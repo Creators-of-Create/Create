@@ -20,6 +20,9 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+
+import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -109,7 +112,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		renderTooltip(matrixStack, mouseX, mouseY);
-		for (Widget widget : renderables) {
+		for (Widget widget : ((ScreenAccessor) this).create$getRenderables()) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHovered()) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (!tooltip.isEmpty())

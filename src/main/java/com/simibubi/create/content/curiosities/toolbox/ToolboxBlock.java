@@ -41,6 +41,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.lib.entity.FakePlayer;
 import com.simibubi.create.lib.utility.NetworkUtil;
 
@@ -148,7 +150,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return InteractionResult.PASS;
 
 		ItemStack stack = player.getItemInHand(hand);
-		DyeColor color = DyeColor.getColor(stack);
+		DyeColor color = DyeHelper.getColor(stack);
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;

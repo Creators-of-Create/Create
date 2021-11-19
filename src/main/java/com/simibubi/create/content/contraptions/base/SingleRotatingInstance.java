@@ -8,15 +8,15 @@ import net.minecraft.world.level.block.state.BlockState;
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
 	protected RotatingData rotatingModel;
-	
+
     public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
 	}
-    
-    @Override
-    public void init() {
-    	rotatingModel = setup(getModel().createInstance());
-    }
+
+//    @Override
+//    public void init() {
+//    	rotatingModel = setup(getModel().createInstance());
+//    }
 
     @Override
     public void update() {

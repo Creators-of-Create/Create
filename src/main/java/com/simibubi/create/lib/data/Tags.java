@@ -14,8 +14,6 @@ import net.minecraft.world.level.material.Fluid;
 //TODO: IMPLEMENT ALL THESE TAGS WITH COMMON ONES
 public class Tags {
 	public static class Items {
-
-
         public static Tag.Named<Item> tag(String id) {
 			return TagFactory.ITEM.create(new ResourceLocation("c", id));
 		}
@@ -27,6 +25,11 @@ public class Tags {
 		public static final Tag.Named<Item> GLASS_COLORLESS = tag("");
 		public static final Tag.Named<Item> DUSTS_REDSTONE = tag("");
 		public static final Tag.Named<Item> INGOTS_IRON = tag("");
+		public static final Tag.Named<Item> RODS_WOODEN = tag("");
+		public static final Tag.Named<Item> DUSTS_GLOWSTONE = tag("");
+		public static final Tag.Named<Item> GLASS_PANES = tag("");
+		public static final Tag.Named<Item> STAINED_GLASS = tag("");
+		public static final Tag.Named<Item> STAINED_GLASS_PANES = tag("");
 	}
 	public static class Blocks {
 		public static Tag.Named<Block> tag(String id) {
@@ -35,11 +38,13 @@ public class Tags {
 		public static final Tag.Named<Block> STONE = tag("");
 		public static final Tag.Named<Block> COBBLESTONE = tag("");
 		public static final Tag.Named<Block> GLASS_COLORLESS = tag("");
+		public static final Tag.Named<Block> GLASS_PANES = tag("");
 	}
 	public static class Fluids {
 		public static Tag.Named<Fluid> tag(String id) {
 			return TagFactory.FLUID.create(new ResourceLocation("c", id));
 		}
+		public static final Tag.Named<Fluid> MILK = tag("milk");
 	}
 
 	public static void gatherData(DataGenerator generator) {

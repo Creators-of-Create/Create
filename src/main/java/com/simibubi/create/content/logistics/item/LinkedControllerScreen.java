@@ -14,6 +14,9 @@ import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.lib.helper.PlayerEntityHelper;
+import com.simibubi.create.lib.mixin.accessor.SlotAccessor;
+import com.simibubi.create.lib.utility.ItemStackUtil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.Rect2i;
@@ -81,9 +84,8 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 
 	@Override
 	protected void containerTick() {
-		if (!menu.player.getMainHandItem()
-			.equals(menu.contentHolder, false))
-			menu.player.closeContainer();
+		if (!ItemStackUtil.equals(menu.player.getMainHandItem(),menu.contentHolder, false))
+			PlayerEntityHelper.closeScreen(menu.player);
 
 		super.containerTick();
 	}
@@ -96,7 +98,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 			super.renderTooltip(ms, x, y);
 			return;
 		}
-		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex()), x, y, font);
+		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), ((SlotAccessor) hoveredSlot).getSlotIndex()), x, y/*, font*/);
 	}
 
 	@Override
@@ -104,7 +106,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		List<Component> list = super.getTooltipFromItem(stack);
 		if (hoveredSlot.container == menu.playerInventory)
 			return list;
-		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex()) : list;
+		return hoveredSlot != null ? addToTooltip(list, ((SlotAccessor)hoveredSlot).getSlotIndex()) : list;
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot) {

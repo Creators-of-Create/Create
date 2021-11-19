@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.lib.config.ConfigType;
+
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.Create;

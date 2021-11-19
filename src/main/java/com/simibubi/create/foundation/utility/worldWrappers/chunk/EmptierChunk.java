@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 
+import com.simibubi.create.lib.mixin.accessor.DimensionTypeAccessor;
+
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -34,7 +36,7 @@ import net.minecraft.world.scores.Scoreboard;
 
 public class EmptierChunk extends LevelChunk {
 
-	private static final Level DUMMY_LEVEL = new Level(null, null, ObfuscationReflectionHelper.getPrivateValue(DimensionType.class, null, "f_63848_"), null, false, false, 0) {
+	private static final Level DUMMY_LEVEL = new Level(null, null, DimensionTypeAccessor.getDEFAULT_OVERWORLD(), null, false, false, 0) {
 
 		@Override
 		public TickList<Block> getBlockTicks() {

@@ -17,7 +17,7 @@ public class WindowBlock extends ConnectedGlassBlock {
 	@Environment(EnvType.CLIENT)
 	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock
-			? (!ItemBlockRenderTypes.canRenderInLayer(state, RenderType.translucent()) && side.getAxis()
+			? (ItemBlockRenderTypes.getChunkRenderType(state) != RenderType.translucent() && side.getAxis()
 				.isHorizontal() || state.getBlock() == adjacentBlockState.getBlock())
 			: super.skipRendering(state, adjacentBlockState, side);
 	}

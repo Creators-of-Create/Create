@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 

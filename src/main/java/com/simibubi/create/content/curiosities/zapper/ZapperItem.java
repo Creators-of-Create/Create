@@ -38,12 +38,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.extensions.ItemExtensions;
+import com.simibubi.create.lib.item.EntitySwingListenerItem;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.utility.NBT;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-public abstract class ZapperItem extends Item {
+public abstract class ZapperItem extends Item implements EntitySwingListenerItem, ItemExtensions {
 
 	public ZapperItem(Properties properties) {
 		super(properties.stacksTo(1));
@@ -66,7 +70,7 @@ public abstract class ZapperItem extends Item {
 	}
 
 	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+	public boolean create$shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		boolean differentBlock = false;
 		if (oldStack.hasTag() && newStack.hasTag() && oldStack.getTag()
 			.contains("BlockUsed")

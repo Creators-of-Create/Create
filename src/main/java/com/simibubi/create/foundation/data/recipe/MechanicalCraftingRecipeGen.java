@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -102,9 +103,8 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			return register(consumer -> {
 				MechanicalCraftingRecipeBuilder b =
 					builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
-				ResourceLocation location = Create.asResource("mechanical_crafting/" + result.get()
-					.asItem()
-					.getRegistryName()
+				ResourceLocation location = Create.asResource("mechanical_crafting/" + Registry.ITEM.getKey(result.get()
+					.asItem())
 					.getPath() + suffix);
 				b.build(consumer, location);
 			});

@@ -7,6 +7,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 

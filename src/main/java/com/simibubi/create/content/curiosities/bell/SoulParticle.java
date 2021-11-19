@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllParticleTypes;
+import com.simibubi.create.lib.helper.ParticleHelper;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -52,7 +53,7 @@ public class SoulParticle extends CustomRotationParticle {
 		this.numLoops = (int) (1f + this.random.nextFloat() * 2f);
 
 		this.setFrame(0);
-		this.stoppedByCollision = true; // disable movement
+		ParticleHelper.setStoppedByCollision(this, true); // disable movement
 		this.mirror = this.random.nextBoolean();
 
 		this.isPerimeter = data instanceof PerimeterData;

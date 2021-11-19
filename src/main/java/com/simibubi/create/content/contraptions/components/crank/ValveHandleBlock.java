@@ -17,6 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+
+import com.simibubi.create.foundation.utility.DyeHelper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -44,7 +47,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
 		ItemStack heldItem = player.getItemInHand(hand);
-		DyeColor color = DyeColor.getColor(heldItem);
+		DyeColor color = DyeHelper.getColor(heldItem);
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;

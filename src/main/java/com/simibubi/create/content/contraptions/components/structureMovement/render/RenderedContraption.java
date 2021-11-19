@@ -22,6 +22,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import com.simibubi.create.lib.extensions.Matrix4fExtensions;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
@@ -126,7 +127,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
 
 		for (RenderType layer : blockLayers) {
-			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
+			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values()/*, layer + "_" + contraption.entity.getId()*/);
 
 			ModelRenderer renderer;
 			if (Backend.getInstance().compat.vertexArrayObjectsSupported())
@@ -161,7 +162,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		float x = (float) (Mth.lerp(pt, entity.xOld, entity.getX()) - camX);
 		float y = (float) (Mth.lerp(pt, entity.yOld, entity.getY()) - camY);
 		float z = (float) (Mth.lerp(pt, entity.zOld, entity.getZ()) - camZ);
-		matrix.setTranslation(x, y, z);
+		((Matrix4fExtensions) (Object) matrix).create$setTranslation(x, y, z);
 		matrix.multiply(modelMatrix);
 	}
 

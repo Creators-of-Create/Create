@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.lib.helper.PlayerEntityHelper;
+import com.simibubi.create.lib.utility.ItemStackUtil;
 
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -85,9 +87,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void containerTick() {
-		if (!menu.player.getMainHandItem()
-				.equals(menu.contentHolder, false))
-			menu.player.closeContainer();
+		if (!ItemStackUtil.equals(menu.player.getMainHandItem(), menu.contentHolder, false))
+			PlayerEntityHelper.closeScreen(menu.player);
 
 		super.containerTick();
 

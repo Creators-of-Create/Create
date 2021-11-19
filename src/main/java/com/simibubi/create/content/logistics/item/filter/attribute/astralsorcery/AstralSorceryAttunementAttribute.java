@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +24,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
         String constellation = nbt.contains("constellation") ? nbt.getString("constellation") : nbt.getString("constellationName");
 
         // Special handling for shifting stars
-        ResourceLocation itemResource = itemStack.getItem().getRegistryName();
+        ResourceLocation itemResource = Registry.ITEM.getKey(itemStack.getItem());
         if(itemResource != null && itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }
@@ -37,7 +38,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
         String constellation = nbt.contains("constellation") ? nbt.getString("constellation") : nbt.getString("constellationName");
 
         // Special handling for shifting stars
-        ResourceLocation itemResource = itemStack.getItem().getRegistryName();
+        ResourceLocation itemResource = Registry.ITEM.getKey(itemStack.getItem());
         if(itemResource != null && itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }

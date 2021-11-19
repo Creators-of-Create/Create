@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.vault;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.helper.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

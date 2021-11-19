@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
+import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.lib.data.Tags;
 
 public class ToolboxDyeingRecipe extends CustomRecipe {
@@ -56,7 +57,7 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 				if (Block.byItem(stack.getItem()) instanceof ToolboxBlock) {
 					toolbox = stack;
 				} else {
-					DyeColor color1 = DyeColor.getColor(stack);
+					DyeColor color1 = DyeHelper.getColor(stack);
 					if (color1 != null) {
 						color = color1;
 					}

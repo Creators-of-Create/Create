@@ -115,7 +115,7 @@ public class SymmetryHandler {
 			mc.getBlockRenderer()
 				.getModelRenderer()
 				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
-					player.level.getRandom(), Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+					player.level.getRandom(), Mth.getSeed(pos), OverlayTexture.NO_OVERLAY);
 
 			buffer.endBatch();
 			ms.popPose();

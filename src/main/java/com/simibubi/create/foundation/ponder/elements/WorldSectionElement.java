@@ -341,8 +341,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.normal());
 			Minecraft.getInstance()
 				.getBlockRenderer()
-				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random,
-					EmptyModelData.INSTANCE);
+				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random);
 			ms.popPose();
 		}
 	}

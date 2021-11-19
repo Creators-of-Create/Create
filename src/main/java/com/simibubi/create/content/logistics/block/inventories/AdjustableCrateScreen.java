@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.lib.helper.PlayerEntityHelper;
 
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -130,7 +131,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		}
 
 		if (menu.doubleCrate != te.isDoubleCrate())
-			menu.playerInventory.player.closeContainer();
+			PlayerEntityHelper.closeScreen(menu.playerInventory.player);
 	}
 
 	@Override

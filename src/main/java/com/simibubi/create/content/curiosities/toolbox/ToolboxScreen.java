@@ -116,7 +116,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 				hoveredToolboxSlot = slot;
 				RenderSystem.disableDepthTest();
 				RenderSystem.colorMask(true, true, true, false);
-				int slotColor = this.getSlotColor(baseIndex);
+				int slotColor = 0x80FFFFFF;// default in forge, never overridden. // this.getSlotColor(baseIndex);
 				fillGradient(ms, i, j, i + 16, j + 16, slotColor, slotColor);
 				RenderSystem.colorMask(true, true, true, true);
 				RenderSystem.enableDepthTest();

@@ -63,7 +63,7 @@ public class WrappedChunk implements ChunkAccess {
                 .filter(it -> {
                     BlockPos blockPos = it.getKey();
                     boolean chunkContains = blockPos.getX() >> 4 == x && blockPos.getZ() >> 4 == z;
-                    return chunkContains && it.getValue().getLightEmission() != 0;
+                    return chunkContains && it.getValue().getLightEmission(/*world, blockPos*/) != 0;
                 })
                 .map(Map.Entry::getKey);
     }

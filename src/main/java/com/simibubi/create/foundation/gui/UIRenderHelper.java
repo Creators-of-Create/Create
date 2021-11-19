@@ -17,6 +17,9 @@ import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+
+import com.simibubi.create.lib.extensions.RenderTargetExtensions;
+import com.simibubi.create.lib.utility.FrameBufferUtil;
 import com.simibubi.create.lib.utility.GuiUtils;
 
 public class UIRenderHelper {
@@ -262,7 +265,7 @@ public class UIRenderHelper {
 			CustomRenderTarget framebuffer = new CustomRenderTarget(true);
 			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
 			framebuffer.setClearColor(0, 0, 0, 0);
-			framebuffer.enableStencil();
+			FrameBufferUtil.enableStencil(framebuffer);
 			return framebuffer;
 		}
 

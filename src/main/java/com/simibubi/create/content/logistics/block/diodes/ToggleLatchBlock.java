@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 

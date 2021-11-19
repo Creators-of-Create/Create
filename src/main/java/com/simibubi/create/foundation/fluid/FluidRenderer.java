@@ -28,6 +28,10 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 
 @Environment(EnvType.CLIENT)
 public class FluidRenderer {
@@ -44,15 +48,16 @@ public class FluidRenderer {
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, VertexConsumer builder, PoseStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes fluidAttributes = fluid.getAttributes();
+		//FluidAttributes fluidAttributes = fluid.getAttributes();
+		FluidRenderHandler handler = FluidRenderHandlerRegistry.INSTANCE.get(fluid);
 		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite flowTexture = spriteAtlas.apply(fluidAttributes.getFlowingTexture(fluidStack));
-		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
+		TextureAtlasSprite flowTexture = spriteAtlas.apply(handler.getFluidSprites(null, null, fluidStack.getFluid().defaultFluidState())[1].getName());
+		TextureAtlasSprite stillTexture = spriteAtlas.apply(FluidVariantRendering.getSprite(fluidStack.getType()).getName());
 
-		int color = fluidAttributes.getColor(fluidStack);
+		int color = FluidVariantRendering.getColor(fluidStack.getType());
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = 0;//Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
@@ -96,21 +101,19 @@ public class FluidRenderer {
 	public static void renderTiledFluidBB(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
 		float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
 		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes fluidAttributes = fluid.getAttributes();
+		FluidVariant fluidVariant = fluidStack.getType();
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-			.apply(fluidAttributes.getStillTexture(fluidStack));
+			.apply(FluidVariantRendering.getSprite(fluidVariant).getName());
 
-		int color = fluidAttributes.getColor(fluidStack);
+		int color = FluidVariantRendering.getColor(fluidStack.getType());
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = 0;//Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
-		if (fluidStack.getFluid()
-			.getAttributes()
-			.isLighterThanAir())
+		if (FluidVariantRendering.fillsFromTop(fluidStack.getType()))
 			MatrixTransformStack.of(ms)
 				.translate(center)
 				.rotateX(180)

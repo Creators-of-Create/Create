@@ -4,6 +4,7 @@
   "package": "com.simibubi.create.lib.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "ItemMixin",
     "accessor.AbstractMinecartAccessor",
     "accessor.AbstractSelectionList$EntryAccessor",
     "accessor.AbstractSelectionListAccessor",
@@ -19,6 +20,7 @@
     "accessor.ClientboundPlayerAbilitiesPacketAccessor",
     "accessor.CubeVoxelShapeAccessor",
     "accessor.DamageSourceAccessor",
+    "accessor.DimensionTypeAccessor",
     "accessor.EntityAccessor",
     "accessor.IngredientAccessor",
     "accessor.ItemTagsAccessor",
@@ -106,6 +108,7 @@
     "client.ItemRendererMixin",
     "client.KeyboardHandlerMixin",
     "client.LanguageInfoMixin",
+    "client.LevelRendererMixin",
     "client.MinecraftMixin",
     "client.ModelBakeryMixin",
     "client.ModelManagerMixin",
@@ -116,7 +119,7 @@
     "client.TerrainParticle$ProviderMixin",
     "client.TerrainParticleMixin",
     "client.TextureAtlasMixin",
-    "client.LevelRendererMixin"
+    "client.RenderTargetMixin"
   ],
   "server": [
     "server.Vec3Mixin",

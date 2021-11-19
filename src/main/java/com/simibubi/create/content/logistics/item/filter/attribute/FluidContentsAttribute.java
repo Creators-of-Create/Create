@@ -45,8 +45,8 @@ public class FluidContentsAttribute implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         String parameter = "";
-        if(fluid != null)
-            parameter = new TranslatableComponent(fluid.getAttributes().getTranslationKey()).getString();
+//        if(fluid != null)
+//            parameter = new TranslatableComponent(fluid.getAttributes().getTranslationKey()).getString();
         return new Object[] { parameter };
     }
 
@@ -68,14 +68,14 @@ public class FluidContentsAttribute implements ItemAttribute {
     private List<Fluid> extractFluids(ItemStack stack) {
         List<Fluid> fluids = new ArrayList<>();
 
-        LazyOptional<IFluidHandlerItem> capability =
-                stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-
-        capability.ifPresent((cap) -> {
-            for(int i = 0; i < cap.getTanks(); i++) {
-                fluids.add(cap.getFluidInTank(i).getFluid());
-            }
-        });
+//        LazyOptional<IFluidHandlerItem> capability =
+//                stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+//
+//        capability.ifPresent((cap) -> {
+//            for(int i = 0; i < cap.getTanks(); i++) {
+//                fluids.add(cap.getFluidInTank(i).getFluid());
+//            }
+//        });
 
         return fluids;
     }

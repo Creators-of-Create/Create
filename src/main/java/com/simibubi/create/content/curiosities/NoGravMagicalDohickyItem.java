@@ -1,6 +1,8 @@
 package com.simibubi.create.content.curiosities;
 
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.item.EntityTickListenerItem;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class NoGravMagicalDohickyItem extends Item {
+public class NoGravMagicalDohickyItem extends Item implements EntityTickListenerItem {
 
 	public NoGravMagicalDohickyItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
@@ -57,7 +59,7 @@ public class NoGravMagicalDohickyItem extends Item {
 	}
 
 	protected void onCreated(ItemEntity entity, CompoundTag persistentData) {
-		entity.lifespan = 6000;
+		//entity.LIFETIME = 6000;
 		persistentData.remove("JustCreated");
 
 		// just a flag to tell the client to play an effect

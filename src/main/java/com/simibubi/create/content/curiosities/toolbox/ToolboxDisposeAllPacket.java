@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
