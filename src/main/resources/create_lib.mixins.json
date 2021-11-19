@@ -4,7 +4,6 @@
   "package": "com.simibubi.create.lib.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ItemMixin",
     "accessor.AbstractMinecartAccessor",
     "accessor.AbstractSelectionList$EntryAccessor",
     "accessor.AbstractSelectionListAccessor",
@@ -47,7 +46,6 @@
     "common.BlockParticleOptionMixin",
     "common.BlockStateMixin",
     "common.BoatMixin",
-    "common.ChunkStatusAccessor",
     "common.ClientboundAddEntityPacketMixin",
     "common.ClipContextMixin",
     "common.EnchantmentHelperMixin",

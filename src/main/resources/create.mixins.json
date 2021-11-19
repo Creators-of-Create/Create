@@ -5,10 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
-    "ChunkStatusMixin",
     "PlayerListMixin",
-    "RenderSystemMixin",
-    "ShapesMixin",
     "SandPaperSoundMixin"
   ],
   "client": [

@@ -239,18 +239,20 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return stack.getItem()
-				.getTags()
-				.contains(tagName);
+//			return stack.getItem()
+//				.getTags()
+//				.contains(tagName);
+			return false;
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			return stack.getItem()
-				.getTags()
-				.stream()
-				.map(InTag::new)
-				.collect(Collectors.toList());
+//			return stack.getItem()
+//				.getTags()
+//				.stream()
+//				.map(InTag::new)
+//				.collect(Collectors.toList());
+			return Collections.emptyList();
 		}
 
 		@Override
