@@ -9,4 +9,8 @@ public class FrameBufferUtil {
 	public static void enableStencil(RenderTarget buffer) {
 		((RenderTargetExtensions) buffer).enableStencil();
 	}
+
+	public static boolean isStencilEnabled(RenderTarget buffer) {
+		return ((RenderTargetExtensions) buffer).isStencilEnabled();
+	}
 }

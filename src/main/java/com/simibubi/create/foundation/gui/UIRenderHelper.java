@@ -255,7 +255,7 @@ public class UIRenderHelper {
 		poseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(1, -1, 1));
 	}
 
-	public static class CustomRenderTarget extends RenderTarget {
+	public static class CustomRenderTarget extends RenderTarget implements RenderTargetExtensions {
 
 		public CustomRenderTarget(boolean pUseDepth) {
 			super(pUseDepth);
@@ -265,7 +265,7 @@ public class UIRenderHelper {
 			CustomRenderTarget framebuffer = new CustomRenderTarget(true);
 			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
 			framebuffer.setClearColor(0, 0, 0, 0);
-			FrameBufferUtil.enableStencil(framebuffer);
+			framebuffer.enableStencil();
 			return framebuffer;
 		}
 

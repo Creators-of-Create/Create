@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.FormattedText;
@@ -22,31 +23,30 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiUtils { // name is this to maintain max compat with upstream
 	public static void drawGradientRect(Matrix4f matrix, int z, int left, int top, int right, int bottom, int startColor, int endColor) {
-		float sA = (float) (startColor >> 24 & 255) / 255.0f;
-		float sR = (float) (startColor >> 16 & 255) / 255.0f;
-		float sG = (float) (startColor >> 8 & 255) / 255.0f;
-		float sB = (float) (startColor & 255) / 255.0f;
-		float eA = (float) (endColor >> 24 & 255) / 255.0f;
-		float eR = (float) (endColor >> 16 & 255) / 255.0f;
-		float eG = (float) (endColor >> 8 & 255) / 255.0f;
-		float eB = (float) (endColor & 255) / 255.0f;
+		float startAlpha = (float)(startColor >> 24 & 255) / 255.0F;
+		float startRed   = (float)(startColor >> 16 & 255) / 255.0F;
+		float startGreen = (float)(startColor >>  8 & 255) / 255.0F;
+		float startBlue  = (float)(startColor       & 255) / 255.0F;
+		float endAlpha   = (float)(endColor   >> 24 & 255) / 255.0F;
+		float endRed     = (float)(endColor   >> 16 & 255) / 255.0F;
+		float endGreen   = (float)(endColor   >>  8 & 255) / 255.0F;
+		float endBlue    = (float)(endColor         & 255) / 255.0F;
 
 		RenderSystem.enableDepthTest();
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		//RenderSystem.shadeModel(GL11.GL_SMOOTH);
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder buffer = tessellator.getBuilder();
 		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		buffer.vertex(matrix, right, top, z).color(sR, sG, sB, sA).endVertex();
-		buffer.vertex(matrix, left, top, z).color(sR, sG, sB, sA).endVertex();
-		buffer.vertex(matrix, left, bottom, z).color(eR, eG, eB, eA).endVertex();
-		buffer.vertex(matrix, right, bottom, z).color(eR, eG, eB, eA).endVertex();
+		buffer.vertex(matrix, right,    top, z).color(startRed, startGreen, startBlue, startAlpha).endVertex();
+		buffer.vertex(matrix,  left,    top, z).color(startRed, startGreen, startBlue, startAlpha).endVertex();
+		buffer.vertex(matrix,  left, bottom, z).color(  endRed,   endGreen,   endBlue,   endAlpha).endVertex();
+		buffer.vertex(matrix, right, bottom, z).color(  endRed,   endGreen,   endBlue,   endAlpha).endVertex();
 		tessellator.end();
 
-		//RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		RenderSystem.enableTexture();
 	}
