@@ -1,6 +1,5 @@
 package com.simibubi.create.lib.mixin.common;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -70,7 +69,6 @@ public abstract class Matrix4fMixin implements Matrix4fExtensions {
 		m33 = o.m33;
 	}
 
-	@ApiStatus.Internal
 	@Override
 	@Contract(mutates = "this")
 	public void create$fromFloatArray(float[] floats) {

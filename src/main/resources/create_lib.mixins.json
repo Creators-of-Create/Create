@@ -46,6 +46,7 @@
     "common.BlockParticleOptionMixin",
     "common.BlockStateMixin",
     "common.BoatMixin",
+    "common.ChunkStatusMixin",
     "common.ClientboundAddEntityPacketMixin",
     "common.ClipContextMixin",
     "common.EnchantmentHelperMixin",
@@ -113,11 +114,11 @@
     "client.MouseHandlerMixin",
     "client.MultiPlayerGameModeMixin",
     "client.ParticleEngineMixin",
+    "client.RenderTargetMixin",
     "client.ScreenMixin",
     "client.TerrainParticle$ProviderMixin",
     "client.TerrainParticleMixin",
-    "client.TextureAtlasMixin",
-    "client.RenderTargetMixin"
+    "client.TextureAtlasMixin"
   ],
   "server": [
     "server.Vec3Mixin",

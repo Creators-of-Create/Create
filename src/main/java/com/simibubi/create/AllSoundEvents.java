@@ -480,8 +480,10 @@ public class AllSoundEvents {
 
 		@Override
 		public void register() {
-			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents)
-				Registry.register(Registry.SOUND_EVENT, getId(), pair.getFirst());
+			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) {
+				Registry.register(Registry.SOUND_EVENT, pair.getFirst().getLocation(), pair.getFirst());
+			}
+
 		}
 
 		@Override
@@ -547,7 +549,7 @@ public class AllSoundEvents {
 
 		@Override
 		public void register() {
-			Registry.register(Registry.SOUND_EVENT, getId(), event);
+			Registry.register(Registry.SOUND_EVENT, event.getLocation(), event);
 		}
 
 		@Override
