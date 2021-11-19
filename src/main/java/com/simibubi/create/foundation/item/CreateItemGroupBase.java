@@ -23,6 +23,8 @@ import net.minecraft.world.level.block.Block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import static com.simibubi.create.lib.utility.ItemGroupUtil.getGroupCountSafe;
+
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	public CreateItemGroupBase(String id) {

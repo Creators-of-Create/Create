@@ -52,6 +52,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
@@ -617,7 +618,7 @@ public class PonderUI extends NavigatableSimiScreen {
 					).withStyle(ChatFormatting.GRAY);
 
 					//renderOrderedTooltip(ms, textRenderer.wrapLines(text, width / 3), 0, 0);
-					renderComponentTooltip(ms, font.getSplitter().splitLines(text, width / 3, Style.EMPTY), 0, 0, font);
+					renderComponentTooltip(ms, font.getSplitter().splitLines(text, width / 3, Style.EMPTY).stream().map(formatted -> (Component) new TextComponent(formatted.getString())).toList(), 0, 0/*, font*/);
 					/*String tooltip = Lang
 						.createTranslationTextComponent(IDENTIFY_MODE, client.gameSettings.keyBindDrop.getBoundKeyLocalizedText().applyTextStyle(TextFormatting.WHITE))
 						.applyTextStyle(TextFormatting.GRAY)

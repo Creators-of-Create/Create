@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.lib.extensions.StructureProcessorExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,23 +21,23 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-public class SchematicProcessor extends StructureProcessor {
-	
+public class SchematicProcessor extends StructureProcessor implements StructureProcessorExtensions {
+
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
 	public static final Codec<SchematicProcessor> CODEC = Codec.unit(() -> {
 		return INSTANCE;
 	});
-	
+
 	public static StructureProcessorType<SchematicProcessor> TYPE;
-	
+
 	public static void register() {
 		TYPE = StructureProcessorType.register("schematic", CODEC);
 	}
-	
+
 	@Nullable
 	@Override
-	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
-			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
+	public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
+			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings) {
 		if (info.nbt != null && info.state.hasBlockEntity()) {
 			BlockEntity te = ((EntityBlock) info.state.getBlock()).newBlockEntity(info.pos, info.state);
 			if (te != null) {
@@ -50,7 +51,7 @@ public class SchematicProcessor extends StructureProcessor {
 
 	@Nullable
 	@Override
-	public StructureTemplate.StructureEntityInfo processEntity(LevelReader world, BlockPos pos, StructureTemplate.StructureEntityInfo rawInfo,
+	public StructureTemplate.StructureEntityInfo create$processEntity(LevelReader world, BlockPos pos, StructureTemplate.StructureEntityInfo rawInfo,
 			StructureTemplate.StructureEntityInfo info, StructurePlaceSettings settings, StructureTemplate template) {
 		return EntityType.by(info.nbt).flatMap(type -> {
 			if (world instanceof Level) {
