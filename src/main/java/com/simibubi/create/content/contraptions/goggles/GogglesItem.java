@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.goggles;
 
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.lib.item.EquipmentItem;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -14,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
-public class GogglesItem extends Item {
+public class GogglesItem extends Item implements EquipmentItem {
 
 	public GogglesItem(Properties properties) {
 		super(properties);

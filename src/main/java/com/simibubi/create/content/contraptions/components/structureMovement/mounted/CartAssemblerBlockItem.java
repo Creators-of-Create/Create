@@ -6,6 +6,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -52,7 +54,7 @@ public class CartAssemblerBlockItem extends BlockItem {
 			return false;
 		}
 
-		RailShape shape = ((BaseRailBlock) block).getRailDirection(state, world, pos, null);
+		RailShape shape = MinecartAndRailUtil.getDirectionOfRail(state, world, pos, null);
 		if (shape != RailShape.EAST_WEST && shape != RailShape.NORTH_SOUTH)
 			return false;
 

@@ -6,6 +6,8 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
+import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
+
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -121,7 +123,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	protected abstract void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks);
 
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		for (Widget widget : renderables) {
+		for (Widget widget : ((ScreenAccessor) this).create$getRenderables()) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHovered()) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (!tooltip.isEmpty())

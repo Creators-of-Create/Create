@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import com.simibubi.create.lib.item.UseFirstBehaviorItem;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class CogwheelBlockItem extends BlockItem {
+public class CogwheelBlockItem extends BlockItem implements UseFirstBehaviorItem {
 
 	boolean large;
 
@@ -70,7 +72,7 @@ public class CogwheelBlockItem extends BlockItem {
 			}
 		}
 
-		return super.onItemUseFirst(stack, context);
+		return InteractionResult.PASS;
 	}
 
 	@Override

@@ -4,6 +4,10 @@ import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 
+import com.simibubi.create.lib.item.CustomDurabilityBarItem;
+
+import com.simibubi.create.lib.utility.DurabilityBarUtil;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -80,8 +84,13 @@ public class BackTankUtil {
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
 			return Mth.hsvToRgb(
 				Math.max(0.0F, (float) (1.0F - getDurabilityForDisplay(stack, usesPerTank))) / 3.0F, 1.0F, 1.0F);
-		return backtank.getItem()
-			.getRGBDurabilityForDisplay(backtank);
+		int color;
+		if (backtank.getItem() instanceof CustomDurabilityBarItem custom) {
+			color = custom.getRGBDurabilityForDisplay(backtank);
+		} else {
+			color = backtank.getItem().getBarColor(backtank);
+		}
+		return color;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -94,8 +103,13 @@ public class BackTankUtil {
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
 			return (double) stack.getDamageValue() / (double) stack.getMaxDamage();
-		return backtank.getItem()
-			.getDurabilityForDisplay(backtank);
+		double durability;
+		if (backtank.getItem() instanceof CustomDurabilityBarItem custom) {
+			durability = custom.getDurabilityForDisplay(backtank);
+		} else {
+			durability = DurabilityBarUtil.getDurabilityForDisplay(backtank);
+		}
+		return durability;
 	}
 
 	@Environment(EnvType.CLIENT)

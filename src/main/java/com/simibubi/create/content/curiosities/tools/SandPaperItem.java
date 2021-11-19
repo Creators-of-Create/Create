@@ -8,6 +8,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.fabricmc.fabric.mixin.content.registry.AxeItemAccessor;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -21,12 +22,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -176,12 +179,15 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 		BlockPos pos = context.getClickedPos();
 		BlockState state = level.getBlockState(pos);
 
-		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
+		Block newBlock = AxeItemAccessor.getStrippedBlocks().get(state.getBlock());
+		BlockState newState = newBlock == null ? null : newBlock.defaultBlockState();
+
 		if (newState != null) {
 			AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 			level.levelEvent(player, 3005, pos, 0); // Spawn particles
 		} else {
-			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
+			newBlock = HoneycombItem.WAX_OFF_BY_BLOCK.get().get(state.getBlock());
+			newState = newBlock == null ? null : newBlock.defaultBlockState();
 			if (newState != null) {
 				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 				level.levelEvent(player, 3004, pos, 0); // Spawn particles

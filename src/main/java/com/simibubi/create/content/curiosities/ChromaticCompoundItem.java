@@ -6,6 +6,12 @@ import com.simibubi.create.lib.helper.EntityHelper;
 
 import com.simibubi.create.lib.item.CustomDurabilityBarItem;
 
+import com.simibubi.create.lib.item.CustomMaxCountItem;
+
+import com.simibubi.create.lib.item.EntityTickListenerItem;
+
+import com.simibubi.create.lib.mixin.accessor.BeaconBlockEntityAccessor;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -38,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
-public class ChromaticCompoundItem extends Item implements CustomDurabilityBarItem {
+public class ChromaticCompoundItem extends Item implements CustomDurabilityBarItem, CustomMaxCountItem, EntityTickListenerItem {
 
 	public ChromaticCompoundItem(Properties properties) {
 		super(properties);
@@ -112,7 +118,7 @@ public class ChromaticCompoundItem extends Item implements CustomDurabilityBarIt
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setDeltaMovement(entity.getDeltaMovement());
-			newEntityHelper.getExtraCustomData(entity)
+			EntityHelper.getExtraCustomData(newEntity)
 				.putBoolean("JustCreated", true);
 			itemData.remove("CollectingLight");
 			world.addFreshEntity(newEntity);
@@ -146,7 +152,7 @@ public class ChromaticCompoundItem extends Item implements CustomDurabilityBarIt
 
 				BeaconBlockEntity bte = (BeaconBlockEntity) te;
 
-				if (!bte.beamSections.isEmpty())
+				if (!((BeaconBlockEntityAccessor) bte).create$beamSections().isEmpty())
 					isOverBeacon = true;
 
 				break;
@@ -214,7 +220,7 @@ public class ChromaticCompoundItem extends Item implements CustomDurabilityBarIt
 
 	public boolean checkLight(ItemStack stack, ItemEntity entity, Level world, CompoundTag itemData, Vec3 positionVec,
 		BlockPos randomOffset, BlockState state) {
-		if (state.getLightEmission(world, randomOffset) == 0)
+		if (state.getLightEmission() == 0)
 			return false;
 		if (state.getDestroySpeed(world, randomOffset) == -1)
 			return false;
@@ -234,7 +240,7 @@ public class ChromaticCompoundItem extends Item implements CustomDurabilityBarIt
 		newEntity.setDeltaMovement(entity.getDeltaMovement());
 		newEntity.setDefaultPickUpDelay();
 		world.addFreshEntity(newEntity);
-		entity.lifespan = 6000;
+//		entity.lifespan = 6000;
 		if (stack.isEmpty())
 			entity.discard();
 		return true;

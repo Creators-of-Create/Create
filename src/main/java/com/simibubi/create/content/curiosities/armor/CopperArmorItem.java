@@ -25,9 +25,9 @@ public class CopperArmorItem extends ArmorItem {
 		return livingEntity.getItemBySlot(slot).getItem() == this;
 	}
 
-	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-		return TEXTURE_STRING;
-	}
+//	@Override
+//	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+//		return TEXTURE_STRING;
+//	}
 
 }

@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.particle;
 
 import com.mojang.serialization.Codec;
 
+import com.simibubi.create.lib.helper.ParticleManagerHelper;
+
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.client.particle.ParticleProvider;
@@ -14,7 +17,7 @@ import net.fabricmc.api.Environment;
 public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extends ICustomParticleData<T> {
 
 	Deserializer<T> getDeserializer();
-	
+
 	public default ParticleType<T> createType() {
 		return new ParticleType<T>(false, getDeserializer()) {
 
@@ -24,20 +27,20 @@ public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extend
 			}
 		};
 	}
-	
+
 	@Override
 	@Environment(EnvType.CLIENT)
 	default ParticleProvider<T> getFactory() {
 		throw new IllegalAccessError("This particle type uses a metaFactory!");
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public SpriteParticleRegistration<T> getMetaFactory();
-	
+
 	@Override
 	@Environment(EnvType.CLIENT)
 	public default void register(ParticleType<T> type, ParticleEngine particles) {
-		particles.register(type, getMetaFactory());
+		ParticleManagerHelper.registerFactory(particles, type, getMetaFactory());
 	}
-	
+
 }

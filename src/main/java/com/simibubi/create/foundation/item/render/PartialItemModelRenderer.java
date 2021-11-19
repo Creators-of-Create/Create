@@ -7,6 +7,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.helper.ItemRendererHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -66,9 +68,8 @@ public class PartialItemModelRenderer {
 			renderBakedItemModel(model, light, ms,
 				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
 		else
-			RenderProperties.get(stack)
-				.getItemStackRenderer()
-				.renderByItem(stack, transformType, ms, buffer, light, overlay);
+			Minecraft.getInstance().getItemRenderer()
+					.render(stack, transformType, false, ms, buffer, light, overlay, model);
 
 		ms.popPose();
 	}
@@ -76,16 +77,15 @@ public class PartialItemModelRenderer {
 	private void renderBakedItemModel(BakedModel model, int light, PoseStack ms, VertexConsumer buffer) {
 		ItemRenderer ir = Minecraft.getInstance()
 			.getItemRenderer();
-		IModelData data = EmptyModelData.INSTANCE;
+//		IModelData data = EmptyModelData.INSTANCE;
 
 		for (Direction direction : Iterate.directions) {
 			random.setSeed(42L);
-			ir.renderQuadList(ms, buffer, model.getQuads(null, direction, random, data), stack, light,
-				overlay);
+			ItemRendererHelper.renderQuadList(ir, ms, buffer, model.getQuads(null, direction, random), stack, light, overlay);
 		}
 
 		random.setSeed(42L);
-		ir.renderQuadList(ms, buffer, model.getQuads(null, null, random, data), stack, light, overlay);
+		ItemRendererHelper.renderQuadList(ir, ms, buffer, model.getQuads(null, null, random), stack, light, overlay);
 	}
 
 }

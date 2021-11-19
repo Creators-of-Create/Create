@@ -89,14 +89,14 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(this instanceof FluidTagIngredient);
-		buffer.writeVarInt(amountRequired);
+		buffer.writeVarLong(amountRequired);
 		writeInternal(buffer);
 	}
 
 	public static FluidIngredient read(FriendlyByteBuf buffer) {
 		boolean isTagIngredient = buffer.readBoolean();
 		FluidIngredient ingredient = isTagIngredient ? new FluidTagIngredient() : new FluidStackIngredient();
-		ingredient.amountRequired = buffer.readVarInt();
+		ingredient.amountRequired = buffer.readVarLong();
 		ingredient.readInternal(buffer);
 		return ingredient;
 	}
@@ -164,13 +164,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void readInternal(FriendlyByteBuf buffer) {
-			fluid = buffer.readRegistryId();
+			fluid = Registry.FLUID.get(buffer.readResourceLocation());
 			tagToMatch = buffer.readNbt();
 		}
 
 		@Override
 		protected void writeInternal(FriendlyByteBuf buffer) {
-			buffer.writeRegistryId(fluid);
+			buffer.writeResourceLocation(Registry.FLUID.getKey(fluid));
 			buffer.writeNbt(tagToMatch);
 		}
 
@@ -183,7 +183,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void writeInternal(JsonObject json) {
-			json.addProperty("fluid", fluid.getRegistryName()
+			json.addProperty("fluid", Registry.FLUID.getKey(fluid)
 				.toString());
 			json.add("nbt", new JsonParser().parse(tagToMatch.toString()));
 		}
@@ -216,7 +216,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			int size = buffer.readVarInt();
 			matchingFluidStacks = new ArrayList<>(size);
 			for (int i = 0; i < size; i++)
-				matchingFluidStacks.add(buffer.readFluidStack());
+				matchingFluidStacks.add(FluidStack.fromBuffer(buffer));
 		}
 
 		@Override
@@ -225,7 +225,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			List<FluidStack> matchingFluidStacks = getMatchingFluidStacks();
 			buffer.writeVarInt(matchingFluidStacks.size());
 			matchingFluidStacks.stream()
-				.forEach(buffer::writeFluidStack);
+				.forEach(stack -> stack.toBuffer(buffer));
 		}
 
 		@Override

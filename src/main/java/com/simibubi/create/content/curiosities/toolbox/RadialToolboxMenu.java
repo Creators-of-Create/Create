@@ -18,6 +18,8 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.helper.KeyBindingHelper;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -60,7 +62,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		float fade = Mth.clamp((ticksOpen + AnimationTickHolder.getPartialTicks()) / 10f, 1 / 512f, 1);
 
 		hoveredSlot = -1;
-		Window window = getMinecraft().getWindow();
+		Window window = Minecraft.getInstance().getWindow();
 		float hoveredX = mouseX - window.getGuiScaledWidth() / 2;
 		float hoveredY = mouseY - window.getGuiScaledHeight() / 2;
 
@@ -267,7 +269,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		Window window = getMinecraft().getWindow();
+		Window window = Minecraft.getInstance().getWindow();
 		double hoveredX = mouseX - window.getGuiScaledWidth() / 2;
 		double hoveredY = mouseY - window.getGuiScaledHeight() / 2;
 		double distance = hoveredX * hoveredX + hoveredY * hoveredY;
@@ -331,8 +333,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	@Override
 	public boolean keyReleased(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
-		if (AllKeys.TOOLBELT.getKeybind()
-			.isActiveAndMatches(mouseKey)) {
+		if (AllKeys.TOOLBELT.getKeybind().matchesMouse(mouseKey.getValue()) && AllKeys.TOOLBELT.getKeybind().isDown()) {
 			this.onClose();
 			return true;
 		}

@@ -9,7 +9,16 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.lib.item.EquipmentItem;
 import com.simibubi.create.lib.transfer.TransferUtil;
+
+import net.fabricmc.fabric.api.tag.TagFactory;
+import net.fabricmc.fabric.impl.tag.extension.FabricTagManagerHooks;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagManager;
+import net.minecraft.world.item.ArmorItem;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -134,7 +143,7 @@ public interface ItemAttribute {
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
-		EQUIPABLE(s -> s.getEquipmentSlot() != null),
+		EQUIPABLE(s -> s.getItem() instanceof EquipmentItem || s.getItem() instanceof ArmorItem),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
@@ -327,14 +336,12 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return modId.equals(stack.getItem()
-				.getCreatorModId(stack));
+			return modId.equals(Registry.ITEM.getKey(stack.getItem()).getNamespace());
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			String id = stack.getItem()
-				.getCreatorModId(stack);
+			String id = Registry.ITEM.getKey(stack.getItem()).getNamespace();
 			return id == null ? Collections.emptyList() : Arrays.asList(new AddedBy(id));
 		}
 
@@ -345,11 +352,8 @@ public interface ItemAttribute {
 
 		@Override
 		public Object[] getTranslationParameters() {
-			Optional<? extends ModContainer> modContainerById = ModList.get()
-				.getModContainerById(modId);
-			String name = modContainerById.map(ModContainer::getModInfo)
-				.map(IModInfo::getDisplayName)
-				.orElse(StringUtils.capitalize(modId));
+			ModContainer container = FabricLoader.getInstance().getModContainer(modId).orElse(null);
+			String name = container == null ? name = StringUtils.capitalize(modId) : container.getMetadata().getName();
 			return new Object[] { name };
 		}
 

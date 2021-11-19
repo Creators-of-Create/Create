@@ -151,7 +151,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			.getAxis()
 			.isHorizontal())
 			return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF,
-				state.rotate(te.getLevel(), te.getBlockPos(), Rotation.CLOCKWISE_180));
+				state.rotate(Rotation.CLOCKWISE_180));
 		return CreateClient.BUFFER_CACHE.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
 			getRenderedBlockState(te));
 	}

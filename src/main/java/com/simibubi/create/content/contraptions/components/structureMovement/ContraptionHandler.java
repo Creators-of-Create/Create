@@ -10,6 +10,8 @@ import java.util.Map;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.nbt.CompoundTag;
@@ -60,7 +62,7 @@ public class ContraptionHandler {
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, Level world) {
 		if (world.isClientSide)
 			return;
-		CompoundTag data = entityLiving.getPersistentData();
+		CompoundTag data = EntityHelper.getExtraCustomData(entityLiving);
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
 		Vec3 position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));

@@ -7,6 +7,8 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 
+import com.simibubi.create.lib.utility.ItemStackUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -84,7 +86,7 @@ public class BeltFunnelInteractionHandler {
 				toInsert.setCount(amountToExtract);
 
 			ItemStack remainder = inserting.insert(toInsert);
-			if (toInsert.equals(remainder, false))
+			if (ItemStackUtil.equals(remainder, toInsert, false))
 				if (blocking)
 					return true;
 				else

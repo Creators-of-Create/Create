@@ -6,6 +6,8 @@ import com.google.gson.JsonParseException;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 
+import com.simibubi.create.lib.mixin.accessor.IngredientAccessor;
+
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +15,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+
+import java.util.Arrays;
 
 public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 
@@ -49,8 +53,9 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 			IAssemblyRecipe assemblyRecipe = (IAssemblyRecipe) recipe;
 			if (assemblyRecipe.supportsAssembly()) {
 				Ingredient transit = Ingredient.of(parent.getTransitionalItem());
+
 				processingRecipe.getIngredients()
-					.set(0, index == 0 ? Ingredient.merge(ImmutableList.of(transit, parent.getIngredient())) : transit);
+					.set(0, index == 0 ? IngredientAccessor.invokeFromValues(ImmutableList.of(transit, parent.getIngredient()).stream().flatMap(i -> Arrays.stream(((IngredientAccessor) (Object) i).getAcceptedItems()))) : transit);
 				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
 				return sequencedRecipe;
 			}

@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
+
+import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -85,7 +89,7 @@ public class ContraptionCollider {
 				continue;
 
 			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayer) {
-				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
+				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).create$aboveGroundTickCount(0);
 				continue;
 			}
 
@@ -241,7 +245,7 @@ public class ContraptionCollider {
 					BlockState blockState = contraption.getBlocks()
 						.get(pos).state;
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
-					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
+					slide = Math.max(0, blockState.getBlock().getFriction()) - .6f;
 				}
 			}
 

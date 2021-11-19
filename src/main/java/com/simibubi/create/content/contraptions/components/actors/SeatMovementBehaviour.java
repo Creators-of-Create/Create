@@ -9,6 +9,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.SlabBlock;
@@ -30,7 +32,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
-		
+
 		AbstractContraptionEntity contraptionEntity = context.contraption.entity;
 		if (contraptionEntity == null)
 			return;
@@ -63,7 +65,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 				Vec3 position = VecHelper.getCenterOf(pos)
 					.add(0, slab ? .5f : 1f, 0);
 				toDismount.teleportTo(position.x, position.y, position.z);
-				toDismount.getPersistentData()
+				EntityHelper.getExtraCustomData(toDismount)
 					.remove("ContraptionDismountLocation");
 			}
 			return;

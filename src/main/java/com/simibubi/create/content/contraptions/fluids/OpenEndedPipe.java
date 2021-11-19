@@ -15,6 +15,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 
+import com.simibubi.create.lib.utility.TagUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -287,7 +289,7 @@ public class OpenEndedPipe extends FlowSource {
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean sim) {
+		public FluidStack drain(long maxDrain, boolean sim) {
 			return drainInner(maxDrain, null, sim);
 		}
 
@@ -320,7 +322,7 @@ public class OpenEndedPipe extends FlowSource {
 			if (filterPresent && !drainedFromWorld.isFluidEqual(filter))
 				return FluidStack.empty();
 
-			int remainder = drainedFromWorld.getAmount() - amount;
+			long remainder = drainedFromWorld.getAmount() - amount;
 			drainedFromWorld.setAmount(amount);
 
 			if (!sim && remainder > 0) {
@@ -375,7 +377,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class MilkEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return Tags.Fluids.MILK.contains(fluid.getFluid());
+			return TagUtil.MILK.contains(fluid.getFluid());
 		}
 
 		@Override
@@ -387,7 +389,7 @@ public class OpenEndedPipe extends FlowSource {
 				world.getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
 			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
 			for (LivingEntity livingentity : list)
-				livingentity.curePotionEffects(curativeItem);
+				livingentity.removeAllEffects();
 		}
 	}
 

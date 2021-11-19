@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 public class BeltHelper {
 
 	public static boolean isItemUpright(ItemStack stack) {
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+		return TransferUtil.getFluidHandlerItem(stack)
 			.isPresent() || stack.is(AllItemTags.UPRIGHT_ON_BELT.tag);
 	}
 

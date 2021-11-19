@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,7 +57,7 @@ public class MinecartSim2020 {
 			return Mth.equal(((MinecartFurnace) c).xPush, 0)
 				&& Mth.equal(((MinecartFurnace) c).zPush, 0);
 		LazyOptional<MinecartController> capability =
-			c.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+				MinecartAndRailUtil.getControllerLazy(c);
 		if (capability.isPresent() && capability.orElse(null)
 			.isStalled())
 			return false;
@@ -83,22 +85,22 @@ public class MinecartSim2020 {
 		actualY = cartPos.getY() + 1;
 
 		BaseRailBlock abstractrailblock = (BaseRailBlock) trackState.getBlock();
-		RailShape railshape = abstractrailblock.getRailDirection(trackState, cart.level, cartPos, cart);
+		RailShape railshape = MinecartAndRailUtil.getDirectionOfRail(trackState, cart.level, cartPos, cart);
 		switch (railshape) {
 		case ASCENDING_EAST:
-			forcedMovement = forcedMovement.add(-1 * cart.getSlopeAdjustment(), 0.0D, 0.0D);
+			forcedMovement = forcedMovement.add(-1 * MinecartAndRailUtil.getSlopeAdjustment(), 0.0D, 0.0D);
 			actualY++;
 			break;
 		case ASCENDING_WEST:
-			forcedMovement = forcedMovement.add(cart.getSlopeAdjustment(), 0.0D, 0.0D);
+			forcedMovement = forcedMovement.add(MinecartAndRailUtil.getSlopeAdjustment(), 0.0D, 0.0D);
 			actualY++;
 			break;
 		case ASCENDING_NORTH:
-			forcedMovement = forcedMovement.add(0.0D, 0.0D, cart.getSlopeAdjustment());
+			forcedMovement = forcedMovement.add(0.0D, 0.0D, MinecartAndRailUtil.getSlopeAdjustment());
 			actualY++;
 			break;
 		case ASCENDING_SOUTH:
-			forcedMovement = forcedMovement.add(0.0D, 0.0D, -1 * cart.getSlopeAdjustment());
+			forcedMovement = forcedMovement.add(0.0D, 0.0D, -1 * MinecartAndRailUtil.getSlopeAdjustment());
 			actualY++;
 		default:
 			break;
@@ -138,7 +140,7 @@ public class MinecartSim2020 {
 
 		cart.setPos(actualX, actualY, actualZ);
 		cart.setDeltaMovement(forcedMovement);
-		cart.moveMinecartOnRail(cartPos);
+		MinecartAndRailUtil.moveMinecartOnRail(cart, cartPos);
 
 		x = cart.getX();
 		y = cart.getY();

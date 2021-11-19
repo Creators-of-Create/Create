@@ -33,6 +33,8 @@ import com.simibubi.create.content.logistics.block.vault.VaultBlock;
 import com.simibubi.create.content.logistics.block.vault.VaultConnectivityHandler;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
+import com.simibubi.create.lib.utility.TagUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -193,7 +195,7 @@ public class BlockMovementChecks {
 			return true;
 		if (state.getDestroySpeed(world, pos) == -1)
 			return false;
-		if (state.getBlock().getTags().contains(NON_MOVABLE))
+		if (TagUtil.NON_MOVABLE.contains(state.getBlock()))
 			return false;
 		if (ContraptionMovementSetting.get(state.getBlock()) == ContraptionMovementSetting.UNMOVABLE)
 			return false;

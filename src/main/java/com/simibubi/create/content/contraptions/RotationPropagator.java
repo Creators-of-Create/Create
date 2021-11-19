@@ -19,6 +19,8 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -36,7 +38,7 @@ public class RotationPropagator {
 	 * Determines the change in rotation between two attached kinetic entities. For
 	 * instance, an axis connection returns 1 while a 1-to-1 gear connection
 	 * reverses the rotation and therefore returns -1.
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return
@@ -201,7 +203,7 @@ public class RotationPropagator {
 
 	/**
 	 * Insert the added position to the kinetic network.
-	 * 
+	 *
 	 * @param worldIn
 	 * @param pos
 	 */
@@ -215,7 +217,7 @@ public class RotationPropagator {
 
 	/**
 	 * Search for sourceless networks attached to the given entity and update them.
-	 * 
+	 *
 	 * @param currentTE
 	 */
 	private static void propagateNewSource(KineticTileEntity currentTE) {
@@ -230,7 +232,7 @@ public class RotationPropagator {
 
 			if (newSpeed == 0 && oppositeSpeed == 0)
 				continue;
-			
+
 			boolean incompatible =
 				Math.signum(newSpeed) != Math.signum(speedOfNeighbour) && (newSpeed != 0 && speedOfNeighbour != 0);
 
@@ -300,7 +302,7 @@ public class RotationPropagator {
 
 	/**
 	 * Remove the given entity from the network.
-	 * 
+	 *
 	 * @param worldIn
 	 * @param pos
 	 * @param removedTE
@@ -333,7 +335,7 @@ public class RotationPropagator {
 	/**
 	 * Clear the entire subnetwork depending on the given entity and find a new
 	 * source
-	 * 
+	 *
 	 * @param updateTE
 	 */
 	private static void propagateMissingSource(KineticTileEntity updateTE) {
@@ -424,8 +426,7 @@ public class RotationPropagator {
 	private static List<BlockPos> getPotentialNeighbourLocations(KineticTileEntity te) {
 		List<BlockPos> neighbours = new LinkedList<>();
 
-		if (!te.getLevel()
-			.isAreaLoaded(te.getBlockPos(), 1))
+		if (!LoadedCheckUtil.isAreaLoaded(te.getLevel(), te.getBlockPos(), 1))
 			return neighbours;
 
 		for (Direction facing : Iterate.directions)
