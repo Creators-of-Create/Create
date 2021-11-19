@@ -39,13 +39,14 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 	}
 
 	protected void registerInstance() {
+		onRegister(blockEntityType -> InstancedRenderRegistry.getInstance().tile(blockEntityType).factory(instanceFactory.get()));
 //		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
-			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
-			if (instanceFactory != null) {
-				InstancedRenderRegistry.getInstance()
-					.tile(getEntry())
-					.factory(instanceFactory.get());
-			}
+//			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
+//			if (instanceFactory != null) {
+//				InstancedRenderRegistry.getInstance()
+//					.tile(getEntry())
+//					.factory(instanceFactory.get());
+//			}
 //		});
 	}
 }

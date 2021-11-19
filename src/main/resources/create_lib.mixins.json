@@ -114,12 +114,13 @@
     "client.MouseHandlerMixin",
     "client.MultiPlayerGameModeMixin",
     "client.ParticleEngineMixin",
+    "client.PostChainMixin",
     "client.RenderTargetMixin",
     "client.ScreenMixin",
     "client.TerrainParticle$ProviderMixin",
     "client.TerrainParticleMixin",
     "client.TextureAtlasMixin",
-    "client.PostChainMixin"
+    "client.BufferBuilderMixin"
   ],
   "server": [
     "server.Vec3Mixin",

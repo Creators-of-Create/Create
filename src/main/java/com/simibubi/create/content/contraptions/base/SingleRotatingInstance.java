@@ -11,12 +11,13 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
+		init();
 	}
 
-//    @Override
-//    public void init() {
-//    	rotatingModel = setup(getModel().createInstance());
-//    }
+    //@Override
+    public void init() {
+    	rotatingModel = setup(getModel().createInstance());
+    }
 
     @Override
     public void update() {
