@@ -182,7 +182,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		@Environment(EnvType.CLIENT)
 		private static void experimentalLighting(String value) {
-			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
+//			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
 			Minecraft.getInstance().levelRenderer.allChanged();
 		}
 

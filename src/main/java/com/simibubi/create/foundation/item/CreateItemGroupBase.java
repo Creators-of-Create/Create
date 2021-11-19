@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.lib.utility.ItemGroupUtil;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.client.Minecraft;
@@ -25,7 +26,7 @@ import net.fabricmc.api.Environment;
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	public CreateItemGroupBase(String id) {
-		super(getGroupCountSafe(), Create.ID + "." + id);
+		super(ItemGroupUtil.getGroupCountSafe(), Create.ID + "." + id);
 	}
 
 	@Override

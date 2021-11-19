@@ -7,6 +7,10 @@ import javax.annotation.Nullable;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
+import com.simibubi.create.lib.helper.GameRendererHelper;
+
+import com.simibubi.create.lib.helper.Vector3fHelper;
+
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -237,13 +241,13 @@ public class VecHelper {
 
 				Vector3f bob_translation = new Vector3f((Mth.sin(f1 * (float) Math.PI) * f2 * 0.5F),
 					(-Math.abs(Mth.cos(f1 * (float) Math.PI) * f2)), 0.0f);
-				bob_translation.setY(-bob_translation.y()); // this is weird but hey, if it works
+				Vector3fHelper.setY(bob_translation, -bob_translation.y()); // this is weird but hey, if it works
 				result3f.add(bob_translation);
 			}
 		}
 
 		// ----- adjust for fov -----
-		float fov = (float) mc.gameRenderer.getFov(ari, partialTicks, true);
+		float fov = (float) GameRendererHelper.getFOVModifier(mc.gameRenderer, ari, partialTicks, true);
 
 		float half_height = (float) mc.getWindow()
 			.getGuiScaledHeight() / 2;

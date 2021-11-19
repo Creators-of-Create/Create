@@ -32,7 +32,7 @@ public abstract class RenderTargetMixin implements RenderTargetExtensions {
 	@Shadow
 	public int height;
 
-	@Redirect(method = "createBuffers", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V", ordinal = 1))
+	@Redirect(method = "createBuffers", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V", ordinal = 1), remap = false)
 	private void stencilBuffer(int i, int j, int k, int l, int m) {
 		if(!stencilEnabled)
 			GlStateManager._glFramebufferTexture2D(36160, 36096, 3553, this.depthBufferId, 0);
@@ -42,7 +42,7 @@ public abstract class RenderTargetMixin implements RenderTargetExtensions {
 		}
 	}
 
-	@Redirect(method = "createBuffers", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V", ordinal = 0))
+	@Redirect(method = "createBuffers", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V", ordinal = 0), remap = false)
 	private void stencilBuffer1(int i, int j, int k, int l, int m, int n, int o, int p, IntBuffer intBuffer) {
 		if (!stencilEnabled)
 			GlStateManager._texImage2D(3553, 0, 6402, this.width, this.height, 0, 6402, 5126, null);

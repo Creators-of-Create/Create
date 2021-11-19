@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
+import com.simibubi.create.lib.helper.KeyBindingHelper;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -116,7 +118,7 @@ public class LinkedControllerClientHandler {
 		return InputConstants.isKeyDown(Minecraft.getInstance()
 			.getWindow()
 			.getWindow(),
-			kb.getKey()
+				KeyBindingHelper.getKeyCode(kb)
 				.getValue());
 	}
 
