@@ -19,6 +19,9 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.mixin.accessor.PlayerAccessor;
+import com.simibubi.create.lib.mixin.accessor.SlotAccessor;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -92,9 +95,8 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 			|| hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(ms, x, y);
 			return;
-		}
-		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex(), true), x, y,
-			font);
+		};
+		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), ((SlotAccessor) hoveredSlot).getSlotIndex(), true), x, y);
 	}
 
 	@Override
@@ -102,7 +104,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		List<Component> list = super.getTooltipFromItem(stack);
 		if (hoveredSlot.container == menu.playerInventory)
 			return list;
-		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex(), false) : list;
+		return hoveredSlot != null ? addToTooltip(list, ((SlotAccessor) hoveredSlot).getSlotIndex(), false) : list;
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot, boolean isEmptySlot) {
@@ -139,7 +141,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	@Override
 	protected void containerTick() {
 		if (!menu.contentHolder.isEntityAlive())
-			menu.player.closeContainer();
+			((PlayerAccessor) menu.player).create$closeScreen();
 
 		super.containerTick();
 

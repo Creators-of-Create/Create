@@ -96,7 +96,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 	public void open(@Nonnull Screen source) {
 		this.source = source;
-		Minecraft client = source.getMinecraft();
+		Minecraft client = Minecraft.getInstance();
 		this.init(client, client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight());
 		this.minecraft.screen = this;
 	}

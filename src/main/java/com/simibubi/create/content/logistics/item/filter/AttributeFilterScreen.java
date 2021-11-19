@@ -18,6 +18,8 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
+import com.simibubi.create.lib.utility.ItemStackUtil;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -197,7 +199,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	protected void containerTick() {
 		super.containerTick();
 		ItemStack stackInSlot = menu.ghostInventory.getStackInSlot(0);
-		if (!stackInSlot.equals(lastItemScanned, false))
+		if (!ItemStackUtil.equals(stackInSlot, lastItemScanned, false))
 			referenceItemChanged(stackInSlot);
 	}
 

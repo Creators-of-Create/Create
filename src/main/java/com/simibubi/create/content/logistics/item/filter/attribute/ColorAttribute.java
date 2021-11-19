@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import com.simibubi.create.foundation.utility.DyeHelper;
+
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -40,7 +43,8 @@ public class ColorAttribute implements ItemAttribute {
 	private Collection<DyeColor> findMatchingDyeColors(ItemStack stack) {
 		CompoundTag nbt = stack.getTag();
 
-		DyeColor color = DyeColor.getColor(stack);
+		DyeColor color = DyeHelper.getColor(stack);
+
 		if (color != null)
 			return Collections.singletonList(color);
 
@@ -56,7 +60,7 @@ public class ColorAttribute implements ItemAttribute {
 			colors.addAll(getFireworkStarColors(nbt.getCompound("Explosion")));
 		}
 
-		Arrays.stream(DyeColor.values()).filter(c -> stack.getItem().getRegistryName().getPath().startsWith(c.getName() + "_")).forEach(colors::add);
+		Arrays.stream(DyeColor.values()).filter(c -> Registry.ITEM.getKey(stack.getItem()).getPath().startsWith(c.getName() + "_")).forEach(colors::add);
 
 		return colors;
 	}

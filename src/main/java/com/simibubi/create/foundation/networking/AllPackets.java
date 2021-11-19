@@ -56,9 +56,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCo
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import me.pepperbell.simplenetworking.C2SPacket;
+import me.pepperbell.simplenetworking.S2CPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import me.pepperbell.simplenetworking.SimpleChannel;
 
@@ -138,18 +141,26 @@ public enum AllPackets {
 	}
 
 	public static void registerPackets() {
-		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-			.serverAcceptedVersions(NETWORK_VERSION_STR::equals)
-			.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
-			.networkProtocolVersion(() -> NETWORK_VERSION_STR)
-			.simpleChannel();
-		for (AllPackets packet : values())
-			packet.packet.register();
+		channel = new SimpleChannel(CHANNEL_NAME);
+		int id = 0;
+		for (AllPackets packet : values()) {
+			boolean registered = false;
+			if (packet.packet.direction == PLAY_TO_SERVER) {
+				channel.registerC2SPacket(packet.packet.type, id++);
+				registered = true;
+			}
+			if (packet.packet.direction == PLAY_TO_CLIENT) {
+				channel.registerS2CPacket(packet.packet.type, id++);
+				registered = true;
+			}
+			if (!registered) {
+				Create.LOGGER.error("Could not register packet with type " + packet.packet.type);
+			}
+		}
 	}
 
 	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
-		channel.send(PacketDistributor.NEAR
-			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())), message);
+		channel.sendToClientsAround((S2CPacket) message, (ServerLevel) world, pos, range);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {
@@ -169,13 +180,14 @@ public enum AllPackets {
 			this.direction = direction;
 		}
 
-		private void register() {
-			channel.messageBuilder(type, index++, direction)
-				.encoder(encoder)
-				.decoder(decoder)
-				.consumer(handler)
-				.add();
-		}
+//		private void register() {
+//			channel.registerC2SPacket();
+//			channel.messageBuilder(type, index++, direction)
+//				.encoder(encoder)
+//				.decoder(decoder)
+//				.consumer(handler)
+//				.add();
+//		}
 	}
 
 }

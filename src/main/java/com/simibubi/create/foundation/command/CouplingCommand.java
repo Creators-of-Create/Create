@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -103,7 +105,7 @@ public class CouplingCommand {
 								throw ONLY_MINECARTS_ALLOWED.create();
 
 							LazyOptional<MinecartController> cart1Capability =
-								cart1.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+									MinecartAndRailUtil.getControllerLazy((AbstractMinecart) cart1);
 							if (!cart1Capability.isPresent()) {
 								ctx.getSource()
 									.sendSuccess(new TextComponent("Minecart has no Couplings Attached"), true);
@@ -151,7 +153,7 @@ public class CouplingCommand {
 							throw ONLY_MINECARTS_ALLOWED.create();
 
 						LazyOptional<MinecartController> capability =
-							cart.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+							MinecartAndRailUtil.getControllerLazy((AbstractMinecart) cart);
 						if (!capability.isPresent()) {
 							ctx.getSource()
 								.sendSuccess(new TextComponent("Minecart has no Couplings Attached"), true);
