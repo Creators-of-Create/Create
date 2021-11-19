@@ -128,6 +128,8 @@ public class Create implements ModInitializer {
 //			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
 		CommonEvents.register();
+
+		REGISTRATE.get().register();
 	}
 
 	public static void init() {

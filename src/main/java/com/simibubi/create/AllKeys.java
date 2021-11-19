@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.Screen;
 public enum AllKeys {
 
 	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),
-	ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
+	ACTIVATE_TOOL("", GLFW.GLFW_KEY_RIGHT_CONTROL),
 	TOOLBELT("toolbelt", GLFW.GLFW_KEY_LEFT_ALT),
 
 	;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -17,6 +18,11 @@ import net.fabricmc.fabric.impl.tag.extension.FabricTagManagerHooks;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
+import net.minecraft.network.PacketListener;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.StaticTagHelper;
+import net.minecraft.tags.StaticTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagManager;
 import net.minecraft.world.item.ArmorItem;
 
@@ -239,20 +245,23 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-//			return stack.getItem()
-//				.getTags()
-//				.contains(tagName);
+			for (Map.Entry<ResourceLocation, Tag<Item>> entry : ItemTags.getAllTags().getAllTags().entrySet()) {
+				if (entry.getValue().contains(stack.getItem())) {
+					return true;
+				}
+			}
 			return false;
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-//			return stack.getItem()
-//				.getTags()
-//				.stream()
-//				.map(InTag::new)
-//				.collect(Collectors.toList());
-			return Collections.emptyList();
+			List<ItemAttribute> attributes = new ArrayList<>();
+			for (Map.Entry<ResourceLocation, Tag<Item>> entry : ItemTags.getAllTags().getAllTags().entrySet()) {
+				if (entry.getValue().contains(stack.getItem())) {
+					attributes.add(new InTag(entry.getKey()));
+				}
+			}
+			return attributes;
 		}
 
 		@Override

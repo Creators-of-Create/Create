@@ -29,14 +29,16 @@ import com.simibubi.create.lib.utility.MinecartAndRailUtil;
 public class CouplingHandler {
 
 	public static InteractionResult preventEntitiesFromMoutingOccupiedCart(Entity e, Entity mounting) {
-		LazyOptional<MinecartController> optional = LazyOptional.ofObject(MinecartAndRailUtil.getController((AbstractMinecart) e));
-		if (!optional.isPresent())
-			return InteractionResult.PASS;
-		if (mounting instanceof AbstractContraptionEntity)
-			return InteractionResult.PASS;
-		MinecartController controller = optional.orElse(null);
-		if (controller.isCoupledThroughContraption()) {
-			return InteractionResult.FAIL;
+		if (e instanceof AbstractMinecart cart) {
+			LazyOptional<MinecartController> optional = LazyOptional.ofObject(MinecartAndRailUtil.getController(cart));
+			if (!optional.isPresent())
+				return InteractionResult.PASS;
+			if (mounting instanceof AbstractContraptionEntity)
+				return InteractionResult.PASS;
+			MinecartController controller = optional.orElse(null);
+			if (controller.isCoupledThroughContraption()) {
+				return InteractionResult.FAIL;
+			}
 		}
 		return InteractionResult.PASS;
 	}
