@@ -1,7 +1,6 @@
 accessWidener v1 named
 
 accessible class com/mojang/blaze3d/platform/GlStateManager$BooleanState
-accessible class com/mojang/blaze3d/platform/GlStateManager$FogState
 
 accessible class net/minecraft/client/particle/ParticleEngine$SpriteParticleRegistration
 
@@ -22,8 +21,5 @@ accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
 
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
-
-accessible class net/minecraft/tags/TagRegistry$NamedTag
-accessible method net/minecraft/tags/TagRegistry$NamedTag <init> (Lnet/minecraft/util/ResourceLocation;)V
 
 extendable class net/minecraft/world/inventory/MenuType$MenuSupplier
