@@ -31,6 +31,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -43,6 +44,8 @@ import com.simibubi.create.lib.item.CustomDurabilityBarItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
 	private static DamageSource lastActiveDamageSource;
@@ -232,19 +235,19 @@ public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
 //	public int getMaxDamage(ItemStack stack) {
 //		return MAX_DAMAGE;
 //	}
-//
-//	@SubscribeEvent
-//	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
-//		// Workaround for removed patch to get the attacking entity.
-//		lastActiveDamageSource = event.getSource();
-//
+
+	public static float bufferLivingAttackEvent(DamageSource source, float amount) {
+		// Workaround for removed patch to get the attacking entity.
+		lastActiveDamageSource = source;//event.getSource();
+
 //		DamageSource source = event.getSource();
 //		if (source == null)
 //			return;
-//		Entity trueSource = source.getEntity();
-//		if (trueSource instanceof Player)
-//			findAndDamageExtendoGrip((Player) trueSource);
-//	}
+		Entity trueSource = source.getEntity();
+		if (trueSource instanceof Player)
+			findAndDamageExtendoGrip((Player) trueSource);
+		return amount;
+	}
 
 	public static double attacksByExtendoGripHaveMoreKnockback(double strength, Player player) {
 		if (lastActiveDamageSource == null)
@@ -258,16 +261,16 @@ public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
 		return strength + 2;
 	}
 
-	private static boolean isUncaughtClientInteraction(Entity entity, Entity target) {
-		// Server ignores entity interaction further than 6m
-		if (entity.distanceToSqr(target) < 36)
-			return false;
-		if (!entity.level.isClientSide)
-			return false;
-		if (!(entity instanceof Player))
-			return false;
-		return true;
-	}
+//	private static boolean isUncaughtClientInteraction(Entity entity, Entity target) {
+//		// Server ignores entity interaction further than 6m
+//		if (entity.distanceToSqr(target) < 36)
+//			return false;
+//		if (!entity.level.isClientSide)
+//			return false;
+//		if (!(entity instanceof Player))
+//			return false;
+//		return true;
+//	}
 
 //	@SubscribeEvent
 //	@Environment(EnvType.CLIENT)

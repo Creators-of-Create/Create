@@ -28,16 +28,16 @@ public abstract class MultiPlayerGameModeMixin {
 	@Shadow
 	private ClientPacketListener connection;
 
-	@Inject(at = @At("HEAD"),
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getMainHandItem()Lnet/minecraft/world/item/ItemStack;"),
 			method = "useItemOn",
 			cancellable = true)
-	public void create$func_217292_a(LocalPlayer clientPlayerEntity, ClientLevel clientWorld, InteractionHand hand, BlockHitResult blockRayTraceResult, CallbackInfoReturnable<InteractionResult> cir) {
-		if (clientPlayerEntity.getItemInHand(hand).getItem() instanceof UseFirstBehaviorItem) {
-			UseOnContext create$itemUseContext = new UseOnContext(clientPlayerEntity, hand, blockRayTraceResult);
-			InteractionResult create$result = ((UseFirstBehaviorItem) clientPlayerEntity.getItemInHand(hand).getItem()).onItemUseFirst(clientPlayerEntity.getItemInHand(hand), create$itemUseContext);
-			if (create$result != InteractionResult.PASS) {
+	public void create$useItemOn(LocalPlayer clientPlayerEntity, ClientLevel clientWorld, InteractionHand hand, BlockHitResult blockRayTraceResult, CallbackInfoReturnable<InteractionResult> cir) {
+		if (clientPlayerEntity.getItemInHand(hand).getItem() instanceof UseFirstBehaviorItem first) {
+			UseOnContext ctx = new UseOnContext(clientPlayerEntity, hand, blockRayTraceResult);
+			InteractionResult result = first.onItemUseFirst(clientPlayerEntity.getItemInHand(hand), ctx);
+			if (result != InteractionResult.PASS) {
 				this.connection.send(new ServerboundUseItemOnPacket(hand, blockRayTraceResult));
-				cir.setReturnValue(create$result);
+				cir.setReturnValue(result);
 			}
 		}
 	}

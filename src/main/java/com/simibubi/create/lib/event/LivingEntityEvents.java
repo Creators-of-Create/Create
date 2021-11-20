@@ -51,6 +51,19 @@ public class LivingEntityEvents {
 		}
 	});
 
+	public static final Event<Hurt> HURT = EventFactory.createArrayBacked(Hurt.class, callbacks -> (source, amount) -> {
+		for (Hurt callback : callbacks) {
+			float newAmount = callback.onHurt(source, amount);
+			if (newAmount != amount) return newAmount;
+		}
+		return amount;
+	});
+
+	@FunctionalInterface
+	public interface Hurt {
+		float onHurt(DamageSource source, float amount);
+	}
+
 	@FunctionalInterface
 	public interface ExperienceDrop {
 		int onLivingEntityExperienceDrop(int i, Player player);

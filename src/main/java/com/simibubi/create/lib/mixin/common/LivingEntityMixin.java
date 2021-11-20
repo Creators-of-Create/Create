@@ -103,6 +103,11 @@ public abstract class LivingEntityMixin extends Entity {
 		return f;
 	}
 
+	@ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
+	private float create$onHurt(float amount, DamageSource source, float amount2) {
+		return LivingEntityEvents.HURT.invoker().onHurt(source, amount);
+	}
+
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I", shift = At.Shift.BEFORE),
 			locals = LocalCapture.CAPTURE_FAILHARD,
 			method = "checkFallDamage", cancellable = true)
@@ -126,8 +131,8 @@ public abstract class LivingEntityMixin extends Entity {
 	//Moved from MobMixin
 	@Inject(at = @At("HEAD"), method = "getEquipmentSlotForItem", cancellable = true)
 	private static void create$getSlotForItemStack(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
-		if (itemStack.getItem() instanceof EquipmentItem) {
-			cir.setReturnValue(((EquipmentItem) itemStack.getItem()).getEquipmentSlot(itemStack));
+		if (itemStack.getItem() instanceof EquipmentItem equipment) {
+			cir.setReturnValue(equipment.getEquipmentSlot(itemStack));
 		}
 	}
 }
