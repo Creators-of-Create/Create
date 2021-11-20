@@ -54,6 +54,7 @@ public class ItemStorageHandler implements IItemHandlerModifiable {
 			if (remainder != 0) {
 				finalVal = new ItemStack(stack.getItem(), (int) remainder);
 			}
+
 			if (!sim) {
 				t.commit();
 			}

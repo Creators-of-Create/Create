@@ -171,7 +171,11 @@ import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
+
+import java.lang.reflect.Field;
 
 public class AllTileEntities {
 
@@ -725,4 +729,37 @@ public class AllTileEntities {
 		.register();
 
 	public static void register() {}
+
+	public static void registerStorages() {
+		TransferUtil.registerStorages(false,
+				ADJUSTABLE_CRATE.get(),
+				BASIN.get(),
+				BELT.get(),
+				ANDESITE_TUNNEL.get(),
+				BRASS_TUNNEL.get(),
+				CHUTE.get(),
+				CREATIVE_CRATE.get(),
+				CRUSHING_WHEEL_CONTROLLER.get(),
+				DEPLOYER.get(),
+				DEPOT.get(),
+				WEIGHTED_EJECTOR.get(),
+				ITEM_DRAIN.get(),
+				MECHANICAL_CRAFTER.get(),
+				MILLSTONE.get(),
+				PORTABLE_STORAGE_INTERFACE.get(),
+				SAW.get(),
+				SMART_CHUTE.get(),
+				TOOLBOX.get(),
+				ITEM_VAULT.get()
+		);
+		TransferUtil.registerStorages(true,
+				BASIN.get(),
+				FLUID_TANK.get(),
+				CREATIVE_FLUID_TANK.get(),
+				HOSE_PULLEY.get(),
+				ITEM_DRAIN.get(),
+				PORTABLE_FLUID_INTERFACE.get(),
+				SPOUT.get()
+		);
+	}
 }

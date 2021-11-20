@@ -25,6 +25,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -193,7 +194,7 @@ public class PipeConnection {
 		if (!hasFlow())
 			return;
 		Flow flow = this.flow.get();
-		if (flow.fluid.isEmpty())
+		if (flow.fluid.isEmpty() || flow.fluid.getFluid().isSame(Fluids.EMPTY))
 			return;
 
 		if (world.isClientSide) {

@@ -15,6 +15,7 @@ import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Recipe;
@@ -81,7 +82,7 @@ public class EmptyingByBasin {
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
-		resultingFluid = tank.drain(1000, simulate);
+		resultingFluid = tank.drain(FluidConstants.BUCKET, simulate);
 		resultingItem = tank.getContainer()
 			.copy();
 		if (!simulate)
