@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
+import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -39,12 +40,19 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 
 	protected CategoryIdentifier uid;
 	protected String name;
-	//private Renderer background;
 	private Renderer icon;
+	private int width, height;
 
-	public CreateRecipeCategory(Renderer icon/*, Renderer background*/) {
-		//this.background = background;
+	public CreateRecipeCategory(Renderer icon, int width, int height) {
 		this.icon = icon;
+		this.width = width;
+		this.height = height;
+	}
+
+	public CreateRecipeCategory(Renderer icon, EmptyBackground background) {
+		this.icon = icon;
+		this.width = background.getWidth();
+		this.height = background.getHeight();
 	}
 
 	public void setCategoryId(String name) {
@@ -62,15 +70,15 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 		return Lang.translate("recipe." + name);
 	}
 
-//	@Override
-//	public Renderer getBackground() {
-//		return background;
-//	}
+	@Override
+	public int getDisplayHeight() {
+		return DisplayCategory.super.getDisplayHeight();
+	}
 
-//	@Override
-//	public DisplayRenderer getDisplayRenderer(Display display) {
-//		return DisplayCategory.super.getDisplayRenderer(display);
-//	}
+	@Override
+	public int getDisplayWidth(D display) {
+		return DisplayCategory.super.getDisplayWidth(display);
+	}
 
 	@Override
 	public Renderer getIcon() {
@@ -92,9 +100,9 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
 
-//	public static Renderer emptyBackground(int width, int height) {
-//		return new EmptyBackground(width, height);
-//	}
+	public static EmptyBackground emptyBackground(int width, int height) {
+		return new EmptyBackground(width, height);
+	}
 
 	public static Renderer doubleItemIcon(ItemLike item1, ItemLike item2) {
 		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
@@ -177,5 +185,9 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 //			}
 //		});
 //	}
+
+	public static Point point(int x, int y) {
+		return new Point(x, y);
+	}
 
 }

@@ -31,17 +31,7 @@ import net.minecraft.network.chat.Component;
 public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe, CrushingDisplay> {
 
 	public CrushingCategory() {
-		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get())/*, emptyBackground(177, 100)*/);
-	}
-
-	@Override
-	public int getDisplayHeight() {
-		return 110;
-	}
-
-	@Override
-	public int getDisplayWidth(CrushingDisplay display) {
-		return 177;
+		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()), emptyBackground(177, 100));
 	}
 
 	//	@Override

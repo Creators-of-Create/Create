@@ -33,11 +33,14 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.SawingCategory;
 //import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.category.display.CrushingDisplay;
+import com.simibubi.create.compat.jei.category.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -176,10 +179,10 @@ public class CreateJEI implements REIClientPlugin {
 //			.recipeList(MysteriousItemConversionCategory::getRecipes)
 //			.build();
 //
-//	private final CreateRecipeCategory spoutFilling = register("spout_filling", SpoutCategory::new).recipes(AllRecipeTypes.FILLING)
-//			.recipeList(() -> SpoutCategory.getRecipes(ingredientManager))
-//			.catalyst(AllBlocks.SPOUT::get)
-//			.build();
+	private final CreateRecipeCategory spoutFilling = register("spout_filling", SpoutCategory::new).recipes(AllRecipeTypes.FILLING)
+			/*.recipeList(() -> SpoutCategory.getRecipes(ingredientManager))*/
+			.catalyst(AllBlocks.SPOUT::get)
+			.build();
 //
 //	private final CreateRecipeCategory draining = register("draining", ItemDrainCategory::new)
 //			.recipeList(() -> ItemDrainCategory.getRecipes(ingredientManager))
@@ -227,6 +230,7 @@ public class CreateJEI implements REIClientPlugin {
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
+		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
 	}
 
 	//	@Override
