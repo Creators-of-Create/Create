@@ -33,6 +33,8 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.SawingCategory;
 //import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.compat.jei.category.display.CrushingDisplay;
+import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
@@ -46,6 +48,7 @@ import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
+import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
@@ -200,7 +203,7 @@ public class CreateJEI implements REIClientPlugin {
 //				.build();
 
 	private <T extends Recipe<?>, D extends Display> CategoryBuilder register(String name,
-																			  Supplier<CreateRecipeCategory<T, D>> supplier) {
+		Supplier<CreateRecipeCategory<T, D>> supplier) {
 		return new CategoryBuilder<>(name, supplier);
 	}
 
@@ -217,10 +220,16 @@ public class CreateJEI implements REIClientPlugin {
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
 		allCategories.forEach(registry::add);
+		allCategories.forEach(createRecipeCategory -> registry.removePlusButton(createRecipeCategory.getCategoryIdentifier()));
 		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registry.addWorkstations(c.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, ((Supplier<ItemStack> )s).get()))));
 	}
 
-//	@Override
+	@Override
+	public void registerDisplays(DisplayRegistry registry) {
+		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
+	}
+
+	//	@Override
 //	public void registerRecipes(IRecipeRegistration registration) {
 //		ingredientManager = registration.getIngredientManager();
 //		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));

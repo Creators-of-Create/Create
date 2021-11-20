@@ -1,5 +1,7 @@
 package com.simibubi.create.lib.mixin.common;
 
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -67,20 +69,7 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 
 	@Override
 	public ItemStack create$getCartItem() {
-		switch (getMinecartType()) {
-			case FURNACE:
-				return new ItemStack(Items.FURNACE_MINECART);
-			case CHEST:
-				return new ItemStack(Items.CHEST_MINECART);
-			case TNT:
-				return new ItemStack(Items.TNT_MINECART);
-			case HOPPER:
-				return new ItemStack(Items.HOPPER_MINECART);
-			case COMMAND_BLOCK:
-				return new ItemStack(Items.COMMAND_BLOCK_MINECART);
-			default:
-				return new ItemStack(Items.MINECART);
-		}
+		return MinecartAndRailUtil.getCartItem(getMinecartType());
 	}
 
 	@Override

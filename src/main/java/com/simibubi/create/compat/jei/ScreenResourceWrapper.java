@@ -3,10 +3,11 @@
 //import com.mojang.blaze3d.vertex.PoseStack;
 //import com.simibubi.create.foundation.gui.AllGuiTextures;
 //
+//import me.shedaniel.rei.api.client.gui.DrawableConsumer;
 //import mezz.jei.api.gui.drawable.IDrawable;
 //import net.minecraft.client.gui.GuiComponent;
 //
-//public class ScreenResourceWrapper implements IDrawable {
+//public class ScreenResourceWrapper implements DrawableConsumer {
 //
 //	private AllGuiTextures resource;
 //

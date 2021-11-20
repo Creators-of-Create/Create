@@ -34,8 +34,9 @@ public class DoubleItemIcon implements Renderer {
 //		return 18;
 //	}
 
-	public void setPos(Point pos) {
+	public DoubleItemIcon setPos(Point pos) {
 		this.pos = pos;
+		return this;
 	}
 
 	@Override
@@ -47,7 +48,10 @@ public class DoubleItemIcon implements Renderer {
 
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
-		matrixStack.translate(pos.getX(), pos.getY(), 0);
+		if(pos == null)
+			matrixStack.translate(bounds.getCenterX() - 9, bounds.getCenterY() - 9, getZ());
+		else
+			matrixStack.translate(pos.getX(), pos.getY(), 0);
 
 		matrixStack.pushPose();
 		matrixStack.translate(1, 1, 0);

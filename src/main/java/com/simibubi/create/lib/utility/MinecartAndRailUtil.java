@@ -10,6 +10,7 @@ import com.simibubi.create.lib.helper.AbstractRailBlockHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -65,5 +66,22 @@ public class MinecartAndRailUtil {
 
 	public static LazyOptional<MinecartController> getControllerLazy(AbstractMinecart cart) {
 		return LazyOptional.ofObject(getController(cart));
+	}
+
+	public static ItemStack getCartItem(AbstractMinecart.Type type) {
+		switch (type) {
+			case FURNACE:
+				return new ItemStack(Items.FURNACE_MINECART);
+			case CHEST:
+				return new ItemStack(Items.CHEST_MINECART);
+			case TNT:
+				return new ItemStack(Items.TNT_MINECART);
+			case HOPPER:
+				return new ItemStack(Items.HOPPER_MINECART);
+			case COMMAND_BLOCK:
+				return new ItemStack(Items.COMMAND_BLOCK_MINECART);
+			default:
+				return new ItemStack(Items.MINECART);
+		}
 	}
 }

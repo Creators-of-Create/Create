@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.DisplayRenderer;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;

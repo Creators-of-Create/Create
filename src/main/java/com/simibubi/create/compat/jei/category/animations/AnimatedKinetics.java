@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.jei.category.widgets.AnimatedKineticsWidget;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AnimatedKinetics /*extends Widget*/ {
+public abstract class AnimatedKinetics extends AnimatedKineticsWidget {
 
 	public int offset = 0;
 
@@ -66,10 +67,6 @@ public abstract class AnimatedKinetics /*extends Widget*/ {
 	protected GuiGameElement.GuiRenderBuilder blockElement(PartialModel partial) {
 		return defaultBlockElement(partial);
 	}
-
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
-	}
-
 
 
 	//	@Override
