@@ -69,6 +69,7 @@
     "common.PlayerMixin",
     "common.RailStateMixin",
     "common.RedStoneWireBlockMixin",
+    "common.ServerPlayerGameModeMixin",
     "common.ServerPlayerMixin",
     "common.ServerResourcesMixin",
     "common.ShapedRecipeMixin",
@@ -97,6 +98,7 @@
     "accessor.ScreenAccessor",
     "accessor.TitleScreenAccessor",
     "client.AbstractContainerScreenMixin",
+    "client.BufferBuilderMixin",
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
     "client.FogRendererMixin",
@@ -119,8 +121,7 @@
     "client.ScreenMixin",
     "client.TerrainParticle$ProviderMixin",
     "client.TerrainParticleMixin",
-    "client.TextureAtlasMixin",
-    "client.BufferBuilderMixin"
+    "client.TextureAtlasMixin"
   ],
   "server": [
     "server.Vec3Mixin",

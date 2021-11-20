@@ -129,6 +129,7 @@ public class Create implements ModInitializer {
 		CommonEvents.register();
 
 		REGISTRATE.get().register();
+		AllTileEntities.registerStorages();
 	}
 
 	public static void init() {
