@@ -7,7 +7,7 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:plates/iron"
+      "tag": "c:iron_plates"
     },
     "C": {
       "item": "create:andesite_alloy"

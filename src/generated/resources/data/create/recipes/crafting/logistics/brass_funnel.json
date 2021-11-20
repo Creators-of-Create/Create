@@ -6,7 +6,7 @@
   ],
   "key": {
     "A": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:brass_ingots"
     },
     "K": {
       "item": "minecraft:dried_kelp"

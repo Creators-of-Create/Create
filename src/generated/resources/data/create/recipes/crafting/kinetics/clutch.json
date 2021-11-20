@@ -10,7 +10,7 @@
       "item": "create:shaft"
     },
     "B": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     "C": {
       "item": "create:andesite_casing"

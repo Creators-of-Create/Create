@@ -10,10 +10,10 @@
       "item": "create:copper_casing"
     },
     "S": {
-      "tag": "forge:nuggets/copper"
+      "tag": "c:copper_nuggets"
     },
     "C": {
-      "tag": "forge:glass"
+      "tag": "c:glass"
     }
   },
   "result": {

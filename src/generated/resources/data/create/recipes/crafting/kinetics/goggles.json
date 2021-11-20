@@ -6,10 +6,10 @@
   ],
   "key": {
     "G": {
-      "tag": "forge:glass"
+      "tag": "c:glass"
     },
     "P": {
-      "tag": "forge:plates/gold"
+      "tag": "c:brass_plates"
     },
     "S": {
       "tag": "forge:string"

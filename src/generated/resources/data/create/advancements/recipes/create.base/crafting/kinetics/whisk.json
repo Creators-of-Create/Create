@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:plates/iron"
+            "tag": "c:iron_plates"
           }
         ]
       }

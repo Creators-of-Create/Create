@@ -2,7 +2,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "tag": "forge:ores/zinc"
+      "tag": "c:zinc_ores"
     }
   ],
   "results": [
@@ -14,10 +14,10 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:ores/zinc",
+        "tag": "c:zinc_ores",
         "type": "forge:tag_empty"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

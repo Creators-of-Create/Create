@@ -2,7 +2,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "tag": "forge:ores/iron"
+      "tag": "c:iron_ores"
     }
   ],
   "results": [
@@ -14,10 +14,10 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:ores/iron",
+        "tag": "c:iron_ores",
         "type": "forge:tag_empty"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

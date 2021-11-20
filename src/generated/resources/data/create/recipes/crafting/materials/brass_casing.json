@@ -10,7 +10,7 @@
       "tag": "minecraft:planks"
     },
     "C": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     },
     "S": {
       "tag": "minecraft:logs"

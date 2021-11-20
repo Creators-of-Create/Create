@@ -10,13 +10,13 @@
       "item": "create:refined_radiance"
     },
     "G": {
-      "tag": "forge:glass_panes/white"
+      "tag": "c:white_glass_panes"
     },
     "O": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidian"
     },
     "L": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:brass_ingots"
     }
   },
   "result": {

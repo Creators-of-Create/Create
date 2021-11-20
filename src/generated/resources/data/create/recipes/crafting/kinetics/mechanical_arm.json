@@ -7,7 +7,7 @@
   ],
   "key": {
     "L": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     },
     "I": {
       "item": "create:precision_mechanism"

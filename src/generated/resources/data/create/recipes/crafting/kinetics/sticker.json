@@ -12,7 +12,7 @@
       "tag": "forge:cobblestone"
     },
     "R": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     "S": {
       "tag": "forge:slimeballs"

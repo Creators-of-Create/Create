@@ -9,10 +9,10 @@
       "tag": "forge:slimeballs"
     },
     "S": {
-      "tag": "forge:plates/iron"
+      "tag": "c:iron_plates"
     },
     "N": {
-      "tag": "forge:nuggets/iron"
+      "tag": "c:iron_nuggets"
     }
   },
   "result": {

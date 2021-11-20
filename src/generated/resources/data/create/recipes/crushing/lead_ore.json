@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "forge:ores/lead"
+      "tag": "c:lead_ores"
     }
   ],
   "results": [
@@ -23,10 +23,10 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:ores/lead",
-        "type": "forge:tag_empty"
+        "tag": "c:lead_ores",
+        "type": "fabric:tag_empty"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

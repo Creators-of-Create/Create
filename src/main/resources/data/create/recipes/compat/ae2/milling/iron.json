@@ -8,9 +8,9 @@
 	"type": "create:milling",
     "ingredients": [
     	{
-    		"tag": "forge:ingots/iron"
+    		"tag": "c:iron_ingots"
     	}
-    ], 
+    ],
 	"results": [
 		{
 			"item": "appliedenergistics2:iron_dust",

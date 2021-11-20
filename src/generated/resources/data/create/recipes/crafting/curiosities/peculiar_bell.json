@@ -9,7 +9,7 @@
       "tag": "forge:storage_blocks/brass"
     },
     "P": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     }
   },
   "result": {

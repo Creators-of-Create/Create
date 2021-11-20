@@ -2,7 +2,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "tag": "forge:ores/nickel"
+      "tag": "c:nickel_ores"
     }
   ],
   "results": [
@@ -14,10 +14,10 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:ores/nickel",
+        "tag": "c:nickel_ores",
         "type": "forge:tag_empty"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

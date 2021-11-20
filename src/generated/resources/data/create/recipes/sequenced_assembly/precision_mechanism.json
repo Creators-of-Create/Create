@@ -1,7 +1,7 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "tag": "forge:plates/gold"
+    "tag": "c:brass_plates"
   },
   "transitionalItem": {
     "item": "create:incomplete_precision_mechanism"
@@ -46,7 +46,7 @@
           "item": "create:incomplete_precision_mechanism"
         },
         {
-          "tag": "forge:nuggets/iron"
+          "tag": "c:iron_nuggets"
         }
       ],
       "results": [

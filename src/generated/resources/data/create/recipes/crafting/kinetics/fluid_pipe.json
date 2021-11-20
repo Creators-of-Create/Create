@@ -5,7 +5,7 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:plates/copper"
+      "tag": "c:copper_plates"
     },
     "C": {
       "item": "minecraft:copper_ingot"

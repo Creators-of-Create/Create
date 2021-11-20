@@ -10,7 +10,7 @@
       "tag": "minecraft:logs"
     },
     "R": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     "C": {
       "item": "create:andesite_alloy"

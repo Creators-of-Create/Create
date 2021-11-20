@@ -13,7 +13,7 @@
       "item": "minecraft:lever"
     },
     "S": {
-      "tag": "forge:stone"
+      "tag": "c:stones"
     }
   },
   "result": {

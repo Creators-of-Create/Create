@@ -13,7 +13,7 @@
       "item": "minecraft:redstone_torch"
     },
     "N": {
-      "tag": "forge:nuggets/iron"
+      "tag": "c:iron_nuggets"
     }
   },
   "result": {

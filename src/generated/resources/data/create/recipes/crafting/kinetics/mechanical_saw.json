@@ -10,10 +10,10 @@
       "item": "create:andesite_casing"
     },
     "A": {
-      "tag": "forge:plates/iron"
+      "tag": "c:iron_plates"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:iron_ingots"
     }
   },
   "result": {

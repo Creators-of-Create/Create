@@ -13,7 +13,7 @@
       "item": "create:turntable"
     },
     "C": {
-      "tag": "forge:stone"
+      "tag": "c:stones"
     }
   },
   "result": {

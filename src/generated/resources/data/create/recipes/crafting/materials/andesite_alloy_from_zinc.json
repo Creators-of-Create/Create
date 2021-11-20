@@ -9,7 +9,7 @@
       "item": "minecraft:andesite"
     },
     "B": {
-      "tag": "forge:nuggets/zinc"
+      "tag": "c:zinc_nuggets"
     }
   },
   "result": {

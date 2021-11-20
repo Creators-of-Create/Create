@@ -13,7 +13,7 @@
       "item": "create:refined_radiance"
     },
     "S": {
-      "tag": "forge:glass/colorless"
+      "tag": "c:colorless_glass"
     }
   },
   "result": {

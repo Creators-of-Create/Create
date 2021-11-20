@@ -6,7 +6,7 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:wooden_rods"
     },
     "P": {
       "tag": "minecraft:planks"

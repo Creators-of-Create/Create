@@ -13,7 +13,7 @@
       "item": "create:fluid_pipe"
     },
     "I": {
-      "tag": "forge:plates/iron"
+      "tag": "c:iron_plates"
     }
   },
   "result": {

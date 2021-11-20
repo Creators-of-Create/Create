@@ -7,13 +7,13 @@
   ],
   "key": {
     "G": {
-      "tag": "forge:plates/gold"
+      "tag": "c:brass_plates"
     },
     "P": {
       "item": "create:cogwheel"
     },
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:wooden_rods"
     }
   },
   "result": {

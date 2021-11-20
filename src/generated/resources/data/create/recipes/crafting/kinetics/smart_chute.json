@@ -13,7 +13,7 @@
       "item": "create:chute"
     },
     "I": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     }
   },
   "result": {

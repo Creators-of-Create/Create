@@ -17,7 +17,7 @@
         "tag": "forge:ores/osmium",
         "type": "forge:tag_empty"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

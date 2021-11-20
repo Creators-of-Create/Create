@@ -2,7 +2,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "tag": "forge:ingots/gold"
+      "tag": "c:gold_ingots"
     }
   ],
   "results": [

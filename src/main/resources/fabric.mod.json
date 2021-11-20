@@ -37,6 +37,9 @@
       "com.simibubi.create.foundation.config.CServer",
       "com.simibubi.create.foundation.config.CStress",
       "com.simibubi.create.foundation.config.CWorldGen"
+    ],
+    "rei": [
+      "com.simibubi.create.compat.jei.CreateJEI"
     ]
   },
 

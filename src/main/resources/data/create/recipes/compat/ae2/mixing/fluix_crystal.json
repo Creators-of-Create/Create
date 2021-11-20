@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
       "fluid": "minecraft:water",
@@ -19,7 +19,7 @@
       "item": "appliedenergistics2:charged_certus_quartz_crystal"
     },
     {
-      "tag": "forge:gems/quartz"
+      "tag": "c:quartz"
     }
   ],
   "results": [

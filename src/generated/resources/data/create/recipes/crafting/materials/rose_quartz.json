@@ -2,31 +2,31 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:gems/quartz"
+      "tag": "c:quartz"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     }
   ],
   "result": {

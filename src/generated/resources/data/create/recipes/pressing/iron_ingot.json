@@ -2,7 +2,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "tag": "forge:ingots/iron"
+      "tag": "c:iron_ingots"
     }
   ],
   "results": [

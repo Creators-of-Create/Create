@@ -16,7 +16,7 @@
       "item": "create:cogwheel"
     },
     "I": {
-      "tag": "forge:stone"
+      "tag": "c:stones"
     }
   },
   "result": {

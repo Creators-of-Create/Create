@@ -9,7 +9,7 @@
   ],
   "key": {
     "L": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:brass_ingots"
     },
     "R": {
       "item": "create:precision_mechanism"
@@ -18,7 +18,7 @@
       "item": "create:brass_hand"
     },
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:wooden_rods"
     }
   },
   "result": {

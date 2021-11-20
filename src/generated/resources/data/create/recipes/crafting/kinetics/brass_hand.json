@@ -10,7 +10,7 @@
       "item": "create:andesite_alloy"
     },
     "B": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     }
   },
   "result": {

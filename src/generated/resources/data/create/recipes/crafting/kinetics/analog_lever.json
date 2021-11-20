@@ -9,7 +9,7 @@
       "item": "create:andesite_casing"
     },
     "P": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:wooden_rods"
     }
   },
   "result": {

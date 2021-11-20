@@ -9,13 +9,13 @@
       "item": "minecraft:redstone_torch"
     },
     "C": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     },
     "R": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     "S": {
-      "tag": "forge:stone"
+      "tag": "c:stones"
     }
   },
   "result": {

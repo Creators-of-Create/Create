@@ -5,7 +5,7 @@
       "item": "minecraft:bread"
     },
     {
-      "fluidTag": "forge:milk",
+      "fluidTag": "c:milk",
       "amount": 250
     }
   ],

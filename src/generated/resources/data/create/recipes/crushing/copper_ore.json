@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "forge:ores/copper"
+      "tag": "c:copper_ores"
     }
   ],
   "results": [
@@ -23,10 +23,10 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:ores/copper",
+        "tag": "c:copper_ores",
         "type": "forge:tag_empty"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

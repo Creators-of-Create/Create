@@ -9,7 +9,7 @@
       "item": "minecraft:warped_planks"
     },
     "X": {
-      "tag": "forge:glass/colorless"
+      "tag": "c:colorless_glass"
     }
   },
   "result": {

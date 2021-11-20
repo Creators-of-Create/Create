@@ -19,7 +19,7 @@
       "item": "minecraft:dried_kelp"
     },
     "I": {
-      "tag": "forge:plates/copper"
+      "tag": "c:copper_plates"
     }
   },
   "result": {

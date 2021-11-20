@@ -9,7 +9,7 @@
       "item": "minecraft:redstone_torch"
     },
     "S": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     },
     "I": {
       "tag": "minecraft:planks"

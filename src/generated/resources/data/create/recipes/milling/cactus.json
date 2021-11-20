@@ -22,7 +22,7 @@
         "modid": "quark",
         "type": "forge:mod_loaded"
       },
-      "type": "forge:not"
+      "type": "fabric:not"
     }
   ]
 }

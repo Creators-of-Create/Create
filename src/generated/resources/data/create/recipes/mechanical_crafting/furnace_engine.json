@@ -7,10 +7,10 @@
   ],
   "key": {
     "P": {
-      "tag": "forge:plates/brass"
+      "tag": "c:brass_plates"
     },
     "B": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:brass_ingots"
     },
     "I": [
       {

@@ -7,7 +7,7 @@
   ],
   "key": {
     "B": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:brass_ingots"
     },
     "C": {
       "item": "create:brass_casing"

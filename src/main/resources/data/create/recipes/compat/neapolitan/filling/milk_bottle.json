@@ -11,7 +11,7 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluidTag": "forge:milk",
+      "fluidTag": "c:milk",
       "amount": 250
     }
   ],

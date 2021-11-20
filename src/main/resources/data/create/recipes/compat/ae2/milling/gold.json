@@ -8,9 +8,9 @@
 	"type": "create:milling",
     "ingredients": [
     	{
-    		"tag": "forge:ingots/gold"
+    		"tag": "c:gold_ingots"
     	}
-    ], 
+    ],
 	"results": [
 		{
 			"item": "appliedenergistics2:gold_dust",

@@ -8,7 +8,7 @@
       "item": "minecraft:cocoa_beans"
     },
     {
-      "fluidTag": "forge:milk",
+      "fluidTag": "c:milk",
       "amount": 250
     }
   ],

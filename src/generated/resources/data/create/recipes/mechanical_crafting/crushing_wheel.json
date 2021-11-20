@@ -12,7 +12,7 @@
       "tag": "minecraft:planks"
     },
     "S": {
-      "tag": "forge:stone"
+      "tag": "c:stones"
     },
     "A": {
       "item": "create:andesite_alloy"

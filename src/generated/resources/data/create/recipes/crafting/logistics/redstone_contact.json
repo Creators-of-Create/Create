@@ -7,13 +7,13 @@
   ],
   "key": {
     "W": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     "C": {
       "item": "minecraft:cobblestone"
     },
     "S": {
-      "tag": "forge:plates/iron"
+      "tag": "c:iron_plates"
     }
   },
   "result": {

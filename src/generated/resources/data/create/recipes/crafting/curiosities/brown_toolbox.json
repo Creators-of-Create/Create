@@ -7,7 +7,7 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:plates/gold"
+      "tag": "c:brass_plates"
     },
     "C": {
       "item": "create:cogwheel"

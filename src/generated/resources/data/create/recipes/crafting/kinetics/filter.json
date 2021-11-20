@@ -8,7 +8,7 @@
       "tag": "minecraft:wool"
     },
     "A": {
-      "tag": "forge:nuggets/iron"
+      "tag": "c:iron_nuggets"
     }
   },
   "result": {
