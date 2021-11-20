@@ -27,7 +27,9 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
@@ -63,7 +65,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.simibubi.create.lib.block.CustomRenderBoundingBox.INFINITE_EXTENT_AABB;
 
-public class EjectorTileEntity extends KineticTileEntity {
+public class EjectorTileEntity extends KineticTileEntity implements ItemTransferable {
 
 	List<IntAttached<ItemStack>> launchedItems;
 	ScrollValueBehaviour maxStackSize;
@@ -551,12 +553,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 			.above(launcher.getVerticalDistance());
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isItemHandlerCap(cap))
-//			return depotBehaviour.getItemCapability(cap, side);
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return depotBehaviour.lazyItemHandler.orElse(null);
+	}
 
 	@Override
 	public boolean shouldRenderNormally() {

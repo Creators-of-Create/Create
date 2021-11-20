@@ -57,13 +57,6 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		return capability.getValueUnsafer();
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isFluidHandlerCap(cap))
-//			return capability.cast();
-//		return super.getCapability(cap, side);
-//	}
-
 	public class InterfaceFluidHandler implements IFluidHandler {
 
 		private IFluidHandler wrapped;

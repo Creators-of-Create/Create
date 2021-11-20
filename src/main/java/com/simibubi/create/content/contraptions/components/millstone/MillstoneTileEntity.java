@@ -14,6 +14,7 @@ import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.utility.LazyOptional;
 
@@ -31,7 +32,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class MillstoneTileEntity extends KineticTileEntity {
+import org.jetbrains.annotations.Nullable;
+
+public class MillstoneTileEntity extends KineticTileEntity implements ItemTransferable {
 
 	public ItemStackHandler inputInv;
 	public ItemStackHandler outputInv;
@@ -173,12 +176,11 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		return Mth.clamp((int) Math.abs(getSpeed() / 16f), 1, 512);
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isItemHandlerCap(cap))
-//			return capability.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return capability.orElse(null);
+	}
 
 	private boolean canProcess(ItemStack stack) {
 		ItemStackHandler tester = new ItemStackHandler(1);

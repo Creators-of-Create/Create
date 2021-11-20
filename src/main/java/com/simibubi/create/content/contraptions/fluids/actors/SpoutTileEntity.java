@@ -172,13 +172,14 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.getRenderedFluid());
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
-//			return tank.getCapability()
-//				.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+		if (direction != Direction.DOWN) {
+			return tank.getCapability().orElse(null);
+		}
+		return null;
+	}
 
 	public void tick() {
 		super.tick();
@@ -244,14 +245,5 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
 			TransferUtil.getFluidHandler(this));
-	}
-
-	@Nullable
-	@Override
-	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
-		if (direction != Direction.DOWN) {
-			return tank.getCapability().getValueUnsafer();
-		}
-		return null;
 	}
 }

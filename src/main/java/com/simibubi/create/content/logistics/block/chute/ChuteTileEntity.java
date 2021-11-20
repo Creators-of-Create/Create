@@ -32,6 +32,8 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
 
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -66,7 +68,7 @@ import com.simibubi.create.lib.utility.NBTSerializer;
  * Commented Code: Chutes create air streams and act similarly to encased fans
  * (Unfinished)
  */
-public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation, CustomRenderBoundingBox { // , IAirCurrentSource {
+public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation, CustomRenderBoundingBox, ItemTransferable { // , IAirCurrentSource {
 
 	//	public AirCurrent airCurrent;
 
@@ -724,12 +726,11 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return true;
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-//			return lazyHandler.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return lazyHandler.orElse(null);
+	}
 
 	public ItemStack getItem() {
 		return item;

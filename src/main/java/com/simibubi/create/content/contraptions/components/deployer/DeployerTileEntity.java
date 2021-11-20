@@ -25,6 +25,9 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -55,7 +58,7 @@ import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
-public class DeployerTileEntity extends KineticTileEntity {
+public class DeployerTileEntity extends KineticTileEntity implements ItemTransferable {
 
 	protected State state;
 	protected Mode mode;
@@ -394,12 +397,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 		sendData();
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isItemHandlerCap(cap) && invHandler != null)
-//			return invHandler.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return invHandler == null ? null : invHandler.orElse(null);
+	}
 
 	@Override
 	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {

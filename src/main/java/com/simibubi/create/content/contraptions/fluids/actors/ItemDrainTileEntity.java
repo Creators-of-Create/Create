@@ -283,25 +283,6 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		super.fromTag(compound, clientPacket);
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (side != null && side.getAxis()
-//			.isHorizontal() && isItemHandlerCap(cap))
-//			return itemHandlers.get(side)
-//				.cast();
-//
-//		if (side != Direction.UP && isFluidHandlerCap(cap))
-//			return internalTank.getCapability()
-//				.cast();
-//
-//		return super.getCapability(cap, side);
-//	}
-
-	@Override
-	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		return containedFluidTooltip(tooltip, isPlayerSneaking, TransferUtil.getFluidHandler(this));
-	}
-
 	@Nullable
 	@Override
 	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
@@ -315,9 +296,13 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Override
 	public IItemHandler getItemHandler(@Nullable Direction direction) {
 		if (direction != null && direction.getAxis().isHorizontal()) {
-			return itemHandlers.get(direction).getValueUnsafer();
+			return itemHandlers.get(direction).orElse(null);
 		}
 		return null;
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		return containedFluidTooltip(tooltip, isPlayerSneaking, TransferUtil.getFluidHandler(this));
+	}
 }

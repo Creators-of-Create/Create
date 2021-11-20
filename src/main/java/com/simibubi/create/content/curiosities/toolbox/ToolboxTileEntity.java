@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +44,9 @@ import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.utility.LazyOptional;
 
-public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable {
+import org.jetbrains.annotations.Nullable;
+
+public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, ItemTransferable {
 
 	public LerpedFloat lid = LerpedFloat.linear()
 		.startWithValue(0);
@@ -273,12 +277,11 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 				level.random.nextFloat() * 0.1F + 1.2F, true);
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isItemHandlerCap(cap))
-//			return inventoryProvider.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return inventoryProvider.orElse(null);
+	}
 
 	@Override
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {

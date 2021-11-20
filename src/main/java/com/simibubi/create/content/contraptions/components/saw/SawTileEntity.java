@@ -28,6 +28,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,9 +74,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.utility.LazyOptional;
 
+import org.jetbrains.annotations.Nullable;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SawTileEntity extends BlockBreakingKineticTileEntity {
+public class SawTileEntity extends BlockBreakingKineticTileEntity implements ItemTransferable {
 
 	private static final AABB RENDER_BOX = new AABB(0, 0, 0, 1, 1, 1);
 
@@ -265,12 +269,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.setRemoved();
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.DOWN)
-//			return invProvider.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return direction == Direction.DOWN ? null : invProvider.orElse(null);
+	}
 
 	protected void spawnEventParticles(ItemStack stack) {
 		if (stack == null || stack.isEmpty())

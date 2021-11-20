@@ -87,11 +87,8 @@ public class LazyOptional<T> {
 		return ret;
 	}
 
-	/**
-	 * Not recommended.
-	 */
 	public T getValueUnsafer() {
-		return supplier.get();
+		return orElse(null);
 	}
 
 	public boolean isPresent() {

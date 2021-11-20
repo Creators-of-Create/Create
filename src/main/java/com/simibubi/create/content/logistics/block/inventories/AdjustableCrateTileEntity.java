@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.block.inventories;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +24,9 @@ import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 
-public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuProvider {
+import org.jetbrains.annotations.Nullable;
+
+public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuProvider, ItemTransferable {
 
 	public class Inv extends ItemStackHandler {
 		public Inv() {
@@ -168,14 +172,12 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuPr
 		invHandler.invalidate();
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-//		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-//			AdjustableCrateTileEntity mainCrate = getMainCrate();
-//			if (mainCrate != null && mainCrate.invHandler != null && mainCrate.invHandler.isPresent())
-//				return mainCrate.invHandler.cast();
-//		}
-//		return super.getCapability(capability, facing);
-//	}
-
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		AdjustableCrateTileEntity mainCrate = getMainCrate();
+			if (mainCrate != null && mainCrate.invHandler != null && mainCrate.invHandler.isPresent())
+				return mainCrate.invHandler.orElse(null);
+			return null;
+	}
 }

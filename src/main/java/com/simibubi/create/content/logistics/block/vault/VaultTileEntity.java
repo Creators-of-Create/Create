@@ -7,6 +7,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -24,7 +26,9 @@ import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 
-public class VaultTileEntity extends SmartTileEntity {
+import org.jetbrains.annotations.Nullable;
+
+public class VaultTileEntity extends SmartTileEntity implements ItemTransferable {
 
 	protected LazyOptional<IItemHandler> itemCapability;
 
@@ -199,14 +203,12 @@ public class VaultTileEntity extends SmartTileEntity {
 			compound.put("Inventory", inventory.serializeNBT());
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isItemHandlerCap(cap)) {
-//			initCapability();
-//			return itemCapability.cast();
-//		}
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		initCapability();
+		return itemCapability.orElse(null);
+	}
 
 	private void initCapability() {
 		if (itemCapability.isPresent())

@@ -9,6 +9,8 @@ import java.util.Set;
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.server.level.ServerLevel;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,7 +44,9 @@ import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered {
+import org.jetbrains.annotations.Nullable;
+
+public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered, ItemTransferable {
 
 	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;
@@ -184,24 +188,21 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-//		if (capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-//			return super.getCapability(capability, side);
-//
-//		if (!this.cap.isPresent()) {
-//			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
-//				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
-//				if (teBelow != null) {
-//					T capBelow = teBelow.getCapability(capability, Direction.UP)
-//						.orElse(null);
-//					if (capBelow != null) {
-//						cap = LazyOptional.of(() -> capBelow)
-//							.cast();
-//					}
-//				}
-//			}
-//		}
-//		return this.cap.cast();
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		if (!this.cap.isPresent()) {
+			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
+				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
+				if (teBelow instanceof ItemTransferable transferable) {
+					IItemHandler capBelow = transferable.getItemHandler(Direction.UP);
+					if (capBelow != null) {
+						cap = LazyOptional.of(() -> capBelow)
+								.cast();
+					}
+				}
+			}
+		}
+		return this.cap.orElse(null);
+	}
 }

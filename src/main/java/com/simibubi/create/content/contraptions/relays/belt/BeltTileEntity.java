@@ -35,6 +35,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -60,7 +62,9 @@ import net.fabricmc.api.EnvType;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-public class BeltTileEntity extends KineticTileEntity implements ILightUpdateListener {
+import org.jetbrains.annotations.Nullable;
+
+public class BeltTileEntity extends KineticTileEntity implements ILightUpdateListener, ItemTransferable {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -177,15 +181,14 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		itemHandler = LazyOptional.of(() -> handler);
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-//			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
-//				return itemHandler.cast();
-//			}
-//		}
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
+			return itemHandler.orElse(null);
+		}
+		return null;
+	}
 
 	@Override
 	public void setRemoved() {

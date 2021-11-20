@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -43,7 +45,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.utility.LazyOptional;
 
-public class MechanicalCrafterTileEntity extends KineticTileEntity {
+import org.jetbrains.annotations.Nullable;
+
+public class MechanicalCrafterTileEntity extends KineticTileEntity implements ItemTransferable {
 
 	enum Phase {
 		IDLE, ACCEPTING, ASSEMBLING, EXPORTING, WAITING, CRAFTING, INSERTING;
@@ -495,12 +499,11 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		countDown = Math.max(100, getCountDownSpeed() + 1);
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (isItemHandlerCap(cap))
-//			return invSupplier.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return invSupplier.orElse(null);
+	}
 
 	public void connectivityChanged() {
 		reRender = true;

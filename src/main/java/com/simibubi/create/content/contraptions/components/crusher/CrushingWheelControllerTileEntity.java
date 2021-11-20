@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
@@ -53,7 +55,9 @@ import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-public class CrushingWheelControllerTileEntity extends SmartTileEntity {
+import org.jetbrains.annotations.Nullable;
+
+public class CrushingWheelControllerTileEntity extends SmartTileEntity implements ItemTransferable {
 
 	public Entity processingEntity;
 	private UUID entityUUID;
@@ -359,12 +363,11 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		inventory.appliedRecipe = false;
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-//			return handler.cast();
-//		return super.getCapability(cap, side);
-//	}
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		return handler.orElse(null);
+	}
 
 	public void clear() {
 		processingEntity = null;

@@ -696,12 +696,11 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		super.setRemoved();
 	}
 
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-//		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-//			return tunnelCapability.cast();
-//		return super.getCapability(capability, side);
-//	}
+	@Override
+	@Nullable
+	public IItemHandler getItemHandler(Direction direction) {
+		return tunnelCapability.getValueUnsafer();
+	}
 
 	public LazyOptional<IItemHandler> getBeltCapability() {
 		if (!beltCapability.isPresent()) {
@@ -767,11 +766,4 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 
 		return true;
 	}
-
-	@Override
-	@Nullable
-	public IItemHandler getItemHandler(Direction direction) {
-		return tunnelCapability.getValueUnsafer();
-	}
-
 }
