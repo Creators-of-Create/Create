@@ -11,7 +11,6 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
-		init();
 	}
 
     @Override
