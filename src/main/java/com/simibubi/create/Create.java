@@ -130,6 +130,7 @@ public class Create implements ModInitializer {
 
 		REGISTRATE.get().register();
 		AllTileEntities.registerStorages();
+		AllPackets.channel.initServerListener();
 	}
 
 	public static void init() {

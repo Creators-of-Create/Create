@@ -17,6 +17,8 @@ import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
+import net.minecraft.core.Registry;
+
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -344,6 +346,12 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
+	public InteractionResult interact(Player player, InteractionHand hand) {
+		System.out.println("h");
+		return super.interact(player, hand);
+	}
+
+	@Override
 	public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
 		if (player instanceof FakePlayer)
 			return InteractionResult.PASS;
@@ -352,6 +360,7 @@ public class BlueprintEntity extends HangingEntity
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 
+		System.out.println(Registry.ITEM.getKey(items.getStackInSlot(9).getItem()));
 		if (!holdingWrench && !level.isClientSide && !items.getStackInSlot(9)
 			.isEmpty()) {
 
