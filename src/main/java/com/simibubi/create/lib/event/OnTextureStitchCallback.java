@@ -9,11 +9,25 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 @Environment(EnvType.CLIENT)
 public interface OnTextureStitchCallback {
-	Event<OnTextureStitchCallback> EVENT = EventFactory.createArrayBacked(OnTextureStitchCallback.class, callbacks -> (util) -> {
-		for (OnTextureStitchCallback callback : callbacks) {
+	Event<OnTextureStitchCallback.Post> POST = EventFactory.createArrayBacked(OnTextureStitchCallback.Post.class, callbacks -> (util) -> {
+		for (OnTextureStitchCallback.Post callback : callbacks) {
 			callback.onModelRegistry(util);
 		}
 	});
 
-	void onModelRegistry(TextureStitchUtil util);
+	Event<OnTextureStitchCallback.Post> PRE = EventFactory.createArrayBacked(OnTextureStitchCallback.Post.class, callbacks -> (util) -> {
+		for (OnTextureStitchCallback.Post callback : callbacks) {
+			callback.onModelRegistry(util);
+		}
+	});
+
+	interface Post {
+		void onModelRegistry(TextureStitchUtil util);
+	}
+
+	interface Pre {
+		void onModelRegistry(TextureStitchUtil util);
+	}
+
+
 }

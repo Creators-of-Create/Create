@@ -420,8 +420,8 @@ public class ClientEvents {
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
-		OnTextureStitchCallback.EVENT.register(SpriteShifter::onTextureStitchPre);
-		OnTextureStitchCallback.EVENT.register(SpriteShifter::onTextureStitchPost);
+		OnTextureStitchCallback.PRE.register(SpriteShifter::onTextureStitchPre);
+		OnTextureStitchCallback.POST.register(SpriteShifter::onTextureStitchPost);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
 		// Flywheel Events

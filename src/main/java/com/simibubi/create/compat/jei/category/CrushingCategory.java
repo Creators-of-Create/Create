@@ -30,8 +30,6 @@ import net.minecraft.network.chat.Component;
 
 public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe, CrushingDisplay> {
 
-	private final AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
-
 	public CrushingCategory() {
 		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get())/*, emptyBackground(177, 100)*/);
 	}
@@ -97,7 +95,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 			widgets.add(Widgets.createSlot(new Point((origin.x + getDisplayWidth(display) / 2 + offset + 19 * outputIndex) + 1, origin.y + 78 + 1)).disableBackground().markOutput().entry(EntryStack.of(VanillaEntryTypes.ITEM, results.get(outputIndex).getStack()).tooltip(tooltip)));
 			widgets.add(WidgetUtil.textured(getRenderedSlot(display.getRecipe(), outputIndex), origin.x + getDisplayWidth(display) / 2 + offset + 19 * outputIndex, origin.y + 78));
 		}
-
+		AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
 		crushingWheels.setPos(new Point(origin.getX() + 62, origin.getY() + 59));
 		widgets.add(crushingWheels);
 		return widgets;

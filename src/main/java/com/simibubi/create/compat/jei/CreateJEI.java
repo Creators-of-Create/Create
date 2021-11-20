@@ -337,13 +337,13 @@ public class CreateJEI implements REIClientPlugin {
 		}
 
 		public CreateRecipeCategory<T, D> build() {
-			if (pred.test(AllConfigs.SERVER.recipes))
-				category.recipes.add(() -> {
-					List<Recipe<?>> recipes = new ArrayList<>();
-					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
-						consumer.accept(recipes);
-					return recipes;
-				});
+//			if (pred.test(AllConfigs.SERVER.recipes))
+//				category.recipes.add(() -> {
+//					List<Recipe<?>> recipes = new ArrayList<>();
+//					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
+//						consumer.accept(recipes);
+//					return recipes;
+//				});
 			allCategories.add(category);
 			return category;
 		}
