@@ -14,7 +14,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 		init();
 	}
 
-    //@Override
+    @Override
     public void init() {
     	rotatingModel = setup(getModel().createInstance());
     }

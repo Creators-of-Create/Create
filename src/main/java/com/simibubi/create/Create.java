@@ -3,7 +3,6 @@ package com.simibubi.create;
 import java.util.Random;
 
 import com.jozufozu.flywheel.event.GatherContextEvent;
-import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.simibubi.create.events.CommonEvents;
 import com.tterrag.registrate.fabric.EnvExecutor;
 

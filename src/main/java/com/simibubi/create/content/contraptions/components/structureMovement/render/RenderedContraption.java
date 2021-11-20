@@ -127,7 +127,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
 
 		for (RenderType layer : blockLayers) {
-			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values()/*, layer + "_" + contraption.entity.getId()*/);
+			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
 
 			ModelRenderer renderer;
 			if (Backend.getInstance().compat.vertexArrayObjectsSupported())

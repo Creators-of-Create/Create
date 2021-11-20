@@ -24,26 +24,26 @@ public class BracketedKineticTileInstance extends SingleRotatingInstance {
 		super(modelManager, tile);
 	}
 
-//	@Override
-//	public void init() {
-//		super.init();
-//		if (!ICogWheel.isLargeCog(tile.getBlockState()))
-//			return;
-//
-//		// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
-//		// mesh properly
-//
-//		float speed = tile.getSpeed();
-//		Axis axis = KineticTileEntityRenderer.getRotationAxisOf(tile);
-//		BlockPos pos = tile.getBlockPos();
-//		float offset = BracketedKineticTileRenderer.getShaftAngleOffset(axis, pos);
-//		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-//		Instancer<RotatingData> half = getRotatingMaterial().getModel(AllBlockPartials.COGWHEEL_SHAFT, blockState,
-//			facing, () -> this.rotateToAxis(axis));
-//
-//		additionalShaft = setup(half.createInstance(), speed);
-//		additionalShaft.setRotationOffset(offset);
-//	}
+	@Override
+	public void init() {
+		super.init();
+		if (!ICogWheel.isLargeCog(tile.getBlockState()))
+			return;
+
+		// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
+		// mesh properly
+
+		float speed = tile.getSpeed();
+		Axis axis = KineticTileEntityRenderer.getRotationAxisOf(tile);
+		BlockPos pos = tile.getBlockPos();
+		float offset = BracketedKineticTileRenderer.getShaftAngleOffset(axis, pos);
+		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
+		Instancer<RotatingData> half = getRotatingMaterial().getModel(AllBlockPartials.COGWHEEL_SHAFT, blockState,
+			facing, () -> this.rotateToAxis(axis));
+
+		additionalShaft = setup(half.createInstance(), speed);
+		additionalShaft.setRotationOffset(offset);
+	}
 
 	@Override
 	protected Instancer<RotatingData> getModel() {
