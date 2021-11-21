@@ -16,6 +16,17 @@
               "source": "block_entity",
               "ops": [
                 {
+                  "source": "UniqueId",
+                  "target": "UniqueId",
+                  "op": "replace"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
                   "source": "Inventory",
                   "target": "Inventory",
                   "op": "replace"

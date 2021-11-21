@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -38,6 +39,7 @@ import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxScreen;
@@ -62,6 +64,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -124,8 +127,7 @@ public class CreateJEI implements IModPlugin {
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
 			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
-				.size() > 1 && !MechanicalPressTileEntity.canCompress(r),
-				BasinRecipe::convertShapeless)
+				.size() > 1 && !MechanicalPressTileEntity.canCompress(r), BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
 			.enableWhen(c -> c.allowShapelessInMixer)
@@ -174,8 +176,8 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		deploying = register("deploying", DeployingCategory::new)
-			.recipeList(
-				() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.getType())))
+			.recipeList(() -> DeployerApplicationRecipe
+				.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.getType())))
 			.recipes(AllRecipeTypes.DEPLOYING)
 			.catalyst(AllBlocks.DEPLOYER::get)
 			.catalyst(AllBlocks.DEPOT::get)
@@ -200,9 +202,8 @@ public class CreateJEI implements IModPlugin {
 		autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
 			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
 				.size() == 1)
-			.recipes(
-				r -> (r.getType() == IRecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType())
-					&& (r instanceof ShapedRecipe))
+			.recipes(r -> (r.getType() == IRecipeType.CRAFTING
+				&& r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType()) && (r instanceof ShapedRecipe))
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 			.enableWhen(c -> c.allowRegularCraftingInCrafter)
 			.build(),
@@ -234,9 +235,20 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	@Override
+	public void registerFluidSubtypes(ISubtypeRegistration registration) {
+		PotionFluidSubtypeInterpreter interpreter = new PotionFluidSubtypeInterpreter();
+		PotionFluid potionFluid = AllFluids.POTION.get();
+		registration.registerSubtypeInterpreter(potionFluid.getSource(), interpreter);
+		registration.registerSubtypeInterpreter(potionFluid.getFlowing(), interpreter);
+	}
+
+	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		ingredientManager = registration.getIngredientManager();
 		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
+
+		registration.addRecipes(ToolboxColoringRecipeMaker.createRecipes()
+			.collect(Collectors.toList()), VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@Override

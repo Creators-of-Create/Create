@@ -10,6 +10,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -91,6 +93,12 @@ public class ToolboxInventory extends ItemStackHandler {
 	public boolean isItemValid(int slot, ItemStack stack) {
 		if (AllItemTags.TOOLBOXES.matches(stack))
 			return false;
+		if (stack.getItem() instanceof BlockItem) {
+			BlockItem blockItem = (BlockItem) stack.getItem();
+			if (blockItem.getBlock() instanceof ShulkerBoxBlock)
+				return false;
+		}
+		
 		if (slot < 0 || slot >= getSlots())
 			return false;
 		int compartment = slot / STACKS_PER_COMPARTMENT;
@@ -138,6 +146,7 @@ public class ToolboxInventory extends ItemStackHandler {
 	protected void onContentsChanged(int slot) {
 		if (!settling && !te.getWorld().isClientSide)
 			settle(slot / STACKS_PER_COMPARTMENT);
+		te.sendData();
 		super.onContentsChanged(slot);
 	}
 

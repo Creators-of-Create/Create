@@ -257,10 +257,10 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				ms.mulPose(new Vector3f(slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0).rotationDegrees(slopeAngle));
 			if (onSlope)
 				ms.translate(0, slopeOffset, 0);
-			ms.pushPose();
-			ms.translate(0, -1 / 8f + 0.005f, 0);
-			ShadowRenderHelper.renderShadow(ms, buffer, .75f, .2f);
-			ms.popPose();
+//			ms.pushPose();
+//			ms.translate(0, -1 / 8f + 0.005f, 0);
+//			ShadowRenderHelper.renderShadow(ms, buffer, .75f, .2f);
+//			ms.popPose();
 			if (slopeShadowOnly) {
 				ms.popPose();
 				ms.translate(0, slopeOffset, 0);

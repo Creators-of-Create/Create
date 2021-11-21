@@ -121,7 +121,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			return;
 		offset = getGridOffset(offset);
 		if (movedContraption != null)
-			applyContraptionPosition();
+			resetContraptionToOffset();
 
 		if (!level.isClientSide) {
 			if (!remove) {

@@ -1,6 +1,10 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
+import static com.simibubi.create.content.curiosities.toolbox.ToolboxInventory.STACKS_PER_COMPARTMENT;
+
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -18,6 +22,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -42,13 +47,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	private static final int DEPOSIT = -7;
 	private static final int UNEQUIP = -5;
 
-	public RadialToolboxMenu(List<ToolboxTileEntity> toolboxes, State state) {
+	public RadialToolboxMenu(List<ToolboxTileEntity> toolboxes, State state, @Nullable ToolboxTileEntity selectedBox) {
 		this.toolboxes = toolboxes;
 		this.state = state;
 		hoveredSlot = -1;
 
-		if (state == State.SELECT_ITEM_UNEQUIP || state == State.SELECT_ITEM)
-			selectedBox = toolboxes.get(0);
+		if (selectedBox != null)
+			this.selectedBox = selectedBox;
 	}
 
 	public void prevSlot(int slot) {
@@ -135,7 +140,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 					ItemStack stackInSlot = inv.filters.get(slot);
 
 					if (!stackInSlot.isEmpty()) {
-						boolean empty = inv.getStackInSlot(slot * ToolboxInventory.STACKS_PER_COMPARTMENT)
+						boolean empty = inv.getStackInSlot(slot * STACKS_PER_COMPARTMENT)
 							.isEmpty();
 
 						(empty ? AllGuiTextures.TOOLBELT_INACTIVE_SLOT : AllGuiTextures.TOOLBELT_SLOT).draw(ms, this, 0,
@@ -257,7 +262,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		ItemStack stackInSlot = inv.filters.get(selected);
 		if (stackInSlot.isEmpty())
 			return;
-		if (inv.getStackInSlot(selected * ToolboxInventory.STACKS_PER_COMPARTMENT)
+		if (inv.getStackInSlot(selected * STACKS_PER_COMPARTMENT)
 			.isEmpty())
 			return;
 
@@ -279,9 +284,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
 					ToolboxInventory inv = selectedBox.inventory;
 					ItemStack stackInSlot = inv.filters.get(scrollSlot);
-					if (!stackInSlot.isEmpty()
-						&& !inv.getStackInSlot(scrollSlot * ToolboxInventory.STACKS_PER_COMPARTMENT)
-							.isEmpty())
+					if (!stackInSlot.isEmpty() && !inv.getStackInSlot(scrollSlot * STACKS_PER_COMPARTMENT)
+						.isEmpty())
 						break;
 				}
 
@@ -305,20 +309,42 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	public boolean mouseClicked(double x, double y, int button) {
 		int selected = (scrollMode ? scrollSlot : hoveredSlot);
 
-		if (selected == DEPOSIT) {
-			onClose();
-			ToolboxHandlerClient.COOLDOWN = 2;
-			return true;
+		if (button == 0) {
+			if (selected == DEPOSIT) {
+				onClose();
+				ToolboxHandlerClient.COOLDOWN = 2;
+				return true;
+			}
+
+			if (state == State.SELECT_BOX && selected >= 0 && selected < toolboxes.size()) {
+				state = State.SELECT_ITEM;
+				selectedBox = toolboxes.get(selected);
+				return true;
+			}
+
+			if (state == State.DETACH || state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
+				if (selected == UNEQUIP || selected >= 0) {
+					onClose();
+					ToolboxHandlerClient.COOLDOWN = 2;
+					return true;
+				}
+			}
 		}
 
-		if (state == State.SELECT_BOX && selected >= 0 && selected < toolboxes.size()) {
-			state = State.SELECT_ITEM;
-			selectedBox = toolboxes.get(selected);
-			return true;
-		}
+		if (button == 1) {
+			if (state == State.SELECT_ITEM && toolboxes.size() > 1) {
+				state = State.SELECT_BOX;
+				return true;
+			}
 
-		if (state == State.DETACH || state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
-			if (selected == UNEQUIP || selected >= 0) {
+			if (state == State.SELECT_ITEM_UNEQUIP && selected == UNEQUIP) {
+				if (toolboxes.size() > 1) {
+					AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+						Minecraft.getInstance().player.inventory.selected));
+					state = State.SELECT_BOX;
+					return true;
+				}
+
 				onClose();
 				ToolboxHandlerClient.COOLDOWN = 2;
 				return true;
@@ -326,6 +352,34 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		}
 
 		return super.mouseClicked(x, y, button);
+	}
+
+	@Override
+	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
+		KeyBinding[] hotbarBinds = minecraft.options.keyHotbarSlots;
+		for (int i = 0; i < hotbarBinds.length && i < 8; i++) {
+			if (hotbarBinds[i].matches(code, p_keyPressed_2_)) {
+
+				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
+					ToolboxInventory inv = selectedBox.inventory;
+					ItemStack stackInSlot = inv.filters.get(i);
+					if (stackInSlot.isEmpty() || inv.getStackInSlot(i * STACKS_PER_COMPARTMENT)
+						.isEmpty())
+						return false;
+				}
+
+				if (state == State.SELECT_BOX)
+					if (i >= toolboxes.size())
+						return false;
+
+				scrollMode = true;
+				scrollSlot = i;
+				mouseClicked(0, 0, 0);
+				return true;
+			}
+		}
+
+		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
 	@Override

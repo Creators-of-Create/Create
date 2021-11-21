@@ -16,6 +16,8 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,6 +53,11 @@ public class PotionFluid extends VirtualFluid {
 			return color;
 		}
 
+		@Override
+		public ITextComponent getDisplayName(FluidStack stack) {
+			return new TranslationTextComponent(getTranslationKey(stack));
+		}
+		
 		@Override
 		public String getTranslationKey(FluidStack stack) {
 			CompoundNBT tag = stack.getOrCreateTag();

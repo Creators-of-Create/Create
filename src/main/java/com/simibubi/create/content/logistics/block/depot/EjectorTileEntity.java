@@ -12,6 +12,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -332,8 +333,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 				float volume = .125f;
 				float pitch = 1.5f - lidProgress.getValue();
 				if (((int) level.getGameTime()) % soundRate == 0 && doLogic)
-					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, volume,
-						pitch);
+					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS,
+						volume, pitch);
 			}
 		}
 
@@ -342,7 +343,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	private boolean scanTrajectoryForObstacles(int time) {
-		if (time == 0)
+		if (time <= 2)
 			return false;
 
 		Vector3d source = getLaunchedItemLocation(time);
@@ -350,7 +351,16 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		BlockRayTraceResult rayTraceBlocks =
 			level.clip(new RayTraceContext(source, target, BlockMode.COLLIDER, FluidMode.NONE, null));
-		if (rayTraceBlocks.getType() == Type.MISS) {
+		boolean miss = rayTraceBlocks.getType() == Type.MISS;
+
+		if (!miss && rayTraceBlocks.getType() == Type.BLOCK) {
+			BlockState blockState = level.getBlockState(rayTraceBlocks.getBlockPos());
+			if (FunnelBlock.isFunnel(blockState) && blockState.hasProperty(FunnelBlock.EXTRACTING)
+				&& blockState.getValue(FunnelBlock.EXTRACTING))
+				miss = true;
+		}
+
+		if (miss) {
 			if (earlyTarget != null && earlyTargetTime < time + 1) {
 				earlyTarget = null;
 				earlyTargetTime = 0;
@@ -360,7 +370,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		Vector3d vec = rayTraceBlocks.getLocation();
 		earlyTarget = Pair.of(vec.add(Vector3d.atLowerCornerOf(rayTraceBlocks.getDirection()
-			.getNormal()).scale(.25f)), rayTraceBlocks.getBlockPos());
+			.getNormal())
+			.scale(.25f)), rayTraceBlocks.getBlockPos());
 		earlyTargetTime = (float) (time + (source.distanceTo(vec) / source.distanceTo(target)));
 		sendData();
 		return true;
