@@ -1032,6 +1032,7 @@
 	"create.schematicannon.status.running": "Running",
 	"create.schematicannon.status.finished": "Finished",
 	"create.schematicannon.status.paused": "Paused",
+	"create.schematicannon.status.pausedByRedstone": "Paused by Redstone",
 	"create.schematicannon.status.stopped": "Stopped",
 	"create.schematicannon.status.noGunpowder": "Out of Gunpowder",
 	"create.schematicannon.status.targetNotLoaded": "Target is not loaded",
@@ -1389,6 +1390,8 @@
 	"block.create.schematicannon.tooltip.summary": "Shoots blocks to recreate a deployed _Schematic_ in the World. Uses items from adjacent Inventories and _Gunpowder_ as fuel.",
 	"block.create.schematicannon.tooltip.condition1": "When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "Opens the _Interface_",
+	"block.create.schematicannon.tooltip.condition2": "When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
 	"block.create.schematic_table.tooltip.summary": "Writes saved Schematics onto an _Empty Schematic_.",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 47",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "Работает",
 	"create.schematicannon.status.finished": "Закончила",
 	"create.schematicannon.status.paused": "Приостановлена",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Остановлена",
 	"create.schematicannon.status.noGunpowder": "Требуется порох",
 	"create.schematicannon.status.targetNotLoaded": "Цель не загружена",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "_Ставит блоки_ для воссоздания _схематики_ в мире. Использует предметы из _соседнего_ _инвентаря_ и _порох_ в качестве _топлива_.",
 	"block.create.schematicannon.tooltip.condition1": "ПКМ",
 	"block.create.schematicannon.tooltip.behaviour1": "Открывает _Интерфейс_",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "СХЕМАТИЧНЫЙ СТОЛ",
 	"block.create.schematic_table.tooltip.summary": "Записывает сохраненные схематики в _пустые_ _схематики_.",

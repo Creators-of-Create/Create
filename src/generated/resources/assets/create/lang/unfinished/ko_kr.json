@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 3",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "작동 중",
 	"create.schematicannon.status.finished": "완료",
 	"create.schematicannon.status.paused": "일시 중지",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "중단됨",
 	"create.schematicannon.status.noGunpowder": "화약이 부족함",
 	"create.schematicannon.status.targetNotLoaded": "목표가 없음",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "장착된 청사진을 바탕으로 블록들을 _발포_합니다. _화약_을 연료로 사용하고 주변 보관함에서 아이템을 사용합니다.",
 	"block.create.schematicannon.tooltip.condition1": "우클릭",
 	"block.create.schematicannon.tooltip.behaviour1": "설정 창을 엽니다.",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
 	"block.create.schematic_table.tooltip.summary": "_빈_ _청사진_에 저장된 청사진을 불러옵니다.",

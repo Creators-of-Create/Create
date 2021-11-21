@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 3",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "运行中",
 	"create.schematicannon.status.finished": "已完成",
 	"create.schematicannon.status.paused": "已暂停",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "已停止",
 	"create.schematicannon.status.noGunpowder": "火药已耗尽",
 	"create.schematicannon.status.targetNotLoaded": "目标未被加载",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "发射方块，重新构建已在世界中部署的_蓝图_，会使用相邻箱子中的物品进行填充，_火药_作为燃料。",
 	"block.create.schematicannon.tooltip.condition1": "当右击时",
 	"block.create.schematicannon.tooltip.behaviour1": "打开_界面_",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "蓝图桌",
 	"block.create.schematic_table.tooltip.summary": "将保存的蓝图图写入_空白蓝图_",

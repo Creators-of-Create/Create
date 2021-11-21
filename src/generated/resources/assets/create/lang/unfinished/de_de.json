@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1173",
+	"_": "Missing Localizations: 1176",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "An",
 	"create.schematicannon.status.finished": "Fertig",
 	"create.schematicannon.status.paused": "Pausiert",
+	"create.schematicannon.status.pausedByRedstone": "Durch Redstone pausiert",
 	"create.schematicannon.status.stopped": "Gestoppt",
 	"create.schematicannon.status.noGunpowder": "Schwarzpulver leer",
 	"create.schematicannon.status.targetNotLoaded": "Kein Block geladen",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Schießt Blöcke, um eine Struktur nach einem positionierten _Bauplan_ zu errichten. Benutzt Gegenstände aus benachbarten Inventaren und _Schießpulver_ als Treibstoff.",
 	"block.create.schematicannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "UNLOCALIZED: Opens the _Interface_",
+	"block.create.schematicannon.tooltip.condition2": "Wenn mit Redstone aktiviert",
+	"block.create.schematicannon.tooltip.behaviour2": "Pausiert die Bauplankanone. Macht weiter oder startet, wenn das Signal wieder aus ist.",
 
 	"block.create.schematic_table.tooltip": "BAUPLANTISCH",
 	"block.create.schematic_table.tooltip.summary": "Schreibt gespeicherte Baupläne auf einen _Leeren_ _Bauplan_",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 3",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "稼働中",
 	"create.schematicannon.status.finished": "完成",
 	"create.schematicannon.status.paused": "一時停止中",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "停止",
 	"create.schematicannon.status.noGunpowder": "火薬不足",
 	"create.schematicannon.status.targetNotLoaded": "ブロックが読み込まれていません",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "ブロックを撃って、_概略図_をもとにワールドに設置します。隣接する収納ブロックからのアイテムを自動搬入し、_火薬_を燃料とします。",
 	"block.create.schematicannon.tooltip.condition1": "右クリックしたとき",
 	"block.create.schematicannon.tooltip.behaviour1": "_UI_を開きます。",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "概略図テーブル",
 	"block.create.schematic_table.tooltip.summary": "保存された構造物を_空の概略図_に書き込みます。",

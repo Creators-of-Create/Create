@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1425",
+	"_": "Missing Localizations: 1428",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "En cours",
 	"create.schematicannon.status.finished": "Terminé",
 	"create.schematicannon.status.paused": "Pausé",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Arrêté",
 	"create.schematicannon.status.noGunpowder": "Plus de poudre à canon",
 	"create.schematicannon.status.targetNotLoaded": "Le bloc n'est pas chargé",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Tire des blocs pour recréer un _schéma_ déployé dans le monde. Utilise des objets des inventaires adjacents et de la _poudre_ _à_ _canon_ comme carburant.",
 	"block.create.schematicannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "UNLOCALIZED: Opens the _Interface_",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "TABLE À SCHÉMA",
 	"block.create.schematic_table.tooltip.summary": "Écrit les schémas enregistrés dans un _schéma_ _vide_.",

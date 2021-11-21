@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1805",
+	"_": "Missing Localizations: 1808",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "Draaiend",
 	"create.schematicannon.status.finished": "Klaar",
 	"create.schematicannon.status.paused": "Gepauzeerd",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Gestopt",
 	"create.schematicannon.status.noGunpowder": "Buskruit op",
 	"create.schematicannon.status.targetNotLoaded": "Blok is niet geladen",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Schiet blokken om een gepostioneerde _Bouwtekening_ in de Wereld te creëeren. Gebruikt blokken uit naastgelegen inventarissen en _Buskruit_ als brandstof.",
 	"block.create.schematicannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "UNLOCALIZED: Opens the _Interface_",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "BOUWTEKENING TAFEL",
 	"block.create.schematic_table.tooltip.summary": "Schrijft opgeslagen bouwtekeningen op een _Lege_ _Bouwtekening_",

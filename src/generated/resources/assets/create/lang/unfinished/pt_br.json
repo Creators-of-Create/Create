@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1537",
+	"_": "Missing Localizations: 1540",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "Trabalhando",
 	"create.schematicannon.status.finished": "Concluído",
 	"create.schematicannon.status.paused": "Pausado",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Parada",
 	"create.schematicannon.status.noGunpowder": "UNLOCALIZED: Sem pólvora",
 	"create.schematicannon.status.targetNotLoaded": "Bloco não carregado",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Dispara blocos para recriar um _Esquema_ no Mundo. Usa itens de Inventários adjacentes e _Pólvora_ como combustível.",
 	"block.create.schematicannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "UNLOCALIZED: Opens the _Interface_",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "MESA DE ESQUEMATIZAR",
 	"block.create.schematic_table.tooltip.summary": "Escreve Esquemas salvos into um _Esquema_ _Vazio_",

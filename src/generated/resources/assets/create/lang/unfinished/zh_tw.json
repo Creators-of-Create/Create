@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 58",
+	"_": "Missing Localizations: 61",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "啟動",
 	"create.schematicannon.status.finished": "完成",
 	"create.schematicannon.status.paused": "已暫停",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "停止",
 	"create.schematicannon.status.noGunpowder": "火藥消耗完畢",
 	"create.schematicannon.status.targetNotLoaded": "方塊未讀取",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "通過發射方塊以在世界中重新構建已部署的_全息圖_，使用相鄰箱子中的物品及_火藥_作為燃料。",
 	"block.create.schematicannon.tooltip.condition1": "當你對加農砲右鍵時",
 	"block.create.schematicannon.tooltip.behaviour1": "打開加農砲的設定介面",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "藍圖桌",
 	"block.create.schematic_table.tooltip.summary": "將保存的藍圖圖寫入_空白藍圖_",

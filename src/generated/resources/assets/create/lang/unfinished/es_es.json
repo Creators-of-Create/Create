@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 3",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "Funcionando",
 	"create.schematicannon.status.finished": "Finalizado",
 	"create.schematicannon.status.paused": "Pausado",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Detenido",
 	"create.schematicannon.status.noGunpowder": "Sin pólvora",
 	"create.schematicannon.status.targetNotLoaded": "El objetivo no está cargado",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Dispara bloques para recrear un _esquema_ desplegado en el mundo. Utiliza objetos de los inventarios adyacentes y _pólvora_ como combustible.",
 	"block.create.schematicannon.tooltip.condition1": "Cuando se hace clic derecho",
 	"block.create.schematicannon.tooltip.behaviour1": "Abre la interfaz.",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "TABLA DE ESQUEMAS",
 	"block.create.schematic_table.tooltip.summary": "Escribe los esquemas guardados en un _esquema vacío_.",

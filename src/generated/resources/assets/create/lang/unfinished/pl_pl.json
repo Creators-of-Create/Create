@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 39",
+	"_": "Missing Localizations: 42",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "Działająca",
 	"create.schematicannon.status.finished": "Ukończone",
 	"create.schematicannon.status.paused": "Wstrzymana",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Zatrzymana",
 	"create.schematicannon.status.noGunpowder": "Koniec prochu",
 	"create.schematicannon.status.targetNotLoaded": "Cel nie jest załadowany",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Strzela blokami, aby odtworzyć wybrany schemat w świecie. Zużywa przedmioty z sąsiadujących bloków, potrzebuje _prochu_ jako paliwo.",
 	"block.create.schematicannon.tooltip.condition1": "Kliknięcie PPM",
 	"block.create.schematicannon.tooltip.behaviour1": "Otwiera _interfejs_.",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "STÓŁ DO PLANOWANIA",
 	"block.create.schematic_table.tooltip.summary": "Przypisuje zapisane schematy do _pustego schematu_.",

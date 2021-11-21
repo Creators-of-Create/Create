@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 953",
+	"_": "Missing Localizations: 956",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1033,6 +1033,7 @@
 	"create.schematicannon.status.running": "In esecuzione",
 	"create.schematicannon.status.finished": "Finito",
 	"create.schematicannon.status.paused": "In pausa",
+	"create.schematicannon.status.pausedByRedstone": "UNLOCALIZED: Paused by Redstone",
 	"create.schematicannon.status.stopped": "Fermo",
 	"create.schematicannon.status.noGunpowder": "Polvere da sparo mancante",
 	"create.schematicannon.status.targetNotLoaded": "Il blocco non è caricato",
@@ -1390,6 +1391,8 @@
 	"block.create.schematicannon.tooltip.summary": "Spara blocchi per ricreare una _schematica_ distribuita nel mondo. Usa gli oggetti degli inventari adiacenti e della _polvere da sparo_ come combustibile.",
 	"block.create.schematicannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "UNLOCALIZED: Opens the _Interface_",
+	"block.create.schematicannon.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
+	"block.create.schematicannon.tooltip.behaviour2": "UNLOCALIZED: Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
 	"block.create.schematic_table.tooltip": "BANCO SCHEMATICO",
 	"block.create.schematic_table.tooltip.summary": "Scrive schematiche salvate su una _schematica_ _vuota_.",
