@@ -55,7 +55,7 @@ public abstract class ClientboundAddEntityPacketMixin implements ClientboundAddE
 		}
 	}
 
-	@Inject(at = @At("TAIL"), method = "handle")
+	@Inject(at = @At("TAIL"), method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V")
 	public void create$onTailApply(ClientGamePacketListener listener, CallbackInfo ci) {
 		if (create$extraDataBuf != null) {
 			create$extraDataBuf.release();

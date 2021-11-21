@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import com.simibubi.create.lib.entity.CustomPosHandlingEntity;
 import com.simibubi.create.lib.event.EntityEyeHeightCallback;
 import com.simibubi.create.lib.event.StartRidingCallback;
 import com.simibubi.create.lib.extensions.BlockStateExtensions;
@@ -54,14 +53,6 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 		int newEyeHeight = EntityEyeHeightCallback.EVENT.invoker().onEntitySize((Entity) (Object) this);
 		if (newEyeHeight != -1)
 			eyeHeight = newEyeHeight;
-	}
-
-	@Inject(at = @At("HEAD"), method = "setPosRaw", cancellable = true)
-	public final void setPosRaw(double d, double e, double f, CallbackInfo ci) {
-		if (this instanceof CustomPosHandlingEntity entity) {
-			entity.setPosRawOverride(d, e, f);
-			ci.cancel();
-		}
 	}
 
 	// CAPTURE DROPS

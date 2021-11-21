@@ -346,12 +346,6 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public InteractionResult interact(Player player, InteractionHand hand) {
-		System.out.println("h");
-		return super.interact(player, hand);
-	}
-
-	@Override
 	public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
 		if (player instanceof FakePlayer)
 			return InteractionResult.PASS;

@@ -14,13 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.simibubi.create.lib.block.CustomDataPacketHandlingTileEntity;
-import com.simibubi.create.lib.entity.ClientSpawnHandlerEntity;
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 import com.simibubi.create.lib.extensions.ClientboundAddEntityPacketExtensions;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
@@ -40,26 +38,8 @@ public abstract class ClientPacketListenerMixin {
 	@Final
 	@Shadow
 	private Connection connection;
-	@Shadow
-	private ClientLevel level;
 	@Unique
 	private boolean create$tileEntityHandled;
-
-	@Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/world/level/Level;)Lnet/minecraft/world/entity/Entity;"),
-			method = "handleAddEntity")
-	public Entity create$replaceNullEntity(EntityType<?> instance, Level level, ClientboundAddEntityPacket packet) {
-		Entity entity = instance.create(this.level);
-		if (entity == null) {
-			EntityType<?> type = packet.getType();
-			if (type != null) {
-				entity = type.create(level);
-				if (entity instanceof ClientSpawnHandlerEntity) {
-					((ClientSpawnHandlerEntity) entity).onClientSpawn(packet);
-				}
-			}
-		}
-		return entity;
-	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;putNonPlayerEntity(ILnet/minecraft/world/entity/Entity;)V", shift = Shift.AFTER),
 			method = "handleAddEntity",
