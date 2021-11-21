@@ -28,7 +28,7 @@ public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBui
 	}
 
 	public CreateEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
-		super(owner, parent, name, callback, factory, classification, (mobCategory, tEntityFactory) -> (B) FabricEntityTypeBuilder.create(mobCategory));
+		super(owner, parent, name, callback, factory, classification, (mobCategory, tEntityFactory) -> (B) FabricEntityTypeBuilder.create(mobCategory, tEntityFactory));
 	}
 
 	public CreateEntityBuilder<T, B, P> instance(NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory) {
@@ -42,15 +42,7 @@ public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBui
 	}
 
 	protected void registerInstance() {
-//		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
-			NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
-			if (instanceFactory != null) {
-				InstancedRenderRegistry.getInstance()
-					.entity(getEntry())
-					.factory(instanceFactory.get());
-			}
-
-//		});
+		onRegister(entry -> InstancedRenderRegistry.getInstance().entity(entry).factory(instanceFactory.get()));
 	}
 
 }

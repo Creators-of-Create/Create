@@ -137,7 +137,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Override
 	public <T extends Entity> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, CreateRegistrate> entity(String name,
-																									   EntityType.EntityFactory<T> factory, MobCategory classification) {
+		EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return this.entity(self(), name, factory, classification);
 	}
 

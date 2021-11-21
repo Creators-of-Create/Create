@@ -66,9 +66,9 @@ public class AllEntityTypes {
 	}
 
 	private static <T extends Entity> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, ?> register(String name, EntityFactory<T> factory,
-																									 NonNullSupplier<EntityRendererProvider<T>> renderer,
-																									 MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
-																									 NonNullConsumer<FabricEntityTypeBuilder<T>> propertyBuilder) {
+		NonNullSupplier<EntityRendererProvider<T>> renderer,
+		MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
+		NonNullConsumer<FabricEntityTypeBuilder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
 		return (CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, ?>) Create.registrate()
 			.entity(id, factory, group)
