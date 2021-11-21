@@ -106,7 +106,7 @@
 
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] to Focus",
 	"create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
-	
+
 	"create.toolbox.unequip": "Unequip: %1$s",
 	"create.toolbox.outOfRange": "Toolbox of held item not in Range",
 	"create.toolbox.detach": "Stop tracking and keep item",
@@ -341,6 +341,7 @@
 	"create.schematicannon.status.running": "Running",
 	"create.schematicannon.status.finished": "Finished",
 	"create.schematicannon.status.paused": "Paused",
+  "create.schematicannon.status.pausedByRedstone": "Paused by Redstone",
 	"create.schematicannon.status.stopped": "Stopped",
 	"create.schematicannon.status.noGunpowder": "Out of Gunpowder",
 	"create.schematicannon.status.targetNotLoaded": "Target is not loaded",
@@ -508,7 +509,7 @@
 	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
 	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
-	
+
 	"create.tooltip.brass_tunnel.contains": "Currently distributing:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "Right-Click to retrieve",

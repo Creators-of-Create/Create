@@ -75,6 +75,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
 		withTileEntityDo(worldIn, pos, te -> te.neighbourCheckCooldown = 0);
+		withTileEntityDo(worldIn, pos, SchematicannonTileEntity::redstoneUpdate);
 	}
 
 }

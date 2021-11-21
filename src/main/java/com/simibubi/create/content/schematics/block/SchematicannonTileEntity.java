@@ -89,6 +89,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	private int printerCooldown;
 	private int skipsLeft;
 	private boolean blockSkipped;
+	protected boolean redstoneLocked;
 
 	public BlockPos previousTarget;
 	public LinkedHashSet<LazyOptional<IItemHandler>> attachedInventories;
@@ -132,6 +133,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		statusMsg = "idle";
 		state = State.STOPPED;
 		replaceMode = 2;
+		redstoneLocked = false;
 		checklist = new MaterialChecklist();
 		printer = new SchematicPrinter();
 	}
@@ -182,6 +184,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		replaceMode = options.getInt("ReplaceMode");
 		skipMissing = options.getBoolean("SkipMissing");
 		replaceTileEntities = options.getBoolean("ReplaceTileEntities");
+		redstoneLocked = compound.getBoolean("Powered");
 
 		// Printer & Flying Blocks
 		if (compound.contains("Printer"))
@@ -242,6 +245,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		compound.putFloat("Fuel", fuelLevel);
 		compound.putString("Status", statusMsg);
 		compound.putString("State", state.name());
+		compound.putBoolean("Powered", redstoneLocked);
 		compound.putInt("AmountPlaced", blocksPlaced);
 		compound.putInt("AmountToPlace", blocksToPlace);
 
@@ -357,6 +361,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				missingItem = null;
 				state = State.RUNNING;
 			}
+		}
+
+		if (redstoneLocked) {
+			state = State.PAUSED;
+			statusMsg = "pausedByRedstone";
+			sendUpdate = true;
+			return;
 		}
 
 		// Update Target
@@ -775,6 +786,18 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public void sendToContainer(PacketBuffer buffer) {
 		buffer.writeBlockPos(getBlockPos());
 		buffer.writeNbt(getUpdateTag());
+	}
+
+	public void redstoneUpdate() {
+		if (level.isClientSide)
+			return;
+		boolean blockPowered = level.hasNeighborSignal(worldPosition);
+		if (blockPowered == redstoneLocked)
+			return;
+		redstoneLocked = blockPowered;
+		state =  State.RUNNING; //To start or find the reason to stop in tickPrinter()
+		statusMsg = "running";
+		sendUpdate = true;
 	}
 
 	@Override

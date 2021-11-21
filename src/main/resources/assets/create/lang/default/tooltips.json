@@ -103,8 +103,11 @@
 	"block.create.schematicannon.tooltip.summary": "Shoots blocks to recreate a deployed _Schematic_ in the World. Uses items from adjacent Inventories and _Gunpowder_ as fuel.",
 	"block.create.schematicannon.tooltip.condition1": "When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "Opens the _Interface_",
+  "block.create.schematicannon.tooltip.condition2": "When Powered by Redstone",
+  "block.create.schematicannon.tooltip.behaviour2": "Pauses the Schematicannon. Resumes or starts when it is unpowered.",
 
-	"block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
+
+  "block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
 	"block.create.schematic_table.tooltip.summary": "Writes saved Schematics onto an _Empty Schematic_.",
 	"block.create.schematic_table.tooltip.condition1": "When given an Empty Schematic",
 	"block.create.schematic_table.tooltip.behaviour1": "Uploads a chosen File from your Schematics Folder.",
@@ -149,7 +152,7 @@
 	"block.create.stockpile_switch.tooltip.summary": "Toggles a Redstone signal based on the amount of _Stored Items_ or _Fluids_ in the attached Container. Comes with a handy filter. As opposed to a _Comparator,_ the _Stockpile Switch_ allows configuration of _thresholds,_ at which signals are inverted.",
 	"block.create.stockpile_switch.tooltip.condition1": "When R-Clicked",
 	"block.create.stockpile_switch.tooltip.behaviour1": "Opens the _Configuration Interface_.",
-	
+
 	"block.create.content_observer.tooltip": "CONTENT OBSERVER",
 	"block.create.content_observer.tooltip.summary": "_Detects Items_ or _Fluids_ inside _containers_, _pipes_ or _conveyors_ matching a configured _filter_.",
 	"block.create.content_observer.tooltip.condition1": "When observing a Container",

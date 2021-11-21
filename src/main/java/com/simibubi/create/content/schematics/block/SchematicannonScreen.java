@@ -184,7 +184,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		switch (te.state) {
 			case PAUSED:
 				pauseIndicator.state = State.YELLOW;
-				playButton.active = true;
+				playButton.active = !te.redstoneLocked;
 				pauseButton.active = false;
 				resetButton.active = true;
 				break;
@@ -276,7 +276,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		ITextComponent msg = Lang.translate("schematicannon.status." + te.statusMsg);
 		int stringWidth = font.width(msg);
 
-		if (te.missingItem != null) {
+		if (te.missingItem != null && !te.redstoneLocked) {
 			stringWidth += 16;
 			GuiGameElement.of(te.missingItem)
 				.<GuiGameElement.GuiRenderBuilder>at(x + 128, y + 49, 100)
@@ -346,7 +346,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 					mouseX, mouseY);
 		}
 
-		if (te.missingItem != null) {
+		if (te.missingItem != null && !te.redstoneLocked) {
 			int missingBlockX = x + 128, missingBlockY = y + 49;
 			if (mouseX >= missingBlockX && mouseY >= missingBlockY && mouseX <= missingBlockX + 16
 				&& mouseY <= missingBlockY + 16) {
