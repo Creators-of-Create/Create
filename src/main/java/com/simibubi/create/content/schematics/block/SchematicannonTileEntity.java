@@ -58,9 +58,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 
@@ -75,6 +77,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	// Inventory
 	public SchematicannonInventory inventory;
+	private LazyOptional<IItemHandlerModifiable> invHandler;
 
 	public boolean sendUpdate;
 	// Sync
@@ -136,6 +139,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		redstoneLocked = false;
 		checklist = new MaterialChecklist();
 		printer = new SchematicPrinter();
+		invHandler = LazyOptional.of(this::getInventory);
 	}
 
 	public void findInventories() {
@@ -800,6 +804,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		sendUpdate = true;
 	}
 
+	private IItemHandlerModifiable getInventory() {
+		return inventory;
+	}
+
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return SchematicannonContainer.create(id, inv, this);
@@ -851,5 +859,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		return true;
 	}
 
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (isItemHandlerCap(cap) && invHandler != null)
+			return invHandler.cast();
+		return super.getCapability(cap, side);
+	}
 
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		if (invHandler != null)
+			invHandler.invalidate();
+	}
 }
