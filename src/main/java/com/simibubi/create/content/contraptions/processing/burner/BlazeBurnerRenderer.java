@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -33,7 +33,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		float offset = (Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) + .5f) / 16f;
 
 		PartialModel blazeModel = AllBlockPartials.BLAZES.get(heatLevel);
-		SuperByteBuffer blazeBuffer = PartialBufferer.get(blazeModel, te.getBlockState());
+		SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, te.getBlockState());
 		blazeBuffer.rotateCentered(Direction.UP, AngleHelper.rad(te.headAngle.getValue(partialTicks)));
 		blazeBuffer.translate(0, offset, 0);
 		blazeBuffer.light(LightTexture.FULL_BRIGHT)

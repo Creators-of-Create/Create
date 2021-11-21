@@ -8,7 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -48,8 +48,8 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 
 		PartialModel partialModel = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
-				PartialBufferer.get(partialModel, gaugeState);
-		SuperByteBuffer dialBuffer = PartialBufferer.get(AllBlockPartials.GAUGE_DIAL, gaugeState);
+				CachedBufferer.partial(partialModel, gaugeState);
+		SuperByteBuffer dialBuffer = CachedBufferer.partial(AllBlockPartials.GAUGE_DIAL, gaugeState);
 
 		float dialPivot = 5.75f / 16;
 		float progress = Mth.lerp(partialTicks, gaugeTE.prevDialState, gaugeTE.dialState);

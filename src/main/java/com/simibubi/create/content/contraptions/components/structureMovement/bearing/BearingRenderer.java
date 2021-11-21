@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -35,7 +35,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 				.getValue(BlockStateProperties.FACING);
 		PartialModel top =
 				bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
-		SuperByteBuffer superBuffer = PartialBufferer.get(top, te.getBlockState());
+		SuperByteBuffer superBuffer = CachedBufferer.partial(top, te.getBlockState());
 
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, te, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);
@@ -50,7 +50,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
 				.getValue(BearingBlock.FACING)
 				.getOpposite());
 	}

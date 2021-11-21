@@ -35,8 +35,8 @@ public class DeployerActorInstance extends ActorInstance {
     boolean stationaryTimer;
 
     float yRot;
+    float xRot;
     float zRot;
-    float zRotPole;
 
     ModelData pole;
     ModelData hand;
@@ -57,8 +57,8 @@ public class DeployerActorInstance extends ActorInstance {
 
         boolean rotatePole = state.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
         yRot = AngleHelper.horizontalAngle(facing);
-        zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
-        zRotPole = rotatePole ? 90 : 0;
+        xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
+        zRot = rotatePole ? 90 : 0;
 
         pole = mat.getModel(AllBlockPartials.DEPLOYER_POLE, state).createInstance();
         hand = mat.getModel(handPose, state).createInstance();
@@ -100,17 +100,17 @@ public class DeployerActorInstance extends ActorInstance {
         msr.translate(context.localPos)
            .translate(offset);
 
-        transformModel(msr, pole, hand, yRot, zRot, zRotPole);
+        transformModel(msr, pole, hand, yRot, xRot, zRot);
     }
 
-    static void transformModel(MatrixTransformStack msr, ModelData pole, ModelData hand, float yRot, float zRot, float zRotPole) {
+    static void transformModel(MatrixTransformStack msr, ModelData pole, ModelData hand, float yRot, float xRot, float zRot) {
 
         msr.centre();
-        msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
         msr.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
+        msr.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
 
         msr.push();
-        msr.rotate(Direction.SOUTH, (float) ((zRotPole) / 180 * Math.PI));
+        msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
         msr.unCentre();
         pole.setTransform(msr.unwrap());
         msr.pop();

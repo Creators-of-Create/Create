@@ -224,8 +224,8 @@ public class GuiGameElement {
 				.isEmpty())
 				return;
 
-			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
-				.getType(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, LightTexture.FULL_BRIGHT, false);
+			FluidRenderer.renderFluidBox(new FluidStack(blockState.getFluidState()
+				.getType(), 1000), 0, 0, 0, 1, 1, 1, buffer, ms, LightTexture.FULL_BRIGHT, false);
 			buffer.endBatch();
 		}
 	}

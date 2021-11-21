@@ -4,11 +4,11 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(Dist.CLIENT)
 public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
-	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
+	public static final SuperByteBufferCache.Compartment<BlockState> KINETIC_TILE = new SuperByteBufferCache.Compartment<>();
 	public static boolean rainbowMode = false;
 
 	public KineticTileEntityRenderer(BlockEntityRendererProvider.Context context) {
@@ -47,7 +47,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, PoseStack ms,
 		VertexConsumer buffer, int light) {
-		SuperByteBuffer superByteBuffer = CreateClient.BUFFER_CACHE.renderBlockIn(KINETIC_TILE, renderedState);
+		SuperByteBuffer superByteBuffer = CachedBufferer.block(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(te, superByteBuffer, ms, buffer, light);
 	}
 
@@ -117,7 +117,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CreateClient.BUFFER_CACHE.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
+		return CachedBufferer.block(KINETIC_TILE, getRenderedBlockState(te));
 	}
 
 }

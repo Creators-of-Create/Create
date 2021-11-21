@@ -12,11 +12,10 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -97,7 +96,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 				PartialModel beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-				SuperByteBuffer beltBuffer = PartialBufferer.get(beltPartial, blockState)
+				SuperByteBuffer beltBuffer = CachedBufferer.partial(beltPartial, blockState)
 						.light(light);
 
 				SpriteShiftEntry spriteShift = getSpriteShiftEntry(color, diagonal, bottom);
@@ -142,7 +141,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					return stack;
 				};
 
-				SuperByteBuffer superBuffer = CreateClient.BUFFER_CACHE.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
+				SuperByteBuffer superBuffer = CachedBufferer.partialDirectional(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 			}
 		}

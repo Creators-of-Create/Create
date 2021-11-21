@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
@@ -47,7 +47,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		float angle = lidProgress * 70;
 
 		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
-			SuperByteBuffer model = PartialBufferer.get(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
+			SuperByteBuffer model = CachedBufferer.partial(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
 			applyLidAngle(te, angle, model.matrixStacker());
 			model.light(light)
 					.renderInto(ms, vertexBuilder);

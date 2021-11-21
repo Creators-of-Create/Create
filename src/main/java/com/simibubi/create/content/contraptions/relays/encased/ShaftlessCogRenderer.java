@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -29,7 +29,7 @@ public class ShaftlessCogRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getFacingVertical(
+		return CachedBufferer.partialFacingVertical(
 			large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL, te.getBlockState(),
 			Direction.fromAxisAndDirection(te.getBlockState()
 				.getValue(EncasedCogwheelBlock.AXIS), AxisDirection.POSITIVE));

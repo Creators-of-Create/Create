@@ -527,7 +527,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {
 
 		public SelectionModeValueBox() {
-			super((blockState, direction) -> direction != Direction.DOWN && direction != Direction.UP);
+			super((blockState, direction) -> !direction.getAxis().isVertical());
 		}
 
 		@Override

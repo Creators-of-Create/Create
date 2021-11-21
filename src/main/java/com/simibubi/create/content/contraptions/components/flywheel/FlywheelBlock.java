@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public class FlywheelBlock extends HorizontalKineticBlock implements ITE<FlywheelTileEntity> {
 
-	public static EnumProperty<ConnectionState> CONNECTION = EnumProperty.create("connection", ConnectionState.class);
+	public static final EnumProperty<ConnectionState> CONNECTION = EnumProperty.create("connection", ConnectionState.class);
 
 	public FlywheelBlock(Properties properties) {
 		super(properties);

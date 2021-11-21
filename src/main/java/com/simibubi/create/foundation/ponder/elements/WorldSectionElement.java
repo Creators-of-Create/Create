@@ -19,7 +19,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
@@ -33,7 +32,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -41,7 +39,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -57,7 +54,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class WorldSectionElement extends AnimatedSceneElement {
 
-	public static final Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new Compartment<>();
+	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new SuperByteBufferCache.Compartment<>();
 
 	List<BlockEntity> renderedTileEntities;
 	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
@@ -396,12 +393,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
 		ForgeHooksClient.setRenderLayer(layer);
-		PoseStack ms = new PoseStack();
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 			.getBlockRenderer();
-		ModelBlockRenderer blockRenderer = dispatcher.getModelRenderer();
+		PoseStack ms = new PoseStack();
 		Random random = new Random();
-		BufferBuilder builder = new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize());
+		BufferBuilder builder = new BufferBuilder(512);
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		world.setMask(this.section);
 
@@ -412,8 +408,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderShape() != RenderShape.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
-				&& ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
+			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
 				BlockEntity tileEntity = world.getBlockEntity(pos);
 				dispatcher.renderBatched(state, pos, world, ms, builder, true, random,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);

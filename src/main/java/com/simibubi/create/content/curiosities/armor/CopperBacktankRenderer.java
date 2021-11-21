@@ -2,10 +2,9 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -28,8 +27,7 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer cogs =
-			CreateClient.BUFFER_CACHE.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, blockState);
+		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_COGS, blockState);
 		cogs.matrixStacker()
 			.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(CopperBacktankBlock.HORIZONTAL_FACING)))
@@ -44,7 +42,7 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.get(AllBlockPartials.COPPER_BACKTANK_SHAFT, te.getBlockState());
+		return CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_SHAFT, te.getBlockState());
 	}
 
 }

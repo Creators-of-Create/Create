@@ -35,7 +35,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
         Direction.Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
         Direction.Axis shaftAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
 
-        boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical();
+        boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.X || pipeAxis.isVertical();
         pointerRotationOffset = twist ? 90 : 0;
 
         pointer = materialManager.defaultSolid()

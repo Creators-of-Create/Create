@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -37,7 +37,7 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
-		SuperByteBuffer flapBuffer = PartialBufferer.get(partialModel, blockState);
+		SuperByteBuffer flapBuffer = CachedBufferer.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 

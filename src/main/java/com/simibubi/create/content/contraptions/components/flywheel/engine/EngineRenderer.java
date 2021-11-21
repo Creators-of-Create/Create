@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -33,7 +33,7 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 				Direction facing = te.getBlockState()
 						.getValue(EngineBlock.FACING);
 				float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
-				PartialBufferer.get(frame, te.getBlockState())
+				CachedBufferer.partial(frame, te.getBlockState())
 						.rotateCentered(Direction.UP, angle)
 						.translate(0, 0, -1)
 						.light(light)
