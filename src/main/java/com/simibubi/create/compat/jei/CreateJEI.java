@@ -127,7 +127,8 @@ public class CreateJEI implements IModPlugin {
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
 			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
-				.size() > 1 && !MechanicalPressTileEntity.canCompress(r), BasinRecipe::convertShapeless)
+				.size() > 1 && !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.isManualRecipe(r),
+				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
 			.enableWhen(c -> c.allowShapelessInMixer)
@@ -144,14 +145,16 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
-			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(IRecipeType.STONECUTTING)))
+			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipes(
+				recipe -> recipe.getType() == IRecipeType.STONECUTTING && !AllRecipeTypes.isManualRecipe(recipe))))
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
 			.enableWhen(c -> c.allowStonecuttingOnSaw)
 			.build(),
 
 		woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
 			.recipeList(() -> CondensedBlockCuttingRecipe
-				.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.get())))
+				.condenseRecipes(findRecipes(recipe -> recipe.getType() == SawTileEntity.woodcuttingRecipeType.get()
+					&& !AllRecipeTypes.isManualRecipe(recipe))))
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
 			.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
 				.isLoaded("druidcraft"))
@@ -163,8 +166,8 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoSquare = register("automatic_packing", PackingCategory::autoSquare)
-			.recipes(r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r),
-				BasinRecipe::convertShapeless)
+			.recipes(r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r)
+				&& !AllRecipeTypes.isManualRecipe(r), BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.catalyst(AllBlocks.BASIN::get)
 			.enableWhen(c -> c.allowShapedSquareInPress)
@@ -203,7 +206,8 @@ public class CreateJEI implements IModPlugin {
 			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
 				.size() == 1)
 			.recipes(r -> (r.getType() == IRecipeType.CRAFTING
-				&& r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType()) && (r instanceof ShapedRecipe))
+				&& r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType()) && (r instanceof ShapedRecipe)
+				&& !AllRecipeTypes.isManualRecipe(r))
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 			.enableWhen(c -> c.allowRegularCraftingInCrafter)
 			.build(),

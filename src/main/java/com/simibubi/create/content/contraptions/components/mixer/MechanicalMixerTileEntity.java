@@ -231,7 +231,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return ((r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE
 			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-			&& !MechanicalPressTileEntity.canCompress(r)) || r.getType() == AllRecipeTypes.MIXING.getType());
+			&& !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
+			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 
 	@Override

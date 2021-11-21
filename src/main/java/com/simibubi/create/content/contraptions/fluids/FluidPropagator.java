@@ -133,7 +133,7 @@ public class FluidPropagator {
 			return null;
 		if (otherBlock instanceof FlowingFluidBlock)
 			return null;
-		if (getStraightPipeAxis(state) == null)
+		if (getStraightPipeAxis(state) == null && !AllBlocks.ENCASED_FLUID_PIPE.has(state))
 			return null;
 		for (Direction d : Iterate.directions) {
 			if (!pos.relative(d)

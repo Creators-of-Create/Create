@@ -28,6 +28,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	public float offset;
 	public boolean running;
 	public boolean assembleNextTick;
+	public boolean needsContraption;
 	public AbstractContraptionEntity movedContraption;
 	protected boolean forceMove;
 	protected ScrollOptionBehaviour<MovementMode> movementMode;
@@ -41,6 +42,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		super(typeIn);
 		setLazyTickRate(3);
 		forceMove = true;
+		needsContraption = true;
 	}
 
 	@Override
@@ -65,14 +67,16 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		if (level.isClientSide)
 			clientOffsetDiff *= .75f;
 
-		if (waitingForSpeedChange && movedContraption != null) {
-			if (level.isClientSide) {
-				float syncSpeed = clientOffsetDiff / 2f;
-				offset += syncSpeed;
-				movedContraption.setContraptionMotion(toMotionVector(syncSpeed));
-				return;
+		if (waitingForSpeedChange) {
+			if (movedContraption != null) {
+				if (level.isClientSide) {
+					float syncSpeed = clientOffsetDiff / 2f;
+					offset += syncSpeed;
+					movedContraption.setContraptionMotion(toMotionVector(syncSpeed));
+					return;
+				}
+				movedContraption.setContraptionMotion(Vector3d.ZERO);
 			}
-			movedContraption.setContraptionMotion(Vector3d.ZERO);
 			return;
 		}
 
@@ -101,6 +105,9 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 			return;
 
 		boolean contraptionPresent = movedContraption != null;
+		if (needsContraption && !contraptionPresent)
+			return;
+		
 		float movementSpeed = getMovementSpeed();
 		float newOffset = offset + movementSpeed;
 		if ((int) newOffset != (int) offset)

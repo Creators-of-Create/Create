@@ -75,6 +75,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 		// Collect Construct
 		if (!level.isClientSide) {
+			needsContraption = false;
 			BlockPos anchor = worldPosition.below(MathHelper.floor(offset + 1));
 			initialOffset = MathHelper.floor(offset);
 			PulleyContraption contraption = new PulleyContraption(initialOffset);
@@ -107,6 +108,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 				movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 				level.addFreshEntity(movedContraption);
 				forceMove = true;
+				needsContraption = true;
 			}
 		}
 
@@ -198,6 +200,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
+		needsContraption = compound.getBoolean("NeedsContraption");
 		super.fromTag(state, compound, clientPacket);
 	}
 
