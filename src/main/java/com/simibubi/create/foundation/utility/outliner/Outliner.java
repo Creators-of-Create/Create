@@ -2,10 +2,9 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
@@ -20,11 +19,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class Outliner {
 
-	final Map<Object, OutlineEntry> outlines;
-
-	public Map<Object, OutlineEntry> getOutlines() {
-		return Collections.unmodifiableMap(outlines);
-	}
+	private final Map<Object, OutlineEntry> outlines = Collections.synchronizedMap(new HashMap<>());
+	private final Map<Object, OutlineEntry> outlinesView = Collections.unmodifiableMap(outlines);
 
 	// Facade
 
@@ -103,6 +99,10 @@ public class Outliner {
 		return Optional.empty();
 	}
 
+	public Map<Object, OutlineEntry> getOutlines() {
+		return outlinesView;
+	}
+
 	// Utility
 
 	private void createAABBOutlineIfMissing(Object slot, AABB bb) {
@@ -126,39 +126,30 @@ public class Outliner {
 
 	// Maintenance
 
-	public Outliner() {
-		outlines = Collections.synchronizedMap(new HashMap<>());
-	}
-
 	public void tickOutlines() {
-		Set<Object> toClear = new HashSet<>();
-
-		outlines.forEach((key, entry) -> {
-			entry.ticksTillRemoval--;
-			entry.getOutline()
-				.tick();
-			if (entry.isAlive())
-				return;
-			toClear.add(key);
-		});
-
-		toClear.forEach(outlines::remove);
+		Iterator<OutlineEntry> iterator = outlines.values().iterator();
+		while (iterator.hasNext()) {
+			OutlineEntry entry = iterator.next();
+			entry.tick();
+			if (!entry.isAlive())
+				iterator.remove();
+		}
 	}
 
 	public void renderOutlines(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		outlines.forEach((key, entry) -> {
 			Outline outline = entry.getOutline();
-			outline.params.alpha = 1;
-			if (entry.ticksTillRemoval < 0) {
-
+			OutlineParams params = outline.getParams();
+			params.alpha = 1;
+			if (entry.isFading()) {
 				int prevTicks = entry.ticksTillRemoval + 1;
 				float fadeticks = OutlineEntry.fadeTicks;
 				float lastAlpha = prevTicks >= 0 ? 1 : 1 + (prevTicks / fadeticks);
 				float currentAlpha = 1 + (entry.ticksTillRemoval / fadeticks);
 				float alpha = Mth.lerp(pt, lastAlpha, currentAlpha);
 
-				outline.params.alpha = alpha * alpha * alpha;
-				if (outline.params.alpha < 1 / 8f)
+				params.alpha = alpha * alpha * alpha;
+				if (params.alpha < 1 / 8f)
 					return;
 			}
 			outline.render(ms, buffer, pt);
@@ -176,8 +167,17 @@ public class Outliner {
 			ticksTillRemoval = 1;
 		}
 
+		public void tick() {
+			ticksTillRemoval--;
+			outline.tick();
+		}
+
 		public boolean isAlive() {
 			return ticksTillRemoval >= -fadeTicks;
+		}
+
+		public boolean isFading() {
+			return ticksTillRemoval < 0;
 		}
 
 		public Outline getOutline() {

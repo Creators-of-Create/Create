@@ -10,7 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -62,8 +62,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 
 	private static void render(BlockState blockState, boolean lit, float progress,
 		PoseStack local, Consumer<SuperByteBuffer> drawCallback) {
-		SuperByteBuffer middle = PartialBufferer.get(getMiddleForState(blockState, lit), blockState);
-		SuperByteBuffer top = PartialBufferer.get(getTopForState(blockState), blockState);
+		SuperByteBuffer middle = CachedBufferer.partial(getMiddleForState(blockState, lit), blockState);
+		SuperByteBuffer top = CachedBufferer.partial(getTopForState(blockState), blockState);
 
 		if (local != null) {
 			middle.transform(local);

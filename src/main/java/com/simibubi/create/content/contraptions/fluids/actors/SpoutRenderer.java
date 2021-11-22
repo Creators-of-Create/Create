@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -44,7 +44,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			float yOffset = (11 / 16f) * level;
 			ms.pushPose();
 			ms.translate(0, yOffset, 0);
-			FluidRenderer.renderTiledFluidBB(fluidStack, min, min - yOffset, min, max, min, max, buffer, ms, light,
+			FluidRenderer.renderFluidBox(fluidStack, min, min - yOffset, min, max, min, max, buffer, ms, light,
 				false);
 			ms.popPose();
 		}
@@ -58,7 +58,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 		if (processingTicks != -1) {
 			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1);
 			AABB bb = new AABB(0.5, .5, 0.5, 0.5, -1.2, 0.5).inflate(radius / 32f);
-			FluidRenderer.renderTiledFluidBB(fluidStack, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
+			FluidRenderer.renderFluidBox(fluidStack, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
 				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true);
 		}
 
@@ -72,7 +72,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 
 		ms.pushPose();
 		for (PartialModel bit : BITS) {
-			PartialBufferer.get(bit, te.getBlockState())
+			CachedBufferer.partial(bit, te.getBlockState())
 					.light(light)
 					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 			ms.translate(0, -3 * squeeze / 32f, 0);

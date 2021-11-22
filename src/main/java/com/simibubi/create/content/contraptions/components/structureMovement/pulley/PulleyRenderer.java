@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -31,12 +31,12 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected SuperByteBuffer renderRope(KineticTileEntity te) {
-		return CreateClient.BUFFER_CACHE.renderBlock(AllBlocks.ROPE.getDefaultState());
+		return CachedBufferer.block(AllBlocks.ROPE.getDefaultState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(KineticTileEntity te) {
-		return CreateClient.BUFFER_CACHE.renderBlock(AllBlocks.PULLEY_MAGNET.getDefaultState());
+		return CachedBufferer.block(AllBlocks.PULLEY_MAGNET.getDefaultState());
 	}
 
 	@Override

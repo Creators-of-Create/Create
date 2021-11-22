@@ -43,7 +43,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		Instancer<OrientedData> instancer = getInstancer(materialManager, entity);
 
 		Direction face = entity.getFacingDirection();
-		rotation = new Quaternion(AngleHelper.verticalAngle(face), AngleHelper.horizontalAngleNew(face), 0, true);
+		rotation = new Quaternion(AngleHelper.verticalAngle(face), AngleHelper.horizontalAngle(face), 0, true);
 
 		model = new ConditionalInstance<>(instancer)
 				.withCondition(this::shouldShow)

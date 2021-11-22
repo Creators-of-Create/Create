@@ -19,9 +19,9 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 		Vec3 vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
 
 		float yRot = AngleHelper.horizontalAngle(facing);
-		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
+		float xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
 		vec = VecHelper.rotateCentered(vec, yRot, Axis.Y);
-		vec = VecHelper.rotateCentered(vec, zRot, Axis.Z);
+		vec = VecHelper.rotateCentered(vec, xRot, Axis.X);
 
 		return vec;
 	}

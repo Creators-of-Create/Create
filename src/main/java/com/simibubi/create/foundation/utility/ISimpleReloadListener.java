@@ -8,6 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
 import net.minecraft.util.profiling.ProfilerFiller;
 
+// TODO 1.18: remove and replace all usages with ResourceManagerReloadListener
 @FunctionalInterface
 public interface ISimpleReloadListener extends PreparableReloadListener {
 

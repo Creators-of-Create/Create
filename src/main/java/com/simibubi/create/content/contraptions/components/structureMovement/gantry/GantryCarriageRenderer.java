@@ -2,11 +2,10 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -48,21 +47,21 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 			if (axis != rotationAxis && axis != facing.getAxis())
 				gantryAxis = axis;
 
-		if (gantryAxis == Axis.Z)
-			if (facing == Direction.DOWN)
+		if (gantryAxis == Axis.X)
+			if (facing == Direction.UP)
 				angleForTe *= -1;
 		if (gantryAxis == Axis.Y)
 			if (facing == Direction.NORTH || facing == Direction.EAST)
 				angleForTe *= -1;
 
-		SuperByteBuffer cogs = PartialBufferer.get(AllBlockPartials.GANTRY_COGS, state);
+		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.GANTRY_COGS, state);
 		cogs.matrixStacker()
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-				.rotateY(alongFirst ^ facing.getAxis() == Axis.Z ? 90 : 0)
+				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
-				.multiply(Vector3f.XP.rotation(-angleForTe))
+				.rotateX(-angleForTe)
 				.translate(0, 9 / 16f, 0)
 				.unCentre();
 
@@ -74,7 +73,7 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
 		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 		float offset = getRotationOffsetForPosition(te, pos, axis);
-		return ((time * te.getSpeed() * 3f / 20 + offset) % 360) / 180 * (float) Math.PI;
+		return (time * te.getSpeed() * 3f / 20 + offset) % 360;
 	}
 
 	@Override

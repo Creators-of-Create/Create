@@ -99,7 +99,7 @@ public abstract class ValueBoxTransform {
 		protected Vec3 getLocalOffset(BlockState state) {
 			Vec3 location = getSouthLocation();
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Axis.Y);
-			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.Z);
+			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.X);
 			return location;
 		}
 

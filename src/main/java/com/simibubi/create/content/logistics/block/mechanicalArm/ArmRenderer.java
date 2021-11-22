@@ -8,7 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -110,12 +110,12 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, MatrixTransformStack msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
-		SuperByteBuffer base = PartialBufferer.get(AllBlockPartials.ARM_BASE, blockState).light(light);
-		SuperByteBuffer lowerBody = PartialBufferer.get(AllBlockPartials.ARM_LOWER_BODY, blockState).light(light);
-		SuperByteBuffer upperBody = PartialBufferer.get(AllBlockPartials.ARM_UPPER_BODY, blockState).light(light);
-		SuperByteBuffer head = PartialBufferer.get(AllBlockPartials.ARM_HEAD, blockState).light(light);
-		SuperByteBuffer claw = PartialBufferer.get(AllBlockPartials.ARM_CLAW_BASE, blockState).light(light);
-		SuperByteBuffer clawGrip = PartialBufferer.get(AllBlockPartials.ARM_CLAW_GRIP, blockState);
+		SuperByteBuffer base = CachedBufferer.partial(AllBlockPartials.ARM_BASE, blockState).light(light);
+		SuperByteBuffer lowerBody = CachedBufferer.partial(AllBlockPartials.ARM_LOWER_BODY, blockState).light(light);
+		SuperByteBuffer upperBody = CachedBufferer.partial(AllBlockPartials.ARM_UPPER_BODY, blockState).light(light);
+		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.ARM_HEAD, blockState).light(light);
+		SuperByteBuffer claw = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_BASE, blockState).light(light);
+		SuperByteBuffer clawGrip = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_GRIP, blockState);
 
 		transformBase(msr, baseAngle);
 		base.transform(msLocal)
@@ -188,7 +188,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.get(AllBlockPartials.ARM_COG, te.getBlockState());
+		return CachedBufferer.partial(AllBlockPartials.ARM_COG, te.getBlockState());
 	}
 
 }

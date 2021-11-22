@@ -71,17 +71,19 @@ public class AnimatedSpout extends AnimatedKinetics {
 		matrixStack.pushPose();
 		UIRenderHelper.flipForGuiRender(matrixStack);
 		matrixStack.scale(16, 16, 16);
-		float from = 2/16f;
-		float to = 1f - from;
-		FluidRenderer.renderTiledFluidBB(fluids.get(0), from, from, from, to, to, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false);
+		float from = 3f / 16f;
+		float to = 17f / 16f;
+		FluidRenderer.renderFluidBox(fluids.get(0), from, from, from, to, to, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false);
 		matrixStack.popPose();
 
 		float width = 1 / 128f * squeeze;
 		matrixStack.translate(scale / 2f, scale * 1.5f, scale / 2f);
 		UIRenderHelper.flipForGuiRender(matrixStack);
 		matrixStack.scale(16, 16, 16);
-		matrixStack.translate(-width / 2, 0, -width / 2);
-		FluidRenderer.renderTiledFluidBB(fluids.get(0), 0, -0.001f, 0, width, 2.001f, width, buffer, matrixStack, LightTexture.FULL_BRIGHT,
+		matrixStack.translate(-0.5f, 0, -0.5f);
+		from = -width / 2 + 0.5f;
+		to = width / 2 + 0.5f;
+		FluidRenderer.renderFluidBox(fluids.get(0), from, 0, from, to, 2, to, buffer, matrixStack, LightTexture.FULL_BRIGHT,
 			false);
 		buffer.endBatch();
 		Lighting.setupFor3DItems();

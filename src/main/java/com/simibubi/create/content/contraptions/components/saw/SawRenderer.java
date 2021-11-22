@@ -8,13 +8,12 @@ import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -82,7 +81,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				rotate = true;
 		}
 
-		SuperByteBuffer superBuffer = PartialBufferer.getFacing(partial, blockState);
+		SuperByteBuffer superBuffer = CachedBufferer.partialFacing(partial, blockState);
 		if (rotate) {
 			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
 		}
@@ -150,9 +149,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		if (state.getValue(FACING)
 			.getAxis()
 			.isHorizontal())
-			return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF,
+			return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF,
 				state.rotate(Rotation.CLOCKWISE_180));
-		return CreateClient.BUFFER_CACHE.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
+		return CachedBufferer.block(KineticTileEntityRenderer.KINETIC_TILE,
 			getRenderedBlockState(te));
 	}
 
@@ -181,14 +180,14 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		SuperByteBuffer superBuffer;
 		if (SawBlock.isHorizontal(state)) {
 			if (shouldAnimate)
-				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
 			else
-				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE, state);
 		} else {
 			if (shouldAnimate)
-				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE, state);
 			else
-				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
 		PoseStack m = matrices.getModel();
@@ -199,7 +198,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			.rotateX(AngleHelper.verticalAngle(facing));
 		if (!SawBlock.isHorizontal(state))
 			MatrixTransformStack.of(m)
-				.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 0 : 90);
+				.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
 		MatrixTransformStack.of(m)
 			.unCentre();
 

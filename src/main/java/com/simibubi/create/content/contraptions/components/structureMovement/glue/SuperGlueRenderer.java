@@ -70,7 +70,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 		ms.pushPose();
 		MatrixTransformStack.of(ms)
-			.rotateY(AngleHelper.horizontalAngleNew(face))
+			.rotateY(AngleHelper.horizontalAngle(face))
 			.rotateX(AngleHelper.verticalAngle(face));
 		Pose peek = ms.last();
 
