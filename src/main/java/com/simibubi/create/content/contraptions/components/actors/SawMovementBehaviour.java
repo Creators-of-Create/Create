@@ -78,7 +78,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		World world = context.world;
 		Vector3d dropPos = VecHelper.getCenterOf(pos);
-		float distance = (float) dropPos.distanceTo(context.position);
+		float distance = context.position == null ? 1 : (float) dropPos.distanceTo(context.position);
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, remainder);
 		entity.setDeltaMovement(context.relativeMotion.scale(distance / 20f));
 		world.addFreshEntity(entity);
