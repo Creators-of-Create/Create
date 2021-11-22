@@ -5,35 +5,33 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllFluids;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.compat.jei.category.display.AbstractCreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import me.shedaniel.math.Point;
-import me.shedaniel.rei.api.client.gui.DisplayRenderer;
+import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Display> implements DisplayCategory<D> {
+public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends AbstractCreateDisplay<R>> implements DisplayCategory<D> {
 
 	public final List<Supplier<List<? extends Recipe<?>>>> recipes = new ArrayList<>();
 	public final List<Supplier<ItemStack>> recipeCatalysts = new ArrayList<>();
@@ -42,12 +40,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 	protected String name;
 	private Renderer icon;
 	private int width, height;
-
-	public CreateRecipeCategory(Renderer icon, int width, int height) {
-		this.icon = icon;
-		this.width = width;
-		this.height = height;
-	}
 
 	public CreateRecipeCategory(Renderer icon, EmptyBackground background) {
 		this.icon = icon;
@@ -72,12 +64,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 
 	@Override
 	public int getDisplayHeight() {
-		return DisplayCategory.super.getDisplayHeight();
+		return height;
 	}
 
 	@Override
 	public int getDisplayWidth(D display) {
-		return DisplayCategory.super.getDisplayWidth(display);
+		return width;
 	}
 
 	@Override
@@ -189,5 +181,24 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Displa
 	public static Point point(int x, int y) {
 		return new Point(x, y);
 	}
+
+	@Override
+	public List<Widget> setupDisplay(D display, Rectangle bounds) {
+		List<Widget> widgets = new ArrayList<>();
+		widgets.add(new Widget() {
+			@Override
+			public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+				draw(display.getRecipe(), poseStack, mouseX, mouseY);
+			}
+
+			@Override
+			public List<? extends GuiEventListener> children() {
+				return new ArrayList<>();
+			}
+		});
+		return widgets;
+	}
+
+	public void draw(R recipe, PoseStack matrixStack, double mouseX, double mouseY) {};
 
 }

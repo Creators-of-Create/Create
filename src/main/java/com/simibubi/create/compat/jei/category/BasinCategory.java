@@ -1,5 +1,5 @@
-package com.simibubi.create.compat.jei.category;
-
+//package com.simibubi.create.compat.jei.category;
+//
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.util.stream.Collectors;

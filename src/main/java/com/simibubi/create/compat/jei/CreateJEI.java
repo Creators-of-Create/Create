@@ -34,6 +34,7 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.compat.jei.category.display.AbstractCreateDisplay;
 import com.simibubi.create.compat.jei.category.display.CrushingDisplay;
 import com.simibubi.create.compat.jei.category.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
@@ -205,7 +206,7 @@ public class CreateJEI implements REIClientPlugin {
 //				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 //				.build();
 
-	private <T extends Recipe<?>, D extends Display> CategoryBuilder register(String name,
+	private <T extends Recipe<?>, D extends AbstractCreateDisplay<T>> CategoryBuilder register(String name,
 		Supplier<CreateRecipeCategory<T, D>> supplier) {
 		return new CategoryBuilder<>(name, supplier);
 	}
@@ -255,7 +256,7 @@ public class CreateJEI implements REIClientPlugin {
 		zones.register(AbstractSimiContainerScreen.class, new SlotMover());
 	}
 
-	private class CategoryBuilder<T extends Recipe<?>, D extends Display> {
+	private class CategoryBuilder<T extends Recipe<?>, D extends AbstractCreateDisplay<T>> {
 		private CreateRecipeCategory<T, D> category;
 		private List<Consumer<List<Recipe<?>>>> recipeListConsumers = new ArrayList<>();
 		private Predicate<CRecipes> pred;

@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
+import com.simibubi.create.content.contraptions.wrench.WrenchItemRenderer;
 import com.simibubi.create.content.curiosities.BuildersTeaItem;
 import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
 import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
@@ -33,12 +34,18 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
+import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandItemRenderer;
 import com.simibubi.create.content.curiosities.tools.BlueprintItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
+import com.simibubi.create.content.curiosities.tools.ExtendoGripItemRenderer;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonItemRenderer;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
+import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItemRenderer;
 import com.simibubi.create.content.logistics.item.LinkedControllerItem;
+import com.simibubi.create.content.logistics.item.LinkedControllerItemRenderer;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
@@ -220,16 +227,19 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> (FabricItemSettings) p.stacksTo(1))
+		.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
 //		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
@@ -254,27 +264,32 @@ public class AllItems {
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
 			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
 			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripItemRenderer::new))
 //		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
+			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<WorldshaperItem> WORLDSHAPER =
 		REGISTRATE.item("handheld_worldshaper", WorldshaperItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
+			.transform(CreateRegistrate.customRenderedItem(() -> WorldshaperItemRenderer::new))
 			.lang("Creative Worldshaper")
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
