@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.render;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -42,7 +41,7 @@ public class BakedModelRenderHelper {
 
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		blockRenderer.tesselateBlock(mc.level, model, referenceState, BlockPos.ZERO.above(255), ms, builder, true,
-			new Random(), 42, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
+			new Random(), 42, OverlayTexture.NO_OVERLAY);
 		builder.end();
 		return builder;
 	}
