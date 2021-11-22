@@ -31,6 +31,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
@@ -148,6 +149,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 			if (!entity.isAlive())
 				continue;
 			if (entity instanceof ItemEntity)
+				continue;
+			if (entity.getPistonPushReaction() == PushReaction.IGNORE)
 				continue;
 
 			entity.onGround = false;
@@ -379,9 +382,14 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 	protected void nudgeEntities() {
 		for (Entity entity : level.getEntitiesOfClass(Entity.class,
-			new AxisAlignedBB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f)))
+			new AxisAlignedBB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f))) {
+			if (!entity.isAlive())
+				continue;
+			if (entity.getPistonPushReaction() == PushReaction.IGNORE)
+				continue;
 			if (!(entity instanceof PlayerEntity))
 				entity.setPos(entity.getX(), entity.getY() + .125f, entity.getZ());
+		}
 	}
 
 	protected void ejectIfTriggered() {
