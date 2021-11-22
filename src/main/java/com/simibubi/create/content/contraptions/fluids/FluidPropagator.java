@@ -125,6 +125,8 @@ public class FluidPropagator {
 		BlockPos neighborPos, boolean isMoving) {
 		if (world.isClientSide)
 			return null;
+		// calling getblockstate() as otherBlock param seems to contain the block which was replaced
+		otherBlock = world.getBlockState(neighborPos).getBlock();
 		if (otherBlock instanceof FluidPipeBlock)
 			return null;
 		if (otherBlock instanceof AxisPipeBlock)

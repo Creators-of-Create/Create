@@ -89,9 +89,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
 		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
-		// calling getblockstate() as otherBlock param seems to contain the block which was replaced
-		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, world.getBlockState(neighborPos)
-			.getBlock(), neighborPos, isMoving);
+		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
 		if (!state.getValue(FACING_TO_PROPERTY_MAP.get(d)))
