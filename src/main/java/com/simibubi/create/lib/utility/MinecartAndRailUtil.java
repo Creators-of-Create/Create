@@ -12,6 +12,7 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,11 +27,11 @@ public class MinecartAndRailUtil {
 		return rail == Blocks.ACTIVATOR_RAIL;
 	}
 
-	public static RailShape getDirectionOfRail(BlockState state, BlockGetter world, BlockPos pos, @Nullable AbstractMinecart cart) {
+	public static RailShape getDirectionOfRail(BlockState state, BlockGetter world, BlockPos pos, @Nullable BaseRailBlock cart) {
 		return AbstractRailBlockHelper.getDirectionOfRail(state, world, pos, cart);
 	}
 
-	public static RailShape getDirectionOfRail(BlockState state, @Nullable AbstractMinecart cart) {
+	public static RailShape getDirectionOfRail(BlockState state, @Nullable BaseRailBlock cart) {
 		return AbstractRailBlockHelper.getDirectionOfRail(state, cart);
 	}
 

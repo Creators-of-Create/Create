@@ -1,5 +1,7 @@
 package com.simibubi.create.lib.transfer.fluid;
 
+import com.simibubi.create.lib.utility.NBT;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
@@ -118,19 +120,21 @@ public class FluidStack {
 		return fluidsEqual && tagsEqual;
 	}
 
-	public CompoundTag writeToNBT(CompoundTag tag) {
-		tag.put("Variant", getType().toNbt());
-		tag.putLong("Amount", getAmount());
-		tag.put("Tag", getTag());
-		return tag;
+	public CompoundTag writeToNBT(CompoundTag nbt) {
+		nbt.put("Variant", getType().toNbt());
+		nbt.putLong("Amount", getAmount());
+		if(tag != null)
+			nbt.put("Tag", tag);
+		return nbt;
 	}
 
 	public static FluidStack loadFluidStackFromNBT(CompoundTag tag) {
 		Tag fluidTag = tag.get("Variant");
 		FluidVariant fluid = FluidVariant.fromNbt((CompoundTag) fluidTag);
-		long amount = tag.getLong("Amount");
-		CompoundTag stackTag = (CompoundTag) tag.get("Tag");
-		return new FluidStack(fluid, amount, stackTag);
+		FluidStack stack = new FluidStack(fluid, tag.getLong("Amount"));
+		if(tag.contains("Tag", NBT.TAG_COMPOUND))
+			stack.tag = tag.getCompound("Tag");
+		return stack;
 	}
 
 	public CompoundTag toTag() {
@@ -179,7 +183,7 @@ public class FluidStack {
 	public static FriendlyByteBuf toBuffer(FluidStack stack, FriendlyByteBuf buffer) {
 		stack.getType().toPacket(buffer);
 		buffer.writeVarLong(stack.getAmount());
-		buffer.writeNbt(stack.getTag());
+		buffer.writeNbt(stack.tag);
 		return buffer;
 	}
 

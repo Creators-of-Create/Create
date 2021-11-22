@@ -59,7 +59,7 @@ public class CouplingPhysics {
 
 			if (railState.getBlock() instanceof BaseRailBlock) {
 				BaseRailBlock block = (BaseRailBlock) railState.getBlock();
-				shape = MinecartAndRailUtil.getDirectionOfRail(railState, world, railPosition, cart);
+				shape = MinecartAndRailUtil.getDirectionOfRail(railState, world, railPosition, block);
 			}
 
 			Vec3 correction = Vec3.ZERO;
@@ -114,7 +114,7 @@ public class CouplingPhysics {
 			if (!(railState.getBlock() instanceof BaseRailBlock))
 				return null;
 			BaseRailBlock block = (BaseRailBlock) railState.getBlock();
-			return MinecartAndRailUtil.getDirectionOfRail(railState, world, railPosition, minecart);
+			return MinecartAndRailUtil.getDirectionOfRail(railState, world, railPosition, block);
 		});
 
 		float futureStress = (float) (couplingLength - nextPositions.getFirst()

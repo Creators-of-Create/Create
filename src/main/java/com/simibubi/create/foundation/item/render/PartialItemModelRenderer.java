@@ -64,7 +64,7 @@ public class PartialItemModelRenderer {
 		ms.pushPose();
 		ms.translate(-0.5D, -0.5D, -0.5D);
 
-		if (/*!*/model.isCustomRenderer())
+		if (!model.isCustomRenderer())
 			renderBakedItemModel(model, light, ms,
 				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
 		else

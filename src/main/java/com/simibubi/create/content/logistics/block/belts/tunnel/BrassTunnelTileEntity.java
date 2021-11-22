@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
@@ -706,7 +707,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		if (!beltCapability.isPresent()) {
 			BlockEntity tileEntity = level.getBlockEntity(worldPosition.below());
 			if (tileEntity != null && tileEntity instanceof ItemTransferable transferable)
-				beltCapability =  LazyOptional.ofObject(transferable.getItemHandler(null));
+				beltCapability = TransferUtil.getItemHandler(tileEntity);
 		}
 		return beltCapability;
 	}

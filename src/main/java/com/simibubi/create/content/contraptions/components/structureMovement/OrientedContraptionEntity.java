@@ -386,7 +386,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				if (blockState.getBlock() instanceof BaseRailBlock) {
 					BaseRailBlock abstractRailBlock = (BaseRailBlock) blockState.getBlock();
 					RailShape railDirection =
-						MinecartAndRailUtil.getDirectionOfRail(blockState, level, railPosition, minecartEntity);
+						MinecartAndRailUtil.getDirectionOfRail(blockState, level, railPosition, abstractRailBlock);
 					motion = VecHelper.project(motion, MinecartSim2020.getRailVec(railDirection));
 				}
 			}

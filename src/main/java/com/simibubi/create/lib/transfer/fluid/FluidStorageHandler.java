@@ -64,6 +64,8 @@ public class FluidStorageHandler implements IFluidHandler {
 	@Override
 	public long fill(FluidStack stack, boolean sim) {
 		long finalVal = stack.getAmount();
+		if(stack.getType().isBlank())
+			return finalVal;
 		try (Transaction t = Transaction.openOuter()) {
 			long remainder = storage.insert(stack.getType(), stack.getAmount(), t);
 			if (remainder != 0) {

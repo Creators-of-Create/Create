@@ -227,19 +227,19 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
+		//.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
+		//.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> (FabricItemSettings) p.stacksTo(1))
-		.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
+		//.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
 //		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
@@ -264,32 +264,32 @@ public class AllItems {
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
 			.properties(p -> (FabricItemSettings) p.stacksTo(1))
-			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerItemRenderer::new))
+			//.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
 			.properties(p -> (FabricItemSettings) p.stacksTo(1))
-			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
+			//.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripItemRenderer::new))
+		//.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripItemRenderer::new))
 //		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
-			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandItemRenderer::new))
+			//.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<WorldshaperItem> WORLDSHAPER =
 		REGISTRATE.item("handheld_worldshaper", WorldshaperItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
-			.transform(CreateRegistrate.customRenderedItem(() -> WorldshaperItemRenderer::new))
+			//.transform(CreateRegistrate.customRenderedItem(() -> WorldshaperItemRenderer::new))
 			.lang("Creative Worldshaper")
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
