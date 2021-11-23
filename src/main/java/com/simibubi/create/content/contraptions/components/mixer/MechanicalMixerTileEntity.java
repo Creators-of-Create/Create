@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -128,7 +129,15 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
-					processingTicks = MathHelper.clamp((MathHelper.log2((int) (512 / speed))) * 15 + 1, 1, 512);
+					
+					float recipeSpeed = 1;
+					if (currentRecipe instanceof ProcessingRecipe) {
+						int t = ((ProcessingRecipe<?>) currentRecipe).getProcessingDuration();
+						if (t != 0)
+							recipeSpeed = t / 100f;
+					}
+					
+					processingTicks = MathHelper.clamp((MathHelper.log2((int) (512 / speed))) * MathHelper.ceil(recipeSpeed * 15) + 1, 1, 512);
 
 					Optional<BasinTileEntity> basin = getBasin();
 					if (basin.isPresent()) {
