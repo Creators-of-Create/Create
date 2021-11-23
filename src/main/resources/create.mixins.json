@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
-    "PlayerListMixin",
-    "SandPaperSoundMixin"
+    "CustomItemUseEffectsMixin",
+    "PlayerListMixin"
   ],
   "client": [
     "BreakProgressMixin",

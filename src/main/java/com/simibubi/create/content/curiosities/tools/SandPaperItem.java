@@ -1,10 +1,12 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import java.util.Random;
 import java.util.function.Consumer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -45,7 +47,7 @@ import com.simibubi.create.lib.entity.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SandPaperItem extends Item implements CustomItemEnchantabilityItem {
+public class SandPaperItem extends Item implements CustomUseEffectsItem, CustomItemEnchantabilityItem {
 
 	public SandPaperItem(Properties properties) {
 		super(properties.durability(8));
@@ -208,6 +210,27 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 	public boolean canPerformAction(ItemStack stack/*, ToolAction toolAction*/) {
 		return stack.getItem() instanceof AxeItem;
 		//return toolAction == ToolActions.AXE_SCRAPE || toolAction == ToolActions.AXE_WAX_OFF;
+	}
+
+	@Override
+	public Boolean shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
+		// Trigger every tick so that we have more fine grain control over the animation
+		return true;
+	}
+
+	@Override
+	public boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, Random random) {
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains("Polishing")) {
+			ItemStack polishing = ItemStack.of(tag.getCompound("Polishing"));
+			entity.spawnItemParticles(polishing, 1);
+		}
+
+		// After 6 ticks play the sound every 7th
+		if ((entity.getTicksUsingItem() - 6) % 7 == 0)
+			entity.playSound(entity.getEatingSound(stack), 0.9F + 0.2F * random.nextFloat(), random.nextFloat() * 0.2F + 0.9F);
+
+		return true;
 	}
 
 	@Override
