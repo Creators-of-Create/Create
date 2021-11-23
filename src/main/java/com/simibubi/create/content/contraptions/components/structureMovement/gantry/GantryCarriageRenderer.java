@@ -55,8 +55,7 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 				angleForTe *= -1;
 
 		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.GANTRY_COGS, state);
-		cogs.matrixStacker()
-				.centre()
+		cogs.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)

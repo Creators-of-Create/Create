@@ -28,8 +28,7 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_COGS, blockState);
-		cogs.matrixStacker()
-			.centre()
+		cogs.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(CopperBacktankBlock.HORIZONTAL_FACING)))
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)

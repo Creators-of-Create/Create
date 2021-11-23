@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
@@ -455,14 +455,12 @@ public class PonderScene {
 		public PoseStack apply(PoseStack ms, float pt, boolean overlayCompatible) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
-			MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 				.rotateX(-35)
-				.rotateY(55);
-			ms.translate(offset, 0, 0);
-			MatrixTransformStack.of(ms)
+				.rotateY(55)
+				.translate(offset, 0, 0)
 				.rotateY(-55)
-				.rotateX(35);
-			MatrixTransformStack.of(ms)
+				.rotateX(35)
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
 

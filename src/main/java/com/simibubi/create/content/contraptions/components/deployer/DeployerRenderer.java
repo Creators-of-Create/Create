@@ -181,8 +181,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		pole.transform(m);
 		hand.transform(m);
-		pole = transform(pole, blockState, true);
-		hand = transform(hand, blockState, false);
+		transform(pole, blockState, true);
+		transform(hand, blockState, false);
 
 		pole.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), builder);

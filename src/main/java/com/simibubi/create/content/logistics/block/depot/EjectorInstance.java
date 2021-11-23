@@ -61,10 +61,6 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 	private void pivotPlate(float lidProgress) {
 		float angle = lidProgress * 70;
 
-		PoseStack ms = new PoseStack();
-
-		EjectorRenderer.applyLidAngle(tile, angle, MatrixTransformStack.of(ms).translate(getInstancePosition()));
-
-		plate.setTransform(ms);
+		EjectorRenderer.applyLidAngle(tile, angle, plate.loadIdentity().translate(getInstancePosition()));
 	}
 }

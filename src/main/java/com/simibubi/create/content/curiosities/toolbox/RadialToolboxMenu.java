@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -124,7 +124,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			for (int slot = 0; slot < 8; slot++) {
 				ms.pushPose();
-				MatrixTransformStack.of(ms)
+				TransformStack.cast(ms)
 					.rotateZ(slot * 45 - 45)
 					.translate(0, -40 + (10 * (1 - fade) * (1 - fade)), 0)
 					.rotateZ(-slot * 45 + 45);

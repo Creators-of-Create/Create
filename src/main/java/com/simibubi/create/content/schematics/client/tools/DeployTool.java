@@ -1,6 +1,6 @@
 package com.simibubi.create.content.schematics.client.tools;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
@@ -59,7 +59,7 @@ public class DeployTool extends PlacementToolBase {
 		Vec3 origin = new Vec3(xOrigin, 0, zOrigin);
 
 		ms.translate(x - centerX, y, z - centerZ);
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.translate(origin)
 			.translate(rotationOffset)
 			.rotateY(transformation.getCurrentRotation())

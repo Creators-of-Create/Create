@@ -51,8 +51,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 	}
 
 	private void animateHead(float offset) {
-		PoseStack stack = new PoseStack();
-		MatrixTransformStack.of(stack)
+		head.loadIdentity()
 				.translate(getInstancePosition())
 				.nudge(tile.hashCode())
 				.centre()
@@ -60,8 +59,6 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 				.rotateX(AngleHelper.verticalAngle(facing) + 90)
 				.unCentre()
 				.translate(0, (offset * offset) * 4 / 16f, 0);
-
-		head.setTransform(stack);
 	}
 
 	@Override

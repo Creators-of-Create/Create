@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.client;
 
 import static java.lang.Math.abs;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -63,7 +63,7 @@ public class SchematicTransformation {
 		float lr = getScaleLR().get(pt);
 		float rot = rotation.get(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.translate(rotationOffset)
 			.rotateY(rot)
 			.translateBack(rotationOffset);

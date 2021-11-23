@@ -23,12 +23,9 @@ public class BrassDiodeInstance extends TileEntityInstance<BrassDiodeTileEntity>
                 .material(Materials.TRANSFORMED)
                 .getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
 
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack.of(ms).translate(getInstancePosition());
-
-        indicator
-                 .setTransform(ms)
-                 .setColor(getColor());
+        indicator.loadIdentity()
+				.translate(getInstancePosition())
+				.setColor(getColor());
 
         previousState = tile.state;
     }

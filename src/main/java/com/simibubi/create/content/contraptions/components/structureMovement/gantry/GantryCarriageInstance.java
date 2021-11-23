@@ -62,8 +62,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 	}
 
 	private void animateCogs(float cogAngle) {
-		PoseStack ms = new PoseStack();
-		MatrixTransformStack.of(ms)
+		gantryCogs.loadIdentity()
 				.translate(getInstancePosition())
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
@@ -73,8 +72,6 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 				.rotateX(-cogAngle)
 				.translate(0, 9 / 16f, 0)
 				.unCentre();
-
-		gantryCogs.setTransform(ms);
 	}
 
 	static float getRotationMultiplier(Direction.Axis gantryAxis, Direction facing) {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -94,7 +94,7 @@ public class SchematicRenderer {
 		BlockPos.betweenClosedStream(blockAccess.getBounds())
 			.forEach(localPos -> {
 				ms.pushPose();
-				MatrixTransformStack.of(ms)
+				TransformStack.cast(ms)
 					.translate(localPos);
 				BlockPos pos = localPos.offset(anchor);
 				BlockState state = blockAccess.getBlockState(pos);

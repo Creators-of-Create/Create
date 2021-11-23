@@ -9,7 +9,6 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -31,7 +30,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class DeployerActorInstance extends ActorInstance {
 
-    Direction facing;
+	private final MatrixTransformStack stack = new MatrixTransformStack();
+	Direction facing;
     boolean stationaryTimer;
 
     float yRot;
@@ -42,7 +42,7 @@ public class DeployerActorInstance extends ActorInstance {
     ModelData hand;
     RotatingData shaft;
 
-    public DeployerActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public DeployerActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
 		Material<ModelData> mat = materialManager.defaultSolid()
@@ -94,13 +94,11 @@ public class DeployerActorInstance extends ActorInstance {
 
         Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		stack.setIdentity()
+				.translate(context.localPos)
+				.translate(offset);
 
-        msr.translate(context.localPos)
-           .translate(offset);
-
-        transformModel(msr, pole, hand, yRot, xRot, zRot);
+        transformModel(stack, pole, hand, yRot, xRot, zRot);
     }
 
     static void transformModel(MatrixTransformStack msr, ModelData pole, ModelData hand, float yRot, float xRot, float zRot) {
@@ -109,11 +107,11 @@ public class DeployerActorInstance extends ActorInstance {
         msr.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
         msr.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
 
-        msr.push();
+        msr.pushPose();
         msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
         msr.unCentre();
         pole.setTransform(msr.unwrap());
-        msr.pop();
+        msr.popPose();
 
         msr.unCentre();
 

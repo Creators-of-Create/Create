@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -41,7 +42,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable {
+public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, IInstanceRendered {
 
 	public LerpedFloat lid = LerpedFloat.linear()
 		.startWithValue(0);

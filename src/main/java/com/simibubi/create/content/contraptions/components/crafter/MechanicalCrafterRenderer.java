@@ -5,7 +5,7 @@ import static com.simibubi.create.content.contraptions.base.KineticTileEntityRen
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -115,14 +115,14 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				Integer x = pair.getKey();
 				Integer y = pair.getValue();
 				ms.translate(x * spacing, y * spacing, 0);
-				
+
 				int offset = 0;
 				if (te.phase == Phase.EXPORTING && te.getBlockState().hasProperty(MechanicalCrafterBlock.POINTING)) {
 					Pointing value = te.getBlockState().getValue(MechanicalCrafterBlock.POINTING);
 					offset = value == Pointing.UP ? -1 : value == Pointing.LEFT ? 2 : value == Pointing.RIGHT ? -2 : 1;
 				}
-				
-				MatrixTransformStack.of(ms)
+
+				TransformStack.cast(ms)
 					.rotateY(180)
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()

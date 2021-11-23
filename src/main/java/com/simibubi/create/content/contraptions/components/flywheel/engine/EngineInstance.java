@@ -33,18 +33,14 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
         float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
 
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
-
-        msr.translate(getInstancePosition())
-           .nudge(tile.hashCode())
-           .centre()
-           .rotate(Direction.UP, angle)
-           .unCentre()
-           .translate(0, 0, -1);
-
-        this.frame.setTransform(ms);
-    }
+        this.frame.loadIdentity()
+				.translate(getInstancePosition())
+				.nudge(tile.hashCode())
+				.centre()
+				.rotate(Direction.UP, angle)
+				.unCentre()
+				.translate(0, 0, -1);
+	}
 
     @Override
     public void remove() {

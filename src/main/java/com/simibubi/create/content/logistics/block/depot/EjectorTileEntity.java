@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -598,7 +598,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		@Override
 		protected void rotate(BlockState state, PoseStack ms) {
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(angle(state))
 				.rotateX(90);
 		}
