@@ -48,6 +48,8 @@ public class ItemStorageHandler implements IItemHandlerModifiable {
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean sim) {
+		if(stack.isEmpty())
+			return stack;
 		ItemStack finalVal = ItemStack.EMPTY;
 		try (Transaction t = Transaction.openOuter()) {
 			long remainder = stack.getCount() - storage.insert(ItemVariant.of(stack), stack.getCount(), t);

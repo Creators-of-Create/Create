@@ -23,3 +23,5 @@ accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 
 extendable class net/minecraft/world/inventory/MenuType$MenuSupplier
+
+accessible method net/minecraft/world/entity/LivingEntity spawnItemParticles (Lnet/minecraft/world/item/ItemStack;I)V
