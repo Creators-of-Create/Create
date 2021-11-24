@@ -209,6 +209,8 @@ public class FluidNetwork {
 
 			if (transfer.isEmpty())
 				return;
+			if (simulate)
+				flowSpeed = transfer.getAmount();
 
 			List<Pair<BlockFace, LazyOptional<IFluidHandler>>> availableOutputs = new ArrayList<>(targets);
 			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {

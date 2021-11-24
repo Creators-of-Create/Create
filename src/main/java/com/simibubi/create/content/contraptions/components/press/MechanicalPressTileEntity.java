@@ -344,7 +344,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	private static final List<ResourceLocation> RECIPE_DENY_LIST =
-		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"));
+		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
 
 	public static <C extends IInventory> boolean canCompress(IRecipe<C> recipe) {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
