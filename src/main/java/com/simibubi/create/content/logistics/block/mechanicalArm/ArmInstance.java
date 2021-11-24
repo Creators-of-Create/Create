@@ -10,6 +10,7 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -122,7 +123,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		}
 
 		PoseStack msLocal = new PoseStack();
-		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(msLocal);
 		msr.translate(getInstancePosition());
 		msr.centre();
 

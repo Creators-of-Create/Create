@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import java.util.Collection;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -131,7 +133,7 @@ public class ContraptionRenderDispatcher {
 
 			PoseStack m = matrices.getModel();
 			m.pushPose();
-			MatrixTransformStack.of(m)
+			TransformStack.cast(m)
 					.translate(blockInfo.pos);
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);

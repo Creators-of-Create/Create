@@ -123,7 +123,7 @@ public class CloneCommand {
 					BlockState state = cached.getState();
 					BlockEntity te = world.getBlockEntity(currentPos);
 					if (te != null) {
-						CompoundTag nbt = te.save(new CompoundTag());
+						CompoundTag nbt = te.saveWithFullMetadata();
 						tileBlocks.add(new StructureTemplate.StructureBlockInfo(newPos, state, nbt));
 					} else {
 						blocks.add(new StructureTemplate.StructureBlockInfo(newPos, state, null));
@@ -169,7 +169,7 @@ public class CloneCommand {
 		}
 
 		world.getBlockTicks()
-			.copy(sourceArea, diffToTarget);
+			.copyArea(sourceArea, diffToTarget);
 
 		return blockPastes;
 	}

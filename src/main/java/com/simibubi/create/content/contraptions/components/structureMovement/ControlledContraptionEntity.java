@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
@@ -231,7 +232,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		Axis axis = getRotationAxis();
 
 		for (PoseStack stack : matrixStacks)
-			MatrixTransformStack.of(stack)
+			TransformStack.cast(stack)
 						 .nudge(getId())
 						 .centre()
 						 .rotate(angle, axis)

@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -33,18 +32,19 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.ticks.LevelTickAccess;
 
 public class EmptierChunk extends LevelChunk {
 
 	private static final Level DUMMY_LEVEL = new Level(null, null, DimensionTypeAccessor.getDEFAULT_OVERWORLD(), null, false, false, 0) {
 
 		@Override
-		public TickList<Block> getBlockTicks() {
+		public LevelTickAccess<Block> getBlockTicks() {
 			return null;
 		}
 
 		@Override
-		public TickList<Fluid> getLiquidTicks() {
+		public LevelTickAccess<Fluid> getFluidTicks() {
 			return null;
 		}
 

@@ -168,7 +168,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext ctx) {
 		if (ctx instanceof EntityCollisionContext && ((EntityCollisionContext) ctx).getEntity()
-			.orElse(null) instanceof ItemEntity)
+			/*.orElse(null)*/ instanceof ItemEntity)
 			return AllShapes.BASIN_COLLISION_SHAPE;
 		return getShape(state, reader, pos, ctx);
 	}

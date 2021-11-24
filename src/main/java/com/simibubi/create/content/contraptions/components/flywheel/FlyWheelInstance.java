@@ -13,6 +13,7 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -103,7 +104,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 	private void animate(float angle) {
 		PoseStack ms = new PoseStack();
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 
 		msr.translate(getInstancePosition());
 

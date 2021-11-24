@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.AllBlockPartials;
@@ -60,7 +61,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		}
 		int itemLight = Mth.floor(sl + .5) << 20 | (Mth.floor(bl + .5) & 0xf) << 4;
 
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.rotateY(vertical ? 0 : -yaw)
 			.rotateX(fakeNormalXRotation);
 		Matrix3f copy = ms.last()
@@ -70,7 +71,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		ms.popPose();
 		ms.pushPose();
 
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.rotateY(-yaw)
 			.rotateX(entity.getXRot())
 			.translate(0, 0, 1 / 32f + .001);

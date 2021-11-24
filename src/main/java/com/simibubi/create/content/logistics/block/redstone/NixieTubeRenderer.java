@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -59,7 +60,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		int light, int overlay) {
 		ms.pushPose();
 		BlockState blockState = te.getBlockState();
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(blockState.getValue(NixieTubeBlock.FACING)));
 

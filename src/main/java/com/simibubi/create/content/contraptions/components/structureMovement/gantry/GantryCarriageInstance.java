@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -63,7 +64,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
 	private void animateCogs(float cogAngle) {
 		PoseStack ms = new PoseStack();
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 				.translate(getInstancePosition())
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))

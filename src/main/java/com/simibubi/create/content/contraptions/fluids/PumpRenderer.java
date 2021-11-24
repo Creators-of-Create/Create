@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -37,7 +38,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 			ms.pushPose();
 			SuperByteBuffer arrow = CachedBufferer.partial(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 			Direction direction = blockState.getValue(PumpBlock.FACING);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 					.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
 					.rotateX(-AngleHelper.verticalAngle(direction) - 90)

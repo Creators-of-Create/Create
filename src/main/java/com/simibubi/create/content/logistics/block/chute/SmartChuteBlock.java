@@ -34,8 +34,7 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 			return;
 		if (!worldIn.getBlockTicks()
 			.willTickThisTick(pos, this))
-			worldIn.getBlockTicks()
-				.scheduleTick(pos, this, 0);
+			worldIn.scheduleTick(pos, this, 0);
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		return true;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ChuteTileEntity> getTileEntityType() {
 		return AllTileEntities.SMART_CHUTE.get();

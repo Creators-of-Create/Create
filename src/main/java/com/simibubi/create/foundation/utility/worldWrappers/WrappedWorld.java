@@ -18,7 +18,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,6 +30,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.ticks.LevelTickAccess;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -92,13 +92,13 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public TickList<Block> getBlockTicks() {
+	public LevelTickAccess<Block> getBlockTicks() {
 		return world.getBlockTicks();
 	}
 
 	@Override
-	public TickList<Fluid> getLiquidTicks() {
-		return world.getLiquidTicks();
+	public LevelTickAccess<Fluid> getFluidTicks() {
+		return world.getFluidTicks();
 	}
 
 	@Override

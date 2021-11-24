@@ -5,6 +5,7 @@ import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -52,7 +53,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
 	private void animateHead(float offset) {
 		PoseStack stack = new PoseStack();
-		MatrixTransformStack.of(stack)
+		TransformStack.cast(stack)
 				.translate(getInstancePosition())
 				.nudge(tile.hashCode())
 				.centre()

@@ -18,7 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.ticks.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -71,8 +71,7 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getBlockTicks()
-			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
@@ -91,8 +90,7 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
 		BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
-			world.getLiquidTicks()
-				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		return state;
 	}
@@ -115,9 +113,8 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getBlockTicks()
-				.scheduleTick(pos, this, 1, TickPriority.HIGH);
-		
+			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
+
 		if (isPump(state) && isPump(oldState) && state.getValue(FACING) == oldState.getValue(FACING)
 			.getOpposite()) {
 			BlockEntity tileEntity = world.getBlockEntity(pos);

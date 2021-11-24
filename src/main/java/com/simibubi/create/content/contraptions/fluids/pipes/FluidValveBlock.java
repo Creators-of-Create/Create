@@ -19,7 +19,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.ticks.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -102,8 +102,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getBlockTicks()
-				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
@@ -115,8 +114,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getBlockTicks()
-			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction d) {
@@ -127,7 +125,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

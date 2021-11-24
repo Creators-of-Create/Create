@@ -227,7 +227,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 		CollisionContext context) {
 		if (context instanceof EntityCollisionContext) {
 			Entity entity = ((EntityCollisionContext) context).getEntity()
-				.orElse(null);
+				/*.orElse(null)*/;
 			if (entity instanceof AbstractMinecart)
 				return Shapes.empty();
 			if (entity instanceof Player)

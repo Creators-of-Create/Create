@@ -15,6 +15,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
+
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
@@ -465,14 +467,14 @@ public class PonderScene {
 		public PoseStack apply(PoseStack ms, float pt, boolean overlayCompatible) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateX(-35)
 				.rotateY(55);
 			ms.translate(offset, 0, 0);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(-55)
 				.rotateX(35);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
 

@@ -84,7 +84,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
 		CollisionContext p_220071_4_) {
 		if (p_220071_4_ instanceof EntityCollisionContext && ((EntityCollisionContext) p_220071_4_).getEntity()
-			.orElse(null) instanceof ItemEntity
+			/*.orElse(null)*/ instanceof ItemEntity
 			&& (p_220071_1_.getValue(SHAPE) == Shape.PULLING || p_220071_1_.getValue(SHAPE) == Shape.PUSHING))
 			return AllShapes.FUNNEL_COLLISION.get(getFacing(p_220071_1_));
 		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);

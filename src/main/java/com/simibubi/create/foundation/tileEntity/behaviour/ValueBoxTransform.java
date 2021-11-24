@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.tileEntity.behaviour;
 
 import java.util.function.Function;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
@@ -109,7 +111,7 @@ public abstract class ValueBoxTransform {
 		protected void rotate(BlockState state, PoseStack ms) {
 			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
 			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(yRot)
 				.rotateX(xRot);
 		}

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -46,7 +47,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 		PoseStack m = matrices.getModel();
 		m.pushPose();
-		MatrixTransformStack.of(m)
+		TransformStack.cast(m)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing))

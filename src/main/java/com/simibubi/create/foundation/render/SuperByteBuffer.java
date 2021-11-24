@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -69,7 +70,7 @@ public class SuperByteBuffer {
 		template = new BufferBuilderReader(buf);
 		transforms = new PoseStack();
 		transforms.pushPose();
-		stacker = MatrixTransformStack.of(transforms);
+		stacker = (MatrixTransformStack) TransformStack.cast(transforms);
 	}
 
 	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {

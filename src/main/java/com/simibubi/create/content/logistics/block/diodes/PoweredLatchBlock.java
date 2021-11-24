@@ -10,13 +10,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.ticks.TickPriority;
 
 public class PoweredLatchBlock extends ToggleLatchBlock {
 
@@ -49,8 +49,7 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 			.willTickThisTick(pos, this))
 			return;
 		if (back != shouldBack || side != shouldSide)
-			worldIn.getBlockTicks()
-				.scheduleTick(pos, this, this.getDelay(state), tickpriority);
+			worldIn.scheduleTick(pos, this, this.getDelay(state), tickpriority);
 	}
 
 	protected boolean isPoweredOnSides(Level worldIn, BlockPos pos, BlockState state) {

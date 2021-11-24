@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.funnel;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -39,7 +40,7 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
 				.getOpposite());

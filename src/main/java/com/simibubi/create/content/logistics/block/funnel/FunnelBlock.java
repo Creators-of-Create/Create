@@ -139,7 +139,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity()
-			.orElse(null) instanceof ItemEntity && getFacing(state).getAxis()
+			/*.orElse(null)*/ instanceof ItemEntity && getFacing(state).getAxis()
 				.isHorizontal())
 			return AllShapes.FUNNEL_COLLISION.get(getFacing(state));
 		return getShape(state, world, pos, context);

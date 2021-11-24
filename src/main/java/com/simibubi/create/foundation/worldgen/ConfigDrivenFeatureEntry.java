@@ -8,7 +8,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.Predicates;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 

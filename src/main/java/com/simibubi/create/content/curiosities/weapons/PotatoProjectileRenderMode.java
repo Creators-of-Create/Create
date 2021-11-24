@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.weapons;
 import static com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderMode.entityRandom;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -32,7 +33,7 @@ public interface PotatoProjectileRenderMode {
 				.getCenter()
 				.subtract(p1);
 
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(AngleHelper.deg(Mth.atan2(diff.x, diff.z)) + 180)
 				.rotateX(AngleHelper.deg(Mth.atan2(diff.y, Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
 		}
@@ -47,7 +48,7 @@ public interface PotatoProjectileRenderMode {
 		@Environment(EnvType.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			super.transform(ms, entity, pt);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateZ((entity.tickCount + pt) * 2 * entityRandom(entity, 16))
 				.rotateX((entity.tickCount + pt) * entityRandom(entity, 32));
 		}
@@ -68,11 +69,11 @@ public interface PotatoProjectileRenderMode {
 		@Environment(EnvType.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			Vec3 diff = entity.getDeltaMovement();
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(AngleHelper.deg(Mth.atan2(diff.x, diff.z)))
 				.rotateX(270
 					+ AngleHelper.deg(Mth.atan2(diff.y, -Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY((entity.tickCount + pt) * 20 * spin + entityRandom(entity, 360))
 				.rotateZ(-spriteAngleOffset);
 		}
@@ -90,7 +91,7 @@ public interface PotatoProjectileRenderMode {
 		@Override
 		@Environment(EnvType.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
-			MatrixTransformStack.of(ms).rotateY(AngleHelper.deg(Mth.atan2(offset.x, offset.z)));
+			TransformStack.cast(ms).rotateY(AngleHelper.deg(Mth.atan2(offset.x, offset.z)));
 		}
 
 	}

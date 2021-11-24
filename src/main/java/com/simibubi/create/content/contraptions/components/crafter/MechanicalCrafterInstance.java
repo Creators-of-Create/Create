@@ -30,7 +30,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 	private Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			TransformStack stacker = MatrixTransformStack.of(stack)
+			TransformStack stacker = TransformStack.cast(stack)
 					.centre();
 
 			if (facing.getAxis() == Direction.Axis.X) stacker.rotateZ(90);

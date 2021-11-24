@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.inventories;
 import java.util.List;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -99,7 +100,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity implements ItemTran
 
 			@Override
 			protected void rotate(BlockState state, PoseStack ms) {
-				MatrixTransformStack.of(ms)
+				TransformStack.cast(ms)
 					.rotateX(90);
 			}
 

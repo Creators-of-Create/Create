@@ -124,13 +124,13 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	 * Hook only these in future subclasses of STE
 	 */
 	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.save(compound);
+		super.saveAdditional(compound);
 		behaviourList.forEach(tb -> tb.write(compound, clientPacket));
 	}
 
 	@Override
 	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.save(compound);
+		super.saveAdditional(compound);
 		behaviourList.forEach(tb -> {
 			if (tb.isSafeNBT())
 				tb.write(compound, clientPacket);

@@ -53,7 +53,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 					if (placingAir && !includeAir)
 						return;
 
-					CompoundTag tileData = tile != null ? tile.save(new CompoundTag()) : null;
+					CompoundTag tileData = tile != null ? tile.saveWithFullMetadata() : null;
 					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
 				}, (pos, entity) -> {
 					world.addFreshEntity(entity);

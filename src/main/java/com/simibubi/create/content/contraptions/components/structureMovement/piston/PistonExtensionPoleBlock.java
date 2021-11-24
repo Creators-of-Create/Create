@@ -151,7 +151,7 @@ public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock impleme
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(BlockStateProperties.WATERLOGGED)) {
-            world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
         return state;
     }

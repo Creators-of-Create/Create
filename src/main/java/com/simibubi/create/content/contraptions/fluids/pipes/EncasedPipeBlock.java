@@ -31,7 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.ticks.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -75,8 +75,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (!world.isClientSide && state != oldState)
-			world.getBlockTicks()
-				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
@@ -93,8 +92,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 			return;
 		if (!state.getValue(FACING_TO_PROPERTY_MAP.get(d)))
 			return;
-		world.getBlockTicks()
-			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override

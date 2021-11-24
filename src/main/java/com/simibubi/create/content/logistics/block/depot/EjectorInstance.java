@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -63,7 +64,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 		PoseStack ms = new PoseStack();
 
-		EjectorRenderer.applyLidAngle(tile, angle, MatrixTransformStack.of(ms).translate(getInstancePosition()));
+		EjectorRenderer.applyLidAngle(tile, angle, TransformStack.cast(ms).translate(getInstancePosition()));
 
 		plate.setTransform(ms);
 	}

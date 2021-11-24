@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -46,7 +47,7 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
 
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)

@@ -4,6 +4,8 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.function.Supplier;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -65,7 +67,7 @@ public class CachedBufferer {
 	public static Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			MatrixTransformStack.of(stack)
+			TransformStack.cast(stack)
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing))
@@ -77,7 +79,7 @@ public class CachedBufferer {
 	public static Supplier<PoseStack> rotateToFaceVertical(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			MatrixTransformStack.of(stack)
+			TransformStack.cast(stack)
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing) + 90)

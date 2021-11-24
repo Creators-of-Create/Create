@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -36,7 +37,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 1f);
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 
 		for (Direction direction : Iterate.directions) {
 			if (!te.flaps.containsKey(direction))

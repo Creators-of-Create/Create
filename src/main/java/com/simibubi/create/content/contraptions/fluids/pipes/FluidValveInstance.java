@@ -5,6 +5,7 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -59,7 +60,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
         float pointerRotation = Mth.lerp(valve.pointer.getValue(AnimationTickHolder.getPartialTicks()), 0, -90);
 
         PoseStack ms = new PoseStack();
-        MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
                      .translate(getInstancePosition())
                      .centre()
                      .rotateY(yRot)

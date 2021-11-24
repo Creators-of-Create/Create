@@ -6,6 +6,7 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -51,7 +52,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
         float angle = (tile.independentAngle + AnimationTickHolder.getPartialTicks() * tile.chasingVelocity) / 360;
 
         PoseStack ms = new PoseStack();
-        MatrixTransformStack.of(ms)
+        TransformStack.cast(ms)
                      .translate(getInstancePosition())
                      .centre()
                      .rotate(Direction.get(Direction.AxisDirection.POSITIVE, axis), angle)

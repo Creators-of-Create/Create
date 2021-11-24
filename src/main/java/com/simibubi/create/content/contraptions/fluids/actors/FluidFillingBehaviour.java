@@ -25,9 +25,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerTickList;
-import net.minecraft.world.level.TickList;
-import net.minecraft.world.level.TickNextTickData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -41,6 +38,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.ticks.LevelTickAccess;
 
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
@@ -193,7 +191,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 								.createLegacyBlock(), 2 | 16);
 					}
 
-					TickList<Fluid> pendingFluidTicks = world.getLiquidTicks();
+					LevelTickAccess<Fluid> pendingFluidTicks = world.getFluidTicks();
 					if (pendingFluidTicks instanceof ServerTickList) {
 						ServerTickListAccessor<Fluid> accessor = (ServerTickListAccessor<Fluid>) pendingFluidTicks;
 						TickNextTickData<Fluid> removedEntry = null;

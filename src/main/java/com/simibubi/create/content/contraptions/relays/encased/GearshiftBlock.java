@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.ticks.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -58,7 +58,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 	public Class<SplitShaftTileEntity> getTileEntityClass() {
 		return SplitShaftTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
 		return AllTileEntities.GEARSHIFT.get();
@@ -72,7 +72,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 
 		// Re-attach next tick
 		if (reAttachNextTick)
-			worldIn.getBlockTicks().scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
+			worldIn.scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
 	}
 
 	@Override

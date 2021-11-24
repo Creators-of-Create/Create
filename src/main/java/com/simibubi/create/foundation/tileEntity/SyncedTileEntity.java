@@ -31,7 +31,7 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 
 	@Override
 	public CompoundTag getUpdateTag() {
-		return save(new CompoundTag());
+		return saveWithFullMetadata();
 	}
 
 

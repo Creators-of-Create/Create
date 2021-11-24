@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.ticks.LevelTickAccess;
 
 public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor {
 
@@ -155,7 +156,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public List<? extends Player> players() {
 		return Collections.emptyList();
@@ -207,12 +208,12 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) {}
 
 	@Override
-	public TickList<Block> getBlockTicks() {
+	public LevelTickAccess<Block> getBlockTicks() {
 		return EmptyTickList.empty();
 	}
 
 	@Override
-	public TickList<Fluid> getLiquidTicks() {
+	public LevelTickAccess<Fluid> getFluidTicks() {
 		return EmptyTickList.empty();
 	}
 

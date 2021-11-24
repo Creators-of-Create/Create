@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.ponder.elements;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -61,7 +62,7 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 	protected float applyFade(PoseStack ms, float pt) {
 		float currentFade = fade.getValue(pt);
 		if (fadeVec != null)
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.translate(fadeVec.scale(-1 + currentFade));
 		return currentFade;
 	}

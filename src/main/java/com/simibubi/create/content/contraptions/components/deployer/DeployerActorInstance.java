@@ -9,6 +9,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -95,7 +96,7 @@ public class DeployerActorInstance extends ActorInstance {
         Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
         PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+        MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 
         msr.translate(context.localPos)
            .translate(offset);
@@ -109,11 +110,11 @@ public class DeployerActorInstance extends ActorInstance {
         msr.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
         msr.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
 
-        msr.push();
+        msr.pushPose();
         msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
         msr.unCentre();
         pole.setTransform(msr.unwrap());
-        msr.pop();
+        msr.popPose();
 
         msr.unCentre();
 

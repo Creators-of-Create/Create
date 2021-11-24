@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 import static net.minecraft.util.Mth.lerp;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -80,7 +81,7 @@ public class CouplingRenderer {
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.multiply(1, 0, 1)
 				.length()) * 180 / Math.PI;
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
 			CartEndpoint cartTransform = transforms.get(isFirst);
 

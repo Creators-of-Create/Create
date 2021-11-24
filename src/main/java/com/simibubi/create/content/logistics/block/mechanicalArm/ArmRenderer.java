@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -59,7 +60,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		BlockState blockState = te.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
-		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(msLocal);
 
 		float baseAngle;
 		float lowerArmAngle;

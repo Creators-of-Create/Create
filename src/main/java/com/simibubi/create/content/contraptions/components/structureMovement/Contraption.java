@@ -610,13 +610,11 @@ public abstract class Contraption {
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
 			blockstate = blockstate.setValue(ButtonBlock.POWERED, false);
-			world.getBlockTicks()
-				.scheduleTick(pos, blockstate.getBlock(), -1);
+			world.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
 		if (blockstate.getBlock() instanceof PressurePlateBlock) {
 			blockstate = blockstate.setValue(PressurePlateBlock.POWERED, false);
-			world.getBlockTicks()
-				.scheduleTick(pos, blockstate.getBlock(), -1);
+			world.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
 		CompoundTag compoundnbt = getTileEntityNBT(world, pos);
 		BlockEntity tileentity = world.getBlockEntity(pos);
@@ -653,7 +651,7 @@ public abstract class Contraption {
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity == null)
 			return null;
-		CompoundTag nbt = tileentity.save(new CompoundTag());
+		CompoundTag nbt = tileentity.saveWithFullMetadata();
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");

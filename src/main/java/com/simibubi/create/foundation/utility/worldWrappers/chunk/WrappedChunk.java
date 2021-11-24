@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,6 +29,7 @@ import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.ticks.TickContainerAccess;
 
 public class WrappedChunk implements ChunkAccess {
 
@@ -158,12 +158,12 @@ public class WrappedChunk implements ChunkAccess {
     }
 
     @Override
-    public TickList<Block> getBlockTicks() {
+    public TickContainerAccess<Block> getBlockTicks() {
         return null;
     }
 
     @Override
-    public TickList<Fluid> getLiquidTicks() {
+    public TickContainerAccess<Fluid> getFluidTicks() {
         return null;
     }
 

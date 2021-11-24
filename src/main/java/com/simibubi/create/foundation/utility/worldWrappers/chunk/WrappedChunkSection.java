@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
@@ -12,7 +13,7 @@ public class WrappedChunkSection extends LevelChunkSection {
     public final int zStart;
 
     public WrappedChunkSection(WrappedChunk owner, int yBase) {
-        super(yBase);
+        super(yBase, owner.world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY));
         this.owner = owner;
         this.xStart = owner.pos.getMinBlockX();
         this.yStart = yBase;

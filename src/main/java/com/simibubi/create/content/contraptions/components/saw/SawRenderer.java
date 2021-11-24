@@ -5,6 +5,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
@@ -192,14 +193,14 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 		PoseStack m = matrices.getModel();
 		m.pushPose();
-		MatrixTransformStack.of(m)
+		TransformStack.cast(m)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing));
 		if (!SawBlock.isHorizontal(state))
-			MatrixTransformStack.of(m)
+			TransformStack.cast(m)
 				.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
-		MatrixTransformStack.of(m)
+		TransformStack.cast(m)
 			.unCentre();
 
 		superBuffer.transform(m)

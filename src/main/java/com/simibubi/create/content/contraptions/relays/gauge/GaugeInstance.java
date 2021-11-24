@@ -37,7 +37,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         Instancer<ModelData> headModel = getHeadModel();
 
         ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+        MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
         msr.translate(getInstancePosition());
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
@@ -67,7 +67,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+        MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 
         for (DialFace faceEntry : faces) {
             faceEntry.updateTransform(msr, progress);

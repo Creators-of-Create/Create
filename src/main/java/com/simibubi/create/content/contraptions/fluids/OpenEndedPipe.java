@@ -159,8 +159,7 @@ public class OpenEndedPipe extends FlowSource {
 
 		if (waterlog) {
 			world.setBlock(outputPos, state.setValue(WATERLOGGED, false), 3);
-			world.getLiquidTicks()
-				.scheduleTick(outputPos, Fluids.WATER, 1);
+			world.scheduleTick(outputPos, Fluids.WATER, 1);
 			return stack;
 		}
 		world.setBlock(outputPos, fluidState.createLegacyBlock()
@@ -217,8 +216,7 @@ public class OpenEndedPipe extends FlowSource {
 
 		if (waterlog) {
 			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), 3);
-			world.getLiquidTicks()
-				.scheduleTick(outputPos, Fluids.WATER, 1);
+			world.scheduleTick(outputPos, Fluids.WATER, 1);
 			return true;
 		}
 

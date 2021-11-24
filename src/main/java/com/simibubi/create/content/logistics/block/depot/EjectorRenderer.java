@@ -53,7 +53,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 					.renderInto(ms, vertexBuilder);
 		}
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		MatrixTransformStack msr = (MatrixTransformStack) TransformStack.cast(ms);
 
 		float maxTime =
 				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());

@@ -168,7 +168,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 		if (!(context instanceof EntityCollisionContext))
 			return standardShape;
 		Entity entity = ((EntityCollisionContext) context).getEntity()
-			.orElse(null);
+			/*.orElse(null)*/;
 		if (entity == null)
 			return standardShape;
 
