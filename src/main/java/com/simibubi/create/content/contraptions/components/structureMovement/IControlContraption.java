@@ -16,8 +16,6 @@ public interface IControlContraption {
 
 	public boolean isValid();
 	
-	public void collided();
-	
 	public BlockPos getBlockPosition();
 
 	static enum MovementMode implements INamedIconOptions {

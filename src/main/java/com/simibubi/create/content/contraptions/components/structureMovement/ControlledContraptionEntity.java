@@ -149,11 +149,6 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			if (level.isClientSide)
 				setPos(getX(), getY(), getZ());
 		}
-
-		Vector3d motion = getDeltaMovement();
-		move(motion.x, motion.y, motion.z);
-		if (ContraptionCollider.collideBlocks(this))
-			getController().collided();
 	}
 
 	@Override

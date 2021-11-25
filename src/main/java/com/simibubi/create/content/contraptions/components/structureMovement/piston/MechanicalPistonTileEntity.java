@@ -81,7 +81,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		BlockPos startPos = BlockPos.ZERO.relative(direction, contraption.initialExtensionProgress);
 		contraption.removeBlocksFromWorld(level, startPos);
 		movedContraption = ControlledContraptionEntity.create(getLevel(), this, contraption);
-		applyContraptionPosition();
+		resetContraptionToOffset();
 		forceMove = true;
 		level.addFreshEntity(movedContraption);
 
@@ -96,7 +96,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 			getLevel().setBlock(worldPosition, getBlockState().setValue(MechanicalPistonBlock.STATE, PistonState.EXTENDED),
 				3 | 16);
 		if (movedContraption != null) {
-			applyContraptionPosition();
+			resetContraptionToOffset();
 			movedContraption.disassemble();
 			AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(level, worldPosition);
 		}
@@ -110,7 +110,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public void collided() {
+	protected void collided() {
 		super.collided();
 		if (!running && getMovementSpeed() > 0)
 			assembleNextTick = true;

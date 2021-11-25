@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 import com.simibubi.create.AllBlocks;
@@ -48,6 +49,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	public LerpedFloat drawers = LerpedFloat.linear()
 		.startWithValue(0);
 
+	UUID uniqueId;
 	ToolboxInventory inventory;
 	LazyOptional<IItemHandler> inventoryProvider;
 	ResetableLazy<DyeColor> colorProvider;
@@ -280,6 +282,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.fromTag(state, compound, clientPacket);
+		if (compound.contains("UniqueId", 11))
+			this.uniqueId = compound.getUUID("UniqueId");
 		if (compound.contains("CustomName", 8))
 			this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
 		if (clientPacket)
@@ -288,7 +292,12 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	@Override
 	protected void write(CompoundNBT compound, boolean clientPacket) {
+		if (uniqueId == null)
+			uniqueId = UUID.randomUUID();
+		
 		compound.put("Inventory", inventory.serializeNBT());
+		compound.putUUID("UniqueId", uniqueId);
+
 		if (customName != null)
 			compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
 		super.write(compound, clientPacket);
@@ -359,6 +368,14 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	public void readInventory(CompoundNBT compound) {
 		inventory.deserializeNBT(compound);
+	}
+
+	public void setUniqueId(UUID uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+
+	public UUID getUniqueId() {
+		return uniqueId;
 	}
 
 	public void setCustomName(ITextComponent customName) {

@@ -35,7 +35,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -79,8 +78,10 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 		if (stack == null)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
-			te.readInventory(stack.getOrCreateTag()
-				.getCompound("Inventory"));
+			CompoundNBT orCreateTag = stack.getOrCreateTag();
+			te.readInventory(orCreateTag.getCompound("Inventory"));
+			if (orCreateTag.contains("UniqueId"))
+				te.setUniqueId(orCreateTag.getUUID("UniqueId"));
 			if (stack.hasCustomHoverName())
 				te.setCustomName(stack.getHoverName());
 		});
@@ -111,16 +112,16 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 	public ItemStack getCloneItemStack(IBlockReader world, BlockPos pos, BlockState state) {
 		ItemStack item = new ItemStack(this);
 		Optional<ToolboxTileEntity> tileEntityOptional = getTileEntityOptional(world, pos);
-
 		CompoundNBT tag = item.getOrCreateTag();
+
 		CompoundNBT inv = tileEntityOptional.map(tb -> tb.inventory.serializeNBT())
 			.orElse(new CompoundNBT());
 		tag.put("Inventory", inv);
 
-		ITextComponent customName = tileEntityOptional.map(ToolboxTileEntity::getCustomName)
-			.orElse(null);
-		if (customName != null)
-			item.setHoverName(customName);
+		tileEntityOptional.map(tb -> tb.getUniqueId())
+			.ifPresent(uid -> tag.putUUID("UniqueId", uid));
+		tileEntityOptional.map(ToolboxTileEntity::getCustomName)
+			.ifPresent(item::setHoverName);
 		return item;
 	}
 
@@ -134,8 +135,7 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos,
-		ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return AllShapes.TOOLBOX.get(state.getValue(FACING));
 	}
 
@@ -156,7 +156,8 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return ActionResultType.SUCCESS;
-			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.TOOLBOXES.get(color).getDefaultState());
+			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.TOOLBOXES.get(color)
+				.getDefaultState());
 			world.setBlockAndUpdate(pos, newState);
 			return ActionResultType.SUCCESS;
 		}

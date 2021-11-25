@@ -133,6 +133,12 @@ public class FluidNetwork {
 						continue;
 					}
 
+					// Give pipe end a chance to init connections
+					if (!adjacent.source.isPresent() && !adjacent.determineSource(world, blockFace.getPos())) {
+						canRemove = false;
+						continue;
+					}
+
 					if (adjacent.source.isPresent() && adjacent.source.get()
 						.isEndpoint()) {
 						targets.add(Pair.of(adjacentLocation, adjacent.source.get()
@@ -203,6 +209,8 @@ public class FluidNetwork {
 
 			if (transfer.isEmpty())
 				return;
+			if (simulate)
+				flowSpeed = transfer.getAmount();
 
 			List<Pair<BlockFace, LazyOptional<IFluidHandler>>> availableOutputs = new ArrayList<>(targets);
 			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {
