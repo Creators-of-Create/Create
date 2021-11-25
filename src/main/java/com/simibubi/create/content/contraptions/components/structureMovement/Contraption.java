@@ -22,15 +22,15 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllInteractionBehaviours;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.IFlywheelWorld;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.api.contraption.ContraptionItemStackHandler;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
@@ -256,6 +256,15 @@ public abstract class Contraption {
 		List<IItemHandlerModifiable> list = storage.values()
 			.stream()
 			.map(MountedStorage::getItemHandler)
+			.sorted((a, b) -> {
+				int priorityA = 0;
+				int priorityB = 0;
+				if (a instanceof ContraptionItemStackHandler)
+					priorityA = ((ContraptionItemStackHandler) a).getPriority();
+				if (b instanceof ContraptionItemStackHandler)
+					priorityB = ((ContraptionItemStackHandler) b).getPriority();
+				return -(priorityA - priorityB);
+			})
 			.collect(Collectors.toList());
 		inventory =
 			new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
@@ -719,7 +728,7 @@ public abstract class Contraption {
 
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
-			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
+			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(world, c.getCompound("Data"))));
 
 		fluidStorage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", NBT.TAG_COMPOUND), c -> fluidStorage

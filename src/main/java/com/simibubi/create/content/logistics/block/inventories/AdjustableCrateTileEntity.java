@@ -19,29 +19,23 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
 
 public class AdjustableCrateTileEntity extends CrateTileEntity implements INamedContainerProvider {
 
-	public class Inv extends ItemStackHandler {
-		public Inv() {
-			super(32);
-		}
+	public class Inv extends CrateItemHandler {
 
 		@Override
-		public int getSlotLimit(int slot) {
-			if (slot < allowedAmount / 64)
-				return super.getSlotLimit(slot);
-			else if (slot == allowedAmount / 64)
-				return allowedAmount % 64;
-			return 0;
+		public int getAllowedAmount() {
+			return AdjustableCrateTileEntity.this.allowedAmount;
 		}
 
+		@Nonnull
 		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			if (slot > allowedAmount / 64)
-				return false;
-			return super.isItemValid(slot, stack);
+		public CrateItemHandler setAllowedAmount(int allowedAmount) {
+			AdjustableCrateTileEntity.this.allowedAmount = allowedAmount;
+			return this;
 		}
 
 		@Override

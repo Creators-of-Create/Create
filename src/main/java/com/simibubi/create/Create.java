@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.api.contraption.ContraptionStorageRegistry;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,6 +112,8 @@ public class Create {
 			.getModEventBus();
 		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
+		AllContraptionStorages.register(modEventBus);
+
 		modEventBus.addListener(Create::init);
 		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
 		modEventBus.addGenericListener(Placement.class, AllWorldFeatures::registerDecoratorFeatures);
@@ -132,7 +136,6 @@ public class Create {
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
-
 		CHUNK_UTIL.init();
 
 		event.enqueueWork(() -> {

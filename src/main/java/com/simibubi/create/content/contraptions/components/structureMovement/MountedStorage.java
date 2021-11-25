@@ -1,30 +1,24 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.contraption.ContraptionItemStackHandler;
+import com.simibubi.create.api.contraption.ContraptionStorageRegistry;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
-import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.block.ChestBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.BarrelTileEntity;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class MountedStorage {
+import static com.simibubi.create.api.contraption.ContraptionStorageRegistry.dummyHandler;
 
-	private static final ItemStackHandler dummyHandler = new ItemStackHandler();
+public class MountedStorage {
 
 	ItemStackHandler handler;
 	boolean valid;
@@ -33,20 +27,12 @@ public class MountedStorage {
 	public static boolean canUseAsStorage(TileEntity te) {
 		if (te == null)
 			return false;
-		
+
 		if (te instanceof MechanicalCrafterTileEntity)
 			return false;
 
-		if (AllTileEntities.ADJUSTABLE_CRATE.is(te))
-			return true;
-		if (AllTileEntities.CREATIVE_CRATE.is(te))
-			return true;
-		if (te instanceof ShulkerBoxTileEntity)
-			return true;
-		if (te instanceof ChestTileEntity)
-			return true;
-		if (te instanceof BarrelTileEntity)
-			return true;
+		ContraptionStorageRegistry registry = ContraptionStorageRegistry.forTileEntity(te.getType());
+		if (registry != null) return registry.canUseAsStorage(te);
 
 		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		IItemHandler handler = capability.orElse(null);
@@ -63,27 +49,16 @@ public class MountedStorage {
 		if (te == null)
 			return;
 
-		// Split double chests
-		if (te.getType() == TileEntityType.CHEST || te.getType() == TileEntityType.TRAPPED_CHEST) {
-			if (te.getBlockState()
-				.getValue(ChestBlock.TYPE) != ChestType.SINGLE)
-				te.getLevel()
-					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
-						.setValue(ChestBlock.TYPE, ChestType.SINGLE));
-			te.clearCache();
+		ContraptionStorageRegistry registry = ContraptionStorageRegistry.forTileEntity(te.getType());
+		if (registry == null) return;
+		IItemHandler teHandler = registry.createHandler(te);
+		if (teHandler != null) {
+			handler = (ContraptionItemStackHandler) teHandler;
+			valid = true;
+			return;
 		}
 
-		// Split double flexcrates
-		if (AllTileEntities.ADJUSTABLE_CRATE.is(te)) {
-			if (te.getBlockState()
-				.getValue(AdjustableCrateBlock.DOUBLE))
-				te.getLevel()
-					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
-						.setValue(AdjustableCrateBlock.DOUBLE, false));
-			te.clearCache();
-		}
-
-		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			.orElse(dummyHandler);
 		if (teHandler == dummyHandler)
 			return;
@@ -110,10 +85,14 @@ public class MountedStorage {
 	}
 
 	public void addStorageToWorld(TileEntity te) {
-		// FIXME: More dynamic mounted storage in .4
-		if (handler instanceof BottomlessItemHandler)
-			return;
-		
+
+		if (handler instanceof ContraptionItemStackHandler) {
+			boolean cancel = !((ContraptionItemStackHandler) handler).addStorageToWorld(te);
+			if (cancel) {
+				return;
+			}
+		}
+
 		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		IItemHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof IItemHandlerModifiable))
@@ -131,29 +110,31 @@ public class MountedStorage {
 	public CompoundNBT serialize() {
 		if (!valid)
 			return null;
-		CompoundNBT tag = handler.serializeNBT();
 
-		if (handler instanceof BottomlessItemHandler) {
-			NBTHelper.putMarker(tag, "Bottomless");
-			tag.put("ProvidedStack", handler.getStackInSlot(0)
-				.serializeNBT());
-		}
-
-		return tag;
+		return handler.serializeNBT();
 	}
 
-	public static MountedStorage deserialize(CompoundNBT nbt) {
+	public static MountedStorage deserialize(World world, CompoundNBT nbt) {
 		MountedStorage storage = new MountedStorage(null);
 		storage.handler = new ItemStackHandler();
 		if (nbt == null)
 			return storage;
-		storage.valid = true;
 
-		if (nbt.contains("Bottomless")) {
-			ItemStack providedStack = ItemStack.of(nbt.getCompound("ProvidedStack"));
-			storage.handler = new BottomlessItemHandler(() -> providedStack);
-			return storage;
+		if (nbt.contains(ContraptionStorageRegistry.REGISTRY_NAME)) {
+			String id = nbt.getString(ContraptionStorageRegistry.REGISTRY_NAME);
+			ContraptionStorageRegistry registry = ContraptionStorageRegistry.REGISTRY.get().getValue(new ResourceLocation(id));
+			if (registry != null) {
+				storage.handler = registry.deserializeHandler(nbt);
+				if (storage.handler == null) storage.handler = dummyHandler;
+				else {
+					((ContraptionItemStackHandler) storage.handler).applyWorld(world);
+					storage.valid = true;
+				}
+				return storage;
+			}
 		}
+
+		storage.valid = true;
 
 		storage.handler.deserializeNBT(nbt);
 		return storage;
