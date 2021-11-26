@@ -3,6 +3,10 @@ package com.simibubi.create.content.logistics.block.diodes;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CSounds;
+import com.simibubi.create.foundation.sound.Sfx;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,8 +30,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 
 	public ToggleLatchBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(POWERING, false)
-			.setValue(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERING, false).setValue(POWERED, false));
 	}
 
 	@Override
@@ -67,25 +70,38 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 		boolean poweredPreviously = state.getValue(POWERED);
 		super.tick(state, worldIn, pos, random);
 		BlockState newState = worldIn.getBlockState(pos);
-		if (newState.getValue(POWERED) && !poweredPreviously)
-			worldIn.setBlock(pos, newState.cycle(POWERING), 2);
+		if (newState.getValue(POWERED) && !poweredPreviously) {
+			newState = newState.cycle(POWERING);
+			worldIn.setBlock(pos, newState, 2);
+			playSound(worldIn, pos, newState.getValue(POWERING), true);
+		}
 	}
 
 	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
 		if (!worldIn.isClientSide) {
-			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
-			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-			worldIn.setBlock(pos, state.cycle(POWERING), 2);
+			state = state.cycle(POWERING);
+			worldIn.setBlock(pos, state, 2);
 		}
+		playSound(worldIn, pos, state.getValue(POWERING), false);
 		return InteractionResult.SUCCESS;
+	}
+
+	protected void playSound(Level worldIn, BlockPos pos, boolean edgeRise, boolean fromTickEvent) {
+		CSounds.EventSourceSetting allowedSource = AllConfigs.CLIENT.sounds.latchToggleSourceSound.get();
+		if (allowedSource == CSounds.EventSourceSetting.NONE ||
+				fromTickEvent && allowedSource != CSounds.EventSourceSetting.ANY)
+			return;
+		Sfx sfx = edgeRise
+				? AllSoundEvents.LATCH_ACTIVATE
+				: AllSoundEvents.LATCH_DEACTIVATE;
+		sfx.playOnServer(worldIn, pos);
 	}
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
-		return side.getAxis() == state.getValue(FACING)
-			.getAxis();
+		return side.getAxis() == state.getValue(FACING).getAxis();
 	}
 
 }

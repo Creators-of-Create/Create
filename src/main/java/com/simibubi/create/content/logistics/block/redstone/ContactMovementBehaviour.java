@@ -1,8 +1,11 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CSounds;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,8 +44,9 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		if (!RedstoneContactBlock.hasValidContact(world, pos.relative(direction.getOpposite()), direction))
 			return;
 		world.setBlockAndUpdate(pos, visitedState.setValue(RedstoneContactBlock.POWERED, true));
+		if (AllConfigs.CLIENT.sounds.contactClickSound.get() != CSounds.ContactSoundSetting.NONE)
+			AllSoundEvents.CONTACT_ACTIVATE.playOnServer(world, pos);
 		context.data.put("lastContact", NbtUtils.writeBlockPos(pos));
-		return;
 	}
 
 	@Override
@@ -54,8 +58,9 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		if (context.data.contains("lastContact")) {
 			BlockPos last = NbtUtils.readBlockPos(context.data.getCompound("lastContact"));
 			context.world.scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
+			if (AllConfigs.CLIENT.sounds.contactClickSound.get() == CSounds.ContactSoundSetting.ALWAYS)
+				AllSoundEvents.CONTACT_DEACTIVATE.playOnServer(context.world, last);
 			context.data.remove("lastContact");
 		}
 	}
-
 }

@@ -2,6 +2,9 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import java.util.Random;
 
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CSounds;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -75,6 +78,7 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 		boolean shouldBack = this.shouldTurnOn(worldIn, pos, state);
 		boolean side = state.getValue(POWERED_SIDE);
 		boolean shouldSide = isPoweredOnSides(worldIn, pos, state);
+		boolean previousPowering = state.getValue(POWERING);
 		BlockState stateIn = state;
 
 		if (back != shouldBack) {
@@ -95,16 +99,21 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 
 		if (state != stateIn)
 			worldIn.setBlock(pos, state, 2);
+
+		if(previousPowering != state.getValue(POWERING))
+			playSound(worldIn, pos, !previousPowering, true);
 	}
 
 	@Override
 	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
-		if (state.getValue(POWERED) != state.getValue(POWERED_SIDE))
+		if (state.getValue(POWERED) != state.getValue(POWERED_SIDE)) {
+			playSound(worldIn, pos, state.getValue(POWERING), false);
 			return InteractionResult.PASS;
+		}
 		if (!worldIn.isClientSide) {
-			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
-			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-			worldIn.setBlock(pos, state.cycle(POWERING), 2);
+			state = state.cycle(POWERING);
+			worldIn.setBlock(pos, state, 2);
+			playSound(worldIn, pos, state.getValue(POWERING), false);
 		}
 		return InteractionResult.SUCCESS;
 	}

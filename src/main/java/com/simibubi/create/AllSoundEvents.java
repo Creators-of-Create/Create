@@ -184,6 +184,22 @@ public class AllSoundEvents extends SoundDefinitionsProvider {
 			"block.haunted_bell.use", SoundSource.BLOCKS)
 			.track(sound("block/haunted_bell/use"))
 			.mix(AllSoundEvents::register);
+	public static final Sfx CONTACT_ACTIVATE = new Sfx.Mixer(
+			"block.contact.activate", SoundSource.BLOCKS)
+			.track(sound("block/contact/click").volume(.1f).pitch(1f))
+			.mix(AllSoundEvents::register);
+	public static final Sfx CONTACT_DEACTIVATE = new Sfx.Mixer(
+			"block.contact.deactivate", SoundSource.BLOCKS)
+			.track(sound("block/contact/click").volume(.1f).pitch(.75f))
+			.mix(AllSoundEvents::register);
+	public static final Sfx LATCH_ACTIVATE = new Sfx.Mixer(
+			"block.latch.activate", SoundSource.BLOCKS)
+			.track(sound(SoundEvents.LEVER_CLICK).volume(.15f).pitch(.9f))
+			.mix(AllSoundEvents::register);
+	public static final Sfx LATCH_DEACTIVATE = new Sfx.Mixer(
+			"block.latch.deactivate", SoundSource.BLOCKS)
+			.track(sound(SoundEvents.LEVER_CLICK).volume(.15f).pitch(.8f))
+			.mix(AllSoundEvents::register);
 
 	// END CONSTANTS ======================================
 
