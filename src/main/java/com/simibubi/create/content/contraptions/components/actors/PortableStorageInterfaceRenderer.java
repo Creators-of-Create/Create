@@ -80,8 +80,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 	}
 
 	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
-		buffer.matrixStacker()
-			.centre()
+		buffer.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.unCentre();

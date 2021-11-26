@@ -26,7 +26,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 	public PortableItemInterfaceTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		capability = LazyOptional.empty();
+		capability = createEmptyHandler();
 	}
 
 	@Override
@@ -40,9 +40,13 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 	@Override
 	protected void stopTransferring() {
 		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		capability = LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
+		capability = createEmptyHandler();
 		oldCap.invalidate();
 		super.stopTransferring();
+	}
+	
+	private LazyOptional<IItemHandlerModifiable> createEmptyHandler() {
+		return LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
@@ -33,7 +34,7 @@ import net.fabricmc.api.Environment;
 
 import org.jetbrains.annotations.Nullable;
 
-public class LitBlazeBurnerBlock extends Block implements BlockPickInteractionAware {
+public class LitBlazeBurnerBlock extends Block implements IWrenchable, BlockPickInteractionAware {
 
 	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 

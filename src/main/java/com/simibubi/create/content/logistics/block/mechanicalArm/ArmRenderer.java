@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -59,7 +60,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		BlockState blockState = te.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
-		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
+        TransformStack msr = TransformStack.cast(msLocal);
 
 		float baseAngle;
 		float lowerArmAngle;
@@ -109,7 +110,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 	}
 
-	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, MatrixTransformStack msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
+	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, TransformStack msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
 		SuperByteBuffer base = CachedBufferer.partial(AllBlockPartials.ARM_BASE, blockState).light(light);
 		SuperByteBuffer lowerBody = CachedBufferer.partial(AllBlockPartials.ARM_LOWER_BODY, blockState).light(light);
 		SuperByteBuffer upperBody = CachedBufferer.partial(AllBlockPartials.ARM_UPPER_BODY, blockState).light(light);
@@ -147,7 +148,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		}
 	}
 
-	private void doItemTransforms(MatrixTransformStack msr, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle) {
+	private void doItemTransforms(TransformStack msr, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle) {
 
 		transformBase(msr, baseAngle);
 		transformLowerArm(msr, lowerArmAngle);
@@ -156,32 +157,32 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		transformClaw(msr);
 	}
 
-	public static void transformClawHalf(MatrixTransformStack msr, boolean hasItem, boolean isBlockItem, int flip) {
+	public static void transformClawHalf(TransformStack msr, boolean hasItem, boolean isBlockItem, int flip) {
 		msr.translate(0, flip * 3 / 16d, -1 / 16d);
 		msr.rotateX(flip * (hasItem ? isBlockItem ? 0 : -35 : 0));
 	}
 
-	public static void transformClaw(MatrixTransformStack msr) {
+	public static void transformClaw(TransformStack msr) {
 		msr.translate(0, 0, -4 / 16d);
 	}
 
-	public static void transformHead(MatrixTransformStack msr, float headAngle) {
+	public static void transformHead(TransformStack msr, float headAngle) {
 		msr.translate(0, 11 / 16d, -11 / 16d);
 		msr.rotateX(headAngle);
 	}
 
-	public static void transformUpperArm(MatrixTransformStack msr, float upperArmAngle) {
+	public static void transformUpperArm(TransformStack msr, float upperArmAngle) {
 		msr.translate(0, 12 / 16d, 12 / 16d);
 		msr.rotateX(upperArmAngle);
 	}
 
-	public static void transformLowerArm(MatrixTransformStack msr, float lowerArmAngle) {
+	public static void transformLowerArm(TransformStack msr, float lowerArmAngle) {
 		msr.translate(0, 1 / 16d, -2 / 16d);
 		msr.rotateX(lowerArmAngle);
 		msr.translate(0, -1 / 16d, 0);
 	}
 
-	public static void transformBase(MatrixTransformStack msr, float baseAngle) {
+	public static void transformBase(TransformStack msr, float baseAngle) {
 		msr.translate(0, 4 / 16d, 0);
 		msr.rotateY(baseAngle);
 	}

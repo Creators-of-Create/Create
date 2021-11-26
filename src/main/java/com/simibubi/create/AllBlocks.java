@@ -162,7 +162,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -696,16 +696,14 @@ public class AllBlocks {
 	public static final DyedBlockList<ValveHandleBlock> DYED_VALVE_HANDLES = new DyedBlockList<>(colour -> {
 		String colourName = colour.getSerializedName();
 		return REGISTRATE.block(colourName + "_valve_handle", p -> ValveHandleBlock.dyed(p, colour))
-				.transform(pickaxeOnly())
-				.transform(BuilderTransformers.valveHandle(colour))
-//				.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get())
-//						.pattern("#")
-//						.pattern("-")
-//						.define('#', colour.getTag())
-//						.define('-', AllItemTags.VALVE_HANDLES.tag)
-//						.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
-//						.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
-				.register();
+			.transform(pickaxeOnly())
+			.transform(BuilderTransformers.valveHandle(colour))
+//			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(c.get())
+//				.requires(colour.getTag())
+//				.requires(AllItemTags.VALVE_HANDLES.tag)
+//				.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
+//				.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
+			.register();
 	});
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
@@ -838,7 +836,8 @@ public class AllBlocks {
 //										existing.getLocation())
 //								.texture("2", p.modLoc("block/" + c.getName() + powered + flipped));
 //					}))
-					.item()
+					.transform(BlockStressDefaults.setNoImpact())
+			.item()
 					.transform(customItemModel("_", "block_single"))
 					.register();
 
@@ -1045,37 +1044,33 @@ public class AllBlocks {
 		String colourName = colour.getSerializedName();
 		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
 		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, colour == DyeColor.RED))
-				.initialProperties(SharedProperties::wooden)
-				.transform(axeOnly())
-				.onRegister(addMovementBehaviour(movementBehaviour))
-//				.blockstate((c, p) -> {
-//					p.simpleBlock(c.get(), p.models()
-//							.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
-//							.texture("1", p.modLoc("block/seat/top_" + colourName))
-//							.texture("2", p.modLoc("block/seat/side_" + colourName)));
-//				})
-//				.recipe((c, p) -> {
-//					ShapedRecipeBuilder.shaped(c.get())
-//							.pattern("#")
-//							.pattern("-")
-//							.define('#', DyeHelper.getWoolOfDye(colour))
-//							.define('-', ItemTags.WOODEN_SLABS)
-//							.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
-//							.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
-//					ShapedRecipeBuilder.shaped(c.get())
-//							.pattern("#")
-//							.pattern("-")
-//							.define('#', colour.getTag())
-//							.define('-', AllItemTags.SEATS.tag)
-//							.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
-//							.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
-//				})
-				.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
-				.tag(AllBlockTags.SEATS.tag)
-				.item()
-				.tag(AllItemTags.SEATS.tag)
-				.build()
-				.register();
+			.initialProperties(SharedProperties::wooden)
+			.transform(axeOnly())
+			.onRegister(addMovementBehaviour(movementBehaviour))
+//			.blockstate((c, p) -> {
+//				p.simpleBlock(c.get(), p.models()
+//					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
+//					.texture("1", p.modLoc("block/seat/top_" + colourName))
+//					.texture("2", p.modLoc("block/seat/side_" + colourName)));
+//			})
+//			.recipe((c, p) -> {
+//				ShapelessRecipeBuilder.shapeless(c.get())
+//					.requires(DyeHelper.getWoolOfDye(colour))
+//					.requires(ItemTags.WOODEN_SLABS)
+//					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
+//					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
+//				ShapelessRecipeBuilder.shapeless(c.get())
+//					.requires(colour.getTag())
+//					.requires(AllItemTags.SEATS.tag)
+//					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
+//					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
+//			})
+			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
+			.tag(AllBlockTags.SEATS.tag)
+			.item()
+			.tag(AllItemTags.SEATS.tag)
+			.build()
+			.register();
 	});
 
 	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
@@ -1462,7 +1457,9 @@ public class AllBlocks {
 //							.add(LootItem.lootTableItem(block)
 //									.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
 //									.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-//											.copy("Inventory", "Inventory")))));
+//											.copy("UniqueId", "UniqueId"))
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+							.copy("Inventory", "Inventory")))));
 //				})
 ////				.blockstate((c, p) -> {
 //					p.horizontalBlock(c.get(), p.models()

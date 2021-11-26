@@ -157,7 +157,10 @@ public class ItemHelper {
 			extracting = ItemStack.EMPTY;
 
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack stack = inv.extractItem(slot, maxExtractionCount - extracting.getCount(), true);
+				int amountToExtractFromThisSlot =
+					Math.min(maxExtractionCount - extracting.getCount(), inv.getStackInSlot(slot)
+						.getMaxStackSize());
+				ItemStack stack = inv.extractItem(slot, amountToExtractFromThisSlot, true);
 
 				if (stack.isEmpty())
 					continue;

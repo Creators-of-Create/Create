@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
@@ -65,7 +65,7 @@ public class ExtendoGripRenderHandler {
 			return;
 
 		PoseStack ms = event.getMatrixStack();
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 		AbstractClientPlayer abstractclientplayerentity = mc.player;
 		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkinTextureLocation());
 

@@ -138,6 +138,17 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 	}
 
 	@Override
+	public void writeSafe(CompoundTag compound, boolean clientPacket) {
+		super.writeSafe(compound, clientPacket);
+		if (input == null)
+			return;
+
+		CompoundTag inputNBT = new CompoundTag();
+		input.write(inputNBT);
+		compound.put("ConnectedInput", inputNBT);
+	}
+
+	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.create$serializeNBT());
 

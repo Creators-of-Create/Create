@@ -109,6 +109,12 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	@Override
 	public void initialize() {
 		super.initialize();
+		initHandler();
+	}
+
+	private void initHandler() {
+		if (invHandler != null)
+			return;
 		if (!level.isClientSide) {
 			player = new DeployerFakePlayer((ServerLevel) level);
 			if (deferredInventoryList != null) {
@@ -395,6 +401,17 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		mode = mode == Mode.PUNCH ? Mode.USE : Mode.PUNCH;
 		setChanged();
 		sendData();
+	}
+
+	@Nullable
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (isItemHandlerCap(cap)) {
+			if (invHandler == null)
+				initHandler();
+			return invHandler.cast();
+		}
+		return super.getCapability(cap, side);
 	}
 
 	@Nullable

@@ -286,9 +286,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public void collided() {}
-
-	@Override
 	public boolean isAttachedTo(AbstractContraptionEntity contraption) {
 		return movedContraption == contraption;
 	}

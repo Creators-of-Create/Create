@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -44,22 +42,16 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
-		PoseStack m = matrices.getModel();
-		m.pushPose();
-		MatrixTransformStack.of(m)
+		superBuffer
+			.transform(matrices.getModel())
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing))
 			.rotateZ(angle)
-			.unCentre();
-
-		superBuffer
-			.transform(m)
+			.unCentre()
 			.light(matrices.getWorld(),
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
-
-		m.popPose();
 	}
 
 }

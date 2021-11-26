@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
@@ -65,7 +65,7 @@ public class CachedBufferer {
 	public static Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			MatrixTransformStack.of(stack)
+			TransformStack.cast(stack)
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing))
@@ -77,7 +77,7 @@ public class CachedBufferer {
 	public static Supplier<PoseStack> rotateToFaceVertical(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			MatrixTransformStack.of(stack)
+			TransformStack.cast(stack)
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing) + 90)

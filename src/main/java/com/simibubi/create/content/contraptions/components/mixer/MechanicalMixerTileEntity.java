@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -131,7 +132,14 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
-					processingTicks = Mth.clamp((Mth.log2((int) (512 / speed))) * 15 + 1, 1, 512);
+					float recipeSpeed = 1;
+					if (currentRecipe instanceof ProcessingRecipe) {
+						int t = ((ProcessingRecipe<?>) currentRecipe).getProcessingDuration();
+						if (t != 0)
+							recipeSpeed = t / 100f;
+					}
+
+					processingTicks = Mth.clamp((Mth.log2((int) (512 / speed))) * Mth.ceil(recipeSpeed * 15) + 1, 1, 512);
 
 					Optional<BasinTileEntity> basin = getBasin();
 					if (basin.isPresent()) {
@@ -233,7 +241,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return ((r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE
 			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-			&& !MechanicalPressTileEntity.canCompress(r)) || r.getType() == AllRecipeTypes.MIXING.getType());
+			&& !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
+			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 
 	@Override

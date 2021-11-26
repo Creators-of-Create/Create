@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.CreateClient;
@@ -55,7 +55,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 					PoseStack localMs = new PoseStack();
 					localMs.translate(-1 / 4f, -1 / 4f, 1);
 					localMs.scale(.5f, .5f, .5f);
-					MatrixTransformStack.of(localMs)
+					TransformStack.cast(localMs)
 						.rotateY(-34);
 					itemRenderer.renderStatic(ammo, TransformType.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer, 0);
 				});

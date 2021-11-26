@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -46,7 +48,7 @@ import com.simibubi.create.lib.utility.LazyOptional;
 
 import org.jetbrains.annotations.Nullable;
 
-public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, ItemTransferable {
+public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, IInstanceRendered, ItemTransferable {
 
 	public LerpedFloat lid = LerpedFloat.linear()
 		.startWithValue(0);
@@ -54,6 +56,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	public LerpedFloat drawers = LerpedFloat.linear()
 		.startWithValue(0);
 
+	UUID uniqueId;
 	ToolboxInventory inventory;
 	LazyOptional<IItemHandler> inventoryProvider;
 	ResetableLazy<DyeColor> colorProvider;
@@ -287,6 +290,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.fromTag(compound, clientPacket);
+		if (compound.contains("UniqueId", 11))
+			this.uniqueId = compound.getUUID("UniqueId");
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 		if (clientPacket)
@@ -295,7 +300,12 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
+		if (uniqueId == null)
+			uniqueId = UUID.randomUUID();
+
 		compound.put("Inventory", inventory.serializeNBT());
+		compound.putUUID("UniqueId", uniqueId);
+
 		if (customName != null)
 			compound.putString("CustomName", Component.Serializer.toJson(customName));
 		super.write(compound, clientPacket);
@@ -365,6 +375,14 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	public void readInventory(CompoundTag compound) {
 		inventory.deserializeNBT(compound);
+	}
+
+	public void setUniqueId(UUID uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+
+	public UUID getUniqueId() {
+		return uniqueId;
 	}
 
 	public void setCustomName(Component customName) {

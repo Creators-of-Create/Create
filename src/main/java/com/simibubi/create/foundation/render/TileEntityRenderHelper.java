@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
@@ -60,7 +60,7 @@ public class TileEntityRenderHelper {
 
 			BlockPos pos = tileEntity.getBlockPos();
 			ms.pushPose();
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.translate(pos);
 
 			try {

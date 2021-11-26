@@ -368,9 +368,6 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public void collided() {}
-
-	@Override
 	public boolean isAttachedTo(AbstractContraptionEntity contraption) {
 		if (!(contraption.getContraption() instanceof ClockworkContraption))
 			return false;

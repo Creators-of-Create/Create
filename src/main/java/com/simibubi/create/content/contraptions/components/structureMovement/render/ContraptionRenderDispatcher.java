@@ -12,7 +12,7 @@ import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.WorldAttached;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
@@ -121,6 +121,8 @@ public class ContraptionRenderDispatcher {
 
 	protected static void renderActors(Level world, PlacementSimulationWorld renderWorld, Contraption c,
 									   ContraptionMatrices matrices, MultiBufferSource buffer) {
+		PoseStack m = matrices.getModel();
+
 		for (Pair<StructureTemplate.StructureBlockInfo, MovementContext> actor : c.getActors()) {
 			MovementContext context = actor.getRight();
 			if (context == null)
@@ -129,16 +131,14 @@ public class ContraptionRenderDispatcher {
 				context.world = world;
 			StructureTemplate.StructureBlockInfo blockInfo = actor.getLeft();
 
-			PoseStack m = matrices.getModel();
-			m.pushPose();
-			MatrixTransformStack.of(m)
-					.translate(blockInfo.pos);
-
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
-			if (movementBehaviour != null)
+			if (movementBehaviour != null) {
+				m.pushPose();
+				TransformStack.cast(m)
+						.translate(blockInfo.pos);
 				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
-
-			m.popPose();
+				m.popPose();
+			}
 		}
 	}
 

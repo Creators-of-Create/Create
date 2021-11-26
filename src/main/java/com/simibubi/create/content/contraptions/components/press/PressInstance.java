@@ -34,9 +34,6 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
     @Override
     public void beginFrame() {
-        if (!press.running)
-            return;
-
         transformModels();
     }
 

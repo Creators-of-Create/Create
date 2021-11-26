@@ -53,7 +53,14 @@ public class EntityLauncher {
 
 	public Vec3 getGlobalPos(double t, Direction d, BlockPos launcher) {
 		Vec3 start = new Vec3(launcher.getX() + .5f, launcher.getY() + .5f, launcher.getZ() + .5f);
-		Vec3 vec = new Vec3(0, y(t), x(t));
+
+		float xt = x(t);
+		float yt = y(t);
+		double progress = Mth.clamp(t / getTotalFlyingTicks(), 0, 1);
+		double correctionStrength = Math.pow(progress, 3);
+
+		Vec3 vec = new Vec3(0, yt + (verticalDistance - yt) * correctionStrength * 0.5f,
+			xt + (horizontalDistance - xt) * correctionStrength);
 		return VecHelper.rotate(vec, 180 + AngleHelper.horizontalAngle(d), Axis.Y)
 			.add(start);
 	}

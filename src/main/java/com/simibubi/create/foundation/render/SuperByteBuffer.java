@@ -1,7 +1,11 @@
 package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.util.BufferBuilderReader;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.Rotate;
+import com.jozufozu.flywheel.util.transform.Scale;
+import com.jozufozu.flywheel.util.transform.TStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -26,9 +30,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
-public class SuperByteBuffer {
+public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
 	private final BufferBuilderReader template;
 
@@ -63,13 +66,11 @@ public class SuperByteBuffer {
 	private final Vector4f pos = new Vector4f();
 	private final Vector3f normal = new Vector3f();
 	private final Vector4f lightPos = new Vector4f();
-	private final MatrixTransformStack stacker;
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		template = new BufferBuilderReader(buf);
 		transforms = new PoseStack();
 		transforms.pushPose();
-		stacker = MatrixTransformStack.of(transforms);
 	}
 
 	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
@@ -229,20 +230,15 @@ public class SuperByteBuffer {
 		return this;
 	}
 
-	public MatrixTransformStack matrixStacker() {
-		return stacker;
-	}
-
-	public SuperByteBuffer translate(Vec3 vec) {
-		return translate(vec.x, vec.y, vec.z);
-	}
-
+	@Override
 	public SuperByteBuffer translate(double x, double y, double z) {
-		return translate((float) x, (float) y, (float) z);
+		transforms.translate(x, y, z);
+		return this;
 	}
 
-	public SuperByteBuffer translate(float x, float y, float z) {
-		transforms.translate(x, y, z);
+	@Override
+	public SuperByteBuffer multiply(Quaternion quaternion) {
+		transforms.mulPose(quaternion);
 		return this;
 	}
 
@@ -258,27 +254,16 @@ public class SuperByteBuffer {
 		return this;
 	}
 
-	public SuperByteBuffer rotate(Direction axis, float radians) {
-		if (radians == 0)
-			return this;
-		transforms.mulPose(axis.step()
-			.rotation(radians));
-		return this;
-	}
-
-	public SuperByteBuffer rotate(Quaternion q) {
-		transforms.mulPose(q);
-		return this;
-	}
-
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
-		return translate(.5f, .5f, .5f).rotate(axis, radians)
+		translate(.5f, .5f, .5f).rotate(axis, radians)
 			.translate(-.5f, -.5f, -.5f);
+		return this;
 	}
 
 	public SuperByteBuffer rotateCentered(Quaternion q) {
-		return translate(.5f, .5f, .5f).rotate(q)
+		translate(.5f, .5f, .5f).multiply(q)
 			.translate(-.5f, -.5f, -.5f);
+		return this;
 	}
 
 	public SuperByteBuffer color(int r, int g, int b, int a) {
@@ -439,6 +424,24 @@ public class SuperByteBuffer {
 	private static int getLight(Level world, Vector4f lightPos) {
 		BlockPos pos = new BlockPos(lightPos.x(), lightPos.y(), lightPos.z());
 		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.asLong(), $ -> LevelRenderer.getLightColor(world, pos));
+	}
+
+	@Override
+	public SuperByteBuffer scale(float factorX, float factorY, float factorZ) {
+		transforms.scale(factorX, factorY, factorZ);
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer pushPose() {
+		transforms.pushPose();
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer popPose() {
+		transforms.popPose();
+		return this;
 	}
 
 	@FunctionalInterface

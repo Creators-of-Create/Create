@@ -168,6 +168,8 @@ public class RecipeGridHandler {
 			if (numItems > 9)
 				return false;
 		}
+		if (AllRecipeTypes.isManualRecipe(recipe))
+			return false;
 		return true;
 	}
 

@@ -49,7 +49,7 @@ package com.simibubi.create.foundation.data.recipe;
 //import net.minecraft.world.level.ItemLike;
 //import net.minecraft.world.level.block.Block;
 //import net.minecraft.world.level.block.Blocks;
-//import com.simibubi.create.lib.data.Tags;
+//import net.minecraftforge.common.Tags;
 //import net.minecraftforge.common.crafting.CraftingHelper;
 //import net.minecraftforge.common.crafting.conditions.ICondition;
 //import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
@@ -499,10 +499,8 @@ package com.simibubi.create.foundation.data.recipe;
 //				.pattern("SCS")),
 //
 //		MECHANICAL_PUMP = create(AllBlocks.MECHANICAL_PUMP).unlockedBy(I::copper)
-//			.viaShaped(b -> b.define('P', I.cog())
-//				.define('S', AllBlocks.FLUID_PIPE.get())
-//				.pattern("P")
-//				.pattern("S")),
+//			.viaShapeless(b -> b.requires(I.cog())
+//				.requires(AllBlocks.FLUID_PIPE.get())),
 //
 //		SMART_FLUID_PIPE = create(AllBlocks.SMART_FLUID_PIPE).unlockedBy(I::copper)
 //			.viaShaped(b -> b.define('P', I.electronTube())
@@ -605,10 +603,8 @@ package com.simibubi.create.foundation.data.recipe;
 //				.pattern("P")),
 //
 //		DEPOT = create(AllBlocks.DEPOT).unlockedBy(I::andesiteCasing)
-//			.viaShaped(b -> b.define('A', I.andesite())
-//				.define('I', I.andesiteCasing())
-//				.pattern("A")
-//				.pattern("I")),
+//			.viaShapeless(b -> b.requires(I.andesite())
+//				.requires(I.andesiteCasing())),
 //
 //		WEIGHTED_EJECTOR = create(AllBlocks.WEIGHTED_EJECTOR).unlockedBy(I::andesiteCasing)
 //			.viaShaped(b -> b.define('A', I.goldSheet())

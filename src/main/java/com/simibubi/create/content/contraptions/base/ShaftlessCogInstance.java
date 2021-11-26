@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
@@ -29,17 +30,17 @@ public class ShaftlessCogInstance extends SingleRotatingInstance {
 		super(modelManager, tile);
 		this.large = large;
 	}
-	
+
 	@Override
 	protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = tile.getBlockState();
 		Direction facing =
 			Direction.fromAxisAndDirection(referenceState.getValue(BlockStateProperties.AXIS), AxisDirection.POSITIVE);
 		PartialModel partial = large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL;
-		
+
 		return getRotatingMaterial().getModel(partial, referenceState, facing, () -> {
 			PoseStack poseStack = new PoseStack();
-			new MatrixTransformStack(poseStack).centre()
+			TransformStack.cast(poseStack).centre()
 				.rotateToFace(facing)
 				.multiply(Vector3f.XN.rotationDegrees(90))
 				.unCentre();

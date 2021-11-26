@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -219,7 +219,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	public void transformMS(PoseStack ms, float pt) {
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vec3.ZERO) || !prevAnimatedRotation.equals(Vec3.ZERO)) {
 			if (centerOfRotation == null)
@@ -227,14 +227,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotX = Mth.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
 			double rotZ = Mth.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
 			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.translate(centerOfRotation)
 				.rotateX(rotX)
 				.rotateZ(rotZ)
 				.rotateY(rotY)
 				.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
-				MatrixTransformStack.of(ms)
+				TransformStack.cast(ms)
 					.translate(stabilizationAnchor)
 					.rotateX(-rotX)
 					.rotateZ(-rotZ)

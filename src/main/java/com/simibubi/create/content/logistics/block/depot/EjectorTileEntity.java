@@ -6,12 +6,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -58,6 +59,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -150,6 +152,8 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 			if (!entity.isAlive())
 				continue;
 			if (entity instanceof ItemEntity)
+				continue;
+			if (entity.getPistonPushReaction() == PushReaction.IGNORE)
 				continue;
 
 			entity.setOnGround(false);
@@ -335,8 +339,8 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 				float volume = .125f;
 				float pitch = 1.5f - lidProgress.getValue();
 				if (((int) level.getGameTime()) % soundRate == 0 && doLogic)
-					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundSource.BLOCKS, volume,
-						pitch);
+					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundSource.BLOCKS,
+						volume, pitch);
 			}
 		}
 
@@ -345,7 +349,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 	}
 
 	private boolean scanTrajectoryForObstacles(int time) {
-		if (time == 0)
+		if (time <= 2)
 			return false;
 
 		Vec3 source = getLaunchedItemLocation(time);
@@ -353,7 +357,16 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 		BlockHitResult rayTraceBlocks =
 			level.clip(new ClipContext(source, target, Block.COLLIDER, Fluid.NONE, null));
-		if (rayTraceBlocks.getType() == Type.MISS) {
+		boolean miss = rayTraceBlocks.getType() == Type.MISS;
+
+		if (!miss && rayTraceBlocks.getType() == Type.BLOCK) {
+			BlockState blockState = level.getBlockState(rayTraceBlocks.getBlockPos());
+			if (FunnelBlock.isFunnel(blockState) && blockState.hasProperty(FunnelBlock.EXTRACTING)
+				&& blockState.getValue(FunnelBlock.EXTRACTING))
+				miss = true;
+		}
+
+		if (miss) {
 			if (earlyTarget != null && earlyTargetTime < time + 1) {
 				earlyTarget = null;
 				earlyTargetTime = 0;
@@ -363,7 +376,8 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 		Vec3 vec = rayTraceBlocks.getLocation();
 		earlyTarget = Pair.of(vec.add(Vec3.atLowerCornerOf(rayTraceBlocks.getDirection()
-			.getNormal()).scale(.25f)), rayTraceBlocks.getBlockPos());
+			.getNormal())
+			.scale(.25f)), rayTraceBlocks.getBlockPos());
 		earlyTargetTime = (float) (time + (source.distanceTo(vec) / source.distanceTo(target)));
 		sendData();
 		return true;
@@ -371,9 +385,14 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 	protected void nudgeEntities() {
 		for (Entity entity : level.getEntitiesOfClass(Entity.class,
-			new AABB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f)))
+			new AABB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f))) {
+			if (!entity.isAlive())
+				continue;
+			if (entity.getPistonPushReaction() == PushReaction.IGNORE)
+				continue;
 			if (!(entity instanceof Player))
 				entity.setPos(entity.getX(), entity.getY() + .125f, entity.getZ());
+		}
 	}
 
 	protected void ejectIfTriggered() {
@@ -600,7 +619,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 		@Override
 		protected void rotate(BlockState state, PoseStack ms) {
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(angle(state))
 				.rotateX(90);
 		}

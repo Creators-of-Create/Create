@@ -5,7 +5,9 @@ import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.Rotate;
+import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -31,6 +33,8 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
 
+		transform(indicator);
+
         AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);
         rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
         rY = AngleHelper.horizontalAngle(blockState.getValue(AnalogLeverBlock.FACING));
@@ -45,25 +49,17 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     }
 
     protected void animateLever() {
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		float state = tile.clientState.get(AnimationTickHolder.getPartialTicks());
 
-        msr.translate(getInstancePosition());
-        transform(msr);
-
-        float state = tile.clientState.get(AnimationTickHolder.getPartialTicks());
-
-        int color = Color.mixColors(0x2C0300, 0xCD0000, state / 15f);
-        indicator.setTransform(ms)
-                 .setColor(color);
+		indicator.setColor(Color.mixColors(0x2C0300, 0xCD0000, state / 15f));
 
         float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
-        msr.translate(1 / 2f, 1 / 16f, 1 / 2f)
-           .rotate(Direction.EAST, angle)
-           .translate(-1 / 2f, -1 / 16f, -1 / 2f);
 
-        handle.setTransform(ms);
-    }
+		transform(handle.loadIdentity())
+				.translate(1 / 2f, 1 / 16f, 1 / 2f)
+				.rotate(Direction.EAST, angle)
+				.translate(-1 / 2f, -1 / 16f, -1 / 2f);
+	}
 
     @Override
     public void remove() {
@@ -76,10 +72,11 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         relight(pos, handle, indicator);
     }
 
-    private void transform(MatrixTransformStack msr) {
-        msr.centre()
-           .rotate(Direction.UP, (float) (rY / 180 * Math.PI))
-           .rotate(Direction.EAST, (float) (rX / 180 * Math.PI))
-           .unCentre();
+    private <T extends Translate<T> & Rotate<T>> T transform(T msr) {
+        return msr.translate(getInstancePosition())
+				.centre()
+				.rotate(Direction.UP, (float) (rY / 180 * Math.PI))
+				.rotate(Direction.EAST, (float) (rX / 180 * Math.PI))
+				.unCentre();
     }
 }

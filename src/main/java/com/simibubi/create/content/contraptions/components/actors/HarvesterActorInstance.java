@@ -74,19 +74,15 @@ public class HarvesterActorInstance extends ActorInstance {
 
     @Override
     public void beginFrame() {
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
-
-        msr.translate(context.localPos)
-           .centre()
-           .rotateY(horizontalAngle)
-           .unCentre()
-           .translate(rotOffset)
-           .rotateX(getRotation())
-           .translateBack(rotOffset);
-
-        harvester.setTransform(ms);
-    }
+        harvester.loadIdentity()
+				.translate(context.localPos)
+				.centre()
+				.rotateY(horizontalAngle)
+				.unCentre()
+				.translate(rotOffset)
+				.rotateX(getRotation())
+				.translateBack(rotOffset);
+	}
 
     private double getRotation() {
         return AngleHelper.angleLerp(AnimationTickHolder.getPartialTicks(), previousRotation, rotation);

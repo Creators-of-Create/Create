@@ -4,7 +4,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
@@ -190,23 +190,18 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
-		PoseStack m = matrices.getModel();
-		m.pushPose();
-		MatrixTransformStack.of(m)
+		superBuffer.transform(matrices.getModel())
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing));
-		if (!SawBlock.isHorizontal(state))
-			MatrixTransformStack.of(m)
-				.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
-		MatrixTransformStack.of(m)
-			.unCentre();
 
-		superBuffer.transform(m)
+		if (!SawBlock.isHorizontal(state)) {
+			superBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
+		}
+
+		superBuffer.unCentre()
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
-
-		m.popPose();
 	}
 
 }

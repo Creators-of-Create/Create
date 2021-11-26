@@ -473,10 +473,19 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			IFluidHandler targetTank = te == null ? null
 				: TransferUtil.getFluidHandler(te, direction.getOpposite())
 					.orElse(null);
+			boolean externalTankNotPresent = targetTank == null;
+
 			if (!outputItems.isEmpty() && targetInv == null)
 				return false;
-			if (!outputFluids.isEmpty() && targetTank == null)
+			if (!outputFluids.isEmpty() && externalTankNotPresent) {
+				// Special case - fluid outputs but output only accepts items
+				targetTank = outputTank.getCapability()
+					.orElse(null);
+				if (targetTank == null)
 				return false;
+if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
+					return false;
+			}
 
 			if (simulate)
 				return true;
@@ -487,8 +496,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 					continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
-			for (FluidStack fluidStack : outputFluids)
-				spoutputFluidBuffer.add(fluidStack.copy());
+			if (!externalTankNotPresent)
+				for (FluidStack fluidStack : outputFluids)
+					spoutputFluidBuffer.add(fluidStack.copy());
 			return true;
 		}
 
@@ -498,22 +508,20 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (targetInv == null && !outputItems.isEmpty())
 			return false;
-
-		for (ItemStack itemStack : outputItems) {
-			// Catalyst items are never consumed
-			if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
-				.equals(itemStack.getItem()))
-				continue;
-			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
-				.isEmpty())
-				return false;
-		}
-
+		if (!acceptItemOutputsIntoBasin(outputItems, simulate, targetInv))
+			return false;
 		if (outputFluids.isEmpty())
 			return true;
 		if (targetTank == null)
 			return false;
+		if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
+			return false;
 
+		return true;
+	}
+
+	private boolean acceptFluidOutputsIntoBasin(List<FluidStack> outputFluids, boolean simulate,
+		IFluidHandler targetTank) {
 		for (FluidStack fluidStack : outputFluids) {
 			long fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
 				? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), simulate)
@@ -521,7 +529,19 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			if (fill != fluidStack.getAmount())
 				return false;
 		}
+		return true;
+	}
 
+	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, boolean simulate, IItemHandler targetInv) {
+		for (ItemStack itemStack : outputItems) {
+			// Catalyst items are never consumed
+			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
+				.sameItem(itemStack))
+				continue;
+			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
+				.isEmpty())
+				return false;
+		}
 		return true;
 	}
 
@@ -615,7 +635,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		Vec3 outMotion = directionVec.scale(1 / 16f)
 			.add(0, -1 / 16f, 0);
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			visualizedOutputFluids.forEach(ia -> {
 				FluidStack fluidStack = ia.getValue();
 				ParticleOptions fluidParticle = FluidFX.getFluidParticle(fluidStack);

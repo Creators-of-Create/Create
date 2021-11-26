@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -59,21 +59,21 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			Shape shape = state.getValue(BeltFunnelBlock.SHAPE);
 			super.rotate(state, ms);
 			if (shape == Shape.PULLING || shape == Shape.PUSHING)
-				MatrixTransformStack.of(ms)
+				TransformStack.cast(ms)
 					.rotateX(-22.5f);
 			return;
 		}
 
 		if (state.getBlock() instanceof FunnelBlock) {
 			super.rotate(state, ms);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateX(-22.5f);
 			return;
 		}
 
 		float yRot = AngleHelper.horizontalAngle(AbstractFunnelBlock.getFunnelFacing(state))
 			+ (facing == Direction.DOWN ? 180 : 0);
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.rotateY(yRot)
 			.rotateX(facing == Direction.DOWN ? -90 : 90);
 	}

@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_HOTBAR_
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_OFF;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_ON;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -117,6 +118,11 @@ public class ToolboxHandlerClient {
 		Level level = player.level;
 
 		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+
+		if (!toolboxes.isEmpty())
+			Collections.sort(toolboxes, (te1, te2) -> te1.getUniqueId()
+				.compareTo(te2.getUniqueId()));
+
 		CompoundTag compound = EntityHelper.getExtraCustomData(player)
 			.getCompound("CreateToolboxData");
 
@@ -132,8 +138,8 @@ public class ToolboxHandlerClient {
 			if (canReachToolbox) {
 				BlockEntity blockEntity = level.getBlockEntity(pos);
 				if (blockEntity instanceof ToolboxTileEntity) {
-					RadialToolboxMenu screen = new RadialToolboxMenu(ImmutableList.of((ToolboxTileEntity) blockEntity),
-						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP);
+					RadialToolboxMenu screen = new RadialToolboxMenu(toolboxes,
+						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP, (ToolboxTileEntity) blockEntity);
 					screen.prevSlot(compound.getCompound(slotKey)
 						.getInt("Slot"));
 					ScreenOpener.open(screen);
@@ -141,7 +147,7 @@ public class ToolboxHandlerClient {
 				}
 			}
 
-			ScreenOpener.open(new RadialToolboxMenu(ImmutableList.of(), RadialToolboxMenu.State.DETACH));
+			ScreenOpener.open(new RadialToolboxMenu(ImmutableList.of(), RadialToolboxMenu.State.DETACH, null));
 			return;
 		}
 
@@ -149,9 +155,9 @@ public class ToolboxHandlerClient {
 			return;
 
 		if (toolboxes.size() == 1)
-			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_ITEM));
+			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_ITEM, toolboxes.get(0)));
 		else
-			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX));
+			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX, null));
 	}
 
 	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,

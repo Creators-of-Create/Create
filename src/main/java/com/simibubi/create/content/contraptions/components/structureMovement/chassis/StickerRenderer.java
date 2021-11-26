@@ -35,8 +35,7 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 			offset = state.getValue(StickerBlock.EXTENDED) ? 1 : 0;
 
 		Direction facing = state.getValue(StickerBlock.FACING);
-		head.matrixStacker()
-			.nudge(te.hashCode())
+		head.nudge(te.hashCode())
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)

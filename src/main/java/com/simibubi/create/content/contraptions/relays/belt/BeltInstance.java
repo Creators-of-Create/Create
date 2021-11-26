@@ -8,6 +8,7 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlockPartials;
@@ -130,7 +131,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
         Supplier<PoseStack> ms = () -> {
             PoseStack modelTransform = new PoseStack();
-            MatrixTransformStack msr = MatrixTransformStack.of(modelTransform);
+            TransformStack msr = TransformStack.cast(modelTransform);
             msr.centre();
             if (axis == Direction.Axis.X)
                 msr.rotateY(90);

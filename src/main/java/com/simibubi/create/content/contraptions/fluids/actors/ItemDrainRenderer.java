@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
@@ -48,7 +49,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		if (transported == null)
 			return;
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 		Vec3 itemPosition = VecHelper.getCenterOf(te.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;

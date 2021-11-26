@@ -76,8 +76,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
 
-		cogs.matrixStacker()
-			.centre()
+		cogs.centre()
 			.rotateY(180)
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)

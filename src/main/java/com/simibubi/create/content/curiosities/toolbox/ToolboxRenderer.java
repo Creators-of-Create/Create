@@ -35,24 +35,22 @@ public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> 
 		float drawerOffset = tileEntityIn.drawers.getValue(partialTicks);
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutoutMipped());
-		lid.matrixStacker()
-			.centre()
+		lid.centre()
 			.rotateY(-facing.toYRot())
 			.unCentre()
 			.translate(0, 6 / 16f, 12 / 16f)
 			.rotateX(135 * lidAngle)
-			.translate(0, -6 / 16f, -12 / 16f);
-		lid.light(light)
+			.translate(0, -6 / 16f, -12 / 16f)
+			.light(light)
 			.renderInto(ms, builder);
 
 		for (int offset : Iterate.zeroAndOne) {
-			drawer.matrixStacker()
-				.centre()
-				.rotateY(-facing.toYRot())
-				.unCentre();
-			drawer.translate(0, offset * 1 / 8f, -drawerOffset * .175f * (2 - offset))
-				.light(light)
-				.renderInto(ms, builder);
+			drawer.centre()
+					.rotateY(-facing.toYRot())
+					.unCentre()
+					.translate(0, offset * 1 / 8f, -drawerOffset * .175f * (2 - offset))
+					.light(light)
+					.renderInto(ms, builder);
 		}
 
 	}

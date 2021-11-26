@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -74,15 +74,15 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean alongX = facing.getAxis() == Axis.X;
 
 			PoseStack localTransforms = new PoseStack();
-			MatrixTransformStack msr = MatrixTransformStack.of(localTransforms);
+            TransformStack msr = TransformStack.cast(localTransforms);
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel());
 
-			msr.centre();
-			msr.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0));
-			msr.rotateZ(sideways ? 90 : 0);
-			msr.rotateX(!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0);
-			msr.unCentre();
+			msr.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
+					.rotateZ(sideways ? 90 : 0)
+					.rotateX(!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0)
+					.unCentre();
 
 			if (downward || beltSlope == BeltSlope.VERTICAL && axisDirection == AxisDirection.POSITIVE) {
 				boolean b = start;
@@ -132,7 +132,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 				Supplier<PoseStack> matrixStackSupplier = () -> {
 					PoseStack stack = new PoseStack();
-					MatrixTransformStack stacker = MatrixTransformStack.of(stack);
+                    TransformStack stacker = TransformStack.cast(stack);
 					stacker.centre();
 					if (dir.getAxis() == Axis.X) stacker.rotateY(90);
 					if (dir.getAxis() == Axis.Y) stacker.rotateX(90);
@@ -200,7 +200,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		for (TransportedItemStack transported : te.getInventory()
 			.getTransportedItems()) {
 			ms.pushPose();
-			MatrixTransformStack.of(ms)
+            TransformStack.cast(ms)
 				.nudge(transported.angle);
 
 			float offset;
@@ -263,7 +263,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				ms.popPose();
 				ms.translate(0, slopeOffset, 0);
 			}
-			
+
 			if (renderUpright) {
 				Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
 				if (renderViewEntity != null) {

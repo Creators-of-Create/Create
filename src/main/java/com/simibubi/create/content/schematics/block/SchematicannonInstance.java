@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -40,7 +40,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         double recoil = SchematicannonRenderer.getRecoil(tile, partialTicks);
 
         PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+        TransformStack msr = TransformStack.cast(ms);
 
         msr.translate(getInstancePosition());
 
@@ -54,7 +54,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         msr.translate(.5f, 15 / 16f, .5f);
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
         msr.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
-        msr.translate(-.5f, -15 / 16f, -.5f);
+        msr.translateBack(.5f, 15 / 16f, .5f);
         msr.translate(0, -recoil / 100, 0);
 
         pipe.setTransform(ms);

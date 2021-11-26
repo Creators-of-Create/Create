@@ -117,11 +117,12 @@ public class BeltInventory {
 			}
 
 			// Don't move if other items are waiting in front
+			boolean noMovement = false;
 			float currentPos = currentItem.beltPosition;
 			if (stackInFront != null) {
 				float diff = stackInFront.beltPosition - currentPos;
 				if (Math.abs(diff) <= spacing)
-					continue;
+					noMovement = true;
 				movement =
 					beltMovementPositive ? Math.min(movement, diff - spacing) : Math.max(movement, diff + spacing);
 			}
@@ -140,7 +141,7 @@ public class BeltInventory {
 			// Belt item processing
 			if (!onClient && horizontal) {
 				ItemStack item = currentItem.stack;
-				if (handleBeltProcessingAndCheckIfRemoved(currentItem, nextOffset)) {
+				if (handleBeltProcessingAndCheckIfRemoved(currentItem, nextOffset, noMovement)) {
 					iterator.remove();
 					belt.sendData();
 					continue;
@@ -150,6 +151,9 @@ public class BeltInventory {
 				if (currentItem.locked)
 					continue;
 			}
+			
+			if (noMovement)
+				continue;
 
 			// Belt Tunnels
 			if (BeltTunnelInteractionHandler.flapTunnelsAndCheckIfStuck(this, currentItem, nextOffset))
@@ -214,7 +218,7 @@ public class BeltInventory {
 		}
 	}
 
-	protected boolean handleBeltProcessingAndCheckIfRemoved(TransportedItemStack currentItem, float nextOffset) {
+	protected boolean handleBeltProcessingAndCheckIfRemoved(TransportedItemStack currentItem, float nextOffset, boolean noMovement) {
 		int currentSegment = (int) currentItem.beltPosition;
 
 		// Continue processing if held
@@ -241,6 +245,9 @@ public class BeltInventory {
 			belt.sendData();
 			return false;
 		}
+		
+		if (noMovement)
+			return false;
 
 		// See if any new belt processing catches the item
 		if (currentItem.beltPosition > .5f || beltMovementPositive) {

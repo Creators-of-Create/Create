@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.fluid;
 import java.util.function.Function;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -63,7 +64,7 @@ public class FluidRenderer {
 		if (inbound)
 			direction = direction.getOpposite();
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 		ms.pushPose();
 		msr.centre()
 			.rotateY(AngleHelper.horizontalAngle(direction))
@@ -114,7 +115,7 @@ public class FluidRenderer {
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
 		if (FluidVariantRendering.fillsFromTop(fluidStack.getType()))
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.translate(center)
 				.rotateX(180)
 				.translateBack(center);

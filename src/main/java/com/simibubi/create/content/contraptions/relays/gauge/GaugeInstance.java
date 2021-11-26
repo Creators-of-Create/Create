@@ -37,7 +37,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         Instancer<ModelData> headModel = getHeadModel();
 
         ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+        TransformStack msr = TransformStack.cast(ms);
         msr.translate(getInstancePosition());
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
@@ -67,7 +67,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
+        TransformStack msr = TransformStack.cast(ms);
 
         for (DialFace faceEntry : faces) {
             faceEntry.updateTransform(msr, progress);
@@ -100,10 +100,10 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
             this.face = face;
         }
 
-        private void setupTransform(MatrixTransformStack msr, float progress) {
+        private void setupTransform(TransformStack msr, float progress) {
             float dialPivot = 5.75f / 16;
 
-            ms.pushPose();
+            msr.pushPose();
             rotateToFace(msr);
 
             getSecond().setTransform(ms);
@@ -114,13 +114,13 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
             getFirst().setTransform(ms);
 
-            ms.popPose();
+            msr.popPose();
         }
 
-        private void updateTransform(MatrixTransformStack msr, float progress) {
+        private void updateTransform(TransformStack msr, float progress) {
             float dialPivot = 5.75f / 16;
 
-            ms.pushPose();
+            msr.pushPose();
 
             rotateToFace(msr)
                     .translate(0, dialPivot, dialPivot)
@@ -129,7 +129,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
             getFirst().setTransform(ms);
 
-            ms.popPose();
+            msr.popPose();
         }
 
         protected TransformStack rotateToFace(TransformStack msr) {

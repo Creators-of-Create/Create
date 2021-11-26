@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
@@ -232,9 +233,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		pressedItems.clear();
 		applyBasinRecipe();
 		Optional<BasinTileEntity> basin = getBasin();
-		SmartInventory inputs = basin.get()
-			.getInputInventory();
 		if (basin.isPresent()) {
+			SmartInventory inputs = basin.get()
+				.getInputInventory();
 			for (int slot = 0; slot < inputs.getSlots(); slot++) {
 				ItemStack stackInSlot = inputs.getItem(slot);
 				if (stackInSlot.isEmpty())
@@ -347,7 +348,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	private static final List<ResourceLocation> RECIPE_DENY_LIST =
-		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"));
+		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
 
 	public static <C extends Container> boolean canCompress(Recipe<C> recipe) {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
@@ -366,7 +367,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> recipe) {
-		return (recipe instanceof CraftingRecipe && canCompress(recipe))
+		return (recipe instanceof CraftingRecipe && !(recipe instanceof MechanicalCraftingRecipe)
+			&& canCompress(recipe) && !AllRecipeTypes.isManualRecipe(recipe))
 			|| recipe.getType() == AllRecipeTypes.COMPACTING.getType();
 	}
 

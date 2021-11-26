@@ -222,6 +222,12 @@ public class ConnectedInputHandler {
 			data.clear();
 			nbt.getList("Data", NBT.TAG_COMPOUND)
 				.forEach(inbt -> data.add(NbtUtils.readBlockPos((CompoundTag) inbt)));
+
+			// nbt got wiped -> reset
+			if (data.isEmpty()) {
+				isController = true;
+				data.add(BlockPos.ZERO);
+			}
 		}
 
 	}

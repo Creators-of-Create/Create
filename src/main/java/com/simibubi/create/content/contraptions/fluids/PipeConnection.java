@@ -166,11 +166,13 @@ public class PipeConnection {
 		return true;
 	}
 
-	private boolean determineSource(Level world, BlockPos pos) {
-		if (!LoadedCheckUtil.isAreaLoaded(world, pos, 1))
+	public boolean determineSource(Level world, BlockPos pos) {
+		BlockPos relative = pos.relative(side);
+		// cannot use world.isLoaded because it always returns true on client
+		if (world.getChunk(relative.getX() >> 4, relative.getZ() >> 4, ChunkStatus.FULL, false) == null)
 			return false;
-		BlockFace location = new BlockFace(pos, side);
 
+		BlockFace location = new BlockFace(pos, side);
 		if (FluidPropagator.isOpenEnd(world, pos, side)) {
 			if (previousSource.orElse(null) instanceof OpenEndedPipe)
 				source = previousSource;
@@ -185,7 +187,7 @@ public class PipeConnection {
 		}
 
 		FluidTransportBehaviour behaviour =
-			TileEntityBehaviour.get(world, pos.relative(side), FluidTransportBehaviour.TYPE);
+			TileEntityBehaviour.get(world, relative, FluidTransportBehaviour.TYPE);
 		source = Optional.of(behaviour == null ? new FlowSource.Blocked(location) : new FlowSource.OtherPipe(location));
 		return true;
 	}
