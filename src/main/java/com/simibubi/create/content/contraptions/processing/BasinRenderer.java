@@ -150,6 +150,8 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 		float fluidLevel = Mth.clamp(totalUnits / 2000, 0, 1);
 
+		fluidLevel = 1 - ((1 - fluidLevel) * (1 - fluidLevel));
+
 		float xMin = 2 / 16f;
 		float xMax = 2 / 16f;
 		final float yMin = 2 / 16f;

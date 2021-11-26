@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
@@ -49,6 +51,11 @@ public class PotionFluid extends VirtualFluid {
 			CompoundTag tag = stack.getOrCreateTag();
 			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
 			return color;
+		}
+
+		@Override
+		public Component getDisplayName(FluidStack stack) {
+			return new TranslatableComponent(getTranslationKey(stack));
 		}
 
 		@Override

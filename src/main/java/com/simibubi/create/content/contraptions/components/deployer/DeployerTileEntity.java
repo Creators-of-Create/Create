@@ -106,6 +106,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
+		initHandler();
+	}
+
+	private void initHandler() {
+		if (invHandler != null)
+			return;
 		if (!level.isClientSide) {
 			player = new DeployerFakePlayer((ServerLevel) level);
 			if (deferredInventoryList != null) {
@@ -398,8 +404,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap) && invHandler != null)
+		if (isItemHandlerCap(cap)) {
+			if (invHandler == null)
+				initHandler();
 			return invHandler.cast();
+		}
 		return super.getCapability(cap, side);
 	}
 

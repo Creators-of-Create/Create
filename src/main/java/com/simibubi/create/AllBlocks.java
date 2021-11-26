@@ -186,7 +186,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -726,11 +726,9 @@ public class AllBlocks {
 		return REGISTRATE.block(colourName + "_valve_handle", p -> ValveHandleBlock.dyed(p, colour))
 			.transform(pickaxeOnly())
 			.transform(BuilderTransformers.valveHandle(colour))
-			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get())
-				.pattern("#")
-				.pattern("-")
-				.define('#', colour.getTag())
-				.define('-', AllItemTags.VALVE_HANDLES.tag)
+			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(c.get())
+				.requires(colour.getTag())
+				.requires(AllItemTags.VALVE_HANDLES.tag)
 				.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
 				.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
 			.register();
@@ -866,6 +864,7 @@ public class AllBlocks {
 						existing.getLocation())
 					.texture("2", p.modLoc("block/" + c.getName() + powered + flipped));
 			}))
+			.transform(BlockStressDefaults.setNoImpact())
 			.item()
 			.transform(customItemModel("_", "block_single"))
 			.register();
@@ -1083,18 +1082,14 @@ public class AllBlocks {
 					.texture("2", p.modLoc("block/seat/side_" + colourName)));
 			})
 			.recipe((c, p) -> {
-				ShapedRecipeBuilder.shaped(c.get())
-					.pattern("#")
-					.pattern("-")
-					.define('#', DyeHelper.getWoolOfDye(colour))
-					.define('-', ItemTags.WOODEN_SLABS)
+				ShapelessRecipeBuilder.shapeless(c.get())
+					.requires(DyeHelper.getWoolOfDye(colour))
+					.requires(ItemTags.WOODEN_SLABS)
 					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
-				ShapedRecipeBuilder.shaped(c.get())
-					.pattern("#")
-					.pattern("-")
-					.define('#', colour.getTag())
-					.define('-', AllItemTags.SEATS.tag)
+				ShapelessRecipeBuilder.shapeless(c.get())
+					.requires(colour.getTag())
+					.requires(AllItemTags.SEATS.tag)
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
@@ -1489,6 +1484,8 @@ public class AllBlocks {
 					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(block)
 						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+							.copy("UniqueId", "UniqueId"))
 						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 							.copy("Inventory", "Inventory")))));
 			})
