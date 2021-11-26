@@ -54,7 +54,11 @@ public class WrenchItem extends Item {
 		IWrenchable actor = (IWrenchable) block;
 		if (player.isShiftKeyDown())
 			return actor.onSneakWrenched(state, context);
-		return actor.onWrenched(state, context);
+
+		InteractionResult result = actor.onWrenched(state, context);
+		if (result == InteractionResult.SUCCESS)
+			AllSoundEvents.WRENCH_RATCHET.playFrom(player, 0.5f, 1f);
+		return result;
 	}
 
 	private boolean canWrenchPickup(BlockState state) {

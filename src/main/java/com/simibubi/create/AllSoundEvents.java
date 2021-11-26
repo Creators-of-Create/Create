@@ -107,6 +107,15 @@ public class AllSoundEvents extends SoundDefinitionsProvider {
 			"item.wrench.rotate", SoundSource.BLOCKS)
 			.track(sound(SoundEvents.WOODEN_TRAPDOOR_CLOSE).volume(.25f).pitch(1.25f))
 			.mix(AllSoundEvents::register);
+	public static final Sfx WRENCH_RATCHET = new Sfx.Mixer(
+			"item.wrench.ratchet", SoundSource.PLAYERS)
+			.track(
+					sound("item/wrench/ratchet/ratchet1"),
+					sound("item/wrench/ratchet/ratchet2"),
+					sound("item/wrench/ratchet/ratchet3"),
+					sound("item/wrench/ratchet/ratchet4")
+			)
+			.mix(AllSoundEvents::register);
 	public static final Sfx WRENCH_REMOVE = new Sfx.Mixer(
 			"item.wrench.remove", SoundSource.BLOCKS)
 			.track(sound(SoundEvents.ITEM_PICKUP).volume(.25f).pitch(.75f))

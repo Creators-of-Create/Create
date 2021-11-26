@@ -41,13 +41,13 @@ public class Sfx {
 
 	public void playOnServer(Level world, Vec3i pos) { playOnServer(world, pos, 1, 1); }
 	public void playOnServer(Level world, Vec3i pos, float volume, float pitch) { play(world, null, pos, volume, pitch); }
-	public void play(Level world, Player entity, Vec3i pos) { play(world, entity, pos, 1, 1); }
 	public void playFrom(Entity entity) { playFrom(entity, 1, 1); }
 	public void playFrom(Entity entity, float volume, float pitch) {
 		if (!entity.isSilent())
-			play(entity.level, null, entity.blockPosition(), volume, pitch);
+			play(entity.level, null, entity.position(), volume, pitch);
 	}
 
+	public void play(Level world, Player entity, Vec3i pos) { play(world, entity, pos, 1, 1); }
 	public void play(Level world, Player entity, Vec3i pos, float volume, float pitch) { play(world, entity, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, volume, pitch); }
 	public void play(Level world, Player entity, Vec3 pos, float volume, float pitch) { play(world, entity, pos.x(), pos.y(), pos.z(), volume, pitch); }
 	public void play(Level world, Player entity, double x, double y, double z, float volume, float pitch) {
