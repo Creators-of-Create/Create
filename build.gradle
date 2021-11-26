@@ -104,6 +104,10 @@ minecraft {
     }
 }
 
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
 compileJava {
     options.compilerArgs = ['-Xdiags:verbose']
 }
