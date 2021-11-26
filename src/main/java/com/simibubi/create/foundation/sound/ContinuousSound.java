@@ -20,10 +20,6 @@ public class ContinuousSound extends AbstractTickableSoundInstance {
 		this.relative = false;
 	}
 
-	public void remove() {
-		stop();
-	}
-
 	@Override
 	public float getVolume() {
 		return scape.getVolume() * relativeVolume;

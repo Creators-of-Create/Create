@@ -190,9 +190,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				applyCompactingOnBasin();
 
 			if (level.getBlockState(worldPosition.below(2)).getSoundType() == SoundType.WOOL)
-				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION_ON_BELT.playOnServer(level, worldPosition);
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATE_ON_BELT.playOnServer(level, worldPosition);
 			else
-				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(level, worldPosition, .5f, .75f + (Math.abs(getSpeed()) / 1024f));
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATE.playOnServer(level, worldPosition, .5f, .75f + (Math.abs(getSpeed()) / 1024f));
 
 			if (!level.isClientSide)
 				sendData();
@@ -351,12 +351,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		if (!(recipe instanceof CraftingRecipe))
 			return false;
-		
+
 		RecipeSerializer<?> serializer = recipe.getSerializer();
-		for (ResourceLocation denied : RECIPE_DENY_LIST) 
+		for (ResourceLocation denied : RECIPE_DENY_LIST)
 			if (serializer != null && denied.equals(serializer.getRegistryName()))
 				return false;
-		
+
 		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()
 			&& (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
 				.size() == 1;

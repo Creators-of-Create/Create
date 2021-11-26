@@ -91,7 +91,7 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 		if (inUse > 0 && AnimationTickHolder.getTicks() % 10 == 0) {
 			if (!AllBlocks.HAND_CRANK.has(getBlockState()))
 				return;
-			AllSoundEvents.CRANKING.playAt(level, worldPosition, (inUse) / 2.5f, .65f + (10 - inUse) / 10f, true);
+			AllSoundEvents.CRANK_CRANKING.playAt(level, worldPosition, (inUse) / 2.5f, .65f + (10 - inUse) / 10f, true);
 		}
 	}
 

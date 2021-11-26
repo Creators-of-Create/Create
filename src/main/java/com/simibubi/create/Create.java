@@ -84,7 +84,6 @@ public class Create {
 	public static void onCtor() {
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
-		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
@@ -114,7 +113,6 @@ public class Create {
 		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
 		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
-		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
@@ -137,7 +135,7 @@ public class Create {
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.provider(gen));
+		gen.addProvider(new AllSoundEvents(gen, event.getExistingFileHelper()));
 		gen.addProvider(new StandardRecipeGen(gen));
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 		gen.addProvider(new SequencedAssemblyRecipeGen(gen));

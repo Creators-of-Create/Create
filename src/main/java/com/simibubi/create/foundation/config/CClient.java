@@ -7,6 +7,8 @@ public class CClient extends ConfigBase {
 	public final ConfigGroup client = group(0, "client",
 			Comments.client);
 
+	public final CSounds sounds = nested(0, CSounds::new, Comments.sound);
+
 	//no group
 	public final ConfigBool tooltips = b(true, "enableTooltips",
 			Comments.tooltips);
@@ -67,13 +69,6 @@ public class CClient extends ConfigBase {
 	public final ConfigBool editingMode = b(false, "editingMode",
 		Comments.editingMode);
 
-	//sound group
-	public final ConfigGroup sound = group(1, "sound",
-			Comments.sound);
-	public final ConfigBool enableAmbientSounds = b(true, "enableAmbientSounds",
-			Comments.enableAmbientSounds);
-	public final ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap",
-			Comments.ambientVolumeCap);
 
 	@Override
 	public String getName() {
@@ -86,6 +81,7 @@ public class CClient extends ConfigBase {
 
 	private static class Comments {
 		static String client = "Client-only settings - If you're looking for general settings, look inside your worlds serverconfig folder!";
+		static String sound = "Sound settings.";
 		static String tooltips = "Show item descriptions on Shift and controls on Ctrl.";
 		static String enableOverstressedTooltip = "Display a tooltip when looking at overstressed components.";
 		static String explainRenderErrors = "Log a stack-trace when rendering issues happen within a moving contraption.";
@@ -138,9 +134,6 @@ public class CClient extends ConfigBase {
 		static String ponder = "Ponder settings";
 		static String comfyReading = "Slow down a ponder scene whenever there is text on screen.";
 		static String editingMode = "Show additional info in the ponder view and reload scene scripts more frequently.";
-		static String sound = "Sound settings";
-		static String enableAmbientSounds = "Make cogs rumble and machines clatter.";
-		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";
 	}
 
 }

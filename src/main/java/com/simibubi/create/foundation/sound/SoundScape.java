@@ -52,7 +52,7 @@ class SoundScape {
 
 	public void play() {
 		continuous.forEach(Minecraft.getInstance()
-			.getSoundManager()::play);
+				.getSoundManager()::play);
 	}
 
 	public void tick() {
@@ -61,8 +61,8 @@ class SoundScape {
 		repeating.forEach(RepeatingSound::tick);
 	}
 
-	public void remove() {
-		continuous.forEach(ContinuousSound::remove);
+	public void stop() {
+		continuous.forEach(ContinuousSound::stop);
 	}
 
 	public Vec3 getMeanPos() {
@@ -85,12 +85,11 @@ class SoundScape {
 		Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
 		float distanceMultiplier = 0;
 		if (renderViewEntity != null) {
-			double distanceTo = renderViewEntity.position()
-				.distanceTo(getMeanPos());
+			double distanceTo = renderViewEntity.position().distanceTo(getMeanPos());
 			distanceMultiplier = (float) Mth.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
 		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
-		float max = AllConfigs.CLIENT.ambientVolumeCap.getF();
+		float max = AllConfigs.CLIENT.sounds.ambientVolumeCap.getF();
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
 		return Mth.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
 	}

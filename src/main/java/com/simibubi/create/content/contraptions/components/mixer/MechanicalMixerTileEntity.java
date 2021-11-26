@@ -289,10 +289,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		// SoundEvents.BLOCK_STONE_BREAK
 		boolean slow = Math.abs(getSpeed()) < 65;
-		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
+		if (slow && AnimationTickHolder.getTicks() % 2 == 0)
 			return;
-		if (runningTicks == 20) 
-			AllSoundEvents.MIXING.playAt(level, worldPosition, .75f, 1, true);
+		if (runningTicks == 20)
+			AllSoundEvents.MIXER_MIXING.playAt(level, worldPosition, .75f, 1, true);
 	}
 
 }

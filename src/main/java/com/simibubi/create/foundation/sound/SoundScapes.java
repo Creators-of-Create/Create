@@ -60,7 +60,7 @@ public class SoundScapes {
 			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2)
 			.repeating(AllSoundEvents.CRUSHING_3.getMainEvent(), 2f, 1.75f, 2);
 	}
-	
+
 	private static SoundScape milling(float pitch, AmbienceGroup group) {
 		return new SoundScape(pitch, group).repeating(AllSoundEvents.CRUSHING_1.getMainEvent(), 1.545f, .75f, 1)
 			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2);
@@ -74,7 +74,7 @@ public class SoundScapes {
 	private static Map<Pair<AmbienceGroup, PitchGroup>, SoundScape> activeSounds = new HashMap<>();
 
 	public static void play(AmbienceGroup group, BlockPos pos, float pitch) {
-		if (!AllConfigs.CLIENT.enableAmbientSounds.get())
+		if (!AllConfigs.CLIENT.sounds.enableAmbientSounds.get())
 			return;
 		if (!outOfRange(pos))
 			addSound(group, pos, pitch);
@@ -87,7 +87,7 @@ public class SoundScapes {
 		if (AnimationTickHolder.getTicks() % UPDATE_INTERVAL != 0)
 			return;
 
-		boolean disable = !AllConfigs.CLIENT.enableAmbientSounds.get();
+		boolean disable = !AllConfigs.CLIENT.sounds.enableAmbientSounds.get();
 		for (Iterator<Entry<Pair<AmbienceGroup, PitchGroup>, SoundScape>> iterator = activeSounds.entrySet()
 			.iterator(); iterator.hasNext();) {
 
@@ -96,7 +96,7 @@ public class SoundScapes {
 			SoundScape value = entry.getValue();
 
 			if (disable || getSoundCount(key.getFirst(), key.getSecond()) == 0) {
-				value.remove();
+				value.stop();
 				iterator.remove();
 			}
 		}
@@ -122,7 +122,7 @@ public class SoundScapes {
 
 	public static void invalidateAll() {
 		counter.clear();
-		activeSounds.forEach(($, sound) -> sound.remove());
+		activeSounds.forEach(($, sound) -> sound.stop());
 		activeSounds.clear();
 	}
 
