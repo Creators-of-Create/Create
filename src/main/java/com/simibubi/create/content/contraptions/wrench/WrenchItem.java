@@ -8,6 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 
 import net.minecraft.core.BlockPos;
@@ -56,7 +57,7 @@ public class WrenchItem extends Item {
 			return actor.onSneakWrenched(state, context);
 
 		InteractionResult result = actor.onWrenched(state, context);
-		if (result == InteractionResult.SUCCESS)
+		if (result == InteractionResult.SUCCESS && AllConfigs.CLIENT.sounds.enableWrenchRatchet.get())
 			AllSoundEvents.WRENCH_RATCHET.playFrom(player, 0.5f, 1f);
 		return result;
 	}

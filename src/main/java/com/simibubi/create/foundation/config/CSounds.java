@@ -9,6 +9,7 @@ public class CSounds extends ConfigBase {
 	public ConfigEnum<TriggerType> contactTriggerType = e(TriggerType.ANY, "contactTriggerType", Comments.contactTriggerType);
 	public ConfigEnum<TriggerSource> latchTriggerSource = e(TriggerSource.ANY, "latchTriggerSource", Comments.latchTriggerSource);
 	public ConfigEnum<TriggerType> controllerTriggerType = e(TriggerType.ANY, "controllerTriggerType", Comments.controllerTriggerType);
+	public ConfigBool enableWrenchRatchet = b(true, "enableWrenchRatchet", Comments.enableWrenchRatchet);
 
 	@Override
 	public String getName() {
@@ -41,5 +42,6 @@ public class CSounds extends ConfigBase {
 				TriggerType.ACTIVATION + " - only button press",
 				TriggerType.NONE + " - nothing"
 		};
+		static String enableWrenchRatchet = "Add ratchet sound to wrench on interaction";
 	}
 }
