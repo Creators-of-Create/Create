@@ -44,7 +44,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		if (!RedstoneContactBlock.hasValidContact(world, pos.relative(direction.getOpposite()), direction))
 			return;
 		world.setBlockAndUpdate(pos, visitedState.setValue(RedstoneContactBlock.POWERED, true));
-		if (AllConfigs.CLIENT.sounds.contactClickSound.get() != CSounds.ContactSoundSetting.NONE)
+		if (AllConfigs.CLIENT.sounds.contactTriggerType.get() != CSounds.TriggerType.NONE)
 			AllSoundEvents.CONTACT_ACTIVATE.playOnServer(world, pos);
 		context.data.put("lastContact", NbtUtils.writeBlockPos(pos));
 	}
@@ -58,7 +58,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		if (context.data.contains("lastContact")) {
 			BlockPos last = NbtUtils.readBlockPos(context.data.getCompound("lastContact"));
 			context.world.scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
-			if (AllConfigs.CLIENT.sounds.contactClickSound.get() == CSounds.ContactSoundSetting.ALWAYS)
+			if (AllConfigs.CLIENT.sounds.contactTriggerType.get() == CSounds.TriggerType.ANY)
 				AllSoundEvents.CONTACT_DEACTIVATE.playOnServer(context.world, last);
 			context.data.remove("lastContact");
 		}

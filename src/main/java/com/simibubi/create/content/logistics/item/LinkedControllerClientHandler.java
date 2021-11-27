@@ -14,6 +14,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CSounds.TriggerType;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -185,14 +187,14 @@ public class LinkedControllerClientHandler {
 			// Released Keys
 			if (!releasedKeys.isEmpty()) {
 				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(releasedKeys, false, lecternPos));
-				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
+				playSound(player, false);
 			}
 
 			// Newly Pressed Keys
 			if (!newKeys.isEmpty()) {
 				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(newKeys, true, lecternPos));
 				packetCooldown = PACKET_RATE;
-				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
+				playSound(player, true);
 			}
 
 			// Keepalive Pressed Keys
@@ -265,6 +267,12 @@ public class LinkedControllerClientHandler {
 		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);
 
 		poseStack.popPose();
+	}
+
+	private static void playSound(LocalPlayer player, boolean pressDown) {
+		TriggerType setting = AllConfigs.CLIENT.sounds.controllerTriggerType.get();
+		if (setting == TriggerType.ANY || setting == TriggerType.ACTIVATION && pressDown)
+			AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.position(), 1f, pressDown ? .75f : .5f, true);
 	}
 
 	public enum Mode {

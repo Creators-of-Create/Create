@@ -11,8 +11,6 @@ import com.simibubi.create.foundation.sound.Sfx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -87,9 +85,9 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 	}
 
 	protected void playSound(Level worldIn, BlockPos pos, boolean edgeRise, boolean fromTickEvent) {
-		CSounds.EventSourceSetting allowedSource = AllConfigs.CLIENT.sounds.latchToggleSourceSound.get();
-		if (allowedSource == CSounds.EventSourceSetting.NONE ||
-				fromTickEvent && allowedSource != CSounds.EventSourceSetting.ANY)
+		CSounds.TriggerSource allowedSource = AllConfigs.CLIENT.sounds.latchTriggerSource.get();
+		if (allowedSource == CSounds.TriggerSource.NONE ||
+				fromTickEvent && allowedSource != CSounds.TriggerSource.ANY)
 			return;
 		Sfx sfx = edgeRise
 				? AllSoundEvents.LATCH_ACTIVATE

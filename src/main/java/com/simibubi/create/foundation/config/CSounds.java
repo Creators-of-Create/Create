@@ -5,9 +5,10 @@ public class CSounds extends ConfigBase {
 	public ConfigGroup sounds = group(0, "sounds", Comments.sounds);
 
 	public ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap", Comments.ambientVolumeCap);
-	public ConfigEnum<ContactSoundSetting> contactClickSound = e(ContactSoundSetting.ALWAYS, "contactClickSound", Comments.contactClick);
 	public ConfigBool enableAmbientSounds = b(true, "enableAmbientSounds", Comments.ambientSounds);
-	public ConfigEnum<EventSourceSetting> latchToggleSourceSound = e(EventSourceSetting.ANY, "latchToggleSourceSound", Comments.latchToggleSourceSound);
+	public ConfigEnum<TriggerType> contactTriggerType = e(TriggerType.ANY, "contactTriggerType", Comments.contactTriggerType);
+	public ConfigEnum<TriggerSource> latchTriggerSource = e(TriggerSource.ANY, "latchTriggerSource", Comments.latchTriggerSource);
+	public ConfigEnum<TriggerType> controllerTriggerType = e(TriggerType.ANY, "controllerTriggerType", Comments.controllerTriggerType);
 
 	@Override
 	public String getName() {
@@ -15,24 +16,30 @@ public class CSounds extends ConfigBase {
 	}
 
 
-	public enum ContactSoundSetting {ALWAYS, EDGE_RISE, NONE}
-	public enum EventSourceSetting {ANY, PLAYER, NONE}
+	public enum TriggerType {ANY, ACTIVATION, NONE}
+	public enum TriggerSource {ANY, PLAYER, NONE}
 
 	private static class Comments {
 		static String sounds = "Make your factory play a symphony of thousand machines";
 		static String ambientSounds = "Make cogs rumble and machines clatter.";
 		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";
-		static String[] contactClick = {
-				"When to play Redstone Contact sound:",
-				ContactSoundSetting.ALWAYS + " - on activation and deactivation",
-				ContactSoundSetting.EDGE_RISE + " - only on activation",
-				ContactSoundSetting.NONE + " - contact will be silent"
+		static String[] contactTriggerType = {
+				"What triggers Redstone Contact sound:",
+				TriggerType.ANY + " - activation and deactivation",
+				TriggerType.ACTIVATION + " - only activation",
+				TriggerType.NONE + " - nothing"
 		};
-		public static String[] latchToggleSourceSound = {
-				"Which sources trigger [Powered] Toggle Latch sounds:",
-				EventSourceSetting.ANY + " - circuits and player interactions",
-				EventSourceSetting.PLAYER +" - only player interactions (silent when in circuits)",
-				EventSourceSetting.NONE +" - latches will be silent"
+		static String[] latchTriggerSource = {
+				"Play [Powered] Toggle Latch sounds whenever:",
+				TriggerSource.ANY + " - block state changes",
+				TriggerSource.PLAYER +" - only when player interacts with block",
+				TriggerSource.NONE +" - never"
+		};
+		static String[] controllerTriggerType = {
+				"What triggers Linked Controller sound:",
+				TriggerType.ANY + " - button press or release",
+				TriggerType.ACTIVATION + " - only button press",
+				TriggerType.NONE + " - nothing"
 		};
 	}
 }
