@@ -134,7 +134,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 			float maxV;
 
 			if (USE_ATLAS) {
-				TextureAtlasSprite sprite = AllStitchedTextures.SUPER_GLUE.getSprite();
+				TextureAtlasSprite sprite = AllStitchedTextures.SUPER_GLUE.get();
 				minU = sprite.getU0();
 				maxU = sprite.getU1();
 				minV = sprite.getV0();
