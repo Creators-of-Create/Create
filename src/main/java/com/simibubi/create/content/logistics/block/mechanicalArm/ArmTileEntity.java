@@ -42,7 +42,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class ArmTileEntity extends KineticTileEntity implements ITransformableTE {
 
@@ -478,7 +477,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
-		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
+		interactionPointTag = compound.getList("InteractionPoints", Tag.TAG_COMPOUND);
 		redstoneLocked = compound.getBoolean("Powered");
 
 		if (!clientPacket)

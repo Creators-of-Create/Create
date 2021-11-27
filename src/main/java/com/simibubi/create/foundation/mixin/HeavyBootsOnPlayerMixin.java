@@ -18,8 +18,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @Mixin(LocalPlayer.class)
 public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayer {
 
-	public HeavyBootsOnPlayerMixin(ClientLevel p_i50991_1_, GameProfile p_i50991_2_) {
-		super(p_i50991_1_, p_i50991_2_);
+	private HeavyBootsOnPlayerMixin(ClientLevel level, GameProfile profile) {
+		super(level, profile);
 	}
 
 	@Inject(at = @At("HEAD"), method = "isUnderWater", cancellable = true)

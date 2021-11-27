@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
-import com.simibubi.create.foundation.ponder.content.PonderChapter;
-import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.resources.ResourceLocation;

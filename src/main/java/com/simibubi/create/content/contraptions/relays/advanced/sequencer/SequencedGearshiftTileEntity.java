@@ -7,9 +7,9 @@ import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEnt
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
@@ -152,7 +152,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		currentInstructionProgress = compound.getFloat("InstructionProgress");
 		poweredPreviously = compound.getBoolean("PrevPowered");
 		timer = compound.getInt("Timer");
-		instructions = Instruction.deserializeAll(compound.getList("Instructions", NBT.TAG_COMPOUND));
+		instructions = Instruction.deserializeAll(compound.getList("Instructions", Tag.TAG_COMPOUND));
 		super.fromTag(compound, clientPacket);
 	}
 

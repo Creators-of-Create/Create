@@ -326,8 +326,6 @@ public class AllSoundEvents {
 			wrappedEvents = new ArrayList<>();
 			variants = new ArrayList<>();
 			this.id = id;
-
-			variants.add(id);
 		}
 
 		public SoundEntryBuilder subtitle(String subtitle) {
@@ -365,7 +363,7 @@ public class AllSoundEvents {
 
 		public SoundEntry build() {
 			SoundEntry entry = wrappedEvents.isEmpty() ? new CustomSoundEntry(id, variants, subtitle, category)
-				: new WrappedSoundEntry(id, variants, subtitle, wrappedEvents, category);
+				: new WrappedSoundEntry(id, subtitle, wrappedEvents, category);
 			entries.put(entry.getId(), entry);
 			return entry;
 		}
@@ -375,13 +373,11 @@ public class AllSoundEvents {
 	public static abstract class SoundEntry {
 
 		protected ResourceLocation id;
-		protected List<ResourceLocation> variants;
 		protected String subtitle;
 		protected SoundSource category;
 
-		public SoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, SoundSource category) {
+		public SoundEntry(ResourceLocation id, String subtitle, SoundSource category) {
 			this.id = id;
-			this.variants = variants;
 			this.subtitle = subtitle;
 			this.category = category;
 		}
@@ -400,10 +396,6 @@ public class AllSoundEvents {
 
 		public ResourceLocation getId() {
 			return id;
-		}
-
-		public List<ResourceLocation> getVariants() {
-			return variants;
 		}
 
 		public boolean hasSubtitle() {
@@ -462,9 +454,9 @@ public class AllSoundEvents {
 		private List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 		private List<Pair<SoundEvent, Couple<Float>>> compiledEvents;
 
-		public WrappedSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
+		public WrappedSoundEntry(ResourceLocation id, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
 			SoundSource category) {
-			super(id, variants, subtitle, category);
+			super(id, subtitle, category);
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
 		}
@@ -535,10 +527,12 @@ public class AllSoundEvents {
 
 	private static class CustomSoundEntry extends SoundEntry {
 
+		protected List<ResourceLocation> variants;
 		protected SoundEvent event;
 
 		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, SoundSource category) {
-			super(id, variants, subtitle, category);
+			super(id, subtitle, category);
+			this.variants = variants;
 		}
 
 		@Override
@@ -561,6 +555,7 @@ public class AllSoundEvents {
 			JsonObject entry = new JsonObject();
 			JsonArray list = new JsonArray();
 
+			list.add(id.toString());
 			for (ResourceLocation variant : variants) {
 				list.add(variant.toString());
 			}

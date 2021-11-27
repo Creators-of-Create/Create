@@ -7,10 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.content.PonderTag;
-import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
-import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.content.SharedText;
+import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderTagScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.AbstractRegistrate;
 

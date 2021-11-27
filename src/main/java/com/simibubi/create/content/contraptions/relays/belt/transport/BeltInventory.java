@@ -25,11 +25,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class BeltInventory {
 
@@ -386,7 +386,7 @@ public class BeltInventory {
 
 	public void read(CompoundTag nbt) {
 		items.clear();
-		nbt.getList("Items", NBT.TAG_COMPOUND)
+		nbt.getList("Items", Tag.TAG_COMPOUND)
 			.forEach(inbt -> items.add(TransportedItemStack.read((CompoundTag) inbt)));
 		beltMovementPositive = nbt.getBoolean("PositiveOrder");
 	}

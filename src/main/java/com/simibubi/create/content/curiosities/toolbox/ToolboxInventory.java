@@ -11,10 +11,10 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -152,7 +152,7 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		filters = NBTHelper.readItemList(nbt.getList("Compartments", NBT.TAG_COMPOUND));
+		filters = NBTHelper.readItemList(nbt.getList("Compartments", Tag.TAG_COMPOUND));
 		if (filters.size() != 8) {
 			filters.clear();
 			for (int i = 0; i < 8; i++)

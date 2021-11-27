@@ -22,7 +22,6 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.ItemTags;
@@ -37,11 +36,14 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
-import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlueprintOverlayRenderer {
+
+	public static final IIngameOverlay OVERLAY = BlueprintOverlayRenderer::renderOverlay;
 
 	static boolean active;
 	static boolean empty;
@@ -204,42 +206,39 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		float partialTicks) {
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		if (!active || empty)
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
 		int w = 30 + 21 * ingredients.size() + 21;
 
-		int x = (mc.getWindow()
-			.getGuiScaledWidth() - w) / 2;
-		int y = (int) (mc.getWindow()
-			.getGuiScaledHeight() / 3f * 2);
+		int x = (width - w) / 2;
+		int y = (int) (height / 3f * 2);
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();
-			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(ms, x, y);
+			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(poseStack, x, y);
 			ItemStack itemStack = pair.getFirst();
 			String count = pair.getSecond() ? null : ChatFormatting.GOLD.toString() + itemStack.getCount();
-			drawItemStack(ms, mc, x, y, itemStack, count);
+			drawItemStack(poseStack, mc, x, y, itemStack, count);
 			x += 21;
 		}
 
 		x += 5;
 		RenderSystem.enableBlend();
-		AllGuiTextures.HOTSLOT_ARROW.render(ms, x, y + 4);
+		AllGuiTextures.HOTSLOT_ARROW.render(poseStack, x, y + 4);
 		x += 25;
 
 		if (result.isEmpty()) {
-			AllGuiTextures.HOTSLOT.render(ms, x, y);
+			AllGuiTextures.HOTSLOT.render(poseStack, x, y);
 			GuiGameElement.of(Items.BARRIER)
 				.at(x + 3, y + 3)
-				.render(ms);
+				.render(poseStack);
 		} else {
-			(resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT).render(ms,
+			(resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT).render(poseStack,
 				resultCraftable ? x - 1 : x, resultCraftable ? y - 1 : y);
-			drawItemStack(ms, mc, x, y, result, null);
+			drawItemStack(poseStack, mc, x, y, result, null);
 		}
 	}
 
@@ -275,7 +274,7 @@ public class BlueprintOverlayRenderer {
 
 			if (AllItems.ATTRIBUTE_FILTER.isIn(itemStack)) {
 				WhitelistMode whitelistMode = WhitelistMode.values()[tag.getInt("WhitelistMode")];
-				ListTag attributes = tag.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+				ListTag attributes = tag.getList("MatchedAttributes", net.minecraft.nbt.Tag.TAG_COMPOUND);
 				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {

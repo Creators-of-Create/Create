@@ -24,10 +24,13 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -95,7 +98,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new ReducedDestroyEffects());
+		consumer.accept(new RenderProperties());
 	}
 
 	@Override
@@ -598,6 +601,19 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
+		@Override
+		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof BeltTileEntity belt) {
+				for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {
+					renderer.destroyBlockProgress(beltPos.hashCode(), beltPos, progress);
+				}
+			}
+			return false;
+		}
 	}
 
 }

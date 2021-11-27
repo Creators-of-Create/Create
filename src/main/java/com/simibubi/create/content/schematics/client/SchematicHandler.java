@@ -23,7 +23,6 @@ import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -40,6 +39,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class SchematicHandler {
 
@@ -59,6 +60,8 @@ public class SchematicHandler {
 	private Vector<SchematicRenderer> renderers;
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
+
+	private final IIngameOverlay overlayRenderer = this::renderOverlay;
 
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
@@ -194,16 +197,20 @@ public class SchematicHandler {
 
 	}
 
-	public void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay, float partialTicks) {
+	public IIngameOverlay getOverlayRenderer() {
+		return overlayRenderer;
+	}
+
+	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		if (!active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(ms, activeHotbarSlot);
+			this.overlay.renderOn(poseStack, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(ms, buffer);
-		selectionScreen.renderPassive(ms, partialTicks);
+			.renderOverlay(gui, poseStack, partialTicks, width, height);
+		selectionScreen.renderPassive(poseStack, partialTicks);
 	}
-	
+
 	public void onMouseInput(int button, boolean pressed) {
 		if (!active)
 			return;

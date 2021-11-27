@@ -41,7 +41,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants.BlockFlags;
 
 public class BeltSlicer {
 
@@ -92,7 +91,7 @@ public class BeltSlicer {
 			BeltTileEntity segmentTE = BeltHelper.getSegmentTE(world, next);
 			KineticTileEntity.switchToBlockState(world, next,
 				state.setValue(BeltBlock.CASING, segmentTE != null && segmentTE.casing != CasingType.NONE));
-			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3 | BlockFlags.IS_MOVING);
+			world.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 			world.removeBlockEntity(pos);
 			world.levelEvent(2001, pos, Block.getId(state));
 
@@ -287,7 +286,7 @@ public class BeltSlicer {
 					belt.beltLength = 0;
 					belt.color = color;
 					if (flipBelt)
-						world.setBlock(blockPos, flipBelt(world.getBlockState(blockPos)), 3 | BlockFlags.IS_MOVING);
+						world.setBlock(blockPos, flipBelt(world.getBlockState(blockPos)), Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 				}
 
 				// Reverse items
@@ -317,7 +316,7 @@ public class BeltSlicer {
 
 			if (mergedController == null) {
 				// Attach at end
-				world.setBlock(next, state.setValue(BeltBlock.CASING, false), 3 | BlockFlags.IS_MOVING);
+				world.setBlock(next, state.setValue(BeltBlock.CASING, false), Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 				BeltTileEntity segmentTE = BeltHelper.getSegmentTE(world, next);
 				if (segmentTE != null)
 					segmentTE.color = controllerTE.color;

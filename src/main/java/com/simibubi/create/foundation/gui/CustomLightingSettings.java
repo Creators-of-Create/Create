@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 public class CustomLightingSettings implements ILightingSettings {
 
@@ -29,7 +28,7 @@ public class CustomLightingSettings implements ILightingSettings {
 			light2.transform(Vector3f.YP.rotationDegrees(yRot2));
 			light2.transform(Vector3f.XN.rotationDegrees(xRot2));
 		} else {
-			light2 = VecHelper.ZERO_3F;
+			light2 = Vector3f.ZERO;
 		}
 
 		lightMatrix = new Matrix4f();

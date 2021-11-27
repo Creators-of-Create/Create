@@ -36,6 +36,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
@@ -139,7 +140,7 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void registerReloadListeners(AddReloadListenerEvent event) {
+	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotionMixingRecipeManager.LISTENER);
 		event.addListener(FluidTransferRecipes.LISTENER);
@@ -147,7 +148,17 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void serverStopped(FMLServerStoppingEvent event) {
+	public static void onDatapackSync(OnDatapackSyncEvent event) {
+		ServerPlayer player = event.getPlayer();
+		if (player != null) {
+			PotatoProjectileTypeManager.syncTo(player);
+		} else {
+			PotatoProjectileTypeManager.syncToAll();
+		}
+	}
+
+	@SubscribeEvent
+	public static void serverStopping(FMLServerStoppingEvent event) {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 

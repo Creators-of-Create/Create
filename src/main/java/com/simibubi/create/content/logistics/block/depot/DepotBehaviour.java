@@ -27,13 +27,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -204,7 +204,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
 		processingOutputBuffer.deserializeNBT(compound.getCompound("OutputBuffer"));
 		if (canMergeItems()) {
-			ListTag list = compound.getList("Incoming", NBT.TAG_COMPOUND);
+			ListTag list = compound.getList("Incoming", Tag.TAG_COMPOUND);
 			incoming = NBTHelper.readCompoundList(list, TransportedItemStack::read);
 		}
 	}

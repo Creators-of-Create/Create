@@ -7,11 +7,11 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyFluidHandler;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
+import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.content.PonderPalette;
-import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

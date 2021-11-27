@@ -8,11 +8,11 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public class ArmPlacementPacket extends SimplePacketBase {
@@ -28,7 +28,7 @@ public class ArmPlacementPacket extends SimplePacketBase {
 
 	public ArmPlacementPacket(FriendlyByteBuf buffer) {
 		CompoundTag nbt = buffer.readNbt();
-		receivedTag = nbt.getList("Points", NBT.TAG_COMPOUND);
+		receivedTag = nbt.getList("Points", Tag.TAG_COMPOUND);
 		pos = buffer.readBlockPos();
 	}
 

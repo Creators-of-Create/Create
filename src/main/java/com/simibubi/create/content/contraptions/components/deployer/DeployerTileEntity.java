@@ -29,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +50,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -315,8 +315,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		timer = compound.getInt("Timer");
 		redstoneLocked = compound.getBoolean("Powered");
 
-		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
-		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
+		deferredInventoryList = compound.getList("Inventory", Tag.TAG_COMPOUND);
+		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", Tag.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
 			heldItem = ItemStack.of(compound.getCompound("HeldItem"));
 		super.fromTag(compound, clientPacket);

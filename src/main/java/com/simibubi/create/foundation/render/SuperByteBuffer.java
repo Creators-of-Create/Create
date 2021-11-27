@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
