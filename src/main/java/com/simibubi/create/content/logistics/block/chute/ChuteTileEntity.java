@@ -354,6 +354,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (level == null)
 			return false;
+		if (!this.canOutputItems())
+			return false;
 		if (!capBelow.isPresent())
 			capBelow = grabCapability(Direction.DOWN);
 		if (capBelow.isPresent()) {
@@ -407,6 +409,9 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (level == null)
 			return false;
 
+		if (!this.canOutputItems())
+			return false;
+		
 		if (AbstractChuteBlock.isOpenChute(getBlockState())) {
 			if (!capAbove.isPresent())
 				capAbove = grabCapability(Direction.UP);
@@ -474,6 +479,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	protected boolean canCollectItemsFromBelow() {
+		return true;
+	}
+	
+	protected boolean canOutputItems() {
 		return true;
 	}
 
