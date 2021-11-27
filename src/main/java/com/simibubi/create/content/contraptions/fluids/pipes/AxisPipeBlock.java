@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileE
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.IAugment;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -38,7 +39,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
-public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWithBracket, IAxisPipe {
+public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWithBracket, IAxisPipe, IAugment {
 
 	public AxisPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -66,6 +67,9 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 				newState = newState.setValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, newState);
+
+			playAugmentationSound(world, pos, AllBlocks.COPPER_CASING.getDefaultState());
+
 			FluidTransportBehaviour.loadFlows(world, pos);
 		}
 		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);

@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllSoundEvents;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -27,6 +29,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.IAugment;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -83,7 +86,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
+public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement, IAugment {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -298,26 +301,28 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (!player.isCreative())
 				heldItem.shrink(1);
 			KineticTileEntity.switchToBlockState(world, pos, state.setValue(PART, BeltPart.PULLEY));
+			playAugmentationSound(world, pos, AllBlocks.SHAFT.getDefaultState());
 			return InteractionResult.SUCCESS;
 		}
 
-		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
-			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.BRASS));
-			return InteractionResult.SUCCESS;
-		}
-
-		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
-			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.ANDESITE));
-			return InteractionResult.SUCCESS;
-		}
+		if (AllBlocks.BRASS_CASING.isIn(heldItem))
+			return encase(world, pos, player, CasingType.BRASS);
+		if (AllBlocks.ANDESITE_CASING.isIn(heldItem))
+			return encase(world, pos, player, CasingType.ANDESITE);
 
 		return InteractionResult.PASS;
+	}
+
+	private InteractionResult encase(Level world, BlockPos pos, Player player, CasingType casingType) {
+		if (world.isClientSide)
+			return InteractionResult.SUCCESS;
+		AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
+		withTileEntityDo(world, pos, te -> te.setCasingType(casingType));
+
+		BlockState state = (casingType == CasingType.BRASS ? AllBlocks.BRASS_CASING : AllBlocks.ANDESITE_CASING).getDefaultState();
+		playAugmentationSound(world, pos, state);
+
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -337,6 +342,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
 			KineticTileEntity.switchToBlockState(world, pos, state.setValue(PART, BeltPart.MIDDLE));
+			playAugmentationSound(world, pos, AllSoundEvents.WRENCH_REMOVE);
 			if (player != null && !player.isCreative())
 				player.getInventory()
 					.placeItemBackInInventory(AllBlocks.SHAFT.asStack());

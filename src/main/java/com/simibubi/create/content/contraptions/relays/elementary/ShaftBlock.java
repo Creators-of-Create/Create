@@ -7,6 +7,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.utility.IAugment;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
@@ -26,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractShaftBlock {
+public class ShaftBlock extends AbstractShaftBlock implements IAugment {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -55,24 +56,26 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
+								 BlockHitResult ray) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		for (EncasedShaftBlock encasedShaft : new EncasedShaftBlock[] { AllBlocks.ANDESITE_ENCASED_SHAFT.get(),
-			AllBlocks.BRASS_ENCASED_SHAFT.get() }) {
+		for (EncasedShaftBlock encasedShaft : new EncasedShaftBlock[]{AllBlocks.ANDESITE_ENCASED_SHAFT.get(),
+				AllBlocks.BRASS_ENCASED_SHAFT.get()}) {
 
-			if (!encasedShaft.getCasing()
-				.isIn(heldItem))
+			if (!encasedShaft.getCasing().isIn(heldItem))
 				continue;
 
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			
+
 			AllTriggers.triggerFor(AllTriggers.CASING_SHAFT, player);
 			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
-				.setValue(AXIS, state.getValue(AXIS)));
+					.setValue(AXIS, state.getValue(AXIS)));
+
+			playAugmentationSound(world, pos, encasedShaft.defaultBlockState());
+
 			return InteractionResult.SUCCESS;
 		}
 
@@ -87,7 +90,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 	private static class PlacementHelper extends PoleHelper<Direction.Axis> {
 		//used for extending a shaft in its axis, like the piston poles. works with shafts and cogs
 
-		private PlacementHelper(){
+		private PlacementHelper() {
 			super(
 					state -> state.getBlock() instanceof AbstractShaftBlock,
 					state -> state.getValue(AXIS),

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.IAugment;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,9 +17,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BracketBlockItem extends BlockItem {
+public class BracketBlockItem extends BlockItem implements IAugment {
 
 	public BracketBlockItem(Block p_i48527_1_, Properties p_i48527_2_) {
 		super(p_i48527_1_, p_i48527_2_);
@@ -53,10 +55,9 @@ public class BracketBlockItem extends BlockItem {
 		
 		if (bracket == newBracket)
 			return InteractionResult.SUCCESS;
-		
-		world.playSound(null, pos, newBracket
-			.getSoundType()
-			.getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1);
+
+		playAugmentationSound(world, pos, newBracket, 0.75f, 1);
+
 		behaviour.applyBracket(newBracket);
 		
 		if (!world.isClientSide && player != null)

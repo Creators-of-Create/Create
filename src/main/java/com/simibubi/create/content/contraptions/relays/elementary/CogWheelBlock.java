@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
+import com.simibubi.create.foundation.utility.IAugment;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -33,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
+public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel, IAugment {
 
 	boolean isLarge;
 
@@ -105,8 +106,9 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
 						: EncasedCogwheelBlock.BOTTOM_SHAFT);
 			}
-			
+
 			KineticTileEntity.switchToBlockState(world, pos, encasedState);
+			playAugmentationSound(world, pos, encasedCog.defaultBlockState());
 			return InteractionResult.SUCCESS;
 		}
 

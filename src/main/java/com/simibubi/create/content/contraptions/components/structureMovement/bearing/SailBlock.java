@@ -10,8 +10,10 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.IAugment;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -20,6 +22,7 @@ import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -41,7 +44,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SailBlock extends WrenchableDirectionalBlock {
+public class SailBlock extends WrenchableDirectionalBlock implements IAugment {
 
 	public static SailBlock frame(Properties properties) {
 		return new SailBlock(properties, true, null);
@@ -79,26 +82,24 @@ public class SailBlock extends WrenchableDirectionalBlock {
 			return placementHelper.getOffset(player, world, state, pos, ray)
 				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
-		if (heldItem.getItem() instanceof ShearsItem) {
-			if (!world.isClientSide)
-				applyDye(state, world, pos, null);
-			return InteractionResult.SUCCESS;
-		}
-
-		if (frame)
-			return InteractionResult.PASS;
-
 		DyeColor color = DyeColor.getColor(heldItem);
-		if (color != null) {
+		InteractionResult result = InteractionResult.PASS;
+		if (heldItem.getItem() instanceof ShearsItem || color != null && !frame) {
 			if (!world.isClientSide)
-				applyDye(state, world, pos, color);
-			return InteractionResult.SUCCESS;
+				result = applyDye(state, world, pos, color);
 		}
 
-		return InteractionResult.PASS;
+		if (result == InteractionResult.SUCCESS) {
+			if (color != null)
+				playAugmentationSound(world, pos, AllSoundEvents.SLIME_ADDED);
+			else
+				playAugmentationSound(world, pos, SoundEvents.SHEEP_SHEAR);
+		}
+		return result;
 	}
 
-	protected void applyDye(BlockState state, Level world, BlockPos pos, @Nullable DyeColor color) {
+
+	protected InteractionResult applyDye(BlockState state, Level world, BlockPos pos, @Nullable DyeColor color) {
 		BlockState newState =
 			(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState();
 		newState = BlockHelper.copyProperties(state, newState);
@@ -106,7 +107,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		// Dye the block itself
 		if (state != newState) {
 			world.setBlockAndUpdate(pos, newState);
-			return;
+			return InteractionResult.SUCCESS;
 		}
 
 		// Dye all adjacent
@@ -122,10 +123,11 @@ public class SailBlock extends WrenchableDirectionalBlock {
 			if (state == adjacentState)
 				continue;
 			world.setBlockAndUpdate(offset, newState);
-			return;
+			return InteractionResult.SUCCESS;
 		}
 
 		// Dye all the things
+		InteractionResult result = InteractionResult.PASS;
 		List<BlockPos> frontier = new ArrayList<>();
 		frontier.add(pos);
 		Set<BlockPos> visited = new HashSet<>();
@@ -148,12 +150,15 @@ public class SailBlock extends WrenchableDirectionalBlock {
 				Block block = adjacentState.getBlock();
 				if (!(block instanceof SailBlock) || ((SailBlock) block).frame && color != null)
 					continue;
-				if (state != adjacentState)
+				if (state != adjacentState) {
 					world.setBlockAndUpdate(offset, newState);
+					result = InteractionResult.SUCCESS;
+				}
 				frontier.add(offset);
 				visited.add(offset);
 			}
 		}
+		return result;
 	}
 
 	@Override

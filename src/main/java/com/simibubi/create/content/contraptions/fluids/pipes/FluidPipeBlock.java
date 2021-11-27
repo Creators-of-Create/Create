@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.IAugment;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -48,7 +49,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.TickPriority;
 
-public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity> {
+public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, IAugment {
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -107,6 +108,9 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
 			FluidTransportBehaviour.loadFlows(world, pos);
 		}
+
+		playAugmentationSound(world, pos, AllBlocks.COPPER_CASING.getDefaultState());
+
 		return InteractionResult.SUCCESS;
 	}
 
