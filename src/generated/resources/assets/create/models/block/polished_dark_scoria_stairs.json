@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "side": "create:block/palettes/dark_scoria/polished",
-    "bottom": "create:block/palettes/dark_scoria/polished",
-    "top": "create:block/palettes/dark_scoria/polished"
-  }
-}

@@ -109,6 +109,8 @@ public class AllTags {
 		WINDMILL_SAILS,
 		WINDOWABLE,
 		WRENCH_PICKUP,
+		
+		ORE_OVERRIDE_STONE,
 
 		WG_STONE(FORGE),
 
@@ -338,6 +340,8 @@ public class AllTags {
 		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 			Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
 			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
+		
+		AllBlockTags.ORE_OVERRIDE_STONE.includeAll(BlockTags.STONE_ORE_REPLACEABLES);
 	}
 
 }

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:fancy_granite_bricks"
-  },
-  "result": "create:fancy_granite_bricks_stairs",
-  "count": 1
-}

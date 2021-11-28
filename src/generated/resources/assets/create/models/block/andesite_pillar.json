@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "side": "create:block/palettes/andesite/pillar",
-    "end": "create:block/palettes/andesite/pillar_end"
-  }
-}

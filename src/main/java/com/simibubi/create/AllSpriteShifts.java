@@ -9,16 +9,12 @@ import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.simibubi.create.content.palettes.PaletteBlockPattern;
-import com.simibubi.create.content.palettes.PaletteBlockPattern.CTs;
-import com.simibubi.create.content.palettes.PaletteStoneVariants;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -26,8 +22,6 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 public class AllSpriteShifts {
 
 	static final Map<WoodType, CTSpriteShiftEntry> WOODEN_WINDOWS = new IdentityHashMap<>();
-	static final Map<PaletteStoneVariants, Map<PaletteBlockPattern.CTs, CTSpriteShiftEntry>> PALETTE_VARIANT_PATTERNS =
-		new IdentityHashMap<>();
 
 	public static final Map<DyeColor, SpriteShiftEntry> DYED_BELTS = new IdentityHashMap<>(),
 		DYED_OFFSET_BELTS = new IdentityHashMap<>(), DYED_DIAGONAL_BELTS = new IdentityHashMap<>();
@@ -79,11 +73,6 @@ public class AllSpriteShifts {
 		return WOODEN_WINDOWS.get(woodType);
 	}
 
-	public static CTSpriteShiftEntry getVariantPattern(PaletteStoneVariants variant, PaletteBlockPattern.CTs texture) {
-		return PALETTE_VARIANT_PATTERNS.get(variant)
-			.get(texture);
-	}
-
 	//
 
 	private static void populateMaps() {
@@ -91,18 +80,6 @@ public class AllSpriteShifts {
 			WoodType.JUNGLE, WoodType.DARK_OAK, WoodType.CRIMSON, WoodType.WARPED };
 		Arrays.stream(supportedWoodTypes)
 			.forEach(woodType -> WOODEN_WINDOWS.put(woodType, vertical("palettes/" + woodType.name() + "_window")));
-
-		for (PaletteStoneVariants paletteStoneVariants : PaletteStoneVariants.values()) {
-			String variantName = Lang.asId(paletteStoneVariants.name());
-			IdentityHashMap<CTs, CTSpriteShiftEntry> map = new IdentityHashMap<>();
-			PALETTE_VARIANT_PATTERNS.put(paletteStoneVariants, map);
-
-			for (PaletteBlockPattern.CTs texture : PaletteBlockPattern.CTs.values()) {
-				String textureName = Lang.asId(texture.name());
-				String target = "palettes/" + variantName + "/" + textureName;
-				map.put(texture, getCT(texture.type, target));
-			}
-		}
 
 		for (DyeColor color : DyeColor.values()) {
 			String id = color.getSerializedName();

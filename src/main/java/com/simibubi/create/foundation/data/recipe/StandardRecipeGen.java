@@ -24,6 +24,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -940,9 +941,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe
 
-	DARK_SCORIA = create(AllPaletteBlocks.DARK_SCORIA).returns(8)
-		.unlockedBy(() -> AllPaletteBlocks.SCORIA.get())
-		.viaShaped(b -> b.define('#', AllPaletteBlocks.SCORIA.get())
+	SCORCHIA = create(AllPaletteStoneTypes.SCORCHIA.getBaseBlock()::get).returns(8)
+		.unlockedBy(AllPaletteStoneTypes.SCORIA.getBaseBlock()::get)
+		.viaShaped(b -> b.define('#', AllPaletteStoneTypes.SCORIA.getBaseBlock()
+			.get())
 			.define('D', Tags.Items.DYES_BLACK)
 			.pattern("###")
 			.pattern("#D#")
@@ -1027,16 +1029,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	DOUGH_TO_BREAD = create(() -> Items.BREAD).viaCooking(AllItems.DOUGH::get)
 		.inSmoker(),
 
-		LIMESAND = create(AllPaletteBlocks.LIMESTONE::get).viaCooking(AllPaletteBlocks.LIMESAND::get)
-			.inFurnace(),
-		SOUL_SAND = create(AllPaletteBlocks.SCORIA::get).viaCooking(() -> Blocks.SOUL_SAND)
-			.inFurnace(),
-		DIORITE = create(AllPaletteBlocks.DOLOMITE::get).viaCooking(() -> Blocks.DIORITE)
-			.inFurnace(),
-		GRANITE = create(AllPaletteBlocks.GABBRO::get).viaCooking(() -> Blocks.GRANITE)
-			.inFurnace(),
-		NAT_SCORIA = create(AllPaletteBlocks.SCORIA::get).withSuffix("_from_natural")
-			.viaCooking(AllPaletteBlocks.NATURAL_SCORIA::get)
+		SOUL_SAND = create(AllPaletteStoneTypes.SCORIA.getBaseBlock()::get).viaCooking(() -> Blocks.SOUL_SAND)
 			.inFurnace(),
 
 		FRAMED_GLASS = recycleGlass(AllPaletteBlocks.FRAMED_GLASS),

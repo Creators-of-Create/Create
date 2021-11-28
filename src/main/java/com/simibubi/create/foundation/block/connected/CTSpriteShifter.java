@@ -36,13 +36,15 @@ public class CTSpriteShifter extends SpriteShifter {
 			return new CTSpriteShiftEntry.Vertical();
 		case CROSS:
 			return new CTSpriteShiftEntry.Cross();
+		case RECTANGLE:
+			return new CTSpriteShiftEntry.Rect();
 		default:
 			return null;
 		}
 	}
 
 	public enum CTType {
-		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS;
+		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS, RECTANGLE;
 	}
 
 }

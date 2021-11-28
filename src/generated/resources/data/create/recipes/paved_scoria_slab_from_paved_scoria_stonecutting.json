@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:paved_scoria"
-  },
-  "result": "create:paved_scoria_slab",
-  "count": 2
-}

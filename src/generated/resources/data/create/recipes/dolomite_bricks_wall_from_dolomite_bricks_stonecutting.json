@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:dolomite_bricks"
-  },
-  "result": "create:dolomite_bricks_wall",
-  "count": 1
-}

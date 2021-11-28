@@ -37,7 +37,7 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 		@Override
 		public int getTextureIndex(CTContext context) {
-			return (context.right ? 1 : 0) + (context.left ? 2 : 0);
+			return !context.right && !context.left ? 0 : !context.right ? 3 : !context.left ? 2 : 1;
 		}
 
 		@Override
@@ -79,6 +79,27 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 		@Override
 		public CTType getType() {
 			return CTType.CROSS;
+		}
+
+	}
+	
+	// Same as cross with different sheet arrangement
+	public static class Rect extends CTSpriteShiftEntry {
+
+		public Rect() {
+			super(4);
+		}
+
+		@Override
+		public int getTextureIndex(CTContext context) {
+			int x = context.left && context.right ? 2 : context.left ? 3 : context.right ? 1 : 0;
+			int y = context.up && context.down ? 1 : context.up ? 2 : context.down ? 0 : 3;
+			return x + y * 4;
+		}
+
+		@Override
+		public CTType getType() {
+			return CTType.RECTANGLE;
 		}
 
 	}

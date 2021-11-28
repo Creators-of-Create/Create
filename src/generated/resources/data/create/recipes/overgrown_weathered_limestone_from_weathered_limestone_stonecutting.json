@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:weathered_limestone"
-  },
-  "result": "create:overgrown_weathered_limestone",
-  "count": 1
-}

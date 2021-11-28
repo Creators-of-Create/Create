@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.data.DataGenerator;
@@ -129,10 +128,6 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(Blocks.SAND)
 			.output(.1f, Items.FLINT)
 			.output(.05f, Items.CLAY_BALL)),
-
-		SAND = create(() -> Blocks.SAND, b -> b.duration(150)
-			.output(AllPaletteBlocks.LIMESAND.get())
-			.output(.1f, Items.BONE_MEAL)),
 
 		NETHERRACK = create(() -> Blocks.NETHERRACK, b -> b.duration(250)
 			.output(AllItems.CINDER_FLOUR.get())

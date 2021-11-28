@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_wall_side",
+  "textures": {
+    "wall": "create:block/palettes/stone_types/polished/dripstone_cut_polished"
+  }
+}

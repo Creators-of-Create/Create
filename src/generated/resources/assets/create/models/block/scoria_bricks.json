@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "create:block/palettes/scoria/bricks"
+    "all": "create:block/palettes/stone_types/brick/scoria_cut_brick"
   }
 }

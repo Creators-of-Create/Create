@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/diorite"
+  },
+  "result": "create:layered_diorite",
+  "count": 1
+}

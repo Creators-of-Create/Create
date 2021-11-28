@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "side": "create:block/palettes/diorite/cobblestone",
-    "bottom": "create:block/palettes/diorite/cobblestone",
-    "top": "create:block/palettes/diorite/cobblestone"
-  }
-}

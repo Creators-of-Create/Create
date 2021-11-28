@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "create:cut_granite",
+    "create:cut_granite_stairs",
+    "create:cut_granite_wall",
+    "create:polished_granite",
+    "create:polished_granite_stairs",
+    "create:polished_granite_wall",
+    "create:granite_bricks",
+    "create:granite_bricks_stairs",
+    "create:granite_bricks_wall",
+    "create:small_granite_bricks",
+    "create:small_granite_bricks_stairs",
+    "create:small_granite_bricks_wall",
+    "create:layered_granite",
+    "create:pillar_granite"
+  ]
+}

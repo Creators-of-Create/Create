@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "side": "create:block/palettes/gabbro/fancy_bricks",
-    "bottom": "create:block/palettes/gabbro/fancy_bricks",
-    "top": "create:block/palettes/gabbro/fancy_bricks"
-  }
-}

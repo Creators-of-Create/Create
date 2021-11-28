@@ -1510,7 +1510,7 @@ public class AllBlocks {
 	// Materials
 
 	static {
-		REGISTRATE.startSection(AllSections.MATERIALS);
+		REGISTRATE.startSection(AllSections.PALETTES);
 	}
 
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)

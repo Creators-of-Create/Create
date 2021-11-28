@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_asurine_wall_from_cut_asurine_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_cut_asurine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_asurine"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_asurine_wall_from_cut_asurine_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_asurine",
+      "has_the_recipe"
+    ]
+  ]
+}

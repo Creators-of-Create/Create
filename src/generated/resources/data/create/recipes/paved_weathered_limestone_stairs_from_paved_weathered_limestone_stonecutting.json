@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:paved_weathered_limestone"
-  },
-  "result": "create:paved_weathered_limestone_stairs",
-  "count": 1
-}

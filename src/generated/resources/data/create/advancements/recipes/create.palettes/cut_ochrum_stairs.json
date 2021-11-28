@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_ochrum_stairs"
+    ]
+  },
+  "criteria": {
+    "has_cut_ochrum": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_ochrum"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_ochrum_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_ochrum",
+      "has_the_recipe"
+    ]
+  ]
+}

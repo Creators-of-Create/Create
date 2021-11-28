@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/layered_scorchia",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/layered_scorchia"
+    },
+    "axis=z": {
+      "model": "create:block/layered_scorchia",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

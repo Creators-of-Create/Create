@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "side": "create:block/palettes/weathered_limestone/fancy_bricks",
-    "bottom": "create:block/palettes/weathered_limestone/fancy_bricks",
-    "top": "create:block/palettes/weathered_limestone/fancy_bricks"
-  }
-}

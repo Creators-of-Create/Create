@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/slab",
   "textures": {
-    "side": "create:block/palettes/limestone/polished_slab",
-    "bottom": "create:block/palettes/limestone/polished",
-    "top": "create:block/palettes/limestone/polished"
+    "side": "create:block/palettes/stone_types/slab/limestone_cut_slab",
+    "bottom": "create:block/palettes/stone_types/polished/limestone_cut_polished",
+    "top": "create:block/palettes/stone_types/polished/limestone_cut_polished"
   }
 }

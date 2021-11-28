@@ -36,10 +36,3 @@ Technology that empowers the player.'''
     ordering="AFTER"
     side="BOTH"
 
-# TODO: remove once Registrate is fixed
-[[dependencies.create]]
-    modId="registrate"
-    mandatory=true
-    versionRange="[1.0.13,1.1.0)"
-    ordering="AFTER"
-    side="BOTH"

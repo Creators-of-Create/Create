@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "create:cut_limestone",
+    "create:cut_limestone_stairs",
+    "create:cut_limestone_wall",
+    "create:polished_limestone",
+    "create:polished_limestone_stairs",
+    "create:polished_limestone_wall",
+    "create:limestone_bricks",
+    "create:limestone_bricks_stairs",
+    "create:limestone_bricks_wall",
+    "create:small_limestone_bricks",
+    "create:small_limestone_bricks_stairs",
+    "create:small_limestone_bricks_wall",
+    "create:layered_limestone",
+    "create:pillar_limestone"
+  ]
+}

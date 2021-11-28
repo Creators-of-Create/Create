@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "create:cut_calcite",
+    "create:cut_calcite_stairs",
+    "create:cut_calcite_wall",
+    "create:polished_calcite",
+    "create:polished_calcite_stairs",
+    "create:polished_calcite_wall",
+    "create:calcite_bricks",
+    "create:calcite_bricks_stairs",
+    "create:calcite_bricks_wall",
+    "create:small_calcite_bricks",
+    "create:small_calcite_bricks_stairs",
+    "create:small_calcite_bricks_wall",
+    "create:layered_calcite",
+    "create:pillar_calcite"
+  ]
+}

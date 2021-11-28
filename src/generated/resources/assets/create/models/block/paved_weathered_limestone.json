@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "side": "create:block/palettes/weathered_limestone/paved",
-    "bottom": "create:block/palettes/weathered_limestone/paved_borderless",
-    "top": "create:block/palettes/weathered_limestone/paved_top"
-  }
-}

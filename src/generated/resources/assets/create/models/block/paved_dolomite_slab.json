@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "side": "create:block/palettes/dolomite/paved",
-    "bottom": "create:block/palettes/dolomite/paved",
-    "top": "create:block/palettes/dolomite/paved"
-  }
-}

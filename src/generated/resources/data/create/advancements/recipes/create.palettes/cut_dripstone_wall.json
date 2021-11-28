@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_dripstone_wall"
+    ]
+  },
+  "criteria": {
+    "has_cut_dripstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_dripstone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_dripstone_wall"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_dripstone",
+      "has_the_recipe"
+    ]
+  ]
+}

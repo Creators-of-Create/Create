@@ -82,14 +82,14 @@ public class AllItems {
 	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
-			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
-					.register();
+		REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
+			.model(AssetLookup.existingItemModel())
+			.register();
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
-			REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
-					.register();
+		REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
+			.model(AssetLookup.existingItemModel())
+			.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -101,11 +101,12 @@ public class AllItems {
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
-	public static final ItemEntry<CombustibleItem> CREATIVE_BLAZE_CAKE = REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
-		.properties(p -> p.rarity(Rarity.EPIC))
-		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE))
-		.register();
+	public static final ItemEntry<CombustibleItem> CREATIVE_BLAZE_CAKE =
+		REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
+			.properties(p -> p.rarity(Rarity.EPIC))
+			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+			.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE))
+			.register();
 
 	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
 		.properties(p -> p.food(new FoodProperties.Builder().nutrition(6)
@@ -218,6 +219,20 @@ public class AllItems {
 		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
 			.register();
 
+	public static final ItemEntry<? extends CopperArmorItem>
+
+	COPPER_BACKTANK =
+		REGISTRATE
+			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
+			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+			.register(),
+
+		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+			.register(),
+
+		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
+			.register();
+
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.register();
@@ -261,7 +276,7 @@ public class AllItems {
 			.properties(p -> p.stacksTo(1))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
-	
+
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
@@ -276,20 +291,6 @@ public class AllItems {
 			.properties(p -> p.rarity(Rarity.EPIC))
 			.lang("Creative Worldshaper")
 			.model(AssetLookup.itemModelWithPartials())
-			.register();
-
-	public static final ItemEntry<? extends CopperArmorItem>
-
-	COPPER_BACKTANK =
-		REGISTRATE
-			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
-			.register(),
-
-		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
-			.register(),
-
-		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
 			.register();
 
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =

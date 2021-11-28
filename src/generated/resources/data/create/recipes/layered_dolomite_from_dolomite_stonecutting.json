@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:dolomite"
-  },
-  "result": "create:layered_dolomite",
-  "count": 1
-}

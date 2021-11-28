@@ -21,7 +21,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.palettes.PavedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
@@ -204,14 +203,6 @@ public class BlockStateGen {
 			.cubeAll(ctx.getName(), prov.modLoc(texturePath)));
 	}
 
-	public static <T extends Block> void pavedBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
-		ModelFile top, ModelFile covered) {
-		prov.getVariantBuilder(ctx.getEntry())
-			.forAllStates(state -> ConfiguredModel.builder()
-				.modelFile(state.getValue(PavedBlock.COVERED) ? covered : top)
-				.build());
-	}
-
 	public static NonNullBiConsumer<DataGenContext<Block, CartAssemblerBlock>, RegistrateBlockstateProvider> cartAssembler() {
 		return (c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(state -> {
@@ -226,8 +217,8 @@ public class BlockStateGen {
 
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
-						.getExistingFile(p.modLoc(
-							"block/" + c.getName() + "/block_" + type.getSerializedName() + (powered ? "_powered" : ""))))
+						.getExistingFile(p.modLoc("block/" + c.getName() + "/block_" + type.getSerializedName()
+							+ (powered ? "_powered" : ""))))
 					.rotationY(yRotation % 360)
 					.build();
 			});
@@ -461,4 +452,5 @@ public class BlockStateGen {
 			.condition(propertyMap.get(Pointing.DOWN.getCombinedDirection(positiveAxis)), down)
 			.end();
 	}
+
 }

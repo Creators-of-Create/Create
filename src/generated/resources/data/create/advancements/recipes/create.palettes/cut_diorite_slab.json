@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_diorite_slab"
+    ]
+  },
+  "criteria": {
+    "has_cut_diorite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_diorite"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_diorite_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_diorite",
+      "has_the_recipe"
+    ]
+  ]
+}

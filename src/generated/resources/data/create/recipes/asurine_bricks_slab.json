@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "asurine_bricks_slab",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:asurine_bricks"
+    }
+  },
+  "result": {
+    "item": "create:asurine_bricks_slab",
+    "count": 6
+  }
+}

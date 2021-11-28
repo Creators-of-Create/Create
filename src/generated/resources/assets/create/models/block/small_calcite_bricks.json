@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "create:block/palettes/stone_types/small_brick/calcite_cut_small_brick"
+  }
+}

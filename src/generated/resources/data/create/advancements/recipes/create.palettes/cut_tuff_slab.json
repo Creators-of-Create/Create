@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_tuff_slab"
+    ]
+  },
+  "criteria": {
+    "has_cut_tuff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_tuff"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_tuff_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_tuff",
+      "has_the_recipe"
+    ]
+  ]
+}

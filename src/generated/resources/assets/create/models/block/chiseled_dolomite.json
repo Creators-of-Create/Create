@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "side": "create:block/palettes/dolomite/chiseled",
-    "end": "create:block/palettes/dolomite/chiseled_top"
-  }
-}

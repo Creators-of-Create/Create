@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "side": "create:block/palettes/granite/pillar",
-    "end": "create:block/palettes/granite/pillar_end"
-  }
-}
