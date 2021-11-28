@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_scorchia_slab"
+    ]
+  },
+  "criteria": {
+    "has_cut_scorchia": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_scorchia"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_scorchia_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_scorchia",
+      "has_the_recipe"
+    ]
+  ]
+}

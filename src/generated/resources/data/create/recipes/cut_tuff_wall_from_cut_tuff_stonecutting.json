@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:cut_tuff"
+  },
+  "result": "create:cut_tuff_wall",
+  "count": 1
+}

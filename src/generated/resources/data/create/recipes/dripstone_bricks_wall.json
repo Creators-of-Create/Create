@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:dripstone_bricks"
+    }
+  },
+  "result": {
+    "item": "create:dripstone_bricks_wall",
+    "count": 6
+  }
+}

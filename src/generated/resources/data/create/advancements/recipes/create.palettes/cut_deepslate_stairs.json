@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_deepslate_stairs"
+    ]
+  },
+  "criteria": {
+    "has_cut_deepslate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_deepslate"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_deepslate_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_deepslate",
+      "has_the_recipe"
+    ]
+  ]
+}

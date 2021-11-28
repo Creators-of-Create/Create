@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "side": "create:block/palettes/limestone/paved",
-    "bottom": "create:block/palettes/limestone/paved",
-    "top": "create:block/palettes/limestone/paved"
-  }
-}

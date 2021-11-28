@@ -18,13 +18,13 @@ import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public abstract class SchematicToolBase implements ISchematicTool {
 
@@ -124,7 +124,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer) {}
 
 	@Override
-	public void renderOverlay(PoseStack ms, MultiBufferSource buffer) {}
+	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {}
 
 	@Override
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer) {

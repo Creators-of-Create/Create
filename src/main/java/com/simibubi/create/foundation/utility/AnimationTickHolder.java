@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
-import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.PonderWorld;
+import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import com.simibubi.create.lib.helper.MinecraftHelper;
 

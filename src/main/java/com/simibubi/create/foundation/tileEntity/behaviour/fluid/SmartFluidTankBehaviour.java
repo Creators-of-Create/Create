@@ -182,7 +182,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	public void read(CompoundTag nbt, boolean clientPacket) {
 		super.read(nbt, clientPacket);
 		MutableInt index = new MutableInt(0);
-		NBTHelper.iterateCompoundList(nbt.getList(getType().getName() + "Tanks", NBT.TAG_COMPOUND), c -> {
+		NBTHelper.iterateCompoundList(nbt.getList(getType().getName() + "Tanks", Tag.TAG_COMPOUND), c -> {
 			if (index.intValue() >= tanks.length)
 				return;
 			tanks[index.intValue()].readNBT(c, clientPacket);

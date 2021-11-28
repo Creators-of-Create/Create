@@ -37,7 +37,7 @@ public class RotationIndicatorParticleData
 
 		@Override
 		public String toString() {
-			return "Bool";
+			return "Char";
 		}
 	};
 

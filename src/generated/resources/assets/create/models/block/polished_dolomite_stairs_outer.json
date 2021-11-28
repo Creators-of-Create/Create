@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "side": "create:block/palettes/dolomite/polished",
-    "bottom": "create:block/palettes/dolomite/polished",
-    "top": "create:block/palettes/dolomite/polished"
-  }
-}

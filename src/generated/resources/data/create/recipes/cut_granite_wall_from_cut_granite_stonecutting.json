@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:cut_granite"
+  },
+  "result": "create:cut_granite_wall",
+  "count": 1
+}

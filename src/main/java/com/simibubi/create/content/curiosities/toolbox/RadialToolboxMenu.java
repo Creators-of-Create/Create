@@ -26,17 +26,12 @@ import com.simibubi.create.lib.helper.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 public class RadialToolboxMenu extends AbstractSimiScreen {
-
-	public static enum State {
-		SELECT_BOX, SELECT_ITEM, SELECT_ITEM_UNEQUIP, DETACH
-	}
 
 	private State state;
 	private int ticksOpen;
@@ -250,13 +245,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		if (state == State.DETACH) {
 			if (selected == UNEQUIP)
 				AllPackets.channel.sendToServer(
-					new ToolboxEquipPacket(null, selected, Minecraft.getInstance().player.getInventory().selected));
+					new ToolboxEquipPacket(null, selected, minecraft.player.getInventory().selected));
 			return;
 		}
 
 		if (selected == UNEQUIP)
 			AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-				Minecraft.getInstance().player.getInventory().selected));
+				minecraft.player.getInventory().selected));
 
 		if (selected < 0)
 			return;
@@ -269,7 +264,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			return;
 
 		AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-			Minecraft.getInstance().player.getInventory().selected));
+			minecraft.player.getInventory().selected));
 	}
 
 	@Override
@@ -309,7 +304,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		int selected = (scrollMode ? scrollSlot : hoveredSlot);
+		int selected = scrollMode ? scrollSlot : hoveredSlot;
 
 		if (button == 0) {
 			if (selected == DEPOSIT) {
@@ -342,7 +337,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			if (state == State.SELECT_ITEM_UNEQUIP && selected == UNEQUIP) {
 				if (toolboxes.size() > 1) {
 					AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-						Minecraft.getInstance().player.getInventory().selected));
+						minecraft.player.getInventory().selected));
 					state = State.SELECT_BOX;
 					return true;
 				}
@@ -357,10 +352,18 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	}
 
 	@Override
-	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
+	public boolean keyPressed(int code, int scanCode, int modifiers) {
+		InputConstants.Key mouseKey = InputConstants.getKey(code, scanCode);
+		if (AllKeys.TOOLBELT.getKeybind()
+			.isActiveAndMatches(mouseKey)) {
+			onClose();
+			ToolboxHandlerClient.COOLDOWN = 2;
+			return true;
+		}
+
 		KeyMapping[] hotbarBinds = minecraft.options.keyHotbarSlots;
 		for (int i = 0; i < hotbarBinds.length && i < 8; i++) {
-			if (hotbarBinds[i].matches(code, p_keyPressed_2_)) {
+			if (hotbarBinds[i].matches(code, scanCode)) {
 
 				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
 					ToolboxInventory inv = selectedBox.inventory;
@@ -381,17 +384,11 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			}
 		}
 
-		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
+		return super.keyPressed(code, scanCode, modifiers);
 	}
 
-	@Override
-	public boolean keyReleased(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
-		if (AllKeys.TOOLBELT.getKeybind().matchesMouse(mouseKey.getValue()) && AllKeys.TOOLBELT.getKeybind().isDown()) {
-			this.onClose();
-			return true;
-		}
-		return super.keyReleased(code, p_keyPressed_2_, p_keyPressed_3_);
+	public static enum State {
+		SELECT_BOX, SELECT_ITEM, SELECT_ITEM_UNEQUIP, DETACH
 	}
 
 }

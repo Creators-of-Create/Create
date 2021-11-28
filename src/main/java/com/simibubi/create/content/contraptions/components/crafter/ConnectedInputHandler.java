@@ -24,6 +24,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -220,7 +221,7 @@ public class ConnectedInputHandler {
 		public void read(CompoundTag nbt) {
 			isController = nbt.getBoolean("Controller");
 			data.clear();
-			nbt.getList("Data", NBT.TAG_COMPOUND)
+			nbt.getList("Data", Tag.TAG_COMPOUND)
 				.forEach(inbt -> data.add(NbtUtils.readBlockPos((CompoundTag) inbt)));
 
 			// nbt got wiped -> reset

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "side": "create:block/palettes/andesite/cobblestone",
-    "bottom": "create:block/palettes/andesite/cobblestone",
-    "top": "create:block/palettes/andesite/cobblestone"
-  }
-}

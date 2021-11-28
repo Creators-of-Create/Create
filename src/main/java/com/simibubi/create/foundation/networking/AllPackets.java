@@ -166,11 +166,11 @@ public enum AllPackets {
 	private static class LoadedPacket<T extends SimplePacketBase> {
 		private static int index = 0;
 
-		BiConsumer<T, FriendlyByteBuf> encoder;
-		Function<FriendlyByteBuf, T> decoder;
-		BiConsumer<T, Supplier<SimplePacketBase.Context>> handler;
-		Class<T> type;
-		NetworkDirection direction;
+		private BiConsumer<T, FriendlyByteBuf> encoder;
+		private Function<FriendlyByteBuf, T> decoder;
+		private BiConsumer<T, Supplier<SimplePacketBase.Context>> handler;
+		private Class<T> type;
+		private NetworkDirection direction;
 
 		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
 			encoder = T::write;

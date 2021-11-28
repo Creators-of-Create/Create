@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/pillar_crimsite",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/pillar_crimsite"
+    },
+    "axis=z": {
+      "model": "create:block/pillar_crimsite",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "side": "create:block/palettes/gabbro/polished_slab",
-    "bottom": "create:block/palettes/gabbro/polished",
-    "top": "create:block/palettes/gabbro/polished"
-  }
-}

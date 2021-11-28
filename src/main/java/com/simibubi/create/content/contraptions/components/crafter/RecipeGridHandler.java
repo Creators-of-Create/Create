@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -206,7 +207,7 @@ public class RecipeGridHandler {
 
 		public static GroupedItems read(CompoundTag nbt) {
 			GroupedItems items = new GroupedItems();
-			ListTag gridNBT = nbt.getList("Grid", NBT.TAG_COMPOUND);
+			ListTag gridNBT = nbt.getList("Grid", Tag.TAG_COMPOUND);
 			gridNBT.forEach(inbt -> {
 				CompoundTag entry = (CompoundTag) inbt;
 				int x = entry.getInt("x");

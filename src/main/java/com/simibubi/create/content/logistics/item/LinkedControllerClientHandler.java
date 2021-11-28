@@ -29,13 +29,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class LinkedControllerClientHandler {
+
+	public static final IIngameOverlay OVERLAY = LinkedControllerClientHandler::renderOverlay;
 
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
@@ -229,18 +232,14 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		float partialTicks) {
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1, int height1) {
 		if (MODE != Mode.BIND)
 			return;
 		Minecraft mc = Minecraft.getInstance();
 
-		ms.pushPose();
+		poseStack.pushPose();
 		Screen tooltipScreen = new TooltipScreen(null);
-		tooltipScreen.init(mc, mc.getWindow()
-			.getGuiScaledWidth(),
-			mc.getWindow()
-				.getGuiScaledHeight());
+		tooltipScreen.init(mc, width1, height1);
 
 		Object[] keys = new Object[6];
 		Vector<KeyMapping> controls = getControls();
@@ -264,10 +263,9 @@ public class LinkedControllerClientHandler {
 		int x = (tooltipScreen.width / 3) - width / 2;
 		int y = tooltipScreen.height - height;
 
-		tooltipScreen.renderComponentTooltip(ms, list, x, y);
+		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);
 
-		ms.popPose();
-
+		poseStack.popPose();
 	}
 
 	public enum Mode {

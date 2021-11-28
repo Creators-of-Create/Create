@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;

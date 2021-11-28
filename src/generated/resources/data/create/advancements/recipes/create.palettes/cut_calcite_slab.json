@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_calcite_slab"
+    ]
+  },
+  "criteria": {
+    "has_cut_calcite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_calcite"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_calcite_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_calcite",
+      "has_the_recipe"
+    ]
+  ]
+}

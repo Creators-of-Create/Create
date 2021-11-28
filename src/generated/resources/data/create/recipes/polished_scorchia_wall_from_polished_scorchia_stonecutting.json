@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:polished_scorchia"
+  },
+  "result": "create:polished_scorchia_wall",
+  "count": 1
+}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "side": "create:block/palettes/gabbro/bricks",
-    "bottom": "create:block/palettes/gabbro/bricks",
-    "top": "create:block/palettes/gabbro/bricks"
-  }
-}

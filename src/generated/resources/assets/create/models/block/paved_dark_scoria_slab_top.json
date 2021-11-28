@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "side": "create:block/palettes/dark_scoria/paved",
-    "bottom": "create:block/palettes/dark_scoria/paved",
-    "top": "create:block/palettes/dark_scoria/paved"
-  }
-}

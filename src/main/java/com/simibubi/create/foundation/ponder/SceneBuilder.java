@@ -21,41 +21,41 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
-import com.simibubi.create.foundation.ponder.content.PonderPalette;
-import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
-import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
-import com.simibubi.create.foundation.ponder.elements.EntityElement;
-import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
-import com.simibubi.create.foundation.ponder.elements.MinecartElement;
-import com.simibubi.create.foundation.ponder.elements.MinecartElement.MinecartConstructor;
-import com.simibubi.create.foundation.ponder.elements.ParrotElement;
-import com.simibubi.create.foundation.ponder.elements.ParrotElement.ParrotPose;
-import com.simibubi.create.foundation.ponder.elements.ParrotElement.SpinOnComponentPose;
-import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
-import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instructions.AnimateMinecartInstruction;
-import com.simibubi.create.foundation.ponder.instructions.AnimateParrotInstruction;
-import com.simibubi.create.foundation.ponder.instructions.AnimateTileEntityInstruction;
-import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
-import com.simibubi.create.foundation.ponder.instructions.CreateMinecartInstruction;
-import com.simibubi.create.foundation.ponder.instructions.CreateParrotInstruction;
-import com.simibubi.create.foundation.ponder.instructions.DelayInstruction;
-import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionInstruction;
-import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
-import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.ponder.instructions.FadeOutOfSceneInstruction;
-import com.simibubi.create.foundation.ponder.instructions.HighlightValueBoxInstruction;
-import com.simibubi.create.foundation.ponder.instructions.KeyframeInstruction;
-import com.simibubi.create.foundation.ponder.instructions.LineInstruction;
-import com.simibubi.create.foundation.ponder.instructions.MarkAsFinishedInstruction;
-import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
-import com.simibubi.create.foundation.ponder.instructions.OutlineSelectionInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ReplaceBlocksInstruction;
-import com.simibubi.create.foundation.ponder.instructions.RotateSceneInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
-import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
-import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
+import com.simibubi.create.foundation.ponder.element.AnimatedSceneElement;
+import com.simibubi.create.foundation.ponder.element.BeltItemElement;
+import com.simibubi.create.foundation.ponder.element.EntityElement;
+import com.simibubi.create.foundation.ponder.element.InputWindowElement;
+import com.simibubi.create.foundation.ponder.element.MinecartElement;
+import com.simibubi.create.foundation.ponder.element.MinecartElement.MinecartConstructor;
+import com.simibubi.create.foundation.ponder.element.ParrotElement;
+import com.simibubi.create.foundation.ponder.element.ParrotElement.ParrotPose;
+import com.simibubi.create.foundation.ponder.element.ParrotElement.SpinOnComponentPose;
+import com.simibubi.create.foundation.ponder.element.TextWindowElement;
+import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.instruction.AnimateMinecartInstruction;
+import com.simibubi.create.foundation.ponder.instruction.AnimateParrotInstruction;
+import com.simibubi.create.foundation.ponder.instruction.AnimateTileEntityInstruction;
+import com.simibubi.create.foundation.ponder.instruction.AnimateWorldSectionInstruction;
+import com.simibubi.create.foundation.ponder.instruction.ChaseAABBInstruction;
+import com.simibubi.create.foundation.ponder.instruction.CreateMinecartInstruction;
+import com.simibubi.create.foundation.ponder.instruction.CreateParrotInstruction;
+import com.simibubi.create.foundation.ponder.instruction.DelayInstruction;
+import com.simibubi.create.foundation.ponder.instruction.DisplayWorldSectionInstruction;
+import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction;
+import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
+import com.simibubi.create.foundation.ponder.instruction.FadeOutOfSceneInstruction;
+import com.simibubi.create.foundation.ponder.instruction.HighlightValueBoxInstruction;
+import com.simibubi.create.foundation.ponder.instruction.KeyframeInstruction;
+import com.simibubi.create.foundation.ponder.instruction.LineInstruction;
+import com.simibubi.create.foundation.ponder.instruction.MarkAsFinishedInstruction;
+import com.simibubi.create.foundation.ponder.instruction.MovePoiInstruction;
+import com.simibubi.create.foundation.ponder.instruction.OutlineSelectionInstruction;
+import com.simibubi.create.foundation.ponder.instruction.PonderInstruction;
+import com.simibubi.create.foundation.ponder.instruction.ReplaceBlocksInstruction;
+import com.simibubi.create.foundation.ponder.instruction.RotateSceneInstruction;
+import com.simibubi.create.foundation.ponder.instruction.ShowInputInstruction;
+import com.simibubi.create.foundation.ponder.instruction.TextInstruction;
+import com.simibubi.create.foundation.ponder.instruction.TileEntityDataInstruction;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -140,7 +140,7 @@ public class SceneBuilder {
 	 * @param title
 	 */
 	public void title(String sceneId, String title) {
-		scene.sceneId = new ResourceLocation(scene.namespace, sceneId);
+		scene.sceneId = new ResourceLocation(scene.getNamespace(), sceneId);
 		PonderLocalization.registerSpecific(scene.sceneId, PonderScene.TITLE_KEY, title);
 	}
 
@@ -190,8 +190,8 @@ public class SceneBuilder {
 	 */
 	public void showBasePlate() {
 		world.showSection(
-			scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.basePlateOffsetX, 0, scene.basePlateOffsetZ),
-				new Vec3i(scene.basePlateSize - 1, 0, scene.basePlateSize - 1)),
+			scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ()),
+				new Vec3i(scene.getBasePlateSize() - 1, 0, scene.getBasePlateSize() - 1)),
 			Direction.UP);
 	}
 
@@ -280,13 +280,13 @@ public class SceneBuilder {
 		}
 
 		public void superGlue(BlockPos pos, Direction side, boolean fullBlock) {
-			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.world, pos, side, fullBlock));
+			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.getWorld(), pos, side, fullBlock));
 		}
 
 		private void rotationIndicator(BlockPos pos, boolean direction) {
 			addInstruction(scene -> {
-				BlockState blockState = scene.world.getBlockState(pos);
-				BlockEntity tileEntity = scene.world.getBlockEntity(pos);
+				BlockState blockState = scene.getWorld().getBlockState(pos);
+				BlockEntity tileEntity = scene.getWorld().getBlockEntity(pos);
 
 				if (!(blockState.getBlock() instanceof KineticBlock))
 					return;
@@ -309,7 +309,7 @@ public class SceneBuilder {
 						.charAt(0));
 
 				for (int i = 0; i < 20; i++)
-					scene.world.addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
+					scene.getWorld().addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
 			});
 		}
 
@@ -528,7 +528,7 @@ public class SceneBuilder {
 		}
 
 		public void restoreBlocks(Selection selection) {
-			addInstruction(scene -> scene.world.restoreBlocks(selection));
+			addInstruction(scene -> scene.getWorld().restoreBlocks(selection));
 		}
 
 		public ElementLink<WorldSectionElement> makeSectionIndependent(Selection selection) {
@@ -779,7 +779,7 @@ public class SceneBuilder {
 
 		public <T extends BlockEntity> void modifyTileEntity(BlockPos position, Class<T> teType, Consumer<T> consumer) {
 			addInstruction(scene -> {
-				BlockEntity tileEntity = scene.world.getBlockEntity(position);
+				BlockEntity tileEntity = scene.getWorld().getBlockEntity(position);
 				if (teType.isInstance(tileEntity))
 					consumer.accept(teType.cast(tileEntity));
 			});

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:paved_diorite"
-  },
-  "result": "create:paved_diorite_slab",
-  "count": 2
-}

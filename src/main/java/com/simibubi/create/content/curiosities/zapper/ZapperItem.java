@@ -17,6 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
@@ -142,7 +143,7 @@ public abstract class ZapperItem extends Item implements EntitySwingListenerItem
 			stateToUse = NbtUtils.readBlockState(nbt.getCompound("BlockUsed"));
 		stateToUse = BlockHelper.setZeroAge(stateToUse);
 		CompoundTag data = null;
-		if (AllBlockTags.SAFE_NBT.matches(stateToUse) && nbt.contains("BlockData", NBT.TAG_COMPOUND)) {
+		if (AllBlockTags.SAFE_NBT.matches(stateToUse) && nbt.contains("BlockData", Tag.TAG_COMPOUND)) {
 			data = nbt.getCompound("BlockData");
 		}
 

@@ -109,11 +109,12 @@ public class AllItems {
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
-	public static final ItemEntry<CombustibleItem> CREATIVE_BLAZE_CAKE = REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
-		.properties(p -> p.rarity(Rarity.EPIC))
-		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE))
-		.register();
+	public static final ItemEntry<CombustibleItem> CREATIVE_BLAZE_CAKE =
+		REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
+			.properties(p -> p.rarity(Rarity.EPIC))
+			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+			.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE))
+			.register();
 
 	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
 		.properties(p -> p.food(new FoodProperties.Builder().nutrition(6)
@@ -145,6 +146,9 @@ public class AllItems {
 		.properties(p -> (FabricItemSettings) p.stacksTo(16))
 		.lang("Builder's Tea")
 		.register();
+
+
+	public static final ItemEntry<Item> RAW_ZINC = ingredient("raw_zinc");
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
@@ -226,6 +230,20 @@ public class AllItems {
 		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
 			.register();
 
+	public static final ItemEntry<? extends CopperArmorItem>
+
+	COPPER_BACKTANK =
+		REGISTRATE
+			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
+			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+			.register(),
+
+		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+			.register(),
+
+		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
+			.register();
+
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
 		//.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
@@ -292,20 +310,6 @@ public class AllItems {
 			//.transform(CreateRegistrate.customRenderedItem(() -> WorldshaperItemRenderer::new))
 			.lang("Creative Worldshaper")
 //			.model(AssetLookup.itemModelWithPartials())
-			.register();
-
-	public static final ItemEntry<? extends CopperArmorItem>
-
-	COPPER_BACKTANK =
-		REGISTRATE
-			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-//			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
-			.register(),
-
-		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
-			.register(),
-
-		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
 			.register();
 
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =

@@ -136,6 +136,8 @@
     "create:peculiar_bell",
     "create:haunted_bell",
     "create:zinc_ore",
+    "create:deepslate_zinc_ore",
+    "create:raw_zinc_block",
     "create:copper_block",
     "create:copper_shingles",
     "create:copper_tiles",

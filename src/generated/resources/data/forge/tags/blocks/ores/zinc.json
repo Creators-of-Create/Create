@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "create:zinc_ore"
+    "create:zinc_ore",
+    "create:deepslate_zinc_ore"
   ]
 }

@@ -1,7 +1,17 @@
 {
   "variants": {
-    "": {
+    "axis=x": {
+      "model": "create:block/layered_granite",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
       "model": "create:block/layered_granite"
+    },
+    "axis=z": {
+      "model": "create:block/layered_granite",
+      "x": 90,
+      "y": 180
     }
   }
 }

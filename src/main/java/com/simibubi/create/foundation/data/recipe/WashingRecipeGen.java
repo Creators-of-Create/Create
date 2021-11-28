@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.data.DataGenerator;
@@ -81,7 +80,6 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		CYAN_CONCRETE = convert(Blocks.CYAN_CONCRETE_POWDER, Blocks.CYAN_CONCRETE),
 		BLACK_CONCRETE = convert(Blocks.BLACK_CONCRETE_POWDER, Blocks.BLACK_CONCRETE),
 
-		LIMESTONE = create(AllPaletteBlocks.LIMESTONE::get, b -> b.output(AllPaletteBlocks.WEATHERED_LIMESTONE.get())),
 		FLOUR = create(AllItems.WHEAT_FLOUR::get, b -> b.output(AllItems.DOUGH.get()))
 
 	;

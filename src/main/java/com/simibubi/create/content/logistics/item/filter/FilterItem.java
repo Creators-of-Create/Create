@@ -130,7 +130,7 @@ public class FilterItem extends Item implements MenuProvider {
 
 			int count = 0;
 			ListTag attributes = filter.getOrCreateTag()
-				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
@@ -226,7 +226,7 @@ public class FilterItem extends Item implements MenuProvider {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
 				.getInt("WhitelistMode")];
 			ListTag attributes = filter.getOrCreateTag()
-				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);

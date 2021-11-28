@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "ochrum_bricks_stairs",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:ochrum_bricks"
+    }
+  },
+  "result": {
+    "item": "create:ochrum_bricks_stairs",
+    "count": 4
+  }
+}

@@ -42,17 +42,17 @@ public final class NBTProcessors {
 			return data;
 		});
 		addProcessor(BlockEntityType.LECTERN, data -> {
-			if (!data.contains("Book", NBT.TAG_COMPOUND))
+			if (!data.contains("Book", Tag.TAG_COMPOUND))
 				return data;
 			CompoundTag book = data.getCompound("Book");
 
-			if (!book.contains("tag", NBT.TAG_COMPOUND))
+			if (!book.contains("tag", Tag.TAG_COMPOUND))
 				return data;
 			CompoundTag tag = book.getCompound("tag");
 
-			if (!tag.contains("pages", NBT.TAG_LIST))
+			if (!tag.contains("pages", Tag.TAG_LIST))
 				return data;
-			ListTag pages = tag.getList("pages", NBT.TAG_STRING);
+			ListTag pages = tag.getList("pages", Tag.TAG_STRING);
 
 			for (Tag inbt : pages) {
 				if (textComponentHasClickEvent(inbt.getAsString()))

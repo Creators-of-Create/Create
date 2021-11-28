@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
@@ -132,7 +133,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		whitelistMode = WhitelistMode.values()[filterItem.getOrCreateTag()
 			.getInt("WhitelistMode")];
 		ListTag attributes = filterItem.getOrCreateTag()
-			.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+			.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 		attributes.forEach(inbt -> {
 			CompoundTag compound = (CompoundTag) inbt;
 			selectedAttributes.add(Pair.of(ItemAttribute.fromNBT(compound), compound.getBoolean("Inverted")));

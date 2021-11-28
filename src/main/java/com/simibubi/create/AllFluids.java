@@ -81,14 +81,14 @@ public class AllFluids {
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {
 		Fluid fluid = fluidState.getType();
-		if (fluid.isSame(HONEY.get()))
-			return fluidState.isSource() ? AllPaletteBlocks.LIMESTONE.getDefaultState()
-				: AllPaletteBlocks.LIMESTONE_VARIANTS.registeredBlocks.get(0)
-					.getDefaultState();
-		if (fluid.isSame(CHOCOLATE.get()))
-			return fluidState.isSource() ? AllPaletteBlocks.SCORIA.getDefaultState()
-				: AllPaletteBlocks.SCORIA_VARIANTS.registeredBlocks.get(0)
-					.getDefaultState();
+//		if (fluid.isSame(HONEY.get())) TODO when fluid blocks return
+//			return fluidState.isSource() ? AllPaletteBlocks.LIMESTONE.getDefaultState()
+//				: AllPaletteBlocks.LIMESTONE_VARIANTS.registeredBlocks.get(0)
+//					.getDefaultState();
+//		if (fluid.isSame(CHOCOLATE.get()))
+//			return fluidState.isSource() ? AllPaletteBlocks.SCORIA.getDefaultState()
+//				: AllPaletteBlocks.SCORIA_VARIANTS.registeredBlocks.get(0)
+//					.getDefaultState();
 		return null;
 	}
 

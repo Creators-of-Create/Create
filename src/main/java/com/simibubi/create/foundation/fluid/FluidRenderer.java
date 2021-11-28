@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.fluid;
 
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;

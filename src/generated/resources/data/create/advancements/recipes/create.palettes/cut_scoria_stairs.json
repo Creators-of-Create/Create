@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_scoria_stairs"
+    ]
+  },
+  "criteria": {
+    "has_cut_scoria": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_scoria"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_scoria_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_scoria",
+      "has_the_recipe"
+    ]
+  ]
+}

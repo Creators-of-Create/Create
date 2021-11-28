@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_wall_post",
+  "textures": {
+    "wall": "create:block/palettes/stone_types/small_brick/tuff_cut_small_brick"
+  }
+}

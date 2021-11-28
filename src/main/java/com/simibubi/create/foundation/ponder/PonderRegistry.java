@@ -13,10 +13,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.ponder.content.PonderChapter;
-import com.simibubi.create.foundation.ponder.content.PonderChapterRegistry;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.content.PonderTagRegistry;
 import com.simibubi.create.foundation.ponder.content.SharedText;
 
 import net.minecraft.client.Minecraft;

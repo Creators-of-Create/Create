@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "side": "create:block/palettes/limestone/fancy_bricks",
-    "bottom": "create:block/palettes/limestone/fancy_bricks",
-    "top": "create:block/palettes/limestone/fancy_bricks"
-  }
-}

@@ -153,7 +153,7 @@ public class CommonEvents {
 		AllCommands.register(dispatcher);
 	}
 
-	public static List<PreparableReloadListener> registerReloadListeners(ServerResources dataPackRegistries) {
+	public static List<PreparableReloadListener> addReloadListeners(ServerResources dataPackRegistries) {
 		List<PreparableReloadListener> listeners = new ArrayList<>();
 		listeners.add(RecipeFinder.LISTENER);
 		listeners.add(PotionMixingRecipeManager.LISTENER);
@@ -162,7 +162,17 @@ public class CommonEvents {
 		return listeners;
 	}
 
-	public static void serverStopped(MinecraftServer server) {
+	public static void onDatapackSync(OnDatapackSyncEvent event) {
+		ServerPlayer player = event.getPlayer();
+		if (player != null) {
+			PotatoProjectileTypeManager.syncTo(player);
+		} else {
+			PotatoProjectileTypeManager.syncToAll();
+		}
+	}
+
+	@SubscribeEvent
+	public static void serverStopping(MinecraftServer server) {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 

@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;

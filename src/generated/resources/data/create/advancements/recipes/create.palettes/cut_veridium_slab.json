@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_veridium_slab"
+    ]
+  },
+  "criteria": {
+    "has_cut_veridium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_veridium"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_veridium_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_veridium",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -28,7 +28,7 @@ public class NBTHelper {
 		T[] enumConstants = enumClass.getEnumConstants();
 		if (enumConstants == null)
 			throw new IllegalArgumentException("Non-Enum class passed to readEnum: " + enumClass.getName());
-		if (nbt.contains(key, NBT.TAG_STRING)) {
+		if (nbt.contains(key, Tag.TAG_STRING)) {
 			String name = nbt.getString(key);
 			for (T t : enumConstants) {
 				if (t.name()

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:deepslate_bricks_stairs"
+    ]
+  },
+  "criteria": {
+    "has_deepslate_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:deepslate_bricks"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:deepslate_bricks_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_deepslate_bricks",
+      "has_the_recipe"
+    ]
+  ]
+}

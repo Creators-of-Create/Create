@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "side": "create:block/palettes/weathered_limestone/polished_slab",
-    "bottom": "create:block/palettes/weathered_limestone/polished",
-    "top": "create:block/palettes/weathered_limestone/polished"
-  }
-}

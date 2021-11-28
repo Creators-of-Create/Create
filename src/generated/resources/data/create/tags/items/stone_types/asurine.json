@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "create:cut_asurine",
+    "create:cut_asurine_stairs",
+    "create:cut_asurine_wall",
+    "create:polished_asurine",
+    "create:polished_asurine_stairs",
+    "create:polished_asurine_wall",
+    "create:asurine_bricks",
+    "create:asurine_bricks_stairs",
+    "create:asurine_bricks_wall",
+    "create:small_asurine_bricks",
+    "create:small_asurine_bricks_stairs",
+    "create:small_asurine_bricks_wall",
+    "create:layered_asurine",
+    "create:pillar_asurine"
+  ]
+}

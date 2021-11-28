@@ -72,9 +72,9 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		if (speed < 0 && axis.isVertical())
 			angle += 180;
 		Vec3 position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
-		x = position.x;
-		y = position.y;
-		z = position.z;
+		this.x = position.x;
+		this.y = position.y;
+		this.z = position.z;
 	}
 
 	public static class Factory implements ParticleProvider<RotationIndicatorParticleData> {

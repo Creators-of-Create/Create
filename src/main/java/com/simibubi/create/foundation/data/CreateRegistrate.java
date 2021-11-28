@@ -9,7 +9,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
@@ -42,7 +41,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -159,17 +157,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		NonNullFunction<BlockBehaviour.Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 //			.blockstate((c, p) -> {
-//				final String location = "block/palettes/" + c.getName() + "/plain";
+//				final String location = "block/palettes/stone_types/" + c.getName();
 //				p.simpleBlock(c.get(), p.models()
 //					.cubeAll(c.getName(), p.modLoc(location)));
 //			})
-			.tag(Tags.Blocks.STONE)
 			.item()
-			.tag(Tags.Items.STONE)
 			.build();
-		if (worldGenStone) {
-			builder.tag(BlockTags.BASE_STONE_OVERWORLD, AllTags.AllBlockTags.WG_STONE.tag);
-		}
 		return builder;
 	}
 

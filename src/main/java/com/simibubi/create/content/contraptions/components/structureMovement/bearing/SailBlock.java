@@ -95,7 +95,7 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 			color = dyed.getDyeColor();
 		}
 
-		if (color != null && color != this.color) {
+		if (color != null) {
 			if (!world.isClientSide)
 				applyDye(state, world, pos, color);
 			return InteractionResult.SUCCESS;

@@ -31,6 +31,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -93,7 +94,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		super.fromTag(compound, clientPacket);
 
 		if (clientPacket) {
-			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", NBT.TAG_COMPOUND),
+			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", Tag.TAG_COMPOUND),
 				c -> pressedItems.add(ItemStack.of(c)));
 			spawnParticles();
 		}

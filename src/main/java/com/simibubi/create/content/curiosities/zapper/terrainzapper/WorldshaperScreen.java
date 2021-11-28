@@ -20,11 +20,11 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import com.simibubi.create.lib.utility.NBT;
 
 public class WorldshaperScreen extends ZapperScreen {
 
@@ -59,7 +59,7 @@ public class WorldshaperScreen extends ZapperScreen {
 
 		CompoundTag nbt = zapper.getOrCreateTag();
 		currentBrush = NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class);
-		if (nbt.contains("BrushParams", NBT.TAG_COMPOUND)) {
+		if (nbt.contains("BrushParams", Tag.TAG_COMPOUND)) {
 			BlockPos paramsData = NbtUtils.readBlockPos(nbt.getCompound("BrushParams"));
 			currentBrushParams[0] = paramsData.getX();
 			currentBrushParams[1] = paramsData.getY();

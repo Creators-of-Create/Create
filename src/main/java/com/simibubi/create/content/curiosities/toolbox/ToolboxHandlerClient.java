@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
@@ -24,7 +23,6 @@ import net.fabricmc.fabric.api.entity.EntityPickInteractionAware;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -38,8 +36,12 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class ToolboxHandlerClient {
+
+	public static final IIngameOverlay OVERLAY = ToolboxHandlerClient::renderOverlay;
 
 	static int COOLDOWN = 0;
 
@@ -160,12 +162,9 @@ public class ToolboxHandlerClient {
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX, null));
 	}
 
-	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		float partialTicks) {
-		Window mainWindow = Minecraft.getInstance()
-			.getWindow();
-		int x = mainWindow.getGuiScaledWidth() / 2 - 90;
-		int y = mainWindow.getGuiScaledHeight() - 23;
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+		int x = width / 2 - 90;
+		int y = height - 23;
 		RenderSystem.enableDepthTest();
 
 		Player player = Minecraft.getInstance().player;
@@ -179,7 +178,7 @@ public class ToolboxHandlerClient {
 		if (compound.isEmpty())
 			return;
 
-		ms.pushPose();
+		poseStack.pushPose();
 		for (int slot = 0; slot < 9; slot++) {
 			String key = String.valueOf(slot);
 			if (!compound.contains(key))
@@ -192,9 +191,9 @@ public class ToolboxHandlerClient {
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
-			texture.render(ms, x + 20 * slot - offset, y + offset);
+			texture.render(poseStack, x + 20 * slot - offset, y + offset);
 		}
-		ms.popPose();
+		poseStack.popPose();
 	}
 
 }

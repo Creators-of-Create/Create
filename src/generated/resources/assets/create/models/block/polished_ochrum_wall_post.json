@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_wall_post",
+  "textures": {
+    "wall": "create:block/palettes/stone_types/polished/ochrum_cut_polished"
+  }
+}

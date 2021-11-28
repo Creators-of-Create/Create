@@ -12,17 +12,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.placement.DecorationContext;
 import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 
-public class ConfigDrivenDecorator extends FeatureDecorator<ConfigDrivenOreFeatureConfig> {
+public class ConfigDrivenDecorator extends FeatureDecorator<ConfigDrivenOreConfiguration> {
 
 	public static final ConfigDrivenDecorator INSTANCE = new ConfigDrivenDecorator();
 	public static final ResourceLocation ID = new ResourceLocation(Create.ID, "config_driven_decorator");
 
 	public ConfigDrivenDecorator() {
-		super(ConfigDrivenOreFeatureConfig.CODEC);
+		super(ConfigDrivenOreConfiguration.CODEC);
 	}
 
 	@Override
-	public Stream<BlockPos> getPositions(DecorationContext context, Random random, ConfigDrivenOreFeatureConfig config, BlockPos pos) {
+	public Stream<BlockPos> getPositions(DecorationContext context, Random random, ConfigDrivenOreConfiguration config, BlockPos pos) {
 		float frequency = config.getFrequency();
 
 		int floored = Mth.floor(frequency);

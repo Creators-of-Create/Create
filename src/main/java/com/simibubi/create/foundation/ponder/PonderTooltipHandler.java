@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.ponder.ui.NavigatableSimiScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;

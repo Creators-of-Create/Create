@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import com.simibubi.create.lib.utility.NBT;
 
@@ -23,7 +24,7 @@ public class ConfigureSequencedGearshiftPacket extends TileEntityConfigurationPa
 
 	@Override
 	protected void readSettings(FriendlyByteBuf buffer) {
-		instructions = buffer.readNbt().getList("data", NBT.TAG_COMPOUND);
+		instructions = buffer.readNbt().getList("data", Tag.TAG_COMPOUND);
 	}
 
 	@Override

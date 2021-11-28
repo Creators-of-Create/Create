@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:cut_tuff"
+    }
+  },
+  "result": {
+    "item": "create:cut_tuff_wall",
+    "count": 6
+  }
+}

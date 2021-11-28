@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "side": "create:block/palettes/weathered_limestone/cobblestone",
-    "bottom": "create:block/palettes/weathered_limestone/cobblestone",
-    "top": "create:block/palettes/weathered_limestone/cobblestone"
-  }
-}

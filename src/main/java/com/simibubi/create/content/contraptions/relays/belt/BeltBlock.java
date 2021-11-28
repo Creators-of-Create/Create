@@ -94,7 +94,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 //	@Environment(EnvType.CLIENT)
 //	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-//		consumer.accept(new ReducedDestroyEffects());
+//		consumer.accept(new RenderProperties());
 //	}
 
 	@Override
@@ -597,6 +597,19 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
+		@Override
+		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof BeltTileEntity belt) {
+				for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {
+					renderer.destroyBlockProgress(beltPos.hashCode(), beltPos, progress);
+				}
+			}
+			return false;
+		}
 	}
 
 }

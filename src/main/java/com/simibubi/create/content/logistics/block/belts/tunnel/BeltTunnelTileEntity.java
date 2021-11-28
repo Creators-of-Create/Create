@@ -85,13 +85,13 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	@Override
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
-		ListTag flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
+		ListTag flapsNBT = compound.getList("Flaps", Tag.TAG_INT);
 		for (Tag inbt : flapsNBT)
 			if (inbt instanceof IntTag)
 				newFlaps.add(Direction.from3DDataValue(((IntTag) inbt).getAsInt()));
 
 		sides.clear();
-		ListTag sidesNBT = compound.getList("Sides", NBT.TAG_INT);
+		ListTag sidesNBT = compound.getList("Sides", Tag.TAG_INT);
 		for (Tag inbt : sidesNBT)
 			if (inbt instanceof IntTag)
 				sides.add(Direction.from3DDataValue(((IntTag) inbt).getAsInt()));

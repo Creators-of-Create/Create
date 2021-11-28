@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:polished_gabbro"
-  },
-  "result": "create:polished_gabbro_wall",
-  "count": 1
-}

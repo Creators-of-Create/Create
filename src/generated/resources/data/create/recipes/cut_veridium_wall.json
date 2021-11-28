@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:cut_veridium"
+    }
+  },
+  "result": {
+    "item": "create:cut_veridium_wall",
+    "count": 6
+  }
+}

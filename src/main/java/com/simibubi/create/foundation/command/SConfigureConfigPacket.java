@@ -16,8 +16,8 @@ import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.foundation.ponder.PonderUI;
-import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderIndexScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderUI;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

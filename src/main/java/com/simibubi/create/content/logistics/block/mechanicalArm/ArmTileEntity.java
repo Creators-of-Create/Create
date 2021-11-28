@@ -483,7 +483,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
-		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
+		interactionPointTag = compound.getList("InteractionPoints", Tag.TAG_COMPOUND);
 		redstoneLocked = compound.getBoolean("Powered");
 
 		if (!clientPacket)

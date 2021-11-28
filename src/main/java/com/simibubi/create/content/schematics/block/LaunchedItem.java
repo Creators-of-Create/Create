@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -113,7 +114,7 @@ public abstract class LaunchedItem {
 		void readNBT(CompoundTag nbt) {
 			super.readNBT(nbt);
 			state = NbtUtils.readBlockState(nbt.getCompound("BlockState"));
-			if (nbt.contains("Data", NBT.TAG_COMPOUND)) {
+			if (nbt.contains("Data", Tag.TAG_COMPOUND)) {
 				data = nbt.getCompound("Data");
 			}
 		}

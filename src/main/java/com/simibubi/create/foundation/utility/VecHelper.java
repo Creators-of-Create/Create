@@ -27,7 +27,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class VecHelper {
 
-	public static final Vector3f ZERO_3F = new Vector3f(0, 0, 0);
 	public static final Vec3 CENTER_OF_ORIGIN = new Vec3(.5, .5, .5);
 
 	public static Vec3 rotate(Vec3 vec, Vec3 rotationVec) {

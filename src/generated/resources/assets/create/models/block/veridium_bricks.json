@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "create:block/palettes/stone_types/brick/veridium_cut_brick"
+  }
+}

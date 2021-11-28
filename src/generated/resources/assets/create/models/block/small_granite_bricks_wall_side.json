@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_wall_side",
+  "textures": {
+    "wall": "create:block/palettes/stone_types/small_brick/granite_cut_small_brick"
+  }
+}

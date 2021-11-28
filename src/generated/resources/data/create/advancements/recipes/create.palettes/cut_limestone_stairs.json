@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_limestone_stairs"
+    ]
+  },
+  "criteria": {
+    "has_cut_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_limestone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_limestone_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_limestone",
+      "has_the_recipe"
+    ]
+  ]
+}

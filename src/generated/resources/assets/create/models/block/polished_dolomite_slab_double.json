@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "side": "create:block/palettes/dolomite/polished_slab",
-    "end": "create:block/palettes/dolomite/polished"
-  }
-}

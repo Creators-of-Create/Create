@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:dark_scoria"
-  },
-  "result": "create:chiseled_dark_scoria",
-  "count": 1
-}

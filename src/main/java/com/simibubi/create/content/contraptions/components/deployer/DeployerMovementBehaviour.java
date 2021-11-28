@@ -36,6 +36,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -236,7 +237,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	private DeployerFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerLevel) {
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world);
-			deployerFakePlayer.getInventory().load(context.tileData.getList("Inventory", NBT.TAG_COMPOUND));
+			deployerFakePlayer.getInventory().load(context.tileData.getList("Inventory", Tag.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
 				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.of(context.data.getCompound("HeldItem")));
 			context.tileData.remove("Inventory");

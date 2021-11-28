@@ -34,8 +34,13 @@ public abstract class ConnectedTextureBehaviour {
 		return false;
 	}
 
-	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
-		Direction face) {
+	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
+		BlockPos otherPos, Direction face, Direction primaryOffset, Direction secondaryOffset) {
+		return connectsTo(state, other, reader, pos, otherPos, face);
+	}
+
+	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
+		BlockPos otherPos, Direction face) {
 		return !isBeingBlocked(state, reader, pos, otherPos, face) && state.getBlock() == other.getBlock();
 	}
 
@@ -85,10 +90,14 @@ public abstract class ConnectedTextureBehaviour {
 		}
 
 		if (type == CTType.OMNIDIRECTIONAL) {
-			context.topLeft = testConnection(reader, pos, state, face, horizontal, vertical, -sh, sv);
-			context.topRight = testConnection(reader, pos, state, face, horizontal, vertical, sh, sv);
-			context.bottomLeft = testConnection(reader, pos, state, face, horizontal, vertical, -sh, -sv);
-			context.bottomRight = testConnection(reader, pos, state, face, horizontal, vertical, sh, -sv);
+			context.topLeft =
+				context.up && context.left && testConnection(reader, pos, state, face, horizontal, vertical, -sh, sv);
+			context.topRight =
+				context.up && context.right && testConnection(reader, pos, state, face, horizontal, vertical, sh, sv);
+			context.bottomLeft = context.down && context.left
+				&& testConnection(reader, pos, state, face, horizontal, vertical, -sh, -sv);
+			context.bottomRight = context.down && context.right
+				&& testConnection(reader, pos, state, face, horizontal, vertical, sh, -sv);
 		}
 
 		return context;
@@ -108,7 +117,9 @@ public abstract class ConnectedTextureBehaviour {
 		final Direction horizontal, final Direction vertical, int sh, int sv) {
 		BlockPos p = pos.relative(horizontal, sh)
 			.relative(vertical, sv);
-		boolean test = connectsTo(state, reader.getBlockState(p), reader, pos, p, face);
+		boolean test = connectsTo(state, reader.getBlockState(p), reader, pos, p, face,
+			sh == 0 ? null : sh == -1 ? horizontal.getOpposite() : horizontal,
+			sv == 0 ? null : sv == -1 ? vertical.getOpposite() : vertical);
 		return test;
 	}
 

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:polished_dripstone"
+  },
+  "result": "create:polished_dripstone_wall",
+  "count": 1
+}

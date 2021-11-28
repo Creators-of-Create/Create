@@ -252,7 +252,7 @@ public class SymmetryWandItem extends Item {
 //				BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, position);
 				BlockState cachedState = world.getBlockState(position);
 				FluidState ifluidstate = world.getFluidState(position);
-				world.setBlock(position, ifluidstate.createLegacyBlock(), BlockFlags.UPDATE_NEIGHBORS);
+				world.setBlock(position, ifluidstate.createLegacyBlock(), Block.UPDATE_KNOWN_SHAPE);
 				world.setBlockAndUpdate(position, blockState);
 
 				CompoundTag wandNbt = wand.getOrCreateTag();

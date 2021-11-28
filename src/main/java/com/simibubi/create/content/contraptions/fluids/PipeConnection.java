@@ -22,6 +22,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -253,7 +254,7 @@ public class PipeConnection {
 		CompoundTag connectionData = tag.getCompound(side.getName());
 
 		if (connectionData.contains("Pressure")) {
-			ListTag pressureData = connectionData.getList("Pressure", NBT.TAG_FLOAT);
+			ListTag pressureData = connectionData.getList("Pressure", Tag.TAG_FLOAT);
 			pressure = Couple.create(pressureData.getFloat(0), pressureData.getFloat(1));
 		} else
 			pressure.replace(f -> 0f);

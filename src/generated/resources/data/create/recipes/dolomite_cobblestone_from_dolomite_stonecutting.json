@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:dolomite"
-  },
-  "result": "create:dolomite_cobblestone",
-  "count": 1
-}

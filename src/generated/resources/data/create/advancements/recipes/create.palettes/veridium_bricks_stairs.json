@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:veridium_bricks_stairs"
+    ]
+  },
+  "criteria": {
+    "has_veridium_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:veridium_bricks"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:veridium_bricks_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_veridium_bricks",
+      "has_the_recipe"
+    ]
+  ]
+}

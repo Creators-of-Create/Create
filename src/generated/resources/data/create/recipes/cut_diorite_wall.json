@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:cut_diorite"
+    }
+  },
+  "result": {
+    "item": "create:cut_diorite_wall",
+    "count": 6
+  }
+}

@@ -27,7 +27,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
@@ -69,13 +68,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -215,33 +208,9 @@ public class ClientEvents {
 		ms.popPose();
 	}
 
-	public static void afterRenderOverlayLayer(PoseStack ms, float pt, Window window, OverlayRenderCallback.Types type) {
-		BufferSource buffers = Minecraft.getInstance()
-			.renderBuffers()
-			.bufferSource();
-		int light = LightTexture.FULL_BRIGHT;
-		int overlay = OverlayTexture.NO_OVERLAY;
-
-		if (type == OverlayRenderCallback.Types.AIR) {
-			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
-			return;
-		}
-
-		onRenderHotbar(ms, buffers, light, overlay, pt);
-	}
-
-	public static void onRenderHotbar(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		float partialTicks) {
-		CreateClient.SCHEMATIC_HANDLER.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		LinkedControllerClientHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		BlueprintOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		GoggleOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		ToolboxHandlerClient.renderOverlay(ms, buffer, light, overlay, partialTicks);
-	}
-
-	public static RenderTooltipBorderColorCallback.BorderColorEntry getItemTooltipColor(ItemStack stack,
-																						int originalBorderColorStart, int originalBorderColorEnd) {
-		return PonderTooltipHandler.handleTooltipColor(stack, originalBorderColorStart, originalBorderColorEnd);
+	@SubscribeEvent
+	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
+		PonderTooltipHandler.handleTooltipColor(event);
 	}
 
 	public static void addToItemTooltip(ItemStack stack, TooltipFlag iTooltipFlag, List<Component> itemTooltip) {

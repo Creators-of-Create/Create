@@ -13,6 +13,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
@@ -101,7 +102,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
 		airLevel = compound.getInt("Air");
 		airLevelTimer = compound.getInt("Timer");
-		enchantmentTag = compound.getList("Enchantments", NBT.TAG_COMPOUND);
+		enchantmentTag = compound.getList("Enchantments", Tag.TAG_COMPOUND);
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 		if (prev != 0 && prev != airLevel && airLevel == BackTankUtil.maxAir(capacityEnchantLevel) && clientPacket)

@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "create:cut_deepslate",
+    "create:cut_deepslate_stairs",
+    "create:cut_deepslate_wall",
+    "create:polished_deepslate",
+    "create:polished_deepslate_stairs",
+    "create:polished_deepslate_wall",
+    "create:deepslate_bricks",
+    "create:deepslate_bricks_stairs",
+    "create:deepslate_bricks_wall",
+    "create:small_deepslate_bricks",
+    "create:small_deepslate_bricks_stairs",
+    "create:small_deepslate_bricks_wall",
+    "create:layered_deepslate",
+    "create:pillar_deepslate"
+  ]
+}
