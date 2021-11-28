@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1860",
+	"_": "Missing Localizations: 1863",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "UNLOCALIZED: Deployer",
 	"block.create.depot": "UNLOCALIZED: Depot",
 	"block.create.diorite_bricks": "Diorietstenen",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "UNLOCALIZED: Purple Toolbox",
 	"block.create.purple_valve_handle": "UNLOCALIZED: Purple Valve Handle",
 	"block.create.radial_chassis": "Rotation Frame",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "UNLOCALIZED: Red Nixie Tube",
 	"block.create.red_sail": "UNLOCALIZED: Red Sail",
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "UNLOCALIZED: Powdered Obsidian",
 	"item.create.precision_mechanism": "UNLOCALIZED: Precision Mechanism",
 	"item.create.propeller": "Propeller",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "UNLOCALIZED: Red Sand Paper",
 	"item.create.refined_radiance": "UNLOCALIZED: Refined Radiance",
 	"item.create.rose_quartz": "Roze Kwarts",

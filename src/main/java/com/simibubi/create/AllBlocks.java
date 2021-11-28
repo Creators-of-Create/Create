@@ -181,6 +181,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.client.renderer.RenderType;
@@ -193,6 +194,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -203,6 +205,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
@@ -1511,15 +1514,44 @@ public class AllBlocks {
 	}
 
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
-		.initialProperties(() -> Blocks.GOLD_BLOCK)
+		.initialProperties(() -> Blocks.GOLD_ORE)
 		.properties(p -> p.requiresCorrectToolForDrops()
 			.sound(SoundType.STONE))
 		.transform(pickaxeOnly())
+		.loot((lt, b) -> lt.add(b,
+			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))
 		.tag(Tags.Items.ORES)
 		.build()
+		.register();
+
+	public static final BlockEntry<Block> DEEPSLATE_ZINC_ORE = REGISTRATE.block("deepslate_zinc_ore", Block::new)
+		.initialProperties(() -> Blocks.DEEPSLATE_GOLD_ORE)
+		.properties(p -> p.requiresCorrectToolForDrops()
+			.sound(SoundType.DEEPSLATE))
+		.transform(pickaxeOnly())
+		.loot((lt, b) -> lt.add(b,
+			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+		.tag(BlockTags.NEEDS_IRON_TOOL)
+		.tag(Tags.Blocks.ORES)
+		.transform(tagBlockAndItem("ores/zinc"))
+		.tag(Tags.Items.ORES)
+		.build()
+		.register();
+
+	public static final BlockEntry<Block> RAW_ZINC_BLOCK = REGISTRATE.block("raw_zinc_block", Block::new)
+		.initialProperties(() -> Blocks.RAW_GOLD_BLOCK)
+		.properties(p -> p.requiresCorrectToolForDrops())
+		.transform(pickaxeOnly())
+		.tag(BlockTags.NEEDS_IRON_TOOL)
+		.lang("Block of Raw Zinc")
+		.simpleItem()
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_PLATING =

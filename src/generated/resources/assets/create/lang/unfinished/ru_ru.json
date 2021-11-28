@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 276",
+	"_": "Missing Localizations: 279",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "Автономный активатор",
 	"block.create.depot": "Депо",
 	"block.create.diorite_bricks": "Диоритовый кирпич",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "UNLOCALIZED: Purple Toolbox",
 	"block.create.purple_valve_handle": "Фиолетовый ручной вентиль",
 	"block.create.radial_chassis": "Радиальное шасси",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "Красный газоразрядный индикатор",
 	"block.create.red_sail": "Красный парус",
 	"block.create.red_seat": "Красное сиденье",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "Порошкообразный обсидиан",
 	"item.create.precision_mechanism": "Механизм точности",
 	"item.create.propeller": "Пропеллер",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Красная наждачная бумага",
 	"item.create.refined_radiance": "Изысканное сияние",
 	"item.create.rose_quartz": "Розовый кварц",

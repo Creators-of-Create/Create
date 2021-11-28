@@ -69,9 +69,19 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe
 
-	COPPER_NUGGET = create(AllItems.COPPER_NUGGET).returns(9)
-		.unlockedBy(() -> Items.COPPER_INGOT)
-		.viaShapeless(b -> b.requires(I.copper())),
+	RAW_ZINC = create(AllItems.RAW_ZINC).returns(9)
+		.unlockedBy(AllBlocks.RAW_ZINC_BLOCK::get)
+		.viaShapeless(b -> b.requires(AllBlocks.RAW_ZINC_BLOCK.get())),
+
+		RAW_ZINC_BLOCK = create(AllBlocks.RAW_ZINC_BLOCK).unlockedBy(AllItems.RAW_ZINC::get)
+			.viaShaped(b -> b.define('C', AllItems.RAW_ZINC.get())
+				.pattern("CCC")
+				.pattern("CCC")
+				.pattern("CCC")),
+
+		COPPER_NUGGET = create(AllItems.COPPER_NUGGET).returns(9)
+			.unlockedBy(() -> Items.COPPER_INGOT)
+			.viaShapeless(b -> b.requires(I.copper())),
 
 		COPPER_INGOT = create(() -> Items.COPPER_INGOT).unlockedBy(AllItems.COPPER_NUGGET::get)
 			.viaShaped(b -> b.define('C', I.copperNugget())
@@ -1037,7 +1047,6 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		VERTICAL_FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.VERTICAL_FRAMED_GLASS_PANE),
 		HORIZONTAL_FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.HORIZONTAL_FRAMED_GLASS_PANE),
 
-		ZINC_ORE = blastMetalOre(AllItems.ZINC_INGOT::get, AllTags.forgeItemTag("ores/zinc")),
 		CRUSHED_IRON = blastCrushedMetal(() -> Items.IRON_INGOT, AllItems.CRUSHED_IRON::get),
 		CRUSHED_GOLD = blastCrushedMetal(() -> Items.GOLD_INGOT, AllItems.CRUSHED_GOLD::get),
 		CRUSHED_COPPER = blastCrushedMetal(() -> Items.COPPER_INGOT, AllItems.CRUSHED_COPPER::get),
@@ -1052,7 +1061,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		CRUSHED_QUICKSILVER = blastModdedCrushedMetal(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
 		CRUSHED_BAUXITE = blastModdedCrushedMetal(AllItems.CRUSHED_BAUXITE, "aluminum", IE, SM),
 		CRUSHED_URANIUM = blastModdedCrushedMetal(AllItems.CRUSHED_URANIUM, "uranium", MEK, IE, SM),
-		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, "nickel", TH, IE, SM)
+		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, "nickel", TH, IE, SM),
+
+		ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_ore")
+			.viaCookingTag(() -> AllTags.forgeItemTag("ores/zinc"))
+			.rewardXP(1)
+			.inBlastFurnace(),
+
+		RAW_ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_raw_ore")
+			.viaCooking(AllItems.RAW_ZINC::get)
+			.rewardXP(.7f)
+			.inBlastFurnace()
 
 	;
 
@@ -1111,13 +1130,6 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.inBlastFurnace();
 		}
 		return null;
-	}
-
-	GeneratedRecipe blastMetalOre(Supplier<? extends ItemLike> result, Tag.Named<Item> ore) {
-		return create(result::get).withSuffix("_from_ore")
-			.viaCookingTag(() -> ore)
-			.rewardXP(.1f)
-			.inBlastFurnace();
 	}
 
 	GeneratedRecipe recycleGlass(BlockEntry<? extends Block> ingredient) {

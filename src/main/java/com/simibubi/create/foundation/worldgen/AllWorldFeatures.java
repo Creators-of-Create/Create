@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
@@ -29,8 +30,8 @@ public class AllWorldFeatures {
 	//
 
 	public static final ConfigDrivenFeatureEntry ZINC_ORE =
-		register("zinc_ore", 14, 4, OVERWORLD_BIOMES).between(15, 70)
-			.withBlock(AllBlocks.ZINC_ORE);
+		register("zinc_ore", 14, 4, OVERWORLD_BIOMES).between(1, 70)
+			.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_OVERWORLD =
 		register("striated_ores_overworld", 32, 1 / 32f, OVERWORLD_BIOMES).between(1, 70)

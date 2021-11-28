@@ -25,7 +25,7 @@
                   }
                 }
               ],
-              "name": "create:zinc_ore"
+              "name": "create:deepslate_zinc_ore"
             },
             {
               "type": "minecraft:item",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1595",
+	"_": "Missing Localizations: 1598",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "Implantador",
 	"block.create.depot": "Depósito",
 	"block.create.diorite_bricks": "Tijolos de Diorito",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "Caixa de ferramentas roxa",
 	"block.create.purple_valve_handle": "válvula roxa",
 	"block.create.radial_chassis": "Chassis Radial",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "Tubo nixie vermelho",
 	"block.create.red_sail": "Vela vermelha",
 	"block.create.red_seat": "Assento vermelho",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "Pó de Obsidiana",
 	"item.create.precision_mechanism": "Mecanismo de Precisão",
 	"item.create.propeller": "Hélice",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Lixa Vermelha",
 	"item.create.refined_radiance": "Luz Refinada",
 	"item.create.rose_quartz": "Quartzo Rosa",

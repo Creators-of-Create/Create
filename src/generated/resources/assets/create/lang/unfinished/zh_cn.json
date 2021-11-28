@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 232",
+	"_": "Missing Localizations: 235",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "机械手",
 	"block.create.depot": "置物台",
 	"block.create.diorite_bricks": "闪长岩砖",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "紫色工具箱",
 	"block.create.purple_valve_handle": "紫色阀门手轮",
 	"block.create.radial_chassis": "旋转底盘",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "红色辉光管",
 	"block.create.red_sail": "红色风帆",
 	"block.create.red_seat": "红色坐垫",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "黑曜石粉末",
 	"item.create.precision_mechanism": "精密构件",
 	"item.create.propeller": "扇叶",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "红沙砂纸",
 	"item.create.refined_radiance": "光辉石",
 	"item.create.rose_quartz": "玫瑰石英",

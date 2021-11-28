@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1172",
+	"_": "Missing Localizations: 1175",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "Installatore",
 	"block.create.depot": "Deposito",
 	"block.create.diorite_bricks": "Mattoni di diorite",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "UNLOCALIZED: Purple Toolbox",
 	"block.create.purple_valve_handle": "Maniglia per valvola viola",
 	"block.create.radial_chassis": "Telaio radiale",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "UNLOCALIZED: Red Nixie Tube",
 	"block.create.red_sail": "Vela rossa",
 	"block.create.red_seat": "Sedile rosso",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "Ossidiana in polvere",
 	"item.create.precision_mechanism": "UNLOCALIZED: Precision Mechanism",
 	"item.create.propeller": "Elica",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Carta vetrata rossa",
 	"item.create.refined_radiance": "Radiance raffinata",
 	"item.create.rose_quartz": "Quarzo rosa",

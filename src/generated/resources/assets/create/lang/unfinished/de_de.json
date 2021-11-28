@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1229",
+	"_": "Missing Localizations: 1232",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "Einsatzgerät",
 	"block.create.depot": "Depot",
 	"block.create.diorite_bricks": "Dioritziegel",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "UNLOCALIZED: Purple Toolbox",
 	"block.create.purple_valve_handle": "Lila Ventilgriff",
 	"block.create.radial_chassis": "Drehgerüst",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "UNLOCALIZED: Red Nixie Tube",
 	"block.create.red_sail": "Rote Segel",
 	"block.create.red_seat": "Roter Sitz",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "Pulverisierter Obsidian",
 	"item.create.precision_mechanism": "UNLOCALIZED: Precision Mechanism",
 	"item.create.propeller": "Propeller",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Rotes Schmirgelpapier",
 	"item.create.refined_radiance": "Raffinierter Glanz",
 	"item.create.rose_quartz": "Rosenquarz",

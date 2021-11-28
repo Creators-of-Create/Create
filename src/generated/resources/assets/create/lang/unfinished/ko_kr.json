@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 232",
+	"_": "Missing Localizations: 235",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -150,6 +150,7 @@
 	"block.create.deepslate_bricks_slab": "UNLOCALIZED: Deepslate Bricks Slab",
 	"block.create.deepslate_bricks_stairs": "UNLOCALIZED: Deepslate Bricks Stairs",
 	"block.create.deepslate_bricks_wall": "UNLOCALIZED: Deepslate Bricks Wall",
+	"block.create.deepslate_zinc_ore": "UNLOCALIZED: Deepslate Zinc Ore",
 	"block.create.deployer": "배포기",
 	"block.create.depot": "아이템 거치대",
 	"block.create.diorite_bricks": "섬록암 벽돌",
@@ -363,6 +364,7 @@
 	"block.create.purple_toolbox": "보라색 공구상자",
 	"block.create.purple_valve_handle": "보라색 밸브 손잡이",
 	"block.create.radial_chassis": "원형 섀시",
+	"block.create.raw_zinc_block": "UNLOCALIZED: Block of Raw Zinc",
 	"block.create.red_nixie_tube": "빨간색 닉시관",
 	"block.create.red_sail": "빨간색 날개",
 	"block.create.red_seat": "빨간색 좌석",
@@ -566,6 +568,7 @@
 	"item.create.powdered_obsidian": "흑요석 가루",
 	"item.create.precision_mechanism": "정밀 기계장치",
 	"item.create.propeller": "프로펠러",
+	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "붉은 사포",
 	"item.create.refined_radiance": "정제된 광채",
 	"item.create.rose_quartz": "장밋빛 석영",
