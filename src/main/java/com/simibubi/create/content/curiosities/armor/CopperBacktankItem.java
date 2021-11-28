@@ -14,7 +14,7 @@ import net.minecraft.world.item.context.UseOnContext;
 
 public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
 
-	public static final int DURABILITY_BAR = 0xefefef;
+	public static final int DURABILITY_BAR = 0xEFEFEF;
 	private BlockItem blockItem;
 
 	public CopperBacktankItem(Properties p_i48534_3_, BlockItem blockItem) {
@@ -38,11 +38,6 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return DURABILITY_BAR;
-	}
-
-	@Override
 	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 		if (!allowdedIn(p_150895_1_))
 			return;
@@ -55,14 +50,18 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
-		return 1 - Mth
-			.clamp(getRemainingAir(stack) / ((float) BackTankUtil.maxAir(stack)), 0, 1);
+	public boolean isBarVisible(ItemStack stack) {
+		return true;
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
-		return true;
+	public int getBarWidth(ItemStack stack) {
+		return Math.round(13.0F * Mth.clamp(getRemainingAir(stack) / ((float) BackTankUtil.maxAir(stack)), 0, 1));
+	}
+
+	@Override
+	public int getBarColor(ItemStack stack) {
+		return DURABILITY_BAR;
 	}
 
 	public static int getRemainingAir(ItemStack stack) {

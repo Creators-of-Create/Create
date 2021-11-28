@@ -21,7 +21,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
@@ -56,11 +55,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -76,10 +71,8 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
@@ -197,31 +190,6 @@ public class ClientEvents {
 		RenderSystem.enableCull();
 
 		ms.popPose();
-	}
-
-	@SubscribeEvent
-	public static void afterRenderOverlayLayer(RenderGameOverlayEvent.PostLayer event) {
-		PoseStack ms = event.getMatrixStack();
-		BufferSource buffers = Minecraft.getInstance()
-			.renderBuffers()
-			.bufferSource();
-		int light = LightTexture.FULL_BRIGHT;
-		int overlay = OverlayTexture.NO_OVERLAY;
-		float pt = event.getPartialTicks();
-
-		if (event.getOverlay() == ForgeIngameGui.AIR_LEVEL_ELEMENT)
-			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
-		if (event.getOverlay() == ForgeIngameGui.HOTBAR_ELEMENT)
-			onRenderHotbar(ms, buffers, light, overlay, pt);
-	}
-
-	public static void onRenderHotbar(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		float partialTicks) {
-		CreateClient.SCHEMATIC_HANDLER.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		LinkedControllerClientHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		BlueprintOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		GoggleOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
-		ToolboxHandlerClient.renderOverlay(ms, buffer, light, overlay, partialTicks);
 	}
 
 	@SubscribeEvent

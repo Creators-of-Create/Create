@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
@@ -30,7 +29,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 	private Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			TransformStack stacker = MatrixTransformStack.of(stack)
+			TransformStack stacker = TransformStack.cast(stack)
 					.centre();
 
 			if (facing.getAxis() == Direction.Axis.X) stacker.rotateZ(90);

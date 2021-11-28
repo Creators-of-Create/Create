@@ -70,36 +70,7 @@ public class BackTankUtil {
 	// For Air-using tools
 
 	@OnlyIn(Dist.CLIENT)
-	public static int getRGBDurabilityForDisplay(ItemStack stack, int usesPerTank) {
-		if (usesPerTank == 0)
-			return 0;
-		LocalPlayer player = Minecraft.getInstance().player;
-		if (player == null)
-			return 0;
-		ItemStack backtank = get(player);
-		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return Mth.hsvToRgb(
-				Math.max(0.0F, (float) (1.0F - getDurabilityForDisplay(stack, usesPerTank))) / 3.0F, 1.0F, 1.0F);
-		return backtank.getItem()
-			.getRGBDurabilityForDisplay(backtank);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static double getDurabilityForDisplay(ItemStack stack, int usesPerTank) {
-		if (usesPerTank == 0)
-			return 0;
-		LocalPlayer player = Minecraft.getInstance().player;
-		if (player == null)
-			return 0;
-		ItemStack backtank = get(player);
-		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return (double) stack.getDamageValue() / (double) stack.getMaxDamage();
-		return backtank.getItem()
-			.getDurabilityForDisplay(backtank);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static boolean showDurabilityBar(ItemStack stack, int usesPerTank) {
+	public static boolean isBarVisible(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return false;
 		LocalPlayer player = Minecraft.getInstance().player;
@@ -109,6 +80,35 @@ public class BackTankUtil {
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
 			return stack.isDamaged();
 		return true;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static int getBarWidth(ItemStack stack, int usesPerTank) {
+		if (usesPerTank == 0)
+			return 13;
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player == null)
+			return 13;
+		ItemStack backtank = get(player);
+		if (backtank.isEmpty() || !hasAirRemaining(backtank))
+			return Math.round(13.0F - (float) stack.getDamageValue() / stack.getMaxDamage() * 13.0F);
+		return backtank.getItem()
+			.getBarWidth(backtank);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static int getBarColor(ItemStack stack, int usesPerTank) {
+		if (usesPerTank == 0)
+			return 0;
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player == null)
+			return 0;
+		ItemStack backtank = get(player);
+		if (backtank.isEmpty() || !hasAirRemaining(backtank))
+			return Mth.hsvToRgb(
+				Math.max(0.0F, 1.0F - (float) stack.getDamageValue() / stack.getMaxDamage()) / 3.0F, 1.0F, 1.0F);
+		return backtank.getItem()
+			.getBarColor(backtank);
 	}
 
 }

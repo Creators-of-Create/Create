@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
-import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.element.InputWindowElement;
+import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 

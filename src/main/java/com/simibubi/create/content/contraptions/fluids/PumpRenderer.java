@@ -1,11 +1,10 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -27,33 +26,30 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
-		if (!(te instanceof PumpTileEntity))
+		if (!(te instanceof PumpTileEntity pump))
 			return;
-		PumpTileEntity pump = (PumpTileEntity) te;
 		Vec3 rotationOffset = new Vec3(.5, 14 / 16f, .5);
 		BlockState blockState = te.getBlockState();
 		float angle = Mth.lerp(pump.arrowDirection.getValue(partialTicks), 0, 90) - 90;
+		SuperByteBuffer arrow = CachedBufferer.partial(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 		for (float yRot : new float[] { 0, 90 }) {
-			ms.pushPose();
-			SuperByteBuffer arrow = PartialBufferer.get(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 			Direction direction = blockState.getValue(PumpBlock.FACING);
-			MatrixTransformStack.of(ms)
-					.centre()
+            arrow.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
 					.rotateX(-AngleHelper.verticalAngle(direction) - 90)
 					.unCentre()
 					.translate(rotationOffset)
 					.rotateY(yRot)
 					.rotateZ(angle)
-					.translateBack(rotationOffset);
-			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
-			ms.popPose();
+					.translateBack(rotationOffset)
+					.light(light)
+					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
+		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
 	}
 
 }

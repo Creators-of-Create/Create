@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class LitBlazeBurnerBlock extends Block {
+public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 
 	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 

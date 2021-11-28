@@ -4,9 +4,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 
@@ -44,7 +43,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		BlockState blockState = tileEntityIn.getBlockState();
 		boolean alongX = blockState.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
-		SuperByteBuffer bracket = PartialBufferer.get(AllBlockPartials.SPEED_CONTROLLER_BRACKET, blockState);
+		SuperByteBuffer bracket = CachedBufferer.partial(AllBlockPartials.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
 				(float) (alongX ? Math.PI : Math.PI / 2));
@@ -53,7 +52,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 	}
 
 	private SuperByteBuffer getRotatedModel(SpeedControllerTileEntity te) {
-		return CreateClient.BUFFER_CACHE.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
+		return CachedBufferer.block(KineticTileEntityRenderer.KINETIC_TILE,
 				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
 	}
 

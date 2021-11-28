@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -40,9 +39,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class GoggleOverlayRenderer {
+
+	public static final IIngameOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
 
 	private static final List<Supplier<Boolean>> customGogglePredicates = new LinkedList<>();
 	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
@@ -50,8 +53,7 @@ public class GoggleOverlayRenderer {
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		float partialTicks) {
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
 
 		if (!(objectMouseOver instanceof BlockHitResult)) {
@@ -148,12 +150,9 @@ public class GoggleOverlayRenderer {
 		if (tooltip.isEmpty())
 			return;
 
-		ms.pushPose();
+		poseStack.pushPose();
 		Screen tooltipScreen = new TooltipScreen(new TextComponent(""));
-		tooltipScreen.init(mc, mc.getWindow()
-			.getGuiScaledWidth(),
-			mc.getWindow()
-				.getGuiScaledHeight());
+		tooltipScreen.init(mc, width, height);
 
 		int titleLinesCount = 1;
 		int tooltipTextWidth = 0;
@@ -190,20 +189,20 @@ public class GoggleOverlayRenderer {
 				Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, false).copy();
 
 		if (fade < 1) {
-			ms.translate((1 - fade) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 4, 0, 0);
+			poseStack.translate((1 - fade) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 4, 0, 0);
 			colorBackground.scaleAlpha(fade);
 			colorBorderTop.scaleAlpha(fade);
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		GuiUtils.drawHoveringText(ms, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
+		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
 			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
-			.render(ms);
-		ms.popPose();
+			.render(poseStack);
+		poseStack.popPose();
 	}
 
 	/**

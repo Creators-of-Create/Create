@@ -128,6 +128,7 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
 import com.simibubi.create.content.curiosities.bell.BellRenderer;
 import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
+import com.simibubi.create.content.curiosities.toolbox.ToolBoxInstance;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
@@ -195,7 +196,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL)
 		.renderer(() -> BracketedKineticTileRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<CreativeMotorTileEntity> MOTOR = Create.registrate()
 		.tileEntity("motor", CreativeMotorTileEntity::new)
 		.instance(() -> HalfShaftInstance::new)
@@ -216,14 +217,14 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE)
 		.renderer(() -> ShaftRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<SimpleKineticTileEntity> ENCASED_COGWHEEL = Create.registrate()
 		.tileEntity("encased_cogwheel", SimpleKineticTileEntity::new)
 		.instance(() -> ShaftlessCogInstance::small)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_COGWHEEL, AllBlocks.BRASS_ENCASED_COGWHEEL)
 		.renderer(() -> ShaftlessCogRenderer::small)
 		.register();
-	
+
 	public static final TileEntityEntry<SimpleKineticTileEntity> ENCASED_LARGE_COGWHEEL = Create.registrate()
 		.tileEntity("encased_large_cogwheel", SimpleKineticTileEntity::new)
 		.instance(() -> ShaftlessCogInstance::large)
@@ -407,7 +408,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.MECHANICAL_ARM)
 		.renderer(() -> ArmRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<VaultTileEntity> ITEM_VAULT = Create.registrate()
 		.tileEntity("item_vault", VaultTileEntity::new)
 		.validBlocks(AllBlocks.ITEM_VAULT)
@@ -717,9 +718,10 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.HAUNTED_BELL)
 		.renderer(() -> BellRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<ToolboxTileEntity> TOOLBOX = Create.registrate()
 		.tileEntity("toolbox", ToolboxTileEntity::new)
+		.instance(() -> ToolBoxInstance::new)
 		.validBlocks(AllBlocks.TOOLBOXES.toArray())
 		.renderer(() -> ToolboxRenderer::new)
 		.register();

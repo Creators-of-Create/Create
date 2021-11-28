@@ -4,9 +4,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.AllSpecialTextures;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -25,13 +25,19 @@ import net.minecraft.world.phys.Vec3;
 public abstract class Outline {
 
 	protected OutlineParams params;
-	protected Matrix3f transformNormals;
+	protected Matrix3f transformNormals; // TODO: not used?
 
 	public Outline() {
 		params = new OutlineParams();
 	}
 
 	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt);
+
+	public void tick() {}
+
+	public OutlineParams getParams() {
+		return params;
+	}
 
 	public void renderCuboidLine(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 start, Vec3 end) {
 		Vec3 diff = end.subtract(start);
@@ -40,7 +46,7 @@ public abstract class Outline {
 			.length();
 		float vAngle = AngleHelper.deg(Mth.atan2(hDistance, diff.y)) - 90;
 		ms.pushPose();
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.translate(start)
 			.rotateY(hAngle).rotateX(vAngle);
 		renderAACuboidLine(ms, buffer, Vec3.ZERO, new Vec3(0, 0, diff.length()));
@@ -125,13 +131,13 @@ public abstract class Outline {
 	}
 
 	protected void putVertex(PoseStack ms, VertexConsumer builder, Vec3 pos, float u, float v, Direction normal) {
-		int i = 15 << 20 | 15 << 4;
-		int j = i >> 16 & '\uffff';
-		int k = i & '\uffff';
-		Pose peek = ms.last();
+		putVertex(ms.last(), builder, (float) pos.x, (float) pos.y, (float) pos.z, u, v, normal);
+	}
+
+	protected void putVertex(PoseStack.Pose pose, VertexConsumer builder, float x, float y, float z, float u, float v, Direction normal) {
 		Color rgb = params.rgb;
 		if (transformNormals == null)
-			transformNormals = peek.normal();
+			transformNormals = pose.normal();
 
 		int xOffset = 0;
 		int yOffset = 0;
@@ -143,21 +149,15 @@ public abstract class Outline {
 			zOffset = normal.getStepZ();
 		}
 
-		builder.vertex(peek.pose(), (float) pos.x, (float) pos.y, (float) pos.z)
+		builder.vertex(pose.pose(), x, y, z)
 			.color(rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(), rgb.getAlphaAsFloat() * params.alpha)
 			.uv(u, v)
 			.overlayCoords(OverlayTexture.NO_OVERLAY)
-			.uv2(j, k)
-			.normal(peek.normal(), xOffset, yOffset, zOffset)
+			.uv2(params.lightMap)
+			.normal(pose.normal(), xOffset, yOffset, zOffset)
 			.endVertex();
 
 		transformNormals = null;
-	}
-
-	public void tick() {}
-
-	public OutlineParams getParams() {
-		return params;
 	}
 
 	public static class OutlineParams {
@@ -168,7 +168,7 @@ public abstract class Outline {
 		protected boolean disableCull;
 		protected boolean disableNormals;
 		protected float alpha;
-		protected int lightMapU, lightMapV;
+		protected int lightMap;
 		protected Color rgb;
 		private float lineWidth;
 
@@ -178,10 +178,7 @@ public abstract class Outline {
 			lineWidth = 1 / 32f;
 			fadeLineWidth = true;
 			rgb = Color.WHITE;
-
-			int i = 15 << 20 | 15 << 4;
-			lightMapU = i >> 16 & '\uffff';
-			lightMapV = i & '\uffff';
+			lightMap = LightTexture.FULL_BRIGHT;
 		}
 
 		// builder
@@ -193,6 +190,11 @@ public abstract class Outline {
 
 		public OutlineParams colored(Color c) {
 			rgb = c.copy();
+			return this;
+		}
+
+		public OutlineParams lightMap(int light) {
+			lightMap = light;
 			return this;
 		}
 

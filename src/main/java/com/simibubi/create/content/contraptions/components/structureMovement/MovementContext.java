@@ -6,11 +6,11 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class MovementContext {
 
@@ -58,10 +58,10 @@ public class MovementContext {
 
 	public static MovementContext readNBT(Level world, StructureBlockInfo info, CompoundTag nbt, Contraption contraption) {
 		MovementContext context = new MovementContext(world, info, contraption);
-		context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
-		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", NBT.TAG_DOUBLE));
+		context.motion = VecHelper.readNBT(nbt.getList("Motion", Tag.TAG_DOUBLE));
+		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", Tag.TAG_DOUBLE));
 		if (nbt.contains("Position"))
-			context.position = VecHelper.readNBT(nbt.getList("Position", NBT.TAG_DOUBLE));
+			context.position = VecHelper.readNBT(nbt.getList("Position", Tag.TAG_DOUBLE));
 		context.stall = nbt.getBoolean("Stall");
 		context.firstMovement = nbt.getBoolean("FirstMovement");
 		context.data = nbt.getCompound("Data");

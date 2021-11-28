@@ -35,7 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -80,13 +79,13 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	@Override
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
-		ListTag flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
+		ListTag flapsNBT = compound.getList("Flaps", Tag.TAG_INT);
 		for (Tag inbt : flapsNBT)
 			if (inbt instanceof IntTag)
 				newFlaps.add(Direction.from3DDataValue(((IntTag) inbt).getAsInt()));
 
 		sides.clear();
-		ListTag sidesNBT = compound.getList("Sides", NBT.TAG_INT);
+		ListTag sidesNBT = compound.getList("Sides", Tag.TAG_INT);
 		for (Tag inbt : sidesNBT)
 			if (inbt instanceof IntTag)
 				sides.add(Direction.from3DDataValue(((IntTag) inbt).getAsInt()));

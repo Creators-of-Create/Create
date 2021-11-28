@@ -2,13 +2,14 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
+import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
-import com.simibubi.create.foundation.ponder.elements.ParrotElement;
-import com.simibubi.create.foundation.ponder.elements.ParrotElement.FaceCursorPose;
-import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.element.InputWindowElement;
+import com.simibubi.create.foundation.ponder.element.ParrotElement;
+import com.simibubi.create.foundation.ponder.element.ParrotElement.FaceCursorPose;
+import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;

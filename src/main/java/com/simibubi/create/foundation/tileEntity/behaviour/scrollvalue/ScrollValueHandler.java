@@ -30,12 +30,12 @@ public class ScrollValueHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
-		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
+		Minecraft mc = Minecraft.getInstance();
+		HitResult objectMouseOver = mc.hitResult;
 		if (!(objectMouseOver instanceof BlockHitResult))
 			return false;
 
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
-		Minecraft mc = Minecraft.getInstance();
 		ClientLevel world = mc.level;
 		BlockPos blockPos = result.getBlockPos();
 
@@ -46,13 +46,13 @@ public class ScrollValueHandler {
 			return false;
 		if (!mc.player.mayBuild())
 			return false;
+		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
+			return false;
 
 		passiveScrollDirection = (float) -delta;
 		wrenchCog.bump(3, -delta * 10);
 		int prev = scrolling.scrollableValue;
 
-		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
-			return false;
 		if (scrolling.slotPositioning instanceof Sided)
 			((Sided) scrolling.slotPositioning).fromSide(result.getDirection());
 		if (!scrolling.testHit(objectMouseOver.getLocation()))

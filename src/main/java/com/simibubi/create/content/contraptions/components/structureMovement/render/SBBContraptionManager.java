@@ -1,12 +1,10 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher.buildStructureBuffer;
-
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -14,7 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.LevelAccessor;
 
 public class SBBContraptionManager extends ContraptionRenderManager<ContraptionRenderInfo> {
-	public static final Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new Compartment<>();
+	public static final SuperByteBufferCache.Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
 
 	public SBBContraptionManager(LevelAccessor world) {
 		super(world);
@@ -45,7 +43,7 @@ public class SBBContraptionManager extends ContraptionRenderManager<ContraptionR
 
 		if (!renderInfo.isVisible()) return;
 
-		SuperByteBuffer contraptionBuffer = CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
+		SuperByteBuffer contraptionBuffer = CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> ContraptionRenderDispatcher.buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
 
 		if (!contraptionBuffer.isEmpty()) {
 			ContraptionMatrices matrices = renderInfo.getMatrices();

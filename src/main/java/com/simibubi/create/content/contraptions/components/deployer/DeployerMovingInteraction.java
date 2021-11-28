@@ -9,12 +9,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.common.util.Constants;
 
 public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
@@ -56,7 +56,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
 				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
 				deployerFakePlayer.getInventory()
-					.load(ctx.tileData.getList("Inventory", Constants.NBT.TAG_COMPOUND));
+					.load(ctx.tileData.getList("Inventory", Tag.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;
 				ctx.tileData.remove("Inventory");
 			} else

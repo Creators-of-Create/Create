@@ -132,4 +132,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		});
 	}
 
+	public static boolean isManualRecipe(Recipe<?> recipe) {
+		return recipe.getId()
+			.getPath()
+			.endsWith("_manual_only");
+	}
+
 }

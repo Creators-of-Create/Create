@@ -1,12 +1,11 @@
 package com.simibubi.create.content.curiosities.armor;
 
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -17,7 +16,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -34,8 +32,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+
+	public static final IIngameOverlay REMAINING_AIR_OVERLAY = CopperBacktankArmorLayer::renderRemainingAirOverlay;
 
 	public CopperBacktankArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
@@ -58,9 +60,8 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		RenderType renderType = Sheets.cutoutBlockSheet();
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
 				.setValue(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
-		SuperByteBuffer backtank = CreateClient.BUFFER_CACHE.renderBlock(renderedState);
-		SuperByteBuffer cogs =
-				CreateClient.BUFFER_CACHE.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
+		SuperByteBuffer backtank = CachedBufferer.block(renderedState);
+		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
 
 		ms.pushPose();
 
@@ -72,8 +73,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
 
-		cogs.matrixStacker()
-			.centre()
+		cogs.centre()
 			.rotateY(180)
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
@@ -105,7 +105,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		livingRenderer.addLayer((CopperBacktankArmorLayer) layer);
 	}
 
-	public static void renderRemainingAirOverlay(PoseStack ms, BufferSource buffers, int light, int overlay, float pt) {
+	public static void renderRemainingAirOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return;
@@ -120,24 +120,21 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		int timeLeft = player.getPersistentData()
 			.getInt("VisualBacktankAir");
 
-		ms.pushPose();
+		poseStack.pushPose();
 
-		Window window = Minecraft.getInstance()
-			.getWindow();
-		ms.translate(window.getGuiScaledWidth() / 2 + 90, window.getGuiScaledHeight() - 53, 0);
+		poseStack.translate(width / 2 + 90, height - 53, 0);
 
 		Component text = new TextComponent(StringUtil.formatTickDuration(timeLeft * 20));
 		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())
 			.at(0, 0)
-			.render(ms);
+			.render(poseStack);
 		int color = 0xFF_FFFFFF;
 		if (timeLeft < 60 && timeLeft % 2 == 0) {
 			color = Color.mixColors(0xFF_FF0000, color, Math.max(timeLeft / 60f, .25f));
 		}
-		Minecraft.getInstance().font.drawShadow(ms, text, 16, 5, color);
-		buffers.endBatch();
+		Minecraft.getInstance().font.drawShadow(poseStack, text, 16, 5, color);
 
-		ms.popPose();
+		poseStack.popPose();
 	}
 
 }

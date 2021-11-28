@@ -35,7 +35,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -120,7 +119,7 @@ public class FilterItem extends Item implements MenuProvider {
 
 			int count = 0;
 			ListTag attributes = filter.getOrCreateTag()
-				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
@@ -216,7 +215,7 @@ public class FilterItem extends Item implements MenuProvider {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
 				.getInt("WhitelistMode")];
 			ListTag attributes = filter.getOrCreateTag()
-				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);

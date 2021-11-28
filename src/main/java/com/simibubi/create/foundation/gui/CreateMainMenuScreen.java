@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
+import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -85,7 +85,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			ms.translate(width / 2, 60, 200);
 			ms.scale(24 * side, 24 * side, 32);
 			ms.translate(-1.75 * ((alpha * alpha) / 2f + .5f), .25f, 0);
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateX(45);
 			GuiGameElement.of(AllBlocks.LARGE_COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / 32f * side, 0)

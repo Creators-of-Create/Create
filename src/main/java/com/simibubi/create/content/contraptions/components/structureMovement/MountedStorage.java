@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
@@ -31,6 +32,9 @@ public class MountedStorage {
 
 	public static boolean canUseAsStorage(BlockEntity te) {
 		if (te == null)
+			return false;
+		
+		if (te instanceof MechanicalCrafterTileEntity)
 			return false;
 
 		if (AllTileEntities.ADJUSTABLE_CRATE.is(te))
@@ -107,7 +111,7 @@ public class MountedStorage {
 		// FIXME: More dynamic mounted storage in .4
 		if (handler instanceof BottomlessItemHandler)
 			return;
-
+		
 		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		IItemHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof IItemHandlerModifiable))

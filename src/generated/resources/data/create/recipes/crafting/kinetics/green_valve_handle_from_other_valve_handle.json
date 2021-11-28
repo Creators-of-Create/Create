@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "#",
-    "-"
-  ],
-  "key": {
-    "#": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "tag": "forge:dyes/green"
     },
-    "-": {
+    {
       "tag": "create:valve_handles"
     }
-  },
+  ],
   "result": {
     "item": "create:green_valve_handle"
   }

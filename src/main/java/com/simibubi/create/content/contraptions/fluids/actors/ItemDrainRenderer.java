@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
@@ -48,7 +48,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		if (transported == null)
 			return;
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 		Vec3 itemPosition = VecHelper.getCenterOf(te.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;
@@ -149,7 +149,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			float yOffset = (7 / 16f) * level;
 			ms.pushPose();
 			ms.translate(0, yOffset, 0);
-			FluidRenderer.renderTiledFluidBB(fluidStack, min, yMin - yOffset, min, max, yMin, max, buffer, ms, light,
+			FluidRenderer.renderFluidBox(fluidStack, min, yMin - yOffset, min, max, yMin, max, buffer, ms, light,
 				false);
 			ms.popPose();
 		}
@@ -174,7 +174,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		if (processingTicks != -1) {
 			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1);
 			AABB bb = new AABB(0.5, 1.0, 0.5, 0.5, 0.25, 0.5).inflate(radius / 32f);
-			FluidRenderer.renderTiledFluidBB(fluidStack2, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
+			FluidRenderer.renderFluidBox(fluidStack2, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
 				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true);
 		}
 

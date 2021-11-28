@@ -5,7 +5,7 @@ import static com.simibubi.create.content.contraptions.base.KineticTileEntityRen
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -13,7 +13,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -115,14 +115,14 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				Integer x = pair.getKey();
 				Integer y = pair.getValue();
 				ms.translate(x * spacing, y * spacing, 0);
-				
+
 				int offset = 0;
 				if (te.phase == Phase.EXPORTING && te.getBlockState().hasProperty(MechanicalCrafterBlock.POINTING)) {
 					Pointing value = te.getBlockState().getValue(MechanicalCrafterBlock.POINTING);
 					offset = value == Pointing.UP ? -1 : value == Pointing.LEFT ? 2 : value == Pointing.RIGHT ? -2 : 1;
 				}
-				
-				MatrixTransformStack.of(ms)
+
+				TransformStack.cast(ms)
 					.rotateY(180)
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
@@ -171,7 +171,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 
 		if (!Backend.getInstance()
 			.canUseInstancing(te.getLevel())) {
-			SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
+			SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, te, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.getValue(HORIZONTAL_FACING)
 				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
@@ -212,7 +212,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 	}
 
 	private SuperByteBuffer renderAndTransform(PartialModel renderBlock, BlockState crafterState) {
-		SuperByteBuffer buffer = PartialBufferer.get(renderBlock, crafterState);
+		SuperByteBuffer buffer = CachedBufferer.partial(renderBlock, crafterState);
 		float xRot = crafterState.getValue(MechanicalCrafterBlock.POINTING)
 			.getXRotation();
 		float yRot = AngleHelper.horizontalAngle(crafterState.getValue(HORIZONTAL_FACING));

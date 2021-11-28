@@ -89,7 +89,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 			return InteractionResult.PASS;
 
 		DyeColor color = DyeColor.getColor(heldItem);
-		if (color != null && color != this.color) {
+		if (color != null) {
 			if (!world.isClientSide)
 				applyDye(state, world, pos, color);
 			return InteractionResult.SUCCESS;

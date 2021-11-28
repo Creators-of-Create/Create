@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -39,7 +39,7 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 			return;
 
 		Direction facing = state.getValue(FACING);
-		SuperByteBuffer handle = PartialBufferer.getFacing(renderedHandle, state, facing.getOpposite());
+		SuperByteBuffer handle = CachedBufferer.partialFacing(renderedHandle, state, facing.getOpposite());
 		HandCrankTileEntity crank = (HandCrankTileEntity) te;
 		kineticRotationTransform(handle, te, facing.getAxis(),
 				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);

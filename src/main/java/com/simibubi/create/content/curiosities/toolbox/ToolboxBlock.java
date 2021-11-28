@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -80,8 +79,10 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 		if (stack == null)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
-			te.readInventory(stack.getOrCreateTag()
-				.getCompound("Inventory"));
+			CompoundTag orCreateTag = stack.getOrCreateTag();
+			te.readInventory(orCreateTag.getCompound("Inventory"));
+			if (orCreateTag.contains("UniqueId"))
+				te.setUniqueId(orCreateTag.getUUID("UniqueId"));
 			if (stack.hasCustomHoverName())
 				te.setCustomName(stack.getHoverName());
 		});
@@ -112,16 +113,16 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state) {
 		ItemStack item = new ItemStack(this);
 		Optional<ToolboxTileEntity> tileEntityOptional = getTileEntityOptional(world, pos);
-
 		CompoundTag tag = item.getOrCreateTag();
+
 		CompoundTag inv = tileEntityOptional.map(tb -> tb.inventory.serializeNBT())
 			.orElse(new CompoundTag());
 		tag.put("Inventory", inv);
 
-		Component customName = tileEntityOptional.map(ToolboxTileEntity::getCustomName)
-			.orElse(null);
-		if (customName != null)
-			item.setHoverName(customName);
+		tileEntityOptional.map(tb -> tb.getUniqueId())
+			.ifPresent(uid -> tag.putUUID("UniqueId", uid));
+		tileEntityOptional.map(ToolboxTileEntity::getCustomName)
+			.ifPresent(item::setHoverName);
 		return item;
 	}
 
@@ -135,8 +136,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos,
-		CollisionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 		return AllShapes.TOOLBOX.get(state.getValue(FACING));
 	}
 
@@ -152,7 +152,8 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.TOOLBOXES.get(color).getDefaultState());
+			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.TOOLBOXES.get(color)
+				.getDefaultState());
 			world.setBlockAndUpdate(pos, newState);
 			return InteractionResult.SUCCESS;
 		}

@@ -13,11 +13,11 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class ContraptionHandler {
 
@@ -63,7 +63,7 @@ public class ContraptionHandler {
 		CompoundTag data = entityLiving.getPersistentData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
-		Vec3 position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
+		Vec3 position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
 		if (entityLiving.getVehicle() == null)
 			entityLiving.teleportTo(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");

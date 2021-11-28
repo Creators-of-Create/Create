@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
@@ -425,8 +425,8 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 
 		static StallData read(CompoundTag nbt) {
 			StallData stallData = new StallData();
-			stallData.position = VecHelper.readNBT(nbt.getList("Pos", NBT.TAG_DOUBLE));
-			stallData.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
+			stallData.position = VecHelper.readNBT(nbt.getList("Pos", Tag.TAG_DOUBLE));
+			stallData.motion = VecHelper.readNBT(nbt.getList("Motion", Tag.TAG_DOUBLE));
 			stallData.yaw = nbt.getFloat("Yaw");
 			stallData.pitch = nbt.getFloat("Pitch");
 			return stallData;

@@ -1,14 +1,15 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
@@ -47,13 +48,13 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		float angle = lidProgress * 70;
 
 		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
-			SuperByteBuffer model = PartialBufferer.get(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
-			applyLidAngle(te, angle, model.matrixStacker());
+			SuperByteBuffer model = CachedBufferer.partial(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
+			applyLidAngle(te, angle, model);
 			model.light(light)
 					.renderInto(ms, vertexBuilder);
 		}
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 
 		float maxTime =
 				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
@@ -90,12 +91,12 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		ms.popPose();
 	}
 
-	static void applyLidAngle(KineticTileEntity te, float angle, TransformStack matrixStacker) {
-		applyLidAngle(te, pivot, angle, matrixStacker);
+	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticTileEntity te, float angle, T tr) {
+		applyLidAngle(te, pivot, angle, tr);
 	}
 
-	static void applyLidAngle(KineticTileEntity te, Vec3 rotationOffset, float angle, TransformStack matrixStacker) {
-		matrixStacker.centre()
+	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticTileEntity te, Vec3 rotationOffset, float angle, T tr) {
+		tr.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.unCentre()

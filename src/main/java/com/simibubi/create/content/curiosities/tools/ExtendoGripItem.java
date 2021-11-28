@@ -215,18 +215,18 @@ public class ExtendoGripItem extends Item {
 	}
 
 	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return BackTankUtil.getRGBDurabilityForDisplay(stack, maxUses());
+	public boolean isBarVisible(ItemStack stack) {
+		return BackTankUtil.isBarVisible(stack, maxUses());
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
-		return BackTankUtil.getDurabilityForDisplay(stack, maxUses());
+	public int getBarWidth(ItemStack stack) {
+		return BackTankUtil.getBarWidth(stack, maxUses());
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
-		return BackTankUtil.showDurabilityBar(stack, maxUses());
+	public int getBarColor(ItemStack stack) {
+		return BackTankUtil.getBarColor(stack, maxUses());
 	}
 
 	private static int maxUses() {

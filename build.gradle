@@ -139,10 +139,10 @@ dependencies {
     implementation fg.deobf(registrate)
     shade registrate
 
-    if (findProject(':Flywheel') != null) {
-        implementation project(':Flywheel') // jozu: I use a gradle workspace with both projects
+    if (findProject(':Flywheel-Forge') != null) {
+        implementation project(':Flywheel-Forge') // jozu: I use a gradle workspace with both projects
     } else {
-        implementation fg.deobf("com.jozufozu.flywheel:Flywheel:${flywheel_version}")
+        implementation fg.deobf("com.jozufozu.flywheel:Flywheel-Forge:${flywheel_version}")
     }
 
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
@@ -166,7 +166,7 @@ jar {
             'Specification-Vendor': 'simibubi',
             'Specification-Version': '1',
             'Implementation-Title': project.name,
-            'Implementation-Version': '${version}',
+            'Implementation-Version': "${version}",
             'Implementation-Vendor': 'simibubi',
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             'MixinConfigs': 'create.mixins.json'
@@ -256,7 +256,7 @@ String getChangelogText() {
 //     if (project.hasProperty('simi_curseforge_key')) {
 //         apiKey = project.simi_curseforge_key
 //     }
-// 
+//
 //     project {
 //         id = project.projectId
 //         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')

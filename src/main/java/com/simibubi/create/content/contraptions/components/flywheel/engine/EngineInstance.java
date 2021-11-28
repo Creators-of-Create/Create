@@ -4,8 +4,6 @@ import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.core.Direction;
@@ -33,18 +31,14 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
         float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
 
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack msr = MatrixTransformStack.of(ms);
-
-        msr.translate(getInstancePosition())
-           .nudge(tile.hashCode())
-           .centre()
-           .rotate(Direction.UP, angle)
-           .unCentre()
-           .translate(0, 0, -1);
-
-        this.frame.setTransform(ms);
-    }
+        this.frame.loadIdentity()
+				.translate(getInstancePosition())
+				.nudge(tile.hashCode())
+				.centre()
+				.rotate(Direction.UP, angle)
+				.unCentre()
+				.translate(0, 0, -1);
+	}
 
     @Override
     public void remove() {

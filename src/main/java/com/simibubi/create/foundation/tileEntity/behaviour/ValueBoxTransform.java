@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -99,7 +99,7 @@ public abstract class ValueBoxTransform {
 		protected Vec3 getLocalOffset(BlockState state) {
 			Vec3 location = getSouthLocation();
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Axis.Y);
-			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.Z);
+			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.X);
 			return location;
 		}
 
@@ -109,7 +109,7 @@ public abstract class ValueBoxTransform {
 		protected void rotate(BlockState state, PoseStack ms) {
 			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
 			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(yRot)
 				.rotateX(xRot);
 		}

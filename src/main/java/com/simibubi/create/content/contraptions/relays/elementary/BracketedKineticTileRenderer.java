@@ -6,7 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -45,7 +45,7 @@ public class BracketedKineticTileRenderer extends KineticTileEntityRenderer {
 
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		renderRotatingBuffer(te,
-			PartialBufferer.getFacingVertical(AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL, te.getBlockState(), facing),
+			CachedBufferer.partialFacingVertical(AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL, te.getBlockState(), facing),
 			ms, buffer.getBuffer(RenderType.solid()), light);
 
 		float offset = getShaftAngleOffset(axis, pos);
@@ -53,7 +53,7 @@ public class BracketedKineticTileRenderer extends KineticTileEntityRenderer {
 		float angle = ((time * te.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 
 		SuperByteBuffer shaft =
-			PartialBufferer.getFacingVertical(AllBlockPartials.COGWHEEL_SHAFT, te.getBlockState(), facing);
+			CachedBufferer.partialFacingVertical(AllBlockPartials.COGWHEEL_SHAFT, te.getBlockState(), facing);
 		kineticRotationTransform(shaft, te, axis, angle, light);
 		shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

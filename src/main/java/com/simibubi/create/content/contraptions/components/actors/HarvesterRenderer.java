@@ -7,7 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -33,7 +33,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 	protected void renderSafe(HarvesterTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.HARVESTER_BLADE, blockState);
 		transform(te.getLevel(), blockState.getValue(HarvesterBlock.FACING), superBuffer,
 				te.getAnimatedSpeed());
 		superBuffer.light(light)
@@ -44,7 +44,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.getValue(HORIZONTAL_FACING);
-		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.HARVESTER_BLADE, blockState);
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 				? context.getAnimationSpeed()
 				: 0);

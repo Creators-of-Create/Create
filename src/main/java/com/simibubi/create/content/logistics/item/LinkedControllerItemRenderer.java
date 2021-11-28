@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.Vector;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler.Mode;
@@ -83,7 +83,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 
 		ms.pushPose();
 

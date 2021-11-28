@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
@@ -29,6 +30,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -44,7 +46,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -89,7 +90,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		super.fromTag(compound, clientPacket);
 
 		if (clientPacket) {
-			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", NBT.TAG_COMPOUND),
+			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", Tag.TAG_COMPOUND),
 				c -> pressedItems.add(ItemStack.of(c)));
 			spawnParticles();
 		}
@@ -229,9 +230,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		pressedItems.clear();
 		applyBasinRecipe();
 		Optional<BasinTileEntity> basin = getBasin();
-		SmartInventory inputs = basin.get()
-			.getInputInventory();
 		if (basin.isPresent()) {
+			SmartInventory inputs = basin.get()
+				.getInputInventory();
 			for (int slot = 0; slot < inputs.getSlots(); slot++) {
 				ItemStack stackInSlot = inputs.getItem(slot);
 				if (stackInSlot.isEmpty())
@@ -344,7 +345,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	private static final List<ResourceLocation> RECIPE_DENY_LIST =
-		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"));
+		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
 
 	public static <C extends Container> boolean canCompress(Recipe<C> recipe) {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
@@ -363,7 +364,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> recipe) {
-		return (recipe instanceof CraftingRecipe && canCompress(recipe))
+		return (recipe instanceof CraftingRecipe && !(recipe instanceof MechanicalCraftingRecipe)
+			&& canCompress(recipe) && !AllRecipeTypes.isManualRecipe(recipe))
 			|| recipe.getType() == AllRecipeTypes.COMPACTING.getType();
 	}
 

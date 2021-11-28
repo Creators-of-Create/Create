@@ -16,10 +16,10 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class SidedFilteringBehaviour extends FilteringBehaviour {
 
@@ -74,7 +74,7 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
-		NBTHelper.iterateCompoundList(nbt.getList("Filters", NBT.TAG_COMPOUND), compound -> {
+		NBTHelper.iterateCompoundList(nbt.getList("Filters", Tag.TAG_COMPOUND), compound -> {
 			Direction face = Direction.from3DDataValue(compound.getInt("Side"));
 			if (sidedFilters.containsKey(face))
 				sidedFilters.get(face)

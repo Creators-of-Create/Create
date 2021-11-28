@@ -5,8 +5,6 @@ import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Color;
 
@@ -23,12 +21,9 @@ public class BrassDiodeInstance extends TileEntityInstance<BrassDiodeTileEntity>
                 .material(Materials.TRANSFORMED)
                 .getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
 
-        PoseStack ms = new PoseStack();
-        MatrixTransformStack.of(ms).translate(getInstancePosition());
-
-        indicator
-                 .setTransform(ms)
-                 .setColor(getColor());
+        indicator.loadIdentity()
+				.translate(getInstancePosition())
+				.setColor(getColor());
 
         previousState = tile.state;
     }

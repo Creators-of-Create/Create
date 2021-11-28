@@ -15,7 +15,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -69,12 +69,12 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		boolean punching = te.mode == Mode.PUNCH;
 
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
-		float zRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
+		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		boolean displayMode = facing == Direction.UP && te.getSpeed() == 0 && !punching;
 
 		ms.mulPose(Vector3f.YP.rotationDegrees(yRot));
 		if (!displayMode) {
-			ms.mulPose(Vector3f.XP.rotationDegrees(zRot));
+			ms.mulPose(Vector3f.XP.rotationDegrees(xRot));
 			ms.translate(0, 0, -11 / 16f);
 		}
 
@@ -116,8 +116,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		BlockState blockState = te.getBlockState();
 		Vec3 offset = getHandOffset(te, partialTicks, blockState);
 
-		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
-		SuperByteBuffer hand = PartialBufferer.get(te.getHandPose(), blockState);
+		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = CachedBufferer.partial(te.getHandPose(), blockState);
 
 		transform(pole.translate(offset.x, offset.y, offset.z), blockState, true)
 			.light(light)
@@ -139,15 +139,15 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	private static SuperByteBuffer transform(SuperByteBuffer buffer, BlockState deployerState, boolean axisDirectionMatters) {
 		Direction facing = deployerState.getValue(FACING);
 
-		float zRotLast =
+		float yRot = AngleHelper.horizontalAngle(facing);
+		float xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
+		float zRot =
 			axisDirectionMatters && (deployerState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Axis.Z) ? 90
 				: 0;
-		float yRot = AngleHelper.horizontalAngle(facing);
-		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
 
-		buffer.rotateCentered(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
 		buffer.rotateCentered(Direction.UP, (float) ((yRot) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.SOUTH, (float) ((zRotLast) / 180 * Math.PI));
+		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
+		buffer.rotateCentered(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
 		return buffer;
 	}
 
@@ -158,8 +158,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		PartialModel handPose = getHandPose(mode);
 
-		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
-		SuperByteBuffer hand = PartialBufferer.get(handPose, blockState);
+		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = CachedBufferer.partial(handPose, blockState);
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
@@ -181,8 +181,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		pole.transform(m);
 		hand.transform(m);
-		pole = transform(pole, blockState, true);
-		hand = transform(hand, blockState, false);
+		transform(pole, blockState, true);
+		transform(hand, blockState, false);
 
 		pole.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), builder);

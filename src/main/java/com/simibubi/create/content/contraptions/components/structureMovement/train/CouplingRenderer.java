@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import static net.minecraft.util.Mth.lerp;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -10,7 +10,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -66,9 +66,9 @@ public class CouplingRenderer {
 
 		BlockState renderState = Blocks.AIR.defaultBlockState();
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		SuperByteBuffer attachment = PartialBufferer.get(AllBlockPartials.COUPLING_ATTACHMENT, renderState);
-		SuperByteBuffer ring = PartialBufferer.get(AllBlockPartials.COUPLING_RING, renderState);
-		SuperByteBuffer connector = PartialBufferer.get(AllBlockPartials.COUPLING_CONNECTOR, renderState);
+		SuperByteBuffer attachment = CachedBufferer.partial(AllBlockPartials.COUPLING_ATTACHMENT, renderState);
+		SuperByteBuffer ring = CachedBufferer.partial(AllBlockPartials.COUPLING_RING, renderState);
+		SuperByteBuffer connector = CachedBufferer.partial(AllBlockPartials.COUPLING_CONNECTOR, renderState);
 
 		Vec3 zero = Vec3.ZERO;
 		Vec3 firstEndpoint = transforms.getFirst()
@@ -80,7 +80,7 @@ public class CouplingRenderer {
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.multiply(1, 0, 1)
 				.length()) * 180 / Math.PI;
 
-		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		TransformStack msr = TransformStack.cast(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
 			CartEndpoint cartTransform = transforms.get(isFirst);
 

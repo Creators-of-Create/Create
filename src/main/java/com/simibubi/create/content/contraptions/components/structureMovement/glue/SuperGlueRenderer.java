@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -69,8 +69,8 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		Direction face = entity.getFacingDirection();
 
 		ms.pushPose();
-		MatrixTransformStack.of(ms)
-			.rotateY(AngleHelper.horizontalAngleNew(face))
+		TransformStack.cast(ms)
+			.rotateY(AngleHelper.horizontalAngle(face))
 			.rotateX(AngleHelper.verticalAngle(face));
 		Pose peek = ms.last();
 

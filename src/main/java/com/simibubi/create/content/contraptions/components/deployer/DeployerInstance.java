@@ -25,8 +25,8 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     final DeployerTileEntity tile;
     final Direction facing;
     final float yRot;
+    final float xRot;
     final float zRot;
-    final float zRotPole;
 
     protected final OrientedData pole;
 
@@ -45,8 +45,8 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         boolean rotatePole = blockState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
 
         yRot = AngleHelper.horizontalAngle(facing);
-        zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
-        zRotPole = rotatePole ? 90 : 0;
+        xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
+        zRot = rotatePole ? 90 : 0;
 
         pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
@@ -54,7 +54,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         relight(pos, pole);
 
         progress = getProgress(AnimationTickHolder.getPartialTicks());
-        updateRotation(pole, hand, yRot, zRot, zRotPole);
+        updateRotation(pole, hand, yRot, xRot, zRot);
         updatePosition();
     }
 
@@ -100,7 +100,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
 
         relight(pos, hand);
-        updateRotation(pole, hand, yRot, zRot, zRotPole);
+        updateRotation(pole, hand, yRot, xRot, zRot);
         updatePosition();
 
         return true;
@@ -129,14 +129,14 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         hand.setPosition(x, y, z);
     }
 
-    static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float zRot, float zRotPole) {
+    static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float xRot, float zRot) {
 
-        Quaternion q = Direction.SOUTH.step().rotationDegrees(zRot);
-        q.mul(Direction.UP.step().rotationDegrees(yRot));
+        Quaternion q = Direction.UP.step().rotationDegrees(yRot);
+        q.mul(Direction.EAST.step().rotationDegrees(xRot));
 
         hand.setRotation(q);
 
-        q.mul(Direction.SOUTH.step().rotationDegrees(zRotPole));
+        q.mul(Direction.SOUTH.step().rotationDegrees(zRot));
 
         pole.setRotation(q);
     }

@@ -40,6 +40,14 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 #elif defined(FRAGMENT_SHADER)
 #use "flywheel:core/lightutil.glsl"
 
+#define ALPHA_DISCARD 0.1
+//
+//#if defined(ALPHA_DISCARD)
+//#if defined(GL_ARB_conservative_depth)
+//layout (depth_greater) out float gl_FragDepth;
+//#endif
+//#endif
+
 in vec3 BoxCoord;
 
 out vec4 FragColor;
@@ -55,6 +63,12 @@ void FLWFinalizeColor(vec4 color) {
 
     color = mix(uFogColor, color, fog);
     color.a = a;
+    #endif
+
+    #if defined(ALPHA_DISCARD)
+    if (color.a < ALPHA_DISCARD) {
+        discard;
+    }
     #endif
 
     FragColor = color;

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
@@ -149,11 +149,6 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			if (level.isClientSide)
 				setPos(getX(), getY(), getZ());
 		}
-
-		Vec3 motion = getDeltaMovement();
-		move(motion.x, motion.y, motion.z);
-		if (ContraptionCollider.collideBlocks(this))
-			getController().collided();
 	}
 
 	@Override
@@ -231,10 +226,10 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		Axis axis = getRotationAxis();
 
 		for (PoseStack stack : matrixStacks)
-			MatrixTransformStack.of(stack)
-						 .nudge(getId())
-						 .centre()
-						 .rotate(angle, axis)
-						 .unCentre();
+			TransformStack.cast(stack)
+					.nudge(getId())
+					.centre()
+					.rotate(angle, axis)
+					.unCentre();
 	}
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -19,9 +19,9 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 		Vec3 vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
 
 		float yRot = AngleHelper.horizontalAngle(facing);
-		float zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
+		float xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
 		vec = VecHelper.rotateCentered(vec, yRot, Axis.Y);
-		vec = VecHelper.rotateCentered(vec, zRot, Axis.Z);
+		vec = VecHelper.rotateCentered(vec, xRot, Axis.X);
 
 		return vec;
 	}
@@ -31,7 +31,7 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 		Direction facing = state.getValue(DeployerBlock.FACING);
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.rotateY(yRot)
 			.rotateX(xRot);
 	}

@@ -15,7 +15,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class NBTHelper {
 
@@ -27,7 +26,7 @@ public class NBTHelper {
 		T[] enumConstants = enumClass.getEnumConstants();
 		if (enumConstants == null)
 			throw new IllegalArgumentException("Non-Enum class passed to readEnum: " + enumClass.getName());
-		if (nbt.contains(key, NBT.TAG_STRING)) {
+		if (nbt.contains(key, Tag.TAG_STRING)) {
 			String name = nbt.getString(key);
 			for (T t : enumConstants) {
 				if (t.name()

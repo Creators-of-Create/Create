@@ -1,38 +1,32 @@
 package com.simibubi.create.foundation.block.render;
 
-import net.minecraft.client.renderer.texture.TextureAtlas;
+import com.jozufozu.flywheel.core.StitchedSprite;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpriteShiftEntry {
-	protected ResourceLocation originalTextureLocation;
-	protected ResourceLocation targetTextureLocation;
-	protected TextureAtlasSprite original;
-	protected TextureAtlasSprite target;
+	protected StitchedSprite original;
+	protected StitchedSprite target;
 
 	public void set(ResourceLocation originalTextureLocation, ResourceLocation targetTextureLocation) {
-		this.originalTextureLocation = originalTextureLocation;
-		this.targetTextureLocation = targetTextureLocation;
+		original = new StitchedSprite(originalTextureLocation);
+		target = new StitchedSprite(targetTextureLocation);
 	}
 
 	public ResourceLocation getOriginalResourceLocation() {
-		return originalTextureLocation;
+		return original.getLocation();
 	}
 
 	public ResourceLocation getTargetResourceLocation() {
-		return targetTextureLocation;
+		return target.getLocation();
 	}
 
 	public TextureAtlasSprite getOriginal() {
-		return original;
+		return original.get();
 	}
 
 	public TextureAtlasSprite getTarget() {
-		return target;
-	}
-
-	protected void loadTextures(TextureAtlas atlas) {
-		original = atlas.getSprite(originalTextureLocation);
-		target = atlas.getSprite(targetTextureLocation);
+		return target.get();
 	}
 }

@@ -24,6 +24,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -31,7 +32,6 @@ import net.minecraft.world.item.crafting.FireworkRocketRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants.NBT;
 
 public class RecipeGridHandler {
 
@@ -166,6 +166,8 @@ public class RecipeGridHandler {
 			if (numItems > 9)
 				return false;
 		}
+		if (AllRecipeTypes.isManualRecipe(recipe))
+			return false;
 		return true;
 	}
 
@@ -202,7 +204,7 @@ public class RecipeGridHandler {
 
 		public static GroupedItems read(CompoundTag nbt) {
 			GroupedItems items = new GroupedItems();
-			ListTag gridNBT = nbt.getList("Grid", NBT.TAG_COMPOUND);
+			ListTag gridNBT = nbt.getList("Grid", Tag.TAG_COMPOUND);
 			gridNBT.forEach(inbt -> {
 				CompoundTag entry = (CompoundTag) inbt;
 				int x = entry.getInt("x");

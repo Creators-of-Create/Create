@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.motor;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -16,7 +16,7 @@ public class CreativeMotorRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState());
+		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState());
 	}
 
 }

@@ -63,7 +63,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 
 		ms.pushPose();
 		ms.translate(0, clampedLevel - totalHeight, 0);
-		FluidRenderer.renderTiledFluidBB(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
+		FluidRenderer.renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
 		ms.popPose();
 	}
 

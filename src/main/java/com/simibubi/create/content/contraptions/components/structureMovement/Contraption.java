@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.IFlywheelWorld;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.ImmutableBox;
 import com.simibubi.create.AllBlocks;
@@ -69,7 +68,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.UniqueLinkedList;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -109,8 +107,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants.BlockFlags;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -705,30 +701,30 @@ public abstract class Contraption {
 			});
 
 		superglue.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Superglue", NBT.TAG_COMPOUND), c -> superglue.add(
+		NBTHelper.iterateCompoundList(nbt.getList("Superglue", Tag.TAG_COMPOUND), c -> superglue.add(
 			Pair.of(NbtUtils.readBlockPos(c.getCompound("Pos")), Direction.from3DDataValue(c.getByte("Direction")))));
 
 		seats.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND), c -> seats.add(NbtUtils.readBlockPos(c)));
+		NBTHelper.iterateCompoundList(nbt.getList("Seats", Tag.TAG_COMPOUND), c -> seats.add(NbtUtils.readBlockPos(c)));
 
 		seatMapping.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),
+		NBTHelper.iterateCompoundList(nbt.getList("Passengers", Tag.TAG_COMPOUND),
 			c -> seatMapping.put(NbtUtils.loadUUID(NBTHelper.getINBT(c, "Id")), c.getInt("Seat")));
 
 		stabilizedSubContraptions.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND),
+		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", Tag.TAG_COMPOUND),
 			c -> stabilizedSubContraptions.put(c.getUUID("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
 
 		storage.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
+		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), c -> storage
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
 
 		fluidStorage.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", NBT.TAG_COMPOUND), c -> fluidStorage
+		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", Tag.TAG_COMPOUND), c -> fluidStorage
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
 
 		interactors.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Interactors", NBT.TAG_COMPOUND), c -> {
+		NBTHelper.iterateCompoundList(nbt.getList("Interactors", Tag.TAG_COMPOUND), c -> {
 			BlockPos pos = NbtUtils.readBlockPos(c.getCompound("Pos"));
 			MovingInteractionBehaviour behaviour = AllInteractionBehaviours.of(getBlocks().get(pos).state.getBlock());
 			if (behaviour != null)
@@ -977,8 +973,8 @@ public abstract class Contraption {
 				if (block.state.getBlock() != blockIn)
 					iterator.remove();
 				world.removeBlockEntity(add);
-				int flags = BlockFlags.IS_MOVING | BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.UPDATE_NEIGHBORS
-					| BlockFlags.BLOCK_UPDATE | BlockFlags.RERENDER_MAIN_THREAD;
+				int flags = Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_KNOWN_SHAPE
+					| Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE;
 				if (blockIn instanceof SimpleWaterloggedBlock && oldState.hasProperty(BlockStateProperties.WATERLOGGED)
 					&& oldState.getValue(BlockStateProperties.WATERLOGGED)) {
 					world.setBlock(add, Blocks.WATER.defaultBlockState(), flags);
@@ -993,7 +989,7 @@ public abstract class Contraption {
 //			if (!shouldUpdateAfterMovement(block))
 //				continue;
 
-			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
+			int flags = Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL;
 			world.sendBlockUpdated(add, block.state, Blocks.AIR.defaultBlockState(), flags);
 
 			// when the blockstate is set to air, the block's POI data is removed, but
@@ -1053,7 +1049,7 @@ public abstract class Contraption {
 				}
 
 				world.destroyBlock(targetPos, true);
-				world.setBlock(targetPos, state, 3 | BlockFlags.IS_MOVING);
+				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
@@ -1102,7 +1098,7 @@ public abstract class Contraption {
 				continue;
 			BlockPos targetPos = transform.apply(block.pos);
 			world.markAndNotifyBlock(targetPos, world.getChunkAt(targetPos), block.state, block.state,
-				BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
+				Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL, 512);
 		}
 
 		for (int i = 0; i < inventory.getSlots(); i++) {
@@ -1301,29 +1297,30 @@ public abstract class Contraption {
 		return maxDistSq;
 	}
 
-	private static class ContraptionTileWorld extends WrappedWorld implements IFlywheelWorld {
-
-		private final BlockEntity te;
-		private final StructureBlockInfo info;
-
-		public ContraptionTileWorld(Level world, BlockEntity te, StructureBlockInfo info) {
-			super(world);
-			this.te = te;
-			this.info = info;
-		}
-
-		@Override
-		public BlockState getBlockState(BlockPos pos) {
-			if (!pos.equals(te.getBlockPos()))
-				return Blocks.AIR.defaultBlockState();
-			return info.state;
-		}
-
-		@Override
-		public boolean isLoaded(BlockPos pos) {
-			return pos.equals(te.getBlockPos());
-		}
-	}
+	// TODO: unused?
+//	private static class ContraptionTileWorld extends WrappedWorld implements IFlywheelWorld {
+//
+//		private final BlockEntity te;
+//		private final StructureBlockInfo info;
+//
+//		public ContraptionTileWorld(Level world, BlockEntity te, StructureBlockInfo info) {
+//			super(world);
+//			this.te = te;
+//			this.info = info;
+//		}
+//
+//		@Override
+//		public BlockState getBlockState(BlockPos pos) {
+//			if (!pos.equals(te.getBlockPos()))
+//				return Blocks.AIR.defaultBlockState();
+//			return info.state;
+//		}
+//
+//		@Override
+//		public boolean isLoaded(BlockPos pos) {
+//			return pos.equals(te.getBlockPos());
+//		}
+//	}
 
 	public static class ContraptionInvWrapper extends CombinedInvWrapper {
 		protected final boolean isExternal;

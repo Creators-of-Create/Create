@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -21,7 +21,7 @@ public class FilteredDetectorFilterSlot extends ValueBoxTransform {
 	@Override
 	protected void rotate(BlockState state, PoseStack ms) {
 		float yRot = AngleHelper.horizontalAngle(state.getValue(HorizontalDirectionalBlock.FACING)) + 180;
-		MatrixTransformStack.of(ms)
+		TransformStack.cast(ms)
 			.rotateY(yRot)
 			.rotateX(90);
 	}

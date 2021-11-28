@@ -40,33 +40,29 @@ public class ChromaticCompoundItem extends Item {
 		super(properties);
 	}
 
-	@Override
-	public boolean shouldOverrideMultiplayerNbt() {
-		return true;
-	}
-
-	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
-		int light = stack.getOrCreateTag()
+	public int getLight(ItemStack stack) {
+		return stack.getOrCreateTag()
 			.getInt("CollectingLight");
-		return 1 - light / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get();
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
-		int light = stack.getOrCreateTag()
-			.getInt("CollectingLight");
-		return light > 0;
+	public boolean isBarVisible(ItemStack stack) {
+		return getLight(stack) > 0;
 	}
 
 	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return Color.mixColors(0x413c69, 0xFFFFFF, (float) (1 - getDurabilityForDisplay(stack)));
+	public int getBarWidth(ItemStack stack) {
+		return Math.round(13.0F * getLight(stack) / AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get());
+	}
+
+	@Override
+	public int getBarColor(ItemStack stack) {
+		return Color.mixColors(0x413c69, 0xFFFFFF, getLight(stack) / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get());
 	}
 
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
-		return showDurabilityBar(stack) ? 1 : 16;
+		return isBarVisible(stack) ? 1 : 16;
 	}
 
 	@Override

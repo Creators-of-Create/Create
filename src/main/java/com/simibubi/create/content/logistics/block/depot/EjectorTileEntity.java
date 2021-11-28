@@ -6,12 +6,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -33,6 +34,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -51,6 +53,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -58,7 +61,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -147,6 +149,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 			if (!entity.isAlive())
 				continue;
 			if (entity instanceof ItemEntity)
+				continue;
+			if (entity.getPistonPushReaction() == PushReaction.IGNORE)
 				continue;
 
 			entity.setOnGround(false);
@@ -332,8 +336,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 				float volume = .125f;
 				float pitch = 1.5f - lidProgress.getValue();
 				if (((int) level.getGameTime()) % soundRate == 0 && doLogic)
-					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundSource.BLOCKS, volume,
-						pitch);
+					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundSource.BLOCKS,
+						volume, pitch);
 			}
 		}
 
@@ -342,7 +346,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	private boolean scanTrajectoryForObstacles(int time) {
-		if (time == 0)
+		if (time <= 2)
 			return false;
 
 		Vec3 source = getLaunchedItemLocation(time);
@@ -350,7 +354,16 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		BlockHitResult rayTraceBlocks =
 			level.clip(new ClipContext(source, target, Block.COLLIDER, Fluid.NONE, null));
-		if (rayTraceBlocks.getType() == Type.MISS) {
+		boolean miss = rayTraceBlocks.getType() == Type.MISS;
+
+		if (!miss && rayTraceBlocks.getType() == Type.BLOCK) {
+			BlockState blockState = level.getBlockState(rayTraceBlocks.getBlockPos());
+			if (FunnelBlock.isFunnel(blockState) && blockState.hasProperty(FunnelBlock.EXTRACTING)
+				&& blockState.getValue(FunnelBlock.EXTRACTING))
+				miss = true;
+		}
+
+		if (miss) {
 			if (earlyTarget != null && earlyTargetTime < time + 1) {
 				earlyTarget = null;
 				earlyTargetTime = 0;
@@ -360,7 +373,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		Vec3 vec = rayTraceBlocks.getLocation();
 		earlyTarget = Pair.of(vec.add(Vec3.atLowerCornerOf(rayTraceBlocks.getDirection()
-			.getNormal()).scale(.25f)), rayTraceBlocks.getBlockPos());
+			.getNormal())
+			.scale(.25f)), rayTraceBlocks.getBlockPos());
 		earlyTargetTime = (float) (time + (source.distanceTo(vec) / source.distanceTo(target)));
 		sendData();
 		return true;
@@ -368,9 +382,14 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 	protected void nudgeEntities() {
 		for (Entity entity : level.getEntitiesOfClass(Entity.class,
-			new AABB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f)))
+			new AABB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f))) {
+			if (!entity.isAlive())
+				continue;
+			if (entity.getPistonPushReaction() == PushReaction.IGNORE)
+				continue;
 			if (!(entity instanceof Player))
 				entity.setPos(entity.getX(), entity.getY() + .125f, entity.getZ());
+		}
 	}
 
 	protected void ejectIfTriggered() {
@@ -513,13 +532,13 @@ public class EjectorTileEntity extends KineticTileEntity {
 		powered = compound.getBoolean("Powered");
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		lidProgress.readNBT(compound.getCompound("Lid"), false);
-		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", NBT.TAG_COMPOUND),
+		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", Tag.TAG_COMPOUND),
 			nbt -> IntAttached.read(nbt, ItemStack::of));
 
 		earlyTarget = null;
 		earlyTargetTime = 0;
 		if (compound.contains("EarlyTarget")) {
-			earlyTarget = Pair.of(VecHelper.readNBT(compound.getList("EarlyTarget", NBT.TAG_DOUBLE)),
+			earlyTarget = Pair.of(VecHelper.readNBT(compound.getList("EarlyTarget", Tag.TAG_DOUBLE)),
 				NbtUtils.readBlockPos(compound.getCompound("EarlyTargetPos")));
 			earlyTargetTime = compound.getFloat("EarlyTargetTime");
 		}
@@ -598,7 +617,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		@Override
 		protected void rotate(BlockState state, PoseStack ms) {
-			MatrixTransformStack.of(ms)
+			TransformStack.cast(ms)
 				.rotateY(angle(state))
 				.rotateX(90);
 		}

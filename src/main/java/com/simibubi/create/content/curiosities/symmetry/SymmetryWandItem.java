@@ -47,7 +47,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -254,7 +253,7 @@ public class SymmetryWandItem extends Item {
 
 				BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, position);
 				FluidState ifluidstate = world.getFluidState(position);
-				world.setBlock(position, ifluidstate.createLegacyBlock(), BlockFlags.UPDATE_NEIGHBORS);
+				world.setBlock(position, ifluidstate.createLegacyBlock(), Block.UPDATE_KNOWN_SHAPE);
 				world.setBlockAndUpdate(position, blockState);
 
 				CompoundTag wandNbt = wand.getOrCreateTag();

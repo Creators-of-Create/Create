@@ -1,12 +1,11 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -32,28 +31,26 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer pointer = PartialBufferer.get(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
+		SuperByteBuffer pointer = CachedBufferer.partial(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
 		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
-		if (!(te instanceof FluidValveTileEntity))
+		if (!(te instanceof FluidValveTileEntity valve))
 			return;
-		FluidValveTileEntity valve = (FluidValveTileEntity) te;
+
 		float pointerRotation = Mth.lerp(valve.pointer.getValue(partialTicks), 0, -90);
 		Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
 		Axis shaftAxis = KineticTileEntityRenderer.getRotationAxisOf(te);
 
 		int pointerRotationOffset = 0;
-		if (pipeAxis.isHorizontal() && shaftAxis == Axis.Z || pipeAxis.isVertical())
+		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
 
-		MatrixTransformStack.of(ms)
-			.centre()
+		pointer.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.rotateY(pointerRotationOffset + pointerRotation)
-			.unCentre();
-
-		pointer.light(light)
+			.unCentre()
+			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
