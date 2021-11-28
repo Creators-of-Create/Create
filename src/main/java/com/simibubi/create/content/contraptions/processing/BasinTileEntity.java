@@ -535,7 +535,8 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, boolean simulate, IItemHandler targetInv) {
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
-			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
+			IFluidHandlerItem handler = TransferUtil.getFluidHandlerItem(itemStack).getValueUnsafer();
+			if (handler.getContainer()
 				.sameItem(itemStack))
 				continue;
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)

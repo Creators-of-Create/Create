@@ -28,6 +28,4 @@ public interface OnTextureStitchCallback {
 	interface Pre {
 		void onModelRegistry(TextureStitchUtil util);
 	}
-
-
 }

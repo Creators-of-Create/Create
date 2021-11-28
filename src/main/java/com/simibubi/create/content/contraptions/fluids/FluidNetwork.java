@@ -183,7 +183,7 @@ public class FluidNetwork {
 			});
 		}
 
-		int flowSpeed = transferSpeed;
+		long flowSpeed = transferSpeed;
 		for (boolean simulate : Iterate.trueAndFalse) {
 
 			IFluidHandler handler = source.orElse(null);

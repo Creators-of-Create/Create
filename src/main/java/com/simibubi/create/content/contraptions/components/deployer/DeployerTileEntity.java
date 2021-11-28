@@ -405,18 +405,9 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 
 	@Nullable
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap)) {
-			if (invHandler == null)
-				initHandler();
-			return invHandler.cast();
-		}
-		return super.getCapability(cap, side);
-	}
-
-	@Nullable
-	@Override
 	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		if(invHandler == null)
+			initHandler();
 		return invHandler == null ? null : invHandler.orElse(null);
 	}
 

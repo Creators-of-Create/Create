@@ -1458,8 +1458,8 @@ public class AllBlocks {
 //									.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
 //									.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 //											.copy("UniqueId", "UniqueId"))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("Inventory", "Inventory")))));
+//						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+//							.copy("Inventory", "Inventory")))));
 //				})
 ////				.blockstate((c, p) -> {
 //					p.horizontalBlock(c.get(), p.models()
