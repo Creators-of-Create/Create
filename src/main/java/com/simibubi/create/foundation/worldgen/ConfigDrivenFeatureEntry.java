@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
@@ -111,7 +112,7 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 		return list;
 	}
 
-	public void addToConfig(ConfigSpec builder) {
+	public void addToConfig(ForgeConfigSpec.Builder builder) {
 		registerAll(builder);
 	}
 

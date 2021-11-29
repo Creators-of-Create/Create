@@ -10,7 +10,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -98,14 +99,14 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				Screens.getButtons(gui).stream()
-					.filter(w -> w instanceof AbstractWidget)
-					.map(w -> (AbstractWidget) w)
-					.filter(w -> w.getMessage().getString().equals(target))
-					.findFirst()
-					.ifPresent(w -> Screens.getButtons(gui).add(
-							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
-					));
+				((ScreenAccessor) gui).create$getChildren().stream()
+						.filter(w -> w instanceof AbstractWidget)
+						.map(w -> (AbstractWidget) w)
+						.filter(w -> w.getMessage().getString().equals(target))
+						.findFirst()
+						.ifPresent(w -> ((ScreenAccessor) gui).create$addRenderableWidget(
+								new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
+						));
 			}
 		}
 

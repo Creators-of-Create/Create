@@ -3,18 +3,17 @@ package com.simibubi.create.foundation.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.electronwill.nightconfig.core.ConfigSpec;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.BlockStressValues.IStressValueProvider;
 
-import com.simibubi.create.lib.config.ConfigValue;
-
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class CStress extends ConfigBase implements IStressValueProvider {
 
@@ -22,24 +21,24 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	private final Map<ResourceLocation, ConfigValue<Double>> impacts = new HashMap<>();
 
 	@Override
-	protected void registerAll(ConfigSpec builder) {
-//		builder.comment("", Comments.su, Comments.impact)
-//			.push("impact");
+	protected void registerAll(Builder builder) {
+		builder.comment("", Comments.su, Comments.impact)
+			.push("impact");
 		BlockStressDefaults.DEFAULT_IMPACTS
 			.forEach((r, i) -> {
-//				if (r.getNamespace().equals(Create.ID))
-//					getImpacts().put(r, builder.define(r.getPath(), i));
+				if (r.getNamespace().equals(Create.ID))
+					getImpacts().put(r, builder.define(r.getPath(), i));
 			});
-//		builder.pop();
+		builder.pop();
 
-//		builder.comment("", Comments.su, Comments.capacity)
-//			.push("capacity");
+		builder.comment("", Comments.su, Comments.capacity)
+			.push("capacity");
 		BlockStressDefaults.DEFAULT_CAPACITIES
 			.forEach((r, i) -> {
-//				if (r.getNamespace().equals(Create.ID))
-//					getCapacities().put(r, builder.define(r.getPath(), i));
+				if (r.getNamespace().equals(Create.ID))
+					getCapacities().put(r, builder.define(r.getPath(), i));
 			});
-//		builder.pop();
+		builder.pop();
 	}
 
 	@Override

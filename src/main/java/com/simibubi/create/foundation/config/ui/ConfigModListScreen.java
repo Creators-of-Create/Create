@@ -12,6 +12,12 @@ import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 
+import com.simibubi.create.foundation.ponder.ui.PonderButton;
+
+import com.simibubi.create.lib.mixin.accessor.AbstractSelectionListAccessor;
+import com.simibubi.create.lib.mixin.accessor.AbstractWidgetAccessor;
+
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
@@ -34,10 +40,11 @@ public class ConfigModListScreen extends ConfigScreen {
 		int listWidth = Math.min(width - 80, 300);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 60, 15, height - 45, 40);
-//		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
+		list.setLeftPos(this.width / 2 - ((AbstractSelectionListAccessor) list).getWidth() / 2);
 		addRenderableWidget(list);
 
 		allEntries = new ArrayList<>();
+		FabricLoader.getInstance().getAllMods().forEach(container -> allEntries.add(new ModEntry(container.getMetadata().getName(), this)));
 //		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
 		allEntries.sort((e1, e2) -> {
 			int empty = (e2.button.active ? 1 : 0) - (e1.button.active ? 1 : 0);
@@ -106,7 +113,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
 				labelTooltip.add(new TextComponent(toHumanReadable(id)));
-				labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
+				labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("This Mod does not have any configs registered or is not using a compatible config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
 			}
 
 			listeners.add(button);
@@ -128,7 +135,7 @@ public class ConfigModListScreen extends ConfigScreen {
 
 			button.x = x + width - 108;
 			button.y = y + 10;
-//			button.setHeight(height - 20);
+			((AbstractWidgetAccessor) button).setHeight(height - 20);
 			button.render(ms, mouseX, mouseY, partialTicks);
 		}
 

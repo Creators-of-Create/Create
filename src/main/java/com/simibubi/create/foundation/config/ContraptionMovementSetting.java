@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.config;
 
-import com.simibubi.create.lib.extensions.BlockExtensions;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -50,7 +48,7 @@ public enum ContraptionMovementSetting {
 		return allAre(blocks, ContraptionMovementSetting.NO_PICKUP);
 	}
 
-	public interface IMovementSettingProvider extends BlockExtensions {
+	public interface IMovementSettingProvider /* extends Block */ {
 		ContraptionMovementSetting getContraptionMovementSetting();
 	}
 }

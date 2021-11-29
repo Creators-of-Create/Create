@@ -3,16 +3,13 @@ package com.simibubi.create.foundation.config.ui;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import com.electronwill.nightconfig.core.ConfigSpec;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import com.simibubi.create.lib.config.ConfigType;
-
-import com.simibubi.create.lib.config.ConfigValue;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
 
 public class CConfigureConfigPacket<T> extends SimplePacketBase {
 
@@ -47,17 +44,17 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 				if (sender == null || !sender.hasPermissions(2))
 					return;
 
-				ConfigSpec spec = ConfigHelper.findConfigSpecFor(ConfigType.SERVER, modID);
+				ForgeConfigSpec spec = ConfigHelper.findForgeConfigSpecFor(ModConfig.Type.SERVER, modID);
 				if (spec == null)
 					return;
-//				ConfigSpec.ValueSpec valueSpec = spec.getRaw(path);
-//				ConfigValue<T> configValue = spec.getValues().get(path);
-//
-//				T v = (T) deserialize(configValue.get(), value);
-//				if (!valueSpec.test(v))
-//					return;
+				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(path);
+				ForgeConfigSpec.ConfigValue<T> configValue = spec.getValues().get(path);
 
-//				configValue.set(v);
+				T v = (T) deserialize(configValue.get(), value);
+				if (!valueSpec.test(v))
+					return;
+
+				configValue.set(v);
 			} catch (Exception e) {
 				Create.LOGGER.warn("Unable to handle ConfigureConfig Packet. ", e);
 			}

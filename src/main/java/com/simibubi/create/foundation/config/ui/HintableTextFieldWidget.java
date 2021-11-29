@@ -55,8 +55,8 @@ public class HintableTextFieldWidget extends EditBox {
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
-		KeyMapping invKey = Minecraft.getInstance().options.keyInventory;
-		if (invKey.isDown() && invKey.matchesMouse(mouseKey.getValue())) {
+		KeyMapping key = Minecraft.getInstance().options.keyInventory;
+		if (key.matchesMouse(mouseKey.getValue()) && key.isDown()) {
 			return true;
 		}
 

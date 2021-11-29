@@ -81,7 +81,6 @@ public class Create implements ModInitializer {
 
 	public static void onCtor() {
 		AllConfigs.register();
-		AllConfigs.onLoad();
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
