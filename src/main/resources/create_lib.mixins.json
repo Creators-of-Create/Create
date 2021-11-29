@@ -38,6 +38,7 @@
     "accessor.Vector3fAccessor",
     "accessor.VoxelShapeAccessor",
     "accessor.WoodTypeAccessor",
+    "common.AbstractFurnaceBlockEntityMixin",
     "common.AbstractMinecartMixin",
     "common.BaseRailBlockMixin",
     "common.BiomeMixin",

@@ -354,7 +354,6 @@ public class BlueprintEntity extends HangingEntity
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 
-		System.out.println(Registry.ITEM.getKey(items.getStackInSlot(9).getItem()));
 		if (!holdingWrench && !level.isClientSide && !items.getStackInSlot(9)
 			.isEmpty()) {
 

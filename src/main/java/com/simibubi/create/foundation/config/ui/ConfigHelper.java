@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.electronwill.nightconfig.core.ConfigSpec;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -23,9 +22,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
-import com.simibubi.create.lib.config.ConfigType;
-import com.simibubi.create.lib.config.ConfigValue;
-import com.simibubi.create.lib.config.ModConfig;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.IConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
 
 public class ConfigHelper {
 
@@ -33,38 +32,36 @@ public class ConfigHelper {
 	public static final Pattern annotationPattern = Pattern.compile("\\[@cui:([^:]*)(?::(.*))?]");
 
 	public static final Map<String, ConfigChange> changes = new HashMap<>();
-	private static final LoadingCache<String, EnumMap<ConfigType, ModConfig>> configCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build(
-			new CacheLoader<String, EnumMap<ConfigType, ModConfig>>() {
+	private static final LoadingCache<String, EnumMap<ModConfig.Type, ModConfig>> configCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build(
+			new CacheLoader<String, EnumMap<ModConfig.Type, ModConfig>>() {
 				@Override
-				public EnumMap<ConfigType, ModConfig> load(@Nonnull String key) {
+				public EnumMap<ModConfig.Type, ModConfig> load(@Nonnull String key) {
 					return findModConfigsUncached(key);
 				}
 			}
 	);
 
-	private static EnumMap<ConfigType, ModConfig> findModConfigsUncached(String modID) {
+	// FIXME compat with other config libs?
+	private static EnumMap<ModConfig.Type, ModConfig> findModConfigsUncached(String modID) {
 //		ModContainer modContainer = ModList.get().getModContainerById(modID).orElseThrow(() -> new IllegalArgumentException("Unable to find ModContainer for id: " + modID));
-		EnumMap<ConfigType, ModConfig> configs = new EnumMap<>(ConfigType.class); // empty, no configs
+//		EnumMap<ModConfig.Type, ModConfig> configs = ObfuscationReflectionHelper.getPrivateValue(ModContainer.class, modContainer, "configs");
+		EnumMap<ModConfig.Type, ModConfig> configs = new EnumMap<>(ModConfig.Type.class);
 		return Objects.requireNonNull(configs);
 	}
 
-//	public static ConfigSpec findConfigSpecFor(ConfigType type, String modID) {
-//		if (!modID.equals(Create.ID))
-//			return configCache.getUnchecked(modID).get(type).getSpec();
-//		return AllConfigs.byType(type).specification;
-//	}
+	public static IConfigSpec<?> findConfigSpecFor(ModConfig.Type type, String modID) {
+		if (!modID.equals(Create.ID))
+			return configCache.getUnchecked(modID).get(type).getSpec();
+		return AllConfigs.byType(type).specification;
+	}
 
 	@Nullable
-	public static ConfigSpec findConfigSpecFor(ConfigType type, String modID) {
-//		ConfigSpec spec = findConfigSpecFor(type, modID);
-//		if (spec instanceof ConfigSpec) {
-//			return (ConfigSpec) spec;
-//		}
-		return switch (type) {
-			case COMMON -> AllConfigs.COMMON.specification;
-			case CLIENT -> AllConfigs.CLIENT.specification;
-			case SERVER -> AllConfigs.SERVER.specification;
-		};
+	public static ForgeConfigSpec findForgeConfigSpecFor(ModConfig.Type type, String modID) {
+		IConfigSpec<?> spec = findConfigSpecFor(type, modID);
+		if (spec instanceof ForgeConfigSpec) {
+			return (ForgeConfigSpec) spec;
+		}
+		return null;
 	}
 
 	public static boolean hasAnyConfig(String modID) {
@@ -74,29 +71,29 @@ public class ConfigHelper {
 	}
 
 	public static boolean hasAnyForgeConfig(String modID) {
-//		if (!modID.equals(Create.ID))
-//			return configCache.getUnchecked(modID).values().stream().anyMatch(config -> config.getSpec() instanceof ConfigSpec);
+		if (!modID.equals(Create.ID))
+			return configCache.getUnchecked(modID).values().stream().anyMatch(config -> config.getSpec() instanceof ForgeConfigSpec);
 		return true;
 	}
 
 	// Directly set a value
 	public static <T> void setConfigValue(ConfigPath path, String value) throws InvalidValueException {
-		ConfigSpec spec = findConfigSpecFor(path.getType(), path.getModID());
+		ForgeConfigSpec spec = findForgeConfigSpecFor(path.getType(), path.getModID());
 		if (spec == null)
 			return;
 
-//		List<String> pathList = Arrays.asList(path.getPath());
-//		ConfigSpec.ValueSpec valueSpec = spec.getRaw(pathList);
-//		ConfigValue<T> configValue = spec.getValues().get(pathList);
-//		T v = (T) CConfigureConfigPacket.deserialize(configValue.get(), value);
-//		if (!valueSpec.test(v))
-//			throw new InvalidValueException();
-//
-//		configValue.set(v);
+		List<String> pathList = Arrays.asList(path.getPath());
+		ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(pathList);
+		ForgeConfigSpec.ConfigValue<T> configValue = spec.getValues().get(pathList);
+		T v = (T) CConfigureConfigPacket.deserialize(configValue.get(), value);
+		if (!valueSpec.test(v))
+			throw new InvalidValueException();
+
+		configValue.set(v);
 	}
 
 	// Add a value to the current UI's changes list
-	public static <T> void setValue(String path,  ConfigValue<T> configValue, T value, @Nullable Map<String, String> annotations) {
+	public static <T> void setValue(String path, ForgeConfigSpec.ConfigValue<T> configValue, T value, @Nullable Map<String, String> annotations) {
 		if (value.equals(configValue.get())) {
 			changes.remove(path);
 		} else {
@@ -105,7 +102,7 @@ public class ConfigHelper {
 	}
 
 	// Get a value from the current UI's changes list or the config value, if its unchanged
-	public static <T> T getValue(String path, ConfigValue<T> configValue) {
+	public static <T> T getValue(String path, ForgeConfigSpec.ConfigValue<T> configValue) {
 		ConfigChange configChange = changes.get(path);
 		if (configChange != null)
 			//noinspection unchecked
@@ -145,7 +142,7 @@ public class ConfigHelper {
 
 	public static class ConfigPath {
 		private String modID = Create.ID;
-		private ConfigType type = ConfigType.CLIENT;
+		private ModConfig.Type type = ModConfig.Type.CLIENT;
 		private String[] path;
 
 		public static ConfigPath parse(String string) {
@@ -160,7 +157,7 @@ public class ConfigHelper {
 			}
 			String[] split = p.split("\\.");
 			try {
-				cp.type = ConfigType.valueOf(split[0].toUpperCase(Locale.ROOT));
+				cp.type = ModConfig.Type.valueOf(split[0].toUpperCase(Locale.ROOT));
 			} catch (Exception e) {
 				throw new IllegalArgumentException("path must start with either 'client.', 'common.' or 'server.'");
 			}
@@ -176,7 +173,7 @@ public class ConfigHelper {
 			return this;
 		}
 
-		public ConfigPath setType(ConfigType type) {
+		public ConfigPath setType(ModConfig.Type type) {
 			this.type = type;
 			return this;
 		}
@@ -190,7 +187,7 @@ public class ConfigHelper {
 			return modID;
 		}
 
-		public ConfigType getType() {
+		public ModConfig.Type getType() {
 			return type;
 		}
 

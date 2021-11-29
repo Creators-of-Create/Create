@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import com.simibubi.create.lib.utility.GuiUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
@@ -28,7 +30,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import com.simibubi.create.lib.utility.GuiUtils;
 
 public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry> implements TickableGuiEventListener {
 

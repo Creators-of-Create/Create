@@ -18,6 +18,7 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AllWorldFeatures {
 
@@ -79,12 +80,12 @@ public class AllWorldFeatures {
 		return generation;
 	}
 
-	public static void fillConfig(ConfigSpec builder) {
+	public static void fillConfig(ForgeConfigSpec.Builder builder) {
 		entries.values()
 			.forEach(entry -> {
-//				builder.push(entry.id);
+				builder.push(entry.id);
 				entry.addToConfig(builder);
-//				builder.pop();
+				builder.pop();
 			});
 	}
 

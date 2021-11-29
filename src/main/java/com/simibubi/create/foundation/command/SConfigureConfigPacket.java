@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.simibubi.create.lib.config.ConfigType;
+import net.minecraftforge.fml.config.ModConfig;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -88,7 +88,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			return;
 		}
 
-		if (configPath.getType() != ConfigType.CLIENT) {
+		if (configPath.getType() != ModConfig.Type.CLIENT) {
 			Create.LOGGER.warn("Received type-mismatched config packet on client");
 			return;
 		}

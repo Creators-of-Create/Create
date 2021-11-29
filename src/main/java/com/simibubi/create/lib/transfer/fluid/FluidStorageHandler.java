@@ -14,9 +14,6 @@ public class FluidStorageHandler implements IFluidHandler {
 
 	public FluidStorageHandler(Storage<FluidVariant> storage) {
 		this.storage = storage;
-		if (storage == null) {
-			System.out.println();
-		}
 	}
 
 	@Override
