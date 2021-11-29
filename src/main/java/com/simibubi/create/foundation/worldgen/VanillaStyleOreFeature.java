@@ -1,10 +1,13 @@
 package com.simibubi.create.foundation.worldgen;
 
+import com.simibubi.create.Create;
+
 import java.util.BitSet;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,11 +21,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 public class VanillaStyleOreFeature extends OreFeatureBase {
 
 	public static final VanillaStyleOreFeature INSTANCE = new VanillaStyleOreFeature();
-	
+
+	public static final ResourceLocation ID = Create.asResource("config_driven_ore");
+
 	public VanillaStyleOreFeature() {
-		setRegistryName("config_driven_ore");
+
 	}
-	
+
 	// From OreFeature, slight adjustments
 
 	public boolean place(FeaturePlaceContext<ConfigDrivenOreConfiguration> pContext) {

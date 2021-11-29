@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.worldgen.LayerPattern.Layer;
 
 import net.minecraft.core.BlockPos;
@@ -30,8 +31,10 @@ public class LayeredOreFeature extends OreFeatureBase {
 
 	public static final LayeredOreFeature INSTANCE = new LayeredOreFeature();
 
+	public static final ResourceLocation ID = Create.asResource("config_driven_layered_ore");
+
 	public LayeredOreFeature() {
-		setRegistryName("config_driven_layered_ore");
+
 	}
 
 	public boolean place(FeaturePlaceContext<ConfigDrivenOreConfiguration> pContext) {

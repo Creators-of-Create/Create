@@ -41,9 +41,11 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
+
+import com.simibubi.create.lib.event.OverlayRenderCallback;
+
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 public class CreateClient implements ClientModInitializer {
 
@@ -106,12 +108,17 @@ public class CreateClient implements ClientModInitializer {
 
 	private static void registerOverlays() {
 		// Register overlays in reverse order
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT, "Create's Remaining Air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Toolboxes", ToolboxHandlerClient.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Goggle Information", GoggleOverlayRenderer.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Blueprints", BlueprintOverlayRenderer.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Linked Controller", LinkedControllerClientHandler.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Schematics", SCHEMATIC_HANDLER.getOverlayRenderer());
+		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
+			if (type == OverlayRenderCallback.Types.AIR)
+				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);
+			else {
+				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
+				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
+				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);
+				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
+				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
+			}
+		}));
 	}
 
 	public static void invalidateRenderers() {

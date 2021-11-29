@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
@@ -36,12 +37,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class ToolboxHandlerClient {
-
-	public static final IIngameOverlay OVERLAY = ToolboxHandlerClient::renderOverlay;
 
 	static int COOLDOWN = 0;
 
@@ -162,9 +159,9 @@ public class ToolboxHandlerClient {
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX, null));
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
-		int x = width / 2 - 90;
-		int y = height - 23;
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
+		int x = window.getGuiScaledWidth() / 2 - 90;
+		int y = window.getGuiScaledHeight() - 23;
 		RenderSystem.enableDepthTest();
 
 		Player player = Minecraft.getInstance().player;

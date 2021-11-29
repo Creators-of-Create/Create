@@ -28,7 +28,6 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
-import com.simibubi.create.lib.utility.Constants.BlockFlags;
 import com.simibubi.create.lib.utility.StickinessUtil;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -117,7 +116,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.NBT;
 
 public abstract class Contraption {
 

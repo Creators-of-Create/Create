@@ -5,10 +5,6 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import com.simibubi.create.lib.utility.Constants;
-
-import com.simibubi.create.lib.utility.NBT;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.simibubi.create.lib.utility.NBT;
-
 import com.simibubi.create.lib.utility.NBTSerializer;
 
 import org.apache.commons.lang3.tuple.MutablePair;

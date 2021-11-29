@@ -1,7 +1,5 @@
 package com.simibubi.create.lib.transfer.fluid;
 
-import com.simibubi.create.lib.utility.NBT;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
@@ -9,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -132,7 +129,7 @@ public class FluidStack {
 		Tag fluidTag = tag.get("Variant");
 		FluidVariant fluid = FluidVariant.fromNbt((CompoundTag) fluidTag);
 		FluidStack stack = new FluidStack(fluid, tag.getLong("Amount"));
-		if(tag.contains("Tag", NBT.TAG_COMPOUND))
+		if(tag.contains("Tag", Tag.TAG_COMPOUND))
 			stack.tag = tag.getCompound("Tag");
 		return stack;
 	}

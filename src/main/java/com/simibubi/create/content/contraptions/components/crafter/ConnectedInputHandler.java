@@ -33,7 +33,6 @@ import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.utility.NBT;
 
 public class ConnectedInputHandler {
 

@@ -63,7 +63,6 @@ import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.utility.NBTSerializer;
 

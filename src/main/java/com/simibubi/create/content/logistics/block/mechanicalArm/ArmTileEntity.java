@@ -47,7 +47,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.NBT;
 
 public class ArmTileEntity extends KineticTileEntity implements ITransformableTE {
 

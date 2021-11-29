@@ -3,8 +3,6 @@ package com.simibubi.create.content.schematics.client.tools;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
-import net.minecraftforge.client.gui.ForgeIngameGui;
-
 public abstract class PlacementToolBase extends SchematicToolBase {
 
 	@Override
@@ -23,8 +21,8 @@ public abstract class PlacementToolBase extends SchematicToolBase {
 	}
 
 	@Override
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
-		super.renderOverlay(gui, poseStack, partialTicks, width, height);
+	public void renderOverlay(PoseStack poseStack, float partialTicks, int width, int height) {
+		super.renderOverlay(poseStack, partialTicks, width, height);
 	}
 
 	@Override

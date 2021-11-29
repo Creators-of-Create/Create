@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -40,13 +41,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 import com.simibubi.create.lib.utility.GuiUtils;
 
 public class GoggleOverlayRenderer {
-
-	public static final IIngameOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
 
 	private static final List<Supplier<Boolean>> customGogglePredicates = new LinkedList<>();
 	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
@@ -54,7 +51,7 @@ public class GoggleOverlayRenderer {
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
 
 		if (!(objectMouseOver instanceof BlockHitResult)) {
@@ -153,7 +150,7 @@ public class GoggleOverlayRenderer {
 
 		poseStack.pushPose();
 		Screen tooltipScreen = new TooltipScreen(new TextComponent(""));
-		tooltipScreen.init(mc, width, height);
+		tooltipScreen.init(mc, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 
 		int titleLinesCount = 1;
 		int tooltipTextWidth = 0;

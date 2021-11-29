@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.worldgen.LayerPattern.Layer.LayerBuilder;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.level.block.Block;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
-import net.minecraftforge.common.util.NonNullConsumer;
 
 public class LayerPattern {
 
@@ -49,13 +49,13 @@ public class LayerPattern {
 	}
 
 	class Builder {
-		
+
 		private boolean netherMode;
 
 		public LayerPattern build() {
 			return LayerPattern.this;
 		}
-		
+
 		public Builder inNether() {
 			netherMode = true;
 			return this;

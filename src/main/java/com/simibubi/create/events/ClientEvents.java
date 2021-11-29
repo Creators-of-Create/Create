@@ -68,6 +68,8 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -208,9 +210,8 @@ public class ClientEvents {
 		ms.popPose();
 	}
 
-	@SubscribeEvent
-	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
-		PonderTooltipHandler.handleTooltipColor(event);
+	public static RenderTooltipBorderColorCallback.BorderColorEntry getItemTooltipColor(ItemStack stack, int originalBorderColorStart, int originalBorderColorEnd) {
+		return PonderTooltipHandler.handleTooltipColor(stack, originalBorderColorStart, originalBorderColorEnd);
 	}
 
 	public static void addToItemTooltip(ItemStack stack, TooltipFlag iTooltipFlag, List<Component> itemTooltip) {
@@ -361,7 +362,6 @@ public class ClientEvents {
 		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
 		LeftClickAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
-		OverlayRenderCallback.EVENT.register(ClientEvents::afterRenderOverlayLayer);
 		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
 		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
 
@@ -389,8 +389,8 @@ public class ClientEvents {
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
-		OnTextureStitchCallback.PRE.register(SpriteShifter::onTextureStitchPre);
-		OnTextureStitchCallback.POST.register(SpriteShifter::onTextureStitchPost);
+//		OnTextureStitchCallback.PRE.register(SpriteShifter::onTextureStitchPre);
+//		OnTextureStitchCallback.POST.register(SpriteShifter::onTextureStitchPost);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
 		// Flywheel Events

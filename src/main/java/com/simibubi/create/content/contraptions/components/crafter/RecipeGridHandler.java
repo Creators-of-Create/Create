@@ -34,7 +34,6 @@ import net.minecraft.world.item.crafting.FireworkRocketRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import com.simibubi.create.lib.utility.NBT;
 
 public class RecipeGridHandler {
 

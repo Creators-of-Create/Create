@@ -38,7 +38,6 @@ import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 import com.simibubi.create.lib.utility.ItemStackUtil;
-import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
 
 public class DepotBehaviour extends TileEntityBehaviour {

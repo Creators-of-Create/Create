@@ -15,7 +15,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import com.simibubi.create.lib.utility.NBT;
+
 import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class NBTHelper {

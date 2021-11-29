@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.utility.NBT;
 
 public class ToolboxInventory extends ItemStackHandler {
 

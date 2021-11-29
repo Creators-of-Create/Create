@@ -39,17 +39,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-
 import com.simibubi.create.lib.utility.NetworkUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.NBT;
 
 public class FilterItem extends Item implements MenuProvider {
 

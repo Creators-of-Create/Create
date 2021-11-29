@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import com.simibubi.create.lib.utility.NBT;
+
 import com.simibubi.create.lib.utility.LazyOptional;
 
 public class SmartFluidTankBehaviour extends TileEntityBehaviour {

@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
+import com.simibubi.create.foundation.block.connected.RotatedLayerCTBehaviour;
 import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
@@ -35,7 +36,7 @@ public class PaletteBlockPattern {
 	public static final PaletteBlockPattern
 
 	CUT =
-		create("cut", PREFIX, ALL_PARTIALS).addRecipes(b -> (c, p) -> p.stonecutting(DataIngredient.items(b), c::get)),
+		create("cut", PREFIX, ALL_PARTIALS)/*.addRecipes(b -> (c, p) -> p.stonecutting(DataIngredient.items(b), c::get))*/,
 
 		BRICKS = create("bricks", SUFFIX, ALL_PARTIALS).textures("brick"),
 
@@ -48,7 +49,7 @@ public class PaletteBlockPattern {
 			.textures("layered", "cap")
 			.connectedTextures(v -> new RotatedLayerCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.CAP))),
 
-		PILLAR = create("pillar", PREFIX).blockStateFactory(p -> p::pillar)
+		PILLAR = create("pillar", PREFIX)/*.blockStateFactory(p -> p::pillar)*/
 			.block(LayeredBlock::new)
 			.textures("pillar", "cap")
 			.connectedTextures(v -> new RotatedLayerCTBehaviour(ct(v, CTs.PILLAR), ct(v, CTs.CAP)))
@@ -172,33 +173,33 @@ public class PaletteBlockPattern {
 
 	// Model generators
 
-	public IBlockStateProvider cubeAll(String variant) {
-		ResourceLocation all = toLocation(variant, textures[0]);
-		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-			.cubeAll(createName(variant), all));
-	}
-
-	public IBlockStateProvider cubeBottomTop(String variant) {
-		ResourceLocation side = toLocation(variant, textures[0]);
-		ResourceLocation bottom = toLocation(variant, textures[1]);
-		ResourceLocation top = toLocation(variant, textures[2]);
-		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-			.cubeBottomTop(createName(variant), side, bottom, top));
-	}
-
-	public IBlockStateProvider pillar(String variant) {
-		ResourceLocation side = toLocation(variant, textures[0]);
-		ResourceLocation end = toLocation(variant, textures[1]);
-		return (ctx, prov) -> BlockStateGen.axisBlock(ctx, prov, $ -> prov.models()
-			.cubeColumn(createName(variant), side, end));
-	}
-
-	public IBlockStateProvider cubeColumn(String variant) {
-		ResourceLocation side = toLocation(variant, textures[0]);
-		ResourceLocation end = toLocation(variant, textures[1]);
-		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-			.cubeColumn(createName(variant), side, end));
-	}
+//	public IBlockStateProvider cubeAll(String variant) {
+//		ResourceLocation all = toLocation(variant, textures[0]);
+//		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+//			.cubeAll(createName(variant), all));
+//	}
+//
+//	public IBlockStateProvider cubeBottomTop(String variant) {
+//		ResourceLocation side = toLocation(variant, textures[0]);
+//		ResourceLocation bottom = toLocation(variant, textures[1]);
+//		ResourceLocation top = toLocation(variant, textures[2]);
+//		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+//			.cubeBottomTop(createName(variant), side, bottom, top));
+//	}
+//
+//	public IBlockStateProvider pillar(String variant) {
+//		ResourceLocation side = toLocation(variant, textures[0]);
+//		ResourceLocation end = toLocation(variant, textures[1]);
+//		return (ctx, prov) -> BlockStateGen.axisBlock(ctx, prov, $ -> prov.models()
+//			.cubeColumn(createName(variant), side, end));
+//	}
+//
+//	public IBlockStateProvider cubeColumn(String variant) {
+//		ResourceLocation side = toLocation(variant, textures[0]);
+//		ResourceLocation end = toLocation(variant, textures[1]);
+//		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+//			.cubeColumn(createName(variant), side, end));
+//	}
 
 	// Utility
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
@@ -36,13 +37,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
-import com.simibubi.create.lib.utility.NBT;
+
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class BlueprintOverlayRenderer {
-
-	public static final IIngameOverlay OVERLAY = BlueprintOverlayRenderer::renderOverlay;
 
 	static boolean active;
 	static boolean empty;
@@ -205,15 +204,15 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		if (!active || empty)
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
 		int w = 30 + 21 * ingredients.size() + 21;
 
-		int x = (width - w) / 2;
-		int y = (int) (height / 3f * 2);
+		int x = (window.getGuiScaledWidth() - w) / 2;
+		int y = (int) (window.getGuiScaledHeight() / 3f * 2);
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();

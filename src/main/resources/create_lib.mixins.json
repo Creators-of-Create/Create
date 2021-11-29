@@ -76,7 +76,8 @@
     "common.ShapelessRecipe$SerializerMixin",
     "common.StructureProcessorMixin",
     "common.StructureTemplateMixin",
-    "common.WalkNodeEvaluatorMixin"
+    "common.WalkNodeEvaluatorMixin",
+    "server.PlayerListMixin"
   ],
   "client": [
     "accessor.AbstractContainerScreenAccessor",

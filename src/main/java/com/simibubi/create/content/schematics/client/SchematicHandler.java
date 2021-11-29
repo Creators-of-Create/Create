@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -39,8 +40,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class SchematicHandler {
 
@@ -60,8 +59,6 @@ public class SchematicHandler {
 	private Vector<SchematicRenderer> renderers;
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
-
-	private final IIngameOverlay overlayRenderer = this::renderOverlay;
 
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
@@ -188,26 +185,22 @@ public class SchematicHandler {
 				renderers.get(0)
 					.render(ms, buffer);
 		}
-		
+
 		if (active)
 			currentTool.getTool()
 			.renderOnSchematic(ms, buffer);
-		
+
 		ms.popPose();
 
 	}
 
-	public IIngameOverlay getOverlayRenderer() {
-		return overlayRenderer;
-	}
-
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		if (!active)
 			return;
 		if (activeSchematicItem != null)
 			this.overlay.renderOn(poseStack, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(gui, poseStack, partialTicks, width, height);
+			.renderOverlay(poseStack, partialTicks, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 		selectionScreen.renderPassive(poseStack, partialTicks);
 	}
 

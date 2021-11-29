@@ -51,7 +51,6 @@ import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class MechanicalPressTileEntity extends BasinOperatingTileEntity {

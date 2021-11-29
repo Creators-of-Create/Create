@@ -42,6 +42,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerResources;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -68,6 +69,7 @@ import com.simibubi.create.lib.event.FluidPlaceBlockCallback;
 import com.simibubi.create.lib.event.LivingEntityEvents;
 
 import com.simibubi.create.lib.event.MobEntitySetTargetCallback;
+import com.simibubi.create.lib.event.OnDatapackSyncCallback;
 import com.simibubi.create.lib.event.PlayerTickEndCallback;
 import com.simibubi.create.lib.event.ServerPlayerCreationCallback;
 
@@ -162,16 +164,14 @@ public class CommonEvents {
 		return listeners;
 	}
 
-	public static void onDatapackSync(OnDatapackSyncEvent event) {
-		ServerPlayer player = event.getPlayer();
+	public static void onDatapackSync(PlayerList playerList, @javax.annotation.Nullable ServerPlayer player) {
 		if (player != null) {
 			PotatoProjectileTypeManager.syncTo(player);
 		} else {
-			PotatoProjectileTypeManager.syncToAll();
+			PotatoProjectileTypeManager.syncToAll(playerList.getPlayers());
 		}
 	}
 
-	@SubscribeEvent
 	public static void serverStopping(MinecraftServer server) {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
@@ -222,15 +222,16 @@ public class CommonEvents {
 		ServerEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
 		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
 		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
-		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopped);
+		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopping);
 		ServerWorldEvents.LOAD.register((server, world) -> CommonEvents.onLoadWorld(world));
 		ServerWorldEvents.UNLOAD.register((server, world) -> CommonEvents.onUnloadWorld(world));
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
 		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
-		DataPackReloadCallback.EVENT.register(CommonEvents::registerReloadListeners);
+		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		BiomeLoadingCallback.EVENT.register(CommonEvents::onBiomeLoad);
+		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
 
 		// External Events
 

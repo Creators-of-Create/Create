@@ -49,8 +49,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class WorldSectionElement extends AnimatedSceneElement {
 
@@ -340,8 +338,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.normal());
 			Minecraft.getInstance()
 				.getBlockRenderer()
-				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random,
-					EmptyModelData.INSTANCE);
+				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random);
 			ms.popPose();
 		}
 	}
@@ -392,7 +389,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
-		ForgeHooksClient.setRenderLayer(layer);
+//		ForgeHooksClient.setRenderLayer(layer);
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 			.getBlockRenderer();
 		PoseStack ms = new PoseStack();
@@ -408,13 +405,12 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
+			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.getChunkRenderType(state) == layer) {
 				BlockEntity tileEntity = world.getBlockEntity(pos);
-				dispatcher.renderBatched(state, pos, world, ms, builder, true, random,
-					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+				dispatcher.renderBatched(state, pos, world, ms, builder, true, random);
 			}
 
-			if (!ifluidstate.isEmpty() && ItemBlockRenderTypes.canRenderInLayer(ifluidstate, layer))
+			if (!ifluidstate.isEmpty() && ItemBlockRenderTypes.getRenderLayer(ifluidstate) == layer)
 				dispatcher.renderLiquid(pos, world, builder, ifluidstate);
 
 			ms.popPose();
@@ -422,7 +418,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		world.clearMask();
 		builder.end();
-		ForgeHooksClient.setRenderLayer(null);
+//		ForgeHooksClient.setRenderLayer(null);
 		return new SuperByteBuffer(builder);
 	}
 

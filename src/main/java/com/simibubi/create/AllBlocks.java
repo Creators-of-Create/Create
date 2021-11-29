@@ -156,7 +156,6 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.simibubi.create.lib.data.Tags;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -1490,10 +1489,10 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops()
 					.sound(SoundType.STONE))
 			.transform(pickaxeOnly())
-		.loot((lt, b) -> lt.add(b,
-			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
-					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+//		.loot((lt, b) -> lt.add(b,
+//			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+//				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+//					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))
@@ -1506,14 +1505,14 @@ public class AllBlocks {
 		.properties(p -> p.requiresCorrectToolForDrops()
 			.sound(SoundType.DEEPSLATE))
 		.transform(pickaxeOnly())
-		.loot((lt, b) -> lt.add(b,
-			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
-					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+//		.loot((lt, b) -> lt.add(b,
+//			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+//				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+//					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 			.tag(BlockTags.NEEDS_IRON_TOOL)
-//			.tag(Tags.Blocks.ORES)
+			.tag(Tags.Blocks.ORES)
 			.transform(tagBlockAndItem("ores/zinc"))
-//			.tag(Tags.Items.ORES)
+			.tag(Tags.Items.ORES)
 			.build()
 			.register();
 
@@ -1565,10 +1564,10 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.tag(BlockTags.NEEDS_IRON_TOOL)
-//			.tag(Tags.Blocks.STORAGE_BLOCKS)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.tag(BlockTags.BEACON_BASE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/zinc"))
-//			.tag(Tags.Items.STORAGE_BLOCKS)
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Block of Zinc")
 			.register();
@@ -1580,10 +1579,10 @@ public class AllBlocks {
 //			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 //					.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
 			.tag(BlockTags.NEEDS_IRON_TOOL)
-//			.tag(Tags.Blocks.STORAGE_BLOCKS)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.tag(BlockTags.BEACON_BASE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
-//			.tag(Tags.Items.STORAGE_BLOCKS)
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Block of Brass")
 			.register();

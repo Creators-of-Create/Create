@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -33,6 +36,8 @@ import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.utility.TagUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -79,7 +84,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement,
-		BlockPickInteractionAware, CustomPathNodeTypeBlock, BlockExtensions {
+		BlockPickInteractionAware, CustomPathNodeTypeBlock, BlockExtensions, DestroyProgressRenderingHandler {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -599,17 +604,19 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		return false;
 	}
 
-	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
-		@Override
-		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
-			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (blockEntity instanceof BeltTileEntity belt) {
-				for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {
-					renderer.destroyBlockProgress(beltPos.hashCode(), beltPos, progress);
-				}
+	public static class RenderProperties extends ReducedDestroyEffects {
+
+	}
+
+	@Override
+	public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
+		BlockEntity blockEntity = level.getBlockEntity(pos);
+		if (blockEntity instanceof BeltTileEntity belt) {
+			for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {
+				renderer.destroyBlockProgress(beltPos.hashCode(), beltPos, progress);
 			}
-			return false;
 		}
+		return false;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
+import com.mojang.blaze3d.platform.Window;
 import com.simibubi.create.lib.helper.KeyBindingHelper;
 
 import org.lwjgl.glfw.GLFW;
@@ -33,12 +34,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class LinkedControllerClientHandler {
-
-	public static final IIngameOverlay OVERLAY = LinkedControllerClientHandler::renderOverlay;
 
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
@@ -232,14 +229,14 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1, int height1) {
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		if (MODE != Mode.BIND)
 			return;
 		Minecraft mc = Minecraft.getInstance();
 
 		poseStack.pushPose();
 		Screen tooltipScreen = new TooltipScreen(null);
-		tooltipScreen.init(mc, width1, height1);
+		tooltipScreen.init(mc, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 
 		Object[] keys = new Object[6];
 		Vector<KeyMapping> controls = getControls();

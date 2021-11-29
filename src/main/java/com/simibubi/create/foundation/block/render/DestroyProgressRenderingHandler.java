@@ -4,9 +4,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.IBlockRenderProperties;
 
-public interface DestroyProgressRenderingHandler extends IBlockRenderProperties {
+public interface DestroyProgressRenderingHandler {
 	/**
 	 * Called before the default block breaking progress overlay is rendered.
 	 *

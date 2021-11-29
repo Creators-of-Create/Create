@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -37,12 +38,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-
-	public static final IIngameOverlay REMAINING_AIR_OVERLAY = CopperBacktankArmorLayer::renderRemainingAirOverlay;
 
 	public CopperBacktankArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
@@ -110,7 +107,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		LivingRendererHelper.addRenderer(livingRenderer, layer);
 	}
 
-	public static void renderRemainingAirOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public static void renderRemainingAirOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return;
@@ -127,7 +124,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 
 		poseStack.pushPose();
 
-		poseStack.translate(width / 2 + 90, height - 53, 0);
+		poseStack.translate(window.getGuiScaledWidth() / 2 + 90, window.getGuiScaledHeight() - 53, 0);
 
 		Component text = new TextComponent(StringUtil.formatTickDuration(timeLeft * 20));
 		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())

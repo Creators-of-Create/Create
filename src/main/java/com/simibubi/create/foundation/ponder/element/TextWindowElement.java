@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.lib.utility.GuiUtils;
 
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -19,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class TextWindowElement extends AnimatedOverlayElement {
 

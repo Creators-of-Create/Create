@@ -45,7 +45,6 @@ import com.simibubi.create.lib.item.EntitySwingListenerItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.NBT;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 public abstract class ZapperItem extends Item implements EntitySwingListenerItem, ItemExtensions {
