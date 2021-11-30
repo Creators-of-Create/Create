@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "create:block/pillar_tuff",
+      "model": "create:block/pillar_tuff_horizontal",
       "x": 90,
       "y": 90
     },
@@ -9,9 +9,8 @@
       "model": "create:block/pillar_tuff"
     },
     "axis=z": {
-      "model": "create:block/pillar_tuff",
-      "x": 90,
-      "y": 180
+      "model": "create:block/pillar_tuff_horizontal",
+      "x": 90
     }
   }
 }

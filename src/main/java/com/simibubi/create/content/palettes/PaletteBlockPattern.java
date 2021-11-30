@@ -23,13 +23,16 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 
 public class PaletteBlockPattern {
 
@@ -44,15 +47,14 @@ public class PaletteBlockPattern {
 
 		POLISHED = create("polished", PREFIX, FOR_POLISHED).textures("polished", "slab"),
 
-		LAYERED = create("layered", PREFIX)//.blockStateFactory(p -> p::pillar)
-			.block(LayeredBlock::new)
+		LAYERED = create("layered", PREFIX)//.blockStateFactory(p -> p::cubeColumn)
 			.textures("layered", "cap")
-			.connectedTextures(v -> new RotatedLayerCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.CAP))),
+			.connectedTextures(v -> new HorizontalCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.CAP))),
 
 		PILLAR = create("pillar", PREFIX)/*.blockStateFactory(p -> p::pillar)*/
 			.block(LayeredBlock::new)
 			.textures("pillar", "cap")
-			.connectedTextures(v -> new RotatedLayerCTBehaviour(ct(v, CTs.PILLAR), ct(v, CTs.CAP)))
+			.connectedTextures(v -> new RotatedPillarCTBehaviour(ct(v, CTs.PILLAR), ct(v, CTs.CAP)))
 
 	;
 
@@ -190,8 +192,24 @@ public class PaletteBlockPattern {
 //	public IBlockStateProvider pillar(String variant) {
 //		ResourceLocation side = toLocation(variant, textures[0]);
 //		ResourceLocation end = toLocation(variant, textures[1]);
-//		return (ctx, prov) -> BlockStateGen.axisBlock(ctx, prov, $ -> prov.models()
-//			.cubeColumn(createName(variant), side, end));
+
+//		return (ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+			.forAllStatesExcept(state -> {
+				Axis axis = state.getValue(BlockStateProperties.AXIS);
+				if (axis == Axis.Y)
+					return ConfiguredModel.builder()
+						.modelFile(prov.models()
+				//			.cubeColumn(createName(variant), side, end))
+						.uvLock(false)
+						.build();
+				return ConfiguredModel.builder()
+					.modelFile(prov.models()
+						.cubeColumnHorizontal(createName(variant) + "_horizontal", side, end))
+					.uvLock(false)
+					.rotationX(90)
+					.rotationY(axis == Axis.X ? 90 : 0)
+					.build();
+			}, BlockStateProperties.WATERLOGGED);
 //	}
 //
 //	public IBlockStateProvider cubeColumn(String variant) {
@@ -221,9 +239,10 @@ public class PaletteBlockPattern {
 	}
 
 	protected static CTSpriteShiftEntry ct(String variant, CTs texture) {
-		ResourceLocation resLoc = texture.target.apply(variant);
+		ResourceLocation resLoc = texture.srcFactory.apply(variant);
+		ResourceLocation resLocTarget = texture.targetFactory.apply(variant);
 		return CTSpriteShifter.getCT(texture.type, resLoc,
-			new ResourceLocation(resLoc.getNamespace(), resLoc.getPath() + "_connected"));
+			new ResourceLocation(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
 	}
 
 //	@FunctionalInterface
@@ -251,11 +270,18 @@ public class PaletteBlockPattern {
 		;
 
 		public CTType type;
-		private Function<String, ResourceLocation> target;
+		private Function<String, ResourceLocation> srcFactory;
+		private Function<String, ResourceLocation> targetFactory;
 
 		private CTs(CTType type, Function<String, ResourceLocation> factory) {
+			this(type, factory, factory);
+		}
+
+		private CTs(CTType type, Function<String, ResourceLocation> srcFactory,
+			Function<String, ResourceLocation> targetFactory) {
 			this.type = type;
-			this.target = factory;
+			this.srcFactory = srcFactory;
+			this.targetFactory = targetFactory;
 		}
 
 	}

@@ -1,17 +1,7 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "create:block/layered_crimsite",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
+    "": {
       "model": "create:block/layered_crimsite"
-    },
-    "axis=z": {
-      "model": "create:block/layered_crimsite",
-      "x": 90,
-      "y": 180
     }
   }
 }

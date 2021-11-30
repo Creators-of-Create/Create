@@ -354,14 +354,6 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 	@Override
 	public boolean keyPressed(int code, int scanCode, int modifiers) {
-		InputConstants.Key mouseKey = InputConstants.getKey(code, scanCode);
-		if (AllKeys.TOOLBELT.getKeybind() // todo: is this right?
-			.matchesMouse(mouseKey.getValue())) {
-			onClose();
-			ToolboxHandlerClient.COOLDOWN = 2;
-			return true;
-		}
-
 		KeyMapping[] hotbarBinds = minecraft.options.keyHotbarSlots;
 		for (int i = 0; i < hotbarBinds.length && i < 8; i++) {
 			if (hotbarBinds[i].matches(code, scanCode)) {
@@ -386,6 +378,17 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		}
 
 		return super.keyPressed(code, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean keyReleased(int code, int scanCode, int modifiers) {
+		InputConstants.Key mouseKey = InputConstants.getKey(code, scanCode);
+		if (AllKeys.TOOLBELT.getKeybind()
+			.isActiveAndMatches(mouseKey)) {
+			onClose();
+			return true;
+		}
+		return super.keyReleased(code, scanCode, modifiers);
 	}
 
 	public static enum State {
