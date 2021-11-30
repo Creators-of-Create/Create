@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "create:block/pillar_diorite",
+      "model": "create:block/pillar_diorite_horizontal",
       "x": 90,
       "y": 90
     },
@@ -9,9 +9,8 @@
       "model": "create:block/pillar_diorite"
     },
     "axis=z": {
-      "model": "create:block/pillar_diorite",
-      "x": 90,
-      "y": 180
+      "model": "create:block/pillar_diorite_horizontal",
+      "x": 90
     }
   }
 }

@@ -9,9 +9,9 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class RotatedLayerCTBehaviour extends HorizontalCTBehaviour {
+public class RotatedPillarCTBehaviour extends HorizontalCTBehaviour {
 
-	public RotatedLayerCTBehaviour(CTSpriteShiftEntry layerShift, CTSpriteShiftEntry topShift) {
+	public RotatedPillarCTBehaviour(CTSpriteShiftEntry layerShift, CTSpriteShiftEntry topShift) {
 		super(layerShift, topShift);
 	}
 
@@ -24,10 +24,10 @@ public class RotatedLayerCTBehaviour extends HorizontalCTBehaviour {
 	@Override
 	protected boolean reverseUVs(BlockState state, Direction face) {
 		Axis axis = state.getValue(LayeredBlock.AXIS);
-		if (axis == Axis.X) 
-			return face.getAxisDirection() == AxisDirection.POSITIVE == (face.getAxis() == Axis.X);
+		if (axis == Axis.X)
+			return face.getAxisDirection() == AxisDirection.NEGATIVE && face.getAxis() != Axis.X;
 		if (axis == Axis.Z)
-			return face.getAxisDirection() == AxisDirection.POSITIVE;
+			return face != Direction.NORTH && face.getAxisDirection() != AxisDirection.POSITIVE;
 		return super.reverseUVs(state, face);
 	}
 

@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "create:block/pillar_andesite",
+      "model": "create:block/pillar_andesite_horizontal",
       "x": 90,
       "y": 90
     },
@@ -9,9 +9,8 @@
       "model": "create:block/pillar_andesite"
     },
     "axis=z": {
-      "model": "create:block/pillar_andesite",
-      "x": 90,
-      "y": 180
+      "model": "create:block/pillar_andesite_horizontal",
+      "x": 90
     }
   }
 }

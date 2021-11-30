@@ -1,17 +1,7 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "create:block/layered_ochrum",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
+    "": {
       "model": "create:block/layered_ochrum"
-    },
-    "axis=z": {
-      "model": "create:block/layered_ochrum",
-      "x": 90,
-      "y": 180
     }
   }
 }
