@@ -29,7 +29,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 
 	public static class CreativeSmartFluidTank extends SmartFluidTank {
 
-		public CreativeSmartFluidTank(int capacity, Consumer<FluidStack> updateCallback) {
+		public CreativeSmartFluidTank(long capacity, Consumer<FluidStack> updateCallback) {
 			super(capacity, updateCallback);
 		}
 

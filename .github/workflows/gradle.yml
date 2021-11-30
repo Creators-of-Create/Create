@@ -1,26 +1,40 @@
-# This workflow will build a Java project with Gradle
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+# Automatically build the project and run any configured tests for every push
+# and submitted pull request. This can help catch issues that only occur on
+# certain platforms or Java versions, and provides a first line of defence
+# against bad commits.
 
-name: Java CI with Gradle
-
-on:
-  push:
-    branches: [ mc1.17/fabric/dev ]
-  pull_request:
-    branches: [ mc1.17/fabric/dev ]
+name: build
+on: [pull_request, push]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 16
-      uses: actions/setup-java@v1
-      with:
-        java-version: 16
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+    build:
+        strategy:
+            matrix:
+                # Use these Java versions
+                java: [
+                        16,    # Minimum supported by Minecraft
+                        17,    # Current Java LTS
+                ]
+                # and run on both Linux
+                os: [ubuntu-20.04]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: checkout repository
+              uses: actions/checkout@v2
+            - name: validate gradle wrapper
+              uses: gradle/wrapper-validation-action@v1
+            - name: setup jdk ${{ matrix.java }}
+              uses: actions/setup-java@v1
+              with:
+                  java-version: ${{ matrix.java }}
+            - name: make gradle wrapper executable
+              if: ${{ runner.os != 'Windows' }}
+              run: chmod +x ./gradlew
+            - name: build
+              run: ./gradlew build
+            - name: capture build artifacts
+              if: ${{ runner.os == 'Linux' && matrix.java == '16' }} # Only upload artifacts built from latest java on one OS
+              uses: actions/upload-artifact@v2
+              with:
+                  name: Artifacts
+                  path: build/libs/

@@ -259,7 +259,7 @@ public class FluidTankConnectivityHandler {
 		List<FluidTankTileEntity> frontier = new ArrayList<>();
 		FluidStack toDistribute = te.tankInventory.getFluid()
 			.copy();
-		int maxCapacity = FluidTankTileEntity.getCapacityMultiplier();
+		long maxCapacity = FluidTankTileEntity.getCapacityMultiplier();
 		if (!toDistribute.isEmpty() && !te.isRemoved())
 			toDistribute.shrink(maxCapacity);
 		te.applyFluidTankSize(1);

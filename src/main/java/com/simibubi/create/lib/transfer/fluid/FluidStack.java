@@ -66,6 +66,10 @@ public class FluidStack {
 		return this;
 	}
 
+	public void grow(long amount) {
+		setAmount(getAmount() + amount);
+	}
+
 	public FluidVariant getType() {
 		return type;
 	}

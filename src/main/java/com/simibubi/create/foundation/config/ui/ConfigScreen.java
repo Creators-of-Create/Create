@@ -180,4 +180,8 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 		ms.popPose();
 	}
+
+	@Override
+	public void renderDirtBackground(int i) {
+	}
 }

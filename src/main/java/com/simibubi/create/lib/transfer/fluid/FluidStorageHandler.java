@@ -93,8 +93,13 @@ public class FluidStorageHandler implements IFluidHandler {
 	public FluidStack drain(long amount, boolean sim) {
 		try (Transaction t = Transaction.openOuter()) {
 			for (StorageView<FluidVariant> view : storage.iterable(t)) {
-				long extracted = storage.extract(view.getResource(), amount, t);
-				return new FluidStack(view.getResource(), extracted);
+				FluidVariant var = view.getResource();
+				if (var.isBlank()) continue;
+				long extracted = view.extract(var, amount, t);
+				if (extracted != 0) {
+					if (!sim) t.commit();
+					return new FluidStack(var, extracted);
+				}
 			}
 		}
 		return FluidStack.empty();

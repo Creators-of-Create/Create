@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,11 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 		BakedModel bracket = data.getBracket();
 		if (bracket == null)
 			return;
-		context.fallbackConsumer().accept(bracket);
+		if (((FabricBakedModel) bracket).isVanillaAdapter()) {
+			context.fallbackConsumer().accept(bracket);
+		} else {
+			((FabricBakedModel) bracket).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		}
 	}
 
 	private class BracketedModelData {

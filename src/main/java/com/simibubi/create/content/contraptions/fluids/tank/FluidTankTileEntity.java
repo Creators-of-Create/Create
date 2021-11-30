@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue
 
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -456,8 +457,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		return MAX_SIZE;
 	}
 
-	public static int getCapacityMultiplier() {
-		return AllConfigs.SERVER.fluids.fluidTankCapacity.get() * 1000;
+	public static long getCapacityMultiplier() {
+		return AllConfigs.SERVER.fluids.fluidTankCapacity.get() * FluidConstants.BUCKET;
 	}
 
 	public static int getMaxHeight() {

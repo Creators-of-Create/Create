@@ -27,8 +27,8 @@ public class BracketedKineticTileInstance extends SingleRotatingInstance {
 	@Override
 	public void init() {
 		super.init();
-		if (!ICogWheel.isLargeCog(tile.getBlockState()))
-			return;
+//		if (!ICogWheel.isLargeCog(tile.getBlockState()))
+//			return;
 
 		// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
 		// mesh properly

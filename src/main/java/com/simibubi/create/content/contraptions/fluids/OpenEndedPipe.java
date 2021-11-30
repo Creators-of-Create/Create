@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.BlockFace;
 
 import com.simibubi.create.lib.utility.TagUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -251,7 +252,7 @@ public class OpenEndedPipe extends FlowSource {
 	private class OpenEndFluidHandler extends FluidTank {
 
 		public OpenEndFluidHandler() {
-			super(1000);
+			super(FluidConstants.BUCKET);
 		}
 
 		@Override

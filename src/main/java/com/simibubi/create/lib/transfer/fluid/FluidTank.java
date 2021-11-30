@@ -45,7 +45,7 @@ public class FluidTank implements IFluidHandler {
 	}
 
 	public boolean isEmpty() {
-		return getCapacity() == 0;
+		return getFluid() == null || getFluid().getAmount() == 0;
 	}
 
 	public long getFluidAmount() {
@@ -72,8 +72,37 @@ public class FluidTank implements IFluidHandler {
 	}
 
 	@Override
-	public long fill(FluidStack stack, boolean sim) {
-		return 0;
+	public long fill(FluidStack resource, boolean sim) {
+		if (resource.isEmpty() || !isFluidValid(0, resource)) {
+			return 0;
+		}
+		if (sim) {
+			if (fluid.isEmpty()) {
+				return Math.min(capacity, resource.getAmount());
+			}
+			if (!fluid.isFluidEqual(resource)) {
+				return 0;
+			}
+			return Math.min(capacity - fluid.getAmount(), resource.getAmount());
+		}
+		if (fluid.isEmpty()) {
+			fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+			return fluid.getAmount();
+		}
+		if (!fluid.isFluidEqual(resource)) {
+			return 0;
+		}
+		long filled = capacity - fluid.getAmount();
+
+		if (resource.getAmount() < filled) {
+			fluid.grow(resource.getAmount());
+			filled = resource.getAmount();
+		}
+		else {
+			fluid.setAmount(capacity);
+		}
+
+		return filled;
 	}
 
 	@Override
