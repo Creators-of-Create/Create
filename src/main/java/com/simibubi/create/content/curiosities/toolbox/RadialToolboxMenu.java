@@ -383,8 +383,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	@Override
 	public boolean keyReleased(int code, int scanCode, int modifiers) {
 		InputConstants.Key mouseKey = InputConstants.getKey(code, scanCode);
-		if (AllKeys.TOOLBELT.getKeybind()
-			.isActiveAndMatches(mouseKey)) {
+		if (AllKeys.TOOLBELT.getKeybind() // todo: is this right?
+			.matchesMouse(mouseKey.getValue())) {
 			onClose();
 			return true;
 		}

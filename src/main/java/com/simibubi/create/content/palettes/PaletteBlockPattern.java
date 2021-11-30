@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
-import com.simibubi.create.foundation.block.connected.RotatedLayerCTBehaviour;
+import com.simibubi.create.foundation.block.connected.RotatedPillarCTBehaviour;
 import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
 
 public class PaletteBlockPattern {
 
@@ -194,22 +193,22 @@ public class PaletteBlockPattern {
 //		ResourceLocation end = toLocation(variant, textures[1]);
 
 //		return (ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-			.forAllStatesExcept(state -> {
-				Axis axis = state.getValue(BlockStateProperties.AXIS);
-				if (axis == Axis.Y)
-					return ConfiguredModel.builder()
-						.modelFile(prov.models()
-				//			.cubeColumn(createName(variant), side, end))
-						.uvLock(false)
-						.build();
-				return ConfiguredModel.builder()
-					.modelFile(prov.models()
-						.cubeColumnHorizontal(createName(variant) + "_horizontal", side, end))
-					.uvLock(false)
-					.rotationX(90)
-					.rotationY(axis == Axis.X ? 90 : 0)
-					.build();
-			}, BlockStateProperties.WATERLOGGED);
+//			.forAllStatesExcept(state -> {
+//				Axis axis = state.getValue(BlockStateProperties.AXIS);
+//				if (axis == Axis.Y)
+//					return ConfiguredModel.builder()
+//						.modelFile(prov.models()
+//				//			.cubeColumn(createName(variant), side, end))
+//						.uvLock(false)
+//						.build();
+//				return ConfiguredModel.builder()
+//					.modelFile(prov.models()
+//						.cubeColumnHorizontal(createName(variant) + "_horizontal", side, end))
+//					.uvLock(false)
+//					.rotationX(90)
+//					.rotationY(axis == Axis.X ? 90 : 0)
+//					.build();
+//			}, BlockStateProperties.WATERLOGGED);
 //	}
 //
 //	public IBlockStateProvider cubeColumn(String variant) {
