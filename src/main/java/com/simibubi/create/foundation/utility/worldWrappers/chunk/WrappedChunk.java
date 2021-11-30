@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkBiomeContainer;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.UpgradeData;
@@ -29,24 +29,24 @@ import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.ticks.LevelChunkTicks;
 import net.minecraft.world.ticks.TickContainerAccess;
 
-public class WrappedChunk implements ChunkAccess {
+public class WrappedChunk extends ChunkAccess {
 
     final PlacementSimulationWorld world;
     boolean needsLight;
     final int x;
     final int z;
-    final ChunkPos pos;
 
     private final LevelChunkSection[] sections;
 
     public WrappedChunk(PlacementSimulationWorld world, int x, int z) {
-        this.world = world;
+		super(new ChunkPos(x, z), UpgradeData.EMPTY, world, world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY), 0L, null, null);
+		this.world = world;
         this.needsLight = true;
         this.x = x;
         this.z = z;
-        this.pos = new ChunkPos(x, z);
 
         this.sections = new LevelChunkSection[16];
 
@@ -118,14 +118,14 @@ public class WrappedChunk implements ChunkAccess {
 
     @Override
     public ChunkPos getPos() {
-        return pos;
+        return chunkPos;
     }
 
-    @Nullable
+    /*@Nullable
     @Override
     public ChunkBiomeContainer getBiomes() {
         return null;
-    }
+    }*/
 
     @Override
     public void setUnsaved(boolean p_177427_1_) {
@@ -167,7 +167,12 @@ public class WrappedChunk implements ChunkAccess {
         return null;
     }
 
-    @Override
+	@Override
+	public TicksToSave getTicksForSerialization() {
+		return new ChunkAccess.TicksToSave(null, null);
+	}
+
+	@Override
     public UpgradeData getUpgradeData() {
         return null;
     }
@@ -253,9 +258,9 @@ public class WrappedChunk implements ChunkAccess {
 		return world.getMinBuildHeight();
 	}
 
-	@Override
+	/*@Override
 	public BlockPos getHeighestPosition(Types pType) {
 		return BlockPos.ZERO;
-	}
+	}*/
 
 }

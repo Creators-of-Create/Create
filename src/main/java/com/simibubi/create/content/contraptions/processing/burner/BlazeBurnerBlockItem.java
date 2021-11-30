@@ -17,6 +17,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -91,18 +93,18 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return super.useOn(context);
 
 		BaseSpawner spawner = ((SpawnerBlockEntity) te).getSpawner();
-		WeightedRandomList<SpawnData> spawnPotentials =
+		SimpleWeightedRandomList<SpawnData> spawnPotentials =
 				AbstractSpawnerHelper.getPotentialSpawns(spawner); // spawnPotentials
-		List<SpawnData> possibleSpawns = spawnPotentials.unwrap();
+		List<WeightedEntry.Wrapper<SpawnData>> possibleSpawns = spawnPotentials.unwrap();
 		if (spawnPotentials.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
 			possibleSpawns
-				.add(AbstractSpawnerHelper.getSpawnData(spawner)); // nextSpawnData
+				.add(WeightedEntry.wrap(AbstractSpawnerHelper.getSpawnData(spawner), 1)); // nextSpawnData
 		}
 
 		ResourceLocation blazeId = Registry.ENTITY_TYPE.getKey(EntityType.BLAZE);
-		for (SpawnData e : possibleSpawns) {
-			ResourceLocation spawnerEntityId = new ResourceLocation(e.getTag()
+		for (WeightedEntry.Wrapper<SpawnData> e : possibleSpawns) {
+			ResourceLocation spawnerEntityId = new ResourceLocation(e.getData().getEntityToSpawn()
 				.getString("id"));
 			if (!spawnerEntityId.equals(blazeId))
 				continue;

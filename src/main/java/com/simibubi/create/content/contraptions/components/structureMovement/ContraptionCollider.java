@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static net.minecraft.world.entity.Entity.collideBoundingBoxHeuristically;
+import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 
+import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
 import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -400,44 +401,30 @@ public class ContraptionCollider {
 	}
 
 	/** From Entity#collide **/
-	static Vec3 collide(Vec3 p_20273_, Entity e) {
-		AABB aabb = e.getBoundingBox();
-		CollisionContext collisioncontext = CollisionContext.of(e);
-		VoxelShape voxelshape = e.level.getWorldBorder()
-			.getCollisionShape();
-		Stream<VoxelShape> stream =
-			Shapes.joinIsNotEmpty(voxelshape, Shapes.create(aabb.deflate(1.0E-7D)), BooleanOp.AND) ? Stream.empty()
-				: Stream.of(voxelshape);
-		Stream<VoxelShape> stream1 = e.level.getEntityCollisions(e, aabb.expandTowards(p_20273_), (p_19949_) -> {
-			return true;
-		});
-		RewindableStream<VoxelShape> rewindablestream = new RewindableStream<>(Stream.concat(stream1, stream));
-		Vec3 vec3 = p_20273_.lengthSqr() == 0.0D ? p_20273_
-			: collideBoundingBoxHeuristically(e, p_20273_, aabb, e.level, collisioncontext, rewindablestream);
-		boolean flag = p_20273_.x != vec3.x;
-		boolean flag1 = p_20273_.y != vec3.y;
-		boolean flag2 = p_20273_.z != vec3.z;
-		boolean flag3 = e.isOnGround() || flag1 && p_20273_.y < 0.0D;
-		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
-			Vec3 vec31 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, e.maxUpStep, p_20273_.z), aabb,
-				e.level, collisioncontext, rewindablestream);
-			Vec3 vec32 = collideBoundingBoxHeuristically(e, new Vec3(0.0D, e.maxUpStep, 0.0D),
-				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, collisioncontext, rewindablestream);
-			if (vec32.y < e.maxUpStep) {
-				Vec3 vec33 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z),
-					aabb.move(vec32), e.level, collisioncontext, rewindablestream).add(vec32);
-				if (vec33.horizontalDistanceSqr() > vec31.horizontalDistanceSqr()) {
-					vec31 = vec33;
+	static Vec3 collide(Vec3 vec3, Entity e) {
+		AABB aABB = e.getBoundingBox();
+		List<VoxelShape> list = e.level.getEntityCollisions(e, aABB.expandTowards(vec3));
+		Vec3 vec32 = vec3.lengthSqr() == 0.0 ? vec3 : collideBoundingBox(e, vec3, aABB, e.level, list);
+		boolean bl = vec3.x != vec32.x;
+		boolean bl2 = vec3.y != vec32.y;
+		boolean bl3 = vec3.z != vec32.z;
+		boolean bl4 = ((EntityAccessor)e).isOnGround() || bl2 && vec3.y < 0.0;
+		if (e.maxUpStep > 0.0F && bl4 && (bl || bl3)) {
+			Vec3 vec33 = collideBoundingBox(e, new Vec3(vec3.x, e.maxUpStep, vec3.z), aABB, e.level, list);
+			Vec3 vec34 = collideBoundingBox(e, new Vec3(0.0, e.maxUpStep, 0.0), aABB.expandTowards(vec3.x, 0.0, vec3.z), e.level, list);
+			if (vec34.y < (double)e.maxUpStep) {
+				Vec3 vec35 = collideBoundingBox(e, new Vec3(vec3.x, 0.0, vec3.z), aABB.move(vec34), e.level, list).add(vec34);
+				if (vec35.horizontalDistanceSqr() > vec33.horizontalDistanceSqr()) {
+					vec33 = vec35;
 				}
 			}
 
-			if (vec31.horizontalDistanceSqr() > vec3.horizontalDistanceSqr()) {
-				return vec31.add(collideBoundingBoxHeuristically(e, new Vec3(0.0D, -vec31.y + p_20273_.y, 0.0D),
-					aabb.move(vec31), e.level, collisioncontext, rewindablestream));
+			if (vec33.horizontalDistanceSqr() > vec32.horizontalDistanceSqr()) {
+				return vec33.add(collideBoundingBox(e, new Vec3(0.0, -vec33.y + vec3.y, 0.0), aABB.move(vec33), e.level, list));
 			}
 		}
 
-		return vec3;
+		return vec32;
 	}
 
 	private static PlayerType getPlayerType(Entity entity) {
@@ -455,7 +442,7 @@ public class ContraptionCollider {
 		return entity instanceof LocalPlayer;
 	}
 
-	private static RewindableStream<VoxelShape> getPotentiallyCollidedShapes(Level world, Contraption contraption,
+	private static List<VoxelShape> getPotentiallyCollidedShapes(Level world, Contraption contraption,
 		AABB localBB) {
 
 		double height = localBB.getYsize();

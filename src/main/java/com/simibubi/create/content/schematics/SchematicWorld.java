@@ -20,11 +20,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.EmptyTickList;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
@@ -37,6 +35,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.ticks.LevelChunkTicks;
 import net.minecraft.world.ticks.LevelTickAccess;
 
 public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor {
@@ -209,7 +208,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public LevelTickAccess<Block> getBlockTicks() {
-		return EmptyTickList.empty();
+		return new LevelChunkTicks<Block>();
 	}
 
 	@Override

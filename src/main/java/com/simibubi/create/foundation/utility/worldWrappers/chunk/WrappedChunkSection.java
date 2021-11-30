@@ -15,9 +15,9 @@ public class WrappedChunkSection extends LevelChunkSection {
     public WrappedChunkSection(WrappedChunk owner, int yBase) {
         super(yBase, owner.world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY));
         this.owner = owner;
-        this.xStart = owner.pos.getMinBlockX();
+        this.xStart = owner.getPos().getMinBlockX();
         this.yStart = yBase;
-        this.zStart = owner.pos.getMinBlockZ();
+        this.zStart = owner.getPos().getMinBlockZ();
     }
 
     @Override

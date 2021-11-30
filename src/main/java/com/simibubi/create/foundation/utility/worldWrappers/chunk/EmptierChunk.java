@@ -9,47 +9,47 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraft.world.scores.Scoreboard;
-import net.minecraft.world.ticks.LevelTickAccess;
+import net.minecraft.world.ticks.LevelTicks;
 
 public class EmptierChunk extends LevelChunk {
 
-	private static final Level DUMMY_LEVEL = new Level(null, null, DimensionTypeAccessor.getDEFAULT_OVERWORLD(), null, false, false, 0) {
+	private static final ServerLevel DUMMY_LEVEL = new ServerLevel(null, null, null, null, null, DimensionTypeAccessor.getDEFAULT_OVERWORLD(), null, null, false, 0, null, false) {
 
 		@Override
-		public LevelTickAccess<Block> getBlockTicks() {
+		public LevelTicks<Block> getBlockTicks() {
 			return null;
 		}
 
 		@Override
-		public LevelTickAccess<Fluid> getFluidTicks() {
+		public LevelTicks<Fluid> getFluidTicks() {
 			return null;
 		}
 
 		@Override
-		public ChunkSource getChunkSource() {
+		public ServerChunkCache getChunkSource() {
 			return null;
 		}
 
@@ -67,7 +67,7 @@ public class EmptierChunk extends LevelChunk {
 		}
 
 		@Override
-		public List<? extends Player> players() {
+		public List<ServerPlayer> players() {
 			return null;
 		}
 
@@ -124,7 +124,7 @@ public class EmptierChunk extends LevelChunk {
 		}
 
 		@Override
-		public Scoreboard getScoreboard() {
+		public ServerScoreboard getScoreboard() {
 			return null;
 		}
 

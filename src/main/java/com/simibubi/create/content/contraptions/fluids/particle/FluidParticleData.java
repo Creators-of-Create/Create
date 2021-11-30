@@ -58,7 +58,7 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 	}
 
 	public static final Codec<FluidStack> FLUID_CODEC = RecordCodecBuilder.create(i -> i.group(
-					Registry.FLUID.fieldOf("FluidName")
+					Registry.FLUID.byNameCodec().fieldOf("FluidName")
 							.forGetter(FluidStack::getFluid),
 					Codec.LONG.fieldOf("Amount")
 							.forGetter(FluidStack::getAmount),
