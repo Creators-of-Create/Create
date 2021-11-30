@@ -15,6 +15,7 @@ import com.simibubi.create.lib.utility.LazyOptional;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +43,7 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 		offset = LerpedFloat.linear()
 			.startWithValue(0);
 		isMoving = true;
-		internalTank = new SmartFluidTank(1500, this::onTankContentsChanged);
+		internalTank = new SmartFluidTank((long) (FluidConstants.BUCKET * 1.5), this::onTankContentsChanged);
 		handler = new HosePulleyFluidHandler(internalTank, filler, drainer,
 			() -> worldPosition.below((int) Math.ceil(offset.getValue())), () -> !this.isMoving);
 		capability = LazyOptional.of(() -> handler);
