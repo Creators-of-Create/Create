@@ -98,11 +98,11 @@ public class BackTankUtil {
 			return Math.round(13.0F - (float) stack.getDamageValue() / stack.getMaxDamage() * 13.0F);
 		double durability;
 		if (backtank.getItem() instanceof CustomDurabilityBarItem custom) {
-			durability = custom.getBarWidth(backtank);
+			durability = backtank.getBarWidth();
 		} else {
 			durability = DurabilityBarUtil.getDurabilityForDisplay(backtank);
 		}
-		return durability;
+		return (int) durability;
 	}
 
 	@Environment(EnvType.CLIENT)

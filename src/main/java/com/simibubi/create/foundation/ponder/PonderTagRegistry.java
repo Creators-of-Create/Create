@@ -12,6 +12,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
@@ -109,8 +110,7 @@ public class PonderTagRegistry {
 		}
 
 		public TagBuilder add(ItemLike item) {
-			return add(item.asItem()
-				.getRegistryName());
+			return add(Registry.ITEM.getKey(item.asItem()));
 		}
 
 		public TagBuilder add(ItemProviderEntry<?> entry) {

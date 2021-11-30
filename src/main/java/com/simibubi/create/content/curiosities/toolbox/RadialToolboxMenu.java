@@ -26,6 +26,7 @@ import com.simibubi.create.lib.helper.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -354,8 +355,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	@Override
 	public boolean keyPressed(int code, int scanCode, int modifiers) {
 		InputConstants.Key mouseKey = InputConstants.getKey(code, scanCode);
-		if (AllKeys.TOOLBELT.getKeybind()
-			.isActiveAndMatches(mouseKey)) {
+		if (AllKeys.TOOLBELT.getKeybind() // todo: is this right?
+			.matchesMouse(mouseKey.getValue())) {
 			onClose();
 			ToolboxHandlerClient.COOLDOWN = 2;
 			return true;

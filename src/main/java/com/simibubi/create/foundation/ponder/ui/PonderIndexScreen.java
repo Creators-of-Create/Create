@@ -104,7 +104,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(item))
 					.withCallback((x, y) -> {
-						if (!PonderRegistry.ALL.containsKey(item.getRegistryName()))
+						if (!PonderRegistry.ALL.containsKey(Registry.ITEM.getKey(item)))
 							return;
 
 						centerScalingOn(x, y);

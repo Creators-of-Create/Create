@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.fabricmc.fabric.api.tag.TagFactory;
+
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
@@ -52,7 +54,7 @@ public enum AllPaletteStoneTypes {
 
 	private Function<CreateRegistrate, NonNullSupplier<Block>> factory;
 	private PalettesVariantEntry variants;
-	
+
 	public NonNullSupplier<Block> baseBlock;
 	public PaletteBlockPattern[] variantTypes;
 	public Tag.Named<Item> materialTag;
@@ -76,7 +78,7 @@ public enum AllPaletteStoneTypes {
 			NonNullSupplier<Block> baseBlock = paletteStoneVariants.factory.apply(registrate);
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
-			paletteStoneVariants.materialTag = AllTags.tag(ItemTags::createOptional, Create.ID, "stone_types/" + id);
+			paletteStoneVariants.materialTag = AllTags.tag(TagFactory.ITEM::create, Create.ID, "stone_types/" + id);
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}

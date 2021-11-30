@@ -83,13 +83,13 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(i));
 
-			if (PonderRegistry.ALL.containsKey(i.getRegistryName())) {
+			if (PonderRegistry.ALL.containsKey(Registry.ITEM.getKey(i))) {
 				b.withCallback((mouseX, mouseY) -> {
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
 				});
 			} else {
-				if (i.getRegistryName()
+				if (Registry.ITEM.getKey(i)
 						.getNamespace()
 						.equals(Create.ID))
 					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_CREATE))
@@ -104,9 +104,8 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		}
 
 		if (!tag.getMainItem().isEmpty()) {
-			ResourceLocation registryName = tag.getMainItem()
-					.getItem()
-					.getRegistryName();
+			ResourceLocation registryName = Registry.ITEM.getKey(tag.getMainItem()
+					.getItem());
 
 			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10)
 					.showing(tag.getMainItem());

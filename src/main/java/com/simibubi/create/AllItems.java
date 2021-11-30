@@ -235,7 +235,7 @@ public class AllItems {
 	COPPER_BACKTANK =
 		REGISTRATE
 			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+//			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
 			.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
