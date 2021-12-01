@@ -214,7 +214,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
-		.properties(p -> (FabricItemSettings) p.stacksTo(1))
+		.properties(p -> p.stacksTo(1))
 		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
 		.lang("Engineer's Goggles")
 		.register();

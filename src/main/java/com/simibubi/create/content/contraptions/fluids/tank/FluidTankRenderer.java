@@ -35,7 +35,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		float minPuddleHeight = 1 / 16f;
 		float totalHeight = te.height - 2 * capHeight - minPuddleHeight;
 
-		float level = fluidLevel.get(partialTicks);
+		float level = 4;//fluidLevel.get(partialTicks);
 		if (level < 1 / (512f * totalHeight))
 			return;
 		float clampedLevel = Mth.clamp(level * totalHeight, 0, totalHeight);

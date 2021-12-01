@@ -15,6 +15,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.utility.FluidTextUtil;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.utility.MinecraftClientUtil;
 
@@ -87,7 +88,7 @@ public interface IHaveGoggleInformation {
 			return true;
 
 		Component capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(ChatFormatting.GRAY);
-		Component amount = new TextComponent(format(tank.getTankCapacity(0))).append(mb).withStyle(ChatFormatting.GOLD);
+		Component amount = new TextComponent(format(Double.parseDouble(FluidTextUtil.getUnicodeMillibuckets(tank.getTankCapacity(0), true)))).append(mb).withStyle(ChatFormatting.GOLD);
 
 		tooltip.add(indent.plainCopy()
 			.append(capacity)
