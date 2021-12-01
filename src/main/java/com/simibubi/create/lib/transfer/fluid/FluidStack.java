@@ -124,7 +124,7 @@ public class FluidStack {
 	public CompoundTag writeToNBT(CompoundTag nbt) {
 		nbt.put("Variant", getType().toNbt());
 		nbt.putLong("Amount", getAmount());
-		if(tag != null)
+		if (tag != null)
 			nbt.put("Tag", tag);
 		return nbt;
 	}

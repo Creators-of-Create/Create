@@ -116,7 +116,7 @@ public class FluidTank implements IFluidHandler {
 		if (amount > canRemove) amount = canRemove;
 		FluidStack out = fluid.copy().setAmount(amount);
 		if (!sim) {
-			fluid.setAmount(amount);
+			fluid.setAmount(fluid.getAmount() - amount);
 		}
 
 		return out;
