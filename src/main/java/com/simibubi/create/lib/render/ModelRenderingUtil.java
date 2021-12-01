@@ -23,6 +23,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class ModelRenderingUtil {
 	private static final ThreadLocal<LayerSpecificModelWrapper> LAYER_WRAPPER = ThreadLocal.withInitial(LayerSpecificModelWrapper::new);
 
+	public static void emitBlockQuadsChecked(BakedModel model, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		if (((FabricBakedModel) model).isVanillaAdapter()) {
+			context.fallbackConsumer().accept(model);
+		} else {
+			((FabricBakedModel) model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		}
+	}
+
 	public static void renderForLayer(ModelBlockRenderer blockModelRenderer, BlockAndTintGetter blockDisplayReader, BakedModel bakedModel, BlockState blockState, BlockPos blockPos, PoseStack matrixStack, VertexConsumer vertexBuilder, boolean bl, Random random, long l, int i, RenderType renderLayer) {
 		BakedModel model = bakedModel;
 		if (!((FabricBakedModel) bakedModel).isVanillaAdapter()) {

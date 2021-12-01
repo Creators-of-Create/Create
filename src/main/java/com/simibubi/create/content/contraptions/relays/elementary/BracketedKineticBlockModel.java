@@ -4,22 +4,19 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.lib.render.ModelRenderingUtil;
+import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-
-import com.simibubi.create.lib.render.VirtualRenderingStateManager;
-
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 public class BracketedKineticBlockModel extends ForwardingBakedModel {
-
-//	private static final ModelProperty<BracketedModelData> BRACKET_PROPERTY = new ModelProperty<>();
 
 	public BracketedKineticBlockModel(BakedModel template) {
 		wrapped = template;
@@ -32,8 +29,8 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 		if (VirtualRenderingStateManager.getVirtualState()) {
-			super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 			return;
 		}
 
@@ -46,11 +43,7 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 		BakedModel bracket = data.getBracket();
 		if (bracket == null)
 			return;
-		if (((FabricBakedModel) bracket).isVanillaAdapter()) {
-			context.fallbackConsumer().accept(bracket);
-		} else {
-			((FabricBakedModel) bracket).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-		}
+		ModelRenderingUtil.emitBlockQuadsChecked(bracket, blockView, state, pos, randomSupplier, context);
 	}
 
 	private class BracketedModelData {

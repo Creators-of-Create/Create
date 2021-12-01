@@ -58,22 +58,16 @@ public class SimpleChannel {
 	}
 
 	/**
-	 * The registered class <b>must</b> have a nullary constructor or else an error will be thrown.
-	 *
-	 * <p>A nullary constructor is one that has no arguments and in this case should not do anything.
-	 * For example, if the class name is {@code ExamplePacket}, the public nullary constructor would be <code>public ExamplePacket() {}</code>.
-	 * The visibility of this constructor does not matter for this method.
+	 * The registered class <b>must</b> have a constructor accepting a {@link FriendlyByteBuf} or else an error will be thrown.
+	 * The visibility of this constructor does not matter.
 	 */
 	public <T extends C2SPacket> void registerC2SPacket(Class<T> clazz, int id) {
 		c2sIdMap.put(id, clazz);
 	}
 
 	/**
-	 * The registered class <b>must</b> have a nullary constructor or else an error will be thrown.
-	 *
-	 * <p>A nullary constructor is one that has no arguments and in this case should not do anything.
-	 * For example, if the class name is {@code ExamplePacket}, the public nullary constructor would be <code>public ExamplePacket() {}</code>.
-	 * The visibility of this constructor does not matter for this method.
+	 * The registered class <b>must</b> have a constructor accepting a {@link FriendlyByteBuf} or else an error will be thrown.
+	 * The visibility of this constructor does not matter.
 	 */
 	public <T extends S2CPacket> void registerS2CPacket(Class<T> clazz, int id) {
 		s2cIdMap.put(id, clazz);
@@ -82,7 +76,7 @@ public class SimpleChannel {
 	private FriendlyByteBuf createBuf(C2SPacket packet) {
 		Integer id = c2sIdMap.inverse().get(packet.getClass());
 		if (id == null) {
-			LOGGER.error("Could not get id for c2s packet " + packet.toString() + " in channel " + channelName);
+			LOGGER.error("Could not get id for C2S packet '" + packet.toString() + "' in channel '" + channelName + "'");
 			return null;
 		}
 		FriendlyByteBuf buf = PacketByteBufs.create();
@@ -94,7 +88,7 @@ public class SimpleChannel {
 	private FriendlyByteBuf createBuf(S2CPacket packet) {
 		Integer id = s2cIdMap.inverse().get(packet.getClass());
 		if (id == null) {
-			LOGGER.error("Could not get id for s2c packet " + packet.toString() + " in channel " + channelName);
+			LOGGER.error("Could not get id for S2C packet '" + packet.toString() + "' in channel '" + channelName + "'");
 			return null;
 		}
 		FriendlyByteBuf buf = PacketByteBufs.create();
@@ -197,7 +191,7 @@ public class SimpleChannel {
 				ctor.setAccessible(true);
 				packet = (C2SPacket) ctor.newInstance(buf);
 			} catch (Exception e) {
-				LOGGER.error("Could not create c2s packet in channel " + channelName + " with id " + id, e);
+				LOGGER.error("Could not create C2S packet in channel '" + channelName + "' with id " + id, e);
 			}
 			if (packet != null) {
 				packet.handle(server, player, handler, new ResponseTarget(responseSender));
@@ -217,7 +211,7 @@ public class SimpleChannel {
 				ctor.setAccessible(true);
 				packet = (S2CPacket) ctor.newInstance(buf);
 			} catch (Exception e) {
-				LOGGER.error("Could not create s2c packet in channel " + channelName + " with id " + id, e);
+				LOGGER.error("Could not create S2C packet in channel '" + channelName + "' with id " + id, e);
 			}
 			if (packet != null) {
 				packet.handle(client, handler, new ResponseTarget(responseSender));
