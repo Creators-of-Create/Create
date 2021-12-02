@@ -24,6 +24,9 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
+// jozu: I use a gradle workspace with both projects.
+// The project is named Flywheel-Forge, but sub-projects are named by folder.
+boolean inWorkspace = findProject(':Flywheel') != null
 
 ext.buildnumber = 0
 project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
@@ -51,6 +54,12 @@ minecraft {
                 create {
                     source sourceSets.main
                 }
+
+                if (inWorkspace) {
+                    flywheel {
+                        source project(":Flywheel").sourceSets.main
+                    }
+                }
             }
         }
 
@@ -63,6 +72,12 @@ minecraft {
             mods {
                 create {
                     source sourceSets.main
+                }
+
+                if (inWorkspace) {
+                    flywheel {
+                        source project(":Flywheel").sourceSets.main
+                    }
                 }
             }
         }
@@ -77,6 +92,12 @@ minecraft {
             mods {
                 create {
                     source sourceSets.main
+                }
+
+                if (inWorkspace) {
+                    flywheel {
+                        source project(":Flywheel").sourceSets.main
+                    }
                 }
             }
         }
@@ -139,8 +160,8 @@ dependencies {
     implementation fg.deobf(registrate)
     shade registrate
 
-    if (findProject(':Flywheel-Forge') != null) {
-        implementation project(':Flywheel-Forge') // jozu: I use a gradle workspace with both projects
+    if (inWorkspace) {
+        implementation project(':Flywheel')
     } else {
         implementation fg.deobf("com.jozufozu.flywheel:Flywheel-Forge:${flywheel_version}")
     }
@@ -155,7 +176,12 @@ dependencies {
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
     // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
+    // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
+    // This allows 'Settings > Build, Execution, and Deployment > Build Tools > Gradle > Build and run using' set to IntelliJ to work correctly
+    if (System.getProperty('idea.sync.active') != 'true') {
+        annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+    }
 }
 
 jar {
