@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
+import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.Minecraft;
@@ -189,9 +190,11 @@ public class GuiGameElement {
 				.getBlockColors()
 				.getColor(blockState, null, null, 0);
 			Color rgb = new Color(color == -1 ? this.color : color);
-			blockRenderer.getModelRenderer()
-				.renderModel(ms.last(), vb, blockState, blockModel, rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
-					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+			VirtualRenderingStateManager.runVirtually(() ->
+					blockRenderer.getModelRenderer()
+							.renderModel(ms.last(), vb, blockState, blockModel, rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
+									LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY)
+			);
 			buffer.endBatch();
 		}
 
@@ -210,7 +213,9 @@ public class GuiGameElement {
 			RenderType renderType, VertexConsumer vb, PoseStack ms) {
 			if (blockState.getBlock() instanceof FireBlock) {
 				Lighting.setupForFlatItems();
-				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+				VirtualRenderingStateManager.runVirtually(() ->
+						blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY)
+				);
 				buffer.endBatch();
 				Lighting.setupFor3DItems();
 				return;

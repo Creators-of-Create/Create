@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -40,8 +41,8 @@ public class BakedModelRenderHelper {
 		BufferBuilder builder = new BufferBuilder(512);
 
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		blockRenderer.tesselateBlock(mc.level, model, referenceState, BlockPos.ZERO.above(255), ms, builder, true,
-			new Random(), 42, OverlayTexture.NO_OVERLAY);
+		VirtualRenderingStateManager.runVirtually(() -> blockRenderer.tesselateBlock(mc.level, model, referenceState, BlockPos.ZERO.above(255), ms, builder, true,
+			new Random(), 42, OverlayTexture.NO_OVERLAY));
 		builder.end();
 		return builder;
 	}

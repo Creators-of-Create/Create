@@ -8,6 +8,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 import com.simibubi.create.lib.utility.VertexBuilderUtil;
 
 import org.lwjgl.system.MemoryStack;
@@ -68,8 +69,8 @@ public abstract class GhostBlockRenderer {
 			BlockPos pos = params.pos;
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			dispatcher.getModelRenderer()
-				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+			VirtualRenderingStateManager.runVirtually(() -> dispatcher.getModelRenderer()
+					.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.NO_OVERLAY));
 
 			ms.popPose();
 		}
@@ -101,9 +102,11 @@ public abstract class GhostBlockRenderer {
 			ms.scale(.85f, .85f, .85f);
 			ms.translate(-.5, -.5, -.5);
 
-			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
-			renderModel(params, ms.last(), vb, params.state, model, 1f, 1f, 1f,
-				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY);
+			VirtualRenderingStateManager.runVirtually(() ->
+					renderModel(params, ms.last(), vb, params.state, model, 1f, 1f, 1f,
+							LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY/*,
+				VirtualEmptyModelData.INSTANCE*/)
+			);
 
 			// buffer.draw();
 			// clean
