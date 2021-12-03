@@ -21,6 +21,9 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import java.util.Objects;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -31,11 +34,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class TransferUtil {
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be) {
+		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
 		return handleTypeChecks(itemStorage).cast();
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be, Direction side) {
+		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
 		return handleTypeChecks(itemStorage).cast();
 	}
@@ -46,6 +51,7 @@ public class TransferUtil {
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos, Direction direction) {
+		if(level.isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, direction);
 		return handleTypeChecks(itemStorage).cast();
 	}
@@ -53,11 +59,13 @@ public class TransferUtil {
 	// Fluids
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be) {
+		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
 		return handleTypeChecks(fluidStorage).cast();
 	}
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be, Direction side) {
+		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
 		return handleTypeChecks(fluidStorage).cast();
 	}
@@ -73,6 +81,7 @@ public class TransferUtil {
 	// Helpers
 
 	public static LazyOptional<?> getHandler(BlockEntity be, Direction direction, Class<?> handler) {
+		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		if (handler == IItemHandler.class) {
 			return getItemHandler(be, direction);
 		} else if (handler == IFluidHandler.class) {

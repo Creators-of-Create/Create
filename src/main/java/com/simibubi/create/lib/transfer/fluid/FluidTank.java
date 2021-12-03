@@ -87,6 +87,7 @@ public class FluidTank implements IFluidHandler {
 		}
 		if (fluid.isEmpty()) {
 			fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+			onContentsChanged();
 			return fluid.getAmount();
 		}
 		if (!fluid.isFluidEqual(resource)) {
@@ -101,7 +102,8 @@ public class FluidTank implements IFluidHandler {
 		else {
 			fluid.setAmount(capacity);
 		}
-
+		if (filled > 0)
+			onContentsChanged();
 		return filled;
 	}
 
@@ -117,8 +119,13 @@ public class FluidTank implements IFluidHandler {
 		FluidStack out = fluid.copy().setAmount(amount);
 		if (!sim) {
 			fluid.setAmount(fluid.getAmount() - amount);
+			onContentsChanged();
 		}
 
 		return out;
+	}
+
+	protected void onContentsChanged() {
+
 	}
 }
