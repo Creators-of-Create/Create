@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.actors.flwdata;
 
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -93,15 +92,4 @@ public class ActorData extends InstanceData {
 		return this;
 	}
 
-	@Override
-	public void write(VecBuffer buf) {
-		buf.putVec3(x, y, z);
-		buf.putVec2(blockLight, skyLight);
-		buf.putFloat(rotationOffset);
-		buf.putVec3(rotationAxisX, rotationAxisY, rotationAxisZ);
-		buf.putVec4(qX, qY, qZ, qW);
-		buf.putVec3(rotationCenterX, rotationCenterY, rotationCenterZ);
-		buf.putFloat(speed);
-
-	}
 }

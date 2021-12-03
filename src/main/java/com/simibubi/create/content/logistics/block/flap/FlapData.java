@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.block.flap;
 
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.core.materials.IFlatLight;
 import com.mojang.math.Vector3f;
@@ -95,18 +94,4 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 		return this;
 	}
 
-	@Override
-	public void write(VecBuffer buf) {
-		buf.putVec3(x, y, z);
-		buf.putVec2(blockLight, skyLight);
-
-		buf.putVec3(segmentOffsetX, segmentOffsetY, segmentOffsetZ);
-		buf.putVec3(pivotX, pivotY, pivotZ);
-
-		buf.putFloat(horizontalAngle);
-		buf.putFloat(intensity);
-		buf.putFloat(flapScale);
-
-		buf.putFloat(flapness);
-	}
 }

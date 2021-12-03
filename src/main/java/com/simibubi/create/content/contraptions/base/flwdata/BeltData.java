@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
@@ -49,13 +48,4 @@ public class BeltData extends KineticData {
 		return this;
 	}
 
-	@Override
-	public void write(VecBuffer buf) {
-		super.write(buf);
-
-		buf.putVec4(qX, qY, qZ, qW);
-		buf.putVec2(sourceU, sourceV);
-		buf.putVec4(minU, minV, maxU, maxV);
-		buf.put(scrollMult);
-	}
 }

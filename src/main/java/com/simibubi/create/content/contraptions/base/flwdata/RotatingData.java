@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.Direction;
@@ -27,10 +26,4 @@ public class RotatingData extends KineticData {
 		return this;
 	}
 
-	@Override
-	public void write(VecBuffer buf) {
-		super.write(buf);
-
-		buf.putVec3(rotationAxisX, rotationAxisY, rotationAxisZ);
-	}
 }

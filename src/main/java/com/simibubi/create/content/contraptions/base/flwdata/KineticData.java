@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.materials.BasicData;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -63,14 +62,4 @@ public class KineticData extends BasicData {
 		return this;
 	}
 
-	@Override
-	public void write(VecBuffer buf) {
-		super.write(buf);
-
-		buf.putFloat(x);
-		buf.putFloat(y);
-		buf.putFloat(z);
-		buf.putFloat(rotationalSpeed);
-		buf.putFloat(rotationOffset);
-	}
 }
