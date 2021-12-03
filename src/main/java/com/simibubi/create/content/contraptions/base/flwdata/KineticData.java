@@ -1,18 +1,19 @@
-package com.simibubi.create.content.contraptions.base;
+package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.materials.BasicData;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
 
 public class KineticData extends BasicData {
-    private float x;
-    private float y;
-    private float z;
-    private float rotationalSpeed;
-    private float rotationOffset;
+    float x;
+    float y;
+    float z;
+    float rotationalSpeed;
+    float rotationOffset;
 
     public KineticData setPosition(BlockPos pos) {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());

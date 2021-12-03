@@ -2,17 +2,18 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
 	protected RotatingData rotatingModel;
-	
+
     public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
 	}
-    
+
     @Override
     public void init() {
     	rotatingModel = setup(getModel().createInstance());

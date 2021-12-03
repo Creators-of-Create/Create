@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;

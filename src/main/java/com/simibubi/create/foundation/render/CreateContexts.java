@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.render;
 import java.util.stream.Stream;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.SpecMetaRegistry;
+import com.jozufozu.flywheel.backend.GameStateRegistry;
 import com.jozufozu.flywheel.backend.pipeline.IShaderPipeline;
 import com.jozufozu.flywheel.backend.pipeline.InstancingTemplate;
 import com.jozufozu.flywheel.backend.pipeline.OneShotTemplate;
@@ -30,7 +30,7 @@ public class CreateContexts {
 	public static void flwInit(GatherContextEvent event) {
 		Backend backend = event.getBackend();
 
-		SpecMetaRegistry.register(RainbowDebugStateProvider.INSTANCE);
+		GameStateRegistry.register(RainbowDebugStateProvider.INSTANCE);
         FileResolution header = Resolver.INSTANCE.findShader(ResourceUtil.subPath(CONTRAPTION, ".glsl"));
 
 		IShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(ContraptionProgram::new, InstancingTemplate.INSTANCE, header);

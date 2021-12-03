@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.block;
+package com.simibubi.create.content.logistics.block.flap;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
@@ -9,25 +9,21 @@ import net.minecraft.core.BlockPos;
 
 public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 
-	private float x;
-	private float y;
-	private float z;
-	private byte blockLight;
-	private byte skyLight;
-
-	private float segmentOffsetX;
-	private float segmentOffsetY;
-	private float segmentOffsetZ;
-
-	private float pivotX;
-	private float pivotY;
-	private float pivotZ;
-
-	private float horizontalAngle;
-	private float intensity;
-	private float flapScale;
-
-	private float flapness;
+	float x;
+	float y;
+	float z;
+	byte blockLight;
+	byte skyLight;
+	float segmentOffsetX;
+	float segmentOffsetY;
+	float segmentOffsetZ;
+	float pivotX;
+	float pivotY;
+	float pivotZ;
+	float horizontalAngle;
+	float intensity;
+	float flapScale;
+	float flapness;
 
 	public FlapData setPosition(BlockPos pos) {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());

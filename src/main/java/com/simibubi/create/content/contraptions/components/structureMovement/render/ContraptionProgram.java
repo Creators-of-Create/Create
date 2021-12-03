@@ -1,11 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import java.util.List;
-
 import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.core.shader.WorldProgram;
-import com.jozufozu.flywheel.core.shader.extension.IProgramExtension;
 import com.mojang.math.Matrix4f;
 
 import net.minecraft.resources.ResourceLocation;
@@ -18,8 +15,8 @@ public class ContraptionProgram extends WorldProgram {
 
 	protected int uLightVolume;
 
-	public ContraptionProgram(ResourceLocation name, int handle, List<IProgramExtension> extensions) {
-		super(name, handle, extensions);
+	public ContraptionProgram(ResourceLocation name, int handle) {
+		super(name, handle);
 		uLightBoxSize = getUniformLocation("uLightBoxSize");
 		uLightBoxMin = getUniformLocation("uLightBoxMin");
 		uModel = getUniformLocation("uModel");

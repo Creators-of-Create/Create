@@ -1,24 +1,23 @@
-package com.simibubi.create.content.contraptions.relays.belt;
+package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BeltData extends KineticData {
-    private float qX;
-    private float qY;
-    private float qZ;
-    private float qW;
-    private float sourceU;
-    private float sourceV;
-    private float minU;
-    private float minV;
-    private float maxU;
-    private float maxV;
-    private byte scrollMult;
+    float qX;
+    float qY;
+    float qZ;
+    float qW;
+    float sourceU;
+    float sourceV;
+    float minU;
+    float minV;
+    float maxU;
+    float maxV;
+    byte scrollMult;
 
     public BeltData setRotation(Quaternion q) {
         this.qX = q.i();

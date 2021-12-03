@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.base;
+package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.mojang.math.Vector3f;
@@ -6,9 +6,9 @@ import com.mojang.math.Vector3f;
 import net.minecraft.core.Direction;
 
 public class RotatingData extends KineticData {
-    private byte rotationAxisX;
-    private byte rotationAxisY;
-    private byte rotationAxisZ;
+    byte rotationAxisX;
+    byte rotationAxisY;
+    byte rotationAxisZ;
 
     public RotatingData setRotationAxis(Direction.Axis axis) {
         Direction orientation = Direction.get(Direction.AxisDirection.POSITIVE, axis);

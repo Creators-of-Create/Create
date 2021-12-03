@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.components.actors;
+package com.simibubi.create.content.contraptions.components.actors.flwdata;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
@@ -8,24 +8,23 @@ import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 
 public class ActorData extends InstanceData {
-    private float x;
-    private float y;
-    private float z;
-    private byte blockLight;
-    private byte skyLight;
-    private float rotationOffset;
-    private byte rotationAxisX;
-    private byte rotationAxisY;
-    private byte rotationAxisZ;
-    private float qX;
-    private float qY;
-    private float qZ;
-    private float qW;
-    private byte rotationCenterX = 64;
-    private byte rotationCenterY = 64;
-    private byte rotationCenterZ = 64;
-
-    private float speed;
+    float x;
+    float y;
+    float z;
+    byte blockLight;
+    byte skyLight;
+    float rotationOffset;
+    byte rotationAxisX;
+    byte rotationAxisY;
+    byte rotationAxisZ;
+    float qX;
+    float qY;
+    float qZ;
+    float qW;
+    byte rotationCenterX = 64;
+    byte rotationCenterY = 64;
+    byte rotationCenterZ = 64;
+    float speed;
 
     public ActorData setPosition(BlockPos pos) {
         this.x = pos.getX();

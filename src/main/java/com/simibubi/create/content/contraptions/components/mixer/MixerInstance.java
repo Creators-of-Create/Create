@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.RotatingData;
+import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -37,7 +37,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 		transformPole(renderedHeadOffset);
 		transformHead(renderedHeadOffset);
 	}
-	
+
 	@Override
 	protected Instancer<RotatingData> getModel() {
 		return materialManager.defaultSolid()
