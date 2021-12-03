@@ -45,11 +45,10 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 			.output(.05f, Items.DEAD_BUSH)),
 		SAND = create(() -> Blocks.SAND, b -> b.output(.25f, Items.CLAY_BALL)),
 
-		CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER, AllItems.COPPER_NUGGET::get),
-		CRUSHED_ZINC = crushedOre(AllItems.CRUSHED_ZINC, AllItems.ZINC_NUGGET::get),
-		CRUSHED_BRASS = crushedOre(AllItems.CRUSHED_BRASS, AllItems.BRASS_NUGGET::get),
-		CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD, () -> Items.GOLD_NUGGET),
-		CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON, () -> Items.IRON_NUGGET),
+		CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER, AllItems.COPPER_NUGGET::get, () -> Items.CLAY_BALL, .5f),
+		CRUSHED_ZINC = crushedOre(AllItems.CRUSHED_ZINC, AllItems.ZINC_NUGGET::get, () -> Items.GUNPOWDER, .25f),
+		CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD, () -> Items.GOLD_NUGGET, () -> Items.QUARTZ, .5f),
+		CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON, () -> Items.IRON_NUGGET, () -> Items.REDSTONE, .125f),
 
 		CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
 		CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, "platinum", SM),
@@ -88,9 +87,10 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		return create(() -> block, b -> b.output(result));
 	}
 
-	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<ItemLike> nugget) {
-		return create(crushed::get, b -> b.output(nugget.get(), 10)
-			.output(.5f, nugget.get(), 5));
+	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<ItemLike> nugget, Supplier<ItemLike> secondary,
+		float secondaryChance) {
+		return create(crushed::get, b -> b.output(nugget.get(), 9)
+			.output(secondaryChance, secondary.get(), 1));
 	}
 
 	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, String metalName, Mods... mods) {
@@ -99,8 +99,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 			create(mod.getId() + "/" + crushed.getId()
 				.getPath(),
 				b -> b.withItemIngredients(Ingredient.of(crushed::get))
-					.output(1, nugget, 10)
-					.output(.5f, nugget, 5)
+					.output(1, nugget, 9)
 					.whenModLoaded(mod.getId()));
 		}
 		return null;

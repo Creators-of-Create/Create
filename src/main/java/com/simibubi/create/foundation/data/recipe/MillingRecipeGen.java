@@ -28,6 +28,11 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.CLAY_BALL, 3)
 			.output(.5f, Items.CLAY_BALL)),
 
+		CALCITE = create(() -> Items.CALCITE, b -> b.duration(250)
+			.output(.125f, Items.BONE_MEAL, 1)),
+		DRIPSTONE = create(() -> Items.DRIPSTONE_BLOCK, b -> b.duration(250)
+			.output(Items.CLAY_BALL, 1)),
+
 		TERRACOTTA = create(() -> Blocks.TERRACOTTA, b -> b.duration(200)
 			.output(Blocks.RED_SAND)),
 		ANDESITE = create(() -> Blocks.ANDESITE, b -> b.duration(200)
@@ -38,21 +43,6 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.FLINT)),
 		SANDSTONE = create(() -> Blocks.SANDSTONE, b -> b.duration(150)
 			.output(Blocks.SAND)),
-
-		COPPER_ORE = metalOre("copper", AllItems.CRUSHED_COPPER, 350),
-		ZINC_ORE = metalOre("zinc", AllItems.CRUSHED_ZINC, 350),
-		IRON_ORE = metalOre("iron", AllItems.CRUSHED_IRON, 400),
-		GOLD_ORE = metalOre("gold", AllItems.CRUSHED_GOLD, 300),
-
-		OSMIUM_ORE = metalOre("osmium", AllItems.CRUSHED_OSMIUM, 400),
-		PLATINUM_ORE = metalOre("platinum", AllItems.CRUSHED_PLATINUM, 300),
-		SILVER_ORE = metalOre("silver", AllItems.CRUSHED_SILVER, 300),
-		TIN_ORE = metalOre("tin", AllItems.CRUSHED_TIN, 350),
-		QUICKSILVER_ORE = metalOre("quicksilver", AllItems.CRUSHED_QUICKSILVER, 300),
-		LEAD_ORE = metalOre("lead", AllItems.CRUSHED_LEAD, 400),
-		ALUMINUM_ORE = metalOre("aluminum", AllItems.CRUSHED_BAUXITE, 300),
-		URANIUM_ORE = metalOre("uranium", AllItems.CRUSHED_URANIUM, 400),
-		NICKEL_ORE = metalOre("nickel", AllItems.CRUSHED_NICKEL, 350),
 
 		WHEAT = create(() -> Items.WHEAT, b -> b.duration(150)
 			.output(AllItems.WHEAT_FLOUR.get())

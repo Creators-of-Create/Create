@@ -151,7 +151,6 @@ import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntit
 import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInstance;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
@@ -636,12 +635,6 @@ public class AllTileEntities {
 		.tileEntity("stockpile_switch", StockpileSwitchTileEntity::new)
 		.validBlocks(AllBlocks.STOCKPILE_SWITCH)
 		.renderer(() -> SmartTileEntityRenderer::new)
-		.register();
-
-	public static final TileEntityEntry<AdjustableCrateTileEntity> ADJUSTABLE_CRATE = Create.registrate()
-		.tileEntity("adjustable_crate", AdjustableCrateTileEntity::new)
-		.validBlocks(AllBlocks.ADJUSTABLE_CRATE)
-		// .renderer(() -> renderer)
 		.register();
 
 	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE = Create.registrate()

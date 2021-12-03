@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "create:veridium"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_copper_ore",
+      "chance": 0.4
+    },
+    {
+      "item": "create:copper_nugget",
+      "chance": 0.4
+    }
+  ],
+  "processingTime": 250
+}

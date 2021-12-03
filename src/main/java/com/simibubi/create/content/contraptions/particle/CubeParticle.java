@@ -124,12 +124,12 @@ public class CubeParticle extends Particle {
 
 		// int light = getBrightnessForRender(p_225606_3_);
 		int light = LightTexture.FULL_BRIGHT;
-		double ageMultiplier = 1 - Math.pow(age, 3) / Math.pow(lifetime, 3);
+		double ageMultiplier = 1 - Math.pow(Mth.clamp(age + p_225606_3_, 0, lifetime), 3) / Math.pow(lifetime, 3);
 
 		for (int i = 0; i < 6; i++) {
 			// 6 faces to a cube
 			for (int j = 0; j < 4; j++) {
-				Vec3 vec = CUBE[i * 4 + j];
+				Vec3 vec = CUBE[i * 4 + j].scale(-1);
 				vec = vec
 					/* .rotate(?) */
 					.scale(scale * ageMultiplier)

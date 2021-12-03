@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 235",
+	"_": "Missing Localizations: 236",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "アカシアの窓",
 	"block.create.acacia_window_pane": "アカシアの窓板",
 	"block.create.adjustable_chain_gearshift": "可変チェーンギアシフト",
-	"block.create.adjustable_crate": "可変クレート",
 	"block.create.analog_lever": "アナログレバー",
 	"block.create.andesite_belt_funnel": "安山岩のベルトファンネル",
 	"block.create.andesite_bricks": "安山岩レンガ",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "クラフトブループリント",
 	"item.create.creative_blaze_cake": "クリエイティブブレイズケーキ",
 	"item.create.crushed_aluminum_ore": "砕いたアルミニウム鉱石",
-	"item.create.crushed_brass": "砕いた真鍮",
 	"item.create.crushed_copper_ore": "砕いた銅鉱石",
 	"item.create.crushed_gold_ore": "砕いた金鉱石",
 	"item.create.crushed_iron_ore": "砕いた鉄鉱石",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "電子管",
 	"item.create.empty_blaze_burner": "空のブレイズバーナー",
 	"item.create.empty_schematic": "空の概略図",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "マジックハンド",
 	"item.create.filter": "フィルター",
 	"item.create.furnace_minecart_contraption": "からくりかまど付きトロッコ",

@@ -48,7 +48,7 @@ public class AllAdvancements implements DataProvider {
 		Advancement root = Advancement.Builder.advancement()
 			.display(AllItems.BRASS_HAND.asStack(), new TranslatableComponent(LANG + "root"),
 				new TranslatableComponent(LANG + "root.desc"),
-				new ResourceLocation(Create.ID, "textures/block/palettes/gabbro/bricks.png"), FrameType.TASK, false,
+				new ResourceLocation(Create.ID, "textures/gui/advancements.png"), FrameType.TASK, false,
 				false, false)
 			.addCriterion("0", InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[] {}))
 			.save(t, id + ":root");

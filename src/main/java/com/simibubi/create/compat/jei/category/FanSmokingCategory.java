@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.Blocks;
 public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> {
 
 	public FanSmokingCategory() {
-		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.BLAZE_POWDER));
+		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.CAMPFIRE));
 	}
 
 	@Override

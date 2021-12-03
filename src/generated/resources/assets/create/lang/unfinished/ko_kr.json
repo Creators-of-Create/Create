@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 235",
+	"_": "Missing Localizations: 236",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "아카시아나무 유리창",
 	"block.create.acacia_window_pane": "아카시아나무 유리판 ",
 	"block.create.adjustable_chain_gearshift": "벨트 변속기",
-	"block.create.adjustable_crate": "가변 창고",
 	"block.create.analog_lever": "아날로그 레버",
 	"block.create.andesite_belt_funnel": "안산암 퍼널",
 	"block.create.andesite_bricks": "안산암 벽돌",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "조합 청사진",
 	"item.create.creative_blaze_cake": "크리에이티브 블레이즈 케이크",
 	"item.create.crushed_aluminum_ore": "분쇄된 알루미늄 광석",
-	"item.create.crushed_brass": "분쇄된 황동",
 	"item.create.crushed_copper_ore": "분쇄된 구리 광석",
 	"item.create.crushed_gold_ore": "분쇄된 금 광석",
 	"item.create.crushed_iron_ore": "분쇄된 철 광석",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "전지 튜브",
 	"item.create.empty_blaze_burner": "빈 블레이즈 버너",
 	"item.create.empty_schematic": "빈 청사진",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "외장형 연장 팔",
 	"item.create.filter": "필터 틀",
 	"item.create.furnace_minecart_contraption": "화로가 실린 광산 수레 구조물",

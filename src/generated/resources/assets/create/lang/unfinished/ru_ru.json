@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 279",
+	"_": "Missing Localizations: 280",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Акациевое окно",
 	"block.create.acacia_window_pane": "Панель из акациевого окна",
 	"block.create.adjustable_chain_gearshift": "Регулируемый цепной механизм",
-	"block.create.adjustable_crate": "Регулируемый ящик",
 	"block.create.analog_lever": "Аналоговый рычаг",
 	"block.create.andesite_belt_funnel": "Андезитовая конвейерная воронка",
 	"block.create.andesite_bricks": "Андезитовый кирпич",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "Создание чертежа",
 	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Дроблёная алюминиевая руда",
-	"item.create.crushed_brass": "Дроблёная латунь",
 	"item.create.crushed_copper_ore": "Дроблёная медная руда",
 	"item.create.crushed_gold_ore": "Дроблёная золотая руда",
 	"item.create.crushed_iron_ore": "Дроблёная железная руда",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "Электронная лампа",
 	"item.create.empty_blaze_burner": "Пустая горелка Всполоха",
 	"item.create.empty_schematic": "Пустая схематика",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "Удлинённая рука",
 	"item.create.filter": "Фильтр",
 	"item.create.furnace_minecart_contraption": "Штуковина самоходной вагонетки",

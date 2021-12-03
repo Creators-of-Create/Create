@@ -1,5 +1,6 @@
 package com.simibubi.create.content.palettes;
 
+import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import com.google.common.collect.ImmutableList;
@@ -32,6 +33,7 @@ public class PalettesVariantEntry {
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
 				registrate.block(pattern.createName(name), pattern.getBlockFactory())
 					.initialProperties(baseBlock::get)
+					.transform(pickaxeOnly())
 					.blockstate(pattern.getBlockStateGenerator()
 						.apply(pattern)
 						.apply(name)::accept);

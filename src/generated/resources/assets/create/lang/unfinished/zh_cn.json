@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 235",
+	"_": "Missing Localizations: 236",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "金合欢木窗户",
 	"block.create.acacia_window_pane": "金合欢木窗户板",
 	"block.create.adjustable_chain_gearshift": "可调节链式传动箱",
-	"block.create.adjustable_crate": "可调节板条箱",
 	"block.create.analog_lever": "模拟拉杆",
 	"block.create.andesite_belt_funnel": "安山岩传送带漏斗",
 	"block.create.andesite_bricks": "安山岩砖",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "合成蓝图",
 	"item.create.creative_blaze_cake": "创造模式烈焰蛋糕",
 	"item.create.crushed_aluminum_ore": "粉碎铝矿石",
-	"item.create.crushed_brass": "粉碎黄铜",
 	"item.create.crushed_copper_ore": "粉碎铜矿石",
 	"item.create.crushed_gold_ore": "粉碎金矿石",
 	"item.create.crushed_iron_ore": "粉碎铁矿石",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "电子管",
 	"item.create.empty_blaze_burner": "空的烈焰人燃烧室",
 	"item.create.empty_schematic": "空白蓝图",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "伸缩机械手",
 	"item.create.filter": "过滤器",
 	"item.create.furnace_minecart_contraption": "装配过的动力矿车",

@@ -1,8 +1,0 @@
-{
-  "parent": "create:block/crate/bottom",
-  "textures": {
-    "crate": "create:block/crate_brass",
-    "side": "create:block/crate_brass_side",
-    "casing": "create:block/brass_casing"
-  }
-}

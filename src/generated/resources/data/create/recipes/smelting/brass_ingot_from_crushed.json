@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "create:crushed_brass"
-  },
-  "result": "create:brass_ingot",
-  "experience": 0.1,
-  "cookingtime": 200
-}

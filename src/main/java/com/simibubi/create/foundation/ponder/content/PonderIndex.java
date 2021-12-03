@@ -391,7 +391,6 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_TUNNEL)
 			.add(AllBlocks.CONTENT_OBSERVER)
 			.add(AllBlocks.STOCKPILE_SWITCH)
-			.add(AllBlocks.ADJUSTABLE_CRATE)
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE);
 

@@ -7,17 +7,20 @@
   ],
   "results": [
     {
-      "item": "minecraft:diamond",
-      "count": 2
+      "item": "minecraft:diamond"
     },
     {
       "item": "minecraft:diamond",
-      "chance": 0.25
+      "chance": 0.75
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
     },
     {
       "item": "minecraft:cobblestone",
       "chance": 0.125
     }
   ],
-  "processingTime": 500
+  "processingTime": 350
 }

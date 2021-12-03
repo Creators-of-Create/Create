@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 1175",
+	"_": "Missing Localizations: 1176",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Finestra di acacia",
 	"block.create.acacia_window_pane": "Pannello di finestra di acacia",
 	"block.create.adjustable_chain_gearshift": "Cambio a catena regolabile",
-	"block.create.adjustable_crate": "Baule regolabile",
 	"block.create.analog_lever": "Leva analogica",
 	"block.create.andesite_belt_funnel": "Imbuto per nastro di andesite",
 	"block.create.andesite_bricks": "Mattoni di andesite",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Alluminio grezzo frantumato",
-	"item.create.crushed_brass": "Ottone frantumato",
 	"item.create.crushed_copper_ore": "Rame grezzo frantumato",
 	"item.create.crushed_gold_ore": "Oro grezzo frantumato",
 	"item.create.crushed_iron_ore": "Ferro grezzo frantumato",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "Valvola",
 	"item.create.empty_blaze_burner": "Inceneritore di blaze vuoto",
 	"item.create.empty_schematic": "Schematica vuota",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "Presa extendo",
 	"item.create.filter": "Filtro",
 	"item.create.furnace_minecart_contraption": "Contrazione per carrello da miniera con fornace",

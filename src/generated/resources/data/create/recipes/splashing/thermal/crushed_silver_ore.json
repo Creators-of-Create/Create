@@ -8,12 +8,7 @@
   "results": [
     {
       "item": "thermal:silver_nugget",
-      "count": 10
-    },
-    {
-      "item": "thermal:silver_nugget",
-      "count": 5,
-      "chance": 0.5
+      "count": 9
     }
   ],
   "conditions": [

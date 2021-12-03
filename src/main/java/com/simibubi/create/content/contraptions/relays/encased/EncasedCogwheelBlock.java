@@ -17,7 +17,10 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.LevelReader;
@@ -46,6 +49,9 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		this.casing = casing;
 	}
 
+	@Override
+	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
+	
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState placedOn = context.getLevel()

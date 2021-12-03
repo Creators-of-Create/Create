@@ -8,12 +8,11 @@
   "results": [
     {
       "item": "minecraft:iron_nugget",
-      "count": 10
+      "count": 9
     },
     {
-      "item": "minecraft:iron_nugget",
-      "count": 5,
-      "chance": 0.5
+      "item": "minecraft:redstone",
+      "chance": 0.125
     }
   ]
 }

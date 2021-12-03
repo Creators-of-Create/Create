@@ -26,7 +26,6 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
-import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
@@ -34,7 +33,6 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -236,35 +234,8 @@ public class BuilderTransformers {
 				p.getVariantBuilder(c.get())
 					.forAllStates(state -> {
 						String variant = "single";
-						int yRot = 0;
-
-						if (state.getValue(CrateBlock.DOUBLE)) {
-							Direction direction = state.getValue(CrateBlock.FACING);
-							if (direction.getAxis() == Axis.X)
-								yRot = 90;
-
-							switch (direction) {
-							case DOWN:
-								variant = "top";
-								break;
-							case NORTH:
-							case EAST:
-								variant = "right";
-								break;
-							case UP:
-								variant = "bottom";
-								break;
-							case SOUTH:
-							case WEST:
-							default:
-								variant = "left";
-
-							}
-						}
-
 						return ConfiguredModel.builder()
 							.modelFile(models.get(variant))
-							.rotationY(yRot)
 							.build();
 					});
 			})

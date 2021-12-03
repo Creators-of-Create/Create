@@ -58,13 +58,14 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 
 		ItemStack stack = clickedSlot.getItem();
 		int size = contentHolder.inventory.getSlots();
+		boolean success = false;
 		if (index < size) {
-			moveItemStackTo(stack, size, slots.size(), false);
+			success = !moveItemStackTo(stack, size, slots.size(), false);
 			contentHolder.inventory.onContentsChanged(index);
 		} else
-			moveItemStackTo(stack, 0, size - 1, false);
+			success = !moveItemStackTo(stack, 0, size - 1, false);
 
-		return ItemStack.EMPTY;
+		return success ? ItemStack.EMPTY : stack;
 	}
 
 	@Override
@@ -83,8 +84,10 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 			if (type == ClickType.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()
 				&& ToolboxInventory.canItemsShareCompartment(itemInClickedSlot, carried)) {
 				int subIndex = index % STACKS_PER_COMPARTMENT;
-				if (subIndex != STACKS_PER_COMPARTMENT - 1)
+				if (subIndex != STACKS_PER_COMPARTMENT - 1) {
 					clicked(index - subIndex + STACKS_PER_COMPARTMENT - 1, flags, type, player);
+					return;
+				}
 			}
 
 			if (type == ClickType.PICKUP && carried.isEmpty() && itemInClickedSlot.isEmpty())

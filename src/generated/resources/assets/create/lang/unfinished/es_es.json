@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 235",
+	"_": "Missing Localizations: 236",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Ventana de acacia",
 	"block.create.acacia_window_pane": "Panel de ventana de acacia",
 	"block.create.adjustable_chain_gearshift": "Cadena de transmisión ajustable",
-	"block.create.adjustable_crate": "Caja ajustable",
 	"block.create.analog_lever": "Palanca analógica",
 	"block.create.andesite_belt_funnel": "Embudo de cinta de andesita",
 	"block.create.andesite_bricks": "Ladrillos de andesita",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "Plano de elaboración",
 	"item.create.creative_blaze_cake": "´Pastel de blaze creativo",
 	"item.create.crushed_aluminum_ore": "Mineral de aluminio molido",
-	"item.create.crushed_brass": "Latón molido",
 	"item.create.crushed_copper_ore": "Mineral de cobre molido",
 	"item.create.crushed_gold_ore": "Mineral de oro molido",
 	"item.create.crushed_iron_ore": "Mineral de hierro molido",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "Tubo de electrones",
 	"item.create.empty_blaze_burner": "Quemador de blaze vacío",
 	"item.create.empty_schematic": "Esquema vacío",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "Agarre extendido",
 	"item.create.filter": "Filtro",
 	"item.create.furnace_minecart_contraption": "Artilugio de vagoneta de horno",

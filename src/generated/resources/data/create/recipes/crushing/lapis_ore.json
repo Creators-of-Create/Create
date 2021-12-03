@@ -8,17 +8,20 @@
   "results": [
     {
       "item": "minecraft:lapis_lazuli",
-      "count": 12
+      "count": 10
     },
     {
       "item": "minecraft:lapis_lazuli",
-      "count": 8,
-      "chance": 0.25
+      "chance": 0.5
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
     },
     {
       "item": "minecraft:cobblestone",
       "chance": 0.125
     }
   ],
-  "processingTime": 300
+  "processingTime": 250
 }

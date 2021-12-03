@@ -203,7 +203,7 @@ public class ProcessingScenes {
 		scene.idle(30);
 
 		ItemStack input = new ItemStack(Items.GOLD_ORE);
-		ItemStack output = AllItems.CRUSHED_GOLD.asStack();
+		ItemStack output = new ItemStack(Items.RAW_GOLD);
 		Vec3 entitySpawn = util.vector.topOf(center.above(2));
 
 		ElementLink<EntityElement> entity1 =

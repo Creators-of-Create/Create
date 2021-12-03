@@ -9,7 +9,10 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,6 +40,9 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	public BlockEntry<CasingBlock> getCasing() {
 		return casing;
 	}
+
+	@Override
+	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {

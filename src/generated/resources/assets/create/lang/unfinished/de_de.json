@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 1232",
+	"_": "Missing Localizations: 1233",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Akazienholzfenster",
 	"block.create.acacia_window_pane": "Akazienholzfensterscheibe",
 	"block.create.adjustable_chain_gearshift": "Verstellbares Kettengetriebe",
-	"block.create.adjustable_crate": "Verstellbare Kiste",
 	"block.create.analog_lever": "Analoger Schalter",
 	"block.create.andesite_belt_funnel": "Riementrichter aus Andesit",
 	"block.create.andesite_bricks": "Andesitziegel",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Zerkleinertes Aluminiumerz",
-	"item.create.crushed_brass": "Zerkleinertes Messing",
 	"item.create.crushed_copper_ore": "Zerkleinertes Kupfererz",
 	"item.create.crushed_gold_ore": "Zerkleinertes Golderz",
 	"item.create.crushed_iron_ore": "Zerkleinertes Eisenerz",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "Elektronenröhre",
 	"item.create.empty_blaze_burner": "Leerer Lohenbrenner",
 	"item.create.empty_schematic": "Leerer Bauplan",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "Extendo Griff",
 	"item.create.filter": "Filter",
 	"item.create.furnace_minecart_contraption": "Antriebsloren Vorrichtung",

@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 1863",
+	"_": "Missing Localizations: 1864",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "UNLOCALIZED: Acacia Window",
 	"block.create.acacia_window_pane": "UNLOCALIZED: Acacia Window Pane",
 	"block.create.adjustable_chain_gearshift": "UNLOCALIZED: Adjustable Chain Gearshift",
-	"block.create.adjustable_crate": "FlexKrat",
 	"block.create.analog_lever": "UNLOCALIZED: Analog Lever",
 	"block.create.andesite_belt_funnel": "UNLOCALIZED: Andesite Belt Funnel",
 	"block.create.andesite_bricks": "Andesietstenen",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "UNLOCALIZED: Crushed Aluminum Ore",
-	"item.create.crushed_brass": "Gemalen Brons",
 	"item.create.crushed_copper_ore": "UNLOCALIZED: Crushed Copper Ore",
 	"item.create.crushed_gold_ore": "UNLOCALIZED: Crushed Gold Ore",
 	"item.create.crushed_iron_ore": "UNLOCALIZED: Crushed Iron Ore",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "UNLOCALIZED: Electron Tube",
 	"item.create.empty_blaze_burner": "UNLOCALIZED: Empty Blaze Burner",
 	"item.create.empty_schematic": "Lege bouwtekening",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "UNLOCALIZED: Extendo Grip",
 	"item.create.filter": "Filter",
 	"item.create.furnace_minecart_contraption": "UNLOCALIZED: Furnace Minecart Contraption",

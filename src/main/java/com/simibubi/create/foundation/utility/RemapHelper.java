@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.utility;
 
-import static com.simibubi.create.AllBlocks.ADJUSTABLE_CRATE;
 import static com.simibubi.create.AllBlocks.ANDESITE_ENCASED_SHAFT;
 import static com.simibubi.create.AllBlocks.BRASS_BELT_FUNNEL;
 import static com.simibubi.create.AllBlocks.BRASS_TUNNEL;
@@ -24,10 +23,6 @@ import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
 import static com.simibubi.create.AllBlocks.STRESSOMETER;
 import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
 import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
-import static com.simibubi.create.AllItems.CRUSHED_COPPER;
-import static com.simibubi.create.AllItems.CRUSHED_GOLD;
-import static com.simibubi.create.AllItems.CRUSHED_IRON;
-import static com.simibubi.create.AllItems.CRUSHED_ZINC;
 import static com.simibubi.create.AllItems.GOLDEN_SHEET;
 import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
 import static com.simibubi.create.AllItems.SCHEMATIC;
@@ -104,7 +99,6 @@ public class RemapHelper {
 		reMap.put("iron_glass", ORNATE_IRON_WINDOW.getId());
 		reMap.put("limestone_slab", Create.asResource("polished_limestone_slab"));
 		reMap.put("entity_detector", CONTENT_OBSERVER.getId());
-		reMap.put("flexcrate", ADJUSTABLE_CRATE.getId());
 		reMap.put("scoria_slab", Create.asResource("polished_scoria_slab"));
 		reMap.put("birch_glass", BIRCH_WINDOW.getId());
 		reMap.put("saw", MECHANICAL_SAW.getId());
@@ -146,19 +140,15 @@ public class RemapHelper {
 		reMap.put("adjustable_pulse_repeater", PULSE_REPEATER.getId());
 		reMap.put("adjustable_repeater", PULSE_REPEATER.getId());
 
-		reMap.put("crushed_copper", CRUSHED_COPPER.getId());
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 		reMap.put("gold_sheet", GOLDEN_SHEET.getId());
 		reMap.put("flour", WHEAT_FLOUR.getId());
 		reMap.put("blueprint_and_quill", SCHEMATIC_AND_QUILL.getId());
-		reMap.put("crushed_iron", CRUSHED_IRON.getId());
 		reMap.put("slot_cover", CRAFTER_SLOT_COVER.getId());
 		reMap.put("blueprint", SCHEMATIC.getId());
 		reMap.put("symmetry_wand", WAND_OF_SYMMETRY.getId());
 		reMap.put("terrain_zapper", WORLDSHAPER.getId());
-		reMap.put("crushed_zinc", CRUSHED_ZINC.getId());
 		reMap.put("property_filter", ATTRIBUTE_FILTER.getId());
-		reMap.put("crushed_gold", CRUSHED_GOLD.getId());
 		reMap.put("obsidian_dust", POWDERED_OBSIDIAN.getId());
 	}
 

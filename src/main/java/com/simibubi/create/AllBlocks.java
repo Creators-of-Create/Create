@@ -147,7 +147,6 @@ import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelGenerator;
 import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
@@ -1155,13 +1154,13 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
-		REGISTRATE.block("shadow_steel_casing", CasingBlock::new)
+		REGISTRATE.block("shadow_steel_casing", CasingBlock::deprecated)
 			.transform(BuilderTransformers.casing(AllSpriteShifts.SHADOW_STEEL_CASING))
 			.lang("Shadow Casing")
 			.register();
 
 	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
-		REGISTRATE.block("refined_radiance_casing", CasingBlock::new)
+		REGISTRATE.block("refined_radiance_casing", CasingBlock::deprecated)
 			.transform(BuilderTransformers.casing(AllSpriteShifts.REFINED_RADIANCE_CASING))
 			.properties(p -> p.lightLevel($ -> 12))
 			.lang("Radiant Casing")
@@ -1245,7 +1244,9 @@ public class AllBlocks {
 
 	public static final BlockEntry<VaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", VaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK)
+			.explosionResistance(1200))
+		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(s -> ConfiguredModel.builder()
 				.modelFile(AssetLookup.standardModel(c, p))
@@ -1325,11 +1326,6 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.horizontalBlock(c.get(),
 				AssetLookup.withIndicator(c, p, $ -> AssetLookup.standardModel(c, p), StockpileSwitchBlock.INDICATOR)))
 			.simpleItem()
-			.register();
-
-	public static final BlockEntry<AdjustableCrateBlock> ADJUSTABLE_CRATE =
-		REGISTRATE.block("adjustable_crate", AdjustableCrateBlock::new)
-			.transform(BuilderTransformers.crate("brass"))
 			.register();
 
 	public static final BlockEntry<CreativeCrateBlock> CREATIVE_CRATE =

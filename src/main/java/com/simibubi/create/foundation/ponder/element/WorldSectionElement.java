@@ -54,7 +54,8 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class WorldSectionElement extends AnimatedSceneElement {
 
-	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new SuperByteBufferCache.Compartment<>();
+	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION =
+		new SuperByteBufferCache.Compartment<>();
 
 	List<BlockEntity> renderedTileEntities;
 	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
@@ -257,11 +258,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		tickableTileEntities.removeIf(te -> scene.getWorld()
 			.getBlockEntity(te.getFirst()
 				.getBlockPos()) != te.getFirst());
-		tickableTileEntities.forEach(te -> {
-			BlockEntity tile = te.getFirst();
-			te.getSecond()
-				.accept(scene.getWorld());
-		});
+		tickableTileEntities.forEach(te -> te.getSecond()
+			.accept(scene.getWorld()));
 	}
 
 	@Override
@@ -286,7 +284,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				return;
 			if (!(block instanceof EntityBlock))
 				return;
-			addTicker(tileEntity, ((EntityBlock) block).getTicker(world, blockState, tileEntity.getType()));
+			BlockEntityTicker<?> ticker = ((EntityBlock) block).getTicker(world, blockState, tileEntity.getType());
+			if (ticker != null)
+				addTicker(tileEntity, ticker);
 			renderedTileEntities.add(tileEntity);
 		});
 	}

@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 274",
+	"_": "Missing Localizations: 275",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Akacjowe okno",
 	"block.create.acacia_window_pane": "Akacjowa szyba okienna",
 	"block.create.adjustable_chain_gearshift": "Regulowany przekładnik łańcuchowy",
-	"block.create.adjustable_crate": "Regulowana skrzynka",
 	"block.create.analog_lever": "Dźwignia analogowa",
 	"block.create.andesite_belt_funnel": "Andezytowy lejek taśmowy",
 	"block.create.andesite_bricks": "Andezytowe cegły",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "Szablon konstruowania",
 	"item.create.creative_blaze_cake": "Kreatywne płomienne ciasto",
 	"item.create.crushed_aluminum_ore": "Rozkruszona ruda żelaza",
-	"item.create.crushed_brass": "Rozkruszony mosiądz",
 	"item.create.crushed_copper_ore": "Rozkruszona ruda miedzi",
 	"item.create.crushed_gold_ore": "Rozkruszona ruda złota",
 	"item.create.crushed_iron_ore": "Rozkruszona ruda żelaza",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "Lampa elektronowa",
 	"item.create.empty_blaze_burner": "Pusty płomienny palnik",
 	"item.create.empty_schematic": "Pusty schemat",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "Wydłużony Chwytak",
 	"item.create.filter": "Filtr",
 	"item.create.furnace_minecart_contraption": "Maszyna w wagoniku z piecem",

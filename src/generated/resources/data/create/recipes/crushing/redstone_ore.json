@@ -8,17 +8,20 @@
   "results": [
     {
       "item": "minecraft:redstone",
-      "count": 8
+      "count": 6
     },
     {
       "item": "minecraft:redstone",
-      "count": 6,
-      "chance": 0.25
+      "chance": 0.5
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
     },
     {
       "item": "minecraft:cobblestone",
       "chance": 0.125
     }
   ],
-  "processingTime": 300
+  "processingTime": 250
 }

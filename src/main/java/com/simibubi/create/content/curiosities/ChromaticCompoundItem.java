@@ -16,11 +16,13 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -46,6 +48,9 @@ public class ChromaticCompoundItem extends Item {
 	}
 
 	@Override
+	public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {}
+
+	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		return getLight(stack) > 0;
 	}
@@ -57,7 +62,8 @@ public class ChromaticCompoundItem extends Item {
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return Color.mixColors(0x413c69, 0xFFFFFF, getLight(stack) / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get());
+		return Color.mixColors(0x413c69, 0xFFFFFF,
+			getLight(stack) / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get());
 	}
 
 	@Override

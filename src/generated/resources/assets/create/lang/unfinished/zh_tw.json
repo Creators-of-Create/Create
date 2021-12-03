@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 293",
+	"_": "Missing Localizations: 294",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "相思木窗戶",
 	"block.create.acacia_window_pane": "相思木窗戶片",
 	"block.create.adjustable_chain_gearshift": "可調式鏈式變速箱",
-	"block.create.adjustable_crate": "可調式板條箱",
 	"block.create.analog_lever": "可調式拉桿",
 	"block.create.andesite_belt_funnel": "安山岩輸送帶漏斗",
 	"block.create.andesite_bricks": "安山岩磚",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "合成藍圖",
 	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "碎狀鋁礦石",
-	"item.create.crushed_brass": "碎狀黃銅",
 	"item.create.crushed_copper_ore": "碎狀銅礦石",
 	"item.create.crushed_gold_ore": "碎狀金礦石",
 	"item.create.crushed_iron_ore": "碎狀鐵礦石",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "真空管",
 	"item.create.empty_blaze_burner": "空的烈焰使者動力爐",
 	"item.create.empty_schematic": "空白藍圖",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "伸縮機械手",
 	"item.create.filter": "過濾器",
 	"item.create.furnace_minecart_contraption": "裝配過的機械礦車",

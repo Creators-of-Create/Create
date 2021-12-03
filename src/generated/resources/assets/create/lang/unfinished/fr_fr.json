@@ -1,12 +1,11 @@
 {
-	"_": "Missing Localizations: 1505",
+	"_": "Missing Localizations: 1506",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Fenêtre en acacia",
 	"block.create.acacia_window_pane": "Vitre en acacia",
 	"block.create.adjustable_chain_gearshift": "UNLOCALIZED: Adjustable Chain Gearshift",
-	"block.create.adjustable_crate": "Caisse ajustable",
 	"block.create.analog_lever": "Levier analogique",
 	"block.create.andesite_belt_funnel": "Entonnoir en andésite pour tapis roulant",
 	"block.create.andesite_bricks": "Briques d'andésite",
@@ -529,7 +528,6 @@
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Aluminium concassé",
-	"item.create.crushed_brass": "Laiton concassé",
 	"item.create.crushed_copper_ore": "Cuivre concassé",
 	"item.create.crushed_gold_ore": "Or concassé",
 	"item.create.crushed_iron_ore": "Fer concassé",
@@ -548,6 +546,7 @@
 	"item.create.electron_tube": "Tube électronique",
 	"item.create.empty_blaze_burner": "Brûleur à blaze vide",
 	"item.create.empty_schematic": "Schéma vide",
+	"item.create.experience_nugget": "UNLOCALIZED: Nugget of Experience",
 	"item.create.extendo_grip": "Extendo Grip",
 	"item.create.filter": "Filtre",
 	"item.create.furnace_minecart_contraption": "Engin de wagon avec fourneau",

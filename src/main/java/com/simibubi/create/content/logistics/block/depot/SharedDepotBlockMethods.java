@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,8 +32,8 @@ public class SharedDepotBlockMethods {
 		return TileEntityBehaviour.get(worldIn, pos, DepotBehaviour.TYPE);
 	}
 
-	public static InteractionResult onUse(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
+	public static InteractionResult onUse(BlockState state, Level world, BlockPos pos, Player player,
+		InteractionHand hand, BlockHitResult ray) {
 		if (ray.getDirection() != Direction.UP)
 			return InteractionResult.PASS;
 		if (world.isClientSide)
@@ -50,14 +51,16 @@ public class SharedDepotBlockMethods {
 
 		ItemStack mainItemStack = behaviour.getHeldItemStack();
 		if (!mainItemStack.isEmpty()) {
-			player.getInventory().placeItemBackInInventory(mainItemStack);
+			player.getInventory()
+				.placeItemBackInInventory(mainItemStack);
 			behaviour.removeHeldItem();
 			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-					1f + Create.RANDOM.nextFloat());
+				1f + Create.RANDOM.nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)
-			player.getInventory().placeItemBackInInventory(outputs.extractItem(i, 64, false));
+			player.getInventory()
+				.placeItemBackInInventory(outputs.extractItem(i, 64, false));
 
 		if (!wasEmptyHanded && !shouldntPlaceItem) {
 			TransportedItemStack transported = new TransportedItemStack(heldItem);
@@ -112,7 +115,10 @@ public class SharedDepotBlockMethods {
 		DepotBehaviour depotBehaviour = get(worldIn, pos);
 		if (depotBehaviour == null)
 			return 0;
-		return ItemHelper.calcRedstoneFromInventory(depotBehaviour.itemHandler);
+		float f = depotBehaviour.getPresentStackSize();
+		Integer max = depotBehaviour.maxStackSize.get();
+		f = f / (max == 0 ? 64 : max);
+		return Mth.clamp(Mth.floor(f * 14.0F) + (f > 0 ? 1 : 0), 0, 15);
 	}
 
 }

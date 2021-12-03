@@ -127,7 +127,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike precisionMechanism() {
 			return AllItems.PRECISION_MECHANISM.get();
 		}
-
+		
 		static ItemLike copperBlock() {
 			return Items.COPPER_BLOCK;
 		}

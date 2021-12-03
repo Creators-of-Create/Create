@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -182,7 +181,7 @@ public class FanScenes {
 			.text("Air Flows passing through water create a Washing Setup");
 		scene.idle(70);
 
-		stack = AllItems.CRUSHED_GOLD.asStack();
+		stack = new ItemStack(Items.RED_SAND, 16);
 		ItemStack washed = new ItemStack(Items.GOLD_NUGGET, 16);
 
 		entityLink = scene.world.createItemEntity(util.vector.centerOf(blockPos.west(2)
