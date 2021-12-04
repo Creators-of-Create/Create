@@ -8,8 +8,8 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
+import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.core.Direction;
 

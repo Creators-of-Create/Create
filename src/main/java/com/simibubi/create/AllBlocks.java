@@ -7,10 +7,8 @@ import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
-import static com.simibubi.create.foundation.data.BlockStateGen.oxidizedBlockstate;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
-import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -166,6 +164,7 @@ import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
+import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.data.AssetLookup;
@@ -178,7 +177,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -1550,37 +1548,6 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<OxidizingBlock> COPPER_PLATING =
-		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p))
-			.initialProperties(() -> Blocks.COPPER_BLOCK)
-			.properties(p -> p.requiresCorrectToolForDrops())
-			.transform(pickaxeOnly())
-			.item()
-			.transform(oxidizedItemModel())
-			.transform(oxidizedBlockstate())
-			.lang("Copper Plating")
-			.register();
-
-	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =
-		REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p))
-			.initialProperties(() -> Blocks.COPPER_BLOCK)
-			.properties(p -> p.requiresCorrectToolForDrops())
-			.transform(pickaxeOnly())
-			.item()
-			.transform(oxidizedItemModel())
-			.transform(oxidizedBlockstate())
-			.register();
-
-	public static final BlockEntry<OxidizingBlock> COPPER_TILES =
-		REGISTRATE.block("copper_tiles", p -> new OxidizingBlock(p))
-			.initialProperties(() -> Blocks.COPPER_BLOCK)
-			.properties(p -> p.requiresCorrectToolForDrops())
-			.transform(pickaxeOnly())
-			.item()
-			.transform(oxidizedItemModel())
-			.transform(oxidizedBlockstate())
-			.register();
-
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -1608,6 +1575,10 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Brass")
 		.register();
+
+	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles");
+
+	public static final CopperBlockSet COPPER_TILES = new CopperBlockSet(REGISTRATE, "copper_tiles");
 
 	// Load this class
 

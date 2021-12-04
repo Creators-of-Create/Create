@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<BracketedTileEntityBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<BracketedTileEntityBehaviour> TYPE = new BehaviourType<>();
 
 	private Optional<BlockState> bracket;
 	private boolean reRender;

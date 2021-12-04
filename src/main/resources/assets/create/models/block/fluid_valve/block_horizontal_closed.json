@@ -3,7 +3,7 @@
 	"textures": {
 		"2": "create:block/fluid_valve",
 		"3": "create:block/fluid_pipe",
-		"particle": "create:block/oxidized/copper_block_0"
+		"particle": "block/copper_block"
 	},
 	"elements": [
 		{

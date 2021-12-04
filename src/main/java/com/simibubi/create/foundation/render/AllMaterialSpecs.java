@@ -4,14 +4,14 @@ import com.jozufozu.flywheel.backend.material.MaterialSpec;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorType;
+import com.simibubi.create.content.contraptions.base.flwdata.BeltData;
 import com.simibubi.create.content.contraptions.base.flwdata.BeltType;
-import com.simibubi.create.content.logistics.block.flap.FlapType;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingType;
 import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorData;
-import com.simibubi.create.content.contraptions.base.flwdata.BeltData;
+import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorType;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
+import com.simibubi.create.content.logistics.block.flap.FlapType;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;

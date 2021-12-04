@@ -17,6 +17,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
@@ -49,27 +50,14 @@ import net.minecraftforge.client.model.generators.ModelFile;
 
 public class BuilderTransformers {
 
-	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> cuckooClock() {
-		return b -> b.initialProperties(SharedProperties::wooden)
-			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
-				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
-			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(BlockStressDefaults.setImpact(1.0))
-			.item()
-			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
-	}
-
 	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
 		CTSpriteShiftEntry casingShift) {
-		return builder -> builder.initialProperties(SharedProperties::stone)
-			.properties(BlockBehaviour.Properties::noOcclusion)
+		return builder -> encasedBase(builder, () -> AllBlocks.SHAFT.get())
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
 				(s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
 			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
 				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
-			.transform(BlockStressDefaults.setNoImpact())
-			.loot((p, b) -> p.dropOther(b, AllBlocks.SHAFT.get()))
 			.item()
 			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
@@ -91,11 +79,8 @@ public class BuilderTransformers {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
-		return b.initialProperties(SharedProperties::stone)
+		return encasedBase(b, drop)
 			.addLayer(() -> RenderType::cutoutMipped)
-			.properties(BlockBehaviour.Properties::noOcclusion)
-			.transform(BlockStressDefaults.setNoImpact())
-			.loot((p, lb) -> p.dropOther(lb, drop.get()))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
@@ -116,7 +101,24 @@ public class BuilderTransformers {
 				.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
 				.texture("side", Create.asResource("block/" + casing + encasedSuffix)))
 			.build();
+	}
 
+	private static <B extends RotatedPillarKineticBlock, P> BlockBuilder<B, P> encasedBase(BlockBuilder<B, P> b,
+		Supplier<ItemLike> drop) {
+		return b.initialProperties(SharedProperties::stone)
+			.properties(BlockBehaviour.Properties::noOcclusion)
+			.transform(BlockStressDefaults.setNoImpact())
+			.loot((p, lb) -> p.dropOther(lb, drop.get()));
+	}
+
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> cuckooClock() {
+		return b -> b.initialProperties(SharedProperties::wooden)
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
+				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(BlockStressDefaults.setImpact(1.0))
+			.item()
+			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
 	}
 
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(

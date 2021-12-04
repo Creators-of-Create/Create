@@ -1,123 +1,123 @@
 {
   "variants": {
     "facing=north,powered=false,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__retracted"
+      "model": "create:block/andesite_belt_funnel_retracted"
     },
     "facing=south,powered=false,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__retracted",
+      "model": "create:block/andesite_belt_funnel_retracted",
       "y": 180
     },
     "facing=west,powered=false,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__retracted",
+      "model": "create:block/andesite_belt_funnel_retracted",
       "y": 270
     },
     "facing=east,powered=false,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__retracted",
+      "model": "create:block/andesite_belt_funnel_retracted",
       "y": 90
     },
     "facing=north,powered=true,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__powered_retracted"
+      "model": "create:block/andesite_belt_funnel_retracted_powered"
     },
     "facing=south,powered=true,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__powered_retracted",
+      "model": "create:block/andesite_belt_funnel_retracted_powered",
       "y": 180
     },
     "facing=west,powered=true,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__powered_retracted",
+      "model": "create:block/andesite_belt_funnel_retracted_powered",
       "y": 270
     },
     "facing=east,powered=true,shape=retracted": {
-      "model": "create:block/andesite_belt_funnel__powered_retracted",
+      "model": "create:block/andesite_belt_funnel_retracted_powered",
       "y": 90
     },
     "facing=north,powered=false,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__extended"
+      "model": "create:block/andesite_belt_funnel_extended"
     },
     "facing=south,powered=false,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__extended",
+      "model": "create:block/andesite_belt_funnel_extended",
       "y": 180
     },
     "facing=west,powered=false,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__extended",
+      "model": "create:block/andesite_belt_funnel_extended",
       "y": 270
     },
     "facing=east,powered=false,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__extended",
+      "model": "create:block/andesite_belt_funnel_extended",
       "y": 90
     },
     "facing=north,powered=true,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__powered_extended"
+      "model": "create:block/andesite_belt_funnel_extended_powered"
     },
     "facing=south,powered=true,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__powered_extended",
+      "model": "create:block/andesite_belt_funnel_extended_powered",
       "y": 180
     },
     "facing=west,powered=true,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__powered_extended",
+      "model": "create:block/andesite_belt_funnel_extended_powered",
       "y": 270
     },
     "facing=east,powered=true,shape=extended": {
-      "model": "create:block/andesite_belt_funnel__powered_extended",
+      "model": "create:block/andesite_belt_funnel_extended_powered",
       "y": 90
     },
     "facing=north,powered=false,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__pushing"
+      "model": "create:block/andesite_belt_funnel_pushing"
     },
     "facing=south,powered=false,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__pushing",
+      "model": "create:block/andesite_belt_funnel_pushing",
       "y": 180
     },
     "facing=west,powered=false,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__pushing",
+      "model": "create:block/andesite_belt_funnel_pushing",
       "y": 270
     },
     "facing=east,powered=false,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__pushing",
+      "model": "create:block/andesite_belt_funnel_pushing",
       "y": 90
     },
     "facing=north,powered=true,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__powered_pushing"
+      "model": "create:block/andesite_belt_funnel_pushing_powered"
     },
     "facing=south,powered=true,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__powered_pushing",
+      "model": "create:block/andesite_belt_funnel_pushing_powered",
       "y": 180
     },
     "facing=west,powered=true,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__powered_pushing",
+      "model": "create:block/andesite_belt_funnel_pushing_powered",
       "y": 270
     },
     "facing=east,powered=true,shape=pushing": {
-      "model": "create:block/andesite_belt_funnel__powered_pushing",
+      "model": "create:block/andesite_belt_funnel_pushing_powered",
       "y": 90
     },
     "facing=north,powered=false,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__pulling"
+      "model": "create:block/andesite_belt_funnel_pulling"
     },
     "facing=south,powered=false,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__pulling",
+      "model": "create:block/andesite_belt_funnel_pulling",
       "y": 180
     },
     "facing=west,powered=false,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__pulling",
+      "model": "create:block/andesite_belt_funnel_pulling",
       "y": 270
     },
     "facing=east,powered=false,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__pulling",
+      "model": "create:block/andesite_belt_funnel_pulling",
       "y": 90
     },
     "facing=north,powered=true,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__powered_pulling"
+      "model": "create:block/andesite_belt_funnel_pulling_powered"
     },
     "facing=south,powered=true,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__powered_pulling",
+      "model": "create:block/andesite_belt_funnel_pulling_powered",
       "y": 180
     },
     "facing=west,powered=true,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__powered_pulling",
+      "model": "create:block/andesite_belt_funnel_pulling_powered",
       "y": 270
     },
     "facing=east,powered=true,shape=pulling": {
-      "model": "create:block/andesite_belt_funnel__powered_pulling",
+      "model": "create:block/andesite_belt_funnel_pulling_powered",
       "y": 90
     }
   }

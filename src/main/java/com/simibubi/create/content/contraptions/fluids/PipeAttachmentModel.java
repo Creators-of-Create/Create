@@ -27,7 +27,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
-	private static ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
+	private static final ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
 
 	public PipeAttachmentModel(BakedModel template) {
 		super(template);

@@ -109,9 +109,9 @@ import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticT
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogInstance;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedCogRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftInstance;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeInstance;

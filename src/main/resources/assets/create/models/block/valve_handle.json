@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"particle": "create:block/oxidized/copper_block_0",
+		"particle": "block/copper_block",
 		"3": "create:block/valve_handle/valve_handle_copper"
 	},
 	"elements": [

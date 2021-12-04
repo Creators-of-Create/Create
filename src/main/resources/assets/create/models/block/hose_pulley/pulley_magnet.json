@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"6": "create:block/hose_pulley_magnet",
-		"particle": "create:block/oxidized/copper_block_0"
+		"particle": "block/copper_block"
 	},
 	"elements": [
 		{

@@ -938,21 +938,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.pattern("#D#")
 			.pattern("###")),
 
-		COPPER_SHINGLES = create(AllBlocks.COPPER_SHINGLES).returns(16)
+		COPPER_SHINGLES = create(AllBlocks.COPPER_SHINGLES.getStandard()).returns(16)
 			.unlockedByTag(I::copperSheet)
 			.viaShaped(b -> b.define('#', I.copperSheet())
 				.pattern("##")
 				.pattern("##")),
 
-		COPPER_SHINGLES_FROM_TILES = create(AllBlocks.COPPER_SHINGLES).withSuffix("_from_plating")
-			.unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.requires(AllBlocks.COPPER_PLATING.get())),
-
-		COPPER_TILES = create(AllBlocks.COPPER_TILES).unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.get())),
-
-		COPPER_PLATING = create(AllBlocks.COPPER_PLATING).unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.requires(AllBlocks.COPPER_TILES.get()))
+		COPPER_TILES = create(AllBlocks.COPPER_TILES.getStandard()).unlockedByTag(I::copperSheet)
+			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.getStandard().get()))
 
 	;
 

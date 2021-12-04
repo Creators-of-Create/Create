@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "create:block/weathered_copper_tiles_slab_top"
+    },
+    "type=bottom": {
+      "model": "create:block/weathered_copper_tiles_slab"
+    },
+    "type=double": {
+      "model": "create:block/weathered_copper_tiles"
+    }
+  }
+}

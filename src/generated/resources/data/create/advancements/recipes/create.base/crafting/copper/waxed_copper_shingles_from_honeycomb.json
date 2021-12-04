@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:crafting/copper/waxed_copper_shingles_from_honeycomb"
+    ]
+  },
+  "criteria": {
+    "has_unwaxed": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:copper_shingles"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:crafting/copper/waxed_copper_shingles_from_honeycomb"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_unwaxed",
+      "has_the_recipe"
+    ]
+  ]
+}

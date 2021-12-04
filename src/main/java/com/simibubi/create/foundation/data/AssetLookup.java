@@ -102,10 +102,6 @@ public class AssetLookup {
 		};
 	}
 
-	public static String getOxidizedModel(String name, int level) {
-		return "block/oxidized/" + name + "_" + level;
-	}
-
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> existingItemModel() {
 		return (c, p) -> p.getExistingFile(p.modLoc("item/" + c.getName()));
 	}

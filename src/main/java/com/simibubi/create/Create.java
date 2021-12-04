@@ -20,6 +20,7 @@ import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ChunkUtil;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -103,6 +104,8 @@ public class Create {
 		BlockSpoutingBehaviour.register();
 
 		ForgeMod.enableMilkFluid();
+
+		CopperRegistries.inject();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 			.getModEventBus();
