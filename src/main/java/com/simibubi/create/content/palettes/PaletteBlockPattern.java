@@ -267,7 +267,7 @@ public class PaletteBlockPattern {
 
 		PILLAR(CTType.RECTANGLE, s -> toLocation(s, "pillar")),
 		CAP(CTType.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
-		LAYERED(CTType.HORIZONTAL, s -> toLocation(s, "layered"))
+		LAYERED(CTType.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
 
 		;
 

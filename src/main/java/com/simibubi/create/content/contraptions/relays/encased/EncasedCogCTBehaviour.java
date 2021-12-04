@@ -36,7 +36,7 @@ public class EncasedCogCTBehaviour extends EncasedCTBehaviour {
 		if (large || axis == face.getAxis())
 			return super.connectsTo(state, other, reader, pos, otherPos, face);
 
-		if (other == state)
+		if (other.getBlock() == state.getBlock() && other.getValue(AXIS) == state.getValue(AXIS))
 			return true;
 
 		BlockState blockState = reader.getBlockState(otherPos.relative(face));
@@ -82,8 +82,13 @@ public class EncasedCogCTBehaviour extends EncasedCTBehaviour {
 	@Override
 	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
 		Axis axis = state.getValue(AXIS);
-		if (large || axis == direction.getAxis())
+		if (large || axis == direction.getAxis()) {
+			if (axis == direction.getAxis() && state
+				.getValue(direction.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+					: EncasedCogwheelBlock.BOTTOM_SHAFT))
+				return null;
 			return super.get(state, direction);
+		}
 		return sideShifts.get(axis == Axis.X || axis == Axis.Z && direction.getAxis() == Axis.X);
 	}
 

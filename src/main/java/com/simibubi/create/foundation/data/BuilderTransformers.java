@@ -34,6 +34,7 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
@@ -76,46 +77,45 @@ public class BuilderTransformers {
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
 		String casing, CTSpriteShiftEntry casingShift) {
-		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get())
-			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-				.withExistingParent(c.getName(), p.modLoc("block/encased_cogwheel/block"))
-				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side")), false))
-			.item()
-			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_cogwheel/item"))
-				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side")))
-			.build();
+		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get(), false);
 	}
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedLargeCogwheel(
 		String casing, CTSpriteShiftEntry casingShift) {
-		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.LARGE_COGWHEEL.get())
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(casingShift)))
-			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-				.withExistingParent(c.getName(), p.modLoc("block/encased_large_cogwheel/block"))
-				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side_connected")), false))
-			.item()
-			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_large_cogwheel/item"))
-				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side_connected")))
-			.build();
+		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.LARGE_COGWHEEL.get(), true)
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(casingShift)));
 	}
 
 	private static <B extends EncasedCogwheelBlock, P> BlockBuilder<B, P> encasedCogwheelBase(BlockBuilder<B, P> b,
-		String casing, CTSpriteShiftEntry casingShift, Supplier<ItemLike> drop) {
+		String casing, CTSpriteShiftEntry casingShift, Supplier<ItemLike> drop, boolean large) {
+		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
+		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
+		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
 		return b.initialProperties(SharedProperties::stone)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(BlockStressDefaults.setNoImpact())
 			.loot((p, lb) -> p.dropOther(lb, drop.get()))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
-				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS))));
+				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
+					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+						: EncasedCogwheelBlock.BOTTOM_SHAFT))))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> {
+				String suffix = (blockState.getValue(EncasedCogwheelBlock.TOP_SHAFT) ? "_top" : "")
+					+ (blockState.getValue(EncasedCogwheelBlock.BOTTOM_SHAFT) ? "_bottom" : "");
+				String modelName = c.getName() + suffix;
+				return p.models()
+					.withExistingParent(modelName, p.modLoc("block/" + blockFolder + "/block" + suffix))
+					.texture("casing", Create.asResource("block/" + casing + "_casing"))
+					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
+			}, false))
+			.item()
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + blockFolder + "/item"))
+				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+				.texture("side", Create.asResource("block/" + casing + encasedSuffix)))
+			.build();
 
 	}
 

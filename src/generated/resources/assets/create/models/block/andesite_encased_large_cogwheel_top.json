@@ -1,5 +1,5 @@
 {
-  "parent": "create:block/encased_large_cogwheel/item",
+  "parent": "create:block/encased_large_cogwheel/block_top",
   "textures": {
     "casing": "create:block/andesite_casing",
     "1": "minecraft:block/stripped_spruce_log_top",
