@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:small_deepslate_brick_wall"
+    ]
+  },
+  "criteria": {
+    "has_small_deepslate_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:small_deepslate_bricks"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:small_deepslate_brick_wall"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_small_deepslate_bricks",
+      "has_the_recipe"
+    ]
+  ]
+}

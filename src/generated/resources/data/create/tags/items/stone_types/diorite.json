@@ -4,16 +4,16 @@
     "create:cut_diorite",
     "create:cut_diorite_stairs",
     "create:cut_diorite_wall",
-    "create:polished_diorite",
-    "create:polished_diorite_stairs",
-    "create:polished_diorite_wall",
-    "create:diorite_bricks",
-    "create:diorite_bricks_stairs",
-    "create:diorite_bricks_wall",
+    "create:polished_cut_diorite",
+    "create:polished_cut_diorite_stairs",
+    "create:polished_cut_diorite_wall",
+    "create:cut_diorite_bricks",
+    "create:cut_diorite_brick_stairs",
+    "create:cut_diorite_brick_wall",
     "create:small_diorite_bricks",
-    "create:small_diorite_bricks_stairs",
-    "create:small_diorite_bricks_wall",
+    "create:small_diorite_brick_stairs",
+    "create:small_diorite_brick_wall",
     "create:layered_diorite",
-    "create:pillar_diorite"
+    "create:diorite_pillar"
   ]
 }

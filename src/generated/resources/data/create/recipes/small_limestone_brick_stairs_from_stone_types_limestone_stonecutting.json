@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/limestone"
+  },
+  "result": "create:small_limestone_brick_stairs",
+  "count": 1
+}

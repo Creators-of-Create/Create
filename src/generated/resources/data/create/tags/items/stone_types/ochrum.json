@@ -4,16 +4,16 @@
     "create:cut_ochrum",
     "create:cut_ochrum_stairs",
     "create:cut_ochrum_wall",
-    "create:polished_ochrum",
-    "create:polished_ochrum_stairs",
-    "create:polished_ochrum_wall",
-    "create:ochrum_bricks",
-    "create:ochrum_bricks_stairs",
-    "create:ochrum_bricks_wall",
+    "create:polished_cut_ochrum",
+    "create:polished_cut_ochrum_stairs",
+    "create:polished_cut_ochrum_wall",
+    "create:cut_ochrum_bricks",
+    "create:cut_ochrum_brick_stairs",
+    "create:cut_ochrum_brick_wall",
     "create:small_ochrum_bricks",
-    "create:small_ochrum_bricks_stairs",
-    "create:small_ochrum_bricks_wall",
+    "create:small_ochrum_brick_stairs",
+    "create:small_ochrum_brick_wall",
     "create:layered_ochrum",
-    "create:pillar_ochrum"
+    "create:ochrum_pillar"
   ]
 }

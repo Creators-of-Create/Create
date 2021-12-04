@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_granite_brick_stairs"
+    ]
+  },
+  "criteria": {
+    "has_cut_granite_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_granite_bricks"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_granite_brick_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_granite_bricks",
+      "has_the_recipe"
+    ]
+  ]
+}

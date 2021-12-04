@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:cut_granite_slab"
+    },
+    {
+      "item": "create:cut_granite_slab"
+    }
+  ],
+  "result": {
+    "item": "create:cut_granite"
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:polished_veridium"
-  },
-  "result": "create:polished_veridium_wall",
-  "count": 1
-}

@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.Lang;
 public enum AllLangPartials {
 
 	ADVANCEMENTS("Advancements"),
-	MESSAGES("UI & Messages"),
+	INTERFACE("UI & Messages"),
 	SUBTITLES("Subtitles", AllSoundEvents::provideLangEntries),
 	TOOLTIPS("Item Descriptions"),
 	PONDER("Ponder Content", PonderLocalization::provideLangEntries),

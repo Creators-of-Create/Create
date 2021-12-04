@@ -4,16 +4,16 @@
     "create:cut_crimsite",
     "create:cut_crimsite_stairs",
     "create:cut_crimsite_wall",
-    "create:polished_crimsite",
-    "create:polished_crimsite_stairs",
-    "create:polished_crimsite_wall",
-    "create:crimsite_bricks",
-    "create:crimsite_bricks_stairs",
-    "create:crimsite_bricks_wall",
+    "create:polished_cut_crimsite",
+    "create:polished_cut_crimsite_stairs",
+    "create:polished_cut_crimsite_wall",
+    "create:cut_crimsite_bricks",
+    "create:cut_crimsite_brick_stairs",
+    "create:cut_crimsite_brick_wall",
     "create:small_crimsite_bricks",
-    "create:small_crimsite_bricks_stairs",
-    "create:small_crimsite_bricks_wall",
+    "create:small_crimsite_brick_stairs",
+    "create:small_crimsite_brick_wall",
     "create:layered_crimsite",
-    "create:pillar_crimsite"
+    "create:crimsite_pillar"
   ]
 }

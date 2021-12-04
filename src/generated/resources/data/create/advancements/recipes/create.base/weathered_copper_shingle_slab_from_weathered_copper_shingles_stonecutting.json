@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:weathered_copper_shingle_slab_from_weathered_copper_shingles_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_weathered_copper_shingles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:weathered_copper_shingles"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:weathered_copper_shingle_slab_from_weathered_copper_shingles_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_weathered_copper_shingles",
+      "has_the_recipe"
+    ]
+  ]
+}

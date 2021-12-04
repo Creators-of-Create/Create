@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:polished_cut_andesite_wall"
+    ]
+  },
+  "criteria": {
+    "has_polished_cut_andesite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:polished_cut_andesite"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:polished_cut_andesite_wall"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_polished_cut_andesite",
+      "has_the_recipe"
+    ]
+  ]
+}

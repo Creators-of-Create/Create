@@ -4,16 +4,16 @@
     "create:cut_dripstone",
     "create:cut_dripstone_stairs",
     "create:cut_dripstone_wall",
-    "create:polished_dripstone",
-    "create:polished_dripstone_stairs",
-    "create:polished_dripstone_wall",
-    "create:dripstone_bricks",
-    "create:dripstone_bricks_stairs",
-    "create:dripstone_bricks_wall",
+    "create:polished_cut_dripstone",
+    "create:polished_cut_dripstone_stairs",
+    "create:polished_cut_dripstone_wall",
+    "create:cut_dripstone_bricks",
+    "create:cut_dripstone_brick_stairs",
+    "create:cut_dripstone_brick_wall",
     "create:small_dripstone_bricks",
-    "create:small_dripstone_bricks_stairs",
-    "create:small_dripstone_bricks_wall",
+    "create:small_dripstone_brick_stairs",
+    "create:small_dripstone_brick_wall",
     "create:layered_dripstone",
-    "create:pillar_dripstone"
+    "create:dripstone_pillar"
   ]
 }

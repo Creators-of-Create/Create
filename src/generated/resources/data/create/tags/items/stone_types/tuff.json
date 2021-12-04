@@ -4,16 +4,16 @@
     "create:cut_tuff",
     "create:cut_tuff_stairs",
     "create:cut_tuff_wall",
-    "create:polished_tuff",
-    "create:polished_tuff_stairs",
-    "create:polished_tuff_wall",
-    "create:tuff_bricks",
-    "create:tuff_bricks_stairs",
-    "create:tuff_bricks_wall",
+    "create:polished_cut_tuff",
+    "create:polished_cut_tuff_stairs",
+    "create:polished_cut_tuff_wall",
+    "create:cut_tuff_bricks",
+    "create:cut_tuff_brick_stairs",
+    "create:cut_tuff_brick_wall",
     "create:small_tuff_bricks",
-    "create:small_tuff_bricks_stairs",
-    "create:small_tuff_bricks_wall",
+    "create:small_tuff_brick_stairs",
+    "create:small_tuff_brick_wall",
     "create:layered_tuff",
-    "create:pillar_tuff"
+    "create:tuff_pillar"
   ]
 }

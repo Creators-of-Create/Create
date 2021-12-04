@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/tuff"
+  },
+  "result": "create:tuff_pillar",
+  "count": 1
+}

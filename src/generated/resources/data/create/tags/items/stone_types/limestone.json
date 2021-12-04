@@ -4,16 +4,16 @@
     "create:cut_limestone",
     "create:cut_limestone_stairs",
     "create:cut_limestone_wall",
-    "create:polished_limestone",
-    "create:polished_limestone_stairs",
-    "create:polished_limestone_wall",
-    "create:limestone_bricks",
-    "create:limestone_bricks_stairs",
-    "create:limestone_bricks_wall",
+    "create:polished_cut_limestone",
+    "create:polished_cut_limestone_stairs",
+    "create:polished_cut_limestone_wall",
+    "create:cut_limestone_bricks",
+    "create:cut_limestone_brick_stairs",
+    "create:cut_limestone_brick_wall",
     "create:small_limestone_bricks",
-    "create:small_limestone_bricks_stairs",
-    "create:small_limestone_bricks_wall",
+    "create:small_limestone_brick_stairs",
+    "create:small_limestone_brick_wall",
     "create:layered_limestone",
-    "create:pillar_limestone"
+    "create:limestone_pillar"
   ]
 }

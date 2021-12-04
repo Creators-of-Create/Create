@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -8,6 +9,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
@@ -38,26 +40,22 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.STRING, 2)
 			.output(.5f, Items.STRING)),
 
-		DIORITE = create(() -> Items.DIORITE, b -> b.duration(350)
+		DIORITE = mineralRecycling(AllPaletteStoneTypes.DIORITE, b -> b.duration(350)
 			.output(.25f, Items.QUARTZ, 1)),
 
-		CRIMSITE = create(AllPaletteStoneTypes.CRIMSITE.getBaseBlock()::get, b -> b.duration(250)
-			.output(.20f, AllItems.CRUSHED_IRON.get(), 1)
-			.output(.20f, Items.IRON_NUGGET, 1)),
+		CRIMSITE =
+			mineralRecycling(AllPaletteStoneTypes.CRIMSITE, AllItems.CRUSHED_IRON::get, () -> Items.IRON_NUGGET, .2f),
 
-		VERIDIUM = create(AllPaletteStoneTypes.VERIDIUM.getBaseBlock()::get, b -> b.duration(250)
-			.output(.40f, AllItems.CRUSHED_COPPER.get(), 1)
-			.output(.40f, AllItems.COPPER_NUGGET.get(), 1)),
+		VERIDIUM = mineralRecycling(AllPaletteStoneTypes.VERIDIUM, AllItems.CRUSHED_COPPER::get,
+			() -> AllItems.COPPER_NUGGET::get, .4f),
 
-		ASURINE = create(AllPaletteStoneTypes.ASURINE.getBaseBlock()::get, b -> b.duration(250)
-			.output(.20f, AllItems.CRUSHED_ZINC.get(), 1)
-			.output(.20f, AllItems.ZINC_NUGGET.get(), 1)),
+		ASURINE = mineralRecycling(AllPaletteStoneTypes.ASURINE, AllItems.CRUSHED_ZINC::get,
+			() -> AllItems.ZINC_NUGGET::get, .2f),
 
-		OCHRUM = create(AllPaletteStoneTypes.OCHRUM.getBaseBlock()::get, b -> b.duration(250)
-			.output(.10f, AllItems.CRUSHED_GOLD.get(), 1)
-			.output(.10f, Items.GOLD_NUGGET, 1)),
+		OCHRUM =
+			mineralRecycling(AllPaletteStoneTypes.OCHRUM, AllItems.CRUSHED_GOLD::get, () -> Items.GOLD_NUGGET, .1f),
 
-		TUFF = create(() -> Items.TUFF, b -> b.duration(350)
+		TUFF = mineralRecycling(AllPaletteStoneTypes.TUFF, b -> b.duration(350)
 			.output(.25f, Items.FLINT, 1)
 			.output(.1f, Items.GOLD_NUGGET, 1)
 			.output(.1f, AllItems.COPPER_NUGGET.get(), 1)
@@ -91,7 +89,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		RAW_ZINC_ORE = rawOre(AllItems.RAW_ZINC::get, AllItems.CRUSHED_ZINC::get, 1),
 		RAW_IRON_ORE = rawOre(() -> Items.RAW_IRON, AllItems.CRUSHED_IRON::get, 1),
 		RAW_GOLD_ORE = rawOre(() -> Items.RAW_GOLD, AllItems.CRUSHED_GOLD::get, 1),
-		
+
 		RAW_COPPER_BLOCK = rawOre(() -> Items.RAW_COPPER_BLOCK, AllItems.CRUSHED_COPPER::get, 9),
 		RAW_ZINC_BLOCK = rawOre(AllBlocks.RAW_ZINC_BLOCK::get, AllItems.CRUSHED_ZINC::get, 9),
 		RAW_IRON_BLOCK = rawOre(() -> Items.RAW_IRON_BLOCK, AllItems.CRUSHED_IRON::get, 9),
@@ -157,6 +155,19 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 	protected GeneratedRecipe netherOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
 		int duration) {
 		return ore(Blocks.NETHERRACK, ore, raw, expectedAmount, duration);
+	}
+
+	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type, Supplier<ItemLike> crushed,
+		Supplier<ItemLike> nugget, float chance) {
+		return mineralRecycling(type, b -> b.duration(250)
+			.output(chance, crushed.get(), 1)
+			.output(chance, nugget.get(), 1));
+	}
+
+	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type,
+		UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
+		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
+		return create(type.getBaseBlock()::get, transform);
 	}
 
 	protected GeneratedRecipe ore(ItemLike stoneType, Supplier<ItemLike> ore, Supplier<ItemLike> raw,

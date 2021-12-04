@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/calcite"
+  },
+  "result": "create:polished_cut_calcite_stairs",
+  "count": 1
+}

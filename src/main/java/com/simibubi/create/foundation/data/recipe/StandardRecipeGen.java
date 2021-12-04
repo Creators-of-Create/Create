@@ -936,16 +936,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.define('D', Tags.Items.DYES_BLACK)
 			.pattern("###")
 			.pattern("#D#")
-			.pattern("###")),
-
-		COPPER_SHINGLES = create(AllBlocks.COPPER_SHINGLES.getStandard()).returns(16)
-			.unlockedByTag(I::copperSheet)
-			.viaShaped(b -> b.define('#', I.copperSheet())
-				.pattern("##")
-				.pattern("##")),
-
-		COPPER_TILES = create(AllBlocks.COPPER_TILES.getStandard()).unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.getStandard().get()))
+			.pattern("###"))
 
 	;
 

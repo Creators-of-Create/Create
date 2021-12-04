@@ -35,5 +35,10 @@ public class Lang {
 	public static String asId(String name) {
 		return name.toLowerCase(Locale.ROOT);
 	}
+	
+	public static String nonPluralId(String name) {
+		String asId = asId(name);
+		return asId.endsWith("s") ? asId.substring(0, asId.length() - 1) : asId;
+	}
 
 }

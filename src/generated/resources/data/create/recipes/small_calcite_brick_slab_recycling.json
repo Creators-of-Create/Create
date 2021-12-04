@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:small_calcite_brick_slab"
+    },
+    {
+      "item": "create:small_calcite_brick_slab"
+    }
+  ],
+  "result": {
+    "item": "create:small_calcite_bricks"
+  }
+}

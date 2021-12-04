@@ -4,16 +4,16 @@
     "create:cut_scorchia",
     "create:cut_scorchia_stairs",
     "create:cut_scorchia_wall",
-    "create:polished_scorchia",
-    "create:polished_scorchia_stairs",
-    "create:polished_scorchia_wall",
-    "create:scorchia_bricks",
-    "create:scorchia_bricks_stairs",
-    "create:scorchia_bricks_wall",
+    "create:polished_cut_scorchia",
+    "create:polished_cut_scorchia_stairs",
+    "create:polished_cut_scorchia_wall",
+    "create:cut_scorchia_bricks",
+    "create:cut_scorchia_brick_stairs",
+    "create:cut_scorchia_brick_wall",
     "create:small_scorchia_bricks",
-    "create:small_scorchia_bricks_stairs",
-    "create:small_scorchia_bricks_wall",
+    "create:small_scorchia_brick_stairs",
+    "create:small_scorchia_brick_wall",
     "create:layered_scorchia",
-    "create:pillar_scorchia"
+    "create:scorchia_pillar"
   ]
 }

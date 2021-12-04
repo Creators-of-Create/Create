@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:cut_dripstone_brick_slab"
+    },
+    {
+      "item": "create:cut_dripstone_brick_slab"
+    }
+  ],
+  "result": {
+    "item": "create:cut_dripstone_bricks"
+  }
+}

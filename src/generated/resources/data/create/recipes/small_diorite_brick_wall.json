@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:small_diorite_bricks"
+    }
+  },
+  "result": {
+    "item": "create:small_diorite_brick_wall",
+    "count": 6
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:oxidized_copper_shingle_stairs"
+    ]
+  },
+  "criteria": {
+    "has_oxidized_copper_shingles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:oxidized_copper_shingles"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:oxidized_copper_shingle_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_oxidized_copper_shingles",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "polished_cut_veridium_stairs",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:polished_cut_veridium"
+    }
+  },
+  "result": {
+    "item": "create:polished_cut_veridium_stairs",
+    "count": 4
+  }
+}

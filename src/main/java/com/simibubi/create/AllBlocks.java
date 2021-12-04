@@ -179,6 +179,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.client.renderer.RenderType;
@@ -403,7 +404,7 @@ public class AllBlocks {
 		.properties(p -> p.strength(0.8F))
 		.transform(axeOrPickaxe())
 		.blockstate(new BeltGenerator()::generate)
-		.transform(BlockStressDefaults.setImpact(1.0))
+		.transform(BlockStressDefaults.setImpact(0))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
@@ -1576,9 +1577,15 @@ public class AllBlocks {
 		.lang("Block of Brass")
 		.register();
 
-	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles");
+	public static final CopperBlockSet COPPER_SHINGLES =
+		new CopperBlockSet(REGISTRATE, "copper_shingles", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+		});
 
-	public static final CopperBlockSet COPPER_TILES = new CopperBlockSet(REGISTRATE, "copper_tiles");
+	public static final CopperBlockSet COPPER_TILES =
+		new CopperBlockSet(REGISTRATE, "copper_tiles", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+		});
 
 	// Load this class
 

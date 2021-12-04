@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:exposed_copper_tiles"
+    }
+  },
+  "result": {
+    "item": "create:exposed_copper_tile_slab",
+    "count": 6
+  }
+}
