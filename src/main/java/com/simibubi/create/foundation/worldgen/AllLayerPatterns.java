@@ -68,16 +68,32 @@ public class AllLayerPatterns {
 		.layer(l -> l.weight(1)
 			.block(Blocks.SMOOTH_BASALT))
 		.build();
+	
+	public static NonNullSupplier<LayerPattern> SCORIA = () -> LayerPattern.builder()
+		.layer(l -> l.weight(1)
+			.passiveBlock())
+		.layer(l -> l.weight(2)
+			.block(AllPaletteStoneTypes.SCORIA.getBaseBlock())
+			.size(1, 3))
+		.layer(l -> l.weight(2)
+			.block(Blocks.TUFF)
+			.block(Blocks.ANDESITE)
+			.size(1, 2))
+		.layer(l -> l.weight(1)
+			.block(Blocks.DIORITE))
+		.build();
 
 	public static NonNullSupplier<LayerPattern> LIMESTONE = () -> LayerPattern.builder()
 		.layer(l -> l.weight(1)
 			.passiveBlock())
 		.layer(l -> l.weight(2)
+			.block(Blocks.CALCITE))
+		.layer(l -> l.weight(2)
 			.block(AllPaletteStoneTypes.LIMESTONE.getBaseBlock())
-			.size(1, 4))
+			.size(1, 5))
 		.build();
 
-	public static NonNullSupplier<LayerPattern> SCORIA = () -> LayerPattern.builder()
+	public static NonNullSupplier<LayerPattern> SCORIA_NETHER = () -> LayerPattern.builder()
 		.inNether()
 		.layer(l -> l.weight(1)
 			.passiveBlock())
@@ -88,6 +104,25 @@ public class AllLayerPatterns {
 			.block(Blocks.BLACKSTONE)
 			.size(1, 3))
 		.layer(l -> l.weight(1)
+			.block(Blocks.BASALT)
+			.block(Blocks.SMOOTH_BASALT))
+		.build();
+	
+	public static NonNullSupplier<LayerPattern> SCORCHIA_NETHER = () -> LayerPattern.builder()
+		.inNether()
+		.layer(l -> l.weight(2)
+			.passiveBlock())
+		.layer(l -> l.weight(4)
+			.block(AllPaletteStoneTypes.SCORCHIA.getBaseBlock())
+			.size(1, 4))
+		.layer(l -> l.weight(2)
+			.block(Blocks.SOUL_SOIL)
+			.block(Blocks.SOUL_SAND)
+			.size(1, 3))
+		.layer(l -> l.weight(1)
+			.block(Blocks.MAGMA_BLOCK))
+		.layer(l -> l.weight(2)
+			.block(Blocks.BASALT)
 			.block(Blocks.SMOOTH_BASALT))
 		.build();
 

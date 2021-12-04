@@ -179,23 +179,16 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	private Marker CURIOSITIES = enterSection(AllSections.CURIOSITIES);
 
-	GeneratedRecipe WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
-		.viaShaped(b -> b.define('E', I.refinedRadiance())
-			.define('G', Tags.Items.GLASS_PANES_WHITE)
-			.define('O', Tags.Items.OBSIDIAN)
-			.define('L', I.brass())
-			.pattern(" GE")
-			.pattern("LEG")
-			.pattern("OL ")),
+	GeneratedRecipe
 
-		TOOLBOX = create(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)).unlockedByTag(I::goldSheet)
-			.viaShaped(b -> b.define('S', I.goldSheet())
-				.define('C', I.cog())
-				.define('W', Tags.Items.CHESTS_WOODEN)
-				.define('L', Tags.Items.LEATHER)
-				.pattern(" C ")
-				.pattern("SWS")
-				.pattern(" L ")),
+	TOOLBOX = create(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)).unlockedByTag(I::goldSheet)
+		.viaShaped(b -> b.define('S', I.goldSheet())
+			.define('C', I.cog())
+			.define('W', Tags.Items.CHESTS_WOODEN)
+			.define('L', Tags.Items.LEATHER)
+			.pattern(" C ")
+			.pattern("SWS")
+			.pattern(" L ")),
 
 		TOOLBOX_DYEING = createSpecial(AllRecipeTypes.TOOLBOX_DYEING::getSerializer, "crafting", "toolbox_dyeing"),
 

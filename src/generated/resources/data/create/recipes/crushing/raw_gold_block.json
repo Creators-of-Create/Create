@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:raw_gold_block"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_gold_ore",
+      "count": 9
+    },
+    {
+      "item": "create:experience_nugget",
+      "count": 9,
+      "chance": 0.75
+    }
+  ],
+  "processingTime": 400
+}
