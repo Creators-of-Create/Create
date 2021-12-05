@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 305",
+	"_": "Missing Localizations: 321",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1534,11 +1534,6 @@
 	"block.create.content_observer.tooltip.condition2": "퍼널을 탐지할 때",
 	"block.create.content_observer.tooltip.behaviour2": "_필터 아이템_이 이동하면 _레드스톤 펄스_를 방출합니다.",
 
-	"block.create.adjustable_crate.tooltip": "ADJUSTABLE CRATE",
-	"block.create.adjustable_crate.tooltip.summary": "이 보관함는 용량을 _직접_ _정할_ 수 있습니다. 아무아이템이나 최대 16스택씩 담을 수 있습니다. 레드스톤 비교기와 호환됩니다.",
-	"block.create.adjustable_crate.tooltip.condition1": "우클릭",
-	"block.create.adjustable_crate.tooltip.behaviour1": "설정 창을 엽니다.",
-
 	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
 	"block.create.creative_crate.tooltip.summary": "이 상자는 아무 아이템을 _무한히_ 저장합니다. 청사진 대포 옆에 놓을 시 준비물을 _전부_ 공급합니다.",
 	"block.create.creative_crate.tooltip.condition1": "필터에 아이템을 설정할 시",
@@ -1611,6 +1606,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "당신의 모든 _수레들을 이어 _멋진 _기차_를 만들어보세요.",
 	"item.create.minecart_coupling.tooltip.condition1": "광산 수레에 사용할 때",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_두 수레를 묶어_ 이동할 때 고정된 _거리를 유지하게_ 합니다.",
+
+	"item.create.experience_nugget.tooltip": "UNLOCALIZED: NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "UNLOCALIZED: _Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "UNLOCALIZED: _Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "PECULIAR BELL",
 	"block.create.peculiar_bell.tooltip.summary": "장식을 위한 황동 종입니다. 영혼 불꽃 위에 설치하면 _기이한_ 일이 일어난다고 합니다...",
@@ -1828,6 +1828,11 @@
 	"create.ponder.cogwheel.header": "톱니바퀴를 이용해 동력 전달하기",
 	"create.ponder.cogwheel.text_1": "톱니바퀴는 인접한 톱니바퀴에 동력을 전달합니다.",
 	"create.ponder.cogwheel.text_2": "이렇게 연결된 톱니바퀴 축은 반대방향으로 돌아갑니다.",
+
+	"create.ponder.cogwheel_casing.header": "UNLOCALIZED: Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "UNLOCALIZED: Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "UNLOCALIZED: The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "크리에이티브 탱크",
 	"create.ponder.creative_fluid_tank.text_1": "크리에이티브 탱크는 무한히 액체를 공급합니다.",
@@ -2251,6 +2256,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "뒤에서 오는 신호는 걸쇠의 신호를 킵니다.",
 	"create.ponder.powered_toggle_latch.text_3": "혹은 끕니다.",
 	"create.ponder.powered_toggle_latch.text_4": "레드스톤 토글 걸쇠는 직접 끄고 킬 수도 있습니다.",
+
+	"create.ponder.pulse_extender.header": "UNLOCALIZED: Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "UNLOCALIZED: Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "UNLOCALIZED: They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "UNLOCALIZED: ...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "UNLOCALIZED: Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "UNLOCALIZED: The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "펄스 중계기 사용하기",
+	"create.ponder.pulse_repeater.text_1": "펄스 중계기는 어느 레드스톤 신호라도 1틱 신호로 바꿉니다.",
+	"create.ponder.pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "원형 섀시를 이용해 블록 붙이기",
 	"create.ponder.radial_chassis.text_1": "원형 섀시는 다른 원형 섀시와 이어집니다.",

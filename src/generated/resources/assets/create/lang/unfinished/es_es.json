@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 305",
+	"_": "Missing Localizations: 321",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1534,11 +1534,6 @@
 	"block.create.content_observer.tooltip.condition2": "Al observar un embudo...",
 	"block.create.content_observer.tooltip.behaviour2": "Emite un pulso de Redstone cuando se transfiere un objeto que coincide.",
 
-	"block.create.adjustable_crate.tooltip": "CAJA AJUSTABLE",
-	"block.create.adjustable_crate.tooltip.summary": "Este _contenedor de objetos_ permite el control manual de su capacidad. Puede contener hasta _16 pilas_ de cualquier objeto. Soporta _comparadores de redstone_.",
-	"block.create.adjustable_crate.tooltip.condition1": "Cuando se hace clic derecho",
-	"block.create.adjustable_crate.tooltip.behaviour1": "Abre la interfaz.",
-
 	"block.create.creative_crate.tooltip": "CAJA CREATIVA",
 	"block.create.creative_crate.tooltip.summary": "Este _contenedor de objetos_ permite la replicación infinita de cualquier elemento. Colócalo junto a un _cañón de esquemas_ para eliminar cualquier requisito de material.",
 	"block.create.creative_crate.tooltip.condition1": "Cuando el elemento está en la ranura para filtros",
@@ -1611,6 +1606,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "_Encadena_ todas tus _vagonetas_ o _artilugios de vagoneta_ para formar un majestuoso _tren_.",
 	"item.create.minecart_coupling.tooltip.condition1": "Cuando se utiliza en vagonetas",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Acopla_ dos vagonetas, intentando mantenerlas a una _distancia constante_ mientras se mueven.",
+
+	"item.create.experience_nugget.tooltip": "UNLOCALIZED: NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "UNLOCALIZED: _Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "UNLOCALIZED: _Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "CAMPANA PECULIAR",
 	"block.create.peculiar_bell.tooltip.summary": "Una campana decorativa de latón. Al colocarla sobre un _Fuego del alma_ o una _Fogata del alma_ puede producirse una transformación espeluznante...",
@@ -1828,6 +1828,11 @@
 	"create.ponder.cogwheel.header": "Transmitir fuerza rotacional mediante engranajes",
 	"create.ponder.cogwheel.text_1": "Los engranajes transmitirán la rotación a otros engranajes adyacentes",
 	"create.ponder.cogwheel.text_2": "Los ejes adyacentes conectados así, girarán en direcciones opuestas",
+
+	"create.ponder.cogwheel_casing.header": "UNLOCALIZED: Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "UNLOCALIZED: Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "UNLOCALIZED: The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "Tanque de fluídos creativo",
 	"create.ponder.creative_fluid_tank.text_1": "Los depósitos de fluidos creativos pueden utilizarse para proporcionar un suministro de fluidos sin fondo",
@@ -2251,6 +2256,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "Las señales en la parte trasera cambiarán su estado...",
 	"create.ponder.powered_toggle_latch.text_3": "...encender y apagar",
 	"create.ponder.powered_toggle_latch.text_4": "Las palancas de cierre motorizadas también se pueden accionar manualmente",
+
+	"create.ponder.pulse_extender.header": "UNLOCALIZED: Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "UNLOCALIZED: Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "UNLOCALIZED: They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "UNLOCALIZED: ...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "UNLOCALIZED: Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "UNLOCALIZED: The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "Controlar señales mediante repetidores de pulsos",
+	"create.ponder.pulse_repeater.text_1": "Los repetidores de pulsos acortan cualquier señal de redstone a un solo pulso",
+	"create.ponder.pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "Fijar bloques mediante chasis radiales",
 	"create.ponder.radial_chassis.text_1": "Los chasis radiales se conectan a bloques de chasis idénticos en una fila",

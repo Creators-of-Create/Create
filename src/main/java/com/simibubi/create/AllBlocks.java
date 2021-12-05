@@ -1577,13 +1577,13 @@ public class AllBlocks {
 		.lang("Block of Brass")
 		.register();
 
-	public static final CopperBlockSet COPPER_SHINGLES =
-		new CopperBlockSet(REGISTRATE, "copper_shingles", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
+		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
 			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
 		});
 
 	public static final CopperBlockSet COPPER_TILES =
-		new CopperBlockSet(REGISTRATE, "copper_tiles", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
 			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
 		});
 

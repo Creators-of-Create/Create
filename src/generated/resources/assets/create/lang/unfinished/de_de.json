@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1302",
+	"_": "Missing Localizations: 1318",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1534,11 +1534,6 @@
 	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
 	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
-	"block.create.adjustable_crate.tooltip": "LAGERRAUM",
-	"block.create.adjustable_crate.tooltip.summary": "Dieser _Speicherbehälter_ erlaubt manuelle Kontrolle über seine Kapazität. Er kann bis zu _16_ _Stacks_ von jeglichem Gegenstand beinhalten.",
-	"block.create.adjustable_crate.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
-	"block.create.adjustable_crate.tooltip.behaviour1": "UNLOCALIZED: Opens the _Interface_.",
-
 	"block.create.creative_crate.tooltip": "BAUPLANKANONENMACHER",
 	"block.create.creative_crate.tooltip.summary": "Stellt einen unendlichen Vorrat an Blöcken für benachbarte _Bauplaenkanonen_ bereit.",
 	"block.create.creative_crate.tooltip.condition1": "Wenn Gegenstand in Filter Slot",
@@ -1611,6 +1606,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "UNLOCALIZED: _Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
 	"item.create.minecart_coupling.tooltip.condition1": "UNLOCALIZED: When Used on Minecart",
 	"item.create.minecart_coupling.tooltip.behaviour1": "UNLOCALIZED: _Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
+
+	"item.create.experience_nugget.tooltip": "UNLOCALIZED: NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "UNLOCALIZED: _Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "UNLOCALIZED: _Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "UNLOCALIZED: PECULIAR BELL",
 	"block.create.peculiar_bell.tooltip.summary": "UNLOCALIZED: A decorative _Brass Bell_. Placing it right above open _Soul Fire_ may cause side-effects...",
@@ -1828,6 +1828,11 @@
 	"create.ponder.cogwheel.header": "UNLOCALIZED: Relaying rotational force using Cogwheels",
 	"create.ponder.cogwheel.text_1": "UNLOCALIZED: Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "UNLOCALIZED: Neighbouring shafts connected like this will rotate in opposite directions",
+
+	"create.ponder.cogwheel_casing.header": "UNLOCALIZED: Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "UNLOCALIZED: Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "UNLOCALIZED: The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
 	"create.ponder.creative_fluid_tank.text_1": "UNLOCALIZED: Creative Fluid Tanks can be used to provide a bottomless supply of fluid",
@@ -2251,6 +2256,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "UNLOCALIZED: Signals at the back will toggle its state",
 	"create.ponder.powered_toggle_latch.text_3": "UNLOCALIZED: ...on and back off",
 	"create.ponder.powered_toggle_latch.text_4": "UNLOCALIZED: Powered toggle latches can also be toggled manually",
+
+	"create.ponder.pulse_extender.header": "UNLOCALIZED: Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "UNLOCALIZED: Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "UNLOCALIZED: They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "UNLOCALIZED: ...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "UNLOCALIZED: Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "UNLOCALIZED: The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "UNLOCALIZED: Controlling signals using Pulse Repeaters",
+	"create.ponder.pulse_repeater.text_1": "UNLOCALIZED: Pulse Repeaters emit a short pulse at a delay",
+	"create.ponder.pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "UNLOCALIZED: Attaching blocks using Radial Chassis",
 	"create.ponder.radial_chassis.text_1": "UNLOCALIZED: Radial Chassis connect to identical Chassis blocks in a row",

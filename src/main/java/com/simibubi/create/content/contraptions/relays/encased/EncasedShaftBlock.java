@@ -9,15 +9,20 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement {
@@ -54,6 +59,14 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 			AllBlocks.SHAFT.getDefaultState()
 				.setValue(AXIS, state.getValue(AXIS)));
 		return InteractionResult.SUCCESS;
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+		if (target instanceof BlockHitResult)
+			return ((BlockHitResult) target).getDirection()
+				.getAxis() == getRotationAxis(state) ? AllBlocks.SHAFT.asStack() : getCasing().asStack();
+		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	@Override

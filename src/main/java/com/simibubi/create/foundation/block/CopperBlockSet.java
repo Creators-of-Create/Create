@@ -58,15 +58,16 @@ public class CopperBlockSet {
 	protected final Variant<?>[] variants;
 	protected final Map<Variant<?>, BlockEntry<?>[]> entries = new HashMap<>();
 	protected final NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe;
+	protected final String endTextureName;
 
-	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, Variant<?>[] variants) {
-		this(registrate, name, variants, (c, p) -> {
-		});
+	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants) {
+		this(registrate, name, endTextureName, variants, NonNullBiConsumer.noop());
 	}
 
-	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, Variant<?>[] variants,
+	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants,
 		NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe) {
 		this.name = name;
+		this.endTextureName = endTextureName;
 		this.variants = variants;
 		this.mainBlockRecipe = mainBlockRecipe;
 		for (boolean waxed : Iterate.falseAndTrue) {
@@ -90,10 +91,6 @@ public class CopperBlockSet {
 					this.entries.put(variant, entries);
 			}
 		}
-	}
-
-	public CopperBlockSet(AbstractRegistrate<?> registrate, String name) {
-		this(registrate, name, DEFAULT_VARIANTS);
 	}
 
 	protected <T extends Block> BlockEntry<?> createEntry(AbstractRegistrate<?> registrate, Variant<T> variant,
@@ -120,10 +117,10 @@ public class CopperBlockSet {
 			.transform(AllTags.pickaxeOnly())
 			.tag(BlockTags.NEEDS_STONE_TOOL)
 			.simpleItem();
-		
+
 		if (variant == BlockVariant.INSTANCE && state == WeatherState.UNAFFECTED)
 			builder.recipe((c, p) -> mainBlockRecipe.accept(c, p));
-		
+
 		if (waxed) {
 			builder.recipe((ctx, prov) -> {
 				Block unwaxed = get(variant, state, false).get();
@@ -135,7 +132,7 @@ public class CopperBlockSet {
 						.getNamespace(), "crafting/copper/" + ctx.getName() + "_from_honeycomb"));
 			});
 		}
-		
+
 		return builder.register();
 	}
 
@@ -145,6 +142,10 @@ public class CopperBlockSet {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getEndTextureName() {
+		return endTextureName;
 	}
 
 	public Variant<?>[] getVariants() {
@@ -216,10 +217,11 @@ public class CopperBlockSet {
 			Block block = ctx.get();
 			String path = block.getRegistryName()
 				.getPath();
-			ResourceLocation texture = prov
-				.modLoc(ModelProvider.BLOCK_FOLDER + "/" + "copper/" + getWeatherStatePrefix(state) + blocks.getName());
+			String baseLoc = ModelProvider.BLOCK_FOLDER + "/copper/" + getWeatherStatePrefix(state);
+			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
+			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
 			prov.simpleBlock(block, prov.models()
-				.cubeAll(path, texture));
+				.cubeColumn(path, texture, endTexture));
 		}
 
 		@Override
@@ -259,9 +261,12 @@ public class CopperBlockSet {
 			CopperBlockSet blocks, WeatherState state, boolean waxed) {
 			ResourceLocation fullModel =
 				prov.modLoc(ModelProvider.BLOCK_FOLDER + "/" + getWeatherStatePrefix(state) + blocks.getName());
-			ResourceLocation texture = prov
-				.modLoc(ModelProvider.BLOCK_FOLDER + "/" + "copper/" + getWeatherStatePrefix(state) + blocks.getName());
-			prov.slabBlock(ctx.get(), fullModel, texture);
+
+			String baseLoc = ModelProvider.BLOCK_FOLDER + "/copper/" + getWeatherStatePrefix(state);
+			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
+			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
+
+			prov.slabBlock(ctx.get(), fullModel, texture, endTexture, endTexture);
 		}
 
 		@Override
@@ -312,9 +317,10 @@ public class CopperBlockSet {
 		@Override
 		public void generateBlockState(DataGenContext<Block, StairBlock> ctx, RegistrateBlockstateProvider prov,
 			CopperBlockSet blocks, WeatherState state, boolean waxed) {
-			ResourceLocation texture = prov
-				.modLoc(ModelProvider.BLOCK_FOLDER + "/" + "copper/" + getWeatherStatePrefix(state) + blocks.getName());
-			prov.stairsBlock(ctx.get(), texture);
+			String baseLoc = ModelProvider.BLOCK_FOLDER + "/copper/" + getWeatherStatePrefix(state);
+			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
+			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
+			prov.stairsBlock(ctx.get(), texture, endTexture, endTexture);
 		}
 
 		@Override

@@ -46,33 +46,33 @@ public class PonderLocalization {
 	//
 
 	public static String getShared(ResourceLocation key) {
-		if (PonderIndex.EDITOR_MODE)
+		if (PonderIndex.editingModeActive())
 			return SHARED.containsKey(key) ? SHARED.get(key) : ("unregistered shared entry: " + key);
 		return I18n.get(langKeyForShared(key));
 	}
 
 	public static String getTag(ResourceLocation key) {
-		if (PonderIndex.EDITOR_MODE)
+		if (PonderIndex.editingModeActive())
 			return TAG.containsKey(key) ? TAG.get(key)
 				.getFirst() : ("unregistered tag entry: " + key);
 		return I18n.get(langKeyForTag(key));
 	}
 
 	public static String getTagDescription(ResourceLocation key) {
-		if (PonderIndex.EDITOR_MODE)
+		if (PonderIndex.editingModeActive())
 			return TAG.containsKey(key) ? TAG.get(key)
 				.getSecond() : ("unregistered tag entry: " + key);
 		return I18n.get(langKeyForTagDescription(key));
 	}
 
 	public static String getChapter(ResourceLocation key) {
-		if (PonderIndex.EDITOR_MODE)
+		if (PonderIndex.editingModeActive())
 			return CHAPTER.containsKey(key) ? CHAPTER.get(key) : ("unregistered chapter entry: " + key);
 		return I18n.get(langKeyForChapter(key));
 	}
 
 	public static String getSpecific(ResourceLocation sceneId, String k) {
-		if (PonderIndex.EDITOR_MODE)
+		if (PonderIndex.editingModeActive())
 			return SPECIFIC.get(sceneId)
 				.get(k);
 		return I18n.get(langKeyForSpecific(sceneId, k));

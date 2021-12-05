@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 344",
+	"_": "Missing Localizations: 360",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1534,11 +1534,6 @@
 	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
 	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
-	"block.create.adjustable_crate.tooltip": "REGULOWANA SKRZYNKA",
-	"block.create.adjustable_crate.tooltip.summary": "Ta skrzynia pozwala na _ręczną kontrolę_ jej pojemności. Może pomieścić do _16 stosów_ dowolnego przedmiotu. Działa z _komparatorami_.",
-	"block.create.adjustable_crate.tooltip.condition1": "Kliknięcie PPM",
-	"block.create.adjustable_crate.tooltip.behaviour1": "Otwiera _interfejs_.",
-
 	"block.create.creative_crate.tooltip": "SKRZYNKA BEZ DNA",
 	"block.create.creative_crate.tooltip.summary": "Ta skrzynia pozwala na _nieskończone powielanie_ dowolnego przedmiotu. Postaw obok _Schematoarmaty_, aby usunąć wszelkie wymagania dotyczące materiałów.",
 	"block.create.creative_crate.tooltip.condition1": "Kiedy przedmiot jest w slocie na filtr",
@@ -1611,6 +1606,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "_Łączy_ wszystkie Twoje _wagoniki_ lub _maszyny torowe_, tworząc majestatyczny pociąg.",
 	"item.create.minecart_coupling.tooltip.condition1": "Kiedy użyto na wagoniku",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Łączy_ dwa wagoniki, próbując utrzymać je w stałej odległości od siebie.",
+
+	"item.create.experience_nugget.tooltip": "UNLOCALIZED: NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "UNLOCALIZED: _Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "UNLOCALIZED: _Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "DZIWNY DZWON",
 	"block.create.peculiar_bell.tooltip.summary": "_Dekoracyjny_ _dzwon_ z mosiądzu. Postawienie nad _eterycznym_ _ogniem_ może wywołać efekty uboczne...",
@@ -1828,6 +1828,11 @@
 	"create.ponder.cogwheel.header": "Przekazywanie obrotu z użyciem kół zębatych",
 	"create.ponder.cogwheel.text_1": "Koła zębate przekazują obrót do sąsiadujących kół",
 	"create.ponder.cogwheel.text_2": "Koła połączone w ten sposób będą obracać się w przeciwnych kierunkach",
+
+	"create.ponder.cogwheel_casing.header": "UNLOCALIZED: Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "UNLOCALIZED: Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "UNLOCALIZED: The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "Kreatywne zbiorniki",
 	"create.ponder.creative_fluid_tank.text_1": "Kretywne zbiorniki mogą być użyte do zapewnienia nieskończonej ilości dowolnej cieczy",
@@ -2251,6 +2256,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "Sygnały otrzymane z tyłu przełączają je",
 	"create.ponder.powered_toggle_latch.text_3": "włączone... wyłączone...",
 	"create.ponder.powered_toggle_latch.text_4": "Zasilane przełączniki mogą też być przełączone ręcznie",
+
+	"create.ponder.pulse_extender.header": "UNLOCALIZED: Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "UNLOCALIZED: Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "UNLOCALIZED: They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "UNLOCALIZED: ...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "UNLOCALIZED: Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "UNLOCALIZED: The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "Kontrola sygnału z użyciem przekaźników pulsowych",
+	"create.ponder.pulse_repeater.text_1": "Przekaźniki pulsowe skrócą dowolny sygnał do pojedynczego pulsu",
+	"create.ponder.pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "Przyłączanie bloków z użyciem stelaża promienistego",
 	"create.ponder.radial_chassis.text_1": "Stelaże promieniste łączą się z identycznymi stelażami w jednym rzędzie",

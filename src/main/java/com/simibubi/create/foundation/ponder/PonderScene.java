@@ -163,7 +163,7 @@ public class PonderScene {
 			return Pair.of(ItemStack.EMPTY, null);
 		if (BoundingBox.fromCorners(origin, origin.offset(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
 			.isInside(selectedPos)) {
-			if (PonderIndex.EDITOR_MODE)
+			if (PonderIndex.editingModeActive())
 				nearestHit.getValue()
 					.getFirst()
 					.selectBlock(selectedPos);

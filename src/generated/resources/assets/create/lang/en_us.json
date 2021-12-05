@@ -1533,12 +1533,7 @@
 	"block.create.content_observer.tooltip.condition2": "When observing a Funnel",
 	"block.create.content_observer.tooltip.behaviour2": "Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
-	"block.create.adjustable_crate.tooltip": "ADJUSTABLE CRATE",
-	"block.create.adjustable_crate.tooltip.summary": "This _Item Container_ allows Manual control over its capacity. It can hold up to _16 Stacks_ of any Item. Supports _Redstone Comparators_.",
-	"block.create.adjustable_crate.tooltip.condition1": "When R-Clicked",
-	"block.create.adjustable_crate.tooltip.behaviour1": "Opens the _Interface_.",
-
-	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
+	"block.create.creative_crate.tooltip": "CREATIVE CRATE",
 	"block.create.creative_crate.tooltip.summary": "This _Storage Container_ allows infinite replication of any item. Place next to a _Schematicannon_ to remove any material requirements.",
 	"block.create.creative_crate.tooltip.condition1": "When Item in Filter Slot",
 	"block.create.creative_crate.tooltip.behaviour1": "Anything _extracting_ from this container will provide an _endless supply_ of the item specified. Items _inserted_ into this crate will be _voided._",
@@ -1610,6 +1605,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
 	"item.create.minecart_coupling.tooltip.condition1": "When Used on Minecart",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
+
+	"item.create.experience_nugget.tooltip": "NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "_Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "_Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "PECULIAR BELL",
 	"block.create.peculiar_bell.tooltip.summary": "A decorative _Brass Bell_. Placing it right above open _Soul Fire_ may cause side-effects...",
@@ -1827,6 +1827,11 @@
 	"create.ponder.cogwheel.header": "Relaying rotational force using Cogwheels",
 	"create.ponder.cogwheel.text_1": "Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "Neighbouring shafts connected like this will rotate in opposite directions",
+
+	"create.ponder.cogwheel_casing.header": "Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "Creative Fluid Tanks",
 	"create.ponder.creative_fluid_tank.text_1": "Creative Fluid Tanks can be used to provide a bottomless supply of fluid",
@@ -2250,6 +2255,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "Signals at the back will toggle its state",
 	"create.ponder.powered_toggle_latch.text_3": "...on and back off",
 	"create.ponder.powered_toggle_latch.text_4": "Powered toggle latches can also be toggled manually",
+
+	"create.ponder.pulse_extender.header": "Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "Controlling signals using Pulse Repeaters",
+	"create.ponder.pulse_repeater.text_1": "Pulse Repeaters emit a short pulse at a delay",
+	"create.ponder.pulse_repeater.text_2": "Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "Attaching blocks using Radial Chassis",
 	"create.ponder.radial_chassis.text_1": "Radial Chassis connect to identical Chassis blocks in a row",

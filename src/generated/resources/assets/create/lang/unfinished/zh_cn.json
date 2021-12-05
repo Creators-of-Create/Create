@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 305",
+	"_": "Missing Localizations: 321",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1534,11 +1534,6 @@
 	"block.create.content_observer.tooltip.condition2": "当检测漏斗时 ",
 	"block.create.content_observer.tooltip.behaviour2": "如果一个_匹配_的_物品_通过，则发出一个_红石脉冲_。",
 
-	"block.create.adjustable_crate.tooltip": "可调节板条箱",
-	"block.create.adjustable_crate.tooltip.summary": "该箱子支持玩家对其容量进行调整，最大可以容纳_16组_物品。支持_红石比较器_。",
-	"block.create.adjustable_crate.tooltip.condition1": "当右击时",
-	"block.create.adjustable_crate.tooltip.behaviour1": "打开_配置面板_。",
-
 	"block.create.creative_crate.tooltip": "创造板条箱",
 	"block.create.creative_crate.tooltip.summary": "这种_储存容器_可以无限地复制任何物品。它还可以移除附近的_蓝图加农炮_的材料需求。",
 	"block.create.creative_crate.tooltip.condition1": "当标记了物品时",
@@ -1611,6 +1606,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "将多个_矿车_或_连接运输装置_链接在一起，构成雄伟的火车。",
 	"item.create.minecart_coupling.tooltip.condition1": "作用与矿车时",
 	"item.create.minecart_coupling.tooltip.behaviour1": "将两个矿车耦合在一起，在移动时将它们保持_恒定的距离_。",
+
+	"item.create.experience_nugget.tooltip": "UNLOCALIZED: NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "UNLOCALIZED: _Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "UNLOCALIZED: _Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "奇异钟",
 	"block.create.peculiar_bell.tooltip.summary": "装饰用的_黄铜质钟_。放在_灵魂火_的正上方可能会产生意料之外的后果......",
@@ -1828,6 +1828,11 @@
 	"create.ponder.cogwheel.header": "使用齿轮来传递旋转力",
 	"create.ponder.cogwheel.text_1": "齿轮会将动力传递至临近的齿轮",
 	"create.ponder.cogwheel.text_2": "以此方式连接的齿轮，旋转方向相反",
+
+	"create.ponder.cogwheel_casing.header": "UNLOCALIZED: Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "UNLOCALIZED: Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "UNLOCALIZED: The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "创造流体储罐",
 	"create.ponder.creative_fluid_tank.text_1": "创造流体储罐可以提供无限量的流体",
@@ -2251,6 +2256,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "后方信号输入可以改变它的状态",
 	"create.ponder.powered_toggle_latch.text_3": "...开启或者是关闭",
 	"create.ponder.powered_toggle_latch.text_4": "你也可以手动切换其状态",
+
+	"create.ponder.pulse_extender.header": "UNLOCALIZED: Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "UNLOCALIZED: Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "UNLOCALIZED: They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "UNLOCALIZED: ...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "UNLOCALIZED: Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "UNLOCALIZED: The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "使用脉冲中继器控制信号",
+	"create.ponder.pulse_repeater.text_1": "脉冲中继器会将所有通入的红石信号缩减为一次脉冲",
+	"create.ponder.pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "使用旋转底盘黏着方块",
 	"create.ponder.radial_chassis.text_1": "同一行上的旋转底盘会相互连接在一起",

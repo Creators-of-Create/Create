@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 305",
+	"_": "Missing Localizations: 321",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1534,11 +1534,6 @@
 	"block.create.content_observer.tooltip.condition2": "ファンネルを観察するとき",
 	"block.create.content_observer.tooltip.behaviour2": "_一致するアイテム_が_輸送_されると、_レッドストーンパルス_を発します。",
 
-	"block.create.adjustable_crate.tooltip": "可変クレート",
-	"block.create.adjustable_crate.tooltip.summary": "この_収納ブロック_は、容量を手動で調整できます。任意のアイテムを_16スタック_まで収納できます。_レッドストーンコンパレーター_に対応しています。",
-	"block.create.adjustable_crate.tooltip.condition1": "右クリックしたとき",
-	"block.create.adjustable_crate.tooltip.behaviour1": "_UI_を開きます。",
-
 	"block.create.creative_crate.tooltip": "クリエイティブクレート",
 	"block.create.creative_crate.tooltip.summary": "あらゆるアイテムを無限に複製する_収納ブロック_。隣接する_概略図砲_へブロックを無限に供給します。",
 	"block.create.creative_crate.tooltip.condition1": "フィルタースロットにアイテムが入っているとき",
@@ -1611,6 +1606,11 @@
 	"item.create.minecart_coupling.tooltip.summary": "壮大な列車を作るために_トロッコ_や_からくり車両_を_連結_しよう。",
 	"item.create.minecart_coupling.tooltip.condition1": "トロッコに使ったとき",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_2台_のトロッコを連結します。それらは移動中に_一定_の_距離_を保とうします。",
+
+	"item.create.experience_nugget.tooltip": "UNLOCALIZED: NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip.summary": "UNLOCALIZED: _Ding!_ A speck of _inspiration_ from your fantastic inventions.",
+	"item.create.experience_nugget.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.experience_nugget.tooltip.behaviour1": "UNLOCALIZED: _Redeems_ _Experience_ points contained within.",
 
 	"block.create.peculiar_bell.tooltip": "風変わりな鐘",
 	"block.create.peculiar_bell.tooltip.summary": "装飾用の_真鍮の鐘_。_魂の炎_の真上に置くと、別の使い方が見つかるかも...",
@@ -1828,6 +1828,11 @@
 	"create.ponder.cogwheel.header": "歯車による回転力の伝達",
 	"create.ponder.cogwheel.text_1": "歯車は隣接する歯車へ回転力を伝達します",
 	"create.ponder.cogwheel.text_2": "このように連結された隣のシャフトは、逆方向に回転します",
+
+	"create.ponder.cogwheel_casing.header": "UNLOCALIZED: Encasing Cogwheels",
+	"create.ponder.cogwheel_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Cogwheels",
+	"create.ponder.cogwheel_casing.text_2": "UNLOCALIZED: Components added after encasing will not connect to the shaft outputs",
+	"create.ponder.cogwheel_casing.text_3": "UNLOCALIZED: The Wrench can be used to toggle connections",
 
 	"create.ponder.creative_fluid_tank.header": "クリエイティブ液体タンク",
 	"create.ponder.creative_fluid_tank.text_1": "クリエイティブ液体タンクは、液体を無限に供給できます",
@@ -2251,6 +2256,18 @@
 	"create.ponder.powered_toggle_latch.text_2": "後ろからの信号で切り替えできます",
 	"create.ponder.powered_toggle_latch.text_3": "何度も信号を送るとオンとオフと繰り返します",
 	"create.ponder.powered_toggle_latch.text_4": "パワードトグルラッチは、手動でもオンオフもできます",
+
+	"create.ponder.pulse_extender.header": "UNLOCALIZED: Controlling signals using Pulse Extenders",
+	"create.ponder.pulse_extender.text_1": "UNLOCALIZED: Pulse Extenders can lengthen a signal passing through",
+	"create.ponder.pulse_extender.text_2": "UNLOCALIZED: They activate after a short delay...",
+	"create.ponder.pulse_extender.text_3": "UNLOCALIZED: ...and cool down for the configured duration",
+	"create.ponder.pulse_extender.text_4": "UNLOCALIZED: Using the mouse wheel, the discharge time can be configured",
+	"create.ponder.pulse_extender.text_5": "UNLOCALIZED: The configured duration can range up to 30 minutes",
+
+	"create.ponder.pulse_repeater.header": "パルスリピーターによる信号制御",
+	"create.ponder.pulse_repeater.text_1": "パルスリピーターは、レッドストーン信号を短縮して1tickのパルス信号にします",
+	"create.ponder.pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
 
 	"create.ponder.radial_chassis.header": "ラジアルシャーシによるブロックの取り付け",
 	"create.ponder.radial_chassis.text_1": "ラジアルシャーシは、同じ種類のシャーシと繋がります",

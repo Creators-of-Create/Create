@@ -20,10 +20,12 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -32,6 +34,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement {
@@ -65,6 +69,16 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+		if (target instanceof BlockHitResult)
+			return ((BlockHitResult) target).getDirection()
+				.getAxis() != getRotationAxis(state)
+					? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
+					: getCasing().asStack();
+		return super.getPickBlock(state, target, world, pos, player);
+	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
