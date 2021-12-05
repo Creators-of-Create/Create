@@ -32,6 +32,7 @@ import static com.simibubi.create.AllItems.SCHEMATIC_AND_QUILL;
 import static com.simibubi.create.AllItems.WAND_OF_SYMMETRY;
 import static com.simibubi.create.AllItems.WHEAT_FLOUR;
 import static com.simibubi.create.AllItems.WORLDSHAPER;
+import static com.simibubi.create.Create.asResource;
 import static com.simibubi.create.content.palettes.AllPaletteBlocks.ACACIA_WINDOW;
 import static com.simibubi.create.content.palettes.AllPaletteBlocks.ACACIA_WINDOW_PANE;
 import static com.simibubi.create.content.palettes.AllPaletteBlocks.BIRCH_WINDOW;
@@ -113,37 +114,58 @@ public class RemapHelper {
 		reMap.put("spruce_glass", SPRUCE_WINDOW.getId());
 		reMap.put("spruce_glass_pane", SPRUCE_WINDOW_PANE.getId());
 
-		reMap.put("limestone_stairs", Create.asResource("polished_limestone_stairs"));
-		reMap.put("weathered_limestone_layers", Create.asResource("layered_weathered_limestone"));
-		reMap.put("indented_gabbro_slab", Create.asResource("polished_gabbro_slab"));
-		reMap.put("andesite_layers", Create.asResource("layered_andesite"));
-		reMap.put("scoria_layers", Create.asResource("layered_scoria"));
-		reMap.put("dark_scoria_tiles_stairs", Create.asResource("dark_scoria_bricks_stairs"));
-		reMap.put("dolomite_stairs", Create.asResource("polished_dolomite_stairs"));
-		reMap.put("paved_gabbro_bricks", Create.asResource("paved_gabbro"));
-		reMap.put("slightly_mossy_gabbro_bricks", Create.asResource("mossy_gabbro"));
-		reMap.put("limestone_wall", Create.asResource("polished_limestone_wall"));
-		reMap.put("dark_scoria_tiles", Create.asResource("dark_scoria_bricks"));
-		reMap.put("dark_scoria_tiles_slab", Create.asResource("dark_scoria_bricks_slab"));
-		reMap.put("weathered_limestone_stairs", Create.asResource("polished_weathered_limestone_stairs"));
-		reMap.put("limestone_slab", Create.asResource("polished_limestone_slab"));
-		reMap.put("scoria_slab", Create.asResource("polished_scoria_slab"));
-		reMap.put("dolomite_wall", Create.asResource("polished_dolomite_wall"));
-		reMap.put("gabbro_layers", Create.asResource("layered_gabbro"));
-		reMap.put("scoria_wall", Create.asResource("polished_scoria_wall"));
-		reMap.put("gabbro_slab", Create.asResource("polished_gabbro_slab"));
-		reMap.put("dolomite_slab", Create.asResource("polished_dolomite_slab"));
-		reMap.put("mossy_gabbro_bricks", Create.asResource("overgrown_gabbro"));
-		reMap.put("paved_gabbro_bricks_slab", Create.asResource("paved_gabbro_slab"));
-		reMap.put("gabbro_wall", Create.asResource("polished_gabbro_wall"));
-		reMap.put("granite_layers", Create.asResource("layered_granite"));
-		reMap.put("indented_gabbro", Create.asResource("polished_gabbro"));
-		reMap.put("scoria_stairs", Create.asResource("polished_scoria_stairs"));
-		reMap.put("weathered_limestone_wall", Create.asResource("polished_weathered_limestone_wall"));
-		reMap.put("diorite_layers", Create.asResource("layered_diorite"));
-		reMap.put("weathered_limestone_slab", Create.asResource("polished_weathered_limestone_slab"));
-		reMap.put("gabbro_stairs", Create.asResource("polished_gabbro_stairs"));
-		reMap.put("limestone_layers", Create.asResource("layered_limestone"));
+		// 1.14 palettes
+		reMap.put("limestone_stairs", asResource("cut_limestone_stairs"));
+		reMap.put("weathered_limestone_layers", asResource("layered_tuff"));
+		reMap.put("indented_gabbro_slab", asResource("polished_cut_dripstone_slab"));
+		reMap.put("andesite_layers", asResource("layered_andesite"));
+		reMap.put("scoria_layers", asResource("layered_scoria"));
+		reMap.put("dark_scoria_tiles_stairs", asResource("cut_scorchia_brick_stairs"));
+		reMap.put("dolomite_stairs", asResource("polished_cut_calcite_stairs"));
+		reMap.put("paved_gabbro_bricks", asResource("cut_dripstone_bricks"));
+		reMap.put("slightly_mossy_gabbro_bricks", asResource("cut_dripstone_bricks"));
+		reMap.put("limestone_wall", asResource("polished_cut_limestone_wall"));
+		reMap.put("dark_scoria_tiles", asResource("cut_scorchia_bricks"));
+		reMap.put("dark_scoria_tiles_slab", asResource("cut_scorchia_brick_slab"));
+		reMap.put("weathered_limestone_stairs", asResource("polished_cut_tuff_stairs"));
+		reMap.put("limestone_slab", asResource("polished_cut_limestone_slab"));
+		reMap.put("scoria_slab", asResource("polished_cut_scoria_slab"));
+		reMap.put("dolomite_wall", asResource("polished_cut_calcite_wall"));
+		reMap.put("gabbro_layers", asResource("layered_dripstone"));
+		reMap.put("scoria_wall", asResource("polished_cut_scoria_wall"));
+		reMap.put("gabbro_slab", asResource("polished_cut_dripstone_slab"));
+		reMap.put("dolomite_slab", asResource("polished_cut_calcite_slab"));
+		reMap.put("mossy_gabbro_bricks", asResource("cut_dripstone_bricks"));
+		reMap.put("paved_gabbro_bricks_slab", asResource("cut_dripstone_brick_slab"));
+		reMap.put("gabbro_wall", asResource("cut_gabbro_wall"));
+		reMap.put("granite_layers", asResource("layered_granite"));
+		reMap.put("indented_gabbro", asResource("polished_cut_dripstone"));
+		reMap.put("scoria_stairs", asResource("polished_cut_scoria_stairs"));
+		reMap.put("weathered_limestone_wall", asResource("polished_cut_tuff_wall"));
+		reMap.put("diorite_layers", asResource("layered_diorite"));
+		reMap.put("weathered_limestone_slab", asResource("polished_cut_tuff_slab"));
+		reMap.put("gabbro_stairs", asResource("polished_cut_dripstone_stairs"));
+		reMap.put("limestone_layers", asResource("layered_limestone"));
+		
+		reMap.put("gabbro", new ResourceLocation("minecraft:dripstone_block"));
+		reMap.put("dolomite", new ResourceLocation("minecraft:calcite"));
+		reMap.put("weathered_limestone", new ResourceLocation("minecraft:tuff"));
+		reMap.put("gabbro_cobblestone", new ResourceLocation("minecraft:dripstone_block"));
+		reMap.put("andesite_cobblestone", new ResourceLocation("minecraft:andesite"));
+		reMap.put("diorite_cobblestone", new ResourceLocation("minecraft:diorite"));
+		reMap.put("granite_cobblestone", new ResourceLocation("minecraft:granite"));
+		reMap.put("dark_scoria", asResource("scorchia"));
+
+		// 1.15 palettes
+		remapPaletteBlock("andesite", "andesite", true);
+		remapPaletteBlock("diorite", "diorite", true);
+		remapPaletteBlock("granite", "granite", true);
+		remapPaletteBlock("limestone", "limestone", false);
+		remapPaletteBlock("gabbro", "dripstone", false);
+		remapPaletteBlock("scoria", "scoria", false);
+		remapPaletteBlock("dark_scoria", "scorchia", false);
+		remapPaletteBlock("dolomite", "calcite", false);
+		remapPaletteBlock("weathered_limestone", "tuff", false);
 
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 		reMap.put("gold_sheet", GOLDEN_SHEET.getId());
@@ -155,6 +177,47 @@ public class RemapHelper {
 		reMap.put("terrain_zapper", WORLDSHAPER.getId());
 		reMap.put("property_filter", ATTRIBUTE_FILTER.getId());
 		reMap.put("obsidian_dust", POWDERED_OBSIDIAN.getId());
+	}
+
+	private static void remapPaletteBlock(String type, String newType, boolean vanilla) {
+		reMap.put("%s_cobblestone_stairs".formatted(type), asResource("cut_%s_stairs".formatted(newType)));
+		reMap.put("%s_cobblestone_slab".formatted(type), asResource("cut_%s_slab".formatted(newType)));
+		reMap.put("%s_cobblestone_wall".formatted(type), asResource("cut_%s_wall".formatted(newType)));
+
+		if (!vanilla) {
+			if (type != "gabbro")
+				reMap.put("%s_cobblestone".formatted(type), asResource("%s".formatted(newType)));
+			reMap.put("polished_%s".formatted(type), asResource("polished_cut_%s".formatted(newType)));
+			reMap.put("polished_%s_stairs".formatted(type),
+				asResource("polished_cut_%s_stairs".formatted(newType)));
+			reMap.put("polished_%s_slab".formatted(type), asResource("polished_cut_%s_slab".formatted(newType)));
+			reMap.put("polished_%s_wall".formatted(type), asResource("polished_cut_%s_wall".formatted(newType)));
+		}
+
+		reMap.put("%s_bricks".formatted(type), asResource("cut_%s_bricks".formatted(newType)));
+		reMap.put("%s_bricks_stairs".formatted(type), asResource("cut_%s_brick_stairs".formatted(newType)));
+		reMap.put("%s_bricks_slab".formatted(type), asResource("cut_%s_brick_slab".formatted(newType)));
+		reMap.put("%s_bricks_wall".formatted(type), asResource("cut_%s_brick_wall".formatted(newType)));
+		reMap.put("fancy_%s_bricks".formatted(type), asResource("small_%s_bricks".formatted(newType)));
+		reMap.put("fancy_%s_bricks_stairs".formatted(type),
+			asResource("small_%s_brick_stairs".formatted(newType)));
+		reMap.put("fancy_%s_bricks_slab".formatted(type), asResource("small_%s_brick_slab".formatted(newType)));
+		reMap.put("fancy_%s_bricks_wall".formatted(type), asResource("small_%s_brick_wall".formatted(newType)));
+		reMap.put("paved_%s".formatted(type), asResource("small_%s_bricks".formatted(newType)));
+		reMap.put("paved_%s_stairs".formatted(type), asResource("small_%s_brick_stairs".formatted(newType)));
+		reMap.put("paved_%s_slab".formatted(type), asResource("small_%s_brick_slab".formatted(newType)));
+		reMap.put("paved_%s_wall".formatted(type), asResource("small_%s_brick_wall".formatted(newType)));
+
+		if (!vanilla)
+			reMap.put("chiseled_%s".formatted(type), asResource("polished_cut_%s".formatted(newType)));
+
+		reMap.put("mossy_%s".formatted(type), asResource("cut_%s_bricks".formatted(newType)));
+		reMap.put("overgrown_%s".formatted(type), asResource("cut_%s_bricks".formatted(newType)));
+
+		if (!type.equals(newType)) {
+			reMap.put("layered_%s".formatted(type), asResource("layered_%s".formatted(newType)));
+			reMap.put("%s_pillar".formatted(type), asResource("%s_pillar".formatted(newType)));
+		}
 	}
 
 	@SubscribeEvent
