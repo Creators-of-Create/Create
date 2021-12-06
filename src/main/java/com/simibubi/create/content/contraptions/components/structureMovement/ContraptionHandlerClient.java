@@ -63,6 +63,8 @@ public class ContraptionHandlerClient {
 			return InteractionResult.PASS;
 		if (mc.level == null)
 			return InteractionResult.PASS;
+		if(mc.gameMode == null)
+			return InteractionResult.PASS;
 //		if (!event.isUseItem())
 //			return InteractionResult.PASS;
 		Vec3 origin = RaycastHelper.getTraceOrigin(player);
