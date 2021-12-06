@@ -1,18 +1,17 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialGroup;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.backend.state.TextureRenderState;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllStitchedTextures;
@@ -21,6 +20,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,7 +52,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	}
 
 	private Instancer<OrientedData> getInstancer(MaterialManager materialManager, SuperGlueEntity entity) {
-		MaterialGroup group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(TextureRenderState.get(TEXTURE));
+		MaterialGroup group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(RenderType.entityCutout(TEXTURE));
 
 		return group.material(Materials.ORIENTED).model(entity.getType(), GlueModel::new);
 	}
@@ -103,7 +103,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		}
 
 		@Override
-		public void buffer(VecBuffer buffer) {
+		public void buffer(VertexConsumer buffer) {
 			Vec3 diff = Vec3.atLowerCornerOf(Direction.SOUTH.getNormal());
 			Vec3 extension = diff.normalize()
 					.scale(1 / 32f - 1 / 128f);
@@ -144,17 +144,16 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				maxU = maxV = 1;
 			}
 
-			//             pos                                               normal                                   uv
 			// inside quad
-			buffer.putVec3((float) a1.x, (float) a1.y, (float) a1.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(maxU, minV);
-			buffer.putVec3((float) a2.x, (float) a2.y, (float) a2.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(maxU, maxV);
-			buffer.putVec3((float) a3.x, (float) a3.y, (float) a3.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(minU, maxV);
-			buffer.putVec3((float) a4.x, (float) a4.y, (float) a4.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(minU, minV);
+			buffer.vertex(a1.x, a1.y, a1.z).normal(0, 0, -1f).uv(maxU, minV).endVertex();
+			buffer.vertex(a2.x, a2.y, a2.z).normal(0, 0, -1f).uv(maxU, maxV).endVertex();
+			buffer.vertex(a3.x, a3.y, a3.z).normal(0, 0, -1f).uv(minU, maxV).endVertex();
+			buffer.vertex(a4.x, a4.y, a4.z).normal(0, 0, -1f).uv(minU, minV).endVertex();
 			// outside quad
-			buffer.putVec3((float) b4.x, (float) b4.y, (float) b4.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(minU, minV);
-			buffer.putVec3((float) b3.x, (float) b3.y, (float) b3.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(minU, maxV);
-			buffer.putVec3((float) b2.x, (float) b2.y, (float) b2.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(maxU, maxV);
-			buffer.putVec3((float) b1.x, (float) b1.y, (float) b1.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(maxU, minV);
+			buffer.vertex(b4.x, b4.y, b4.z).normal(0, 0, 1f).uv(minU, minV).endVertex();
+			buffer.vertex(b3.x, b3.y, b3.z).normal(0, 0, 1f).uv(minU, maxV).endVertex();
+			buffer.vertex(b2.x, b2.y, b2.z).normal(0, 0, 1f).uv(maxU, maxV).endVertex();
+			buffer.vertex(b1.x, b1.y, b1.z).normal(0, 0, 1f).uv(maxU, minV).endVertex();
 		}
 
 		@Override

@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.components.actors.flwdata;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
-import com.jozufozu.flywheel.backend.struct.StructType;
 import com.jozufozu.flywheel.backend.struct.StructWriter;
+import com.jozufozu.flywheel.backend.struct.Writeable;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
 
-public class ActorType implements StructType<ActorData> {
+public class ActorType implements Writeable<ActorData> {
 	@Override
 	public ActorData create() {
 		return new ActorData();

@@ -37,6 +37,8 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 
 		if (visible.isEmpty()) return;
 
+		GlTextureUnit active = GlTextureUnit.getActive();
+
 		RenderType layer = event.getType();
 
 		layer.setupRenderState();
@@ -67,7 +69,7 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 		glBindTexture(GL_TEXTURE_3D, 0);
 
 		layer.clearRenderState();
-		GlTextureUnit.T0.makeActive();
+		active.makeActive();
 	}
 
 	@Override
