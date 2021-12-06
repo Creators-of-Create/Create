@@ -14,7 +14,7 @@ public class ActorType implements Writeable<ActorData> {
 
 	@Override
 	public VertexFormat format() {
-		return AllInstanceFormats.BELT;
+		return AllInstanceFormats.ACTOR;
 	}
 
 	@Override
