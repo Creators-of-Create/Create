@@ -405,31 +405,8 @@ public class AllAdvancements implements DataProvider {
 			itemAdvancement("blaze_cake", AllItems.BLAZE_CAKE, TaskType.NORMAL).parent(crushing_wheel)
 				.save(t, id + ":blaze_cake");
 
-		Advancement chromatic_compound =
-			itemAdvancement("chromatic_compound", AllItems.CHROMATIC_COMPOUND, TaskType.NORMAL).parent(blaze_cake)
-				.save(t, id + ":chromatic_compound");
-
-		Advancement shadow_steel =
-			itemAdvancement("shadow_steel", AllItems.SHADOW_STEEL, TaskType.GOAL).parent(chromatic_compound)
-				.save(t, id + ":shadow_steel");
-
-		Advancement refined_radiance =
-			itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL).parent(chromatic_compound)
-				.save(t, id + ":refined_radiance");
-
-		Advancement chromatic_age = advancement("chromatic_age", AllBlocks.REFINED_RADIANCE_CASING.get(), TaskType.GOAL)
-			.parent(chromatic_compound)
-			.addCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
-			.addCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
-			.save(t, id + ":chromatic_age");
-
-		Advancement chromatic_eob = deadEnd().parent(chromatic_age)
-			.addCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
-			.addCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
-			.save(t, id + ":chromatic_eob");
-
 		Advancement symmetry_wand =
-			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).parent(refined_radiance)
+			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).parent(clockwork_component)
 				.save(t, id + ":wand_of_symmetry");
 
 	}

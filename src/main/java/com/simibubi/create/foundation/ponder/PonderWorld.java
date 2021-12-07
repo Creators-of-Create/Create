@@ -9,12 +9,12 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
@@ -259,6 +259,7 @@ public class PonderWorld extends SchematicWorld {
 
 	public void fixControllerTileEntities() {
 		for (BlockEntity tileEntity : tileEntities.values()) {
+			
 			if (tileEntity instanceof BeltTileEntity) {
 				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
 				if (!beltTileEntity.isController())
@@ -272,20 +273,22 @@ public class PonderWorld extends SchematicWorld {
 					belt2.setController(controllerPos);
 				}
 			}
-			if (tileEntity instanceof FluidTankTileEntity) {
-				FluidTankTileEntity fluidTankTileEntity = (FluidTankTileEntity) tileEntity;
-				BlockPos lastKnown = fluidTankTileEntity.getLastKnownPos();
-				BlockPos current = fluidTankTileEntity.getBlockPos();
+			
+			if (tileEntity instanceof IMultiTileContainer) {
+				IMultiTileContainer multiTile = (IMultiTileContainer) tileEntity;
+				BlockPos lastKnown = multiTile.getLastKnownPos();
+				BlockPos current = tileEntity.getBlockPos();
 				if (lastKnown == null || current == null)
 					continue;
-				if (fluidTankTileEntity.isController())
+				if (multiTile.isController())
 					continue;
 				if (!lastKnown.equals(current)) {
-					BlockPos newControllerPos = fluidTankTileEntity.getController()
+					BlockPos newControllerPos = multiTile.getController()
 						.offset(current.subtract(lastKnown));
-					fluidTankTileEntity.setController(newControllerPos);
+					multiTile.setController(newControllerPos);
 				}
 			}
+
 		}
 	}
 

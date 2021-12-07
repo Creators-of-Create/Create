@@ -11,12 +11,12 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class VaultCTBehaviour extends ConnectedTextureBehaviour {
+public class ItemVaultCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override
 	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
-		Axis vaultBlockAxis = VaultBlock.getVaultBlockAxis(state);
-		boolean small = !VaultBlock.isLarge(state);
+		Axis vaultBlockAxis = ItemVaultBlock.getVaultBlockAxis(state);
+		boolean small = !ItemVaultBlock.isLarge(state);
 		if (vaultBlockAxis == null)
 			return null;
 
@@ -32,7 +32,7 @@ public class VaultCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override
 	protected Direction getUpDirection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
-		Axis vaultBlockAxis = VaultBlock.getVaultBlockAxis(state);
+		Axis vaultBlockAxis = ItemVaultBlock.getVaultBlockAxis(state);
 		boolean alongX = vaultBlockAxis == Axis.X;
 		if (face.getAxis()
 			.isVertical() && alongX)
@@ -45,7 +45,7 @@ public class VaultCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override
 	protected Direction getRightDirection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
-		Axis vaultBlockAxis = VaultBlock.getVaultBlockAxis(state);
+		Axis vaultBlockAxis = ItemVaultBlock.getVaultBlockAxis(state);
 		if (face.getAxis()
 			.isVertical() && vaultBlockAxis == Axis.X)
 			return super.getRightDirection(reader, pos, state, face).getClockWise();
@@ -62,7 +62,7 @@ public class VaultCTBehaviour extends ConnectedTextureBehaviour {
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
 		BlockPos otherPos, Direction face) {
-		return state == other && VaultConnectivityHandler.isConnected(reader, pos, otherPos);
+		return state == other && ItemVaultConnectivityHandler.isConnected(reader, pos, otherPos);
 	}
 
 }

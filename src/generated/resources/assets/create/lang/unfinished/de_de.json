@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1318",
+	"_": "Missing Localizations: 1319",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -772,14 +772,6 @@
 	"advancement.create.crushing_wheel.desc": "UNLOCALIZED: Create some Crushing Wheels to break down more materials more effectively.",
 	"advancement.create.blaze_cake": "UNLOCALIZED: Sugar Rush",
 	"advancement.create.blaze_cake.desc": "UNLOCALIZED: Bake your blaze burner a special cake.",
-	"advancement.create.chromatic_compound": "UNLOCALIZED: Mysterious Minerals",
-	"advancement.create.chromatic_compound.desc": "UNLOCALIZED: Create a Bar of Chromatic Compound.",
-	"advancement.create.shadow_steel": "UNLOCALIZED: Void Returner",
-	"advancement.create.shadow_steel.desc": "UNLOCALIZED: Create Shadow Steel, a metal bar of nothingness.",
-	"advancement.create.refined_radiance": "UNLOCALIZED: Bright and Inspiring",
-	"advancement.create.refined_radiance.desc": "UNLOCALIZED: Create Refined Radiance, a powerful chromatic substance.",
-	"advancement.create.chromatic_age": "UNLOCALIZED: The Chromatic Age",
-	"advancement.create.chromatic_age.desc": "UNLOCALIZED: Create casing blocks of the light and dark.",
 	"advancement.create.wand_of_symmetry": "UNLOCALIZED: Radiant Mirrors",
 	"advancement.create.wand_of_symmetry.desc": "UNLOCALIZED: Craft a Staff of Symmetry.",
 	"advancement.create.extendo_grip": "Boioioing!",
@@ -2053,6 +2045,17 @@
 	"create.ponder.item_drain.text_3": "UNLOCALIZED: When items are inserted from the side...",
 	"create.ponder.item_drain.text_4": "UNLOCALIZED: ...they roll across, emptying out their contained fluid",
 	"create.ponder.item_drain.text_5": "UNLOCALIZED: Pipe Networks can now pull the fluid from the drains' internal buffer",
+
+	"create.ponder.item_vault_sizes.header": "UNLOCALIZED: Dimensions of an Item Vault",
+	"create.ponder.item_vault_sizes.text_1": "UNLOCALIZED: Item Vaults can be combined to increase the total capacity",
+	"create.ponder.item_vault_sizes.text_2": "UNLOCALIZED: Their base square can be up to 3 blocks wide...",
+	"create.ponder.item_vault_sizes.text_3": "UNLOCALIZED: ...and grow in length up to 3x their diameter",
+
+	"create.ponder.item_vault_storage.header": "UNLOCALIZED: Storing Items in Vaults",
+	"create.ponder.item_vault_storage.text_1": "UNLOCALIZED: Item Vaults can be used to store large amounts of items",
+	"create.ponder.item_vault_storage.text_2": "UNLOCALIZED: However, contents cannot be added or taken manually",
+	"create.ponder.item_vault_storage.text_3": "UNLOCALIZED: Any components for item transfer can both insert...",
+	"create.ponder.item_vault_storage.text_4": "UNLOCALIZED: ...and take contents from this container",
 
 	"create.ponder.large_cogwheel.header": "UNLOCALIZED: Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "UNLOCALIZED: Large cogwheels can connect to each other at right angles",

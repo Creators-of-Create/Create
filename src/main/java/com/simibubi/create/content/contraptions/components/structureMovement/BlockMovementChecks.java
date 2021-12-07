@@ -29,8 +29,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.content.logistics.block.vault.VaultBlock;
-import com.simibubi.create.content.logistics.block.vault.VaultConnectivityHandler;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
 import net.minecraft.core.BlockPos;
@@ -333,8 +333,8 @@ public class BlockMovementChecks {
 					.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
 			return FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(direction));
-		if (state.getBlock() instanceof VaultBlock)
-			return VaultConnectivityHandler.isConnected(world, pos, pos.relative(direction));
+		if (state.getBlock() instanceof ItemVaultBlock)
+			return ItemVaultConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (AllBlocks.STICKER.has(state) && state.getValue(StickerBlock.EXTENDED)) {
 			return direction == state.getValue(StickerBlock.FACING)
 					&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());

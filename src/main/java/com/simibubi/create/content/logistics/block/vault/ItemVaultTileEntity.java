@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -12,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -23,7 +25,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class VaultTileEntity extends SmartTileEntity {
+public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer {
 
 	protected LazyOptional<IItemHandler> itemCapability;
 
@@ -35,7 +37,7 @@ public class VaultTileEntity extends SmartTileEntity {
 	protected int length;
 	protected Axis axis;
 
-	public VaultTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+	public ItemVaultTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 
 		inventory = new ItemStackHandler(AllConfigs.SERVER.logistics.vaultCapacity.get()) {
@@ -60,11 +62,11 @@ public class VaultTileEntity extends SmartTileEntity {
 			return;
 		if (!isController())
 			return;
-		VaultConnectivityHandler.formVaults(this);
+		ItemVaultConnectivityHandler.formVaults(this);
 	}
 
 	protected void updateComparators() {
-		VaultTileEntity controllerTE = getControllerTE();
+		ItemVaultTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null)
 			return;
 
@@ -92,23 +94,29 @@ public class VaultTileEntity extends SmartTileEntity {
 		if (updateConnectivity)
 			updateConnectivity();
 	}
+	
+	@Override
+	public BlockPos getLastKnownPos() {
+		return lastKnownPos;
+	}
 
+	@Override
 	public boolean isController() {
 		return controller == null || worldPosition.getX() == controller.getX()
 			&& worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
 	}
-
+	
 	private void onPositionChanged() {
 		removeController(true);
 		lastKnownPos = worldPosition;
 	}
 
-	public VaultTileEntity getControllerTE() {
+	public ItemVaultTileEntity getControllerTE() {
 		if (isController())
 			return this;
 		BlockEntity tileEntity = level.getBlockEntity(controller);
-		if (tileEntity instanceof VaultTileEntity)
-			return (VaultTileEntity) tileEntity;
+		if (tileEntity instanceof ItemVaultTileEntity)
+			return (ItemVaultTileEntity) tileEntity;
 		return null;
 	}
 
@@ -121,8 +129,8 @@ public class VaultTileEntity extends SmartTileEntity {
 		length = 1;
 
 		BlockState state = getBlockState();
-		if (VaultBlock.isVault(state)) {
-			state = state.setValue(VaultBlock.LARGE, false);
+		if (ItemVaultBlock.isVault(state)) {
+			state = state.setValue(ItemVaultBlock.LARGE, false);
 			getLevel().setBlock(worldPosition, state, 22);
 		}
 
@@ -131,8 +139,9 @@ public class VaultTileEntity extends SmartTileEntity {
 		sendData();
 	}
 
+	@Override
 	public void setController(BlockPos controller) {
-		if (level.isClientSide())
+		if (level.isClientSide && !isVirtual())
 			return;
 		if (controller.equals(this.controller))
 			return;
@@ -142,10 +151,11 @@ public class VaultTileEntity extends SmartTileEntity {
 		sendData();
 	}
 
+	@Override
 	public BlockPos getController() {
 		return isController() ? worldPosition : controller;
 	}
-
+	
 	@Override
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		super.fromTag(compound, clientPacket);
@@ -194,8 +204,19 @@ public class VaultTileEntity extends SmartTileEntity {
 
 		super.write(compound, clientPacket);
 
-		if (!clientPacket)
+		if (!clientPacket) {
+			compound.putString("StorageType", "CombinedInv");
 			compound.put("Inventory", inventory.serializeNBT());
+		}
+	}
+	
+	public ItemStackHandler getInventoryOfBlock() {
+		return inventory;
+	}
+	
+	public void applyInventoryToBlock(ItemStackHandler handler) {
+		for (int i = 0; i < inventory.getSlots(); i++)
+			inventory.setStackInSlot(i, i < handler.getSlots() ? handler.getStackInSlot(i) : ItemStack.EMPTY);
 	}
 
 	@Override
@@ -211,7 +232,7 @@ public class VaultTileEntity extends SmartTileEntity {
 		if (itemCapability.isPresent())
 			return;
 		if (!isController()) {
-			VaultTileEntity controllerTE = getControllerTE();
+			ItemVaultTileEntity controllerTE = getControllerTE();
 			if (controllerTE == null)
 				return;
 			controllerTE.initCapability();
@@ -219,15 +240,15 @@ public class VaultTileEntity extends SmartTileEntity {
 			return;
 		}
 
-		boolean alongZ = VaultBlock.getVaultBlockAxis(getBlockState()) == Axis.Z;
+		boolean alongZ = ItemVaultBlock.getVaultBlockAxis(getBlockState()) == Axis.Z;
 		IItemHandlerModifiable[] invs = new IItemHandlerModifiable[length * radius * radius];
 		for (int yOffset = 0; yOffset < length; yOffset++) {
 			for (int xOffset = 0; xOffset < radius; xOffset++) {
 				for (int zOffset = 0; zOffset < radius; zOffset++) {
 					BlockPos vaultPos = alongZ ? worldPosition.offset(xOffset, zOffset, yOffset)
 						: worldPosition.offset(yOffset, xOffset, zOffset);
-					VaultTileEntity vaultAt =
-						VaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
+					ItemVaultTileEntity vaultAt =
+						ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
 					invs[yOffset * radius * radius + xOffset * radius + zOffset] =
 						vaultAt != null ? vaultAt.inventory : new ItemStackHandler();
 				}

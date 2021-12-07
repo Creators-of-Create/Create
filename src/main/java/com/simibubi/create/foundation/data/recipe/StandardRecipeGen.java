@@ -536,14 +536,19 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("P")
 				.pattern("S")),
 
-		FLUID_TANK = create(AllBlocks.FLUID_TANK).returns(2)
-			.unlockedBy(I::copperCasing)
-			.viaShaped(b -> b.define('B', I.copperCasing())
-				.define('S', I.copperNugget())
-				.define('C', Tags.Items.GLASS)
-				.pattern(" B ")
-				.pattern("SCS")
-				.pattern(" B ")),
+		FLUID_TANK = create(AllBlocks.FLUID_TANK).unlockedByTag(() -> Tags.Items.BARRELS_WOODEN)
+			.viaShaped(b -> b.define('B', I.copperSheet())
+				.define('C', Tags.Items.BARRELS_WOODEN)
+				.pattern("B")
+				.pattern("C")
+				.pattern("B")),
+
+		ITEM_VAULT = create(AllBlocks.ITEM_VAULT).unlockedByTag(() -> Tags.Items.BARRELS_WOODEN)
+			.viaShaped(b -> b.define('B', I.ironSheet())
+				.define('C', Tags.Items.BARRELS_WOODEN)
+				.pattern("B")
+				.pattern("C")
+				.pattern("B")),
 
 		DEPLOYER = create(AllBlocks.DEPLOYER).unlockedBy(I::electronTube)
 			.viaShaped(b -> b.define('I', AllItems.BRASS_HAND.get())

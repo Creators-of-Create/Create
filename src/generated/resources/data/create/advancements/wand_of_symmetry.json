@@ -1,5 +1,5 @@
 {
-  "parent": "create:refined_radiance",
+  "parent": "create:precision_mechanism",
   "display": {
     "icon": {
       "item": "create:wand_of_symmetry"

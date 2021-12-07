@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
@@ -36,7 +37,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer {
 
 	private static final int MAX_SIZE = 3;
 
@@ -106,10 +107,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			fluidLevel.tick();
 	}
 	
+	@Override
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
 	}
 
+	@Override
 	public boolean isController() {
 		return controller == null
 			|| worldPosition.getX() == controller.getX() && worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
@@ -277,6 +280,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		}
 	}
 
+	@Override
 	public void setController(BlockPos controller) {
 		if (level.isClientSide && !isVirtual())
 			return;
@@ -295,6 +299,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		oldCap.invalidate();
 	}
 
+	@Override
 	public BlockPos getController() {
 		return isController() ? worldPosition : controller;
 	}

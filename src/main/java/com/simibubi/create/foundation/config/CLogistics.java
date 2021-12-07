@@ -7,7 +7,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt psiTimeout = i(20, 1, "psiTimeout", Comments.psiTimeout);
 	public final ConfigInt mechanicalArmRange = i(5, 1, "mechanicalArmRange", Comments.mechanicalArmRange);
 	public final ConfigInt linkRange = i(128, 1, "linkRange", Comments.linkRange);
-	public final ConfigInt vaultCapacity = i(27, 1, "vaultCapacity", Comments.vaultCapacity);
+	public final ConfigInt vaultCapacity = i(20, 1, "vaultCapacity", Comments.vaultCapacity);
 
 	@Override
 	public String getName() {

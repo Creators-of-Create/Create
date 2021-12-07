@@ -157,9 +157,9 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
-import com.simibubi.create.content.logistics.block.vault.VaultBlock;
-import com.simibubi.create.content.logistics.block.vault.VaultCTBehaviour;
-import com.simibubi.create.content.logistics.block.vault.VaultItem;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
@@ -637,6 +637,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BracketBlock> WOODEN_BRACKET = REGISTRATE.block("wooden_bracket", BracketBlock::new)
 		.blockstate(new BracketGenerator("wooden")::generate)
+		.properties(p -> p.sound(SoundType.SCAFFOLDING))
 		.transform(axeOrPickaxe())
 		.item(BracketBlockItem::new)
 		.transform(BracketGenerator.itemModel("wooden"))
@@ -644,6 +645,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BracketBlock> METAL_BRACKET = REGISTRATE.block("metal_bracket", BracketBlock::new)
 		.blockstate(new BracketGenerator("metal")::generate)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
 		.item(BracketBlockItem::new)
 		.transform(BracketGenerator.itemModel("metal"))
@@ -652,7 +654,7 @@ public class AllBlocks {
 	// Fluids
 
 	public static final BlockEntry<FluidPipeBlock> FLUID_PIPE = REGISTRATE.block("fluid_pipe", FluidPipeBlock::new)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.pipe())
 		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
@@ -662,7 +664,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
 		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
-			.initialProperties(SharedProperties::softMetal)
+			.initialProperties(SharedProperties::copperMetal)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.encasedPipe())
@@ -675,7 +677,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<GlassFluidPipeBlock> GLASS_FLUID_PIPE =
 		REGISTRATE.block("glass_fluid_pipe", GlassFluidPipeBlock::new)
-			.initialProperties(SharedProperties::softMetal)
+			.initialProperties(SharedProperties::copperMetal)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> p.models()
@@ -686,7 +688,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP = REGISTRATE.block("mechanical_pump", PumpBlock::new)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
 		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
@@ -697,7 +699,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<SmartFluidPipeBlock> SMART_FLUID_PIPE =
 		REGISTRATE.block("smart_fluid_pipe", SmartFluidPipeBlock::new)
-			.initialProperties(SharedProperties::softMetal)
+			.initialProperties(SharedProperties::copperMetal)
 			.transform(pickaxeOnly())
 			.blockstate(new SmartFluidPipeGenerator()::generate)
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
@@ -706,7 +708,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
 			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
@@ -736,7 +738,7 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(pickaxeOnly())
 		.blockstate(new FluidTankGenerator()::generate)
@@ -749,7 +751,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FluidTankBlock> CREATIVE_FLUID_TANK =
 		REGISTRATE.block("creative_fluid_tank", FluidTankBlock::creative)
-			.initialProperties(SharedProperties::softMetal)
+			.initialProperties(SharedProperties::copperMetal)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
@@ -766,7 +768,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<HosePulleyBlock> HOSE_PULLEY = REGISTRATE.block("hose_pulley", HosePulleyBlock::new)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.horizontalBlockProvider(true))
 		.transform(BlockStressDefaults.setImpact(4.0))
@@ -775,7 +777,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<ItemDrainBlock> ITEM_DRAIN = REGISTRATE.block("item_drain", ItemDrainBlock::new)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
@@ -783,7 +785,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<SpoutBlock> SPOUT = REGISTRATE.block("spout", SpoutBlock::new)
-		.initialProperties(SharedProperties::softMetal)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 		.addLayer(() -> RenderType::cutoutMipped)
@@ -793,7 +795,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_FLUID_INTERFACE =
 		REGISTRATE.block("portable_fluid_interface", PortableStorageInterfaceBlock::forFluids)
-			.initialProperties(SharedProperties::softMetal)
+			.initialProperties(SharedProperties::copperMetal)
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
@@ -820,6 +822,7 @@ public class AllBlocks {
 	public static final BlockEntry<PistonExtensionPoleBlock> PISTON_EXTENSION_POLE =
 		REGISTRATE.block("piston_extension_pole", PistonExtensionPoleBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
+			.properties(p -> p.sound(SoundType.SCAFFOLDING))
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 			.simpleItem()
@@ -1104,7 +1107,8 @@ public class AllBlocks {
 
 	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
 		.initialProperties(SharedProperties::wooden)
-		.properties(BlockBehaviour.Properties::noOcclusion)
+		.properties(p -> p.sound(SoundType.SCAFFOLDING)
+			.noOcclusion())
 		.transform(axeOnly())
 		.blockstate(BlockStateGen.directionalBlockProvider(false))
 		.tag(AllBlockTags.WINDMILL_SAILS.tag)
@@ -1115,7 +1119,8 @@ public class AllBlocks {
 	public static final BlockEntry<SailBlock> SAIL =
 		REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p, DyeColor.WHITE))
 			.initialProperties(SharedProperties::wooden)
-			.properties(BlockBehaviour.Properties::noOcclusion)
+			.properties(p -> p.sound(SoundType.SCAFFOLDING)
+				.noOcclusion())
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
@@ -1150,6 +1155,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<CasingBlock> COPPER_CASING = REGISTRATE.block("copper_casing", CasingBlock::new)
 		.transform(BuilderTransformers.casing(AllSpriteShifts.COPPER_CASING))
+		.properties(p -> p.sound(SoundType.COPPER))
 		.register();
 
 	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
@@ -1241,7 +1247,7 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<VaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", VaultBlock::new)
+	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK)
 			.explosionResistance(1200))
@@ -1249,10 +1255,10 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(s -> ConfiguredModel.builder()
 				.modelFile(AssetLookup.standardModel(c, p))
-				.rotationY(s.getValue(VaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
+				.rotationY(s.getValue(ItemVaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
 				.build()))
-		.onRegister(connectedTextures(new VaultCTBehaviour()))
-		.item(VaultItem::new)
+		.onRegister(connectedTextures(new ItemVaultCTBehaviour()))
+		.item(ItemVaultItem::new)
 		.build()
 		.register();
 
@@ -1436,7 +1442,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<CopperBacktankBlock> COPPER_BACKTANK =
 		REGISTRATE.block("copper_backtank", CopperBacktankBlock::new)
-			.initialProperties(SharedProperties::softMetal)
+			.initialProperties(SharedProperties::copperMetal)
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)

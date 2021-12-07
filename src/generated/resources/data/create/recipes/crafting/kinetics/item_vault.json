@@ -7,13 +7,13 @@
   ],
   "key": {
     "B": {
-      "tag": "forge:plates/copper"
+      "tag": "forge:plates/iron"
     },
     "C": {
       "tag": "forge:barrels/wooden"
     }
   },
   "result": {
-    "item": "create:fluid_tank"
+    "item": "create:item_vault"
   }
 }

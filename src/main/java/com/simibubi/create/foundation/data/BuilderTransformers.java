@@ -123,7 +123,7 @@ public class BuilderTransformers {
 
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(
 		@Nullable DyeColor color) {
-		return b -> b.initialProperties(SharedProperties::softMetal)
+		return b -> b.initialProperties(SharedProperties::copperMetal)
 			.blockstate((c, p) -> {
 				String variant = color == null ? "copper" : color.getSerializedName();
 				p.directionalBlock(c.get(), p.models()

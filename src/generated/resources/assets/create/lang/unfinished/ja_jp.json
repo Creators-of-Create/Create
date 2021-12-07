@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 321",
+	"_": "Missing Localizations: 330",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -772,14 +772,6 @@
 	"advancement.create.crushing_wheel.desc": "より効率的に粉砕するために、破砕ホイールを作る",
 	"advancement.create.blaze_cake": "シュガー・ラッシュ",
 	"advancement.create.blaze_cake.desc": "ブレイズバーナーで特別なケーキを焼く",
-	"advancement.create.chromatic_compound": "二極性化合物",
-	"advancement.create.chromatic_compound.desc": "色彩の化合物を作る",
-	"advancement.create.shadow_steel": "奈落からの帰還",
-	"advancement.create.shadow_steel.desc": "究極の虚無、「シャドウスチール」を作る",
-	"advancement.create.refined_radiance": "光輝の吹入",
-	"advancement.create.refined_radiance.desc": "究極の色彩、「高貴な光輝」を作る",
-	"advancement.create.chromatic_age": "色彩の時代",
-	"advancement.create.chromatic_age.desc": "光と闇のケーシングを作る",
 	"advancement.create.wand_of_symmetry": "輝く鏡",
 	"advancement.create.wand_of_symmetry.desc": "対象の杖を作る",
 	"advancement.create.extendo_grip": "ビヨヨーン！",
@@ -2053,6 +2045,17 @@
 	"create.ponder.item_drain.text_3": "横からアイテムを入れると...",
 	"create.ponder.item_drain.text_4": "...中に詰まった液体を出しながら横に転がっていきます",
 	"create.ponder.item_drain.text_5": "液体ネットワークで、排液口から液体を取り出せます",
+
+	"create.ponder.item_vault_sizes.header": "UNLOCALIZED: Dimensions of an Item Vault",
+	"create.ponder.item_vault_sizes.text_1": "UNLOCALIZED: Item Vaults can be combined to increase the total capacity",
+	"create.ponder.item_vault_sizes.text_2": "UNLOCALIZED: Their base square can be up to 3 blocks wide...",
+	"create.ponder.item_vault_sizes.text_3": "UNLOCALIZED: ...and grow in length up to 3x their diameter",
+
+	"create.ponder.item_vault_storage.header": "UNLOCALIZED: Storing Items in Vaults",
+	"create.ponder.item_vault_storage.text_1": "UNLOCALIZED: Item Vaults can be used to store large amounts of items",
+	"create.ponder.item_vault_storage.text_2": "UNLOCALIZED: However, contents cannot be added or taken manually",
+	"create.ponder.item_vault_storage.text_3": "UNLOCALIZED: Any components for item transfer can both insert...",
+	"create.ponder.item_vault_storage.text_4": "UNLOCALIZED: ...and take contents from this container",
 
 	"create.ponder.large_cogwheel.header": "大きな歯車による回転力の伝達",
 	"create.ponder.large_cogwheel.text_1": "大きな歯車は、直角に接続できます",

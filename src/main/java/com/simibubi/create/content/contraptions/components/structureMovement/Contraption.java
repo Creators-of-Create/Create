@@ -57,9 +57,10 @@ import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
-import com.simibubi.create.content.logistics.block.vault.VaultTileEntity;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.ICoordinate;
@@ -337,6 +338,15 @@ public abstract class Contraption {
 				frontier.add(attached);
 		}
 
+		// Double Chest halves stick together
+		if (state.hasProperty(ChestBlock.TYPE) && state.hasProperty(ChestBlock.FACING)
+			&& state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+			Direction offset = ChestBlock.getConnectedDirection(state);
+			BlockPos attached = pos.relative(offset);
+			if (!visited.contains(attached))
+				frontier.add(attached);
+		}
+
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			moveBearing(pos, frontier, visited, state);
@@ -593,8 +603,6 @@ public abstract class Contraption {
 
 	protected Pair<StructureBlockInfo, BlockEntity> capture(Level world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
-		if (blockstate.getBlock() instanceof ChestBlock)
-			blockstate = blockstate.setValue(ChestBlock.TYPE, ChestType.SINGLE);
 		if (AllBlocks.REDSTONE_CONTACT.has(blockstate))
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
@@ -647,7 +655,7 @@ public abstract class Contraption {
 		nbt.remove("y");
 		nbt.remove("z");
 
-		if ((tileentity instanceof FluidTankTileEntity || tileentity instanceof VaultTileEntity)
+		if ((tileentity instanceof FluidTankTileEntity || tileentity instanceof ItemVaultTileEntity)
 			&& nbt.contains("Controller"))
 			nbt.put("Controller",
 				NbtUtils.writeBlockPos(toLocalPos(NbtUtils.readBlockPos(nbt.getCompound("Controller")))));
@@ -1066,8 +1074,8 @@ public abstract class Contraption {
 						tag.remove("InitialOffset");
 					}
 
-					if (tileEntity instanceof FluidTankTileEntity && tag.contains("LastKnownPos"))
-						tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below()));
+					if (tileEntity instanceof IMultiTileContainer && tag.contains("LastKnownPos"))
+						tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below(Integer.MAX_VALUE - 1)));
 
 					tileEntity.load(tag);
 

@@ -33,12 +33,12 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntity> {
+public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultTileEntity> {
 
 	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	public static final BooleanProperty LARGE = BooleanProperty.create("large");
 
-	public VaultBlock(Properties p_i48440_1_) {
+	public ItemVaultBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 		registerDefaultState(defaultBlockState().setValue(LARGE, false));
 	}
@@ -73,7 +73,7 @@ public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntit
 			return;
 		if (pIsMoving)
 			return;
-		withTileEntityDo(pLevel, pPos, VaultTileEntity::updateConnectivity);
+		withTileEntityDo(pLevel, pPos, ItemVaultTileEntity::updateConnectivity);
 	}
 
 	@Override
@@ -83,9 +83,9 @@ public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntit
 			.isVertical()) {
 			BlockEntity te = context.getLevel()
 				.getBlockEntity(context.getClickedPos());
-			if (te instanceof VaultTileEntity) {
-				VaultTileEntity vault = (VaultTileEntity) te;
-				VaultConnectivityHandler.splitVault(vault);
+			if (te instanceof ItemVaultTileEntity) {
+				ItemVaultTileEntity vault = (ItemVaultTileEntity) te;
+				ItemVaultConnectivityHandler.splitVault(vault);
 				vault.removeController(true);
 			}
 			state = state.setValue(LARGE, false);
@@ -98,12 +98,12 @@ public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntit
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean pIsMoving) {
 		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
 			BlockEntity te = world.getBlockEntity(pos);
-			if (!(te instanceof VaultTileEntity))
+			if (!(te instanceof ItemVaultTileEntity))
 				return;
-			VaultTileEntity tankTE = (VaultTileEntity) te;
+			ItemVaultTileEntity tankTE = (ItemVaultTileEntity) te;
 			ItemHelper.dropContents(world, pos, tankTE.inventory);
 			world.removeBlockEntity(pos);
-			VaultConnectivityHandler.splitVault(tankTE);
+			ItemVaultConnectivityHandler.splitVault(tankTE);
 		}
 	}
 
@@ -166,12 +166,12 @@ public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntit
 	}
 
 	@Override
-	public BlockEntityType<? extends VaultTileEntity> getTileEntityType() {
+	public BlockEntityType<? extends ItemVaultTileEntity> getTileEntityType() {
 		return AllTileEntities.ITEM_VAULT.get();
 	}
 
 	@Override
-	public Class<VaultTileEntity> getTileEntityClass() {
-		return VaultTileEntity.class;
+	public Class<ItemVaultTileEntity> getTileEntityClass() {
+		return ItemVaultTileEntity.class;
 	}
 }

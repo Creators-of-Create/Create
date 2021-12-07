@@ -219,6 +219,7 @@ public class FluidTankScenes {
 	public static void sizes(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("fluid_tank_sizes", "Dimensions of a Fluid tank");
 		scene.configureBasePlate(0, 0, 6);
+		scene.scaleSceneView(0.9f);
 		scene.showBasePlate();
 		scene.idle(5);
 

@@ -58,8 +58,7 @@ public class PonderIndex {
 			.addStoryBoard("gearbox", KineticsScenes::gearbox, PonderTag.KINETIC_RELAYS);
 
 		HELPER.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch, PonderTag.KINETIC_RELAYS);
-		HELPER.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift,
-			PonderTag.KINETIC_RELAYS);
+		HELPER.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift, PonderTag.KINETIC_RELAYS);
 
 		HELPER.forComponents(AllBlocks.SEQUENCED_GEARSHIFT)
 			.addStoryBoard("sequenced_gearshift", KineticsScenes::sequencedGearshift);
@@ -70,24 +69,23 @@ public class PonderIndex {
 			.addStoryBoard("fan/source", FanScenes::source, PonderTag.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
-				PonderTag.KINETIC_SOURCES);
+			PonderTag.KINETIC_SOURCES);
 		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
-				PonderTag.KINETIC_SOURCES);
-		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank,
-				PonderTag.KINETIC_SOURCES);
+			PonderTag.KINETIC_SOURCES);
+		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, PonderTag.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
-				PonderTag.KINETIC_SOURCES);
+			PonderTag.KINETIC_SOURCES);
 		HELPER.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
-				.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
+			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
-		HELPER.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
-				ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
+		HELPER.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay", ChainDriveScenes::chainDriveAsRelay,
+			PonderTag.KINETIC_RELAYS);
 		HELPER.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
-				.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
+			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
 		HELPER.forComponents(AllBlocks.FURNACE_ENGINE)
-				.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
+			.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
 		HELPER.forComponents(AllBlocks.FLYWHEEL)
 			.addStoryBoard("furnace_engine", KineticsScenes::flywheel);
 		HELPER.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
@@ -108,8 +106,7 @@ public class PonderIndex {
 			.addStoryBoard("basin", ProcessingScenes::basin)
 			.addStoryBoard("mechanical_mixer/mixing", ProcessingScenes::mixing)
 			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
-		HELPER.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner",
-			ProcessingScenes::emptyBlazeBurner);
+		HELPER.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner", ProcessingScenes::emptyBlazeBurner);
 		HELPER.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
 		HELPER.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
 		HELPER.forComponents(AllBlocks.WEIGHTED_EJECTOR)
@@ -123,6 +120,11 @@ public class PonderIndex {
 			.addStoryBoard("mechanical_crafter/connect", CrafterScenes::connect);
 		HELPER.forComponents(AllBlocks.MECHANICAL_CRAFTER, AllItems.CRAFTER_SLOT_COVER)
 			.addStoryBoard("mechanical_crafter/covers", CrafterScenes::covers);
+
+		// Vaults
+		HELPER.forComponents(AllBlocks.ITEM_VAULT)
+			.addStoryBoard("item_vault/storage", ItemVaultScenes::storage, PonderTag.LOGISTICS)
+			.addStoryBoard("item_vault/sizes", ItemVaultScenes::sizes);
 
 		// Chutes
 		HELPER.forComponents(AllBlocks.CHUTE)
@@ -265,7 +267,8 @@ public class PonderIndex {
 			.addStoryBoard("fluid_tank/storage", FluidTankScenes::storage, PonderTag.FLUIDS)
 			.addStoryBoard("fluid_tank/sizes", FluidTankScenes::sizes);
 		HELPER.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
-			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
+			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, PonderTag.FLUIDS,
+				PonderTag.CREATIVE)
 			.addStoryBoard("fluid_tank/sizes_creative", FluidTankScenes::sizes);
 		HELPER.forComponents(AllBlocks.HOSE_PULLEY)
 			.addStoryBoard("hose_pulley/intro", HosePulleyScenes::intro, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
@@ -300,7 +303,7 @@ public class PonderIndex {
 		if (REGISTER_DEBUG_SCENES)
 			DebugScenes.registerAll();
 	}
-	
+
 	public static boolean editingModeActive() {
 		return AllConfigs.CLIENT.editingMode.get();
 	}
@@ -388,6 +391,7 @@ public class PonderIndex {
 			.add(AllItems.ATTRIBUTE_FILTER)
 			.add(AllBlocks.CHUTE)
 			.add(AllBlocks.SMART_CHUTE)
+			.add(AllBlocks.ITEM_VAULT)
 			.add(AllBlocks.DEPOT)
 			.add(AllBlocks.WEIGHTED_EJECTOR)
 			.add(AllBlocks.MECHANICAL_ARM)

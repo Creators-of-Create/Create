@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/fluid_tank"
+      "create:crafting/kinetics/item_vault"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/fluid_tank"
+        "recipe": "create:crafting/kinetics/item_vault"
       }
     }
   },

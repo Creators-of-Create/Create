@@ -18,9 +18,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class VaultItem extends BlockItem {
+public class ItemVaultItem extends BlockItem {
 
-	public VaultItem(Block p_i48527_1_, Properties p_i48527_2_) {
+	public ItemVaultItem(Block p_i48527_1_, Properties p_i48527_2_) {
 		super(p_i48527_1_, p_i48527_2_);
 	}
 
@@ -62,12 +62,12 @@ public class VaultItem extends BlockItem {
 		BlockPos placedOnPos = pos.relative(face.getOpposite());
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 
-		if (!VaultBlock.isVault(placedOnState))
+		if (!ItemVaultBlock.isVault(placedOnState))
 			return;
-		VaultTileEntity tankAt = VaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
+		ItemVaultTileEntity tankAt = ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
 		if (tankAt == null)
 			return;
-		VaultTileEntity controllerTE = tankAt.getControllerTE();
+		ItemVaultTileEntity controllerTE = tankAt.getControllerTE();
 		if (controllerTE == null)
 			return;
 
@@ -76,7 +76,7 @@ public class VaultItem extends BlockItem {
 			return;
 
 		int tanksToPlace = 0;
-		Axis vaultBlockAxis = VaultBlock.getVaultBlockAxis(placedOnState);
+		Axis vaultBlockAxis = ItemVaultBlock.getVaultBlockAxis(placedOnState);
 		if (vaultBlockAxis == null)
 			return;
 		if (face.getAxis() != vaultBlockAxis)
@@ -96,7 +96,7 @@ public class VaultItem extends BlockItem {
 				BlockPos offsetPos = vaultBlockAxis == Axis.X ? startPos.offset(0, xOffset, zOffset)
 					: startPos.offset(xOffset, zOffset, 0);
 				BlockState blockState = world.getBlockState(offsetPos);
-				if (VaultBlock.isVault(blockState))
+				if (ItemVaultBlock.isVault(blockState))
 					continue;
 				if (!blockState.getMaterial()
 					.isReplaceable())
@@ -113,7 +113,7 @@ public class VaultItem extends BlockItem {
 				BlockPos offsetPos = vaultBlockAxis == Axis.X ? startPos.offset(0, xOffset, zOffset)
 					: startPos.offset(xOffset, zOffset, 0);
 				BlockState blockState = world.getBlockState(offsetPos);
-				if (VaultBlock.isVault(blockState))
+				if (ItemVaultBlock.isVault(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
 				player.getPersistentData()
