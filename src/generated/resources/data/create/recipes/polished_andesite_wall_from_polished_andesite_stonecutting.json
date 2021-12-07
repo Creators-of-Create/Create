@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:polished_andesite"
-  },
-  "result": "create:polished_andesite_wall",
-  "count": 1
-}

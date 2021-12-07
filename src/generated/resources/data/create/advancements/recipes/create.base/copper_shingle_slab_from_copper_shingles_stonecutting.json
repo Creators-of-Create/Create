@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:copper_shingle_slab_from_copper_shingles_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_copper_shingles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:copper_shingles"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:copper_shingle_slab_from_copper_shingles_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_copper_shingles",
+      "has_the_recipe"
+    ]
+  ]
+}

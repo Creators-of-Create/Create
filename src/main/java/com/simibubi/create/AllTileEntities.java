@@ -5,7 +5,6 @@ import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.components.actors.DrillInstance;
 import com.simibubi.create.content.contraptions.components.actors.DrillRenderer;
@@ -109,9 +108,10 @@ import com.simibubi.create.content.contraptions.relays.elementary.BracketedKinet
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogInstance;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
-import com.simibubi.create.content.contraptions.relays.encased.ShaftlessCogRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftInstance;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeInstance;
@@ -151,7 +151,6 @@ import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntit
 import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInstance;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
@@ -224,16 +223,16 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<SimpleKineticTileEntity> ENCASED_COGWHEEL = Create.registrate()
 		.tileEntity("encased_cogwheel", SimpleKineticTileEntity::new)
-		.instance(() -> ShaftlessCogInstance::small)
+		.instance(() -> EncasedCogInstance::small)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_COGWHEEL, AllBlocks.BRASS_ENCASED_COGWHEEL)
-		.renderer(() -> ShaftlessCogRenderer::small)
+		.renderer(() -> EncasedCogRenderer::small)
 		.register();
 
 	public static final TileEntityEntry<SimpleKineticTileEntity> ENCASED_LARGE_COGWHEEL = Create.registrate()
 		.tileEntity("encased_large_cogwheel", SimpleKineticTileEntity::new)
-		.instance(() -> ShaftlessCogInstance::large)
+		.instance(() -> EncasedCogInstance::large)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL, AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL)
-		.renderer(() -> ShaftlessCogRenderer::large)
+		.renderer(() -> EncasedCogRenderer::large)
 		.register();
 
 	public static final TileEntityEntry<AdjustablePulleyTileEntity> ADJUSTABLE_PULLEY = Create.registrate()
@@ -640,12 +639,6 @@ public class AllTileEntities {
 		.tileEntity("stockpile_switch", StockpileSwitchTileEntity::new)
 		.validBlocks(AllBlocks.STOCKPILE_SWITCH)
 		.renderer(() -> SmartTileEntityRenderer::new)
-		.register();
-
-	public static final TileEntityEntry<AdjustableCrateTileEntity> ADJUSTABLE_CRATE = Create.registrate()
-		.tileEntity("adjustable_crate", AdjustableCrateTileEntity::new)
-		.validBlocks(AllBlocks.ADJUSTABLE_CRATE)
-		// .renderer(() -> renderer)
 		.register();
 
 	public static final TileEntityEntry<CreativeCrateTileEntity> CREATIVE_CRATE = Create.registrate()

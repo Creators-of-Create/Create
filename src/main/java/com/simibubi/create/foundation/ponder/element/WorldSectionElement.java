@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,14 +20,15 @@ import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -52,7 +52,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WorldSectionElement extends AnimatedSceneElement {
 
-	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new SuperByteBufferCache.Compartment<>();
+	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION =
+		new SuperByteBufferCache.Compartment<>();
 
 	List<BlockEntity> renderedTileEntities;
 	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
@@ -255,11 +256,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		tickableTileEntities.removeIf(te -> scene.getWorld()
 			.getBlockEntity(te.getFirst()
 				.getBlockPos()) != te.getFirst());
-		tickableTileEntities.forEach(te -> {
-			BlockEntity tile = te.getFirst();
-			te.getSecond()
-				.accept(scene.getWorld());
-		});
+		tickableTileEntities.forEach(te -> te.getSecond()
+			.accept(scene.getWorld()));
 	}
 
 	@Override
@@ -284,7 +282,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				return;
 			if (!(block instanceof EntityBlock))
 				return;
-			addTicker(tileEntity, ((EntityBlock) block).getTicker(world, blockState, tileEntity.getType()));
+			tileEntity.setBlockState(world.getBlockState(pos));
+			BlockEntityTicker<?> ticker = ((EntityBlock) block).getTicker(world, blockState, tileEntity.getType());
+			if (ticker != null)
+				addTicker(tileEntity, ticker);
 			renderedTileEntities.add(tileEntity);
 		});
 	}
@@ -311,6 +312,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			renderedTileEntities = null;
 			tickableTileEntities = null;
 		}
+
+		ms.pushPose();
 		transformMS(ms, pt);
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer, pt);
@@ -329,6 +332,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.apply(overlayMS, pt, true);
 				transformMS(overlayMS, pt);
 			}
+
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 			VertexConsumer builder = new SheetedDecalTextureGenerator(
@@ -341,6 +345,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random);
 			ms.popPose();
 		}
+
+		ms.popPose();
 	}
 
 	protected void renderStructure(PonderWorld world, PoseStack ms, MultiBufferSource buffer, RenderType type,
@@ -377,9 +383,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		ms.pushPose();
 		transformMS(ms, pt);
-		RenderSystem.disableTexture();
-		LevelRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), shape.bounds()
-			.move(selectedBlock), 1, 1, 1, 0.6f);
+		ms.translate(selectedBlock.getX(), selectedBlock.getY(), selectedBlock.getZ());
+
+		AABBOutline aabbOutline = new AABBOutline(shape.bounds());
+		aabbOutline.getParams()
+			.lineWidth(1 / 64f)
+			.colored(0xefefef)
+			.disableNormals();
+		aabbOutline.render(ms, (SuperRenderTypeBuffer) buffer, pt);
+
 		ms.popPose();
 	}
 

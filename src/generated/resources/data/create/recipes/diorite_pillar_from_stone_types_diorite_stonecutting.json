@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/diorite"
+  },
+  "result": "create:diorite_pillar",
+  "count": 1
+}

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderTag;
@@ -21,7 +22,7 @@ public class PonderIndex {
 
 	static final PonderRegistrationHelper HELPER = new PonderRegistrationHelper(Create.ID);
 
-	public static final boolean EDITOR_MODE = false;
+	public static final boolean REGISTER_DEBUG_SCENES = false;
 
 	public static void register() {
 		// Register storyboards here
@@ -35,11 +36,13 @@ public class PonderIndex {
 
 		HELPER.forComponents(AllBlocks.COGWHEEL)
 			.addStoryBoard("cog/small", KineticsScenes::cogAsRelay, PonderTag.KINETIC_RELAYS)
-			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp);
+			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
+			.addStoryBoard("cog/encasing", KineticsScenes::cogwheelsCanBeEncased);
 
 		HELPER.forComponents(AllBlocks.LARGE_COGWHEEL)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
-			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay, PonderTag.KINETIC_RELAYS);
+			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay, PonderTag.KINETIC_RELAYS)
+			.addStoryBoard("cog/encasing", KineticsScenes::cogwheelsCanBeEncased);
 
 		HELPER.forComponents(AllItems.BELT_CONNECTOR)
 			.addStoryBoard("belt/connect", BeltScenes::beltConnector, PonderTag.KINETIC_RELAYS)
@@ -278,11 +281,10 @@ public class PonderIndex {
 			.addStoryBoard("portable_interface/redstone_fluid", MovementActorScenes::psiRedstone);
 
 		// Redstone
-		// TODO simi
-//		HELPER.forComponents(AllBlocks.PULSE_EXTENDER)
-//			.addStoryBoard("adjustable_repeater", RedstoneScenes::adjustableRepeater);
-//		HELPER.forComponents(AllBlocks.PULSE_REPEATER)
-//			.addStoryBoard("adjustable_pulse_repeater", RedstoneScenes::adjustablePulseRepeater);
+		HELPER.forComponents(AllBlocks.PULSE_EXTENDER)
+			.addStoryBoard("pulse_extender", RedstoneScenes::pulseExtender);
+		HELPER.forComponents(AllBlocks.PULSE_REPEATER)
+			.addStoryBoard("pulse_repeater", RedstoneScenes::pulseRepeater);
 		HELPER.forComponents(AllBlocks.POWERED_LATCH)
 			.addStoryBoard("powered_latch", RedstoneScenes::poweredLatch);
 		HELPER.forComponents(AllBlocks.POWERED_TOGGLE_LATCH)
@@ -295,8 +297,12 @@ public class PonderIndex {
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
 
 		// Debug scenes, can be found in game via the Brass Hand
-		if (EDITOR_MODE)
+		if (REGISTER_DEBUG_SCENES)
 			DebugScenes.registerAll();
+	}
+	
+	public static boolean editingModeActive() {
+		return AllConfigs.CLIENT.editingMode.get();
 	}
 
 	public static void registerTags() {
@@ -391,7 +397,6 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_TUNNEL)
 			.add(AllBlocks.CONTENT_OBSERVER)
 			.add(AllBlocks.STOCKPILE_SWITCH)
-			.add(AllBlocks.ADJUSTABLE_CRATE)
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE);
 

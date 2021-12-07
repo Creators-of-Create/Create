@@ -38,19 +38,19 @@ public class PaletteBlockPattern {
 	public static final PaletteBlockPattern
 
 	CUT =
-		create("cut", PREFIX, ALL_PARTIALS)/*.addRecipes(b -> (c, p) -> p.stonecutting(DataIngredient.items(b), c::get))*/,
+		create("cut", PREFIX, ALL_PARTIALS),
 
-		BRICKS = create("bricks", SUFFIX, ALL_PARTIALS).textures("brick"),
+		BRICKS = create("cut_bricks", WRAP, ALL_PARTIALS).textures("brick"),
 
 		SMALL_BRICKS = create("small_bricks", WRAP, ALL_PARTIALS).textures("small_brick"),
 
-		POLISHED = create("polished", PREFIX, FOR_POLISHED).textures("polished", "slab"),
+		POLISHED = create("polished_cut", PREFIX, FOR_POLISHED).textures("polished", "slab"),
 
 		LAYERED = create("layered", PREFIX)//.blockStateFactory(p -> p::cubeColumn)
 			.textures("layered", "cap")
 			.connectedTextures(v -> new HorizontalCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.CAP))),
 
-		PILLAR = create("pillar", PREFIX)/*.blockStateFactory(p -> p::pillar)*/
+		PILLAR = create("pillar", SUFFIX)/*.blockStateFactory(p -> p::pillar)*/
 			.block(LayeredBlock::new)
 			.textures("pillar", "cap")
 			.connectedTextures(v -> new RotatedPillarCTBehaviour(ct(v, CTs.PILLAR), ct(v, CTs.CAP)))
@@ -124,6 +124,7 @@ public class PaletteBlockPattern {
 
 //	public void addRecipes(NonNullSupplier<Block> baseBlock, DataGenContext<Block, ? extends Block> c,
 //		RegistrateRecipeProvider p) {
+//		p.stonecutting(DataIngredient.items(baseBlock), c::get);
 //		additionalRecipes.apply(baseBlock)
 //			.accept(c, p);
 //	}
@@ -160,7 +161,7 @@ public class PaletteBlockPattern {
 //		itemTags = tags;
 //		return this;
 //	}
-
+//
 //	private PaletteBlockPattern addRecipes(
 //		NonNullFunction<NonNullSupplier<Block>, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> func) {
 //		this.additionalRecipes = func;
@@ -264,7 +265,7 @@ public class PaletteBlockPattern {
 
 		PILLAR(CTType.RECTANGLE, s -> toLocation(s, "pillar")),
 		CAP(CTType.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
-		LAYERED(CTType.HORIZONTAL, s -> toLocation(s, "layered"))
+		LAYERED(CTType.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
 
 		;
 

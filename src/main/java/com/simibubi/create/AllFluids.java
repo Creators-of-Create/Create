@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
-import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.entry.FluidEntry;
@@ -81,14 +81,14 @@ public class AllFluids {
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {
 		Fluid fluid = fluidState.getType();
-//		if (fluid.isSame(HONEY.get())) TODO when fluid blocks return
-//			return fluidState.isSource() ? AllPaletteBlocks.LIMESTONE.getDefaultState()
-//				: AllPaletteBlocks.LIMESTONE_VARIANTS.registeredBlocks.get(0)
-//					.getDefaultState();
-//		if (fluid.isSame(CHOCOLATE.get()))
-//			return fluidState.isSource() ? AllPaletteBlocks.SCORIA.getDefaultState()
-//				: AllPaletteBlocks.SCORIA_VARIANTS.registeredBlocks.get(0)
-//					.getDefaultState();
+		if (fluid.isSame(HONEY.get()))
+			return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
+				.get()
+				.defaultBlockState();
+		if (fluid.isSame(CHOCOLATE.get()))
+			return AllPaletteStoneTypes.SCORIA.getBaseBlock()
+				.get()
+				.defaultBlockState();
 		return null;
 	}
 

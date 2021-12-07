@@ -4,10 +4,12 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.helper.EntityHelper;
 import com.simibubi.create.lib.item.EntityTickListenerItem;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,6 +20,9 @@ public class NoGravMagicalDohickyItem extends Item implements EntityTickListener
 	public NoGravMagicalDohickyItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
 	}
+
+	@Override
+	public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {}
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {

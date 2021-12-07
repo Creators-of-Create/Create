@@ -559,6 +559,11 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		GridAlignedBB beltVolume = getVolume();
 
 		if (beltVolume.intersects(changed)) {
+			if (light == null) {
+				initializeLight();
+				return;
+			}
+			
 			if (type == LightLayer.BLOCK)
 				updateBlockLight();
 

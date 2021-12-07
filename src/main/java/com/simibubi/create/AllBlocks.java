@@ -6,6 +6,7 @@ import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
@@ -125,7 +126,6 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
@@ -143,6 +143,7 @@ import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
+import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.data.AssetLookup;
@@ -154,8 +155,8 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.simibubi.create.lib.data.Tags;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -377,7 +378,7 @@ public class AllBlocks {
 			.properties(p -> p.strength(0.8F))
 			.transform(axeOrPickaxe())
 //			.blockstate(new BeltGenerator()::generate)
-			.transform(BlockStressDefaults.setImpact(1.0))
+			.transform(BlockStressDefaults.setImpact(0))
 			.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 			.register();
 
@@ -1126,13 +1127,13 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
-			REGISTRATE.block("shadow_steel_casing", CasingBlock::new)
+			REGISTRATE.block("shadow_steel_casing", CasingBlock::deprecated)
 					.transform(BuilderTransformers.casing(AllSpriteShifts.SHADOW_STEEL_CASING))
 					.lang("Shadow Casing")
 					.register();
 
 	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
-			REGISTRATE.block("refined_radiance_casing", CasingBlock::new)
+			REGISTRATE.block("refined_radiance_casing", CasingBlock::deprecated)
 					.transform(BuilderTransformers.casing(AllSpriteShifts.REFINED_RADIANCE_CASING))
 					.properties(p -> p.lightLevel($ -> 12))
 					.lang("Radiant Casing")
@@ -1216,8 +1217,10 @@ public class AllBlocks {
 
 	public static final BlockEntry<VaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", VaultBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
-//			.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK)
+	//			.explosionResistance(1200))
+		.transform(pickaxeOnly())
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 //					.forAllStates(s -> ConfiguredModel.builder()
 //							.modelFile(AssetLookup.standardModel(c, p))
 //							.rotationY(s.getValue(VaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
@@ -1298,10 +1301,7 @@ public class AllBlocks {
 					.simpleItem()
 					.register();
 
-	public static final BlockEntry<AdjustableCrateBlock> ADJUSTABLE_CRATE =
-			REGISTRATE.block("adjustable_crate", AdjustableCrateBlock::new)
-					.transform(BuilderTransformers.crate("brass"))
-					.register();
+
 
 	public static final BlockEntry<CreativeCrateBlock> CREATIVE_CRATE =
 			REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
@@ -1525,40 +1525,6 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<OxidizingBlock> COPPER_PLATING =
-			REGISTRATE.block("copper_block", p -> new OxidizingBlock(p))
-					.initialProperties(() -> Blocks.COPPER_BLOCK)
-					.properties(p -> p.requiresCorrectToolForDrops())
-					.transform(pickaxeOnly())
-					.item()
-//					.transform(oxidizedItemModel())
-//					.transform(oxidizedBlockstate())
-					.lang("Copper Plating")
-					.build()
-					.register();
-
-	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =
-			REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p))
-					.initialProperties(() -> Blocks.COPPER_BLOCK)
-					.properties(p -> p.requiresCorrectToolForDrops())
-					.transform(pickaxeOnly())
-					.item()
-//					.transform(oxidizedItemModel())
-//					.transform(oxidizedBlockstate())
-					.build()
-					.register();
-
-	public static final BlockEntry<OxidizingBlock> COPPER_TILES =
-			REGISTRATE.block("copper_tiles", p -> new OxidizingBlock(p))
-					.initialProperties(() -> Blocks.COPPER_BLOCK)
-					.properties(p -> p.requiresCorrectToolForDrops())
-					.transform(pickaxeOnly())
-					.item()
-//					.transform(oxidizedItemModel())
-//					.transform(oxidizedBlockstate())
-					.build()
-					.register();
-
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.properties(p -> p.requiresCorrectToolForDrops())
@@ -1586,6 +1552,16 @@ public class AllBlocks {
 			.build()
 			.lang("Block of Brass")
 			.register();
+
+	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
+		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+		});
+
+	public static final CopperBlockSet COPPER_TILES =
+		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+		});
 
 	// Load this class
 

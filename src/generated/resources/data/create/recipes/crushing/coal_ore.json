@@ -7,18 +7,20 @@
   ],
   "results": [
     {
-      "item": "minecraft:coal",
-      "count": 2
+      "item": "minecraft:coal"
     },
     {
       "item": "minecraft:coal",
-      "count": 2,
-      "chance": 0.5
+      "chance": 0.75
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
     },
     {
       "item": "minecraft:cobblestone",
       "chance": 0.125
     }
   ],
-  "processingTime": 300
+  "processingTime": 150
 }

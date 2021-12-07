@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_scoria_slab_recycling"
+    ]
+  },
+  "criteria": {
+    "has_cut_scoria_slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_scoria_slab"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_scoria_slab_recycling"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_scoria_slab",
+      "has_the_recipe"
+    ]
+  ]
+}

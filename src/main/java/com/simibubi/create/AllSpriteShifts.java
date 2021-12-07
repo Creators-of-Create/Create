@@ -28,7 +28,7 @@ public class AllSpriteShifts {
 
 	public static final CTSpriteShiftEntry FRAMED_GLASS =
 		getCT(OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
-		HORIZONTAL_FRAMED_GLASS = getCT(HORIZONTAL, "palettes/framed_glass", "palettes/horizontal_framed_glass"),
+		HORIZONTAL_FRAMED_GLASS = getCT(CTType.HORIZONTAL_KRYPPERS, "palettes/framed_glass", "palettes/horizontal_framed_glass"),
 		VERTICAL_FRAMED_GLASS = getCT(VERTICAL, "palettes/framed_glass", "palettes/vertical_framed_glass"),
 		ORNATE_IRON_WINDOW = vertical("palettes/ornate_iron_window");
 

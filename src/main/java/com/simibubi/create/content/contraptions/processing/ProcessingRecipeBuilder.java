@@ -168,6 +168,11 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		params.fluidResults.add(fluidStack);
 		return this;
 	}
+	
+	public ProcessingRecipeBuilder<T> toolNotConsumed() {
+		params.keepHeldItem = true;
+		return this;
+	}
 
 	//
 
@@ -198,6 +203,8 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		protected NonNullList<FluidStack> fluidResults;
 		protected int processingDuration;
 		protected HeatCondition requiredHeat;
+		
+		public boolean keepHeldItem;
 
 		protected ProcessingRecipeParams(ResourceLocation id) {
 			this.id = id;
@@ -207,6 +214,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 			fluidResults = NonNullList.create();
 			processingDuration = 0;
 			requiredHeat = HeatCondition.NONE;
+			keepHeldItem = false;
 		}
 
 	}

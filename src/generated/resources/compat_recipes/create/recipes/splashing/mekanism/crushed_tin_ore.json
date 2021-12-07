@@ -8,12 +8,7 @@
   "results": [
     {
       "item": "mekanism:nugget_tin",
-      "count": 10
-    },
-    {
-      "item": "mekanism:nugget_tin",
-      "count": 5,
-      "chance": 0.5
+      "count": 9
     }
   ],
   "conditions": [

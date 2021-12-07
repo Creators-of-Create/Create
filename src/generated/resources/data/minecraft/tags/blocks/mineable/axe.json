@@ -98,7 +98,6 @@
     "create:mechanical_arm",
     "create:content_observer",
     "create:stockpile_switch",
-    "create:adjustable_crate",
     "create:creative_crate",
     "create:nixie_tube",
     "create:white_nixie_tube",

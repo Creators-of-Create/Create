@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:cut_calcite_brick_slab_recycling"
+    ]
+  },
+  "criteria": {
+    "has_cut_calcite_brick_slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:cut_calcite_brick_slab"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:cut_calcite_brick_slab_recycling"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cut_calcite_brick_slab",
+      "has_the_recipe"
+    ]
+  ]
+}

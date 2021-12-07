@@ -31,13 +31,19 @@ public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 	public static class Horizontal extends CTSpriteShiftEntry {
 
-		public Horizontal() {
+		// Different sheet arrangement
+		private boolean kryppers;
+
+		public Horizontal(boolean kryppers) {
 			super(2);
+			this.kryppers = kryppers;
 		}
 
 		@Override
 		public int getTextureIndex(CTContext context) {
-			return !context.right && !context.left ? 0 : !context.right ? 3 : !context.left ? 2 : 1;
+			if (kryppers)
+				return !context.right && !context.left ? 0 : !context.right ? 3 : !context.left ? 2 : 1;
+			return (context.right ? 1 : 0) + (context.left ? 2 : 0);
 		}
 
 		@Override

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:small_asurine_brick_slab"
+    },
+    {
+      "item": "create:small_asurine_brick_slab"
+    }
+  ],
+  "result": {
+    "item": "create:small_asurine_bricks"
+  }
+}

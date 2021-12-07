@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/crimsite"
+  },
+  "result": "create:small_crimsite_brick_slab",
+  "count": 2
+}

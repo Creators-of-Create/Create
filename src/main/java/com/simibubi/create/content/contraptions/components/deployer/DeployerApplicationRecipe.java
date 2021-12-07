@@ -38,7 +38,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 
 	public DeployerApplicationRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.DEPLOYING, params);
-		keepHeldItem = false;
+		keepHeldItem = params.keepHeldItem;
 	}
 
 	@Override

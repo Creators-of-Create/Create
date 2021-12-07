@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:weathered_copper_tile_stairs"
+    ]
+  },
+  "criteria": {
+    "has_weathered_copper_tiles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:weathered_copper_tiles"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:weathered_copper_tile_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_weathered_copper_tiles",
+      "has_the_recipe"
+    ]
+  ]
+}

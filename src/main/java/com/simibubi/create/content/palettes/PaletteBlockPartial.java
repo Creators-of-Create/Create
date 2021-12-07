@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.lib.helper.StairsBlockHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -12,6 +13,8 @@ import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -42,7 +45,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 	public @NonnullType BlockBuilder<B, CreateRegistrate> create(String variantName, PaletteBlockPattern pattern,
 		BlockEntry<? extends Block> block, AllPaletteStoneTypes variant) {
-		String patternName = pattern.createName(variantName);
+		String patternName = Lang.nonPluralId(pattern.createName(variantName));
 		String blockName = patternName + "_" + this.name;
 
 		BlockBuilder<B, CreateRegistrate> blockBuilder = Create.registrate()
@@ -125,6 +128,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 //			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
 //			p.stairs(DataIngredient.items(patternBlock), c::get, c.getName(), false);
 //			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 1);
+//			p.stonecutting(DataIngredient.items(type.getBaseBlock()), c::get, 1);
 //		}
 
 	}
@@ -166,7 +170,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 //					.cubeColumn(name + "_double", sideTexture, mainTexture);
 //			} else {
 //				doubleSlab = prov.models()
-//					.getExistingFile(prov.modLoc(name.replace("_slab", "")));
+//					.getExistingFile(prov.modLoc(pattern.createName(variantName)));
 //			}
 //
 //			prov.slabBlock(ctx.get(), bottom, top, doubleSlab);
@@ -187,6 +191,13 @@ public abstract class PaletteBlockPartial<B extends Block> {
 //			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
 //			p.slab(DataIngredient.items(patternBlock), c::get, c.getName(), false);
 //			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 2);
+//			p.stonecutting(DataIngredient.items(type.getBaseBlock()), c::get, 2);
+//			DataIngredient ingredient = DataIngredient.items(c.get());
+//			ShapelessRecipeBuilder.shapeless(patternBlock.get())
+//				.requires(ingredient)
+//				.requires(ingredient)
+//				.unlockedBy("has_" + c.getName(), ingredient.getCritereon(p))
+//				.save(p, Create.ID + ":" + c.getName() + "_recycling");
 //		}
 
 //		@Override
@@ -237,8 +248,15 @@ public abstract class PaletteBlockPartial<B extends Block> {
 //		@Override
 //		protected void createRecipes(AllPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
 //			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
-//			p.wall(DataIngredient.items(patternBlock), c::get);
 //			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 1);
+//			p.stonecutting(DataIngredient.items(type.getBaseBlock()), c::get, 1);
+//			DataIngredient ingredient = DataIngredient.items(patternBlock);
+//			ShapedRecipeBuilder.shaped(c.get(), 6)
+//				.pattern("XXX")
+//				.pattern("XXX")
+//				.define('X', ingredient)
+//				.unlockedBy("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+//				.save(p, p.safeId(c.get()));
 //		}
 
 	}

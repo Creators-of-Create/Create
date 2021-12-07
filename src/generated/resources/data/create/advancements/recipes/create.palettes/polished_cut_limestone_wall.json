@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:polished_cut_limestone_wall"
+    ]
+  },
+  "criteria": {
+    "has_polished_cut_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:polished_cut_limestone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:polished_cut_limestone_wall"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_polished_cut_limestone",
+      "has_the_recipe"
+    ]
+  ]
+}

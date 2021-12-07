@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/veridium"
-  },
-  "result": "create:small_veridium_bricks_wall",
-  "count": 1
-}

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:exposed_copper_tile_slab"
+    ]
+  },
+  "criteria": {
+    "has_exposed_copper_tiles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:exposed_copper_tiles"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:exposed_copper_tile_slab"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_exposed_copper_tiles",
+      "has_the_recipe"
+    ]
+  ]
+}

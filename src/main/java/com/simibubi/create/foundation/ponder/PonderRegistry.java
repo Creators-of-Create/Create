@@ -61,7 +61,7 @@ public class PonderRegistry {
 	}
 
 	public static List<PonderScene> compile(List<PonderStoryBoardEntry> entries) {
-		if (PonderIndex.EDITOR_MODE) {
+		if (PonderIndex.editingModeActive()) {
 			PonderLocalization.SHARED.clear();
 			SharedText.gatherText();
 		}

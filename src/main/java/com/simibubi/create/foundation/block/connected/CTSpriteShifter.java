@@ -29,7 +29,9 @@ public class CTSpriteShifter extends SpriteShifter {
 	private static CTSpriteShiftEntry create(CTType type) {
 		switch (type) {
 		case HORIZONTAL:
-			return new CTSpriteShiftEntry.Horizontal();
+			return new CTSpriteShiftEntry.Horizontal(false);
+		case HORIZONTAL_KRYPPERS:
+			return new CTSpriteShiftEntry.Horizontal(true);
 		case OMNIDIRECTIONAL:
 			return new CTSpriteShiftEntry.Omnidirectional();
 		case VERTICAL:
@@ -44,7 +46,7 @@ public class CTSpriteShifter extends SpriteShifter {
 	}
 
 	public enum CTType {
-		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS, RECTANGLE;
+		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS, RECTANGLE, HORIZONTAL_KRYPPERS;
 	}
 
 }

@@ -17,17 +17,31 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement {
+
+	public static final BooleanProperty TOP_SHAFT = BooleanProperty.create("top_shaft");
+	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
 
 	boolean isLarge;
 	private BlockEntry<CasingBlock> casing;
@@ -44,6 +58,26 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		super(properties);
 		isLarge = large;
 		this.casing = casing;
+		registerDefaultState(defaultBlockState().setValue(TOP_SHAFT, false)
+			.setValue(BOTTOM_SHAFT, false));
+	}
+
+	@Override
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(TOP_SHAFT, BOTTOM_SHAFT));
+	}
+
+	@Override
+	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+		if (target instanceof BlockHitResult)
+			return ((BlockHitResult) target).getDirection()
+				.getAxis() != getRotationAxis(state)
+					? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
+					: getCasing().asStack();
+		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	@Override
@@ -65,7 +99,25 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 
 	@Override
 	public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {
-		return pState == pAdjacentBlockState;
+		return pState.getBlock() == pAdjacentBlockState.getBlock()
+			&& pState.getValue(AXIS) == pAdjacentBlockState.getValue(AXIS);
+	}
+
+	@Override
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		if (context.getClickedFace()
+			.getAxis() != state.getValue(AXIS))
+			return super.onWrenched(state, context);
+
+		Level level = context.getLevel();
+		if (level.isClientSide)
+			return InteractionResult.SUCCESS;
+
+		BlockPos pos = context.getClickedPos();
+		KineticTileEntity.switchToBlockState(level, pos, state.cycle(context.getClickedFace()
+			.getAxisDirection() == AxisDirection.POSITIVE ? TOP_SHAFT : BOTTOM_SHAFT));
+		playRotateSound(level, pos);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -82,7 +134,20 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return false;
+		return face.getAxis() == state.getValue(AXIS)
+			&& state.getValue(face.getAxisDirection() == AxisDirection.POSITIVE ? TOP_SHAFT : BOTTOM_SHAFT);
+	}
+
+	@Override
+	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		if (newState.getBlock() instanceof EncasedCogwheelBlock
+			&& oldState.getBlock() instanceof EncasedCogwheelBlock) {
+			if (newState.getValue(TOP_SHAFT) != oldState.getValue(TOP_SHAFT))
+				return false;
+			if (newState.getValue(BOTTOM_SHAFT) != oldState.getValue(BOTTOM_SHAFT))
+				return false;
+		}
+		return super.areStatesKineticallyEquivalent(oldState, newState);
 	}
 
 	@Override

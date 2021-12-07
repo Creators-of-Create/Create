@@ -23,12 +23,9 @@ package com.simibubi.create.foundation.data;
 //import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 //import com.simibubi.create.foundation.utility.Iterate;
 //import com.simibubi.create.foundation.utility.Pointing;
-//import com.simibubi.create.foundation.worldgen.OxidizingBlock;
-//import com.tterrag.registrate.builders.BlockBuilder;
 //import com.tterrag.registrate.providers.DataGenContext;
 //import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 //import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-//import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 //
 //import net.minecraft.core.Direction;
 //import net.minecraft.core.Direction.Axis;
@@ -80,17 +77,6 @@ package com.simibubi.create.foundation.data;
 //	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> horizontalWheelProvider(
 //		boolean customItem) {
 //		return (c, p) -> horizontalWheel(c, p, getBlockModel(customItem, c, p));
-//	}
-//
-//	public static <P> NonNullUnaryOperator<BlockBuilder<OxidizingBlock, P>> oxidizedBlockstate() {
-//		return b -> b.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-//			.forAllStates(state -> {
-//				String name = AssetLookup.getOxidizedModel(ctx.getName(), state.getValue(OxidizingBlock.OXIDIZATION));
-//				return ConfiguredModel.builder()
-//					.modelFile(prov.models()
-//						.cubeAll(name, prov.modLoc(name)))
-//					.build();
-//			}));
 //	}
 //
 //	// Utility

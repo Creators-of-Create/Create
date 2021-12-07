@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:copper_tiles"
+    }
+  },
+  "result": {
+    "item": "create:copper_tile_stairs",
+    "count": 4
+  }
+}

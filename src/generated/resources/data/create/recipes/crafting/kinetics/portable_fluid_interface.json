@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " B ",
-    " I "
-  ],
-  "key": {
-    "I": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "item": "create:copper_casing"
     },
-    "B": {
-      "item": "create:andesite_funnel"
+    {
+      "item": "create:chute"
     }
-  },
+  ],
   "result": {
     "item": "create:portable_fluid_interface"
   }

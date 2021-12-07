@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "create:polished_cut_ochrum"
+    }
+  },
+  "result": {
+    "item": "create:polished_cut_ochrum_wall",
+    "count": 6
+  }
+}

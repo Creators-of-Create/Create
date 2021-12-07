@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:polished_cut_crimsite_slab"
+    },
+    {
+      "item": "create:polished_cut_crimsite_slab"
+    }
+  ],
+  "result": {
+    "item": "create:polished_cut_crimsite"
+  }
+}

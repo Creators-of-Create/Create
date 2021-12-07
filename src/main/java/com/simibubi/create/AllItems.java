@@ -26,6 +26,7 @@ import com.simibubi.create.content.curiosities.BuildersTeaItem;
 import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
 import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
 import com.simibubi.create.content.curiosities.CombustibleItem;
+import com.simibubi.create.content.curiosities.ExperienceNuggetItem;
 import com.simibubi.create.content.curiosities.RefinedRadianceItem;
 import com.simibubi.create.content.curiosities.ShadowSteelItem;
 import com.simibubi.create.content.curiosities.TreeFertilizerItem;
@@ -78,10 +79,12 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
-		CINDER_FLOUR = ingredient("cinder_flour"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
-		ROSE_QUARTZ = ingredient("rose_quartz"), POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"),
-		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
+		CINDER_FLOUR = ingredient("cinder_flour"), ROSE_QUARTZ = ingredient("rose_quartz"),
+		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), PROPELLER = ingredient("propeller"),
+		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
+
+	public static final ItemEntry<HiddenIngredientItem> POWDERED_OBSIDIAN = hiddenIngredient("powdered_obsidian");
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_PRECISION_MECHANISM =
 		REGISTRATE.item("incomplete_precision_mechanism", SequencedAssemblyItem::new)
@@ -147,7 +150,6 @@ public class AllItems {
 		.lang("Builder's Tea")
 		.register();
 
-
 	public static final ItemEntry<Item> RAW_ZINC = ingredient("raw_zinc");
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
@@ -173,9 +175,17 @@ public class AllItems {
 	public static final ItemEntry<Item> COPPER_NUGGET =
 		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), Tags.Items.NUGGETS),
 		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), Tags.Items.NUGGETS),
-		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), Tags.Items.NUGGETS),
+		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), Tags.Items.NUGGETS);
 
-		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), PLATES.tag),
+	public static final ItemEntry<ExperienceNuggetItem> EXP_NUGGET =
+		REGISTRATE.item("experience_nugget", ExperienceNuggetItem::new)
+			.tag(Tags.Items.NUGGETS)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.lang("Nugget of Experience")
+			.register();
+
+	public static final ItemEntry<Item> COPPER_SHEET =
+		taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), PLATES.tag),
 		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),
 		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag, ItemTags.PIGLIN_LOVED),
@@ -183,8 +193,7 @@ public class AllItems {
 		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
 		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag, ItemTags.PIGLIN_LOVED),
 		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
-		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag),
-		CRUSHED_BRASS = taggedIngredient("crushed_brass", CRUSHED_ORES.tag);
+		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag);
 
 	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre("osmium"),
 		CRUSHED_PLATINUM = compatCrushedOre("platinum"), CRUSHED_SILVER = compatCrushedOre("silver"),
@@ -357,10 +366,10 @@ public class AllItems {
 			.register();
 	}
 
-//	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
-//		return REGISTRATE.item(name, HiddenIngredientItem::new)
-//			.register();
-//	}
+	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+		return REGISTRATE.item(name, HiddenIngredientItem::new)
+			.register();
+	}
 
 	@SafeVarargs
 	private static ItemEntry<Item> taggedIngredient(String name, Tag.Named<Item>... tags) {
@@ -373,7 +382,7 @@ public class AllItems {
 		return REGISTRATE
 			.item("crushed_" + metalName + "_ore",
 				props -> new TagDependentIngredientItem(props, new ResourceLocation("forge", "ores/" + metalName)))
-			.tag(AllItemTags.CRUSHED_ORES.tag)
+			.tag(CRUSHED_ORES.tag)
 			.register();
 	}
 

@@ -16,6 +16,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
@@ -24,7 +25,6 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
-import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
@@ -32,8 +32,8 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
@@ -46,27 +46,14 @@ import net.minecraft.world.level.block.state.properties.PistonType;
 
 public class BuilderTransformers {
 
-	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> cuckooClock() {
-		return b -> b.initialProperties(SharedProperties::wooden)
-//			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
-//				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
-			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(BlockStressDefaults.setImpact(1.0))
-			.item()
-			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
-	}
-
 	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
 		CTSpriteShiftEntry casingShift) {
-		return builder -> builder.initialProperties(SharedProperties::stone)
-			.properties(BlockBehaviour.Properties::noOcclusion)
+		return builder -> encasedBase(builder, () -> AllBlocks.SHAFT.get())
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
 				(s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
-//			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-//				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
-			.transform(BlockStressDefaults.setNoImpact())
-//			.loot((p, b) -> p.dropOther(b, AllBlocks.SHAFT.get()))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
+				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
 			.item()
 //			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
@@ -74,47 +61,60 @@ public class BuilderTransformers {
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
 		String casing, CTSpriteShiftEntry casingShift) {
-		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get())
-//			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-//				.withExistingParent(c.getName(), p.modLoc("block/encased_cogwheel/block"))
-//				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-//				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-//				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side")), false))
-			.item()
-//			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_cogwheel/item"))
-//				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-//				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-//				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side")))
-			.build();
+		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get(), false);
 	}
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedLargeCogwheel(
 		String casing, CTSpriteShiftEntry casingShift) {
-		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.LARGE_COGWHEEL.get())
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(casingShift)))
-//			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-//				.withExistingParent(c.getName(), p.modLoc("block/encased_large_cogwheel/block"))
-//				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-//				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-//				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side_connected")), false))
-			.item()
-//			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_large_cogwheel/item"))
-//				.texture("casing", Create.asResource("block/" + casing + "_casing"))
-//				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
-//				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side_connected")))
-			.build();
+		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.LARGE_COGWHEEL.get(), true)
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(casingShift)));
 	}
 
 	private static <B extends EncasedCogwheelBlock, P> BlockBuilder<B, P> encasedCogwheelBase(BlockBuilder<B, P> b,
-		String casing, CTSpriteShiftEntry casingShift, Supplier<ItemLike> drop) {
-		return b.initialProperties(SharedProperties::stone)
+		String casing, CTSpriteShiftEntry casingShift, Supplier<ItemLike> drop, boolean large) {
+		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
+		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
+		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
+		return encasedBase(b, drop)
 			.addLayer(() -> RenderType::cutoutMipped)
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
+				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
+					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+						: EncasedCogwheelBlock.BOTTOM_SHAFT))))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> {
+				String suffix = (blockState.getValue(EncasedCogwheelBlock.TOP_SHAFT) ? "_top" : "")
+					+ (blockState.getValue(EncasedCogwheelBlock.BOTTOM_SHAFT) ? "_bottom" : "");
+				String modelName = c.getName() + suffix;
+				return p.models()
+					.withExistingParent(modelName, p.modLoc("block/" + blockFolder + "/block" + suffix))
+					.texture("casing", Create.asResource("block/" + casing + "_casing"))
+					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
+			}, false))
+			.item()
+//			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + blockFolder + "/item"))
+//				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+//				.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+//				.texture("side", Create.asResource("block/" + casing + encasedSuffix)))
+			.build();
+	}
+
+	private static <B extends RotatedPillarKineticBlock, P> BlockBuilder<B, P> encasedBase(BlockBuilder<B, P> b,
+		Supplier<ItemLike> drop) {
+		return b.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(BlockStressDefaults.setNoImpact())
-//			.loot((p, lb) -> p.dropOther(lb, drop.get()))
-			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
-				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS))));
+//			.loot((p, lb) -> p.dropOther(lb, drop.get()));
+	}
 
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> cuckooClock() {
+		return b -> b.initialProperties(SharedProperties::wooden)
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
+				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(BlockStressDefaults.setImpact(1.0))
+			.item()
+			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
 	}
 
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(
@@ -214,56 +214,29 @@ public class BuilderTransformers {
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> crate(String type) {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
-//			.blockstate((c, p) -> {
-//				String[] variants = { "single", "top", "bottom", "left", "right" };
-//				Map<String, ModelFile> models = new HashMap<>();
-//
-//				ResourceLocation crate = p.modLoc("block/crate_" + type);
-//				ResourceLocation side = p.modLoc("block/crate_" + type + "_side");
-//				ResourceLocation casing = p.modLoc("block/" + type + "_casing");
-//
-//				for (String variant : variants)
-//					models.put(variant, p.models()
-//						.withExistingParent("block/crate/" + type + "/" + variant, p.modLoc("block/crate/" + variant))
-//						.texture("crate", crate)
-//						.texture("side", side)
-//						.texture("casing", casing));
-//
-//				p.getVariantBuilder(c.get())
-//					.forAllStates(state -> {
-//						String variant = "single";
-//						int yRot = 0;
-//
-//						if (state.getValue(CrateBlock.DOUBLE)) {
-//							Direction direction = state.getValue(CrateBlock.FACING);
-//							if (direction.getAxis() == Axis.X)
-//								yRot = 90;
-//
-//							switch (direction) {
-//							case DOWN:
-//								variant = "top";
-//								break;
-//							case NORTH:
-//							case EAST:
-//								variant = "right";
-//								break;
-//							case UP:
-//								variant = "bottom";
-//								break;
-//							case SOUTH:
-//							case WEST:
-//							default:
-//								variant = "left";
-//
-//							}
-//						}
-//
-//						return ConfiguredModel.builder()
-//							.modelFile(models.get(variant))
-//							.rotationY(yRot)
-//							.build();
-//					});
-//			})
+			.blockstate((c, p) -> {
+				String[] variants = { "single", "top", "bottom", "left", "right" };
+				Map<String, ModelFile> models = new HashMap<>();
+
+				ResourceLocation crate = p.modLoc("block/crate_" + type);
+				ResourceLocation side = p.modLoc("block/crate_" + type + "_side");
+				ResourceLocation casing = p.modLoc("block/" + type + "_casing");
+
+				for (String variant : variants)
+					models.put(variant, p.models()
+						.withExistingParent("block/crate/" + type + "/" + variant, p.modLoc("block/crate/" + variant))
+						.texture("crate", crate)
+						.texture("side", side)
+						.texture("casing", casing));
+
+				p.getVariantBuilder(c.get())
+					.forAllStates(state -> {
+						String variant = "single";
+						return ConfiguredModel.builder()
+							.modelFile(models.get(variant))
+							.build();
+					});
+			})
 			.item()
 			.properties(p -> type.equals("creative") ? p.rarity(Rarity.EPIC) : p)
 			.transform(ModelGen.customItemModel("crate", type, "single"));

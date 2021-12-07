@@ -1,18 +1,23 @@
 package com.simibubi.create.foundation.data;
 
-import java.util.function.Function;
-
-import com.tterrag.registrate.providers.DataGenContext;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-
-public class AssetLookup {
-
+//import java.util.function.Function;
+//
+//import com.tterrag.registrate.providers.DataGenContext;
+//import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+//import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+//import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+//
+//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.world.item.BlockItem;
+//import net.minecraft.world.item.Item;
+//import net.minecraft.world.level.block.state.BlockState;
+//import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+//import net.minecraft.world.level.block.state.properties.IntegerProperty;
+//import net.minecraftforge.client.model.generators.ItemModelBuilder;
+//import net.minecraftforge.client.model.generators.ModelFile;
+//
+//public class AssetLookup {
+//
 //	/**
 //	 * Custom block models packaged with other partials. Example:
 //	 * models/block/schematicannon/block.json <br>
@@ -97,10 +102,6 @@ public class AssetLookup {
 //		};
 //	}
 //
-//	public static String getOxidizedModel(String name, int level) {
-//		return "block/oxidized/" + name + "_" + level;
-//	}
-//
 //	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> existingItemModel() {
 //		return (c, p) -> p.getExistingFile(p.modLoc("item/" + c.getName()));
 //	}
@@ -112,5 +113,5 @@ public class AssetLookup {
 //	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModelWithPartials() {
 //		return (c, p) -> p.withExistingParent("item/" + c.getName(), p.modLoc("item/" + c.getName() + "/item"));
 //	}
-
-}
+//
+//}

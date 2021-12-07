@@ -6,7 +6,7 @@
 		"4": "create:block/pump",
 		"1_1": "create:block/axis_top",
 		"1_0": "create:block/axis",
-		"particle": "create:block/oxidized/copper_block_0"
+		"particle": "block/copper_block"
 	},
 	"elements": [
 		{

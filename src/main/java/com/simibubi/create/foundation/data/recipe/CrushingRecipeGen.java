@@ -1,16 +1,23 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.lib.condition.NotCondition;
 import com.simibubi.create.lib.condition.TagEmptyCondition;
-import com.tterrag.registrate.util.entry.ItemEntry;
+import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
 public class CrushingRecipeGen extends ProcessingRecipeGen {
@@ -35,66 +42,68 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.STRING, 2)
 			.output(.5f, Items.STRING)),
 
-		COPPER_BLOCK = create("copper_block", b -> b.duration(400)
-			.require(I.copperBlock())
-			.output(AllItems.CRUSHED_COPPER.get(), 5)),
+		DIORITE = mineralRecycling(AllPaletteStoneTypes.DIORITE, b -> b.duration(350)
+			.output(.25f, Items.QUARTZ, 1)),
 
-		ZINC_BLOCK = create("zinc_block", b -> b.duration(400)
-			.require(I.zincBlock())
-			.output(AllItems.CRUSHED_ZINC.get(), 5)),
+		CRIMSITE =
+			mineralRecycling(AllPaletteStoneTypes.CRIMSITE, AllItems.CRUSHED_IRON::get, () -> Items.IRON_NUGGET, .2f),
 
-		BRASS_BLOCK = create("brass_block", b -> b.duration(400)
-			.require(I.brassBlock())
-			.output(AllItems.CRUSHED_BRASS.get(), 5)),
+		VERIDIUM = mineralRecycling(AllPaletteStoneTypes.VERIDIUM, AllItems.CRUSHED_COPPER::get,
+			() -> AllItems.COPPER_NUGGET::get, .4f),
 
-		COPPER_ORE = metalOre("copper", AllItems.CRUSHED_COPPER, 350),
-		ZINC_ORE = metalOre("zinc", AllItems.CRUSHED_ZINC, 350),
-		IRON_ORE = metalOre("iron", AllItems.CRUSHED_IRON, 400),
-		GOLD_ORE = metalOre("gold", AllItems.CRUSHED_GOLD, 300),
+		ASURINE = mineralRecycling(AllPaletteStoneTypes.ASURINE, AllItems.CRUSHED_ZINC::get,
+			() -> AllItems.ZINC_NUGGET::get, .2f),
 
-		OSMIUM_ORE = metalOre("osmium", AllItems.CRUSHED_OSMIUM, 400),
-		PLATINUM_ORE = metalOre("platinum", AllItems.CRUSHED_PLATINUM, 300),
-		SILVER_ORE = metalOre("silver", AllItems.CRUSHED_SILVER, 300),
-		TIN_ORE = metalOre("tin", AllItems.CRUSHED_TIN, 350),
-		QUICKSILVER_ORE = metalOre("quicksilver", AllItems.CRUSHED_QUICKSILVER, 300),
-		LEAD_ORE = metalOre("lead", AllItems.CRUSHED_LEAD, 400),
-		ALUMINUM_ORE = metalOre("aluminum", AllItems.CRUSHED_BAUXITE, 300),
-		URANIUM_ORE = metalOre("uranium", AllItems.CRUSHED_URANIUM, 400),
-		NICKEL_ORE = metalOre("nickel", AllItems.CRUSHED_NICKEL, 350),
+		OCHRUM =
+			mineralRecycling(AllPaletteStoneTypes.OCHRUM, AllItems.CRUSHED_GOLD::get, () -> Items.GOLD_NUGGET, .1f),
 
-		NETHER_QUARTZ_ORE = create(() -> Blocks.NETHER_QUARTZ_ORE, b -> b.duration(350)
-			.output(Items.QUARTZ, 2)
-			.output(.5f, Items.QUARTZ, 4)
-			.output(.125f, Blocks.NETHERRACK)),
+		TUFF = mineralRecycling(AllPaletteStoneTypes.TUFF, b -> b.duration(350)
+			.output(.25f, Items.FLINT, 1)
+			.output(.1f, Items.GOLD_NUGGET, 1)
+			.output(.1f, AllItems.COPPER_NUGGET.get(), 1)
+			.output(.1f, AllItems.ZINC_NUGGET.get(), 1)
+			.output(.1f, Items.IRON_NUGGET, 1)),
 
-		REDSTONE_ORE = create(() -> Blocks.REDSTONE_ORE, b -> b.duration(300)
-			.output(Items.REDSTONE, 8)
-			.output(.25f, Items.REDSTONE, 6)
-			.output(.125f, Blocks.COBBLESTONE)),
+		COPPER_ORE = stoneOre(() -> Items.COPPER_ORE, AllItems.CRUSHED_COPPER::get, 5.25f, 250),
+		ZINC_ORE = stoneOre(AllBlocks.ZINC_ORE::get, AllItems.CRUSHED_ZINC::get, 1.75f, 250),
+		IRON_ORE = stoneOre(() -> Items.IRON_ORE, () -> AllItems.CRUSHED_IRON::get, 1.75f, 250),
+		GOLD_ORE = stoneOre(() -> Items.GOLD_ORE, AllItems.CRUSHED_GOLD::get, 1.75f, 250),
+		DIAMOND_ORE = stoneOre(() -> Items.DIAMOND_ORE, () -> Items.DIAMOND, 1.75f, 350),
+		EMERALD_ORE = stoneOre(() -> Items.EMERALD_ORE, () -> Items.EMERALD, 1.75f, 350),
+		COAL_ORE = stoneOre(() -> Items.COAL_ORE, () -> Items.COAL, 1.75f, 150),
+		REDSTONE_ORE = stoneOre(() -> Items.REDSTONE_ORE, () -> Items.REDSTONE, 6.5f, 250),
+		LAPIS_ORE = stoneOre(() -> Items.LAPIS_ORE, () -> Items.LAPIS_LAZULI, 10.5f, 250),
 
-		LAPIS_ORE = create(() -> Blocks.LAPIS_ORE, b -> b.duration(300)
-			.output(Items.LAPIS_LAZULI, 12)
-			.output(.25f, Items.LAPIS_LAZULI, 8)
-			.output(.125f, Blocks.COBBLESTONE)),
+		DEEP_COPPER_ORE = deepslateOre(() -> Items.DEEPSLATE_COPPER_ORE, AllItems.CRUSHED_COPPER::get, 7.25f, 350),
+		DEEP_ZINC_ORE = deepslateOre(AllBlocks.DEEPSLATE_ZINC_ORE::get, AllItems.CRUSHED_ZINC::get, 2.25f, 350),
+		DEEP_IRON_ORE = deepslateOre(() -> Items.DEEPSLATE_IRON_ORE, AllItems.CRUSHED_IRON::get, 2.25f, 350),
+		DEEP_GOLD_ORE = deepslateOre(() -> Items.DEEPSLATE_GOLD_ORE, AllItems.CRUSHED_GOLD::get, 2.25f, 350),
+		DEEP_DIAMOND_ORE = deepslateOre(() -> Items.DEEPSLATE_DIAMOND_ORE, () -> Items.DIAMOND, 2.25f, 450),
+		DEEP_EMERALD_ORE = stoneOre(() -> Items.DEEPSLATE_EMERALD_ORE, () -> Items.EMERALD, 2.25f, 450),
+		DEEP_COAL_ORE = deepslateOre(() -> Items.DEEPSLATE_COAL_ORE, () -> Items.COAL, 1.75f, 250),
+		DEEP_REDSTONE_ORE = deepslateOre(() -> Items.DEEPSLATE_REDSTONE_ORE, () -> Items.REDSTONE, 7.5f, 350),
+		DEEP_LAPIS_ORE = deepslateOre(() -> Items.DEEPSLATE_LAPIS_ORE, () -> Items.LAPIS_LAZULI, 12.5f, 350),
 
-		COAL_ORE = create(() -> Blocks.COAL_ORE, b -> b.duration(300)
-			.output(Items.COAL, 2)
-			.output(.5f, Items.COAL, 2)
-			.output(.125f, Blocks.COBBLESTONE)),
+		NETHER_GOLD_ORE = netherOre(() -> Items.NETHER_GOLD_ORE, () -> Items.GOLD_NUGGET, 7.5f, 350),
+		NETHER_QUARTZ_ORE = netherOre(() -> Items.NETHER_QUARTZ_ORE, () -> Items.QUARTZ, 2.25f, 350),
 
-		EMERALD_ORE = create(() -> Blocks.EMERALD_ORE, b -> b.duration(500)
-			.output(Items.EMERALD, 2)
-			.output(.25f, Items.EMERALD, 1)
-			.output(.125f, Blocks.COBBLESTONE)),
+		RAW_COPPER_ORE = rawOre(() -> Items.RAW_COPPER, AllItems.CRUSHED_COPPER::get, 1),
+		RAW_ZINC_ORE = rawOre(AllItems.RAW_ZINC::get, AllItems.CRUSHED_ZINC::get, 1),
+		RAW_IRON_ORE = rawOre(() -> Items.RAW_IRON, AllItems.CRUSHED_IRON::get, 1),
+		RAW_GOLD_ORE = rawOre(() -> Items.RAW_GOLD, AllItems.CRUSHED_GOLD::get, 1),
 
-		DIAMOND_ORE = create(() -> Blocks.DIAMOND_ORE, b -> b.duration(500)
-			.output(Items.DIAMOND, 2)
-			.output(.25f, Items.DIAMOND, 1)
-			.output(.125f, Blocks.COBBLESTONE)),
+		RAW_COPPER_BLOCK = rawOre(() -> Items.RAW_COPPER_BLOCK, AllItems.CRUSHED_COPPER::get, 9),
+		RAW_ZINC_BLOCK = rawOre(AllBlocks.RAW_ZINC_BLOCK::get, AllItems.CRUSHED_ZINC::get, 9),
+		RAW_IRON_BLOCK = rawOre(() -> Items.RAW_IRON_BLOCK, AllItems.CRUSHED_IRON::get, 9),
+		RAW_GOLD_BLOCK = rawOre(() -> Items.RAW_GOLD_BLOCK, AllItems.CRUSHED_GOLD::get, 9),
 
 		NETHER_WART = create("nether_wart_block", b -> b.duration(150)
 			.require(Blocks.NETHER_WART_BLOCK)
 			.output(.25f, Items.NETHER_WART, 1)),
+
+		AMETHYST_CLUSTER = create(() -> Blocks.AMETHYST_CLUSTER, b -> b.duration(150)
+			.output(Items.AMETHYST_SHARD, 7)
+			.output(.5f, Items.AMETHYST_SHARD)),
 
 		GLOWSTONE = create(() -> Blocks.GLOWSTONE, b -> b.duration(150)
 			.output(Items.GLOWSTONE_DUST, 3)
@@ -135,13 +144,51 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
-		return create(name + "_ore", b -> b.duration(duration)
-			.withCondition(new NotCondition(new TagEmptyCondition("forge", "ores/" + name)))
-			.require(AllTags.forgeItemTag("ores/" + name))
-			.output(crushed.get())
-			.output(.3f, crushed.get(), 2)
-			.output(.125f, Blocks.COBBLESTONE));
+	protected GeneratedRecipe stoneOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
+		int duration) {
+		return ore(Blocks.COBBLESTONE, ore, raw, expectedAmount, duration);
+	}
+
+	protected GeneratedRecipe deepslateOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
+		int duration) {
+		return ore(Blocks.COBBLED_DEEPSLATE, ore, raw, expectedAmount, duration);
+	}
+
+	protected GeneratedRecipe netherOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
+		int duration) {
+		return ore(Blocks.NETHERRACK, ore, raw, expectedAmount, duration);
+	}
+
+	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type, Supplier<ItemLike> crushed,
+		Supplier<ItemLike> nugget, float chance) {
+		return mineralRecycling(type, b -> b.duration(250)
+			.output(chance, crushed.get(), 1)
+			.output(chance, nugget.get(), 1));
+	}
+
+	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type,
+		UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
+		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
+		return create(type.getBaseBlock()::get, transform);
+	}
+
+	protected GeneratedRecipe ore(ItemLike stoneType, Supplier<ItemLike> ore, Supplier<ItemLike> raw,
+		float expectedAmount, int duration) {
+		return create(ore, b -> {
+			ProcessingRecipeBuilder<ProcessingRecipe<?>> builder = b.duration(duration)
+				.output(raw.get(), Mth.floor(expectedAmount));
+			float extra = expectedAmount - Mth.floor(expectedAmount);
+			if (extra > 0)
+				builder.output(extra, raw.get(), 1);
+			builder.output(.75f, AllItems.EXP_NUGGET.get(), 1);
+			return builder.output(.125f, stoneType);
+		});
+	}
+
+	protected GeneratedRecipe rawOre(Supplier<ItemLike> input, Supplier<ItemLike> result, int amount) {
+		return create(input, b -> b.duration(400)
+			.output(result.get(), amount)
+			.output(.75f, AllItems.EXP_NUGGET.get(), amount));
 	}
 
 	public CrushingRecipeGen(DataGenerator p_i48262_1_) {

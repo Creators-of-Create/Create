@@ -3,7 +3,7 @@
     "textures": {
         "particle": "create:block/gearbox_top",
         "slit": "create:block/mechanical_saw_top",
-        "stonecutter_saw": "create:block/static_saw",
+        "stonecutter_saw": "block/stonecutter_saw",
         "gearbox_top": "create:block/gearbox_top",
         "encased_belt": "create:block/encased_chain_drive",
         "gearbox": "create:block/gearbox",

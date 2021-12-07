@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:exposed_copper_shingles"
+  },
+  "result": "create:exposed_copper_shingle_stairs",
+  "count": 1
+}

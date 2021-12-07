@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=z": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    }
+  }
+}

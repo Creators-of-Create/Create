@@ -76,7 +76,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				partial = AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE;
 			}
 
-			if (!blockState.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE))
+			if (blockState.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE))
 				rotate = true;
 		}
 

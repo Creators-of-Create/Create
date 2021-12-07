@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "create:block/portable_storage_interface",
-		"1": "create:block/brass_casing",
-		"particle": "create:block/brass_casing"
+		"1": "create:block/andesite_casing",
+		"particle": "create:block/andesite_casing"
 	},
 	"elements": [
 		{

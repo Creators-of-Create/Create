@@ -8,12 +8,7 @@
   "results": [
     {
       "item": "immersiveengineering:nugget_uranium",
-      "count": 10
-    },
-    {
-      "item": "immersiveengineering:nugget_uranium",
-      "count": 5,
-      "chance": 0.5
+      "count": 9
     }
   ],
   "conditions": [

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/andesite"
+  },
+  "result": "create:polished_cut_andesite_slab",
+  "count": 2
+}

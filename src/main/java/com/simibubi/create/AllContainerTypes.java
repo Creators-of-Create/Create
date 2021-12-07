@@ -4,8 +4,6 @@ import com.simibubi.create.content.curiosities.toolbox.ToolboxContainer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxScreen;
 import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateContainer;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerContainer;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer;
@@ -32,9 +30,6 @@ public class AllContainerTypes {
 
 	public static final ContainerEntry<SchematicannonContainer> SCHEMATICANNON =
 		register("schematicannon", SchematicannonContainer::new, () -> SchematicannonScreen::new);
-
-	public static final ContainerEntry<AdjustableCrateContainer> FLEXCRATE =
-		register("flexcrate", AdjustableCrateContainer::new, () -> AdjustableCrateScreen::new);
 
 	public static final ContainerEntry<FilterContainer> FILTER =
 		register("filter", FilterContainer::new, () -> FilterScreen::new);

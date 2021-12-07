@@ -28,12 +28,12 @@ public class AllWorldFeatures {
 
 	//
 
-	public static final ConfigDrivenFeatureEntry ZINC_ORE =
-		register("zinc_ore", 14, 4, OVERWORLD_BIOMES).between(1, 70)
-			.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
+	public static final ConfigDrivenFeatureEntry ZINC_ORE = register("zinc_ore", 12, 3, OVERWORLD_BIOMES).between(1, 70)
+		.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_OVERWORLD =
-		register("striated_ores_overworld", 32, 1 / 32f, OVERWORLD_BIOMES).between(1, 70)
+		register("striated_ores_overworld", 32, 1 / 18f, OVERWORLD_BIOMES).between(1, 70)
+			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
 			.withLayerPattern(AllLayerPatterns.MAGNETITE)
 			.withLayerPattern(AllLayerPatterns.MALACHITE)
@@ -41,8 +41,9 @@ public class AllWorldFeatures {
 			.withLayerPattern(AllLayerPatterns.OCHRESTONE);
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_NETHER =
-		register("striated_ores_nether", 32, 1 / 16f, NETHER_BIOMES).between(40, 100)
-			.withLayerPattern(AllLayerPatterns.SCORIA);
+		register("striated_ores_nether", 32, 1 / 12f, NETHER_BIOMES).between(40, 90)
+			.withLayerPattern(AllLayerPatterns.SCORIA_NETHER)
+			.withLayerPattern(AllLayerPatterns.SCORCHIA_NETHER);
 
 	//
 

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:small_tuff_bricks"
-  },
-  "result": "create:small_tuff_bricks_wall",
-  "count": 1
-}

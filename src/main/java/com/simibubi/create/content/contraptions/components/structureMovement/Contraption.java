@@ -63,7 +63,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.vault.VaultTileEntity;
@@ -321,9 +320,6 @@ public abstract class Contraption {
 		if (state.getBlock() instanceof AbstractChassisBlock
 			&& !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
-
-		if (AllBlocks.ADJUSTABLE_CRATE.has(state))
-			AdjustableCrateBlock.splitCrate(world, pos);
 
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
@@ -600,8 +596,6 @@ public abstract class Contraption {
 		BlockState blockstate = world.getBlockState(pos);
 		if (blockstate.getBlock() instanceof ChestBlock)
 			blockstate = blockstate.setValue(ChestBlock.TYPE, ChestType.SINGLE);
-		if (AllBlocks.ADJUSTABLE_CRATE.has(blockstate))
-			blockstate = blockstate.setValue(AdjustableCrateBlock.DOUBLE, false);
 		if (AllBlocks.REDSTONE_CONTACT.has(blockstate))
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof ButtonBlock) {

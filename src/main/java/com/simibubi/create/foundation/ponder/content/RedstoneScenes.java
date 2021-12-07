@@ -191,8 +191,8 @@ public class RedstoneScenes {
 		scene.world.rotateSection(contact, 0, 10, 0, speed);
 	}
 
-	public static void adjustableRepeater(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("adjustable_repeater", "Controlling signals using Adjustable Repeaters");
+	public static void pulseExtender(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("pulse_extender", "Controlling signals using Pulse Extenders");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
@@ -210,7 +210,7 @@ public class RedstoneScenes {
 		Vec3 circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
 			.add(0, 3 / 16f, 0);
 		scene.overlay.showText(70)
-			.text("Adjustable Repeaters behave similarly to regular Repeaters")
+			.text("Pulse Extenders can lengthen a signal passing through")
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
@@ -218,13 +218,12 @@ public class RedstoneScenes {
 
 		scene.effects.indicateRedstone(leverPos);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
-		scene.idle(30);
-		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.idle(2);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
 		scene.idle(15);
 
-		scene.overlay.showText(40)
-			.text("They charge up for a set time...")
+		scene.overlay.showText(60)
+			.text("They activate after a short delay...")
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(util.grid.at(0, 1, 2)));
 		scene.idle(50);
@@ -233,11 +232,13 @@ public class RedstoneScenes {
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
 		scene.idle(30);
 		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
-		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
 		scene.idle(15);
 
 		scene.overlay.showText(40)
-			.text("...and cool down for the same duration")
+			.text("...and cool down for the configured duration")
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(util.grid.at(0, 1, 2)));
 		scene.idle(50);
@@ -246,7 +247,7 @@ public class RedstoneScenes {
 		scene.overlay.showControls(new InputWindowElement(circuitTop, Pointing.DOWN).scroll(), 60);
 		scene.idle(10);
 		scene.overlay.showText(60)
-			.text("Using the mouse wheel, the charge time can be configured")
+			.text("Using the mouse wheel, the discharge time can be configured")
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
@@ -256,20 +257,27 @@ public class RedstoneScenes {
 
 		scene.effects.indicateRedstone(leverPos);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
-		scene.idle(60);
+		scene.idle(2);
+		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(20);
+		scene.effects.indicateRedstone(leverPos);
+		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
+		scene.idle(15);
 		scene.overlay.showText(50)
-			.text("Configured delays can range up to 30 minutes")
+			.text("The configured duration can range up to 30 minutes")
 			.placeNearTarget()
 			.pointAt(circuitTop);
-		scene.idle(60);
+		scene.idle(70);
 		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
-		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
 		scene.idle(15);
 
 	}
 
-	public static void adjustablePulseRepeater(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("adjustable_pulse_repeater", "Controlling signals using Adjustable Pulse Repeaters");
+	public static void pulseRepeater(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("pulse_repeater", "Controlling signals using Pulse Repeaters");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
@@ -292,12 +300,15 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
-		scene.idle(3);
-		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(2);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
 		scene.idle(15);
 
 		scene.overlay.showText(60)
-			.text("Adjustable Pulse Repeaters emit a short pulse at a delay")
+			.text("Pulse Repeaters emit a short pulse at a delay")
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
@@ -327,8 +338,11 @@ public class RedstoneScenes {
 		scene.idle(60);
 		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
-		scene.idle(3);
-		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(2);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
 	}
 
 	public static void poweredLatch(SceneBuilder scene, SceneBuildingUtil util) {

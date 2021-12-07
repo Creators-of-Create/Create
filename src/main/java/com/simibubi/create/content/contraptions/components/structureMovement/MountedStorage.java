@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -40,8 +39,6 @@ public class MountedStorage {
 		if (te instanceof MechanicalCrafterTileEntity)
 			return false;
 
-		if (AllTileEntities.ADJUSTABLE_CRATE.is(te))
-			return true;
 		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
 		if (te instanceof ShulkerBoxBlockEntity)
@@ -73,15 +70,6 @@ public class MountedStorage {
 				te.getLevel()
 					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
 						.setValue(ChestBlock.TYPE, ChestType.SINGLE));
-		}
-
-		// Split double flexcrates
-		if (AllTileEntities.ADJUSTABLE_CRATE.is(te)) {
-			if (te.getBlockState()
-				.getValue(AdjustableCrateBlock.DOUBLE))
-				te.getLevel()
-					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
-						.setValue(AdjustableCrateBlock.DOUBLE, false));
 		}
 
 		IItemHandler teHandler = TransferUtil.getItemHandler(te)

@@ -30,15 +30,19 @@ public enum AllPaletteStoneTypes {
 	TUFF(VANILLA_RANGE, r -> () -> Blocks.TUFF),
 
 	ASURINE(STANDARD_RANGE, r -> r.paletteStoneBlock("asurine", () -> Blocks.DEEPSLATE, true)
+		.properties(p -> p.destroyTime(1.25f))
 		.register()),
 
 	CRIMSITE(STANDARD_RANGE, r -> r.paletteStoneBlock("crimsite", () -> Blocks.DEEPSLATE, true)
+		.properties(p -> p.destroyTime(1.25f))
 		.register()),
 
 	LIMESTONE(STANDARD_RANGE, r -> r.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true)
+		.properties(p -> p.destroyTime(1.25f))
 		.register()),
 
 	OCHRUM(STANDARD_RANGE, r -> r.paletteStoneBlock("ochrum", () -> Blocks.CALCITE, true)
+		.properties(p -> p.destroyTime(1.25f))
 		.register()),
 
 	SCORIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scoria", () -> Blocks.BLACKSTONE, true)
@@ -48,6 +52,7 @@ public enum AllPaletteStoneTypes {
 		.register()),
 
 	VERIDIUM(STANDARD_RANGE, r -> r.paletteStoneBlock("veridium", () -> Blocks.TUFF, true)
+		.properties(p -> p.destroyTime(1.25f))
 		.register())
 
 	;

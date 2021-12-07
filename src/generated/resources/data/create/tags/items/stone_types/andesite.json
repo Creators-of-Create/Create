@@ -4,16 +4,16 @@
     "create:cut_andesite",
     "create:cut_andesite_stairs",
     "create:cut_andesite_wall",
-    "create:polished_andesite",
-    "create:polished_andesite_stairs",
-    "create:polished_andesite_wall",
-    "create:andesite_bricks",
-    "create:andesite_bricks_stairs",
-    "create:andesite_bricks_wall",
+    "create:polished_cut_andesite",
+    "create:polished_cut_andesite_stairs",
+    "create:polished_cut_andesite_wall",
+    "create:cut_andesite_bricks",
+    "create:cut_andesite_brick_stairs",
+    "create:cut_andesite_brick_wall",
     "create:small_andesite_bricks",
-    "create:small_andesite_bricks_stairs",
-    "create:small_andesite_bricks_wall",
+    "create:small_andesite_brick_stairs",
+    "create:small_andesite_brick_wall",
     "create:layered_andesite",
-    "create:pillar_andesite"
+    "create:andesite_pillar"
   ]
 }

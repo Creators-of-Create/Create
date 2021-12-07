@@ -26,7 +26,6 @@ package com.simibubi.create.foundation.data.recipe;
 //import com.simibubi.create.content.palettes.AllPaletteBlocks;
 //import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 //import com.simibubi.create.foundation.utility.Lang;
-//import com.simibubi.create.lib.data.Tags;
 //import com.tterrag.registrate.util.entry.BlockEntry;
 //import com.tterrag.registrate.util.entry.ItemEntry;
 //import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -51,6 +50,11 @@ package com.simibubi.create.foundation.data.recipe;
 //import net.minecraft.world.level.ItemLike;
 //import net.minecraft.world.level.block.Block;
 //import net.minecraft.world.level.block.Blocks;
+//import net.minecraftforge.common.Tags;
+//import net.minecraftforge.common.crafting.CraftingHelper;
+//import net.minecraftforge.common.crafting.conditions.ICondition;
+//import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+//import net.minecraftforge.common.crafting.conditions.NotCondition;
 //
 //@SuppressWarnings("unused")
 //public class StandardRecipeGen extends CreateRecipeProvider {
@@ -175,23 +179,16 @@ package com.simibubi.create.foundation.data.recipe;
 //
 //	private Marker CURIOSITIES = enterSection(AllSections.CURIOSITIES);
 //
-//	GeneratedRecipe WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
-//		.viaShaped(b -> b.define('E', I.refinedRadiance())
-//			.define('G', Tags.Items.GLASS_PANES_WHITE)
-//			.define('O', Tags.Items.OBSIDIAN)
-//			.define('L', I.brass())
-//			.pattern(" GE")
-//			.pattern("LEG")
-//			.pattern("OL ")),
+//	GeneratedRecipe
 //
-//		TOOLBOX = create(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)).unlockedByTag(I::goldSheet)
-//			.viaShaped(b -> b.define('S', I.goldSheet())
-//				.define('C', I.cog())
-//				.define('W', Tags.Items.CHESTS_WOODEN)
-//				.define('L', Tags.Items.LEATHER)
-//				.pattern(" C ")
-//				.pattern("SWS")
-//				.pattern(" L ")),
+//	TOOLBOX = create(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)).unlockedByTag(I::goldSheet)
+//		.viaShaped(b -> b.define('S', I.goldSheet())
+//			.define('C', I.cog())
+//			.define('W', Tags.Items.CHESTS_WOODEN)
+//			.define('L', Tags.Items.LEATHER)
+//			.pattern(" C ")
+//			.pattern("SWS")
+//			.pattern(" L ")),
 //
 //		TOOLBOX_DYEING = createSpecial(AllRecipeTypes.TOOLBOX_DYEING::getSerializer, "crafting", "toolbox_dyeing"),
 //
@@ -557,17 +554,13 @@ package com.simibubi.create.foundation.data.recipe;
 //				.pattern("SCS")
 //				.pattern(" I ")),
 //
-//		PORTABLE_STORAGE_INTERFACE = create(AllBlocks.PORTABLE_STORAGE_INTERFACE).unlockedBy(I::brassCasing)
-//			.viaShaped(b -> b.define('I', I.brassCasing())
-//				.define('B', AllBlocks.ANDESITE_FUNNEL.get())
-//				.pattern(" B ")
-//				.pattern(" I ")),
+//		PORTABLE_STORAGE_INTERFACE = create(AllBlocks.PORTABLE_STORAGE_INTERFACE).unlockedBy(I::andesiteCasing)
+//			.viaShapeless(b -> b.requires(I.andesiteCasing())
+//				.requires(AllBlocks.CHUTE.get())),
 //
 //		PORTABLE_FLUID_INTERFACE = create(AllBlocks.PORTABLE_FLUID_INTERFACE).unlockedBy(I::copperCasing)
-//			.viaShaped(b -> b.define('I', I.copperCasing())
-//				.define('B', AllBlocks.ANDESITE_FUNNEL.get())
-//				.pattern(" B ")
-//				.pattern(" I ")),
+//			.viaShapeless(b -> b.requires(I.copperCasing())
+//				.requires(AllBlocks.CHUTE.get())),
 //
 //		ROPE_PULLEY = create(AllBlocks.ROPE_PULLEY).unlockedBy(I::andesite)
 //			.viaShaped(b -> b.define('S', I.shaft())
@@ -841,13 +834,6 @@ package com.simibubi.create.foundation.data.recipe;
 //				.pattern("AA")
 //				.pattern("KK")),
 //
-//		ADJUSTABLE_CRATE = create(AllBlocks.ADJUSTABLE_CRATE).returns(4)
-//			.unlockedBy(I::brassCasing)
-//			.viaShaped(b -> b.define('B', I.brassCasing())
-//				.pattern("BBB")
-//				.pattern("B B")
-//				.pattern("BBB")),
-//
 //		BELT_OBSERVER = create(AllBlocks.CONTENT_OBSERVER).unlockedBy(AllItems.BELT_CONNECTOR::get)
 //			.viaShaped(b -> b.define('B', I.brassCasing())
 //				.define('R', I.redstone())
@@ -950,23 +936,7 @@ package com.simibubi.create.foundation.data.recipe;
 //			.define('D', Tags.Items.DYES_BLACK)
 //			.pattern("###")
 //			.pattern("#D#")
-//			.pattern("###")),
-//
-//		COPPER_SHINGLES = create(AllBlocks.COPPER_SHINGLES).returns(16)
-//			.unlockedByTag(I::copperSheet)
-//			.viaShaped(b -> b.define('#', I.copperSheet())
-//				.pattern("##")
-//				.pattern("##")),
-//
-//		COPPER_SHINGLES_FROM_TILES = create(AllBlocks.COPPER_SHINGLES).withSuffix("_from_plating")
-//			.unlockedByTag(I::copperSheet)
-//			.viaShapeless(b -> b.requires(AllBlocks.COPPER_PLATING.get())),
-//
-//		COPPER_TILES = create(AllBlocks.COPPER_TILES).unlockedByTag(I::copperSheet)
-//			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.get())),
-//
-//		COPPER_PLATING = create(AllBlocks.COPPER_PLATING).unlockedByTag(I::copperSheet)
-//			.viaShapeless(b -> b.requires(AllBlocks.COPPER_TILES.get()))
+//			.pattern("###"))
 //
 //	;
 //
@@ -1047,7 +1017,6 @@ package com.simibubi.create.foundation.data.recipe;
 //		CRUSHED_GOLD = blastCrushedMetal(() -> Items.GOLD_INGOT, AllItems.CRUSHED_GOLD::get),
 //		CRUSHED_COPPER = blastCrushedMetal(() -> Items.COPPER_INGOT, AllItems.CRUSHED_COPPER::get),
 //		CRUSHED_ZINC = blastCrushedMetal(AllItems.ZINC_INGOT::get, AllItems.CRUSHED_ZINC::get),
-//		CRUSHED_BRASS = blastCrushedMetal(AllItems.BRASS_INGOT::get, AllItems.CRUSHED_BRASS::get),
 //
 //		CRUSHED_OSMIUM = blastModdedCrushedMetal(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
 //		CRUSHED_PLATINUM = blastModdedCrushedMetal(AllItems.CRUSHED_PLATINUM, "platinum", SM),

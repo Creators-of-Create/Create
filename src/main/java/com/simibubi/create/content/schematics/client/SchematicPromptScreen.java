@@ -48,6 +48,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		nameField.setBordered(false);
 		nameField.setMaxLength(35);
 		nameField.changeFocus(true);
+		setFocused(nameField);
 		addRenderableWidget(nameField);
 
 		abort = new IconButton(x + 7, y + 53, AllIcons.I_TRASH);

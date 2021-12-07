@@ -16,7 +16,7 @@ public class PulseExtenderTileEntity extends BrassDiodeTileEntity {
 	protected void updateState(boolean powered, boolean powering, boolean atMax, boolean atMin) {
 		if (atMin && !powered)
 			return;
-		if (atMin) {
+		if (atMin || powered) {
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, true));
 			state = maxState.getValue();
 			return;
@@ -30,6 +30,7 @@ public class PulseExtenderTileEntity extends BrassDiodeTileEntity {
 			return;
 		}
 		
-		state--;
+		if (!powered)
+			state--;
 	}
 }

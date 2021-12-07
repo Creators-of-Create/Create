@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"casing": "create:block/andesite_casing",
 		"1": "block/stripped_spruce_log_top",
-		"side": "create:block/andesite_encased_cogwheel_side",
-		"particle": "#casing"
+		"particle": "create:block/andesite_casing",
+		"casing": "create:block/andesite_casing",
+		"side": "create:block/andesite_encased_cogwheel_side"
 	},
 	"elements": [
 		{

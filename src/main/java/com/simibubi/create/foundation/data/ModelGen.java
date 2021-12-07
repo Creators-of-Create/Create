@@ -27,13 +27,6 @@ public class ModelGen {
 //			.texture("bottom", bottom)
 //			.texture("overlay", overlay);
 //	}
-//
-//	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> oxidizedItemModel() {
-//		return b -> b
-//			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(),
-//				prov.modLoc(AssetLookup.getOxidizedModel(ctx.getName(), 0))))
-//			.build();
-//	}
 
 	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> customItemModel() {
 		return b -> b//.model(AssetLookup::customItemModel)

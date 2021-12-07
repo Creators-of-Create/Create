@@ -8,12 +8,11 @@
   "results": [
     {
       "item": "create:zinc_nugget",
-      "count": 10
+      "count": 9
     },
     {
-      "item": "create:zinc_nugget",
-      "count": 5,
-      "chance": 0.5
+      "item": "minecraft:gunpowder",
+      "chance": 0.25
     }
   ]
 }

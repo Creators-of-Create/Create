@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/scoria"
-  },
-  "result": "create:pillar_scoria",
-  "count": 1
-}

@@ -1,5 +1,5 @@
-//package com.simibubi.create.compat.jei.category;
-//
+package com.simibubi.create.compat.jei.category;
+
 //import com.mojang.blaze3d.vertex.PoseStack;
 //import com.simibubi.create.AllItems;
 //import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -11,7 +11,7 @@
 //public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> {
 //
 //	public FanSmokingCategory() {
-//		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.BLAZE_POWDER));
+//		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.CAMPFIRE));
 //	}
 //
 //	@Override

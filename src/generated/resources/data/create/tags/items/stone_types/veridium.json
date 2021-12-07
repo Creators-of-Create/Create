@@ -4,16 +4,16 @@
     "create:cut_veridium",
     "create:cut_veridium_stairs",
     "create:cut_veridium_wall",
-    "create:polished_veridium",
-    "create:polished_veridium_stairs",
-    "create:polished_veridium_wall",
-    "create:veridium_bricks",
-    "create:veridium_bricks_stairs",
-    "create:veridium_bricks_wall",
+    "create:polished_cut_veridium",
+    "create:polished_cut_veridium_stairs",
+    "create:polished_cut_veridium_wall",
+    "create:cut_veridium_bricks",
+    "create:cut_veridium_brick_stairs",
+    "create:cut_veridium_brick_wall",
     "create:small_veridium_bricks",
-    "create:small_veridium_bricks_stairs",
-    "create:small_veridium_bricks_wall",
+    "create:small_veridium_brick_stairs",
+    "create:small_veridium_brick_wall",
     "create:layered_veridium",
-    "create:pillar_veridium"
+    "create:veridium_pillar"
   ]
 }

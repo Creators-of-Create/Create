@@ -14,6 +14,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -90,8 +91,22 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
 
-			KineticTileEntity.switchToBlockState(world, pos, encasedCog.defaultBlockState()
-				.setValue(AXIS, state.getValue(AXIS)));
+			BlockState encasedState = encasedCog.defaultBlockState()
+				.setValue(AXIS, state.getValue(AXIS));
+
+			for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
+				BlockState adjacentState = world.getBlockState(pos.relative(d));
+				if (!(adjacentState.getBlock() instanceof IRotate))
+					continue;
+				IRotate def = (IRotate) adjacentState.getBlock();
+				if (!def.hasShaftTowards(world, pos.relative(d), adjacentState, d.getOpposite()))
+					continue;
+				encasedState =
+					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+						: EncasedCogwheelBlock.BOTTOM_SHAFT);
+			}
+			
+			KineticTileEntity.switchToBlockState(world, pos, encasedState);
 			return InteractionResult.SUCCESS;
 		}
 

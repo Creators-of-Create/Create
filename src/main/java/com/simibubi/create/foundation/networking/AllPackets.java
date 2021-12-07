@@ -37,7 +37,6 @@ import com.simibubi.create.content.logistics.item.LinkedControllerBindPacket;
 import com.simibubi.create.content.logistics.item.LinkedControllerInputPacket;
 import com.simibubi.create.content.logistics.item.LinkedControllerStopLecternPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
-import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
@@ -72,7 +71,6 @@ public enum AllPackets {
 
 	// Client to Server
 	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new, PLAY_TO_SERVER),
 	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new,
 			PLAY_TO_SERVER),

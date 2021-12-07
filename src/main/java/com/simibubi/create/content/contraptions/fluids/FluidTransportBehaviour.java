@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<FluidTransportBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<FluidTransportBehaviour> TYPE = new BehaviourType<>();
 
 	public enum UpdatePhase {
 		WAIT_FOR_PUMPS, // Do not run Layer II logic while pumps could still be distributing pressure

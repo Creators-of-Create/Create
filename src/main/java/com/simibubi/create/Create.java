@@ -30,6 +30,7 @@ import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ChunkUtil;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -39,6 +40,7 @@ import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
@@ -99,10 +101,9 @@ public class Create implements ModInitializer {
 
 //		ForgeMod.enableMilkFluid(); // FIXME PORT: milk
 
-//		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-//			.getModEventBus();
-//		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
-
+		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+				.getModEventBus();
+		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 //		modEventBus.addListener(Create::init);
 		init();
 //		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
@@ -117,6 +118,7 @@ public class Create implements ModInitializer {
 		AllParticleTypes.register();
 //		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 		AllSoundEvents.register();
+		CopperRegistries.inject();
 
 //		forgeEventBus.register(CHUNK_UTIL);
 		CHUNK_UTIL.fabricInitEvents();
@@ -138,6 +140,7 @@ public class Create implements ModInitializer {
 		BuiltinPotatoProjectileTypes.register();
 
 		CHUNK_UTIL.init();
+		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
 //		event.enqueueWork(() -> {
 			AllTriggers.register();

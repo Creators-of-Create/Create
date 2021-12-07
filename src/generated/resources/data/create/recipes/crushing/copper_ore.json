@@ -2,31 +2,26 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "c:copper_ores"
+      "item": "minecraft:copper_ore"
     }
   ],
   "results": [
     {
-      "item": "create:crushed_copper_ore"
+      "item": "create:crushed_copper_ore",
+      "count": 5
     },
     {
       "item": "create:crushed_copper_ore",
-      "count": 2,
-      "chance": 0.3
+      "chance": 0.25
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
     },
     {
       "item": "minecraft:cobblestone",
       "chance": 0.125
     }
   ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "value": {
-        "tag": "c:copper_ores",
-        "type": "forge:tag_empty"
-      },
-      "type": "fabric:not"
-    }
-  ]
+  "processingTime": 250
 }
