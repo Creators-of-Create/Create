@@ -37,7 +37,7 @@ public class AllWorldFeatures {
 		.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_OVERWORLD =
-		register("striated_ores_overworld", 32, 1 / 9f, OVERWORLD_BIOMES).between(-63, 70)
+		register("striated_ores_overworld", 32, 1 / 12f, OVERWORLD_BIOMES).between(-30, 70)
 			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
 			.withLayerPattern(AllLayerPatterns.MAGNETITE)
