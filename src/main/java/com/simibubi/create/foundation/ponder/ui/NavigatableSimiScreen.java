@@ -95,7 +95,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		ms.pushPose();
 		ms.translate(0, 0, 500);
-		if (backTrack.isHovered()) {
+		if (backTrack.isHoveredOrFocused()) {
 			TranslatableComponent translate = Lang.translate(backTrackingLangKey());
 			font.draw(ms, translate, 41 - font.width(translate) / 2, height - 16,
 				Theme.i(Theme.Key.TEXT_DARKER));

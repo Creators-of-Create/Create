@@ -71,13 +71,13 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		if (target instanceof BlockHitResult)
 			return ((BlockHitResult) target).getDirection()
 				.getAxis() != getRotationAxis(state)
 					? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
 					: getCasing().asStack();
-		return super.getPickBlock(state, target, world, pos, player);
+		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
 	@Override

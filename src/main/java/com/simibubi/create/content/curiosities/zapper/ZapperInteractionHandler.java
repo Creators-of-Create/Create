@@ -80,7 +80,7 @@ public class ZapperInteractionHandler {
 		CompoundTag data = null;
 		BlockEntity tile = player.level.getBlockEntity(pos);
 		if (tile != null) {
-			data = tile.save(new CompoundTag());
+			data = tile.saveWithFullMetadata();
 			data.remove("x");
 			data.remove("y");
 			data.remove("z");

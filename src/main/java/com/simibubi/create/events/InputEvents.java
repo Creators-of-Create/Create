@@ -60,7 +60,7 @@ public class InputEvents {
 		if (Minecraft.getInstance().screen != null)
 			return;
 		
-		if (event.getKeyBinding() == Minecraft.getInstance().options.keyPickItem) {
+		if (event.getKeyMapping() == Minecraft.getInstance().options.keyPickItem) {
 			if (ToolboxHandlerClient.onPickItem())
 				event.setCanceled(true);
 			return;

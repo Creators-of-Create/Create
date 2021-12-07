@@ -607,13 +607,11 @@ public abstract class Contraption {
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
 			blockstate = blockstate.setValue(ButtonBlock.POWERED, false);
-			world.getBlockTicks()
-				.scheduleTick(pos, blockstate.getBlock(), -1);
+			world.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
 		if (blockstate.getBlock() instanceof PressurePlateBlock) {
 			blockstate = blockstate.setValue(PressurePlateBlock.POWERED, false);
-			world.getBlockTicks()
-				.scheduleTick(pos, blockstate.getBlock(), -1);
+			world.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
 		CompoundTag compoundnbt = getTileEntityNBT(world, pos);
 		BlockEntity tileentity = world.getBlockEntity(pos);
@@ -650,7 +648,7 @@ public abstract class Contraption {
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity == null)
 			return null;
-		CompoundTag nbt = tileentity.save(new CompoundTag());
+		CompoundTag nbt = tileentity.saveWithFullMetadata();
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");
@@ -862,7 +860,7 @@ public abstract class Contraption {
 		CompoundTag compound = new CompoundTag();
 		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
 			throw new IllegalStateException("Palette Map index exceeded maximum");
-		}, NbtUtils::readBlockState, NbtUtils::writeBlockState);
+		});
 		ListTag blockList = new ListTag();
 
 		for (StructureBlockInfo block : this.blocks.values()) {
@@ -876,7 +874,9 @@ public abstract class Contraption {
 		}
 
 		ListTag paletteNBT = new ListTag();
-		palette.write(paletteNBT);
+		for(int i = 0; i < palette.getSize(); ++i) 
+			paletteNBT.add(NbtUtils.writeBlockState(palette.values.byId(i)));
+		
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
 
@@ -890,8 +890,12 @@ public abstract class Contraption {
 			CompoundTag c = ((CompoundTag) compound);
 			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
 				throw new IllegalStateException("Palette Map index exceeded maximum");
-			}, NbtUtils::readBlockState, NbtUtils::writeBlockState);
-			palette.read(c.getList("Palette", 10));
+			});
+			
+			ListTag list = c.getList("Palette", 10);
+			palette.values.clear();
+			for (int i = 0; i < list.size(); ++i)
+				palette.values.add(NbtUtils.readBlockState(list.getCompound(i)));
 
 			blockList = c.getList("BlockList", 10);
 		} else {

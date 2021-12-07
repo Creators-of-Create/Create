@@ -94,8 +94,8 @@ public class LecternControllerBlock extends LecternBlock
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-		return Blocks.LECTERN.getPickBlock(state, target, world, pos, player);
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+		return Blocks.LECTERN.getCloneItemStack(state, target, world, pos, player);
 	}
 
 	@Override

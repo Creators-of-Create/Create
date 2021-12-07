@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 public class FabulousWarningCommand {
 

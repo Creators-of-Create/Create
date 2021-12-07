@@ -63,7 +63,7 @@ public class MountedStorage {
 			return;
 
 		if (te instanceof ChestBlockEntity) {
-			CompoundTag tag = te.save(new CompoundTag());
+			CompoundTag tag = te.saveWithFullMetadata();
 			if (tag.contains("LootTable", 8))
 				return;
 
@@ -115,7 +115,7 @@ public class MountedStorage {
 			return;
 
 		if (te instanceof ChestBlockEntity) {
-			CompoundTag tag = te.save(new CompoundTag());
+			CompoundTag tag = te.saveWithFullMetadata();
 			tag.remove("Items");
 			NonNullList<ItemStack> items = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
 			for (int i = 0; i < items.size(); i++)

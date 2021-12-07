@@ -12,7 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 
 public class SchematicPlacePacket extends SimplePacketBase {
 
@@ -53,7 +53,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 					if (placingAir && !includeAir)
 						return;
 					
-					CompoundTag tileData = tile != null ? tile.save(new CompoundTag()) : null;
+					CompoundTag tileData = tile != null ? tile.saveWithFullMetadata() : null;
 					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
 				}, (pos, entity) -> {
 					world.addFreshEntity(entity);

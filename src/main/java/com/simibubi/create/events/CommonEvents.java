@@ -46,6 +46,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -53,7 +54,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
 
 @EventBusSubscriber
 public class CommonEvents {
@@ -158,7 +158,7 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void serverStopping(FMLServerStoppingEvent event) {
+	public static void serverStopping(ServerStoppingEvent event) {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 

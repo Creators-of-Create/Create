@@ -9,12 +9,15 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Pair;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {
@@ -34,7 +37,7 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 	protected ConfigFloat frequency;
 
 	Function<ConfigDrivenFeatureEntry, ? extends ConfiguredFeature<?, ?>> factory;
-	Optional<ConfiguredFeature<?, ?>> feature = Optional.empty();
+	Optional<Pair<ConfiguredFeature<?, ?>, PlacedFeature>> feature = Optional.empty();
 
 	public ConfigDrivenFeatureEntry(String id, int clusterSize, float frequency) {
 		this.id = id;
@@ -71,14 +74,16 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 	public ConfigDrivenFeatureEntry between(int minHeight, int maxHeight) {
 		allValues.remove(this.minHeight);
 		allValues.remove(this.maxHeight);
-		this.minHeight = i(minHeight, 0, "minHeight");
-		this.maxHeight = i(maxHeight, 0, "maxHeight");
+		this.minHeight = i(minHeight, -64, "minHeight");
+		this.maxHeight = i(maxHeight, -64, "maxHeight");
 		return this;
 	}
 
-	public ConfiguredFeature<?, ?> getFeature() {
-		if (!feature.isPresent())
-			feature = Optional.of(factory.apply(this));
+	public Pair<ConfiguredFeature<?, ?>, PlacedFeature> getFeature() {
+		if (!feature.isPresent()) {
+			ConfiguredFeature<?, ?> configured = factory.apply(this);
+			feature = Optional.of(Pair.of(configured, configured.placed(new ConfigDrivenDecorator(id))));
+		}
 		return feature.get();
 	}
 
@@ -87,26 +92,24 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 		LayeredOreFeature.LAYER_PATTERNS.put(Create.asResource(id), layers.stream()
 			.map(NonNullSupplier::get)
 			.toList());
-		return LayeredOreFeature.INSTANCE.configured(config)
-			.decorated(ConfigDrivenDecorator.INSTANCE.configured(config));
+		return LayeredOreFeature.INSTANCE.configured(config);
 	}
 
 	private ConfiguredFeature<?, ?> standardFactory(ConfigDrivenFeatureEntry entry) {
 		ConfigDrivenOreConfiguration config = new ConfigDrivenOreConfiguration(createTarget(), 0, id);
-		return VanillaStyleOreFeature.INSTANCE.configured(config)
-			.decorated(ConfigDrivenDecorator.INSTANCE.configured(config));
+		return VanillaStyleOreFeature.INSTANCE.configured(config);
 	}
 
 	private List<TargetBlockState> createTarget() {
 		List<TargetBlockState> list = new ArrayList<>();
 		if (block != null)
-			list.add(OreConfiguration.target(OreConfiguration.Predicates.STONE_ORE_REPLACEABLES, block.get()
+			list.add(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, block.get()
 				.defaultBlockState()));
 		if (deepblock != null)
-			list.add(OreConfiguration.target(OreConfiguration.Predicates.DEEPSLATE_ORE_REPLACEABLES, deepblock.get()
+			list.add(OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, deepblock.get()
 				.defaultBlockState()));
 		if (netherblock != null)
-			list.add(OreConfiguration.target(OreConfiguration.Predicates.NETHER_ORE_REPLACEABLES, netherblock.get()
+			list.add(OreConfiguration.target(OreFeatures.NETHER_ORE_REPLACEABLES, netherblock.get()
 				.defaultBlockState()));
 		return list;
 	}

@@ -33,6 +33,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.event.ScreenEvent;
 
 public abstract class ConfigScreen extends AbstractSimiScreen {
 
@@ -66,7 +67,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	@Override
 	public void renderBackground(@Nonnull PoseStack ms) {
-		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this, ms));
+		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ScreenEvent.BackgroundDrawnEvent(this, ms));
 	}
 
 	@Override

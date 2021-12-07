@@ -144,12 +144,12 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
 		Player player) {
 		if (color != DyeColor.ORANGE)
 			return AllBlocks.ORANGE_NIXIE_TUBE.get()
-				.getPickBlock(state, target, world, pos, player);
-		return super.getPickBlock(state, target, world, pos, player);
+				.getCloneItemStack(state, target, world, pos, player);
+		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
 	@Override
@@ -171,8 +171,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 			return;
 		if (!worldIn.getBlockTicks()
 			.willTickThisTick(pos, this))
-			worldIn.getBlockTicks()
-				.scheduleTick(pos, this, 0);
+			worldIn.scheduleTick(pos, this, 0);
 	}
 
 	@Override

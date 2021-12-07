@@ -124,7 +124,7 @@ public class PonderTooltipHandler {
 	}
 
 	public static void handleTooltipColor(RenderTooltipEvent.Color event) {
-		if (trackingStack != event.getStack())
+		if (trackingStack != event.getItemStack())
 			return;
 		if (holdWProgress.getValue() == 0)
 			return;

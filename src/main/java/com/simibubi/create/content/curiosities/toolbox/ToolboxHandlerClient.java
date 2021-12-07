@@ -69,7 +69,7 @@ public class ToolboxHandlerClient {
 			BlockState state = level.getBlockState(pos);
 			if (state.getMaterial() == Material.AIR)
 				return false;
-			result = state.getPickBlock(hitResult, level, pos, player);
+			result = state.getCloneItemStack(hitResult, level, pos, player);
 
 		} else if (hitResult.getType() == HitResult.Type.ENTITY) {
 			Entity entity = ((EntityHitResult) hitResult).getEntity();

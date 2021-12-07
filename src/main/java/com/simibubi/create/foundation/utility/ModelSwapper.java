@@ -18,7 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class ModelSwapper {
@@ -42,7 +42,7 @@ public class ModelSwapper {
 	public void onModelRegistry(ModelRegistryEvent event) {
 		customRenderedItems.forEach((item, modelFunc) -> modelFunc.apply(null)
 			.getModelLocations()
-			.forEach(ModelLoader::addSpecialModel));
+			.forEach(ForgeModelBakery::addSpecialModel));
 	}
 
 	public void onModelBake(ModelBakeEvent event) {

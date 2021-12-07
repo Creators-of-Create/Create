@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
@@ -77,14 +76,13 @@ public abstract class ShootableGadgetRenderHandler {
 
 		Minecraft mc = Minecraft.getInstance();
 		AbstractClientPlayer player = mc.player;
-		TextureManager textureManager = mc.getTextureManager();
 		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getEntityRenderDispatcher()
 			.getRenderer(player);
 		ItemInHandRenderer firstPersonRenderer = mc.getItemInHandRenderer();
 
-		PoseStack ms = event.getMatrixStack();
-		MultiBufferSource buffer = event.getBuffers();
-		int light = event.getLight();
+		PoseStack ms = event.getPoseStack();
+		MultiBufferSource buffer = event.getMultiBufferSource();
+		int light = event.getPackedLight();
 		float pt = event.getPartialTicks();
 
 		boolean rightHand = event.getHand() == InteractionHand.MAIN_HAND ^ mc.player.getMainArm() == HumanoidArm.LEFT;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.collect.Streams;
 import com.simibubi.create.content.curiosities.bell.SoulParticle.ExpandingPerimeterData;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -75,7 +76,7 @@ public class SoulPulseEffect {
 	}
 
 	public static boolean isDark(Level world, BlockPos at) {
-		return world.getBrightness(LightLayer.BLOCK, at) < 8;
+		return world.getBrightness(LightLayer.BLOCK, at) < 1;
 	}
 
 	public static boolean canSpawnSoulAt(Level world, BlockPos at, boolean ignoreLight) {
@@ -83,15 +84,12 @@ public class SoulPulseEffect {
 		double dummyWidth = 0.2, dummyHeight = 0.75;
 		double w2 = dummyWidth / 2;
 
-		return world != null
-			&& NaturalSpawner
-				.isSpawnPositionOk(SpawnPlacements.Type.ON_GROUND, world, at, dummy)
+		return world != null && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.Type.ON_GROUND, world, at, dummy)
 			&& (ignoreLight || isDark(world, at))
-			&& world
-				.getBlockCollisions(null,
+			&& Streams
+				.stream(world.getBlockCollisions(null,
 					new AABB(at.getX() + 0.5 - w2, at.getY(), at.getZ() + 0.5 - w2, at.getX() + 0.5 + w2,
-						at.getY() + dummyHeight, at.getZ() + 0.5 + w2),
-					(a, b) -> true)
+						at.getY() + dummyHeight, at.getZ() + 0.5 + w2)))
 				.allMatch(VoxelShape::isEmpty);
 	}
 
@@ -105,7 +103,7 @@ public class SoulPulseEffect {
 				.distanceTo(VecHelper.getCenterOf(at)))) >= distance ? new SoulParticle.PerimeterData()
 					: new ExpandingPerimeterData(),
 				p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
-		if (world.getBrightness(LightLayer.BLOCK, at) < 8) {
+		if (SoulPulseEffect.isDark(world, at)) {
 			world.addAlwaysVisibleParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
 			world.addParticle(new SoulBaseParticle.Data(), p.x + 0.5, p.y + 0.01, p.z + 0.5, 0, 0, 0);
 		}

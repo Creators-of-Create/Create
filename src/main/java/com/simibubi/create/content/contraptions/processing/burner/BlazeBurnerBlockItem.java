@@ -16,7 +16,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.random.WeightedEntry.Wrapper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -89,18 +90,22 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return super.useOn(context);
 
 		BaseSpawner spawner = ((SpawnerBlockEntity) te).getSpawner();
-		WeightedRandomList<SpawnData> spawnPotentials =
+		SimpleWeightedRandomList<SpawnData> spawnPotentials =
 			ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45443_"); // spawnPotentials
-		List<SpawnData> possibleSpawns = spawnPotentials.unwrap();
-		if (spawnPotentials.isEmpty()) {
+
+		List<SpawnData> possibleSpawns = spawnPotentials.unwrap()
+			.stream()
+			.map(Wrapper::getData)
+			.toList();
+
+		if (possibleSpawns.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
-			possibleSpawns
-				.add(ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45444_")); // nextSpawnData
+			possibleSpawns.add(ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45444_")); // nextSpawnData
 		}
 
 		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();
 		for (SpawnData e : possibleSpawns) {
-			ResourceLocation spawnerEntityId = new ResourceLocation(e.getTag()
+			ResourceLocation spawnerEntityId = new ResourceLocation(e.entityToSpawn()
 				.getString("id"));
 			if (!spawnerEntityId.equals(blazeId))
 				continue;
@@ -117,7 +122,8 @@ public class BlazeBurnerBlockItem extends BlockItem {
 	}
 
 	@Override
-	public InteractionResult interactLivingEntity(ItemStack heldItem, Player player, LivingEntity entity, InteractionHand hand) {
+	public InteractionResult interactLivingEntity(ItemStack heldItem, Player player, LivingEntity entity,
+		InteractionHand hand) {
 		if (hasCapturedBlaze())
 			return InteractionResult.PASS;
 		if (!(entity instanceof Blaze))
@@ -141,7 +147,8 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			player.setItemInHand(hand, filled);
 			return;
 		}
-		player.getInventory().placeItemBackInInventory(filled);
+		player.getInventory()
+			.placeItemBackInInventory(filled);
 	}
 
 	private void spawnCaptureEffects(Level world, Vec3 vec) {

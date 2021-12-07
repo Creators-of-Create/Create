@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.networking;
 import java.util.function.Supplier;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 
 public abstract class SimplePacketBase {
 

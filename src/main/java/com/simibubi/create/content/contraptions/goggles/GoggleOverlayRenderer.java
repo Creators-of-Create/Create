@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
+import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
@@ -41,7 +42,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class GoggleOverlayRenderer {
 
@@ -195,7 +195,7 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
+		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
 			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();

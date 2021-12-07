@@ -54,7 +54,6 @@ public class AllCommands {
 		return Commands.literal("util")
 				.then(ReplaceInCommandBlocksCommand.register())
 				.then(ClearBufferCacheCommand.register())
-				.then(ChunkUtilCommand.register())
 				.then(FlySpeedCommand.register())
 				//.then(KillTPSCommand.register())
 				.build();

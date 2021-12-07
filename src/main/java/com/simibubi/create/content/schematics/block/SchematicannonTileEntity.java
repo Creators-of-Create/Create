@@ -729,7 +729,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			CompoundTag data = null;
 			if (tile != null) {
 				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-					data = tile.save(new CompoundTag());
+					data = tile.saveWithFullMetadata();
 					data = NBTProcessors.process(tile, data, true);
 				} else if (tile instanceof IPartialSafeNBT) {
 					data = new CompoundTag();

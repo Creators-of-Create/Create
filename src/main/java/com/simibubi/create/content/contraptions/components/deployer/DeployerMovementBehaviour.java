@@ -136,7 +136,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 			BlockEntity tile = schematicWorld.getBlockEntity(pos);
 			if (tile != null) {
-				data = tile.save(new CompoundTag());
+				data = tile.saveWithFullMetadata();
 				data = NBTProcessors.process(tile, data, true);
 			}
 		}

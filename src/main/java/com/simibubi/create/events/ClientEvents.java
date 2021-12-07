@@ -67,12 +67,13 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
@@ -84,7 +85,6 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
@@ -170,12 +170,12 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderWorld(RenderWorldLastEvent event) {
+	public static void onRenderWorld(RenderLevelLastEvent event) {
 		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
 			.getPosition();
 		float pt = AnimationTickHolder.getPartialTicks();
 
-		PoseStack ms = event.getMatrixStack();
+		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
@@ -248,7 +248,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
-		Camera info = event.getInfo();
+		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
@@ -279,7 +279,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
-		Camera info = event.getInfo();
+		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);

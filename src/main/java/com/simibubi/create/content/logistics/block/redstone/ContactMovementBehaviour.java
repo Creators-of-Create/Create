@@ -8,9 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.ticks.TickPriority;
 
 public class ContactMovementBehaviour extends MovementBehaviour {
 
@@ -53,7 +53,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 	public void deactivateLastVisitedContact(MovementContext context) {
 		if (context.data.contains("lastContact")) {
 			BlockPos last = NbtUtils.readBlockPos(context.data.getCompound("lastContact"));
-			context.world.getBlockTicks().scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
+			context.world.scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
 			context.data.remove("lastContact");
 		}
 	}

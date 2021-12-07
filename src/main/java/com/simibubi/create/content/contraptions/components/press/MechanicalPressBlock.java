@@ -28,8 +28,8 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity()
-			.orElse(null) instanceof Player)
+		if (context instanceof EntityCollisionContext
+			&& ((EntityCollisionContext) context).getEntity() instanceof Player)
 			return AllShapes.CASING_14PX.get(Direction.DOWN);
 
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;

@@ -28,7 +28,7 @@ import net.minecraft.world.item.crafting.Ingredient.Value;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.StackList;
+import net.minecraftforge.common.crafting.MultiItemValue;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -133,7 +133,7 @@ public class BlueprintItem extends Item {
 			return filterItem;
 		}
 
-		if (itemList instanceof StackList) {
+		if (itemList instanceof MultiItemValue) {
 			ItemStack result = AllItems.FILTER.asStack();
 			ItemStackHandler filterItems = FilterItem.getFilterItems(result);
 			int i = 0;

@@ -62,12 +62,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.network.NetworkHooks;
 
 public class BlueprintEntity extends HangingEntity
 	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker {
@@ -399,7 +399,7 @@ public class BlueprintEntity extends HangingEntity
 					} else {
 						amountCrafted += result.getCount();
 						result.onCraftedBy(player.level, player, 1);
-						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
+						ForgeEventFactory.firePlayerCraftingEvent(player, result, craftingInventory);
 						NonNullList<ItemStack> nonnulllist = level.getRecipeManager()
 							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level);
 

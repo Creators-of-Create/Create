@@ -64,7 +64,7 @@ public class ExtendoGripRenderHandler {
 		if (notInOffhand && !AllItems.EXTENDO_GRIP.isIn(heldItem))
 			return;
 
-		PoseStack ms = event.getMatrixStack();
+		PoseStack ms = event.getPoseStack();
 		TransformStack msr = TransformStack.cast(ms);
 		AbstractClientPlayer abstractclientplayerentity = mc.player;
 		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkinTextureLocation());
@@ -99,9 +99,11 @@ public class ExtendoGripRenderHandler {
 			PlayerRenderer playerrenderer = (PlayerRenderer) mc.getEntityRenderDispatcher()
 				.getRenderer(player);
 			if (rightHand)
-				playerrenderer.renderRightHand(event.getMatrixStack(), event.getBuffers(), event.getLight(), player);
+				playerrenderer.renderRightHand(event.getPoseStack(), event.getMultiBufferSource(),
+					event.getPackedLight(), player);
 			else
-				playerrenderer.renderLeftHand(event.getMatrixStack(), event.getBuffers(), event.getLight(), player);
+				playerrenderer.renderLeftHand(event.getPoseStack(), event.getMultiBufferSource(),
+					event.getPackedLight(), player);
 			ms.popPose();
 
 			// Render gun
@@ -111,7 +113,7 @@ public class ExtendoGripRenderHandler {
 			TransformType transform =
 				rightHand ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 			firstPersonRenderer.renderItem(mc.player, notInOffhand ? heldItem : offhandItem, transform, !rightHand,
-				event.getMatrixStack(), event.getBuffers(), event.getLight());
+				event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
 
 			if (!notInOffhand) {
 				ForgeHooksClient.handleCameraTransforms(ms, mc.getItemRenderer()
@@ -126,8 +128,8 @@ public class ExtendoGripRenderHandler {
 					ms.scale(1.25f, 1.25f, 1.25f);
 				}
 
-				firstPersonRenderer.renderItem(mc.player, heldItem, transform, !rightHand, event.getMatrixStack(),
-					event.getBuffers(), event.getLight());
+				firstPersonRenderer.renderItem(mc.player, heldItem, transform, !rightHand, event.getPoseStack(),
+					event.getMultiBufferSource(), event.getPackedLight());
 			}
 
 			ms.popPose();

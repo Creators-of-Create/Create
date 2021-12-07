@@ -19,8 +19,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerTickList;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +26,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.ticks.LevelTicks;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 @ParametersAreNonnullByDefault
@@ -60,19 +59,13 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	@Override
-	public ServerTickList<Block> getBlockTicks() {
-		TickList<Block> tl =  world.getBlockTicks();
-		if (tl instanceof ServerTickList)
-			return (ServerTickList<Block>) tl;
+	public LevelTicks<Block> getBlockTicks() {
 		return super.getBlockTicks();
 	}
-
+	
 	@Override
-	public ServerTickList<Fluid> getLiquidTicks() {
-		TickList<Fluid> tl =  world.getLiquidTicks();
-		if (tl instanceof ServerTickList)
-			return (ServerTickList<Fluid>) tl;
-		return super.getLiquidTicks();
+	public LevelTicks<Fluid> getFluidTicks() {
+		return super.getFluidTicks();
 	}
 
 	@Override

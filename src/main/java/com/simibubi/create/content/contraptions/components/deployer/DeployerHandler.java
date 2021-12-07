@@ -374,7 +374,7 @@ public class DeployerHandler {
 			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 35);
 			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), 35);
 		} else {
-			if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
+			if (!blockstate.onDestroyedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
 				return true;
 		}
 

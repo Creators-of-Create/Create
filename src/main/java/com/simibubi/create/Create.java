@@ -21,7 +21,6 @@ import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.command.ChunkUtil;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -42,7 +41,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
@@ -75,7 +73,6 @@ public class Create {
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final ServerLagger LAGGER = new ServerLagger();
-	public static final ChunkUtil CHUNK_UTIL = new ChunkUtil();
 	public static final Random RANDOM = new Random();
 
 	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
@@ -115,12 +112,9 @@ public class Create {
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
 		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
-		modEventBus.addGenericListener(FeatureDecorator.class, AllWorldFeatures::registerDecoratorFeatures);
 		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-
-		forgeEventBus.register(CHUNK_UTIL);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
@@ -131,13 +125,13 @@ public class Create {
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
 
-		CHUNK_UTIL.init();
 		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
 		event.enqueueWork(() -> {
 			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
+			AllWorldFeatures.registerPlacementTypes();
 		});
 	}
 

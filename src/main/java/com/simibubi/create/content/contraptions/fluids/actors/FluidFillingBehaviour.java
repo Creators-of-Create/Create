@@ -23,9 +23,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerTickList;
-import net.minecraft.world.level.TickList;
-import net.minecraft.world.level.TickNextTickData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -39,6 +36,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.ticks.LevelTickAccess;
+import net.minecraft.world.ticks.LevelTicks;
 
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
@@ -191,20 +190,10 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 								.createLegacyBlock(), 2 | 16);
 					}
 
-					TickList<Fluid> pendingFluidTicks = world.getLiquidTicks();
-					if (pendingFluidTicks instanceof ServerTickList) {
-						ServerTickList<Fluid> serverTickList = (ServerTickList<Fluid>) pendingFluidTicks;
-						TickNextTickData<Fluid> removedEntry = null;
-						for (TickNextTickData<Fluid> nextTickListEntry : serverTickList.tickNextTickSet) {
-							if (nextTickListEntry.pos.equals(currentPos)) {
-								removedEntry = nextTickListEntry;
-								break;
-							}
-						}
-						if (removedEntry != null) {
-							serverTickList.tickNextTickSet.remove(removedEntry);
-							serverTickList.tickNextTickList.remove(removedEntry);
-						}
+					LevelTickAccess<Fluid> pendingFluidTicks = world.getFluidTicks();
+					if (pendingFluidTicks instanceof LevelTicks) {
+						LevelTicks<Fluid> serverTickList = (LevelTicks<Fluid>) pendingFluidTicks;
+						serverTickList.clearArea(new BoundingBox(currentPos));
 					}
 
 					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));

@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -82,7 +82,7 @@ public class SymmetryHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void render(RenderWorldLastEvent event) {
+	public static void render(RenderLevelLastEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 
@@ -109,7 +109,7 @@ public class SymmetryHandler {
 			Camera info = mc.gameRenderer.getMainCamera();
 			Vec3 view = info.getPosition();
 
-			PoseStack ms = event.getMatrixStack();
+			PoseStack ms = event.getPoseStack();
 			ms.pushPose();
 			ms.translate(-view.x(), -view.y(), -view.z());
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());

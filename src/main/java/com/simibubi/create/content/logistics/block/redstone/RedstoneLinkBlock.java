@@ -57,8 +57,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 
 		if (!worldIn.getBlockTicks()
 			.willTickThisTick(pos, this))
-			worldIn.getBlockTicks()
-				.scheduleTick(pos, this, 0);
+			worldIn.scheduleTick(pos, this, 0);
 	}
 
 	@Override

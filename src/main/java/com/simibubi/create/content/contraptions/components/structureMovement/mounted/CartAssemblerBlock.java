@@ -223,8 +223,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos,
 		CollisionContext context) {
 		if (context instanceof EntityCollisionContext) {
-			Entity entity = ((EntityCollisionContext) context).getEntity()
-				.orElse(null);
+			Entity entity = ((EntityCollisionContext) context).getEntity();
 			if (entity instanceof AbstractMinecart)
 				return Shapes.empty();
 			if (entity instanceof Player)

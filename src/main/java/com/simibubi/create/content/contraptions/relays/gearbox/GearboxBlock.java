@@ -50,10 +50,10 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 	}
 	
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
 			Player player) {
 		if (state.getValue(AXIS).isVertical())
-			return super.getPickBlock(state, target, world, pos, player);
+			return super.getCloneItemStack(state, target, world, pos, player);
 		return new ItemStack(AllItems.VERTICAL_GEARBOX.get());
 	}
 

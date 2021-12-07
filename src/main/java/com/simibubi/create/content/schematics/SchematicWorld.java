@@ -14,17 +14,15 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.data.worldgen.biome.Biomes;
+import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.EmptyTickList;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
@@ -37,6 +35,8 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.ticks.BlackholeTickAccess;
+import net.minecraft.world.ticks.LevelTickAccess;
 
 public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor {
 
@@ -45,7 +45,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	protected List<BlockEntity> renderedTileEntities;
 	protected List<Entity> entities;
 	protected BoundingBox bounds;
-
+	
 	public BlockPos anchor;
 	public boolean renderMode;
 
@@ -54,7 +54,12 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	public SchematicWorld(BlockPos anchor, Level original) {
-		super(original, new WrappedChunkProvider());
+		this(anchor, original,new WrappedChunkProvider());
+	}
+
+	public SchematicWorld(BlockPos anchor, Level original, WrappedChunkProvider provider) {
+		super(original, provider);
+		provider.setFallbackWorld(this);
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
 		this.bounds = new BoundingBox(BlockPos.ZERO);
@@ -137,12 +142,22 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public Biome getBiome(BlockPos pos) {
-		return Biomes.THE_VOID;
+		return OverworldBiomes.theVoid();
 	}
 
 	@Override
 	public int getBrightness(LightLayer p_226658_1_, BlockPos p_226658_2_) {
 		return 10;
+	}
+	
+	@Override
+	public LevelTickAccess<Block> getBlockTicks() {
+		return BlackholeTickAccess.emptyLevelList();
+	}
+	
+	@Override
+	public LevelTickAccess<Fluid> getFluidTicks() {
+		return BlackholeTickAccess.emptyLevelList();
 	}
 
 	@Override
@@ -205,16 +220,6 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) {}
-
-	@Override
-	public TickList<Block> getBlockTicks() {
-		return EmptyTickList.empty();
-	}
-
-	@Override
-	public TickList<Fluid> getLiquidTicks() {
-		return EmptyTickList.empty();
-	}
 
 	public BoundingBox getBounds() {
 		return bounds;

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.mutable.MutableObject;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -13,6 +15,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -20,7 +23,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -83,8 +86,8 @@ public class OpenCreateMenuButton extends Button {
 	public static class OpenConfigButtonHandler {
 
 		@SubscribeEvent
-		public static void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
-			Screen gui = event.getGui();
+		public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
+			Screen gui = event.getScreen();
 
 			MenuRows menu = null;
 			int rowIdx = 0, offsetX = 0;
@@ -103,14 +106,19 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				event.getWidgetList().stream()
+				MutableObject<GuiEventListener> toAdd = new MutableObject<>(null);
+				event.getListenersList()
+					.stream()
 					.filter(w -> w instanceof AbstractWidget)
 					.map(w -> (AbstractWidget) w)
-					.filter(w -> w.getMessage().getString().equals(target))
+					.filter(w -> w.getMessage()
+						.getString()
+						.equals(target))
 					.findFirst()
-					.ifPresent(w -> event.addWidget(
-							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
-					));
+					.ifPresent(w -> toAdd
+						.setValue(new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)));
+				if (toAdd.getValue() != null)
+					event.addListener(toAdd.getValue());
 			}
 		}
 

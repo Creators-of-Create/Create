@@ -51,8 +51,7 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 		if (turnOffTicks > 0) {
 			turnOffTicks--;
 			if (turnOffTicks == 0)
-				level.getBlockTicks()
-					.scheduleTick(worldPosition, state.getBlock(), 1);
+				level.scheduleTick(worldPosition, state.getBlock(), 1);
 		}
 
 		if (!isActive())

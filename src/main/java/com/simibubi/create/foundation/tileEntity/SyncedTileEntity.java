@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -32,6 +32,11 @@ public abstract class SyncedTileEntity extends BlockEntity {
 		return save(new CompoundTag());
 	}
 
+	@Override
+	public CompoundTag save(CompoundTag tag) {
+		saveAdditional(tag);
+		return super.save(tag);
+	}
 
 	public void sendData() {
 		if (level != null && !level.isClientSide)
@@ -45,7 +50,8 @@ public abstract class SyncedTileEntity extends BlockEntity {
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, writeToClient(new CompoundTag()));
+		return ClientboundBlockEntityDataPacket.create(this,
+			te -> ((SyncedTileEntity) te).writeToClient(new CompoundTag()));
 	}
 
 	@Override

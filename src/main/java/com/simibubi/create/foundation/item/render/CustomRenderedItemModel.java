@@ -13,7 +13,7 @@ import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 
 public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedModel> {
 
@@ -58,13 +58,13 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedMod
 	}
 
 	public void loadPartials(ModelBakeEvent event) {
-		ModelLoader modelLoader = event.getModelLoader();
+		ForgeModelBakery modelLoader = event.getModelLoader();
 		for (String name : partials.keySet())
 			partials.put(name, loadPartial(modelLoader, name));
 	}
 
 	@SuppressWarnings("deprecation")
-	protected BakedModel loadPartial(ModelLoader modelLoader, String name) {
+	protected BakedModel loadPartial(ForgeModelBakery modelLoader, String name) {
 		return modelLoader.bake(getPartialModelLocation(name), BlockModelRotation.X0_Y0);
 	}
 

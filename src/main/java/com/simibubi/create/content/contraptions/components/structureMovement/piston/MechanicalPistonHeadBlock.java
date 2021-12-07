@@ -51,7 +51,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
                                   Player player) {
         return AllBlocks.PISTON_EXTENSION_POLE.asStack();
     }
@@ -101,9 +101,8 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
                                           LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.getValue(BlockStateProperties.WATERLOGGED)) {
-            world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-        }
+        if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         return state;
     }
 
