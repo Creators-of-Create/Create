@@ -130,7 +130,7 @@ public class LayerPattern {
 			private LayerBuilder blocks(BlockState stone, BlockState deepslate) {
 				Layer.this.targets.add(
 					ImmutableList.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, stone),
-						OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, deepslate)));
+						OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, deepslate)));
 				return this;
 			}
 
