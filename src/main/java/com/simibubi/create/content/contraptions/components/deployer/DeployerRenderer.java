@@ -5,10 +5,13 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
@@ -34,6 +37,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.state.BlockState;
@@ -158,6 +162,11 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		PartialModel handPose = getHandPose(mode);
 
+		float speed = (float) context.getAnimationSpeed();
+		if (context.contraption.stalled)
+			speed = 0;
+
+		SuperByteBuffer shaft = CachedBufferer.block(AllBlocks.SHAFT.getDefaultState());
 		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = CachedBufferer.partial(handPose, blockState);
 
@@ -177,13 +186,35 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		PoseStack m = matrices.getModel();
 		m.pushPose();
-		m.translate(offset.x, offset.y, offset.z);
 
+		m.pushPose();
+		Axis axis = Axis.Y;
+		if (context.state.getBlock() instanceof IRotate) {
+			IRotate def = (IRotate) context.state.getBlock();
+			axis = def.getRotationAxis(context.state);
+		}
+		
+		float time = AnimationTickHolder.getRenderTime(context.world) / 20;
+		float angle = (time * speed) % 360;
+		
+		new MatrixTransformStack(m)
+			.centre()
+			.rotateY(axis == Axis.Z ? 90 : 0)
+			.rotateZ(axis.isHorizontal() ? 90 : 0)
+			.unCentre();
+		shaft.transform(m);
+		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Axis.Y), angle);
+		m.popPose();
+
+		m.translate(offset.x, offset.y, offset.z);
 		pole.transform(m);
 		hand.transform(m);
+
 		transform(pole, blockState, true);
 		transform(hand, blockState, false);
 
+		shaft.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.getViewProjection(), builder);
 		pole.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), builder);
 		hand.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))

@@ -82,7 +82,7 @@ public class LayeredOreFeature extends OreFeatureBase {
 					float dy = y * 2f / height - 1;
 					if (dx * dx + dy * dy > 1)
 						continue;
-					if (worldgenlevel.isOutsideBuildHeight(y))
+					if (worldgenlevel.isOutsideBuildHeight(y0 + y))
 						continue;
 
 					for (int z = 0; z < length; z++) {
