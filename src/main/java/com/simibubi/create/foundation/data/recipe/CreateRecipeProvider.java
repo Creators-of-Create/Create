@@ -29,10 +29,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	}
 
 //	@Override
-	protected void buildCraftingRecipes(Consumer<FinishedRecipe> p_200404_1_) {
-		all.forEach(c -> c.register(p_200404_1_));
-		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
-	}
+//	protected void buildCraftingRecipes(Consumer<FinishedRecipe> p_200404_1_) {
+//		all.forEach(c -> c.register(p_200404_1_));
+//		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
+//	}
 
 	protected GeneratedRecipe register(GeneratedRecipe recipe) {
 		all.add(recipe);
@@ -128,7 +128,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike precisionMechanism() {
 			return AllItems.PRECISION_MECHANISM.get();
 		}
-		
+
 		static ItemLike copperBlock() {
 			return Items.COPPER_BLOCK;
 		}

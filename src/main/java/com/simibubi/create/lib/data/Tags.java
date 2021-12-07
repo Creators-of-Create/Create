@@ -11,6 +11,7 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.material.Fluid;
 //TODO: IMPLEMENT ALL THESE TAGS WITH COMMON ONES
 public class Tags {
 	public static class Items {
-        public static Tag.Named<Item> tag(String id) {
+		public static Tag.Named<Item> tag(String id) {
 			return TagFactory.ITEM.create(new ResourceLocation("c", id));
 		}
 		public static final Tag.Named<Item> STONE = tag("stone");
@@ -42,7 +43,8 @@ public class Tags {
 		public static final Tag.Named<Item> COPPER_PLATES = tag("copper_plates");
 		public static final Tag.Named<Item> OBSIDIAN = tag("");
 		public static final Tag.Named<Item> STORAGE_BLOCKS = tag("");
-
+		public static final Tag.Named<Item> ENDER_PEARLS = tag("");
+		public static final Tag.Named<Item> GLASS = tag("");
 	}
 	public static class Blocks {
 		public static Tag.Named<Block> tag(String id) {

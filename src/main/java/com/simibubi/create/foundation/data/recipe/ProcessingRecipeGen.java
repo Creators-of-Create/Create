@@ -127,9 +127,8 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 	protected Supplier<ResourceLocation> idWithSuffix(Supplier<ItemLike> item, String suffix) {
 		return () -> {
-			ResourceLocation registryName = item.get()
-				.asItem()
-				.getRegistryName();
+			ResourceLocation registryName = Registry.ITEM.getKey(item.get()
+				.asItem());
 			return Create.asResource(registryName.getPath() + suffix);
 		};
 	}

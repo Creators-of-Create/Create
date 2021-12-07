@@ -6,7 +6,6 @@ import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
-import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
@@ -146,7 +145,6 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
-import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
@@ -156,7 +154,6 @@ import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.lib.data.Tags;
-import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -1218,9 +1215,9 @@ public class AllBlocks {
 	public static final BlockEntry<VaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", VaultBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK)
-	//			.explosionResistance(1200))
+				.explosionResistance(1200))
 		.transform(pickaxeOnly())
-		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+//		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 //					.forAllStates(s -> ConfiguredModel.builder()
 //							.modelFile(AssetLookup.standardModel(c, p))
 //							.rotationY(s.getValue(VaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
@@ -1554,14 +1551,14 @@ public class AllBlocks {
 			.register();
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
-		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS/*, (c, p) -> {
 			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
-		});
+		}*/);
 
 	public static final CopperBlockSet COPPER_TILES =
-		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
+		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS/*, (c, p) -> {
 			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
-		});
+		}*/);
 
 	// Load this class
 

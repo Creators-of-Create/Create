@@ -727,7 +727,7 @@ public class AllTileEntities {
 
 	public static void registerStorages() {
 		TransferUtil.registerStorages(false,
-				ADJUSTABLE_CRATE.get(),
+//				ADJUSTABLE_CRATE.get(),
 				BASIN.get(),
 				BELT.get(),
 				ANDESITE_TUNNEL.get(),

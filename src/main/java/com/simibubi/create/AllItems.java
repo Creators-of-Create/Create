@@ -50,7 +50,6 @@ import com.simibubi.create.content.logistics.item.LinkedControllerItemRenderer;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
-import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;

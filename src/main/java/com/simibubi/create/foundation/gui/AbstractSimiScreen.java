@@ -140,19 +140,19 @@ public abstract class AbstractSimiScreen extends Screen {
 	protected void debugWindowArea(PoseStack matrixStack) {
 		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
 	}
-	
+
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
 		boolean keyPressed = super.keyPressed(pKeyCode, pScanCode, pModifiers);
 		if (keyPressed || getFocused() != null)
 			return keyPressed;
-		
+
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+		if (this.minecraft.options.keyInventory.matchesMouse(mouseKey.getValue())/*.isActiveAndMatches(mouseKey)*/) {
 			this.onClose();
 			return true;
 		}
-		
+
 		return false;
 	}
 

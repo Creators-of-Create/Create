@@ -21,6 +21,7 @@
     "accessor.DamageSourceAccessor",
     "accessor.DimensionTypeAccessor",
     "accessor.EntityAccessor",
+    "accessor.HoneycombItemAccessor",
     "accessor.IngredientAccessor",
     "accessor.ItemTagsAccessor",
     "accessor.LivingEntityAccessor",

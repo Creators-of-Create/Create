@@ -8,6 +8,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.simibubi.create.Create;
+import com.simibubi.create.lib.mixin.accessor.HoneycombItemAccessor;
 
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.block.Block;
@@ -72,6 +73,6 @@ public class CopperRegistries {
 			});
 			return builder.build();
 		});
-		HoneycombItem.WAXABLES = waxableMapSupplier;
+		HoneycombItemAccessor.setWAXABLES(waxableMapSupplier);
 	}
 }

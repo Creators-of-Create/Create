@@ -101,9 +101,9 @@ public class Create implements ModInitializer {
 
 //		ForgeMod.enableMilkFluid(); // FIXME PORT: milk
 
-		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-				.getModEventBus();
-		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+//		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+//				.getModEventBus();
+//		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 //		modEventBus.addListener(Create::init);
 		init();
 //		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);

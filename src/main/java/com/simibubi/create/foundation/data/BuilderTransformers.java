@@ -52,8 +52,8 @@ public class BuilderTransformers {
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
 				(s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
-			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
+//			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
+//				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
 			.item()
 //			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
@@ -81,16 +81,16 @@ public class BuilderTransformers {
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
 						: EncasedCogwheelBlock.BOTTOM_SHAFT))))
-			.blockstate((c, p) -> axisBlock(c, p, blockState -> {
-				String suffix = (blockState.getValue(EncasedCogwheelBlock.TOP_SHAFT) ? "_top" : "")
-					+ (blockState.getValue(EncasedCogwheelBlock.BOTTOM_SHAFT) ? "_bottom" : "");
-				String modelName = c.getName() + suffix;
-				return p.models()
-					.withExistingParent(modelName, p.modLoc("block/" + blockFolder + "/block" + suffix))
-					.texture("casing", Create.asResource("block/" + casing + "_casing"))
-					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
-					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
-			}, false))
+//			.blockstate((c, p) -> axisBlock(c, p, blockState -> {
+//				String suffix = (blockState.getValue(EncasedCogwheelBlock.TOP_SHAFT) ? "_top" : "")
+//					+ (blockState.getValue(EncasedCogwheelBlock.BOTTOM_SHAFT) ? "_bottom" : "");
+//				String modelName = c.getName() + suffix;
+//				return p.models()
+//					.withExistingParent(modelName, p.modLoc("block/" + blockFolder + "/block" + suffix))
+//					.texture("casing", Create.asResource("block/" + casing + "_casing"))
+//					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+//					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
+//			}, false))
 			.item()
 //			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + blockFolder + "/item"))
 //				.texture("casing", Create.asResource("block/" + casing + "_casing"))
@@ -103,14 +103,14 @@ public class BuilderTransformers {
 		Supplier<ItemLike> drop) {
 		return b.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
-			.transform(BlockStressDefaults.setNoImpact())
+			.transform(BlockStressDefaults.setNoImpact());
 //			.loot((p, lb) -> p.dropOther(lb, drop.get()));
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> cuckooClock() {
 		return b -> b.initialProperties(SharedProperties::wooden)
-			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
-				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
+//			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
+//				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(BlockStressDefaults.setImpact(1.0))
 			.item()
@@ -214,29 +214,29 @@ public class BuilderTransformers {
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> crate(String type) {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
-			.blockstate((c, p) -> {
-				String[] variants = { "single", "top", "bottom", "left", "right" };
-				Map<String, ModelFile> models = new HashMap<>();
-
-				ResourceLocation crate = p.modLoc("block/crate_" + type);
-				ResourceLocation side = p.modLoc("block/crate_" + type + "_side");
-				ResourceLocation casing = p.modLoc("block/" + type + "_casing");
-
-				for (String variant : variants)
-					models.put(variant, p.models()
-						.withExistingParent("block/crate/" + type + "/" + variant, p.modLoc("block/crate/" + variant))
-						.texture("crate", crate)
-						.texture("side", side)
-						.texture("casing", casing));
-
-				p.getVariantBuilder(c.get())
-					.forAllStates(state -> {
-						String variant = "single";
-						return ConfiguredModel.builder()
-							.modelFile(models.get(variant))
-							.build();
-					});
-			})
+//			.blockstate((c, p) -> {
+//				String[] variants = { "single", "top", "bottom", "left", "right" };
+//				Map<String, ModelFile> models = new HashMap<>();
+//
+//				ResourceLocation crate = p.modLoc("block/crate_" + type);
+//				ResourceLocation side = p.modLoc("block/crate_" + type + "_side");
+//				ResourceLocation casing = p.modLoc("block/" + type + "_casing");
+//
+//				for (String variant : variants)
+//					models.put(variant, p.models()
+//						.withExistingParent("block/crate/" + type + "/" + variant, p.modLoc("block/crate/" + variant))
+//						.texture("crate", crate)
+//						.texture("side", side)
+//						.texture("casing", casing));
+//
+//				p.getVariantBuilder(c.get())
+//					.forAllStates(state -> {
+//						String variant = "single";
+//						return ConfiguredModel.builder()
+//							.modelFile(models.get(variant))
+//							.build();
+//					});
+//			})
 			.item()
 			.properties(p -> type.equals("creative") ? p.rarity(Rarity.EPIC) : p)
 			.transform(ModelGen.customItemModel("crate", type, "single"));

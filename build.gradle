@@ -77,7 +77,7 @@ dependencies {
     implementation(include('com.electronwill.night-config:core:3.6.0'))
     implementation(include('com.electronwill.night-config:toml:3.6.0'))
     modImplementation(include("com.tterrag:registrate-fabric:${project.registrate_version}"))
-    modImplementation(include("com.jozufozu.flywheel:Flywheel:${project.flywheel_version}"))
+    modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("net.devtech:arrp:${project.arrp_version}"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
