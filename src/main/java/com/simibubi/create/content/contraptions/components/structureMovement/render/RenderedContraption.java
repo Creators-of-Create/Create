@@ -34,7 +34,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
 
-	public final InstancingEngine<ContraptionProgram> materialManager;
+	public final InstancingEngine<ContraptionProgram> engine;
 	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
@@ -47,12 +47,12 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = InstancingEngine.builder(CreateContexts.CWORLD)
+		this.engine = InstancingEngine.builder(CreateContexts.CWORLD)
 				.setGroupFactory(ContraptionGroup.forContraption(this))
 				.setIgnoreOriginCoordinate(true)
 				.build();
-		this.kinetics = new ContraptionInstanceManager(this, materialManager);
-		this.materialManager.addListener(this.kinetics);
+		this.kinetics = new ContraptionInstanceManager(this, engine);
+		this.engine.addListener(this.kinetics);
 
 		buildLayers();
 		if (Backend.getInstance().canUseInstancing()) {
@@ -113,7 +113,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		lighter.delete();
 
-		materialManager.delete();
+		engine.delete();
 		kinetics.invalidate();
 	}
 
@@ -129,13 +129,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		for (RenderType layer : blockLayers) {
 			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
 
-			ModelRenderer renderer;
-			if (Backend.getInstance().compat.vertexArrayObjectsSupported())
-				renderer = new ArrayModelRenderer(layerModel);
-			else
-				renderer = new ModelRenderer(layerModel);
-
-			renderLayers.put(layer, renderer);
+			renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 		}
 	}
 

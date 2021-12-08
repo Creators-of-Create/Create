@@ -2,7 +2,12 @@ package com.simibubi.create.foundation.gui;
 
 import javax.annotation.Nonnull;
 
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.GlConst;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -250,6 +255,17 @@ public class UIRenderHelper {
 
 	public static void flipForGuiRender(PoseStack poseStack) {
 		poseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(1, -1, 1));
+	}
+
+	/**
+	 * Switch from src to dst, after copying the contents of src to dst.
+	 */
+	public static void swapAndBlitColor(RenderTarget src, RenderTarget dst) {
+		GlStateManager._glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, src.frameBufferId);
+		GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, dst.frameBufferId);
+		GlStateManager._glBlitFrameBuffer(0, 0, src.viewWidth, src.viewHeight, 0, 0, dst.viewWidth, dst.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+
+		GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, dst.frameBufferId);
 	}
 
 	public static class CustomRenderTarget extends RenderTarget {
