@@ -57,8 +57,6 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 
 		light = new LightVolume(volume);
 		light.initialize(LightUpdater.get(world).getProvider());
-
-		beginFrame();
 	}
 
 	@Override
