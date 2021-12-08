@@ -13,11 +13,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.ticks.LevelTickAccess;
 
 public class ConnectedPillarBlock extends LayeredBlock {
 
@@ -83,9 +83,9 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this)
 			return;
-		TickList<Block> blockTicks = pLevel.getBlockTicks();
+		LevelTickAccess<Block> blockTicks = pLevel.getBlockTicks();
 		if (!blockTicks.hasScheduledTick(pPos, this))
-			blockTicks.scheduleTick(pPos, this, 1);
+			pLevel.scheduleTick(pPos, this, 1);
 	}
 	
 	@Override
