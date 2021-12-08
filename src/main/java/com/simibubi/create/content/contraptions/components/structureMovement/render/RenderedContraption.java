@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
+import com.jozufozu.flywheel.backend.material.instancing.InstancingEngine;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.IModel;
@@ -34,7 +34,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
 
-	public final MaterialManagerImpl<ContraptionProgram> materialManager;
+	public final InstancingEngine<ContraptionProgram> materialManager;
 	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
@@ -47,11 +47,12 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = MaterialManagerImpl.builder(CreateContexts.CWORLD)
+		this.materialManager = InstancingEngine.builder(CreateContexts.CWORLD)
 				.setGroupFactory(ContraptionGroup.forContraption(this))
 				.setIgnoreOriginCoordinate(true)
 				.build();
 		this.kinetics = new ContraptionInstanceManager(this, materialManager);
+		this.materialManager.addListener(this.kinetics);
 
 		buildLayers();
 		if (Backend.getInstance().canUseInstancing()) {
