@@ -54,7 +54,7 @@ public class PaletteBlockPattern {
 			.connectedTextures(v -> new HorizontalCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.CAP))),
 
 		PILLAR = create("pillar", SUFFIX).blockStateFactory(p -> p::pillar)
-			.block(LayeredBlock::new)
+			.block(ConnectedPillarBlock::new)
 			.textures("pillar", "cap")
 			.connectedTextures(v -> new RotatedPillarCTBehaviour(ct(v, CTs.PILLAR), ct(v, CTs.CAP)))
 
@@ -212,7 +212,8 @@ public class PaletteBlockPattern {
 					.rotationX(90)
 					.rotationY(axis == Axis.X ? 90 : 0)
 					.build();
-			}, BlockStateProperties.WATERLOGGED);
+			}, BlockStateProperties.WATERLOGGED, ConnectedPillarBlock.NORTH, ConnectedPillarBlock.SOUTH,
+				ConnectedPillarBlock.EAST, ConnectedPillarBlock.WEST);
 	}
 
 	public IBlockStateProvider cubeColumn(String variant) {

@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.block.connected;
 
+import com.simibubi.create.content.palettes.ConnectedPillarBlock;
 import com.simibubi.create.content.palettes.LayeredBlock;
 
 import net.minecraft.core.BlockPos;
@@ -17,8 +18,31 @@ public class RotatedPillarCTBehaviour extends HorizontalCTBehaviour {
 
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
-		BlockPos otherPos, Direction face) {
-		return state == other && super.connectsTo(state, other, reader, pos, otherPos, face);
+		BlockPos otherPos, Direction face, Direction primaryOffset, Direction secondaryOffset) {
+		if (other.getBlock() != state.getBlock())
+			return false;
+		Axis stateAxis = state.getValue(LayeredBlock.AXIS);
+		if (other.getValue(LayeredBlock.AXIS) != stateAxis)
+			return false;
+		if (isBeingBlocked(state, reader, pos, otherPos, face))
+			return false;
+		if (primaryOffset != null && primaryOffset.getAxis() != stateAxis
+			&& !ConnectedPillarBlock.getConnection(state, primaryOffset))
+			return false;
+		if (secondaryOffset != null && secondaryOffset.getAxis() != stateAxis) {
+			if (!ConnectedPillarBlock.getConnection(state, secondaryOffset))
+				return false;
+			if (!ConnectedPillarBlock.getConnection(other, secondaryOffset.getOpposite()))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	protected boolean isBeingBlocked(BlockState state, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
+		Direction face) {
+		return state.getValue(LayeredBlock.AXIS) == face.getAxis()
+			&& super.isBeingBlocked(state, reader, pos, otherPos, face);
 	}
 
 	@Override
@@ -42,7 +66,7 @@ public class RotatedPillarCTBehaviour extends HorizontalCTBehaviour {
 		if (axis == Axis.X && face == Direction.NORTH)
 			return false;
 		if (axis == Axis.Z && face == Direction.WEST)
-			return true;
+			return false;
 		return super.reverseUVsVertically(state, face);
 	}
 

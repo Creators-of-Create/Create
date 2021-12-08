@@ -106,7 +106,7 @@ public class LayerPattern {
 			}
 
 			public LayerBuilder passiveBlock() {
-				return block(Blocks.AIR);
+				return blocks(Blocks.STONE.defaultBlockState(), Blocks.DEEPSLATE.defaultBlockState());
 			}
 
 			public LayerBuilder block(Block block) {
@@ -116,6 +116,10 @@ public class LayerPattern {
 					return this;
 				}
 				return blocks(block.defaultBlockState(), block.defaultBlockState());
+			}
+			
+			public LayerBuilder blocks(Block block, Block deepblock) {
+				return blocks(block.defaultBlockState(), deepblock.defaultBlockState());
 			}
 
 			public LayerBuilder blocks(Couple<NonNullSupplier<? extends Block>> blocksByDepth) {
