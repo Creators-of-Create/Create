@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import com.jozufozu.flywheel.backend.api.Instancer;
-import com.jozufozu.flywheel.backend.api.MaterialManager;
+import com.jozufozu.flywheel.api.Instancer;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;

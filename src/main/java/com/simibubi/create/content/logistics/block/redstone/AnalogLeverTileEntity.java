@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.api.FlywheelRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;

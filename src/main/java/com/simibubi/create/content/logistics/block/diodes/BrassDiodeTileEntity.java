@@ -4,7 +4,7 @@ import static com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.api.FlywheelRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;

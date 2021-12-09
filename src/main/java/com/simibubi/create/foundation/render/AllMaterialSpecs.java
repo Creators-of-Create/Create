@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.backend.api.MaterialSpec;
+import com.jozufozu.flywheel.api.MaterialSpec;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.flwdata.BeltData;

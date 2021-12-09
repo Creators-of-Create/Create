@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.flap;
 
-import com.jozufozu.flywheel.backend.api.InstanceData;
+import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.core.materials.FlatLit;
 import com.mojang.math.Vector3f;
 

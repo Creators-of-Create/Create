@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.backend.api.instance.ITickableInstance;
-import com.jozufozu.flywheel.backend.api.Instancer;
+import com.jozufozu.flywheel.api.instance.ITickableInstance;
+import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
-import com.jozufozu.flywheel.backend.api.MaterialGroup;
-import com.jozufozu.flywheel.backend.api.MaterialManager;
+import com.jozufozu.flywheel.api.MaterialGroup;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;

@@ -2,11 +2,11 @@ package com.simibubi.create.content.logistics.block.funnel;
 
 import java.util.ArrayList;
 
-import com.jozufozu.flywheel.backend.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.api.InstanceData;
-import com.jozufozu.flywheel.backend.api.Instancer;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.InstanceData;
+import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
-import com.jozufozu.flywheel.backend.api.MaterialManager;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.flap.FlapData;

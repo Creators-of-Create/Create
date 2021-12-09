@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
-import com.jozufozu.flywheel.backend.api.FlywheelRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;

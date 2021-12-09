@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import com.jozufozu.flywheel.backend.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.api.Instancer;
-import com.jozufozu.flywheel.backend.api.MaterialManager;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.Instancer;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;

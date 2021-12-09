@@ -3,10 +3,10 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.backend.api.InstanceData;
-import com.jozufozu.flywheel.backend.api.Instancer;
-import com.jozufozu.flywheel.backend.api.Material;
-import com.jozufozu.flywheel.backend.api.MaterialManager;
+import com.jozufozu.flywheel.api.InstanceData;
+import com.jozufozu.flywheel.api.Instancer;
+import com.jozufozu.flywheel.api.Material;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;

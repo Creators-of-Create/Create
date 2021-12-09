@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
-import com.jozufozu.flywheel.backend.api.Material;
-import com.jozufozu.flywheel.backend.api.MaterialManager;
+import com.jozufozu.flywheel.api.Material;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;

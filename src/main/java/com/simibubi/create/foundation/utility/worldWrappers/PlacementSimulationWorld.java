@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.jozufozu.flywheel.backend.api.FlywheelWorld;
+import com.jozufozu.flywheel.api.FlywheelWorld;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;

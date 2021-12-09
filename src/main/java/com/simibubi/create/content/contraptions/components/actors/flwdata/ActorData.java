@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors.flwdata;
 
-import com.jozufozu.flywheel.backend.api.InstanceData;
+import com.jozufozu.flywheel.api.InstanceData;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
