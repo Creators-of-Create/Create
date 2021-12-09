@@ -1,12 +1,12 @@
 package com.simibubi.create.content.logistics.block.flap;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.core.materials.IFlatLight;
+import com.jozufozu.flywheel.backend.api.InstanceData;
+import com.jozufozu.flywheel.core.materials.FlatLit;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
 
-public class FlapData extends InstanceData implements IFlatLight<FlapData> {
+public class FlapData extends InstanceData implements FlatLit<FlapData> {
 
 	float x;
 	float y;

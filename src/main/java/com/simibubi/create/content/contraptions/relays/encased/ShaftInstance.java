@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.api.MaterialManager;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 

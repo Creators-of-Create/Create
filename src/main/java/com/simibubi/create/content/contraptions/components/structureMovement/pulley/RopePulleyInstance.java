@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 
-import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.api.Instancer;
+import com.jozufozu.flywheel.backend.api.MaterialManager;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;

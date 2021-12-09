@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.jozufozu.flywheel.light.GPULightVolume;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.light.ListenerStatus;
 
 import net.minecraft.world.level.LightLayer;
 
-public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
+public abstract class ContraptionLighter<C extends Contraption> implements LightListener {
     protected final C contraption;
     public final GPULightVolume lightVolume;
 	protected final LightUpdater lightUpdater;

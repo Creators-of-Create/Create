@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.funnel;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
@@ -37,7 +37,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, IInstanceRendered {
+public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, FlywheelRendered {
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour invManipulation;

@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.Material;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.backend.api.InstanceData;
+import com.jozufozu.flywheel.backend.api.Instancer;
+import com.jozufozu.flywheel.backend.api.Material;
+import com.jozufozu.flywheel.backend.api.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.jozufozu.flywheel.backend.IFlywheelWorld;
+import com.jozufozu.flywheel.backend.api.FlywheelWorld;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 
-public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelWorld {
+public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWorld {
 	public Map<BlockPos, BlockState> blocksAdded;
 	public Map<BlockPos, BlockEntity> tesAdded;
 

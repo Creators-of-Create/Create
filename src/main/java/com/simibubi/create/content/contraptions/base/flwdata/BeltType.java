@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.backend.struct.Batched;
 import com.jozufozu.flywheel.backend.struct.BatchingTransformer;
 import com.jozufozu.flywheel.backend.struct.StructWriter;
 import com.jozufozu.flywheel.backend.struct.Writeable;
-import com.jozufozu.flywheel.core.model.IModel;
+import com.jozufozu.flywheel.core.model.Model;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
 
 public class BeltType implements Writeable<BeltData>, Batched<BeltData> {
@@ -26,7 +26,7 @@ public class BeltType implements Writeable<BeltData>, Batched<BeltData> {
 	}
 
 	@Override
-	public BatchingTransformer<BeltData> getTransformer(IModel model) {
+	public BatchingTransformer<BeltData> getTransformer(Model model) {
 		return null;
 	}
 }

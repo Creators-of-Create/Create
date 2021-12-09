@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
@@ -18,7 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EngineTileEntity extends SmartTileEntity implements IInstanceRendered {
+public class EngineTileEntity extends SmartTileEntity implements FlywheelRendered {
 
 	public float appliedCapacity;
 	public float appliedSpeed;

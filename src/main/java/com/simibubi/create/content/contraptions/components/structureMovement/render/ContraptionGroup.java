@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import com.jozufozu.flywheel.backend.material.instancing.InstancedMaterialGroup;
-import com.jozufozu.flywheel.backend.material.instancing.InstancingEngine;
+import com.jozufozu.flywheel.backend.instancing.instancing.InstancedMaterialGroup;
+import com.jozufozu.flywheel.backend.instancing.instancing.InstancingEngine;
 
 import net.minecraft.client.renderer.RenderType;
 

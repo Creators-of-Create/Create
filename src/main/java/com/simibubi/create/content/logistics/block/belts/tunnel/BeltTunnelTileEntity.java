@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
@@ -40,7 +40,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered {
+public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRendered {
 
 	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;

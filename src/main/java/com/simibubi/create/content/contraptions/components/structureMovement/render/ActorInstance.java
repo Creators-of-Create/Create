@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.api.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
