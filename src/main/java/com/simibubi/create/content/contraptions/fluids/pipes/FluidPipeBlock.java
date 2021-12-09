@@ -168,7 +168,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		Direction direction) {
 		if (FluidPropagator.hasFluidCapability(world, neighbourPos, direction.getOpposite()))
 			return true;
-		if (neighbour.hasProperty(BlockStateProperties.LEVEL_HONEY))
+		if (VanillaFluidTargets.shouldPipesConnectTo(neighbour))
 			return true;
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, neighbourPos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket =
