@@ -671,7 +671,7 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<PulseExtenderTileEntity> PULSE_EXTENDER = Create.registrate()
-		.tileEntity("adjustable_repeater", PulseExtenderTileEntity::new)
+		.tileEntity("pulse_extender", PulseExtenderTileEntity::new)
 		.instance(() -> BrassDiodeInstance::new)
 		.validBlocks(AllBlocks.PULSE_EXTENDER)
 		.renderer(() -> BrassDiodeRenderer::new)
@@ -679,7 +679,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<PulseRepeaterTileEntity> PULSE_REPEATER =
 		Create.registrate()
-			.tileEntity("adjustable_pulse_repeater", PulseRepeaterTileEntity::new)
+			.tileEntity("pulse_repeater", PulseRepeaterTileEntity::new)
 			.instance(() -> BrassDiodeInstance::new)
 			.validBlocks(AllBlocks.PULSE_REPEATER)
 			.renderer(() -> BrassDiodeRenderer::new)
