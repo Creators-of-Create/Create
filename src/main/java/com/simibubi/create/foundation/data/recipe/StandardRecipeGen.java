@@ -496,7 +496,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("SSS")
 				.pattern("PCP")),
 
-		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(8)
+		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(4)
 			.unlockedBy(I::copper)
 			.viaShaped(b -> b.define('S', I.copperSheet())
 				.define('C', I.copper())
