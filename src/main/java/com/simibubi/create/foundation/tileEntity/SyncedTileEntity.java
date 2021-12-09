@@ -56,6 +56,8 @@ public abstract class SyncedTileEntity extends BlockEntity {
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+		if (pkt.getTag() == null)
+			return;
 		readClientUpdate(pkt.getTag());
 	}
 
