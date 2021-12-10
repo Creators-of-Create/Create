@@ -18,6 +18,11 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue
 
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
+import com.simibubi.create.lib.utility.LazyOptional;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

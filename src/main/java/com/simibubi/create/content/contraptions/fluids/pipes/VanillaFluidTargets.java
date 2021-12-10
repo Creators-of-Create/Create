@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_HONEY;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
 
 public class VanillaFluidTargets {
 
@@ -30,20 +30,20 @@ public class VanillaFluidTargets {
 			return new FluidStack(AllFluids.HONEY.get()
 				.getSource(), 250);
 		}
-		
+
 		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.LAVA, 1000);
 		}
-		
+
 		if (state.getBlock() == Blocks.WATER_CAULDRON) {
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.WATER, 1000);
 		}
-		
-		return FluidStack.EMPTY;
+
+		return FluidStack.empty();
 	}
 
 }

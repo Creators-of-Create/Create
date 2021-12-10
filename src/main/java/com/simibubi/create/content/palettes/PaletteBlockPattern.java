@@ -210,7 +210,7 @@ public class PaletteBlockPattern {
 //					.rotationY(axis == Axis.X ? 90 : 0)
 //					.build();
 //			}, BlockStateProperties.WATERLOGGED, ConnectedPillarBlock.NORTH, ConnectedPillarBlock.SOUTH,
-				ConnectedPillarBlock.EAST, ConnectedPillarBlock.WEST);
+//				ConnectedPillarBlock.EAST, ConnectedPillarBlock.WEST);
 //	}
 //
 //	public IBlockStateProvider cubeColumn(String variant) {

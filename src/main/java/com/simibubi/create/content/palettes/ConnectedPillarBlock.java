@@ -3,6 +3,7 @@ package com.simibubi.create.content.palettes;
 import java.util.Random;
 
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -56,7 +57,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
-					if (!level.isAreaLoaded(currentPos, 1))
+					if (!LoadedCheckUtil.isAreaLoaded(level, currentPos, 1))
 						break;
 
 					BlockState other1 = currentPos.equals(pos) ? state : level.getBlockState(currentPos);
@@ -78,7 +79,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 		}
 		return state;
 	}
-	
+
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this)
@@ -87,14 +88,14 @@ public class ConnectedPillarBlock extends LayeredBlock {
 		if (!blockTicks.hasScheduledTick(pPos, this))
 			blockTicks.scheduleTick(pPos, this, 1);
 	}
-	
+
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
 		if (pState.getBlock() != this)
 			return;
 		BlockPos belowPos = pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
-		if (!canConnect(pState, belowState)) 
+		if (!canConnect(pState, belowState))
 			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), 3);
 	}
 
