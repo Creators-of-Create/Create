@@ -8,11 +8,11 @@
   "results": [
     {
       "item": "create:crushed_copper_ore",
-      "chance": 0.4
+      "chance": 0.8
     },
     {
       "item": "create:copper_nugget",
-      "chance": 0.4
+      "chance": 0.8
     }
   ],
   "processingTime": 250

@@ -8,11 +8,11 @@
   "results": [
     {
       "item": "create:crushed_zinc_ore",
-      "chance": 0.2
+      "chance": 0.3
     },
     {
       "item": "create:zinc_nugget",
-      "chance": 0.2
+      "chance": 0.3
     }
   ],
   "processingTime": 250

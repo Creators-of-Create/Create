@@ -44,16 +44,16 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(.25f, Items.QUARTZ, 1)),
 
 		CRIMSITE =
-			mineralRecycling(AllPaletteStoneTypes.CRIMSITE, AllItems.CRUSHED_IRON::get, () -> Items.IRON_NUGGET, .2f),
+			mineralRecycling(AllPaletteStoneTypes.CRIMSITE, AllItems.CRUSHED_IRON::get, () -> Items.IRON_NUGGET, .4f),
 
 		VERIDIUM = mineralRecycling(AllPaletteStoneTypes.VERIDIUM, AllItems.CRUSHED_COPPER::get,
-			() -> AllItems.COPPER_NUGGET::get, .4f),
+			() -> AllItems.COPPER_NUGGET::get, .8f),
 
 		ASURINE = mineralRecycling(AllPaletteStoneTypes.ASURINE, AllItems.CRUSHED_ZINC::get,
-			() -> AllItems.ZINC_NUGGET::get, .2f),
+			() -> AllItems.ZINC_NUGGET::get, .3f),
 
 		OCHRUM =
-			mineralRecycling(AllPaletteStoneTypes.OCHRUM, AllItems.CRUSHED_GOLD::get, () -> Items.GOLD_NUGGET, .1f),
+			mineralRecycling(AllPaletteStoneTypes.OCHRUM, AllItems.CRUSHED_GOLD::get, () -> Items.GOLD_NUGGET, .2f),
 
 		TUFF = mineralRecycling(AllPaletteStoneTypes.TUFF, b -> b.duration(350)
 			.output(.25f, Items.FLINT, 1)
