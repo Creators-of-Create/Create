@@ -52,9 +52,8 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
     }
 
     protected void growBoundsForEdgeData() {
-        bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
-        bounds.setMinY(Math.max(bounds.getMinY(), 0));
-        bounds.setMaxY(Math.min(bounds.getMaxY(), 255));
+        // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
+        bounds.grow(2);
 	}
 
 	@Override
