@@ -2,14 +2,17 @@ package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
-import com.jozufozu.flywheel.backend.struct.Batched;
-import com.jozufozu.flywheel.backend.struct.BatchingTransformer;
-import com.jozufozu.flywheel.backend.struct.StructWriter;
-import com.jozufozu.flywheel.backend.struct.Writeable;
+import com.jozufozu.flywheel.api.struct.Batched;
+import com.jozufozu.flywheel.api.struct.BatchingTransformer;
+import com.jozufozu.flywheel.api.struct.StructWriter;
+import com.jozufozu.flywheel.api.struct.Instanced;
 import com.jozufozu.flywheel.core.model.Model;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
+import com.simibubi.create.foundation.render.AllProgramSpecs;
 
-public class BeltType implements Writeable<BeltData>, Batched<BeltData> {
+import net.minecraft.resources.ResourceLocation;
+
+public class BeltType implements Instanced<BeltData>, Batched<BeltData> {
 	@Override
 	public BeltData create() {
 		return new BeltData();
@@ -23,6 +26,11 @@ public class BeltType implements Writeable<BeltData>, Batched<BeltData> {
 	@Override
 	public StructWriter<BeltData> getWriter(VecBuffer backing) {
 		return new UnsafeBeltWriter(backing, this);
+	}
+
+	@Override
+	public ResourceLocation getProgramSpec() {
+		return AllProgramSpecs.BELT;
 	}
 
 	@Override

@@ -85,7 +85,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 		behaviourList.forEach(TileEntityBehaviour::initialize);
 		lazyTick();
 	}
-	
+
 	@Override
 	public final void saveAdditional(CompoundTag compound) {
 		write(compound, false);
@@ -225,9 +225,5 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	@SuppressWarnings("deprecation")
 	public void refreshBlockState() {
 		setBlockState(getLevel().getBlockState(getBlockPos()));
-	}
-
-	public Level getWorld() {
-		return getLevel();
 	}
 }

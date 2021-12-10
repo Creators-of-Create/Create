@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.api.MaterialSpec;
+import com.jozufozu.flywheel.api.struct.StructType;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.flwdata.BeltData;
@@ -22,16 +22,16 @@ public class AllMaterialSpecs {
 		// noop, make sure the static field are loaded.
 	}
 
-	public static final MaterialSpec<RotatingData> ROTATING = new MaterialSpec<>(Locations.ROTATING, AllProgramSpecs.ROTATING, new RotatingType());
-	public static final MaterialSpec<BeltData> BELTS = new MaterialSpec<>(Locations.BELTS, AllProgramSpecs.BELT, new BeltType());
-	public static final MaterialSpec<ActorData> ACTORS = new MaterialSpec<>(Locations.ACTORS, AllProgramSpecs.ACTOR, new ActorType());
-	public static final MaterialSpec<FlapData> FLAPS = new MaterialSpec<>(Locations.FLAPS, AllProgramSpecs.FLAPS, new FlapType());
+	public static final StructType<RotatingData> ROTATING = new RotatingType();
+	public static final StructType<BeltData> BELTS = new BeltType();
+	public static final StructType<ActorData> ACTORS = new ActorType();
+	public static final StructType<FlapData> FLAPS = new FlapType();
 
 	public static void flwInit(GatherContextEvent event) {
-		event.getBackend().register(ROTATING);
-		event.getBackend().register(BELTS);
-		event.getBackend().register(ACTORS);
-		event.getBackend().register(FLAPS);
+		event.getBackend().register(Locations.ROTATING, ROTATING);
+		event.getBackend().register(Locations.BELTS, BELTS);
+		event.getBackend().register(Locations.ACTORS, ACTORS);
+		event.getBackend().register(Locations.FLAPS, FLAPS);
 	}
 
 	public static class Locations {

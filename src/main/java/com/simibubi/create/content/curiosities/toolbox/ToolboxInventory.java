@@ -98,7 +98,7 @@ public class ToolboxInventory extends ItemStackHandler {
 			if (blockItem.getBlock() instanceof ShulkerBoxBlock)
 				return false;
 		}
-		
+
 		if (slot < 0 || slot >= getSlots())
 			return false;
 		int compartment = slot / STACKS_PER_COMPARTMENT;
@@ -144,7 +144,7 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	@Override
 	protected void onContentsChanged(int slot) {
-		if (!settling && !te.getWorld().isClientSide)
+		if (!settling && !te.getLevel().isClientSide)
 			settle(slot / STACKS_PER_COMPARTMENT);
 		te.sendData();
 		super.onContentsChanged(slot);
