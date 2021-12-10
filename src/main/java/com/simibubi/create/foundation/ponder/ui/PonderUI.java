@@ -737,19 +737,19 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.pushPose();
 		ms.translate(0, 0, 500);
 		int tooltipY = height - 16;
-		if (scan.isHovered())
+		if (scan.isHoveredOrFocused())
 			drawCenteredString(ms, font, Lang.translate(IDENTIFY), scan.x + 10, tooltipY, tooltipColor);
-		if (index != 0 && left.isHovered())
+		if (index != 0 && left.isHoveredOrFocused())
 			drawCenteredString(ms, font, Lang.translate(PREVIOUS), left.x + 10, tooltipY, tooltipColor);
-		if (close.isHovered())
+		if (close.isHoveredOrFocused())
 			drawCenteredString(ms, font, Lang.translate(CLOSE), close.x + 10, tooltipY, tooltipColor);
-		if (index != scenes.size() - 1 && right.isHovered())
+		if (index != scenes.size() - 1 && right.isHoveredOrFocused())
 			drawCenteredString(ms, font, Lang.translate(NEXT), right.x + 10, tooltipY, tooltipColor);
-		if (replay.isHovered())
+		if (replay.isHoveredOrFocused())
 			drawCenteredString(ms, font, Lang.translate(REPLAY), replay.x + 10, tooltipY, tooltipColor);
-		if (slowMode.isHovered())
+		if (slowMode.isHoveredOrFocused())
 			drawCenteredString(ms, font, Lang.translate(SLOW_TEXT), slowMode.x + 5, tooltipY, tooltipColor);
-		if (PonderIndex.editingModeActive() && userMode.isHovered())
+		if (PonderIndex.editingModeActive() && userMode.isHoveredOrFocused())
 			drawCenteredString(ms, font, "Editor View", userMode.x + 10, tooltipY, tooltipColor);
 		ms.popPose();
 

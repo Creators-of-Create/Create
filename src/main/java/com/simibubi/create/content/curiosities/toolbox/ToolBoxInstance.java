@@ -1,9 +1,9 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;

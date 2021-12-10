@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -67,9 +67,7 @@ import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
-import static com.simibubi.create.lib.block.CustomRenderBoundingBox.INFINITE_EXTENT_AABB;
-
-public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, IInstanceRendered, CustomRenderBoundingBox {
+public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, FlywheelRendered, CustomRenderBoundingBox {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
@@ -736,7 +734,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			CompoundTag data = null;
 			if (tile != null) {
 				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-					data = tile.save(new CompoundTag());
+					data = tile.saveWithFullMetadata();
 					data = NBTProcessors.process(tile, data, true);
 				} else if (tile instanceof IPartialSafeNBT) {
 					data = new CompoundTag();

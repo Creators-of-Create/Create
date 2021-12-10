@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
-
 public class SchematicSyncPacket extends SimplePacketBase {
 
 	public int slot;

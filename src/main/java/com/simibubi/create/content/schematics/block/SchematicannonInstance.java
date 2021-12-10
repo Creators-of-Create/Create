@@ -1,9 +1,9 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
-import com.jozufozu.flywheel.backend.material.Material;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.Material;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -24,9 +24,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
-
-        beginFrame();
-    }
+	}
 
     @Override
     public void beginFrame() {

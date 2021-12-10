@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.mutable.MutableObject;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -15,6 +17,7 @@ import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -99,14 +102,19 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				((ScreenAccessor) gui).create$getChildren().stream()
-						.filter(w -> w instanceof AbstractWidget)
-						.map(w -> (AbstractWidget) w)
-						.filter(w -> w.getMessage().getString().equals(target))
-						.findFirst()
-						.ifPresent(w -> ((ScreenAccessor) gui).create$addRenderableWidget(
-								new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
-						));
+				MutableObject<GuiEventListener> toAdd = new MutableObject<>(null);
+				event.getListenersList()
+					.stream()
+					.filter(w -> w instanceof AbstractWidget)
+					.map(w -> (AbstractWidget) w)
+					.filter(w -> w.getMessage()
+						.getString()
+						.equals(target))
+					.findFirst()
+					.ifPresent(w -> toAdd
+						.setValue(new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)));
+				if (toAdd.getValue() != null)
+					event.addListener(toAdd.getValue());
 			}
 		}
 

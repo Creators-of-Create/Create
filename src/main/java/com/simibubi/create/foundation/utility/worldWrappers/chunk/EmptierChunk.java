@@ -3,21 +3,23 @@ package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 import com.simibubi.create.lib.mixin.accessor.DimensionTypeAccessor;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagContainer;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,20 +34,25 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.ticks.BlackholeTickAccess;
+import net.minecraft.world.ticks.LevelTickAccess;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class EmptierChunk extends LevelChunk {
 
-	private static final Level DUMMY_LEVEL = new Level(null, null, DimensionTypeAccessor.getDEFAULT_OVERWORLD(), null, false, false, 0) {
+	private static final class DummyLevel extends Level {
+		RegistryAccess access;
 
-		@Override
-		public TickList<Block> getBlockTicks() {
-			return null;
+		private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, DimensionType p_46452_,
+			Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_) {
+			super(p_46450_, p_46451_, p_46452_, p_46453_, p_46454_, p_46455_, p_46456_);
 		}
 
-		@Override
-		public TickList<Fluid> getLiquidTicks() {
-			return null;
+		public Level withAccess(RegistryAccess access) {
+			this.access = access;
+			return this;
 		}
 
 		@Override
@@ -54,16 +61,14 @@ public class EmptierChunk extends LevelChunk {
 		}
 
 		@Override
-		public void levelEvent(Player pPlayer, int pType, BlockPos pPos, int pData) {
-		}
+		public void levelEvent(Player pPlayer, int pType, BlockPos pPos, int pData) {}
 
 		@Override
-		public void gameEvent(Entity pEntity, GameEvent pEvent, BlockPos pPos) {
-		}
+		public void gameEvent(Entity pEntity, GameEvent pEvent, BlockPos pPos) {}
 
 		@Override
 		public RegistryAccess registryAccess() {
-			return null;
+			return access;
 		}
 
 		@Override
@@ -82,18 +87,15 @@ public class EmptierChunk extends LevelChunk {
 		}
 
 		@Override
-		public void sendBlockUpdated(BlockPos pPos, BlockState pOldState, BlockState pNewState, int pFlags) {
-		}
+		public void sendBlockUpdated(BlockPos pPos, BlockState pOldState, BlockState pNewState, int pFlags) {}
 
 		@Override
 		public void playSound(Player pPlayer, double pX, double pY, double pZ, SoundEvent pSound, SoundSource pCategory,
-				float pVolume, float pPitch) {
-		}
+			float pVolume, float pPitch) {}
 
 		@Override
 		public void playSound(Player pPlayer, Entity pEntity, SoundEvent pEvent, SoundSource pCategory, float pVolume,
-				float pPitch) {
-		}
+			float pPitch) {}
 
 		@Override
 		public String gatherChunkSourceStats() {
@@ -111,8 +113,7 @@ public class EmptierChunk extends LevelChunk {
 		}
 
 		@Override
-		public void setMapData(String pMapId, MapItemSavedData pData) {
-		}
+		public void setMapData(String pMapId, MapItemSavedData pData) {}
 
 		@Override
 		public int getFreeMapId() {
@@ -120,8 +121,7 @@ public class EmptierChunk extends LevelChunk {
 		}
 
 		@Override
-		public void destroyBlockProgress(int pBreakerId, BlockPos pPos, int pProgress) {
-		}
+		public void destroyBlockProgress(int pBreakerId, BlockPos pPos, int pProgress) {}
 
 		@Override
 		public Scoreboard getScoreboard() {
@@ -143,10 +143,22 @@ public class EmptierChunk extends LevelChunk {
 			return null;
 		}
 
-	};
+		@Override
+		public LevelTickAccess<Block> getBlockTicks() {
+			return BlackholeTickAccess.emptyLevelList();
+		}
 
-	public EmptierChunk() {
-		super(DUMMY_LEVEL, null, null);
+		@Override
+		public LevelTickAccess<Fluid> getFluidTicks() {
+			return BlackholeTickAccess.emptyLevelList();
+		}
+	}
+
+	private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null,
+		ObfuscationReflectionHelper.getPrivateValue(DimensionType.class, null, "f_63848_"), null, false, false, 0);
+
+	public EmptierChunk(RegistryAccess registryAccess) {
+		super(DUMMY_LEVEL.withAccess(registryAccess), null);
 	}
 
 	public BlockState getBlockState(BlockPos p_180495_1_) {
@@ -171,13 +183,13 @@ public class EmptierChunk extends LevelChunk {
 		return null;
 	}
 
-	public void addAndRegisterBlockEntity(BlockEntity p_150813_1_) { }
+	public void addAndRegisterBlockEntity(BlockEntity p_150813_1_) {}
 
-	public void setBlockEntity(BlockEntity p_177426_2_) { }
+	public void setBlockEntity(BlockEntity p_177426_2_) {}
 
-	public void removeBlockEntity(BlockPos p_177425_1_) { }
+	public void removeBlockEntity(BlockPos p_177425_1_) {}
 
-	public void markUnsaved() { }
+	public void markUnsaved() {}
 
 	public boolean isEmpty() {
 		return true;

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.backend.material.Material;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.Material;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorData;

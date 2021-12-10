@@ -1,16 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
-import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.api.instance.ITickableInstance;
+import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
-import com.jozufozu.flywheel.backend.material.MaterialGroup;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.MaterialGroup;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.jozufozu.flywheel.core.model.IModel;
+import com.jozufozu.flywheel.core.model.Model;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllItems;
@@ -95,7 +95,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				|| AllItems.SUPER_GLUE.isIn(player.getOffhandItem());
 	}
 
-	public static class GlueModel implements IModel {
+	public static class GlueModel implements Model {
 
 		@Override
 		public String name() {

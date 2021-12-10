@@ -8,11 +8,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.feature.configurations.DecoratorConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 
-public class ConfigDrivenOreConfiguration implements FeatureConfiguration, DecoratorConfiguration {
+public class ConfigDrivenOreConfiguration implements FeatureConfiguration {
 
 	public static final Codec<ConfigDrivenOreConfiguration> CODEC = RecordCodecBuilder.create((p_67849_) -> {
 		return p_67849_.group(Codec.list(TargetBlockState.CODEC)

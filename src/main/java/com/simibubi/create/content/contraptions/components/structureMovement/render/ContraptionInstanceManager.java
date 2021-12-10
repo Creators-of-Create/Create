@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.instancing.tile.TileInstanceManager;
-import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -23,7 +23,7 @@ public class ContraptionInstanceManager extends TileInstanceManager {
 
     private final WeakReference<RenderedContraption> contraption;
 
-    ContraptionInstanceManager(RenderedContraption contraption, MaterialManagerImpl<?> materialManager) {
+    ContraptionInstanceManager(RenderedContraption contraption, MaterialManager materialManager) {
 		super(materialManager);
 		this.contraption = new WeakReference<>(contraption);
 	}

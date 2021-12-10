@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -38,6 +37,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.ticks.TickPriority;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -80,8 +80,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getBlockTicks()
-				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
@@ -98,8 +97,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getBlockTicks()
-			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction d) {

@@ -24,7 +24,7 @@ public class IconButton extends AbstractSimiWidget {
 			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 
 			AllGuiTextures button = !active ? AllGuiTextures.BUTTON_DOWN
-				: isHovered() ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
+				: isHoveredOrFocused() ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			AllGuiTextures.BUTTON.bind();

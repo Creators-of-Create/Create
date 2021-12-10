@@ -184,7 +184,7 @@ public class PonderScene {
 			pickBlock = blockState.getBlock().getCloneItemStack(world, selectedPos, blockState);
 		}
 
-//		= blockState.getPickBlock(
+//		= blockState.getCloneItemStack(
 //			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world, selectedPos,
 //			Minecraft.getInstance().player);
 

@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.GameStateRegistry;
-import com.jozufozu.flywheel.backend.pipeline.IShaderPipeline;
+import com.jozufozu.flywheel.backend.pipeline.ShaderPipeline;
 import com.jozufozu.flywheel.backend.pipeline.InstancingTemplate;
 import com.jozufozu.flywheel.backend.pipeline.OneShotTemplate;
 import com.jozufozu.flywheel.backend.pipeline.WorldShaderPipeline;
@@ -33,8 +33,8 @@ public class CreateContexts {
 		GameStateRegistry.register(RainbowDebugStateProvider.INSTANCE);
         FileResolution header = Resolver.INSTANCE.findShader(ResourceUtil.subPath(CONTRAPTION, ".glsl"));
 
-		IShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(ContraptionProgram::new, InstancingTemplate.INSTANCE, header);
-		IShaderPipeline<ContraptionProgram> structure = new WorldShaderPipeline<>(ContraptionProgram::new, OneShotTemplate.INSTANCE, header);
+		ShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(ContraptionProgram::new, InstancingTemplate.INSTANCE, header);
+		ShaderPipeline<ContraptionProgram> structure = new WorldShaderPipeline<>(ContraptionProgram::new, OneShotTemplate.INSTANCE, header);
 
 		CWORLD = backend.register(WorldContext.builder(backend, CONTRAPTION)
 				.build(instancing));

@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.flap;
 import org.lwjgl.system.MemoryUtil;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
-import com.jozufozu.flywheel.backend.struct.StructType;
+import com.jozufozu.flywheel.api.struct.StructType;
 import com.jozufozu.flywheel.backend.struct.UnsafeBufferWriter;
 
 public class UnsafeFlapWriter extends UnsafeBufferWriter<FlapData> {

@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
@@ -51,7 +51,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 public class KineticTileEntity extends SmartTileEntity
-	implements IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
+	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;

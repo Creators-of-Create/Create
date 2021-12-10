@@ -28,7 +28,7 @@ import net.minecraft.world.level.material.Fluid;
 public class AllTags {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
 	public static <T> Tag.Named<T> tag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String namespace,
 		String path) {

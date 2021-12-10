@@ -31,7 +31,6 @@ import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.command.ChunkUtil;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -72,7 +71,6 @@ public class Create implements ModInitializer {
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final ServerLagger LAGGER = new ServerLagger();
-	public static final ChunkUtil CHUNK_UTIL = new ChunkUtil();
 	public static final Random RANDOM = new Random();
 
 	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
@@ -139,13 +137,13 @@ public class Create implements ModInitializer {
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
 
-		CHUNK_UTIL.init();
 		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
 //		event.enqueueWork(() -> {
 			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
+			AllWorldFeatures.registerPlacementTypes();
 //		});
 	}
 

@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
@@ -43,9 +43,7 @@ import net.fabricmc.api.EnvType;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-import org.jetbrains.annotations.Nullable;
-
-public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered, ItemTransferable {
+public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRendered, ItemTransferable {
 
 	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;

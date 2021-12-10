@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-
 public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity> extends SimplePacketBase {
 
 	protected BlockPos pos;

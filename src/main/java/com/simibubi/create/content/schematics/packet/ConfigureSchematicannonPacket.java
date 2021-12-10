@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
-
 public class ConfigureSchematicannonPacket extends SimplePacketBase {
 
 	public static enum Option {

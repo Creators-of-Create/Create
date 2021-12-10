@@ -69,7 +69,7 @@ import net.minecraft.world.item.Rarity;
 public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
 	// Schematics
 

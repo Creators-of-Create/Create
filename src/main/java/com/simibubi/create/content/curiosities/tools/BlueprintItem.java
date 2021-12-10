@@ -133,7 +133,7 @@ public class BlueprintItem extends Item {
 			return filterItem;
 		}
 
-		if (itemList.getItems().toArray()[0] instanceof ItemStack) {
+		if (itemList instanceof MultiItemValue) {
 			ItemStack result = AllItems.FILTER.asStack();
 			ItemStackHandler filterItems = FilterItem.getFilterItems(result);
 			int i = 0;

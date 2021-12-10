@@ -29,7 +29,7 @@ import com.simibubi.create.lib.data.Tags;
 public class AllPaletteBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.PALETTES_CREATIVE_TAB)
+		.creativeModeTab(() -> Create.PALETTES_CREATIVE_TAB)
 		.startSection(AllSections.PALETTES);
 
 	// Windows and Glass

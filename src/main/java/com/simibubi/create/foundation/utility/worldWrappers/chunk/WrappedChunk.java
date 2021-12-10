@@ -12,195 +12,170 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.TickList;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkBiomeContainer;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.ticks.BlackholeTickAccess;
+import net.minecraft.world.ticks.TickContainerAccess;
 
-public class WrappedChunk implements ChunkAccess {
+public class WrappedChunk extends ChunkAccess {
 
-    final PlacementSimulationWorld world;
-    boolean needsLight;
-    final int x;
-    final int z;
-    final ChunkPos pos;
+	final PlacementSimulationWorld world;
+	boolean needsLight;
+	final int x;
+	final int z;
 
-    private final LevelChunkSection[] sections;
+	private final LevelChunkSection[] sections;
 
-    public WrappedChunk(PlacementSimulationWorld world, int x, int z) {
-        this.world = world;
-        this.needsLight = true;
-        this.x = x;
-        this.z = z;
-        this.pos = new ChunkPos(x, z);
+	public WrappedChunk(PlacementSimulationWorld world, int x, int z) {
+		super(new ChunkPos(x, z), UpgradeData.EMPTY, world, world.registryAccess()
+			.registry(Registry.BIOME_REGISTRY)
+			.orElseThrow(), 0L, null, null);
 
-        this.sections = new LevelChunkSection[16];
+		this.world = world;
+		this.needsLight = true;
+		this.x = x;
+		this.z = z;
 
-        for (int i = 0; i < 16; i++) {
-            sections[i] = new WrappedChunkSection(this, i << 4);
-        }
-    }
+		this.sections = new LevelChunkSection[16];
 
-    @Override
-    public Stream<BlockPos> getLights() {
-        return world.blocksAdded
-                .entrySet()
-                .stream()
-                .filter(it -> {
-                    BlockPos blockPos = it.getKey();
-                    boolean chunkContains = blockPos.getX() >> 4 == x && blockPos.getZ() >> 4 == z;
-                    return chunkContains && it.getValue().getLightEmission(/*world, blockPos*/) != 0;
-                })
-                .map(Map.Entry::getKey);
-    }
+		for (int i = 0; i < 16; i++) {
+			sections[i] = new WrappedChunkSection(this, i << 4);
+		}
+	}
 
-    @Override
-    public LevelChunkSection[] getSections() {
-        return sections;
-    }
+	@Override
+	public Stream<BlockPos> getLights() {
+		return world.blocksAdded.entrySet()
+			.stream()
+			.filter(it -> {
+				BlockPos blockPos = it.getKey();
+				boolean chunkContains = blockPos.getX() >> 4 == x && blockPos.getZ() >> 4 == z;
+				return chunkContains && it.getValue()
+					.getLightEmission(/*world, blockPos*/) != 0;
+			})
+			.map(Map.Entry::getKey);
+	}
 
-    @Override
-    public ChunkStatus getStatus() {
-        return ChunkStatus.LIGHT;
-    }
+	@Override
+	public LevelChunkSection[] getSections() {
+		return sections;
+	}
 
-    @Nullable
-    @Override
-    public BlockState setBlockState(BlockPos p_177436_1_, BlockState p_177436_2_, boolean p_177436_3_) {
-        return null;
-    }
+	@Override
+	public ChunkStatus getStatus() {
+		return ChunkStatus.LIGHT;
+	}
 
-    @Override
-    public void setBlockEntity(BlockEntity p_177426_2_) {
-    }
+	@Nullable
+	@Override
+	public BlockState setBlockState(BlockPos p_177436_1_, BlockState p_177436_2_, boolean p_177436_3_) {
+		return null;
+	}
 
-    @Override
-    public void addEntity(Entity p_76612_1_) {
-    }
+	@Override
+	public void setBlockEntity(BlockEntity p_177426_2_) {}
 
-    @Override
-    public Set<BlockPos> getBlockEntitiesPos() {
-        return null;
-    }
+	@Override
+	public void addEntity(Entity p_76612_1_) {}
 
-    @Override
-    public Collection<Map.Entry<Heightmap.Types, Heightmap>> getHeightmaps() {
-        return null;
-    }
+	@Override
+	public Set<BlockPos> getBlockEntitiesPos() {
+		return null;
+	}
 
-    @Override
-    public void setHeightmap(Heightmap.Types p_201607_1_, long[] p_201607_2_) {
-    }
+	@Override
+	public Collection<Map.Entry<Heightmap.Types, Heightmap>> getHeightmaps() {
+		return null;
+	}
 
-    @Override
-    public Heightmap getOrCreateHeightmapUnprimed(Heightmap.Types p_217303_1_) {
-        return null;
-    }
+	@Override
+	public void setHeightmap(Heightmap.Types p_201607_1_, long[] p_201607_2_) {}
 
-    @Override
-    public int getHeight(Heightmap.Types p_201576_1_, int p_201576_2_, int p_201576_3_) {
-        return 0;
-    }
+	@Override
+	public Heightmap getOrCreateHeightmapUnprimed(Heightmap.Types p_217303_1_) {
+		return null;
+	}
 
-    @Override
-    public ChunkPos getPos() {
-        return pos;
-    }
+	@Override
+	public int getHeight(Heightmap.Types p_201576_1_, int p_201576_2_, int p_201576_3_) {
+		return 0;
+	}
 
-    @Nullable
-    @Override
-    public ChunkBiomeContainer getBiomes() {
-        return null;
-    }
+	@Override
+	public void setUnsaved(boolean p_177427_1_) {}
 
-    @Override
-    public void setUnsaved(boolean p_177427_1_) {
-    }
+	@Override
+	public boolean isUnsaved() {
+		return false;
+	}
 
-    @Override
-    public boolean isUnsaved() {
-        return false;
-    }
+	@Override
+	public void removeBlockEntity(BlockPos p_177425_1_) {}
 
-    @Override
-    public void removeBlockEntity(BlockPos p_177425_1_) {
-    }
+	@Override
+	public ShortList[] getPostProcessing() {
+		return new ShortList[0];
+	}
 
-    @Override
-    public ShortList[] getPostProcessing() {
-        return new ShortList[0];
-    }
+	@Nullable
+	@Override
+	public CompoundTag getBlockEntityNbt(BlockPos p_201579_1_) {
+		return null;
+	}
 
-    @Nullable
-    @Override
-    public CompoundTag getBlockEntityNbt(BlockPos p_201579_1_) {
-        return null;
-    }
+	@Nullable
+	@Override
+	public CompoundTag getBlockEntityNbtForSaving(BlockPos p_223134_1_) {
+		return null;
+	}
 
-    @Nullable
-    @Override
-    public CompoundTag getBlockEntityNbtForSaving(BlockPos p_223134_1_) {
-        return null;
-    }
+	@Override
+	public UpgradeData getUpgradeData() {
+		return null;
+	}
 
-    @Override
-    public TickList<Block> getBlockTicks() {
-        return null;
-    }
+	@Override
+	public void setInhabitedTime(long p_177415_1_) {}
 
-    @Override
-    public TickList<Fluid> getLiquidTicks() {
-        return null;
-    }
+	@Override
+	public long getInhabitedTime() {
+		return 0;
+	}
 
-    @Override
-    public UpgradeData getUpgradeData() {
-        return null;
-    }
+	@Override
+	public boolean isLightCorrect() {
+		return needsLight;
+	}
 
-    @Override
-    public void setInhabitedTime(long p_177415_1_) {
-    }
+	@Override
+	public void setLightCorrect(boolean needsLight) {
+		this.needsLight = needsLight;
+	}
 
-    @Override
-    public long getInhabitedTime() {
-        return 0;
-    }
+	@Nullable
+	@Override
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		return null;
+	}
 
-    @Override
-    public boolean isLightCorrect() {
-        return needsLight;
-    }
-
-    @Override
-    public void setLightCorrect(boolean needsLight) {
-        this.needsLight = needsLight;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity getBlockEntity(BlockPos pos) {
-        return null;
-    }
-
-    @Override
-    public BlockState getBlockState(BlockPos pos) {
-        return world.getBlockState(pos);
-    }
+	@Override
+	public BlockState getBlockState(BlockPos pos) {
+		return world.getBlockState(pos);
+	}
 
 	@Override
 	public FluidState getFluidState(BlockPos p_204610_1_) {
@@ -208,8 +183,7 @@ public class WrappedChunk implements ChunkAccess {
 	}
 
 	@Override
-	public void addReferenceForFeature(StructureFeature<?> arg0, long arg1) {
-	}
+	public void addReferenceForFeature(StructureFeature<?> arg0, long arg1) {}
 
 	@Override
 	public Map<StructureFeature<?>, LongSet> getAllReferences() {
@@ -227,16 +201,13 @@ public class WrappedChunk implements ChunkAccess {
 	}
 
 	@Override
-	public void setAllReferences(Map<StructureFeature<?>, LongSet> arg0) {
-	}
+	public void setAllReferences(Map<StructureFeature<?>, LongSet> arg0) {}
 
 	@Override
-	public void setStartForFeature(StructureFeature<?> arg0, StructureStart<?> arg1) {
-	}
+	public void setStartForFeature(StructureFeature<?> arg0, StructureStart<?> arg1) {}
 
 	@Override
-	public void setAllStarts(Map<StructureFeature<?>, StructureStart<?>> p_201612_1_) {
-	}
+	public void setAllStarts(Map<StructureFeature<?>, StructureStart<?>> p_201612_1_) {}
 
 	@Override
 	public Map<StructureFeature<?>, StructureStart<?>> getAllStarts() {
@@ -254,8 +225,18 @@ public class WrappedChunk implements ChunkAccess {
 	}
 
 	@Override
-	public BlockPos getHeighestPosition(Types pType) {
-		return BlockPos.ZERO;
+	public TickContainerAccess<Fluid> getFluidTicks() {
+		return BlackholeTickAccess.emptyContainer();
+	}
+
+	@Override
+	public TicksToSave getTicksForSerialization() {
+		return null;
+	}
+
+	@Override
+	public TickContainerAccess<Block> getBlockTicks() {
+		return BlackholeTickAccess.emptyContainer();
 	}
 
 }

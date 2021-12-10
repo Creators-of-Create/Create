@@ -17,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -118,7 +117,7 @@ public class LayeredOreFeature extends OreFeatureBase {
 						if (!worldgenlevel.ensureCanWrite(mutablePos))
 							continue;
 						LevelChunkSection levelchunksection = bulksectionaccess.getSection(mutablePos);
-						if (levelchunksection == LevelChunk.EMPTY_SECTION)
+						if (levelchunksection == null)
 							continue;
 
 						int i3 = SectionPos.sectionRelative(currentX);

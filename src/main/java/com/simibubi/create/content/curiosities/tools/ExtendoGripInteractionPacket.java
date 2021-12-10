@@ -11,7 +11,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-
 public class ExtendoGripInteractionPacket extends SimplePacketBase {
 
 	private InteractionHand interactionHand;

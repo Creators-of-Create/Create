@@ -10,7 +10,7 @@ import com.simibubi.create.lib.utility.NBTSerializer;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -136,7 +136,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 			BlockEntity tile = schematicWorld.getBlockEntity(pos);
 			if (tile != null) {
-				data = tile.save(new CompoundTag());
+				data = tile.saveWithFullMetadata();
 				data = NBTProcessors.process(tile, data, true);
 			}
 		}

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids.particle;
 
-import java.util.Optional;
-
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -10,10 +8,8 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
 
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluids;
 
@@ -57,30 +53,18 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 		return Registry.PARTICLE_TYPE.getKey(type) + " " + Registry.FLUID.getKey(fluid.getFluid());
 	}
 
-	public static final Codec<FluidStack> FLUID_CODEC = RecordCodecBuilder.create(i -> i.group(
-					Registry.FLUID.fieldOf("FluidName")
-							.forGetter(FluidStack::getFluid),
-					Codec.LONG.fieldOf("Amount")
-							.forGetter(FluidStack::getAmount),
-					CompoundTag.CODEC.optionalFieldOf("tag")
-							.forGetter((fs) -> {
-								return Optional.ofNullable(fs.toTag());
-							}))
-			//Just ignore tags for now
-			.apply(i, (f, a, t) -> new FluidStack(f, a)));
-
 	public static final Codec<FluidParticleData> CODEC = RecordCodecBuilder.create(i -> i
-		.group(FLUID_CODEC.fieldOf("fluid")
+		.group(FluidStack.CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_PARTICLE.get(), fs)));
 
 	public static final Codec<FluidParticleData> BASIN_CODEC = RecordCodecBuilder.create(i -> i
-		.group(FLUID_CODEC.fieldOf("fluid")
+		.group(FluidStack.CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), fs)));
 
 	public static final Codec<FluidParticleData> DRIP_CODEC = RecordCodecBuilder.create(i -> i
-		.group(FLUID_CODEC.fieldOf("fluid")
+		.group(FluidStack.CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_DRIP.get(), fs)));
 

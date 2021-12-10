@@ -373,16 +373,14 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return shape;
 
 		return getTileEntityOptional(worldIn, pos).map(te -> {
-			if (!((EntityCollisionContext) context).getEntity()
-				.isPresent())
+			Entity entity = ((EntityCollisionContext) context).getEntity();
+			if (entity == null)
 				return shape;
 
 			BeltTileEntity controller = te.getControllerTE();
 			if (controller == null)
 				return shape;
-			if (controller.passengers == null
-				|| !controller.passengers.containsKey(((EntityCollisionContext) context).getEntity()
-					.get()))
+			if (controller.passengers == null || !controller.passengers.containsKey(entity))
 				return BeltShapes.getCollisionShape(state);
 			return shape;
 

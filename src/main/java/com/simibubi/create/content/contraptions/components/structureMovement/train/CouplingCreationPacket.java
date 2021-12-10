@@ -8,7 +8,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 
-
 public class CouplingCreationPacket extends SimplePacketBase {
 
 	int id1, id2;

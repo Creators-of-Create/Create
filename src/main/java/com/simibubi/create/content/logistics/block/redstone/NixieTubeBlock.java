@@ -179,8 +179,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 			return;
 		if (!worldIn.getBlockTicks()
 			.willTickThisTick(pos, this))
-			worldIn.getBlockTicks()
-				.scheduleTick(pos, this, 0);
+			worldIn.scheduleTick(pos, this, 0);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 
-
 public class ContraptionSeatMappingPacket extends SimplePacketBase {
 
 	private Map<UUID, Integer> mapping;

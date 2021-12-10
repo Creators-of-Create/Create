@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRendere
 import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -42,7 +43,6 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -52,23 +52,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
-
-	public interface BlockEntityFactory<T extends BlockEntity> {
-
-		public T create(BlockEntityType<T> type, BlockPos pos, BlockState state);
-
-		default T createWithReversedParams(BlockPos pos, BlockState state, BlockEntityType<T> type) {
-			return create(type, pos, state);
-		}
-
-	}
 
 	protected CreateRegistrate(String modid) {
 		super(modid);
@@ -135,9 +124,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
 		BlockEntityFactory<T> factory) {
-		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
-			return CreateTileEntityBuilder.create(this, parent, name, callback, factory::createWithReversedParams);
-		});
+		return (CreateTileEntityBuilder<T, P>) this.entry(name,
+			(callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory));
 	}
 
 	@Override

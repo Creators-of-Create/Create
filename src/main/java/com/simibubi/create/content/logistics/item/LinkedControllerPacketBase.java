@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-
 public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 
 	private BlockPos lecternPos;

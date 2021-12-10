@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
-
 public class SchematicUploadPacket extends SimplePacketBase {
 
 	public static final int BEGIN = 0;

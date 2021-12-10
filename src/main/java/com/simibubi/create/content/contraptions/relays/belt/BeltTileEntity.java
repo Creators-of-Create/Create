@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
@@ -58,13 +58,7 @@ import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
-import net.fabricmc.api.EnvType;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import org.jetbrains.annotations.Nullable;
-
-public class BeltTileEntity extends KineticTileEntity implements ILightUpdateListener, ItemTransferable {
+public class BeltTileEntity extends KineticTileEntity implements LightListener, ItemTransferable {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -563,7 +557,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 				initializeLight();
 				return;
 			}
-			
+
 			if (type == LightLayer.BLOCK)
 				updateBlockLight();
 

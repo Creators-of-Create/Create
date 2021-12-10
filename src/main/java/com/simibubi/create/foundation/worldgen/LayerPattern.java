@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.worldgen.LayerPattern.Layer.LayerBuilder;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -111,7 +112,7 @@ public class LayerPattern {
 			public LayerBuilder block(Block block) {
 				if (netherMode) {
 					Layer.this.targets.add(ImmutableList.of(OreConfiguration
-						.target(OreConfiguration.Predicates.NETHER_ORE_REPLACEABLES, block.defaultBlockState())));
+						.target(OreFeatures.NETHER_ORE_REPLACEABLES, block.defaultBlockState())));
 					return this;
 				}
 				return blocks(block.defaultBlockState(), block.defaultBlockState());
@@ -132,8 +133,8 @@ public class LayerPattern {
 
 			private LayerBuilder blocks(BlockState stone, BlockState deepslate) {
 				Layer.this.targets.add(
-					ImmutableList.of(OreConfiguration.target(OreConfiguration.Predicates.STONE_ORE_REPLACEABLES, stone),
-						OreConfiguration.target(OreConfiguration.Predicates.DEEPSLATE_ORE_REPLACEABLES, deepslate)));
+					ImmutableList.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, stone),
+						OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, deepslate)));
 				return this;
 			}
 

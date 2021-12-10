@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.InstanceData;
+import com.jozufozu.flywheel.api.Instancer;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;

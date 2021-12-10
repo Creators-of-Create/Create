@@ -12,7 +12,6 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-
 public abstract class ShootGadgetPacket extends SimplePacketBase {
 
 	public Vec3 location;

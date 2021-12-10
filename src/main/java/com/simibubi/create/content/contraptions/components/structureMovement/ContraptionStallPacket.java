@@ -8,7 +8,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.fabricmc.api.EnvType;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-
 public class ContraptionStallPacket extends SimplePacketBase {
 
 	int entityID;

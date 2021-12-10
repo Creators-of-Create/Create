@@ -34,7 +34,7 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 			BlockEntity tileEntity = world.getBlockEntity(pos);
 			if (!type.isInstance(tileEntity))
 				return;
-			CompoundTag apply = data.apply(tileEntity.save(new CompoundTag()));
+			CompoundTag apply = data.apply(tileEntity.saveWithFullMetadata());
 			if (tileEntity instanceof SyncedTileEntity)
 				((SyncedTileEntity) tileEntity).readClientUpdate(apply);
 			tileEntity.load(apply);

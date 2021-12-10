@@ -121,9 +121,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				FluidState nextFluidState = world.getFluidState(pos);
 				if (nextFluidState.isEmpty())
 					return;
-				world.getLiquidTicks()
-					.scheduleTick(pos, nextFluidState.getType(), world.getRandom()
-						.nextInt(5));
+				world.scheduleTick(pos, nextFluidState.getType(), world.getRandom()
+					.nextInt(5));
 			});
 	}
 

@@ -12,7 +12,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -144,7 +143,7 @@ public class VanillaStyleOreFeature extends OreFeatureBase {
 								continue;
 							LevelChunkSection levelchunksection =
 								bulksectionaccess.getSection(blockpos$mutableblockpos);
-							if (levelchunksection == LevelChunk.EMPTY_SECTION)
+							if (levelchunksection == null)
 								continue;
 							int i3 = SectionPos.sectionRelative(i2);
 							int j3 = SectionPos.sectionRelative(j2);

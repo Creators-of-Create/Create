@@ -1,10 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static net.minecraft.world.entity.Entity.collideBoundingBoxHeuristically;
+import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 
@@ -38,7 +37,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RewindableStream;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -48,9 +46,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -125,11 +120,10 @@ public class ContraptionCollider {
 
 				// Else find 'nearby' individual block shapes to collide with
 				List<AABB> bbs = new ArrayList<>();
-				RewindableStream<VoxelShape> potentialHits =
+				List<VoxelShape> potentialHits =
 					getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
-				potentialHits.getStream()
-					.forEach(shape -> shape.toAabbs()
-						.forEach(bbs::add));
+				potentialHits.forEach(shape -> shape.toAabbs()
+					.forEach(bbs::add));
 				return bbs;
 
 			});
@@ -402,38 +396,29 @@ public class ContraptionCollider {
 	/** From Entity#collide **/
 	static Vec3 collide(Vec3 p_20273_, Entity e) {
 		AABB aabb = e.getBoundingBox();
-		CollisionContext collisioncontext = CollisionContext.of(e);
-		VoxelShape voxelshape = e.level.getWorldBorder()
-			.getCollisionShape();
-		Stream<VoxelShape> stream =
-			Shapes.joinIsNotEmpty(voxelshape, Shapes.create(aabb.deflate(1.0E-7D)), BooleanOp.AND) ? Stream.empty()
-				: Stream.of(voxelshape);
-		Stream<VoxelShape> stream1 = e.level.getEntityCollisions(e, aabb.expandTowards(p_20273_), (p_19949_) -> {
-			return true;
-		});
-		RewindableStream<VoxelShape> rewindablestream = new RewindableStream<>(Stream.concat(stream1, stream));
-		Vec3 vec3 = p_20273_.lengthSqr() == 0.0D ? p_20273_
-			: collideBoundingBoxHeuristically(e, p_20273_, aabb, e.level, collisioncontext, rewindablestream);
+		List<VoxelShape> list = e.level.getEntityCollisions(e, aabb.expandTowards(p_20273_));
+		Vec3 vec3 = p_20273_.lengthSqr() == 0.0D ? p_20273_ : collideBoundingBox(e, p_20273_, aabb, e.level, list);
 		boolean flag = p_20273_.x != vec3.x;
 		boolean flag1 = p_20273_.y != vec3.y;
 		boolean flag2 = p_20273_.z != vec3.z;
 		boolean flag3 = e.isOnGround() || flag1 && p_20273_.y < 0.0D;
 		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
-			Vec3 vec31 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, e.maxUpStep, p_20273_.z), aabb,
-				e.level, collisioncontext, rewindablestream);
-			Vec3 vec32 = collideBoundingBoxHeuristically(e, new Vec3(0.0D, e.maxUpStep, 0.0D),
-				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, collisioncontext, rewindablestream);
-			if (vec32.y < e.maxUpStep) {
-				Vec3 vec33 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z),
-					aabb.move(vec32), e.level, collisioncontext, rewindablestream).add(vec32);
+			Vec3 vec31 =
+				collideBoundingBox(e, new Vec3(p_20273_.x, (double) e.maxUpStep, p_20273_.z), aabb, e.level, list);
+			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, (double) e.maxUpStep, 0.0D),
+				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, list);
+			if (vec32.y < (double) e.maxUpStep) {
+				Vec3 vec33 =
+					collideBoundingBox(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z), aabb.move(vec32), e.level, list)
+						.add(vec32);
 				if (vec33.horizontalDistanceSqr() > vec31.horizontalDistanceSqr()) {
 					vec31 = vec33;
 				}
 			}
 
 			if (vec31.horizontalDistanceSqr() > vec3.horizontalDistanceSqr()) {
-				return vec31.add(collideBoundingBoxHeuristically(e, new Vec3(0.0D, -vec31.y + p_20273_.y, 0.0D),
-					aabb.move(vec31), e.level, collisioncontext, rewindablestream));
+				return vec31.add(collideBoundingBox(e, new Vec3(0.0D, -vec31.y + p_20273_.y, 0.0D), aabb.move(vec31),
+					e.level, list));
 			}
 		}
 
@@ -455,7 +440,7 @@ public class ContraptionCollider {
 		return entity instanceof LocalPlayer;
 	}
 
-	private static RewindableStream<VoxelShape> getPotentiallyCollidedShapes(Level world, Contraption contraption,
+	private static List<VoxelShape> getPotentiallyCollidedShapes(Level world, Contraption contraption,
 		AABB localBB) {
 
 		double height = localBB.getYsize();
@@ -468,7 +453,7 @@ public class ContraptionCollider {
 		BlockPos min = new BlockPos(blockScanBB.minX, blockScanBB.minY, blockScanBB.minZ);
 		BlockPos max = new BlockPos(blockScanBB.maxX, blockScanBB.maxY, blockScanBB.maxZ);
 
-		RewindableStream<VoxelShape> potentialHits = new RewindableStream<>(BlockPos.betweenClosedStream(min, max)
+		List<VoxelShape> potentialHits = BlockPos.betweenClosedStream(min, max)
 			.filter(contraption.getBlocks()::containsKey)
 			.map(p -> {
 				BlockState blockState = contraption.getBlocks()
@@ -478,7 +463,8 @@ public class ContraptionCollider {
 				VoxelShape collisionShape = blockState.getCollisionShape(world, p);
 				return collisionShape.move(pos.getX(), pos.getY(), pos.getZ());
 			})
-			.filter(Predicates.not(VoxelShape::isEmpty)));
+			.filter(Predicates.not(VoxelShape::isEmpty))
+			.toList();
 
 		return potentialHits;
 	}

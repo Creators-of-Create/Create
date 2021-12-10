@@ -83,9 +83,8 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	}
 
 	@Override
-	public final CompoundTag save(CompoundTag compound) {
+	public final void saveAdditional(CompoundTag compound) {
 		write(compound, false);
-		return compound;
 	}
 
 	@Override
@@ -124,13 +123,13 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	 * Hook only these in future subclasses of STE
 	 */
 	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.save(compound);
+		super.saveAdditional(compound);
 		behaviourList.forEach(tb -> tb.write(compound, clientPacket));
 	}
 
 	@Override
 	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.save(compound);
+		super.saveAdditional(compound);
 		behaviourList.forEach(tb -> {
 			if (tb.isSafeNBT())
 				tb.write(compound, clientPacket);
@@ -222,9 +221,5 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	@SuppressWarnings("deprecation")
 	public void refreshBlockState() {
 		setBlockState(getLevel().getBlockState(getBlockPos()));
-	}
-
-	public Level getWorld() {
-		return getLevel();
 	}
 }

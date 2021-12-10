@@ -1,14 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.Instancer;
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.IMovingListener;
+import com.jozufozu.flywheel.light.MovingListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightPacking;
 import com.jozufozu.flywheel.light.LightProvider;
@@ -22,7 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, IMovingListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, MovingListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
@@ -57,8 +57,6 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 
 		light = new LightVolume(volume);
 		light.initialize(LightUpdater.get(world).getProvider());
-
-		beginFrame();
 	}
 
 	@Override

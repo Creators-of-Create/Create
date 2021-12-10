@@ -108,8 +108,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			return;
 		if (!world.isClientSide && !world.getBlockTicks()
 			.willTickThisTick(pos, this))
-			world.getBlockTicks()
-				.scheduleTick(pos, this, 0);
+			world.scheduleTick(pos, this, 0);
 	}
 
 	@Override

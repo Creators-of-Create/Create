@@ -409,7 +409,7 @@ public class BlueprintEntity extends HangingEntity
 					} else {
 						amountCrafted += result.getCount();
 						result.onCraftedBy(player.level, player, 1);
-//						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
+//						ForgeEventFactory.firePlayerCraftingEvent(player, result, craftingInventory);
 						NonNullList<ItemStack> nonnulllist = level.getRecipeManager()
 							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level);
 

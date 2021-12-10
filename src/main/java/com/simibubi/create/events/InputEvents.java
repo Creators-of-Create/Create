@@ -48,9 +48,9 @@ public class InputEvents {
 
 	public static InteractionResult onClickInput(int button, int action, int mods) {
 		if (Minecraft.getInstance().screen != null)
-			return InteractionResult.PASS;
+			return;
 
-		if (Minecraft.getInstance().options.keyPickItem.matchesMouse(button)) {
+		if (event.getKeyMapping() == Minecraft.getInstance().options.keyPickItem) {
 			if (ToolboxHandlerClient.onPickItem())
 				return InteractionResult.SUCCESS;
 			return InteractionResult.PASS;

@@ -4,7 +4,7 @@ import static com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BrassDiodeTileEntity extends SmartTileEntity implements IInstanceRendered {
+public abstract class BrassDiodeTileEntity extends SmartTileEntity implements FlywheelRendered {
 
 	protected int state;
 	ScrollValueBehaviour maxState;
@@ -43,7 +43,7 @@ public abstract class BrassDiodeTileEntity extends SmartTileEntity implements II
 		int max = Math.max(2, maxState.getValue());
 		return Mth.clamp(state, 0, max) / (float) max;
 	}
-	
+
 	public boolean isIdle() {
 		return state == 0;
 	}

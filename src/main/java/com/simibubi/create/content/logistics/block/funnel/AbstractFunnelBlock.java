@@ -72,8 +72,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 			behaviour.onNeighborChanged(fromPos);
 		if (!worldIn.getBlockTicks()
 			.willTickThisTick(pos, this))
-			worldIn.getBlockTicks()
-				.scheduleTick(pos, this, 0);
+			worldIn.scheduleTick(pos, this, 0);
 	}
 
 	@Override

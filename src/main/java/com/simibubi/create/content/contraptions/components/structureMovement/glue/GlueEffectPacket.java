@@ -12,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-
 public class GlueEffectPacket extends SimplePacketBase {
 
 	private BlockPos pos;

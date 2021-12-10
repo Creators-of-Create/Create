@@ -12,6 +12,7 @@ import com.simibubi.create.lib.utility.PlantUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -197,12 +198,13 @@ public class BlockHelper {
 		int k = target.getZ() & 15;
 		LevelChunk chunk = world.getChunkAt(target);
 		LevelChunkSection chunksection = chunk.getSections()[j >> 4];
-		if (chunksection == LevelChunk.EMPTY_SECTION) {
-			chunksection = new LevelChunkSection(j >> 4 << 4);
+		if (chunksection == null) {
+			chunksection = new LevelChunkSection(j >> 4 << 4, world.registryAccess()
+				.registryOrThrow(Registry.BIOME_REGISTRY));
 			chunk.getSections()[j >> 4] = chunksection;
 		}
 		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
-		chunk.markUnsaved();
+		chunk.setUnsaved(true);
 //		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
 		world.setBlock(target, state, 82);

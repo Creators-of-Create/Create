@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 
 import org.apache.commons.lang3.Validate;
 
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
@@ -73,7 +73,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 public class SuperGlueEntity extends Entity
-	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, IInstanceRendered {
+	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, FlywheelRendered {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -146,14 +146,9 @@ public class SuperGlueEntity extends Entity
 			double depth = 2 - 1 / 128f;
 
 			switch (axis) {
-			case X:
-				w = depth;
-				break;
-			case Y:
-				h = depth;
-				break;
-			case Z:
-				l = depth;
+			case X -> w = depth;
+			case Y -> h = depth;
+			case Z -> l = depth;
 			}
 
 			w = w / 32.0D;
@@ -429,16 +424,12 @@ public class SuperGlueEntity extends Entity
 		}
 
 		float f = Mth.wrapDegrees(this.getYRot());
-		switch (transformRotation) {
-		case CLOCKWISE_180:
-			return f + 180.0F;
-		case COUNTERCLOCKWISE_90:
-			return f + 90.0F;
-		case CLOCKWISE_90:
-			return f + 270.0F;
-		default:
-			return f;
-		}
+		return switch (transformRotation) {
+			case CLOCKWISE_180 -> f + 180.0F;
+			case COUNTERCLOCKWISE_90 -> f + 90.0F;
+			case CLOCKWISE_90 -> f + 270.0F;
+			default -> f;
+		};
 	}
 
 	public BlockPos getHangingPosition() {
@@ -495,10 +486,5 @@ public class SuperGlueEntity extends Entity
 	@Override
 	public boolean isIgnoringBlockTriggers() {
 		return true;
-	}
-
-	@Override
-	public Level getWorld() {
-		return level;
 	}
 }

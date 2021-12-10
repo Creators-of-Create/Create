@@ -19,7 +19,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.ticks.TickPriority;
 
 public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements ITE<SmartFluidPipeTileEntity>, IAxisPipe, IWrenchable {
@@ -101,8 +101,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getBlockTicks()
-				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
@@ -114,8 +113,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getBlockTicks()
-			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction d) {

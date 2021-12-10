@@ -401,7 +401,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
-//		ForgeHooksClient.setRenderLayer(layer);
+//		ForgeHooksClient.setRenderType(layer);
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 			.getBlockRenderer();
 		PoseStack ms = new PoseStack();
@@ -430,7 +430,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		world.clearMask();
 		builder.end();
-//		ForgeHooksClient.setRenderLayer(null);
+//		ForgeHooksClient.setRenderType(null);
 		return new SuperByteBuffer(builder);
 	}
 

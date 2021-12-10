@@ -19,7 +19,6 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 
 import java.util.function.Supplier;
 
-
 public class MinecartControllerUpdatePacket extends SimplePacketBase {
 
 	int entityID;

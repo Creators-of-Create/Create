@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 
-
 public class ContraptionInteractionPacket extends SimplePacketBase {
 
 	private InteractionHand interactionHand;

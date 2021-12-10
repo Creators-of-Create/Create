@@ -6,13 +6,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.BoxElement;
@@ -214,31 +209,16 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		this.fillGradient(ms, 0, 0, this.width, this.height, 0x70101010, 0x80101010);
 	}
 
+
 	@Override
 	protected void prepareFrame() {
-		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
-		RenderTarget mainBuffer = minecraft.getMainRenderTarget();
-
-		GlCompat functions = Backend.getInstance().compat;
-		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.frameBufferId);
-		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.frameBufferId);
-		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
-
-		functions.fbo.bindFramebuffer(GlConst.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
+		UIRenderHelper.swapAndBlitColor(minecraft.getMainRenderTarget(), UIRenderHelper.framebuffer);
 		RenderSystem.clear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 	}
 
 	@Override
 	protected void endFrame() {
-		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
-		RenderTarget mainBuffer = minecraft.getMainRenderTarget();
-
-		GlCompat functions = Backend.getInstance().compat;
-		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.frameBufferId);
-		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.frameBufferId);
-		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
-
-		functions.fbo.bindFramebuffer(GlConst.GL_FRAMEBUFFER, mainBuffer.frameBufferId);
+		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
 	}
 
 	@Override

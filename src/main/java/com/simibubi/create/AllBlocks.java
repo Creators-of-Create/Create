@@ -188,7 +188,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 public class AllBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+			.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
 	// Schematics
 

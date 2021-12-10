@@ -140,7 +140,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	}
 
 	private void fillToolTip(IconButton button, Component tooltip) {
-		if (!button.isHovered())
+		if (!button.isHoveredOrFocused())
 			return;
 		List<Component> tip = button.getToolTip();
 		tip.addAll(TooltipHelper.cutTextComponent(tooltip, GRAY, GRAY));
