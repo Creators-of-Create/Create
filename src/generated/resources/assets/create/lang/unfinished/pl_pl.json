@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 360",
+	"_": "Missing Localizations: 369",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -772,14 +772,6 @@
 	"advancement.create.crushing_wheel.desc": "Wytwórz parę kół kruszących, aby kruszyły więcej materiałów w krótszym czasie.",
 	"advancement.create.blaze_cake": "Przypływ energii",
 	"advancement.create.blaze_cake.desc": "Upiecz dla swojego palnika pyszne ciasto.",
-	"advancement.create.chromatic_compound": "Minerały dwubiegunowe",
-	"advancement.create.chromatic_compound.desc": "Wytwórz sztabkę związku chromatycznego.",
-	"advancement.create.shadow_steel": "Dar otchłani",
-	"advancement.create.shadow_steel.desc": "Uzyskaj mroczną stal, sztabkę pełną nicości.",
-	"advancement.create.refined_radiance": "Czysty blask",
-	"advancement.create.refined_radiance.desc": "Uzyskaj świetlisty materiał, silną substancję chromatyczną.",
-	"advancement.create.chromatic_age": "Epoka kolorów",
-	"advancement.create.chromatic_age.desc": "Wytwórz jasną i mroczną obudowę.",
 	"advancement.create.wand_of_symmetry": "Symetria.",
 	"advancement.create.wand_of_symmetry.desc": "Zdobądź różdżkę symetrii.",
 	"advancement.create.extendo_grip": "Dalej dalej ręce Gadżeta!",
@@ -2053,6 +2045,17 @@
 	"create.ponder.item_drain.text_3": "Kiedy przedmioty są dostarczane od boku...",
 	"create.ponder.item_drain.text_4": "...są opróżniane i przesuwane na drugą stronę",
 	"create.ponder.item_drain.text_5": "Systemy rur mogą wyciągać zawartą w odpływie ciecz",
+
+	"create.ponder.item_vault_sizes.header": "UNLOCALIZED: Dimensions of an Item Vault",
+	"create.ponder.item_vault_sizes.text_1": "UNLOCALIZED: Item Vaults can be combined to increase the total capacity",
+	"create.ponder.item_vault_sizes.text_2": "UNLOCALIZED: Their base square can be up to 3 blocks wide...",
+	"create.ponder.item_vault_sizes.text_3": "UNLOCALIZED: ...and grow in length up to 3x their diameter",
+
+	"create.ponder.item_vault_storage.header": "UNLOCALIZED: Storing Items in Vaults",
+	"create.ponder.item_vault_storage.text_1": "UNLOCALIZED: Item Vaults can be used to store large amounts of items",
+	"create.ponder.item_vault_storage.text_2": "UNLOCALIZED: However, contents cannot be added or taken manually",
+	"create.ponder.item_vault_storage.text_3": "UNLOCALIZED: Any components for item transfer can both insert...",
+	"create.ponder.item_vault_storage.text_4": "UNLOCALIZED: ...and take contents from this container",
 
 	"create.ponder.large_cogwheel.header": "Przekazywanie siły obrotowej z użyciem dużych kół zębatych",
 	"create.ponder.large_cogwheel.text_1": "Duże koła zębate mogą się łączyć ze sobą pod kątem prostym",

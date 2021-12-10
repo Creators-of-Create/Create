@@ -163,7 +163,7 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
-import com.simibubi.create.content.logistics.block.vault.VaultTileEntity;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
@@ -412,8 +412,8 @@ public class AllTileEntities {
 		.renderer(() -> ArmRenderer::new)
 		.register();
 
-	public static final TileEntityEntry<VaultTileEntity> ITEM_VAULT = Create.registrate()
-		.tileEntity("item_vault", VaultTileEntity::new)
+	public static final TileEntityEntry<ItemVaultTileEntity> ITEM_VAULT = Create.registrate()
+		.tileEntity("item_vault", ItemVaultTileEntity::new)
 		.validBlocks(AllBlocks.ITEM_VAULT)
 		.register();
 
@@ -675,7 +675,7 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<PulseExtenderTileEntity> PULSE_EXTENDER = Create.registrate()
-		.tileEntity("adjustable_repeater", PulseExtenderTileEntity::new)
+		.tileEntity("pulse_extender", PulseExtenderTileEntity::new)
 		.instance(() -> BrassDiodeInstance::new)
 		.validBlocks(AllBlocks.PULSE_EXTENDER)
 		.renderer(() -> BrassDiodeRenderer::new)
@@ -683,7 +683,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<PulseRepeaterTileEntity> PULSE_REPEATER =
 		Create.registrate()
-			.tileEntity("adjustable_pulse_repeater", PulseRepeaterTileEntity::new)
+			.tileEntity("pulse_repeater", PulseRepeaterTileEntity::new)
 			.instance(() -> BrassDiodeInstance::new)
 			.validBlocks(AllBlocks.PULSE_REPEATER)
 			.renderer(() -> BrassDiodeRenderer::new)

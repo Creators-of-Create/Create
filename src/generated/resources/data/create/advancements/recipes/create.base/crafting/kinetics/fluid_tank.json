@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:copper_casing"
-            ]
+            "tag": "forge:barrels/wooden"
           }
         ]
       }

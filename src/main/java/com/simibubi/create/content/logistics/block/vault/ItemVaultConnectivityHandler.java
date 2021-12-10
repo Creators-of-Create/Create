@@ -26,22 +26,22 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class VaultConnectivityHandler {
+public class ItemVaultConnectivityHandler {
 
-	public static void formVaults(VaultTileEntity te) {
+	public static void formVaults(ItemVaultTileEntity te) {
 		VaultSearchCache cache = new VaultSearchCache();
-		List<VaultTileEntity> frontier = new ArrayList<>();
+		List<ItemVaultTileEntity> frontier = new ArrayList<>();
 		frontier.add(te);
 		formVaults(te.getType(), te.getLevel(), cache, frontier);
 	}
 
 	private static void formVaults(BlockEntityType<?> type, BlockGetter world, VaultSearchCache cache,
-		List<VaultTileEntity> frontier) {
-		PriorityQueue<Pair<Integer, VaultTileEntity>> creationQueue = makeCreationQueue();
+		List<ItemVaultTileEntity> frontier) {
+		PriorityQueue<Pair<Integer, ItemVaultTileEntity>> creationQueue = makeCreationQueue();
 		Set<BlockPos> visited = new HashSet<>();
 
 		int minY = Integer.MAX_VALUE;
-		for (VaultTileEntity fluidTankTileEntity : frontier) {
+		for (ItemVaultTileEntity fluidTankTileEntity : frontier) {
 			BlockPos pos = fluidTankTileEntity.getBlockPos();
 			minY = Math.min(pos.getY(), minY);
 		}
@@ -49,7 +49,7 @@ public class VaultConnectivityHandler {
 		minY -= 3;
 
 		while (!frontier.isEmpty()) {
-			VaultTileEntity tank = frontier.remove(0);
+			ItemVaultTileEntity tank = frontier.remove(0);
 			BlockPos tankPos = tank.getBlockPos();
 			if (visited.contains(tankPos))
 				continue;
@@ -68,7 +68,7 @@ public class VaultConnectivityHandler {
 					continue;
 				if (visited.contains(next))
 					continue;
-				VaultTileEntity nextTank = vaultAt(type, world, next);
+				ItemVaultTileEntity nextTank = vaultAt(type, world, next);
 				if (nextTank == null)
 					continue;
 				if (nextTank.isRemoved())
@@ -80,8 +80,8 @@ public class VaultConnectivityHandler {
 		visited.clear();
 
 		while (!creationQueue.isEmpty()) {
-			Pair<Integer, VaultTileEntity> next = creationQueue.poll();
-			VaultTileEntity toCreate = next.getValue();
+			Pair<Integer, ItemVaultTileEntity> next = creationQueue.poll();
+			ItemVaultTileEntity toCreate = next.getValue();
 			if (visited.contains(toCreate.getBlockPos()))
 				continue;
 			visited.add(toCreate.getBlockPos());
@@ -90,11 +90,11 @@ public class VaultConnectivityHandler {
 
 	}
 
-	public static void splitVault(VaultTileEntity te) {
+	public static void splitVault(ItemVaultTileEntity te) {
 		splitVaultAndInvalidate(te, null, false);
 	}
 
-	private static int tryToFormNewVault(VaultTileEntity te, VaultSearchCache cache, boolean simulate) {
+	private static int tryToFormNewVault(ItemVaultTileEntity te, VaultSearchCache cache, boolean simulate) {
 		int bestWidth = 1;
 		int bestAmount = -1;
 
@@ -120,9 +120,9 @@ public class VaultConnectivityHandler {
 			te.length = bestAmount / bestWidth / bestWidth;
 
 			BlockState state = te.getBlockState();
-			if (VaultBlock.isVault(state))
+			if (ItemVaultBlock.isVault(state))
 				te.getLevel()
-					.setBlock(te.getBlockPos(), state.setValue(VaultBlock.LARGE, te.radius > 2), 22);
+					.setBlock(te.getBlockPos(), state.setValue(ItemVaultBlock.LARGE, te.radius > 2), 22);
 
 			te.itemCapability.invalidate();
 			te.setChanged();
@@ -131,34 +131,34 @@ public class VaultConnectivityHandler {
 		return bestAmount;
 	}
 
-	private static int tryToFormNewVaultOfRadius(VaultTileEntity te, int width, VaultSearchCache cache,
+	private static int tryToFormNewVaultOfRadius(ItemVaultTileEntity te, int width, VaultSearchCache cache,
 		boolean simulate) {
 		int amount = 0;
 		int height = 0;
 		BlockEntityType<?> type = te.getType();
 		Level world = te.getLevel();
 		BlockPos origin = te.getBlockPos();
-		boolean alongZ = VaultBlock.getVaultBlockAxis(te.getBlockState()) == Axis.Z;
+		boolean alongZ = ItemVaultBlock.getVaultBlockAxis(te.getBlockState()) == Axis.Z;
 
 		Search:
 
-		for (int yOffset = 0; yOffset < VaultTileEntity.getMaxLength(width); yOffset++) {
+		for (int yOffset = 0; yOffset < ItemVaultTileEntity.getMaxLength(width); yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
 
 					BlockPos pos =
 						alongZ ? origin.offset(xOffset, zOffset, yOffset) : origin.offset(yOffset, xOffset, zOffset);
-					Optional<VaultTileEntity> tank = cache.getOrCache(type, world, pos);
+					Optional<ItemVaultTileEntity> tank = cache.getOrCache(type, world, pos);
 					if (!tank.isPresent())
 						break Search;
 
-					VaultTileEntity controller = tank.get();
+					ItemVaultTileEntity controller = tank.get();
 					int otherWidth = controller.radius;
 					if (otherWidth > width)
 						break Search;
-					if (otherWidth == width && controller.length == VaultTileEntity.getMaxLength(width))
+					if (otherWidth == width && controller.length == ItemVaultTileEntity.getMaxLength(width))
 						break Search;
-					if ((VaultBlock.getVaultBlockAxis(controller.getBlockState()) == Axis.Z) != alongZ)
+					if ((ItemVaultBlock.getVaultBlockAxis(controller.getBlockState()) == Axis.Z) != alongZ)
 						break Search;
 
 					BlockPos controllerPos = controller.getBlockPos();
@@ -192,7 +192,7 @@ public class VaultConnectivityHandler {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
 					BlockPos pos =
 						alongZ ? origin.offset(xOffset, zOffset, yOffset) : origin.offset(yOffset, xOffset, zOffset);
-					VaultTileEntity tank = vaultAt(type, world, pos);
+					ItemVaultTileEntity tank = vaultAt(type, world, pos);
 					if (tank == te)
 						continue;
 
@@ -202,9 +202,9 @@ public class VaultConnectivityHandler {
 					cache.put(pos, te);
 
 					BlockState state = world.getBlockState(pos);
-					if (!VaultBlock.isVault(state))
+					if (!ItemVaultBlock.isVault(state))
 						continue;
-					state = state.setValue(VaultBlock.LARGE, width > 2);
+					state = state.setValue(ItemVaultBlock.LARGE, width > 2);
 					world.setBlock(pos, state, 22);
 				}
 			}
@@ -213,7 +213,7 @@ public class VaultConnectivityHandler {
 		return amount;
 	}
 
-	private static void splitVaultAndInvalidate(VaultTileEntity te, @Nullable VaultSearchCache cache,
+	private static void splitVaultAndInvalidate(ItemVaultTileEntity te, @Nullable VaultSearchCache cache,
 		boolean tryReconnect) {
 		// tryReconnect helps whenever only few tanks have been removed
 
@@ -224,13 +224,13 @@ public class VaultConnectivityHandler {
 		int height = te.length;
 		int width = te.radius;
 		BlockState state = te.getBlockState();
-		boolean alongZ = VaultBlock.getVaultBlockAxis(state) == Axis.Z;
+		boolean alongZ = ItemVaultBlock.getVaultBlockAxis(state) == Axis.Z;
 		if (width == 1 && height == 1)
 			return;
 
 		Level world = te.getLevel();
 		BlockPos origin = te.getBlockPos();
-		List<VaultTileEntity> frontier = new ArrayList<>();
+		List<ItemVaultTileEntity> frontier = new ArrayList<>();
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
@@ -238,7 +238,7 @@ public class VaultConnectivityHandler {
 
 					BlockPos pos =
 						alongZ ? origin.offset(xOffset, zOffset, yOffset) : origin.offset(yOffset, xOffset, zOffset);
-					VaultTileEntity tankAt = vaultAt(te.getType(), world, pos);
+					ItemVaultTileEntity tankAt = vaultAt(te.getType(), world, pos);
 					if (tankAt == null)
 						continue;
 					if (!tankAt.getController()
@@ -262,31 +262,31 @@ public class VaultConnectivityHandler {
 			formVaults(te.getType(), world, cache == null ? new VaultSearchCache() : cache, frontier);
 	}
 
-	private static PriorityQueue<Pair<Integer, VaultTileEntity>> makeCreationQueue() {
-		return new PriorityQueue<>(new Comparator<Pair<Integer, VaultTileEntity>>() {
+	private static PriorityQueue<Pair<Integer, ItemVaultTileEntity>> makeCreationQueue() {
+		return new PriorityQueue<>(new Comparator<Pair<Integer, ItemVaultTileEntity>>() {
 			@Override
-			public int compare(Pair<Integer, VaultTileEntity> o1, Pair<Integer, VaultTileEntity> o2) {
+			public int compare(Pair<Integer, ItemVaultTileEntity> o1, Pair<Integer, ItemVaultTileEntity> o2) {
 				return o2.getKey() - o1.getKey();
 			}
 		});
 	}
 
 	@Nullable
-	public static VaultTileEntity vaultAt(BlockEntityType<?> type, BlockGetter world, BlockPos pos) {
+	public static ItemVaultTileEntity vaultAt(BlockEntityType<?> type, BlockGetter world, BlockPos pos) {
 		BlockEntity te = world.getBlockEntity(pos);
-		if (te instanceof VaultTileEntity && te.getType() == type)
-			return (VaultTileEntity) te;
+		if (te instanceof ItemVaultTileEntity && te.getType() == type)
+			return (ItemVaultTileEntity) te;
 		return null;
 	}
 
 	private static class VaultSearchCache {
-		Map<BlockPos, Optional<VaultTileEntity>> controllerMap;
+		Map<BlockPos, Optional<ItemVaultTileEntity>> controllerMap;
 
 		public VaultSearchCache() {
 			controllerMap = new HashMap<>();
 		}
 
-		void put(BlockPos pos, VaultTileEntity target) {
+		void put(BlockPos pos, ItemVaultTileEntity target) {
 			controllerMap.put(pos, Optional.of(target));
 		}
 
@@ -298,15 +298,15 @@ public class VaultConnectivityHandler {
 			return controllerMap.containsKey(pos);
 		}
 
-		Optional<VaultTileEntity> getOrCache(BlockEntityType<?> type, BlockGetter world, BlockPos pos) {
+		Optional<ItemVaultTileEntity> getOrCache(BlockEntityType<?> type, BlockGetter world, BlockPos pos) {
 			if (hasVisited(pos))
 				return controllerMap.get(pos);
-			VaultTileEntity tankAt = vaultAt(type, world, pos);
+			ItemVaultTileEntity tankAt = vaultAt(type, world, pos);
 			if (tankAt == null) {
 				putEmpty(pos);
 				return Optional.empty();
 			}
-			VaultTileEntity controller = tankAt.getControllerTE();
+			ItemVaultTileEntity controller = tankAt.getControllerTE();
 			if (controller == null) {
 				putEmpty(pos);
 				return Optional.empty();
@@ -320,10 +320,10 @@ public class VaultConnectivityHandler {
 	public static boolean isConnected(BlockGetter world, BlockPos tankPos, BlockPos otherTankPos) {
 		BlockEntity te1 = world.getBlockEntity(tankPos);
 		BlockEntity te2 = world.getBlockEntity(otherTankPos);
-		if (!(te1 instanceof VaultTileEntity) || !(te2 instanceof VaultTileEntity))
+		if (!(te1 instanceof ItemVaultTileEntity) || !(te2 instanceof ItemVaultTileEntity))
 			return false;
-		return ((VaultTileEntity) te1).getController()
-			.equals(((VaultTileEntity) te2).getController());
+		return ((ItemVaultTileEntity) te1).getController()
+			.equals(((ItemVaultTileEntity) te2).getController());
 	}
 
 }

@@ -22,6 +22,7 @@ public enum ContraptionMovementSetting {
 	}
 
 	static {
+		register(Blocks.BUDDING_AMETHYST.getRegistryName(), () -> AllConfigs.SERVER.kinetics.amethystMovement.get());
 		register(Registry.BLOCK.getKey(Blocks.SPAWNER), () -> AllConfigs.SERVER.kinetics.spawnerMovement.get());
 		register(Registry.BLOCK.getKey(Blocks.OBSIDIAN), () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
 		register(Registry.BLOCK.getKey(Blocks.CRYING_OBSIDIAN), () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());

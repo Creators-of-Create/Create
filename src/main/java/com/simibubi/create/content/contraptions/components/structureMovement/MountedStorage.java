@@ -4,19 +4,20 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import com.simibubi.create.lib.transfer.TransferUtil;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.level.block.state.properties.ChestType;
+
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
@@ -47,6 +48,8 @@ public class MountedStorage {
 			return true;
 		if (te instanceof BarrelBlockEntity)
 			return true;
+		if (te instanceof ItemVaultTileEntity)
+			return true;
 
 		LazyOptional<IItemHandler> capability = TransferUtil.getItemHandler(te);
 		IItemHandler handler = capability.orElse(null);
@@ -63,19 +66,31 @@ public class MountedStorage {
 		if (te == null)
 			return;
 
-		// Split double chests
-		if (te.getType() == BlockEntityType.CHEST || te.getType() == BlockEntityType.TRAPPED_CHEST) {
-			if (te.getBlockState()
-				.getValue(ChestBlock.TYPE) != ChestType.SINGLE)
-				te.getLevel()
-					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
-						.setValue(ChestBlock.TYPE, ChestType.SINGLE));
+		if (te instanceof ChestBlockEntity) {
+			CompoundTag tag = te.save(new CompoundTag());
+			if (tag.contains("LootTable", 8))
+				return;
+
+			handler = new ItemStackHandler(((ChestBlockEntity) te).getContainerSize());
+			NonNullList<ItemStack> items = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
+			ContainerHelper.loadAllItems(tag, items);
+			for (int i = 0; i < items.size(); i++)
+				handler.setStackInSlot(i, items.get(i));
+			valid = true;
+			return;
 		}
 
 		IItemHandler teHandler = TransferUtil.getItemHandler(te)
 			.orElse(dummyHandler);
 		if (teHandler == dummyHandler)
 			return;
+
+		// multiblock vaults need to provide individual invs
+		if (te instanceof ItemVaultTileEntity) {
+			handler = ((ItemVaultTileEntity) te).getInventoryOfBlock();
+			valid = true;
+			return;
+		}
 
 		// te uses ItemStackHandler
 		if (teHandler instanceof ItemStackHandler) {
@@ -102,6 +117,21 @@ public class MountedStorage {
 		// FIXME: More dynamic mounted storage in .4
 		if (handler instanceof BottomlessItemHandler)
 			return;
+if (te instanceof ChestBlockEntity) {
+			CompoundTag tag = te.save(new CompoundTag());
+			tag.remove("Items");
+			NonNullList<ItemStack> items = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
+			for (int i = 0; i < items.size(); i++)
+				items.set(i, handler.getStackInSlot(i));
+			ContainerHelper.saveAllItems(tag, items);
+			te.load(tag);
+			return;
+		}
+
+		if (te instanceof ItemVaultTileEntity) {
+			((ItemVaultTileEntity) te).applyInventoryToBlock(handler);
+			return;
+		}
 
 		LazyOptional<IItemHandler> capability = TransferUtil.getItemHandler(te);
 		IItemHandler teHandler = capability.orElse(null);

@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
@@ -35,13 +36,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
-import com.simibubi.create.lib.utility.LazyOptional;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
-
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IFluidHandler, FluidTransferable, CustomRenderBoundingBox {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, IFluidHandler, FluidTransferable, CustomRenderBoundingBox {
 
 	private static final int MAX_SIZE = 3;
 
@@ -110,11 +105,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (fluidLevel != null)
 			fluidLevel.tick();
 	}
-
+@Override
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
 	}
 
+	@Override
 	public boolean isController() {
 		return controller == null
 			|| worldPosition.getX() == controller.getX() && worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
@@ -282,6 +278,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		}
 	}
 
+	@Override
 	public void setController(BlockPos controller) {
 		if (level.isClientSide && !isVirtual())
 			return;
@@ -300,6 +297,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		oldCap.invalidate();
 	}
 
+	@Override
 	public BlockPos getController() {
 		return isController() ? worldPosition : controller;
 	}

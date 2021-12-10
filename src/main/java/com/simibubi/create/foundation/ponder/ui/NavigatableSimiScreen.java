@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
+import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -141,7 +142,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			UIRenderHelper.framebuffer.clear(Minecraft.ON_OSX);
 			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindWrite(true);
+			PonderTooltipHandler.enable = false;
 			lastScreen.render(ms, mouseX, mouseY, partialTicks);
+			PonderTooltipHandler.enable = true;
 
 			ms.popPose();
 			ms.pushPose();

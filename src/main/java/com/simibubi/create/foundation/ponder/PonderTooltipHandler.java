@@ -27,6 +27,8 @@ import com.simibubi.create.lib.helper.KeyBindingHelper;
 
 public class PonderTooltipHandler {
 
+	public static boolean enable = true;
+	
 	static LerpedFloat holdWProgress = LerpedFloat.linear()
 		.startWithValue(0);
 	static ItemStack hoveredStack = ItemStack.EMPTY;
@@ -43,14 +45,15 @@ public class PonderTooltipHandler {
 
 	public static void deferredTick() {
 		deferTick = false;
+		Minecraft instance = Minecraft.getInstance();
+		Screen currentScreen = instance.screen;
+		
 		if (hoveredStack.isEmpty() || trackingStack.isEmpty()) {
 			trackingStack = ItemStack.EMPTY;
 			holdWProgress.startWithValue(0);
 			return;
 		}
 
-		Minecraft instance = Minecraft.getInstance();
-		Screen currentScreen = instance.screen;
 		float value = holdWProgress.getValue();
 		int keyCode = KeyBindingHelper.getKeyCode(ponderKeybind()).getValue();
 		long window = instance.getWindow()
@@ -72,6 +75,9 @@ public class PonderTooltipHandler {
 	}
 
 	public static void addToTooltip(List<Component> toolTip, ItemStack stack) {
+		if (!enable)
+			return;
+		
 		updateHovered(stack);
 
 		if (deferTick)
@@ -94,11 +100,13 @@ public class PonderTooltipHandler {
 	protected static void updateHovered(ItemStack stack) {
 		Minecraft instance = Minecraft.getInstance();
 		Screen currentScreen = instance.screen;
+		boolean inPonderUI = currentScreen instanceof PonderUI;
+		
 		ItemStack prevStack = trackingStack;
 		hoveredStack = ItemStack.EMPTY;
 		subject = false;
 
-		if (currentScreen instanceof PonderUI) {
+		if (inPonderUI) {
 			PonderUI ponderUI = (PonderUI) currentScreen;
 			if (stack.sameItem(ponderUI.getSubject()))
 				subject = true;
@@ -109,7 +117,7 @@ public class PonderTooltipHandler {
 		if (!PonderRegistry.ALL.containsKey(Registry.ITEM.getKey(stack.getItem())))
 			return;
 
-		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
+		if (prevStack.isEmpty() || !prevStack.sameItem(stack)) 
 			holdWProgress.startWithValue(0);
 
 		hoveredStack = stack;

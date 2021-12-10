@@ -1,23 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " B "
+    "B",
+    "C",
+    "B"
   ],
   "key": {
     "B": {
-      "item": "create:copper_casing"
-    },
-    "S": {
-      "tag": "c:copper_nuggets"
+      "tag": "forge:plates/copper"
     },
     "C": {
-      "tag": "c:glass"
+      "tag": "forge:barrels/wooden"
     }
   },
   "result": {
-    "item": "create:fluid_tank",
-    "count": 2
+    "item": "create:fluid_tank"
   }
 }

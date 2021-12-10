@@ -11,6 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -161,7 +162,7 @@ public class FluidPropagator {
 		if (PumpBlock.isPump(connectedState) && connectedState.getValue(PumpBlock.FACING)
 			.getAxis() == side.getAxis())
 			return false;
-		if (connectedState.hasProperty(BlockStateProperties.LEVEL_HONEY))
+		if (VanillaFluidTargets.shouldPipesConnectTo(connectedState))
 			return true;
 		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
 			return false;

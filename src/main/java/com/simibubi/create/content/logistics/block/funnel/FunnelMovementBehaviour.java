@@ -120,6 +120,11 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 			item.setItem(remainder);
 		}
 	}
+	
+	@Override
+	public boolean renderAsNormalTileEntity() {
+		return true;
+	}
 
 	private ItemStack getFilter(MovementContext context) {
 		return hasFilter ? ItemStack.of(context.tileData.getCompound("Filter")) : ItemStack.EMPTY;

@@ -196,10 +196,10 @@ public class AllIcons implements ScreenElement {
 		Vec3 vec3 = new Vec3(1, 1, 0);
 		Vec3 vec4 = new Vec3(1, 0, 0);
 
-		float u1 = iconX / ICON_ATLAS_SIZE;
-		float u2 = (iconX + 16) / ICON_ATLAS_SIZE;
-		float v1 = iconY / ICON_ATLAS_SIZE;
-		float v2 = (iconY + 16) / ICON_ATLAS_SIZE;
+		float u1 = iconX * 1f / ICON_ATLAS_SIZE;
+		float u2 = (iconX + 16) * 1f / ICON_ATLAS_SIZE;
+		float v1 = iconY * 1f / ICON_ATLAS_SIZE;
+		float v2 = (iconY + 16) * 1f / ICON_ATLAS_SIZE;
 
 		vertex(builder, matrix, vec1, rgb, u1, v1, light);
 		vertex(builder, matrix, vec2, rgb, u1, v2, light);

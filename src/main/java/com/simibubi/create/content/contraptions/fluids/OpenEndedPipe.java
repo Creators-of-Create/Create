@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_HONEY;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -33,7 +33,6 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -138,12 +137,9 @@ public class OpenEndedPipe extends FlowSource {
 		FluidState fluidState = state.getFluidState();
 		boolean waterlog = state.hasProperty(WATERLOGGED);
 
-		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(LEVEL_HONEY) >= 5) {
-			if (!simulate)
-				world.setBlock(outputPos, state.setValue(LEVEL_HONEY, 0), 3);
-			return new FluidStack(AllFluids.HONEY.get()
-				.getSource(), 250);
-		}
+		FluidStack drainBlock = VanillaFluidTargets.drainBlock(world, outputPos, state, simulate);
+		if (!drainBlock.isEmpty())
+			return drainBlock;
 
 		if (!waterlog && !state.getMaterial()
 			.isReplaceable())

@@ -19,6 +19,10 @@ public class SharedProperties {
 	public static Block softMetal() {
 		return Blocks.GOLD_BLOCK;
 	}
+	
+	public static Block copperMetal() {
+		return Blocks.COPPER_BLOCK;
+	}
 
 	public static Block wooden() {
 		return Blocks.STRIPPED_SPRUCE_WOOD;

@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.worldgen;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,6 @@ public class LayeredOreFeature extends OreFeatureBase {
 		List<LayerPattern.Layer> resolvedLayers = new ArrayList<>();
 		List<Float> layerDiameterOffsets = new ArrayList<>();
 
-		BitSet bitset = new BitSet(size * size * size);
 		MutableBlockPos mutablePos = new MutableBlockPos();
 		BulkSectionAccess bulksectionaccess = new BulkSectionAccess(worldgenlevel);
 		int layerCoordinate = random.nextInt(4);
@@ -85,7 +83,7 @@ public class LayeredOreFeature extends OreFeatureBase {
 					float dy = y * 2f / height - 1;
 					if (dx * dx + dy * dy > 1)
 						continue;
-					if (worldgenlevel.isOutsideBuildHeight(y))
+					if (worldgenlevel.isOutsideBuildHeight(y0 + y))
 						continue;
 
 					for (int z = 0; z < length; z++) {
@@ -108,11 +106,6 @@ public class LayeredOreFeature extends OreFeatureBase {
 
 						if (dx * dx + dy * dy + dz * dz > 1 * layerDiameterOffsets.get(layerIndex))
 							continue;
-
-						int index = x * length * height + y * length + z;
-						if (bitset.get(index))
-							continue;
-						bitset.set(index);
 
 						LayerPattern.Layer layer = resolvedLayers.get(layerIndex);
 						List<TargetBlockState> state = layer.rollBlock(random);

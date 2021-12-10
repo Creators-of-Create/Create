@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -48,7 +49,15 @@ public class BracketBlockItem extends BlockItem {
 			return InteractionResult.SUCCESS;
 
 		BlockState bracket = behaviour.getBracket();
-		behaviour.applyBracket(suitableBracket.get());
+		BlockState newBracket = suitableBracket.get();
+		
+		if (bracket == newBracket)
+			return InteractionResult.SUCCESS;
+		
+		world.playSound(null, pos, newBracket
+			.getSoundType()
+			.getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1);
+		behaviour.applyBracket(newBracket);
 		
 		if (!world.isClientSide && player != null)
 			behaviour.triggerAdvancements(world, player, state);
