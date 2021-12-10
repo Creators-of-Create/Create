@@ -37,7 +37,9 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
 	public final ConfigEnum<ContraptionMovementSetting> spawnerMovement =
-			e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
+		e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
+	public final ConfigEnum<ContraptionMovementSetting> amethystMovement =
+		e(ContraptionMovementSetting.NO_PICKUP, "amethystMovement", Comments.amethystMovement);
 	public final ConfigEnum<ContraptionMovementSetting> obsidianMovement =
 		e(ContraptionMovementSetting.UNMOVABLE, "movableObsidian", Comments.obsidianMovement);
 	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
@@ -108,6 +110,7 @@ public class CKinetics extends ConfigBase {
 		static String ejectorScanInterval =
 			"Time in ticks until the next item launched by an ejector scans blocks for potential collisions";
 		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
+		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
 	}
 
