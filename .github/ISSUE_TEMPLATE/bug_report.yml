@@ -33,6 +33,12 @@ body:
             required: false
     -   type: input
         attributes:
+            label: Crash Report or Log
+            description: If applicable, please add a link to the crash report or log that was created when this issue occured
+        validations:
+            required: false
+    -   type: input
+        attributes:
             label: Operating System
             description: The operating system you were using when the bug occured
             placeholder: Windows 11
