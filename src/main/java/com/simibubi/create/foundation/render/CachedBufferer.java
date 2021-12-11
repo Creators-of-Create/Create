@@ -4,6 +4,8 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.function.Supplier;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.core.PartialModel;

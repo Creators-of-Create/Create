@@ -16,4 +16,7 @@ public interface EntityAccessor {
 
 	@Accessor
 	void setRemovalReason(Entity.RemovalReason removalReason);
+
+	@Accessor
+	boolean isOnGround();
 }
