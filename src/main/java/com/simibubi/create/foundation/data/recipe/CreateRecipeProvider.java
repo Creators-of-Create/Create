@@ -9,6 +9,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 
+import me.alphamode.forgetags.Tags;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -17,7 +19,6 @@ import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import com.simibubi.create.lib.data.Tags;
 
 //todo: use FabricRecipeProvider one data gen api is merged
 public abstract class CreateRecipeProvider extends RecipeProvider {

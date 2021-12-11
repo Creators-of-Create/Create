@@ -14,6 +14,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
+import me.alphamode.forgetags.Tags;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -23,7 +25,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import com.simibubi.create.lib.data.Tags;
 
 public class WashingRecipeGen extends ProcessingRecipeGen {
 

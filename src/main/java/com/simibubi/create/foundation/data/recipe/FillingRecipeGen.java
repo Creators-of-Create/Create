@@ -10,7 +10,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.material.Fluids;
-import com.simibubi.create.lib.data.Tags;
+
+import me.alphamode.forgetags.Tags;
 
 public class FillingRecipeGen extends ProcessingRecipeGen {
 

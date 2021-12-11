@@ -5,12 +5,13 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
+import me.alphamode.forgetags.Tags;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
-import com.simibubi.create.lib.data.Tags;
 
 public class MixingRecipeGen extends ProcessingRecipeGen {
 

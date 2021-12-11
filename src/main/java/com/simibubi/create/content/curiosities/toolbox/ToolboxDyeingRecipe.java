@@ -13,7 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.lib.data.Tags;
+
+import me.alphamode.forgetags.Tags;
 
 public class ToolboxDyeingRecipe extends CustomRecipe {
 

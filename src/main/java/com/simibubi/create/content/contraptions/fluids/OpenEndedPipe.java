@@ -37,7 +37,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
-import com.simibubi.create.lib.data.Tags;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 

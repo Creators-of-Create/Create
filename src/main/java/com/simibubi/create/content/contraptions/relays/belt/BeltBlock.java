@@ -7,6 +7,8 @@ import java.util.List;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 
+import me.alphamode.forgetags.Tags;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -29,7 +31,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
-import com.simibubi.create.lib.data.Tags;
 import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.IItemHandler;

@@ -7,6 +7,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
+import me.alphamode.forgetags.Tags;
+
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +16,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import com.simibubi.create.lib.data.Tags;
 
 public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 
@@ -42,7 +43,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.patternLine(" P ")
 				.patternLine(" B ")
 				.patternLine(" O ")),
-		
+
 		EXTENDO_GRIP = create(AllItems.EXTENDO_GRIP::get).returns(1)
 			.recipe(b -> b.key('L', Ingredient.of(I.brass()))
 				.key('R', I.precisionMechanism())

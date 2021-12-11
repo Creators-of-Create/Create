@@ -153,9 +153,9 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;

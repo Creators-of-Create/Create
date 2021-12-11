@@ -54,8 +54,9 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.util.entry.ItemEntry;
+
+import me.alphamode.forgetags.Tags;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;

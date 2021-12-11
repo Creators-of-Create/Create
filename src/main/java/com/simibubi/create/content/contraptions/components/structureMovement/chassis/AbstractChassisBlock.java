@@ -6,7 +6,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.data.Tags;
+
+import me.alphamode.forgetags.Tags;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

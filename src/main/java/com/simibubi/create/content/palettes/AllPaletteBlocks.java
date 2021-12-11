@@ -18,13 +18,14 @@ import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import me.alphamode.forgetags.Tags;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import com.simibubi.create.lib.data.Tags;
 
 public class AllPaletteBlocks {
 
