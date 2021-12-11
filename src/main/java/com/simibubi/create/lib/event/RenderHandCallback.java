@@ -47,15 +47,15 @@ public interface RenderHandCallback {
 			return stack;
 		}
 
-		public PoseStack getMatrixStack() {
+		public PoseStack getPoseStack() {
 			return matrices;
 		}
 
-		public MultiBufferSource getBuffers() {
+		public MultiBufferSource getMultiBufferSource() {
 			return vertexConsumers;
 		}
 
-		public int getLight() {
+		public int getPackedLight() {
 			return light;
 		}
 

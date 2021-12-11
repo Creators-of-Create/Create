@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.mixin.accessor.HashMapPaletteAccessor;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
@@ -876,7 +877,7 @@ public abstract class Contraption {
 
 		ListTag paletteNBT = new ListTag();
 		for(int i = 0; i < palette.getSize(); ++i)
-			paletteNBT.add(NbtUtils.writeBlockState(palette.values.byId(i)));
+			paletteNBT.add(NbtUtils.writeBlockState(((HashMapPaletteAccessor<BlockState>)palette).getValues().byId(i)));
 
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
@@ -894,9 +895,9 @@ public abstract class Contraption {
 			});
 
 			ListTag list = c.getList("Palette", 10);
-			palette.values.clear();
+			((HashMapPaletteAccessor)palette).getValues().clear();
 			for (int i = 0; i < list.size(); ++i)
-				palette.values.add(NbtUtils.readBlockState(list.getCompound(i)));
+				((HashMapPaletteAccessor)palette).getValues().add(NbtUtils.readBlockState(list.getCompound(i)));
 
 			blockList = c.getList("BlockList", 10);
 		} else {

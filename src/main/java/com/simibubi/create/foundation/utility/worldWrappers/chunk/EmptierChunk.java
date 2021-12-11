@@ -38,7 +38,6 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class EmptierChunk extends LevelChunk {
 
@@ -155,7 +154,7 @@ public class EmptierChunk extends LevelChunk {
 	}
 
 	private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null,
-		ObfuscationReflectionHelper.getPrivateValue(DimensionType.class, null, "f_63848_"), null, false, false, 0);
+			DimensionTypeAccessor.getDEFAULT_OVERWORLD(), null, false, false, 0);
 
 	public EmptierChunk(RegistryAccess registryAccess) {
 		super(DUMMY_LEVEL.withAccess(registryAccess), null);

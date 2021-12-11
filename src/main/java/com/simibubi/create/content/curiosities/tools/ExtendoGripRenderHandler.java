@@ -23,9 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import com.simibubi.create.lib.event.RenderHandCallback.RenderHandEvent;
 
 import com.simibubi.create.lib.helper.FirstPersonRendererHelper;
-import com.simibubi.create.lib.mixin.accessor.ItemInHandRendererAccessor;
-
-import net.fabricmc.api.EnvType;
 
 public class ExtendoGripRenderHandler {
 

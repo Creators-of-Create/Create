@@ -31,6 +31,7 @@ static boolean pingUrl(String address) {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://cursemaven.com" }
     maven { url = "https://maven.parchmentmc.org" }
@@ -65,6 +66,7 @@ dependencies {
     mappings loom.officialMojangMappings()
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") { exclude(group: "net.fabricmc.fabric-api") }
+    modApi(include("me.shedaniel.cloth:basic-math:0.6.0"))
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
@@ -76,10 +78,10 @@ dependencies {
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
     implementation(include('com.electronwill.night-config:core:3.6.0'))
     implementation(include('com.electronwill.night-config:toml:3.6.0'))
-    modImplementation(include("com.tterrag:registrate-fabric:${project.registrate_version}"))
+    modImplementation(include("com.tterrag.registrate:Registrate:${project.registrate_version}"))
+    //modImplementation(include("com.tterrag:registrate-fabric:${project.registrate_version}"))
     modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
-    modImplementation(include("net.devtech:arrp:${project.arrp_version}"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
 }
 

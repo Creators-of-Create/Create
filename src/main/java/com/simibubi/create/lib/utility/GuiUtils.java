@@ -22,6 +22,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 
 public class GuiUtils { // name is this to maintain max compat with upstream
+	public static final int DEFAULT_BACKGROUND_COLOR = 0xF0100010;
+	public static final int DEFAULT_BORDER_COLOR_START = 0x505000FF;
+	public static final int DEFAULT_BORDER_COLOR_END = (DEFAULT_BORDER_COLOR_START & 0xFEFEFE) >> 1 | DEFAULT_BORDER_COLOR_START & 0xFF000000;
 	public static void drawGradientRect(Matrix4f matrix, int z, int left, int top, int right, int bottom, int startColor, int endColor) {
 		float startAlpha = (float)(startColor >> 24 & 255) / 255.0F;
 		float startRed   = (float)(startColor >> 16 & 255) / 255.0F;

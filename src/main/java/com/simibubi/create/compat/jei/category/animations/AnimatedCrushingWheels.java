@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 
-import me.shedaniel.math.Rectangle;
-
 import java.util.List;
 
 import net.minecraft.client.gui.components.events.GuiEventListener;

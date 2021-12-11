@@ -1,5 +1,9 @@
 package com.simibubi.create.lib.mixin.common;
 
+import com.simibubi.create.lib.event.BiomeLoadingCallback;
+
+import com.simibubi.create.lib.utility.BiomeUtil;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -23,8 +27,9 @@ public abstract class BiomeMixin {
 	private BiomeGenerationSettings generationSettings;
 
 	@Inject(at = @At("TAIL"), method = "<init>")
-	public void create$biomeInit(Biome.ClimateSettings climate, Biome.BiomeCategory category, float f, float g, BiomeSpecialEffects biomeAmbience, BiomeGenerationSettings biomeGenerationSettings, MobSpawnSettings mobSpawnInfo, CallbackInfo ci) {
+	public void create$biomeInit(Biome.ClimateSettings climateSettings, Biome.BiomeCategory biomeCategory, BiomeSpecialEffects biomeSpecialEffects, BiomeGenerationSettings biomeGenerationSettings, MobSpawnSettings mobSpawnSettings, CallbackInfo ci) {
 		ResourceLocation key = BuiltinRegistries.BIOME.getKey((Biome) (Object) this); // dunno
-//		this.generationSettings = BiomeLoadingCallback.EVENT.invoker().onBiomeLoad(key, category, BiomeUtil.settingsToBuilder(biomeGenerationSettings)).build();
+		if(biomeGenerationSettings != BiomeGenerationSettings.EMPTY)
+			this.generationSettings = BiomeLoadingCallback.EVENT.invoker().onBiomeLoad(key, biomeCategory, BiomeUtil.settingsToBuilder(biomeGenerationSettings)).build();
 	}
 }

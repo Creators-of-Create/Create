@@ -13,15 +13,9 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.surfacebuilders.ConfiguredSurfaceBuilder;
 
 @Mixin(BiomeGenerationSettings.Builder.class)
 public interface BiomeGenerationSettings$BuilderAccessor {
-	@Accessor("surfaceBuilder")
-	Optional<Supplier<ConfiguredSurfaceBuilder<?>>> getSurfaceBuilder();
-
-	@Accessor("surfaceBuilder")
-	void setSurfaceBuilder(Optional<Supplier<ConfiguredSurfaceBuilder<?>>> surfaceBuilder);
 
 	@Accessor("carvers")
 	Map<GenerationStep.Carving, List<Supplier<ConfiguredWorldCarver<?>>>> getCarvers();
@@ -35,9 +29,4 @@ public interface BiomeGenerationSettings$BuilderAccessor {
 	@Accessor("features")
 	void setFeatures(List<List<Supplier<ConfiguredFeature<?, ?>>>> features);
 
-	@Accessor("structureStarts")
-	List<Supplier<ConfiguredStructureFeature<?, ?>>> getStructureFeatures();
-
-	@Accessor("structureStarts")
-	void setStructureFeatures(List<Supplier<ConfiguredStructureFeature<?, ?>>> structureFeatures);
 }

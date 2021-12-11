@@ -43,6 +43,8 @@ import net.fabricmc.api.EnvType;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import org.jetbrains.annotations.Nullable;
+
 public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRendered, ItemTransferable {
 
 	public Map<Direction, InterpolatedChasingValue> flaps;

@@ -57,6 +57,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.utility.LazyOptional;
+
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
+
+import org.jetbrains.annotations.Nullable;
 
 public class BeltTileEntity extends KineticTileEntity implements LightListener, ItemTransferable {
 

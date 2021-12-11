@@ -13,8 +13,6 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import com.simibubi.create.lib.mixin.accessor.ServerTickListAccessor;
-
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 import net.minecraft.core.BlockPos;

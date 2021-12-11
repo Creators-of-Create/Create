@@ -1,5 +1,8 @@
 package com.simibubi.create.lib.transfer.fluid;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
@@ -10,8 +13,22 @@ import net.minecraft.world.level.material.Fluid;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class FluidStack {
+	public static final Codec<FluidStack> CODEC = RecordCodecBuilder.create(
+			instance -> instance.group(
+					Registry.FLUID.byNameCodec().fieldOf("FluidName").forGetter(FluidStack::getFluid),
+					Codec.LONG.fieldOf("Amount").forGetter(FluidStack::getAmount),
+					CompoundTag.CODEC.optionalFieldOf("Tag").forGetter(stack -> Optional.ofNullable(stack.getTag()))
+			).apply(instance, (fluid, amount, tag) -> {
+				FluidStack stack = new FluidStack(fluid, amount);
+				tag.ifPresent(stack::setTag);
+				return stack;
+			})
+	);
+
 	private static final FluidStack EMPTY = new FluidStack(FluidVariant.blank(), 0) {
 		@Override
 		public FluidStack setAmount(long amount) {

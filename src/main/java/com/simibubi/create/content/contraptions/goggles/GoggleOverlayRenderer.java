@@ -194,7 +194,7 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
+		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
 			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();

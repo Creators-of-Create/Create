@@ -46,11 +46,7 @@ import com.tterrag.registrate.util.NonNullLazyValue;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 
 public class Create implements ModInitializer {
 
@@ -99,27 +95,18 @@ public class Create implements ModInitializer {
 
 //		ForgeMod.enableMilkFluid(); // FIXME PORT: milk
 
-//		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-//				.getModEventBus();
-//		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
-//		modEventBus.addListener(Create::init);
-		init();
-//		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		// datagen, not needed
-//		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
-		AllWorldFeatures.registerOreFeatures();
-//		modEventBus.addGenericListener(FeatureDecorator.class, AllWorldFeatures::registerDecoratorFeatures);
-		AllWorldFeatures.registerDecoratorFeatures();
-//		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
-		AllRecipeTypes.register();
-//		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
-		AllParticleTypes.register();
-//		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-		AllSoundEvents.register();
 		CopperRegistries.inject();
 
+		init();
+		// datagen, not needed
+//		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
+		AllWorldFeatures.registerOreFeatures();
+		AllRecipeTypes.register();
+		AllParticleTypes.register();
+		AllSoundEvents.register();
+
 //		forgeEventBus.register(CHUNK_UTIL);
-		CHUNK_UTIL.fabricInitEvents();
+		//CHUNK_UTIL.fabricInitEvents();
 
 		// handled as ClientModInitializer
 //		EnvExecutor.runWhenOn(EnvType.CLIENT,

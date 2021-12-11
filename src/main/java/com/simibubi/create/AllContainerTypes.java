@@ -14,7 +14,7 @@ import com.simibubi.create.content.schematics.block.SchematicTableContainer;
 import com.simibubi.create.content.schematics.block.SchematicTableScreen;
 import com.simibubi.create.content.schematics.block.SchematicannonContainer;
 import com.simibubi.create.content.schematics.block.SchematicannonScreen;
-import com.tterrag.registrate.builders.MenuBuilder.ForgeMenuFactory;
+import com.tterrag.registrate.builders.MenuBuilder;
 import com.tterrag.registrate.builders.MenuBuilder.ScreenFactory;
 import com.tterrag.registrate.util.entry.MenuEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -42,12 +42,12 @@ public class AllContainerTypes {
 
 	public static final MenuEntry<LinkedControllerContainer> LINKED_CONTROLLER =
 		register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);
-	
+
 	public static final MenuEntry<ToolboxContainer> TOOLBOX =
 		register("toolbox", ToolboxContainer::new, () -> ToolboxScreen::new);
 
 	private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
-		String name, ForgeMenuFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
+			String name, MenuBuilder.ForgeMenuFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
 		return Create.registrate()
 			.menu(name, factory, screenFactory)
 			.register();

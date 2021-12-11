@@ -57,7 +57,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -145,7 +144,7 @@ public class AllItems {
 
 	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.properties(p -> (FabricItemSettings) p.stacksTo(16))
+		.properties(p -> p.stacksTo(16))
 		.lang("Builder's Tea")
 		.register();
 
@@ -264,7 +263,7 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
-		.properties(p -> (FabricItemSettings) p.stacksTo(1))
+		.properties(p -> p.stacksTo(1))
 		//.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
 //		.model(AssetLookup.itemModelWithPartials())
 		.register();
@@ -289,14 +288,14 @@ public class AllItems {
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
-			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+			.properties(p -> p.stacksTo(1))
 			//.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+			.properties(p -> p.stacksTo(1))
 			//.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
 //			.model(AssetLookup.itemModelWithPartials())
 			.register();
@@ -346,16 +345,16 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
-		.properties(p -> (FabricItemSettings) p.stacksTo(1))
+		.properties(p -> p.stacksTo(1))
 		.register();
 
 	public static final ItemEntry<SchematicAndQuillItem> SCHEMATIC_AND_QUILL =
 		REGISTRATE.item("schematic_and_quill", SchematicAndQuillItem::new)
-			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+			.properties(p -> p.stacksTo(1))
 			.register();
 
 	public static final ItemEntry<SchematicItem> SCHEMATIC = REGISTRATE.item("schematic", SchematicItem::new)
-		.properties(p -> (FabricItemSettings) p.stacksTo(1))
+		.properties(p -> p.stacksTo(1))
 		.register();
 
 	// Shortcuts

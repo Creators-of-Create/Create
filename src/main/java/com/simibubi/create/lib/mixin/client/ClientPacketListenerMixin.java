@@ -1,24 +1,14 @@
 package com.simibubi.create.lib.mixin.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.resources.sounds.MinecartSoundInstance;
-import net.minecraft.network.protocol.PacketUtils;
-
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -36,7 +26,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(EnvType.CLIENT)
@@ -63,29 +52,29 @@ public abstract class ClientPacketListenerMixin {
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;load(Lnet/minecraft/nbt/CompoundTag;)V"),
-		method = "handleBlockEntityData"
+		method = "lambda$handleBlockEntityData$4"
 	)
-	private void create$teIsHandled1(ClientboundBlockEntityDataPacket sUpdateTileEntityPacket, CallbackInfo ci) {
+	private void create$teIsHandled1(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		create$tileEntityHandled = true;
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CommandBlockEditScreen;updateGui()V"),
-		method = "handleBlockEntityData"
+		method = "lambda$handleBlockEntityData$4"
 	)
-	private void create$teIsHandled2(ClientboundBlockEntityDataPacket sUpdateTileEntityPacket, CallbackInfo ci) {
+	private void create$teIsHandled2(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		create$tileEntityHandled = true;
 	}
 
-	@Inject(at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "handleBlockEntityData",
+	@Inject(at = @At("TAIL"),
+			method = "lambda$handleBlockEntityData$4",
 			cancellable = true)
-	public void create$handleCustomTileEntity(ClientboundBlockEntityDataPacket sUpdateTileEntityPacket, CallbackInfo ci, BlockPos pos, BlockEntity tileEntity) {
+	public void create$handleCustomTileEntity(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		if (!create$tileEntityHandled) {
-			if (tileEntity == null) {
+			if (blockEntity == null) {
 				CREATE$LOGGER.error("Received invalid update packet for null TileEntity");
 				ci.cancel();
-			} else if (tileEntity instanceof CustomDataPacketHandlingTileEntity) {
-				((CustomDataPacketHandlingTileEntity) tileEntity).onDataPacket(connection, sUpdateTileEntityPacket);
+			} else if (blockEntity instanceof CustomDataPacketHandlingTileEntity) {
+				((CustomDataPacketHandlingTileEntity) blockEntity).onDataPacket(connection, clientboundBlockEntityDataPacket);
 			}
 		} else {
 			create$tileEntityHandled = false;

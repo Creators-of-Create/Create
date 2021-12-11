@@ -18,17 +18,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 @ParametersAreNonnullByDefault
-public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBuilder<T>, P> extends EntityBuilder<T, B, P> {
+public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBuilder<T>, P> extends EntityBuilder<T, P> {
 
 	@Nullable
 	private NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory;
 
-	public static <T extends Entity, P> EntityBuilder<T, FabricEntityTypeBuilder<T>, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
+	public static <T extends Entity, P> EntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (new CreateEntityBuilder<>(owner, parent, name, callback, factory, classification)).defaultLang();
 	}
 
 	public CreateEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
-		super(owner, parent, name, callback, factory, classification, (mobCategory, tEntityFactory) -> (B) FabricEntityTypeBuilder.create(mobCategory, tEntityFactory));
+		super(owner, parent, name, callback, factory, classification/*, (mobCategory, tEntityFactory) -> FabricEntityTypeBuilder.create(mobCategory, tEntityFactory)*/);
 	}
 
 	public CreateEntityBuilder<T, B, P> instance(NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory) {

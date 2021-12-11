@@ -37,17 +37,17 @@ public abstract class BlockEntityMixin implements BlockEntityExtensions, NBTSeri
 	}
 
 	@Inject(method = "saveMetadata",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putString(Ljava/lang/String;Ljava/lang/String;)V"))
-	private void saveMetadata(CompoundTag compoundNBT, CallbackInfoReturnable<CompoundTag> cir) {
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V", ordinal = 2))
+	private void saveMetadata(CompoundTag compoundNBT, CallbackInfo ci) {
 		if (this.create$extraCustomData != null) {
-			compoundNBT.put(TileEntityHelper.EXTRA_DATA_KEY, this.create$extraCustomData);
+			compoundNBT.put(TileEntityHelper.EXTRA_DATA_KEY, this.create$extraCustomData.copy());
 		}
 	}
 
 	@Override
 	public CompoundTag create$serializeNBT() {
 		CompoundTag nbt = new CompoundTag();
-		MixinHelper.<BlockEntity>cast(this).save(nbt);
+		MixinHelper.<BlockEntity>cast(this).load(nbt);
 		return nbt;
 	}
 

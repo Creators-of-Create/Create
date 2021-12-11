@@ -21,9 +21,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 
 public class AllWorldFeatures {
 
@@ -83,11 +80,10 @@ public class AllWorldFeatures {
 	}
 
 	public static BiomeGenerationSettings.Builder reload(ResourceLocation key, Biome.BiomeCategory category, BiomeGenerationSettings.Builder generation) {
-		BiomeGenerationSettingsBuilder generation = event.getGeneration();
 		Decoration decoStep = GenerationStep.Decoration.UNDERGROUND_ORES;
 		ENTRIES.values()
 			.forEach(entry -> {
-				if (!entry.biomeFilter.test(event.getName(), event.getCategory()))
+				if (!entry.biomeFilter.test(key, category))
 					return;
 				generation.addFeature(decoStep, entry.getFeature()
 					.getSecond());

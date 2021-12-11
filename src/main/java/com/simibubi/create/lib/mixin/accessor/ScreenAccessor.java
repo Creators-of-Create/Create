@@ -23,12 +23,12 @@ public interface ScreenAccessor {
 	@Accessor("minecraft")
 	Minecraft create$client();
 
-	@Accessor("children")
-	List<GuiEventListener> create$getChildren();
-
 	@Accessor("renderables")
 	List<Widget> create$getRenderables();
 
 	@Invoker("addRenderableWidget")
 	<T extends GuiEventListener & Widget & NarratableEntry> T create$addRenderableWidget(T widget);
+
+	@Accessor
+	List<NarratableEntry> getNarratables();
 }

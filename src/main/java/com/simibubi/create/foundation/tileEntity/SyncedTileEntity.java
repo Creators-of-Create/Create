@@ -31,13 +31,13 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 
 	@Override
 	public CompoundTag getUpdateTag() {
-		return save(new CompoundTag());
+		return create$save(new CompoundTag());
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
+	public CompoundTag create$save(CompoundTag tag) {
 		saveAdditional(tag);
-		return super.save(tag);
+		return BlockEntityExtensions.super.create$save(tag);
 	}
 
 	public void sendData() {
@@ -70,7 +70,7 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 
 	// Special handling for client update packets
 	public CompoundTag writeToClient(CompoundTag tag) {
-		return save(tag);
+		return create$save(tag);
 	}
 
 	public void notifyUpdate() {
