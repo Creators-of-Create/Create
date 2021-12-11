@@ -43,7 +43,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 		BlockEntity tileEntity = world.getBlockEntity(readBlockPos);
 		if (tileEntity instanceof ToolboxTileEntity) {
 			ToolboxTileEntity toolbox = (ToolboxTileEntity) tileEntity;
-			toolbox.handleUpdateTag(readNbt);
+			toolbox.readClient(readNbt);
 			return toolbox;
 		}
 

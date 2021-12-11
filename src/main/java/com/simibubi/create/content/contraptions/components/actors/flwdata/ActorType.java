@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.actors.flwdata;
 
-import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.api.struct.Batched;
 import com.jozufozu.flywheel.api.struct.BatchingTransformer;
-import com.jozufozu.flywheel.api.struct.StructWriter;
 import com.jozufozu.flywheel.api.struct.Instanced;
+import com.jozufozu.flywheel.api.struct.StructWriter;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.model.Model;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
 import com.simibubi.create.foundation.render.AllProgramSpecs;

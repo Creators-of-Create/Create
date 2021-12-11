@@ -53,9 +53,9 @@ public class SchematicTableTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 		
 		if (!clientPacket)
 			return;

@@ -33,7 +33,7 @@ public class SchematicannonContainer extends ContainerBase<SchematicannonTileEnt
 		ClientLevel world = Minecraft.getInstance().level;
 		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		if (tileEntity instanceof SchematicannonTileEntity schematicannon) {
-			schematicannon.handleUpdateTag(extraData.readNbt());
+			schematicannon.readClient(extraData.readNbt());
 			return schematicannon;
 		}
 		return null;

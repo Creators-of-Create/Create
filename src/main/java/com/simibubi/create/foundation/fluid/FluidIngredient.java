@@ -185,7 +185,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		protected void writeInternal(JsonObject json) {
 			json.addProperty("fluid", fluid.getRegistryName()
 				.toString());
-			json.add("nbt", new JsonParser().parse(tagToMatch.toString()));
+			json.add("nbt", JsonParser.parseString(tagToMatch.toString()));
 		}
 
 		@Override

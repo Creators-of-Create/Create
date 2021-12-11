@@ -63,11 +63,11 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		generatedSpeed = compound.getFloat("GeneratedSpeed");
 		generatedCapacity = compound.getFloat("GeneratedCapacity");
 		stoppingCooldown = compound.getInt("Cooldown");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 		if (clientPacket)
 			visualSpeed.withSpeed(1 / 32f)
 				.target(getGeneratedSpeed());

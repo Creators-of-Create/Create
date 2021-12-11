@@ -581,7 +581,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		boolean wasConnectedLeft = connectedLeft;
 		boolean wasConnectedRight = connectedRight;
 
@@ -603,7 +603,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 				}));
 		}
 
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

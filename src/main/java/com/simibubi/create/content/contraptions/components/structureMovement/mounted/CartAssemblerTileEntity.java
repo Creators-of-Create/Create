@@ -242,9 +242,9 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

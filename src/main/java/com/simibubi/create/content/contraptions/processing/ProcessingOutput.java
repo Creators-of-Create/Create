@@ -67,7 +67,7 @@ public class ProcessingOutput {
 		if (count != 1)
 			json.addProperty("count", count);
 		if (stack.hasTag())
-			json.add("nbt", new JsonParser().parse(stack.getTag()
+			json.add("nbt", JsonParser.parseString(stack.getTag()
 				.toString()));
 		if (chance != 1)
 			json.addProperty("chance", chance);

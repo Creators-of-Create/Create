@@ -14,8 +14,8 @@ import java.util.function.Function;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.ListenerStatus;
@@ -214,9 +214,9 @@ public class BeltTileEntity extends KineticTileEntity implements LightListener {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		int prevBeltLength = beltLength;
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (compound.getBoolean("IsController"))
 			controller = worldPosition;

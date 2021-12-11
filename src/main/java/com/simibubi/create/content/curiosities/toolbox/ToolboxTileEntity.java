@@ -283,9 +283,9 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 		if (compound.contains("UniqueId", 11))
 			this.uniqueId = compound.getUUID("UniqueId");
 		if (compound.contains("CustomName", 8))

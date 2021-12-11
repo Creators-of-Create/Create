@@ -14,7 +14,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer.TooltipScreen;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -29,6 +28,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.gui.ForgeIngameGui;
@@ -236,7 +236,7 @@ public class LinkedControllerClientHandler {
 		Minecraft mc = Minecraft.getInstance();
 
 		poseStack.pushPose();
-		Screen tooltipScreen = new TooltipScreen(null);
+		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {};
 		tooltipScreen.init(mc, width1, height1);
 
 		Object[] keys = new Object[6];
@@ -258,9 +258,10 @@ public class LinkedControllerClientHandler {
 		int height = list.size() * mc.font.lineHeight;
 		for (Component iTextComponent : list)
 			width = Math.max(width, mc.font.width(iTextComponent));
-		int x = (tooltipScreen.width / 3) - width / 2;
-		int y = tooltipScreen.height - height;
+		int x = (width1 / 3) - width / 2;
+		int y = height1 - height;
 
+		// TODO
 		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);
 
 		poseStack.popPose();

@@ -66,9 +66,9 @@ public abstract class BrassDiodeTileEntity extends SmartTileEntity implements Fl
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

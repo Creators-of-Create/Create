@@ -157,8 +157,8 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	}
 	
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 
 		BlockPos controllerBefore = controller;
 		int prevSize = radius;

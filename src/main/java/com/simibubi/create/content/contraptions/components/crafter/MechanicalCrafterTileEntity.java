@@ -168,7 +168,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
 
@@ -183,7 +183,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 		if (!clientPacket)
 			return;
 		if (compound.contains("Redraw"))

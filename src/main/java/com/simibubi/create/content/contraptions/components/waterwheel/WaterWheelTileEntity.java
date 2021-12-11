@@ -28,8 +28,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		if (compound.contains("Flows")) {
 			for (Direction d : Iterate.directions)
 				setFlow(d, compound.getCompound("Flows")

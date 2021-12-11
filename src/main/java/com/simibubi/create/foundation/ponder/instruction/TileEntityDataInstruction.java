@@ -36,7 +36,7 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 				return;
 			CompoundTag apply = data.apply(tileEntity.saveWithFullMetadata());
 			if (tileEntity instanceof SyncedTileEntity)
-				((SyncedTileEntity) tileEntity).readClientUpdate(apply);
+				((SyncedTileEntity) tileEntity).readClient(apply);
 			tileEntity.load(apply);
 		});
 	}

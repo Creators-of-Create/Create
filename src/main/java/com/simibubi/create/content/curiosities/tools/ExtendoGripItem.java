@@ -2,7 +2,9 @@ package com.simibubi.create.content.curiosities.tools;
 
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
@@ -17,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -65,13 +66,15 @@ public class ExtendoGripItem extends Item {
 		new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
 			AttributeModifier.Operation.ADDITION);
 
-	static LazyLoadedValue<Multimap<Attribute, AttributeModifier>> rangeModifier = new LazyLoadedValue<>(() ->
-	// Holding an ExtendoGrip
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier));
+	static Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
+		// Holding an ExtendoGrip
+		ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier)
+	);
 
-	static LazyLoadedValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = new LazyLoadedValue<>(() ->
-	// Holding two ExtendoGrips o.O
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier));
+	static Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
+		// Holding two ExtendoGrips o.O
+		ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier)
+	);
 
 	public ExtendoGripItem(Properties properties) {
 		super(properties.stacksTo(1)

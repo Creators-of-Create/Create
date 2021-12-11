@@ -4,7 +4,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -18,24 +17,48 @@ import net.minecraftforge.network.PacketDistributor;
 @ParametersAreNonnullByDefault
 public abstract class SyncedTileEntity extends BlockEntity {
 
-	public SyncedTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
-		super(tileEntityTypeIn, pos, state);
-	}
-
-	@Override
-	public CompoundTag getTileData() {
-		return super.getTileData();
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		return save(new CompoundTag());
+	public SyncedTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
 	public CompoundTag save(CompoundTag tag) {
+		super.save(tag);
 		saveAdditional(tag);
-		return super.save(tag);
+		return tag;
+	}
+
+	@Override
+	public CompoundTag getUpdateTag() {
+		return writeClient(new CompoundTag());
+	}
+
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+
+	@Override
+	public void handleUpdateTag(CompoundTag tag) {
+		readClient(tag);
+	}
+
+	@Override
+	public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet) {
+		CompoundTag tag = packet.getTag();
+		if (tag != null) {
+			readClient(tag);
+		}
+	}
+
+	// Special handling for client update packets
+	public void readClient(CompoundTag tag) {
+		load(tag);
+	}
+
+	// Special handling for client update packets
+	public CompoundTag writeClient(CompoundTag tag) {
+		return save(tag);
 	}
 
 	public void sendData() {
@@ -48,29 +71,6 @@ public abstract class SyncedTileEntity extends BlockEntity {
 			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 1);
 	}
 
-	@Override
-	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this,
-			te -> ((SyncedTileEntity) te).writeToClient(new CompoundTag()));
-	}
-
-	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-		if (pkt.getTag() == null)
-			return;
-		readClientUpdate(pkt.getTag());
-	}
-
-	// Special handling for client update packets
-	public void readClientUpdate(CompoundTag tag) {
-		load(tag);
-	}
-
-	// Special handling for client update packets
-	public CompoundTag writeToClient(CompoundTag tag) {
-		return save(tag);
-	}
-
 	public void notifyUpdate() {
 		setChanged();
 		sendData();
@@ -81,7 +81,6 @@ public abstract class SyncedTileEntity extends BlockEntity {
 	}
 
 	public LevelChunk containedChunk() {
-		SectionPos sectionPos = SectionPos.of(worldPosition);
-		return level.getChunk(sectionPos.x(), sectionPos.z());
+		return level.getChunkAt(worldPosition);
 	}
 }

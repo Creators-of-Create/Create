@@ -155,10 +155,10 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		offset.readNBT(compound.getCompound("Offset"), clientPacket);
 		internalTank.readFromNBT(compound.getCompound("Tank"));
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 		if (clientPacket)
 			infinite = compound.getBoolean("Infinite");
 	}

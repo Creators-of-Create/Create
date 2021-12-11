@@ -56,7 +56,7 @@ public class SchematicTableContainer extends ContainerBase<SchematicTableTileEnt
 		ClientLevel world = Minecraft.getInstance().level;
 		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		if (tileEntity instanceof SchematicTableTileEntity schematicTable) {
-			schematicTable.handleUpdateTag(extraData.readNbt());
+			schematicTable.readClient(extraData.readNbt());
 			return schematicTable;
 		}
 		return null;

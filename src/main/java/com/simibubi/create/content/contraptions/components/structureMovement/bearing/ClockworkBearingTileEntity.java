@@ -310,7 +310,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		float hourAngleBefore = hourAngle;
 		float minuteAngleBefore = minuteAngle;
 
@@ -318,7 +318,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		hourAngle = compound.getFloat("HourAngle");
 		minuteAngle = compound.getFloat("MinuteAngle");
 		lastException = AssemblyException.read(compound);
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

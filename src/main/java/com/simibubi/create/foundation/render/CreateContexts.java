@@ -4,9 +4,9 @@ import java.util.stream.Stream;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.GameStateRegistry;
-import com.jozufozu.flywheel.backend.pipeline.ShaderPipeline;
 import com.jozufozu.flywheel.backend.pipeline.InstancingTemplate;
 import com.jozufozu.flywheel.backend.pipeline.OneShotTemplate;
+import com.jozufozu.flywheel.backend.pipeline.ShaderPipeline;
 import com.jozufozu.flywheel.backend.pipeline.WorldShaderPipeline;
 import com.jozufozu.flywheel.backend.source.FileResolution;
 import com.jozufozu.flywheel.backend.source.Resolver;

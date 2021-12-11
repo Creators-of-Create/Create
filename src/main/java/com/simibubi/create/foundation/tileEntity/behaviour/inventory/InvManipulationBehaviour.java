@@ -18,7 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItemHandler, InvManipulationBehaviour> {
 
 	// Extra types available for multibehaviour
-	public static BehaviourType<InvManipulationBehaviour>
+	public static final BehaviourType<InvManipulationBehaviour>
 
 	TYPE = new BehaviourType<>(), EXTRACT = new BehaviourType<>(), INSERT = new BehaviourType<>();
 

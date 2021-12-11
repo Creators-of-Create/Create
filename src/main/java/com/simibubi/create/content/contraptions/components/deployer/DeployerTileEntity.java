@@ -309,7 +309,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
@@ -319,7 +319,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", Tag.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
 			heldItem = ItemStack.of(compound.getCompound("HeldItem"));
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

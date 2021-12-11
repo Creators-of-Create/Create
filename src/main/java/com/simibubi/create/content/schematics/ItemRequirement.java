@@ -48,8 +48,8 @@ public class ItemRequirement {
 
 	List<StackRequirement> requiredItems;
 
-	public static ItemRequirement INVALID = new ItemRequirement();
-	public static ItemRequirement NONE = new ItemRequirement();
+	public static final ItemRequirement INVALID = new ItemRequirement();
+	public static final ItemRequirement NONE = new ItemRequirement();
 
 	private ItemRequirement() {
 	}

@@ -226,13 +226,13 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
-			super.fromTag(compound, clientPacket);
+			super.read(compound, clientPacket);
 			return;
 		}
 
@@ -252,7 +252,7 @@ public class KineticTileEntity extends SmartTileEntity
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();

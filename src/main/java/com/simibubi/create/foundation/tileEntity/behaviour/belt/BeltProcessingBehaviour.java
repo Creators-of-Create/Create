@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class BeltProcessingBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<BeltProcessingBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<BeltProcessingBehaviour> TYPE = new BehaviourType<>();
 
 	public static enum ProcessingResult {
 		PASS, HOLD, REMOVE;

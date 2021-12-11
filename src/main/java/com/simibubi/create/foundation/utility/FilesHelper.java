@@ -49,7 +49,7 @@ public class FilesHelper {
 			Files.deleteIfExists(Paths.get(path));
 			JsonWriter writer = new JsonWriter(Files.newBufferedWriter(Paths.get(path), StandardOpenOption.CREATE));
 			writer.setIndent("  ");
-			Streams.write(new JsonParser().parse(compound.toString()), writer);
+			Streams.write(JsonParser.parseString(compound.toString()), writer);
 			writer.close();
 			return true;
 		} catch (IOException e) {
@@ -62,7 +62,7 @@ public class FilesHelper {
 		try {
 			Files.deleteIfExists(Paths.get(path));
 			JsonWriter writer = new JsonWriter(Files.newBufferedWriter(Paths.get(path), StandardOpenOption.CREATE));
-			Streams.write(new JsonParser().parse(compound.toString()), writer);
+			Streams.write(JsonParser.parseString(compound.toString()), writer);
 			writer.close();
 			return true;
 		} catch (IOException e) {

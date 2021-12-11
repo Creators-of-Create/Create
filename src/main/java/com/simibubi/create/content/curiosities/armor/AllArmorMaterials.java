@@ -2,10 +2,10 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.function.Supplier;
 
+import com.google.common.base.Suppliers;
 import com.simibubi.create.AllSoundEvents;
 
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
@@ -28,7 +28,7 @@ public enum AllArmorMaterials implements ArmorMaterial {
 	private final SoundEvent soundEvent;
 	private final float toughness;
 	private final float knockbackResistance;
-	private final LazyLoadedValue<Ingredient> repairMaterial;
+	private final Supplier<Ingredient> repairMaterial;
 
 	private AllArmorMaterials(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_,
 		SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
@@ -39,7 +39,7 @@ public enum AllArmorMaterials implements ArmorMaterial {
 		this.soundEvent = p_i231593_7_;
 		this.toughness = p_i231593_8_;
 		this.knockbackResistance = p_i231593_9_;
-		this.repairMaterial = new LazyLoadedValue<>(p_i231593_10_);
+		this.repairMaterial = Suppliers.memoize(p_i231593_10_::get);
 	}
 
 	public int getDurabilityForSlot(EquipmentSlot p_200896_1_) {
