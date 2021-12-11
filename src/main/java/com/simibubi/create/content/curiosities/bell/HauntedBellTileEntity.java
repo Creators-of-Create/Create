@@ -1,11 +1,9 @@
 package com.simibubi.create.content.curiosities.bell;
 
-import java.util.List;
 import java.util.Random;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,9 +26,6 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	public HauntedBellTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
-
-	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) { }
 
 	@Override
 	public PartialModel getBellModel() {
@@ -65,8 +60,8 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		effectTicks = compound.getInt("EffectTicks");
 	}
 

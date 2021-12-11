@@ -275,12 +275,12 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		heldItem = null;
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (compound.contains("HeldItem"))
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Nullable

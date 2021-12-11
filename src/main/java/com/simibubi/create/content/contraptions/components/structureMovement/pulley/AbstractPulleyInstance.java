@@ -1,19 +1,19 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.MovingListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightPacking;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.LightVolume;
+import com.jozufozu.flywheel.light.MovingListener;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;

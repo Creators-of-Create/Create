@@ -82,7 +82,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRen
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
 		ListTag flapsNBT = compound.getList("Flaps", Tag.TAG_INT);
 		for (Tag inbt : flapsNBT)
@@ -106,7 +106,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRen
 		// Backwards compat
 		if (!compound.contains("Sides") && compound.contains("Flaps"))
 			sides.addAll(flaps.keySet());
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 		if (clientPacket)
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}

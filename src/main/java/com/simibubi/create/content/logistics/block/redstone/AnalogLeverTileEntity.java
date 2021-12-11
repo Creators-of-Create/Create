@@ -34,11 +34,11 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		lastChange = compound.getInt("ChangeTimer");
 		clientState.target(state);
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

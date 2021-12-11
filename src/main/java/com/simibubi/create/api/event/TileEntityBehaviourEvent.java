@@ -12,18 +12,18 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
 /**
- * Event that is fired just before a SmartTileEntity is being deserealized <br>
+ * Event that is fired just before a SmartTileEntity is being deserialized<br>
  * Also if a new one is placed<br>
  * Use it to attach a new {@link TileEntityBehaviour} or replace existing ones
- * (with caution) <br>
+ * (with caution)<br>
  * <br>
  * Actual setup of the behaviours internal workings and data should be done in
  * TileEntityBehaviour#read() and TileEntityBehaviour#initialize()
  * respectively.<br>
  * <br>
- * Because of the earlyness of this event, the added behaviours will have access
- * to the initial nbt read (unless the TE was placed, not loaded), thereby
- * allowing tiles to store and retrieve data for injected behaviours
+ * Because of the earliness of this event, the added behaviours will have access
+ * to the initial NBT read (unless the TE was placed, not loaded), thereby
+ * allowing tiles to store and retrieve data for injected behaviours.
  */
 public class TileEntityBehaviourEvent<T extends SmartTileEntity> {
 

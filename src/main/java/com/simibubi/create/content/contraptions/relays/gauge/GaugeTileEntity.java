@@ -31,10 +31,10 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		dialTarget = compound.getFloat("Value");
 		color = compound.getInt("Color");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

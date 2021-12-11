@@ -95,8 +95,8 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		int prev = airLevel;
 		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
 		airLevel = compound.getInt("Air");

@@ -85,12 +85,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
 		prevRunningTicks = runningTicks = compound.getInt("Ticks");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (clientPacket) {
 			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", Tag.TAG_COMPOUND),

@@ -70,8 +70,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		pointer.readNBT(compound.getCompound("Pointer"), clientPacket);
 	}
 

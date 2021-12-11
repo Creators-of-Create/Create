@@ -16,37 +16,28 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class SmartTileEntity extends SyncedTileEntity implements IPartialSafeNBT, IInteractionChecker {
 
-	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
-	// Internally maintained to be identical to behaviorMap.values() in order to
-	// improve iteration performance.
-	private final List<TileEntityBehaviour> behaviourList;
-	private boolean initialized;
-	private boolean firstNbtRead;
+	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
+	private boolean initialized = false;
+	private boolean firstNbtRead = true;
 	private int lazyTickRate;
 	private int lazyTickCounter;
 
 	// Used for simulating this TE in a client-only setting
 	private boolean virtualMode;
 
-	public SmartTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
-		super(tileEntityTypeIn, pos, state);
-		behaviours = new HashMap<>();
-		initialized = false;
-		firstNbtRead = true;
+	public SmartTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+
 		setLazyTickRate(10);
 
 		ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 		addBehaviours(list);
 		list.forEach(b -> behaviours.put(b.getType(), b));
-
-		behaviourList = new ArrayList<>(list.size());
-		updateBehaviorList();
 	}
 
 	public abstract void addBehaviours(List<TileEntityBehaviour> behaviours);
@@ -56,6 +47,16 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	 * here that depends on your custom te data.
 	 */
 	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {}
+
+	public void initialize() {
+		if (firstNbtRead) {
+			firstNbtRead = false;
+			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent<>(getBlockState(), this, behaviours));
+		}
+
+		forEachBehaviour(TileEntityBehaviour::initialize);
+		lazyTick();
+	}
 
 	public void tick() {
 		if (!initialized && hasLevel()) {
@@ -68,77 +69,89 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 			lazyTick();
 		}
 
-		behaviourList.forEach(TileEntityBehaviour::tick);
+		forEachBehaviour(TileEntityBehaviour::tick);
 	}
 
-	public void initialize() {
-		if (firstNbtRead) {
-			firstNbtRead = false;
-			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent(getBlockState(), this, behaviours));
-			updateBehaviorList();
-		}
-
-		behaviourList.forEach(TileEntityBehaviour::initialize);
-		lazyTick();
-	}
-
-	@Override
-	public final void saveAdditional(CompoundTag compound) {
-		write(compound, false);
-	}
-
-	@Override
-	public final CompoundTag writeToClient(CompoundTag compound) {
-		write(compound, true);
-		return compound;
-	}
-
-	@Override
-	public final void readClientUpdate(CompoundTag tag) {
-		fromTag(tag, true);
-	}
-
-	@Override
-	public final void load(CompoundTag tag) {
-		fromTag(tag, false);
+	public void lazyTick() {
 	}
 
 	/**
 	 * Hook only these in future subclasses of STE
 	 */
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void write(CompoundTag tag, boolean clientPacket) {
+		super.saveAdditional(tag);
+		forEachBehaviour(tb -> tb.write(tag, clientPacket));
+	}
+
+	@Override
+	public void writeSafe(CompoundTag tag, boolean clientPacket) {
+		super.saveAdditional(tag);
+		forEachBehaviour(tb -> {
+			if (tb.isSafeNBT())
+				tb.write(tag, clientPacket);
+		});
+	}
+
+	/**
+	 * Hook only these in future subclasses of STE
+	 */
+	protected void read(CompoundTag tag, boolean clientPacket) {
 		if (firstNbtRead) {
 			firstNbtRead = false;
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
 			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent(getBlockState(), this, behaviours));
-			updateBehaviorList();
 		}
-		super.load(compound);
-		behaviourList.forEach(tb -> tb.read(compound, clientPacket));
-	}
-
-	/**
-	 * Hook only these in future subclasses of STE
-	 */
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.saveAdditional(compound);
-		behaviourList.forEach(tb -> tb.write(compound, clientPacket));
+		super.load(tag);
+		forEachBehaviour(tb -> tb.read(tag, clientPacket));
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.saveAdditional(compound);
-		behaviourList.forEach(tb -> {
-			if (tb.isSafeNBT())
-				tb.write(compound, clientPacket);
-		});
+	public final void load(CompoundTag tag) {
+		read(tag, false);
+	}
+
+	@Override
+	public final void saveAdditional(CompoundTag tag) {
+		write(tag, false);
+	}
+
+	@Override
+	public final void readClient(CompoundTag tag) {
+		read(tag, true);
+	}
+
+	@Override
+	public final CompoundTag writeClient(CompoundTag tag) {
+		write(tag, true);
+		return tag;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
+		return (T) behaviours.get(type);
+	}
+
+	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {
+		behaviours.values().forEach(action);
+	}
+
+	protected void attachBehaviourLate(TileEntityBehaviour behaviour) {
+		behaviours.put(behaviour.getType(), behaviour);
+		behaviour.initialize();
 	}
 
 	public ItemRequirement getRequiredItems() {
-		return behaviourList.stream()
-			.reduce(ItemRequirement.NONE, (a, b) -> a.with(b.getRequiredItems()), (a, b) -> a.with(b));
+		return behaviours.values().stream()
+			.reduce(ItemRequirement.NONE, (r, b) -> r.with(b.getRequiredItems()), (r, r1) -> r.with(r1));
+	}
+
+	protected void removeBehaviour(BehaviourType<?> type) {
+		TileEntityBehaviour remove = behaviours.remove(type);
+		if (remove != null) {
+			remove.remove();
+		}
 	}
 
 	@Override
@@ -151,51 +164,6 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 		this.lazyTickRate = slowTickRate;
 		this.lazyTickCounter = slowTickRate;
 	}
-
-	public void lazyTick() {
-
-	}
-
-	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {
-		behaviourList.forEach(action);
-	}
-
-	protected void attachBehaviourLate(TileEntityBehaviour behaviour) {
-		behaviours.put(behaviour.getType(), behaviour);
-		behaviour.initialize();
-
-		updateBehaviorList();
-	}
-
-	protected void removeBehaviour(BehaviourType<?> type) {
-		TileEntityBehaviour remove = behaviours.remove(type);
-		if (remove != null) {
-			remove.remove();
-			updateBehaviorList();
-		}
-	}
-
-	// We don't trust the input to the API will be sane, so we
-	// update all the contents whenever something changes. It's
-	// simpler than trying to manipulate the list one element at
-	// a time.
-	private void updateBehaviorList() {
-		behaviourList.clear();
-		behaviourList.addAll(behaviours.values());
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
-		return (T) behaviours.get(type);
-	}
-
-//	protected boolean isItemHandlerCap(Capability<?> cap) {
-//		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-//	}
-//
-//	protected boolean isFluidHandlerCap(Capability<?> cap) {
-//		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
-//	}
 
 	public void markVirtual() {
 		virtualMode = true;
@@ -222,4 +190,12 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	public void refreshBlockState() {
 		setBlockState(getLevel().getBlockState(getBlockPos()));
 	}
+
+//	protected boolean isItemHandlerCap(Capability<?> cap) {
+//		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+//	}
+//
+//	protected boolean isFluidHandlerCap(Capability<?> cap) {
+//		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+//	}
 }

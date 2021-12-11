@@ -65,10 +65,10 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		if (!wasMoved)
 			lastGeneratedSpeed = compound.getFloat("LastGenerated");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

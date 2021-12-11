@@ -15,7 +15,6 @@ import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
-import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

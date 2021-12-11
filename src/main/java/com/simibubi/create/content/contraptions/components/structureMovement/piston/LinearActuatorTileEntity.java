@@ -194,7 +194,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		boolean forceMovement = compound.contains("ForceMovement");
 		float offsetBefore = offset;
 
@@ -202,7 +202,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		waitingForSpeedChange = compound.getBoolean("Waiting");
 		offset = compound.getFloat("Offset");
 		lastException = AssemblyException.read(compound);
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

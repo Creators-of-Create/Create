@@ -314,9 +314,9 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		reversed = compound.getBoolean("Reversed");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	public void updatePipesOnSide(Direction side) {

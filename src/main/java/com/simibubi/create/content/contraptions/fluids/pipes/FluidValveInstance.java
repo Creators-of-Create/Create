@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;

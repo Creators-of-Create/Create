@@ -1,9 +1,9 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,8 +32,8 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
         double[] cannonAngles = SchematicannonRenderer.getCannonAngles(tile, pos, partialTicks);
 
-        double pitch = cannonAngles[0];
-        double yaw = cannonAngles[1];
+        double yaw = cannonAngles[0];
+        double pitch = cannonAngles[1];
 
         double recoil = SchematicannonRenderer.getRecoil(tile, partialTicks);
 

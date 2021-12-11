@@ -193,10 +193,10 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
 		needsContraption = compound.getBoolean("NeedsContraption");
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	@Override

@@ -72,10 +72,6 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
 
-	public enum State {
-		STOPPED, PAUSED, RUNNING;
-	}
-
 	// Inventory
 	public SchematicannonInventory inventory;
 
@@ -114,11 +110,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 	// Render
 	public boolean firstRenderTick;
-
-	@Override
-	public AABB getRenderBoundingBox() {
-		return INFINITE_EXTENT_AABB;
-	}
+	public float defaultYaw;
 
 	public SchematicannonTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -156,7 +148,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		if (!clientPacket) {
 			inventory.deserializeNBT(compound.getCompound("Inventory"));
 		}
@@ -186,7 +178,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (compound.contains("FlyingBlocks"))
 			readFlyingBlocks(compound);
 
-		super.fromTag(compound, clientPacket);
+		defaultYaw = compound.getFloat("DefaultYaw");
+
+		super.read(compound, clientPacket);
 	}
 
 	protected void readFlyingBlocks(CompoundTag compound) {
@@ -261,6 +255,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		for (LaunchedItem b : flyingBlocks)
 			tagFlyingBlocks.add(b.serializeNBT());
 		compound.put("FlyingBlocks", tagFlyingBlocks);
+
+		compound.putFloat("DefaultYaw", defaultYaw);
 
 		super.write(compound, clientPacket);
 	}
@@ -822,8 +818,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
+	public AABB getRenderBoundingBox() {
+		return INFINITE_EXTENT_AABB;
+	}
+
+	@Override
 	public boolean shouldRenderNormally() {
 		return true;
+	}
+
+	public enum State {
+		STOPPED, PAUSED, RUNNING;
 	}
 
 }

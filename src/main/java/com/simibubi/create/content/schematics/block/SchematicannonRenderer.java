@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -31,34 +30,33 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	public boolean shouldRenderOffScreen(SchematicannonTileEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
 		return true;
 	}
 
 	@Override
-	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, PoseStack ms,
+	protected void renderSafe(SchematicannonTileEntity tileEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
-		boolean blocksLaunching = !tileEntityIn.flyingBlocks.isEmpty();
+		boolean blocksLaunching = !tileEntity.flyingBlocks.isEmpty();
 		if (blocksLaunching)
-			renderLaunchedBlocks(tileEntityIn, partialTicks, ms, buffer, light, overlay);
+			renderLaunchedBlocks(tileEntity, partialTicks, ms, buffer, light, overlay);
 
 		if (Backend.getInstance()
-			.canUseInstancing(tileEntityIn.getLevel()))
+			.canUseInstancing(tileEntity.getLevel()))
 			return;
 
-		BlockPos pos = tileEntityIn.getBlockPos();
+		BlockPos pos = tileEntity.getBlockPos();
+		BlockState state = tileEntity.getBlockState();
 
-		double[] cannonAngles = getCannonAngles(tileEntityIn, pos, partialTicks);
+		double[] cannonAngles = getCannonAngles(tileEntity, pos, partialTicks);
 
-		double pitch = cannonAngles[0];
-		double yaw = cannonAngles[1];
+		double yaw = cannonAngles[0];
+		double pitch = cannonAngles[1];
 
-		double recoil = getRecoil(tileEntityIn, partialTicks);
+		double recoil = getRecoil(tileEntity, partialTicks);
 
 		ms.pushPose();
-		BlockState state = tileEntityIn.getBlockState();
-		int lightCoords = LevelRenderer.getLightColor(tileEntityIn.getLevel(), pos);
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
@@ -66,7 +64,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		connector.translate(.5f, 0, .5f);
 		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(-.5f, 0, -.5f);
-		connector.light(lightCoords)
+		connector.light(light)
 			.renderInto(ms, vb);
 
 		SuperByteBuffer pipe = CachedBufferer.partial(AllBlockPartials.SCHEMATICANNON_PIPE, state);
@@ -75,15 +73,15 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
 		pipe.translate(-.5f, -15 / 16f, -.5f);
 		pipe.translate(0, -recoil / 100, 0);
-		pipe.light(lightCoords)
+		pipe.light(light)
 			.renderInto(ms, vb);
 
 		ms.popPose();
 	}
 
 	public static double[] getCannonAngles(SchematicannonTileEntity tile, BlockPos pos, float partialTicks) {
-		double yaw = 0;
-		double pitch = 40;
+		double yaw;
+		double pitch;
 
 		BlockPos target = tile.printer.getCurrentTarget();
 		if (target != null) {
@@ -106,9 +104,12 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			pitch = Mth.atan2(distance, diff.y() * 3 + yOffset);
 			pitch = pitch / Math.PI * 180 + 10;
 
+		} else {
+			yaw = tile.defaultYaw;
+			pitch = 40;
 		}
 
-		return new double[] { pitch, yaw };
+		return new double[] { yaw, pitch };
 	}
 
 	public static double getRecoil(SchematicannonTileEntity tileEntityIn, float partialTicks) {

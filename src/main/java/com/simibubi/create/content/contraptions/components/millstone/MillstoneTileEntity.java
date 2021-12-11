@@ -165,11 +165,11 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, boolean clientPacket) {
 		timer = compound.getInt("Timer");
 		inputInv.deserializeNBT(compound.getCompound("InputInventory"));
 		outputInv.deserializeNBT(compound.getCompound("OutputInventory"));
-		super.fromTag(compound, clientPacket);
+		super.read(compound, clientPacket);
 	}
 
 	public int getProcessingSpeed() {

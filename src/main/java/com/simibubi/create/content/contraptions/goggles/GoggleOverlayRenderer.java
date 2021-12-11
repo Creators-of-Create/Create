@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.utility.outliner.Outline;
 import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -150,10 +149,7 @@ public class GoggleOverlayRenderer {
 			return;
 
 		poseStack.pushPose();
-		Screen tooltipScreen = new TooltipScreen(new TextComponent(""));
-		tooltipScreen.init(mc, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 
-		int titleLinesCount = 1;
 		int tooltipTextWidth = 0;
 		for (FormattedText textLine : tooltip) {
 			int textLineWidth = mc.font.width(textLine);
@@ -163,17 +159,16 @@ public class GoggleOverlayRenderer {
 
 		int tooltipHeight = 8;
 		if (tooltip.size() > 1) {
+			tooltipHeight += 2; // gap between title lines and next lines
 			tooltipHeight += (tooltip.size() - 1) * 10;
-			if (tooltip.size() > titleLinesCount)
-				tooltipHeight += 2; // gap between title lines and next lines
 		}
 
 		CClient cfg = AllConfigs.CLIENT;
-		int posX = tooltipScreen.width / 2 + cfg.overlayOffsetX.get();
-		int posY = tooltipScreen.height / 2 + cfg.overlayOffsetY.get();
+		int posX = mc.getWindow().getGuiScaledWidth() / 2 + cfg.overlayOffsetX.get();
+		int posY = mc.getWindow().getGuiScaledHeight() / 2 + cfg.overlayOffsetY.get();
 
-		posX = Math.min(posX, tooltipScreen.width - tooltipTextWidth - 20);
-		posY = Math.min(posY, tooltipScreen.height - tooltipHeight - 20);
+		posX = Math.min(posX, mc.getWindow().getGuiScaledWidth() - tooltipTextWidth - 20);
+		posY = Math.min(posY, mc.getWindow().getGuiScaledHeight() - tooltipHeight - 20);
 
 		float fade = Mth.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();
@@ -194,7 +189,7 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
+		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1,
 			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
@@ -205,26 +200,11 @@ public class GoggleOverlayRenderer {
 	}
 
 	/**
-	 * Use this method to add custom entry points to the goggle overay, e.g. custom
+	 * Use this method to add custom entry points to the goggles overlay, e.g. custom
 	 * armor, handheld alternatives, etc.
 	 */
 	public static void registerCustomGoggleCondition(Supplier<Boolean> condition) {
 		customGogglePredicates.add(condition);
-	}
-
-	public static final class TooltipScreen extends Screen {
-		public TooltipScreen(Component p_i51108_1_) {
-			super(p_i51108_1_);
-		}
-
-//		@Override
-//		public void init(Minecraft mc, int width, int height) {
-//			this.minecraft = mc;
-//			this.itemRenderer = mc.getItemRenderer();
-//			this.font = mc.font;
-//			this.width = width;
-//			this.height = height;
-//		}
 	}
 
 }

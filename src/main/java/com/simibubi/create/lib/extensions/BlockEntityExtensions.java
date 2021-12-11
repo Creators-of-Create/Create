@@ -7,7 +7,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface BlockEntityExtensions {
-	CompoundTag create$getExtraCustomData();
+	default CompoundTag create$getExtraCustomData() {
+		return null;
+	}
 
 	void create$deserializeNBT(BlockState state, CompoundTag nbt);
 

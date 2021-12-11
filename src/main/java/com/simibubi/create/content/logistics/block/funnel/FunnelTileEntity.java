@@ -323,8 +323,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)

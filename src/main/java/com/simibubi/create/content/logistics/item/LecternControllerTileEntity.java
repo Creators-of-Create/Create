@@ -58,8 +58,8 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(CompoundTag compound, boolean clientPacket) {
-		super.fromTag(compound, clientPacket);
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
 		controller = ItemStack.of(compound.getCompound("Controller"));
 		user = compound.hasUUID("User") ? compound.getUUID("User") : null;
 	}

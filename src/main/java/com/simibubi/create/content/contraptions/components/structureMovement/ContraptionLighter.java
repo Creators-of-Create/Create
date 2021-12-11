@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.jozufozu.flywheel.light.GPULightVolume;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.ListenerStatus;
@@ -52,9 +52,8 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
     }
 
     protected void growBoundsForEdgeData() {
-        bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
-        bounds.setMinY(Math.max(bounds.getMinY(), 0));
-        bounds.setMaxY(Math.min(bounds.getMaxY(), 255));
+        // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
+        bounds.grow(2);
 	}
 
 	@Override

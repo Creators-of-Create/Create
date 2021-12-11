@@ -114,8 +114,8 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	//
 
 	@Override
-	protected void fromTag(CompoundTag nbt, boolean clientPacket) {
-		super.fromTag(nbt, clientPacket);
+	protected void read(CompoundTag nbt, boolean clientPacket) {
+		super.read(nbt, clientPacket);
 
 		if (nbt.contains("RawCustomText", Tag.TAG_STRING)) {
 			rawCustomText = getJsonFromString(nbt.getString("RawCustomText"));
@@ -164,7 +164,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 
 	private JsonElement getJsonFromString(String string) {
 		try {
-			return new JsonParser().parse(string);
+			return JsonParser.parseString(string);
 		} catch (JsonParseException e) {
 			return null;
 		}
