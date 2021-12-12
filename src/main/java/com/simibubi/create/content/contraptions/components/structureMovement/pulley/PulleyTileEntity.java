@@ -207,7 +207,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected int getExtensionRange() {
-		return Math.max(0, Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), (worldPosition.getY() - 1) + 64));
+		return Math.max(0, Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), (worldPosition.getY() - 1) - level.getMinBuildHeight()));
 	}
 
 	@Override
