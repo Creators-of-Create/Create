@@ -30,9 +30,7 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
 
-    #if defined(USE_FOG)
-    FragDistance = length(worldPos.xyz);
-    #endif
+    FragDistance = max(length(worldPos.xz), abs(worldPos.y)); // cylindrical fog
 
     gl_Position = uViewProjection * worldPos;
 }
@@ -57,13 +55,11 @@ vec4 FLWBlockTexture(vec2 texCoords) {
 }
 
 void FLWFinalizeColor(vec4 color) {
-    #if defined(USE_FOG)
     float a = color.a;
     float fog = clamp(FLWFogFactor(), 0., 1.);
 
     color = mix(uFogColor, color, fog);
     color.a = a;
-    #endif
 
     #if defined(ALPHA_DISCARD)
     if (color.a < ALPHA_DISCARD) {
