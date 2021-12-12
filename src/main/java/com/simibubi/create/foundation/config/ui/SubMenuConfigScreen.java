@@ -150,7 +150,12 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
 				ForgeConfigSpec.ConfigValue configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw((List<String>) configValue.getPath());
-				List<String> comments = new ArrayList<>(Arrays.asList(valueSpec.getComment().split("\n")));
+
+				List<String> comments = new ArrayList<>();
+
+				if (valueSpec.getComment() != null)
+					comments.addAll(Arrays.asList(valueSpec.getComment().split("\n")));
+
 				Pair<String, Map<String, String>> metadata = ConfigHelper.readMetadataFromComment(comments);
 
 				ConfigHelper.setValue(String.join(".", configValue.getPath()), configValue, valueSpec.getDefault(), metadata.getSecond());
