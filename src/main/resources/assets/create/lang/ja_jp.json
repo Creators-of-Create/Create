@@ -193,7 +193,7 @@
 	"block.create.dark_oak_window": "ダークオークの窓",
 	"block.create.dark_oak_window_pane": "ダークオークの窓板",
 	"block.create.deepslate_pillar": "深層岩の柱",
-	"block.create.deepslate_zinc_ore": "深層岩 Zinc Ore",
+	"block.create.deepslate_zinc_ore": "深層亜鉛鉱石",
 	"block.create.deployer": "デプロイヤー",
 	"block.create.depot": "デポ",
 	"block.create.diorite_pillar": "閃緑岩の柱",
@@ -2263,7 +2263,7 @@
 	"create.ponder.pulse_extender.header": "パルスエクステンダーによる信号制御",
 	"create.ponder.pulse_extender.text_1": "パルスエクステンダーは通過する信号を長くします",
 	"create.ponder.pulse_extender.text_2": "短時間の遅延の後...",
-	"create.ponder.pulse_extender.text_3": "...設定した時間だけ信号を出し、クールダウンに入ります",
+	"create.ponder.pulse_extender.text_3": "...設定した時間だけ信号を出します",
 	"create.ponder.pulse_extender.text_4": "マウスホイールで、信号を出す時間を調整できます",
 	"create.ponder.pulse_extender.text_5": "最大で30分まで設定できます",
 
