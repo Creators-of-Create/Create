@@ -76,8 +76,7 @@ public abstract class ClientPacketListenerMixin {
 			} else if (blockEntity instanceof CustomDataPacketHandlingTileEntity) {
 				((CustomDataPacketHandlingTileEntity) blockEntity).onDataPacket(connection, clientboundBlockEntityDataPacket);
 			}
-		} else {
-			create$tileEntityHandled = false;
 		}
+		create$tileEntityHandled = false;
 	}
 }

@@ -10,7 +10,12 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+
+boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
+ext.buildnumber = 0
+project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
+
+version = "mc${project.minecraft_version}_v${project.mod_version}" + (dev && !buildnumber.equals('custom') ? "+${buildnumber}" : '')
 group = project.maven_group
 
 repositories {

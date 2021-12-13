@@ -51,8 +51,9 @@
 
   "depends": {
     "fabricloader": ">=0.12.11",
-    "fabric": "*",
-    "minecraft": "1.18.x",
-    "registrate": "*"
+    "fabric": ">=0.44.0",
+    "minecraft": ">=1.18.1",
+    "registrate": "*",
+    "flywheel": "*"
   }
 }

@@ -10,7 +10,7 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 
 @Mixin(Biome.class)
 public interface BiomeAccessor {
-	@Invoker
+	@Invoker("<init>")
 	static Biome createBiome(Biome.ClimateSettings climateSettings, Biome.BiomeCategory biomeCategory, BiomeSpecialEffects biomeSpecialEffects, BiomeGenerationSettings biomeGenerationSettings, MobSpawnSettings mobSpawnSettings) {
 		throw new UnsupportedOperationException();
 	}

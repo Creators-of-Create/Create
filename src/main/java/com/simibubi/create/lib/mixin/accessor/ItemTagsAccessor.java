@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 @Mixin(ItemTags.class)
 public interface ItemTagsAccessor {
-	@Invoker
+	@Invoker("bind")
 	static Tag.Named<Item> callBind(String string) {
 		throw new UnsupportedOperationException();
 	}

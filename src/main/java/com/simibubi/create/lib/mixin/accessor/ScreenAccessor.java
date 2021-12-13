@@ -16,6 +16,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 
 import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.injection.Coerce;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Screen.class)
@@ -28,7 +29,4 @@ public interface ScreenAccessor {
 
 	@Accessor("children")
 	List<GuiEventListener> create$getChildren();
-
-	@Invoker("addRenderableWidget")
-	<T extends GuiEventListener & Widget & NarratableEntry> T create$addRenderableWidget(T widget);
 }

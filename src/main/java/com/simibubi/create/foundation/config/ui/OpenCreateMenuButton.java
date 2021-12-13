@@ -111,7 +111,7 @@ public class OpenCreateMenuButton extends Button {
 						.map(w -> (AbstractWidget) w)
 						.filter(w -> w.getMessage().getString().equals(target))
 						.findFirst()
-						.ifPresent(w -> ((ScreenAccessor) gui).create$addRenderableWidget(
+						.ifPresent(w -> gui.addRenderableWidget(
 								new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
 						));
 			}

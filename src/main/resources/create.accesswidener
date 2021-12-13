@@ -27,3 +27,5 @@ extendable class net/minecraft/world/inventory/MenuType$MenuSupplier
 accessible method net/minecraft/world/entity/LivingEntity spawnItemParticles (Lnet/minecraft/world/item/ItemStack;I)V
 
 accessible method net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/nbt/CompoundTag;)V
+
+accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;

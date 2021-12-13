@@ -8,6 +8,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Mixin(BlockEntity.class)
 public interface BlockEntityAccessor {
-	@Invoker
+	@Invoker("saveMetadata")
 	void callSaveMetadata(CompoundTag compoundTag);
 }
