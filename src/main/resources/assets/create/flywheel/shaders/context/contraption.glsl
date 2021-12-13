@@ -30,9 +30,7 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
 
-    #if defined(USE_FOG)
-    FragDistance = length(worldPos.xyz);
-    #endif
+    FragDistance = max(length(worldPos.xz), abs(worldPos.y)); // cylindrical fog
 
     gl_Position = uViewProjection * worldPos;
 }
@@ -41,12 +39,13 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 #use "flywheel:core/lightutil.glsl"
 
 #define ALPHA_DISCARD 0.1
-//
-//#if defined(ALPHA_DISCARD)
-//#if defined(GL_ARB_conservative_depth)
-//layout (depth_greater) out float gl_FragDepth;
-//#endif
-//#endif
+// optimize discard usage
+#if defined(ALPHA_DISCARD)
+#if defined(GL_ARB_conservative_depth)
+#extension GL_ARB_conservative_depth : enable
+layout (depth_greater) out float gl_FragDepth;
+#endif
+#endif
 
 in vec3 BoxCoord;
 
@@ -57,13 +56,11 @@ vec4 FLWBlockTexture(vec2 texCoords) {
 }
 
 void FLWFinalizeColor(vec4 color) {
-    #if defined(USE_FOG)
     float a = color.a;
     float fog = clamp(FLWFogFactor(), 0., 1.);
 
     color = mix(uFogColor, color, fog);
     color.a = a;
-    #endif
 
     #if defined(ALPHA_DISCARD)
     if (color.a < ALPHA_DISCARD) {

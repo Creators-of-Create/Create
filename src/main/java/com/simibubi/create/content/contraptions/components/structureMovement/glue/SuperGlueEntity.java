@@ -185,7 +185,7 @@ public class SuperGlueEntity extends Entity
 	public boolean onValidSurface() {
 		BlockPos pos = hangingPosition;
 		BlockPos pos2 = hangingPosition.relative(getFacingDirection().getOpposite());
-		if (pos2.getY() >= 256)
+		if (level.isOutsideBuildHeight(pos2))
 			return false;
 		if (!LevelUtil.isAreaLoaded(level, pos, 0) || !LevelUtil.isAreaLoaded(level, pos2, 0))
 			return true;
