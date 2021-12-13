@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 
+import com.simibubi.create.lib.utility.LevelUtil;
 import com.simibubi.create.lib.utility.PlantUtil;
 
 import net.minecraft.core.BlockPos;
@@ -205,7 +206,7 @@ public class BlockHelper {
 		}
 		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
 		chunk.setUnsaved(true);
-//		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
+		LevelUtil.markAndNotifyBlock(world, target, chunk, old, state, 82, 512);
 
 		world.setBlock(target, state, 82);
 		world.neighborChanged(target, world.getBlockState(target.below())

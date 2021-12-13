@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.lib.helper.EntityHelper;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -67,7 +67,7 @@ public class ToolboxHandler {
 			BlockPos pos = NbtUtils.readBlockPos(data.getCompound("Pos"));
 			int slot = data.getInt("Slot");
 
-			if (!LoadedCheckUtil.isAreaLoaded(world, pos, 0))
+			if (!LevelUtil.isAreaLoaded(world, pos, 0))
 				continue;
 			if (!(world.getBlockState(pos)
 				.getBlock() instanceof ToolboxBlock)) {

@@ -35,7 +35,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(toolboxPos != null);
 		if (toolboxPos != null)
 			buffer.writeBlockPos(toolboxPos);

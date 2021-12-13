@@ -30,8 +30,8 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		super.write(buffer);
+	public void encode(FriendlyByteBuf buffer) {
+		super.encode(buffer);
 		buffer.writeVarInt(button);
 		buffer.writeBlockPos(linkLocation);
 	}

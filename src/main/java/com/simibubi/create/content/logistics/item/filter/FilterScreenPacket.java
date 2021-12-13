@@ -33,7 +33,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(option.ordinal());
 		buffer.writeNbt(data);
 	}

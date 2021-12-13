@@ -3,7 +3,7 @@ package com.simibubi.create.content.palettes;
 import java.util.Random;
 
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -57,7 +57,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
-					if (!LoadedCheckUtil.isAreaLoaded(level, currentPos, 1))
+					if (!LevelUtil.isAreaLoaded(level, currentPos, 1))
 						break;
 
 					BlockState other1 = currentPos.equals(pos) ? state : level.getBlockState(currentPos);

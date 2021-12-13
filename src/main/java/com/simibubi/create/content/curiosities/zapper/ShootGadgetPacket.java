@@ -31,7 +31,7 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 		readAdditional(buffer);
 	}
 
-	public final void write(FriendlyByteBuf buffer) {
+	public final void encode(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(hand == InteractionHand.MAIN_HAND);
 		buffer.writeBoolean(self);
 		buffer.writeDouble(location.x);

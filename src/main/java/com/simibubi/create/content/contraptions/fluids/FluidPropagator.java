@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 public class FluidPropagator {
 
@@ -58,7 +58,7 @@ public class FluidPropagator {
 
 			for (Direction direction : getPipeConnections(currentState, pipe)) {
 				BlockPos target = currentPos.relative(direction);
-				if (!LoadedCheckUtil.isAreaLoaded(world,target, 0))
+				if (!LevelUtil.isAreaLoaded(world,target, 0))
 					continue;
 
 				BlockEntity tileEntity = world.getBlockEntity(target);

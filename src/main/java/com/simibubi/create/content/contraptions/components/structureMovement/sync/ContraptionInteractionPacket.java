@@ -36,7 +36,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(target);
 		buffer.writeInt(interactionHand == null ? -1 : interactionHand.ordinal());
 		buffer.writeBlockPos(localPos);

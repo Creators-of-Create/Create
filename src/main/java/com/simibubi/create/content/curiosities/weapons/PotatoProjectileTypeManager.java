@@ -141,7 +141,7 @@ public class PotatoProjectileTypeManager {
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buffer) {
+		public void encode(FriendlyByteBuf buffer) {
 			toBuffer(buffer);
 		}
 

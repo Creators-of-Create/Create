@@ -6,7 +6,7 @@ import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
 import com.simibubi.create.lib.entity.FakePlayer;
 
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -187,7 +187,7 @@ public class SuperGlueEntity extends Entity
 		BlockPos pos2 = hangingPosition.relative(getFacingDirection().getOpposite());
 		if (pos2.getY() >= 256)
 			return false;
-		if (!LoadedCheckUtil.isAreaLoaded(level, pos, 0) || !LoadedCheckUtil.isAreaLoaded(level, pos2, 0))
+		if (!LevelUtil.isAreaLoaded(level, pos, 0) || !LevelUtil.isAreaLoaded(level, pos2, 0))
 			return true;
 		if (!isValidFace(level, pos2, getFacingDirection())
 			&& !isValidFace(level, pos, getFacingDirection().getOpposite()))

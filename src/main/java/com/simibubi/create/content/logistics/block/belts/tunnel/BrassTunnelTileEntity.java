@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import com.simibubi.create.lib.utility.NBTSerializer;
 
@@ -341,7 +341,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!LoadedCheckUtil.isAreaLoaded(level, adjacent.getBlockPos(), 1))
+				if (!LevelUtil.isAreaLoaded(level, adjacent.getBlockPos(), 1))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)
@@ -483,7 +483,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!LoadedCheckUtil.isAreaLoaded(level, adjacent.getBlockPos(), 1))
+				if (!LevelUtil.isAreaLoaded(level, adjacent.getBlockPos(), 1))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)

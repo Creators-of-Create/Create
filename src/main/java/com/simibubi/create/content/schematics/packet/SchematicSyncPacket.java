@@ -42,7 +42,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeVarInt(slot);
 		buffer.writeBoolean(deployed);
 		buffer.writeBlockPos(anchor);

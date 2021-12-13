@@ -30,7 +30,7 @@ public class GlueEffectPacket extends SimplePacketBase {
 		fullBlock = buffer.readBoolean();
 	}
 
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeByte(direction.get3DDataValue());
 		buffer.writeBoolean(fullBlock);

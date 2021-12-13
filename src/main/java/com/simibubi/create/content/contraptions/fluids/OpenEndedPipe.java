@@ -38,7 +38,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -129,7 +129,7 @@ public class OpenEndedPipe extends FlowSource {
 		FluidStack empty = FluidStack.empty();
 		if (world == null)
 			return empty;
-		if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
+		if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
 			return empty;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -166,7 +166,7 @@ public class OpenEndedPipe extends FlowSource {
 	private boolean provideFluidToSpace(FluidStack fluid, boolean simulate) {
 		if (world == null)
 			return false;
-		if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
+		if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
 			return false;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -253,7 +253,7 @@ public class OpenEndedPipe extends FlowSource {
 			// Never allow being filled when a source is attached
 			if (world == null)
 				return 0;
-			if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
+			if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
 				return 0;
 			if (resource.isEmpty())
 				return 0;
@@ -293,7 +293,7 @@ public class OpenEndedPipe extends FlowSource {
 
 			if (world == null)
 				return empty;
-			if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
+			if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
 				return empty;
 			if (amount == 0)
 				return empty;

@@ -64,7 +64,7 @@ import com.simibubi.create.lib.transfer.item.EmptyHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, FlywheelRendered, CustomRenderBoundingBox {
@@ -362,7 +362,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		// Check block
-		if (!LoadedCheckUtil.isAreaLoaded(getLevel(), printer.getCurrentTarget(), 0)) {
+		if (!LevelUtil.isAreaLoaded(getLevel(), printer.getCurrentTarget(), 0)) {
 			positionNotLoaded = true;
 			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;

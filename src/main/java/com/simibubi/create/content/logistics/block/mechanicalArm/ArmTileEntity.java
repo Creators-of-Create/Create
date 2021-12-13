@@ -26,7 +26,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedAngle;
 
 import com.simibubi.create.lib.utility.ItemStackUtil;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import com.simibubi.create.lib.utility.NBTSerializer;
 
@@ -407,7 +407,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	protected void initInteractionPoints() {
 		if (!updateInteractionPoints || interactionPointTag == null)
 			return;
-		if (!LoadedCheckUtil.isAreaLoaded(level, worldPosition, getRange() + 1))
+		if (!LevelUtil.isAreaLoaded(level, worldPosition, getRange() + 1))
 			return;
 		inputs.clear();
 		outputs.clear();

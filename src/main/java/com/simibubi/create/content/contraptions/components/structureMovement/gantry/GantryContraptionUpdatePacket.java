@@ -27,7 +27,7 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		buffer.writeFloat((float) coord);
 		buffer.writeFloat((float) motion);

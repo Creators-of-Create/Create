@@ -81,7 +81,7 @@ public class SimpleChannel {
 		}
 		FriendlyByteBuf buf = PacketByteBufs.create();
 		buf.writeVarInt(id);
-		packet.write(buf);
+		packet.encode(buf);
 		return buf;
 	}
 
@@ -93,7 +93,7 @@ public class SimpleChannel {
 		}
 		FriendlyByteBuf buf = PacketByteBufs.create();
 		buf.writeVarInt(id);
-		packet.write(buf);
+		packet.encode(buf);
 		return buf;
 	}
 
@@ -214,7 +214,7 @@ public class SimpleChannel {
 				LOGGER.error("Could not create S2C packet in channel '" + channelName + "' with id " + id, e);
 			}
 			if (packet != null) {
-				packet.handle(client, handler, new ResponseTarget(responseSender));
+				packet.execute(client, handler, new ResponseTarget(responseSender));
 			}
 		}
 	}

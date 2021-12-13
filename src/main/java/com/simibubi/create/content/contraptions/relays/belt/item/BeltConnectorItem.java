@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -201,9 +201,9 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static boolean canConnect(Level world, BlockPos first, BlockPos second) {
-		if (!LoadedCheckUtil.isAreaLoaded(world, first, 1))
+		if (!LevelUtil.isAreaLoaded(world, first, 1))
 			return false;
-		if (!LoadedCheckUtil.isAreaLoaded(world, second, 1))
+		if (!LevelUtil.isAreaLoaded(world, second, 1))
 			return false;
 		if (!second.closerThan(first, maxLength()))
 			return false;
@@ -262,7 +262,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static boolean validateAxis(Level world, BlockPos pos) {
-		if (!LoadedCheckUtil.isAreaLoaded(world, pos, 1))
+		if (!LevelUtil.isAreaLoaded(world, pos, 1))
 			return false;
 		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
 			return false;

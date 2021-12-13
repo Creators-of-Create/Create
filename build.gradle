@@ -1,7 +1,9 @@
+//file:noinspection GroovyAssignabilityCheck
 plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
-    id("io.github.juuxel.loom-quiltflower-mini") version "1.+"
+    id 'io.github.juuxel.loom-quiltflower-mini' version '1.+'
+    id 'org.quiltmc.quilt-mappings-on-loom' version '3.1.1'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -10,24 +12,6 @@ targetCompatibility = JavaVersion.VERSION_17
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
-
-static String getTerraformersMCMaven() { // thanks LambdAurora
-    def terraformersUrl = 'https://maven.terraformersmc.com/'
-    if (pingUrl(terraformersUrl))
-        return terraformersUrl
-    else
-        return 'https://maven.kotlindiscord.com/repository/terraformers/'
-}
-
-static boolean pingUrl(String address) {
-    try {
-        def conn = (HttpURLConnection) new URL(address).openConnection()
-        int responseCode = conn.getResponseCode()
-        return (200 <= responseCode && responseCode <= 399)
-    } catch (IOException ignored) {
-        return false
-    }
-}
 
 repositories {
     mavenCentral()
@@ -43,7 +27,7 @@ repositories {
     maven { url = "https://ladysnake.jfrog.io/artifactory/mods" }
     maven { url = "https://maven.kotlindiscord.com/repository/terraformers/" }
     maven { url = "https://maven.devos.community/releases/" }
-    maven { url = getTerraformersMCMaven() }
+    maven { url = "https://maven.terraformersmc.com/" }
     maven {
         url = "https://jitpack.io/"
         content {
@@ -58,13 +42,18 @@ repositories {
             includeGroup("com.jamieswhiteshirt")
         }
     }
-    mavenLocal()
 }
 
 dependencies {
     // dev env
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
-    mappings loom.officialMojangMappings()
+    // THIS IS SO CURSED I LOVE IT
+    // names of mojmap with the docs and params of parchment, then docs and params of QM as fallback
+    mappings loom.layered {
+        it.addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.18.1-rc3+build.4:v2")) // https://maven.quiltmc.org/#browse/browse:release
+        it.parchment("org.parchmentmc.data:parchment-1.18.1:BLEEDING-20211212.174449-1@zip") // https://ldtteam.jfrog.io/ui/native/parchmentmc-public/org/parchmentmc/data/parchment-1.18.1/BLEEDING-SNAPSHOT
+        it.officialMojangMappings()
+    }
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") { exclude(group: "net.fabricmc.fabric-api") }
     modApi(include("me.shedaniel.cloth:basic-math:0.6.0"))
@@ -76,11 +65,11 @@ dependencies {
 
     // dependencies
     modImplementation(include("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"))
+    modImplementation(include("me.alphamode:ForgeTags:1.0"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
     implementation(include('com.electronwill.night-config:core:3.6.0'))
     implementation(include('com.electronwill.night-config:toml:3.6.0'))
     modImplementation(include("com.tterrag.registrate:Registrate:${project.registrate_version}"))
-    //modImplementation(include("com.tterrag:registrate-fabric:${project.registrate_version}"))
     modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))

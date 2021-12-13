@@ -19,7 +19,7 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -426,7 +426,7 @@ public class RotationPropagator {
 	private static List<BlockPos> getPotentialNeighbourLocations(KineticTileEntity te) {
 		List<BlockPos> neighbours = new LinkedList<>();
 
-		if (!LoadedCheckUtil.isAreaLoaded(te.getLevel(), te.getBlockPos(), 1))
+		if (!LevelUtil.isAreaLoaded(te.getLevel(), te.getBlockPos(), 1))
 			return neighbours;
 
 		for (Direction facing : Iterate.directions)

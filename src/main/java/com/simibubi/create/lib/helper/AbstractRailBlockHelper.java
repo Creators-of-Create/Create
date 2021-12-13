@@ -13,10 +13,10 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 
 public class AbstractRailBlockHelper {
 	public static RailShape getDirectionOfRail(BlockState state, BlockGetter world, BlockPos pos, @Nullable BaseRailBlock cart) {
-		return ((BaseRailBlockExtensions) cart).create$getRailDirection(state, world, pos, cart);
+		return ((BaseRailBlockExtensions) state.getBlock()).create$getRailDirection(state, world, pos, cart);
 	}
 
 	public static RailShape getDirectionOfRail(BlockState state, @Nullable BaseRailBlock cart) {
-		return ((BaseRailBlockExtensions) cart).create$getRailDirection(state);
+		return ((BaseRailBlockExtensions) state.getBlock()).create$getRailDirection(state);
 	}
 }

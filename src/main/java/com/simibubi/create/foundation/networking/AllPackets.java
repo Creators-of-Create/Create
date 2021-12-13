@@ -55,7 +55,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCo
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import me.pepperbell.simplenetworking.C2SPacket;
 import me.pepperbell.simplenetworking.S2CPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -171,7 +170,7 @@ public enum AllPackets {
 		private NetworkDirection direction;
 
 		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
-			encoder = T::write;
+			encoder = T::encode;
 			decoder = factory;
 			handler = T::handle;
 			this.type = type;

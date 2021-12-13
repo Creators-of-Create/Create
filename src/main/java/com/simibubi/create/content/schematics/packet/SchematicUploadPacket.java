@@ -52,7 +52,7 @@ public class SchematicUploadPacket extends SimplePacketBase {
 			data = buffer.readByteArray();
 	}
 
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(code);
 		buffer.writeUtf(schematic);
 

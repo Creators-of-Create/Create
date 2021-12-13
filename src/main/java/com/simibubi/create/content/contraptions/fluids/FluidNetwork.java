@@ -23,7 +23,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
 
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -293,7 +293,7 @@ public class FluidNetwork {
 	}
 
 	private boolean isPresent(BlockFace location) {
-		return LoadedCheckUtil.isAreaLoaded(world, location.getPos(), 0);
+		return LevelUtil.isAreaLoaded(world, location.getPos(), 0);
 	}
 
 	@Nullable

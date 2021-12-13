@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -22,7 +22,7 @@ public class BeltHelper {
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {
-		if (!LoadedCheckUtil.isAreaLoaded(world, pos, 0))
+		if (!LevelUtil.isAreaLoaded(world, pos, 0))
 			return null;
 		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (!(tileEntity instanceof BeltTileEntity))

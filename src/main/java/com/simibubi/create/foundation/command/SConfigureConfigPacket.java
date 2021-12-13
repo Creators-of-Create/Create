@@ -48,7 +48,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeUtf(option);
 		buffer.writeUtf(value);
 	}

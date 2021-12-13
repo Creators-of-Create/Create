@@ -28,7 +28,7 @@ public class HighlightPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 	}
 

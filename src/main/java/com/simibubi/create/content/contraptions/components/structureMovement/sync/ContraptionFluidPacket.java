@@ -31,7 +31,7 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
 		buffer.writeBlockPos(localPos);
 		containedFluid.toBuffer(buffer);

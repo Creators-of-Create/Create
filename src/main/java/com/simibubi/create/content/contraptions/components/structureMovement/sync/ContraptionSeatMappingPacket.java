@@ -31,7 +31,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		buffer.writeShort(mapping.size());
 		mapping.forEach((k, v) -> {

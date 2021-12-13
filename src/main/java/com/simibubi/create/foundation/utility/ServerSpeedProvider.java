@@ -54,7 +54,7 @@ public class ServerSpeedProvider {
 		public Packet(FriendlyByteBuf buffer) {}
 
 		@Override
-		public void write(FriendlyByteBuf buffer) {}
+		public void encode(FriendlyByteBuf buffer) {}
 
 		@Override
 		public void handle(Supplier<Context> context) {

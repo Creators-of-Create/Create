@@ -34,7 +34,7 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(h);
 		buffer.writeInt(v);
 		buffer.writeBlockPos(pos);

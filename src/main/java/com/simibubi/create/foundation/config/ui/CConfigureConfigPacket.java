@@ -30,7 +30,7 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeUtf(modID);
 		buffer.writeUtf(path);
 		buffer.writeUtf(value);

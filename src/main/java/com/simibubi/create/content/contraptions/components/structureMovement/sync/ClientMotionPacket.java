@@ -30,7 +30,7 @@ public class ClientMotionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeFloat((float) motion.x);
 		buffer.writeFloat((float) motion.y);
 		buffer.writeFloat((float) motion.z);

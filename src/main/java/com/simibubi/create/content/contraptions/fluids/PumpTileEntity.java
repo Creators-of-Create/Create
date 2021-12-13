@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -155,7 +155,7 @@ public class PumpTileEntity extends KineticTileEntity {
 				int distance = entry.getFirst();
 				BlockPos currentPos = entry.getSecond();
 
-				if (!LoadedCheckUtil.isAreaLoaded(level, currentPos, 0))
+				if (!LevelUtil.isAreaLoaded(level, currentPos, 0))
 					continue;
 				if (visited.contains(currentPos))
 					continue;
@@ -169,7 +169,7 @@ public class PumpTileEntity extends KineticTileEntity {
 					BlockFace blockFace = new BlockFace(currentPos, face);
 					BlockPos connectedPos = blockFace.getConnectedPos();
 
-					if (!LoadedCheckUtil.isAreaLoaded(level, connectedPos, 0))
+					if (!LevelUtil.isAreaLoaded(level, connectedPos, 0))
 						continue;
 					if (blockFace.isEquivalent(start))
 						continue;

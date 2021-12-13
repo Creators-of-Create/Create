@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 
-	public abstract void write(FriendlyByteBuf buffer);
+	public abstract void encode(FriendlyByteBuf buffer);
 
 	public abstract void handle(Supplier<Context> context);
 
@@ -28,7 +28,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 	}
 
 	@Override
-	public void handle(Minecraft client, ClientPacketListener handler, SimpleChannel.ResponseTarget responseTarget) {
+	public void execute(Minecraft client, ClientPacketListener handler, SimpleChannel.ResponseTarget responseTarget) {
 		handle(new Context(client, handler, null, responseTarget));
 	}
 

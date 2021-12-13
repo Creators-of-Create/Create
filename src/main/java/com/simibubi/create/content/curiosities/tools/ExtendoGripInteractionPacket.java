@@ -40,7 +40,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(target);
 		buffer.writeInt(interactionHand == null ? -1 : interactionHand.ordinal());
 		buffer.writeBoolean(specificPoint != null);

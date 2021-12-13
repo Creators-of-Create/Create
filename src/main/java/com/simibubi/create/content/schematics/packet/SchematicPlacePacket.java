@@ -25,7 +25,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 		stack = buffer.readItem();
 	}
 
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeItem(stack);
 	}
 

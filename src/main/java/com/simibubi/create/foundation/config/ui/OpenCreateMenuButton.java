@@ -106,17 +106,14 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				MutableObject<GuiEventListener> toAdd = new MutableObject<>(null);
-				Screens.getButtons(gui).stream()
+				((ScreenAccessor) gui).create$getChildren().stream()
+						.filter(w -> w instanceof AbstractWidget)
+						.map(w -> (AbstractWidget) w)
 						.filter(w -> w.getMessage().getString().equals(target))
-					.findFirst()
-					.ifPresent(w -> toAdd
-						.setValue(new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)));
-				if (toAdd.getValue() != null) {
-//					gui.children().add(toAdd.getValue());
-					((ScreenAccessor)gui).create$getRenderables().add((Widget) toAdd.getValue());
-					((ScreenAccessor)gui).getNarratables().add((NarratableEntry) toAdd.getValue());
-				}
+						.findFirst()
+						.ifPresent(w -> ((ScreenAccessor) gui).create$addRenderableWidget(
+								new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
+						));
 			}
 		}
 

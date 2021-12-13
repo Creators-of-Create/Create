@@ -30,7 +30,7 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(inLectern());
 		if (inLectern()) {
 			buffer.writeInt(lecternPos.getX());

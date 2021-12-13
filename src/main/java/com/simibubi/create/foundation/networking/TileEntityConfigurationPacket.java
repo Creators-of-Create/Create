@@ -24,7 +24,7 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		writeSettings(buffer);
 	}

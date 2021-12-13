@@ -12,5 +12,5 @@ public interface S2CPacket extends Packet {
 	 * 	// code here
 	 * }</code></pre>
 	 */
-	void handle(Minecraft client, ClientPacketListener handler, ResponseTarget responseTarget);
+	void execute(Minecraft client, ClientPacketListener handler, ResponseTarget responseTarget);
 }

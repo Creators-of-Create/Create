@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -233,7 +233,7 @@ public class SchematicPrinter {
 			BlockState required = blockReader.getBlockState(relPos);
 			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
 
-			if (!LoadedCheckUtil.isAreaLoaded(world, pos.offset(schematicAnchor), 0)) {
+			if (!LevelUtil.isAreaLoaded(world, pos.offset(schematicAnchor), 0)) {
 				checklist.warnBlockNotLoaded();
 				continue;
 			}

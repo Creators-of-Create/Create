@@ -40,7 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.entity.FakePlayer;
-import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.LevelUtil;
 import com.simibubi.create.lib.utility.PlantUtil;
 
 public class BuiltinPotatoProjectileTypes {
@@ -295,7 +295,7 @@ public class BuiltinPotatoProjectileTypes {
 				return true;
 
 			BlockPos hitPos = ray.getBlockPos();
-			if (!LoadedCheckUtil.isAreaLoaded(world, hitPos, 1))
+			if (!LevelUtil.isAreaLoaded(world, hitPos, 1))
 				return true;
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
@@ -319,7 +319,7 @@ public class BuiltinPotatoProjectileTypes {
 				return true;
 
 			BlockPos hitPos = ray.getBlockPos();
-			if (!LoadedCheckUtil.isAreaLoaded(world, hitPos, 1))
+			if (!LevelUtil.isAreaLoaded(world, hitPos, 1))
 				return true;
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);

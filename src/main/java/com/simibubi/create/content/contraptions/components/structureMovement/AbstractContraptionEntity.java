@@ -494,6 +494,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	public void remove(RemovalReason p_146834_) {
+		if (p_146834_ == RemovalReason.DISCARDED) onRemovedFromWorld();
+
 		if (!level.isClientSide && !isRemoved() && contraption != null)
 			if (!ticking)
 				contraption.stop(level);

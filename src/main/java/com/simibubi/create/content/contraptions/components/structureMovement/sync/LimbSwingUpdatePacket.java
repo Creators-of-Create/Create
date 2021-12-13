@@ -35,7 +35,7 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
 		buffer.writeFloat((float) position.x);
 		buffer.writeFloat((float) position.y);

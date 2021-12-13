@@ -29,6 +29,7 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
+import com.simibubi.create.lib.utility.LevelUtil;
 import com.simibubi.create.lib.utility.StickinessUtil;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -1016,7 +1017,7 @@ public abstract class Contraption {
 						});
 				});
 
-			world.setBlock(add, Blocks.AIR.defaultBlockState(), flags,
+			LevelUtil.markAndNotifyBlock(world, add, world.getChunkAt(add), block.state, Blocks.AIR.defaultBlockState(), flags,
 					512);
 			block.state.updateIndirectNeighbourShapes(world, add, flags & -2);
 		}
@@ -1105,8 +1106,8 @@ public abstract class Contraption {
 			if (!shouldUpdateAfterMovement(block))
 				continue;
 			BlockPos targetPos = transform.apply(block.pos);
-			world.setBlock(targetPos, /*world.getChunkAt(targetPos), block.state, */block.state,
-				Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL, 512);
+			LevelUtil.markAndNotifyBlock(world, targetPos, world.getChunkAt(targetPos), block.state, block.state,
+					Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL, 512);
 		}
 
 		for (int i = 0; i < inventory.getSlots(); i++) {
