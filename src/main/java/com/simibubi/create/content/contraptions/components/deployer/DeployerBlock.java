@@ -107,7 +107,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	public Class<DeployerTileEntity> getTileEntityClass() {
 		return DeployerTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends DeployerTileEntity> getTileEntityType() {
 		return AllTileEntities.DEPLOYER.get();
