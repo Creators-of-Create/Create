@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.mixin.content.registry.AxeItemAccessor;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -40,10 +41,6 @@ import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.item.CustomItemEnchantabilityItem;
 import com.simibubi.create.lib.utility.NBTSerializer;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.entity.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -138,7 +135,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem, CustomI
 			}
 
 			if (!polished.isEmpty()) {
-				if (player instanceof FakePlayer) {
+				if (player instanceof FakeServerPlayer) {
 					player.drop(polished, false, false);
 				} else {
 					player.getInventory().placeItemBackInInventory(polished);

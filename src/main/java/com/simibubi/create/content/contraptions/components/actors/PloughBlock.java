@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import com.simibubi.create.lib.entity.FakePlayer;
 
 public class PloughBlock extends AttachedActorBlock {
 
@@ -16,13 +18,14 @@ public class PloughBlock extends AttachedActorBlock {
 	/**
 	 * The OnHoeUse event takes a player, so we better not pass null
 	 */
-	static class PloughFakePlayer extends FakePlayer {
+	static class PloughFakePlayer extends FakeServerPlayer {
 
 		public static final GameProfile PLOUGH_PROFILE =
 				new GameProfile(UUID.fromString("9e2faded-eeee-4ec2-c314-dad129ae971d"), "Plough");
+		public static final FakePlayerBuilder BUILDER = new FakePlayerBuilder(new ResourceLocation("create", "plough"));
 
 		public PloughFakePlayer(ServerLevel world) {
-			super(world, PLOUGH_PROFILE);
+			super(BUILDER, world.getServer(), world, PLOUGH_PROFILE);
 		}
 
 	}

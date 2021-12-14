@@ -9,6 +9,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -42,7 +43,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import com.simibubi.create.lib.entity.FakePlayer;
 
 public class CopperBacktankBlock extends HorizontalKineticBlock
 	implements ITE<CopperBacktankTileEntity>, SimpleWaterloggedBlock {
@@ -78,7 +78,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
 		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -124,7 +124,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		BlockHitResult p_225533_6_) {
 		if (player == null)
 			return InteractionResult.PASS;
-		if (player instanceof FakePlayer)
+		if (player instanceof FakeServerPlayer)
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;

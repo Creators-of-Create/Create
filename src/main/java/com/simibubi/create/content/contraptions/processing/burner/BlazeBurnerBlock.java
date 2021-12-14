@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
@@ -51,8 +52,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import com.simibubi.create.lib.entity.FakePlayer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -128,7 +127,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		}
 
 		boolean doNotConsume = player.isCreative();
-		boolean forceOverflow = !(player instanceof FakePlayer);
+		boolean forceOverflow = !(player instanceof FakeServerPlayer);
 
 		InteractionResultHolder<ItemStack> res =
 			tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);

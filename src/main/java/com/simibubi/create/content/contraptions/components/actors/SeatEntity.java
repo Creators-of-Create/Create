@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllEntityTypes;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.entity.FakePlayer;
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
 public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
@@ -65,7 +65,7 @@ public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 	protected boolean canRide(Entity entity) {
 		// Fake Players (tested with deployers) have a BUNCH of weird issues, don't let
 		// them ride seats
-		return !(entity instanceof FakePlayer);
+		return !(entity instanceof FakeServerPlayer);
 	}
 
 	@Override

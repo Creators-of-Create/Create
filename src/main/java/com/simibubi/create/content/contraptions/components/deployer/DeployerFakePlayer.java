@@ -4,6 +4,11 @@ import java.util.Collection;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
+
+import net.minecraft.resources.ResourceLocation;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
@@ -37,18 +42,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.entity.FakePlayer;
 
-public class DeployerFakePlayer extends FakePlayer {
+public class DeployerFakePlayer extends FakeServerPlayer {
 
 	private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
 	public static final GameProfile DEPLOYER_PROFILE =
 		new GameProfile(UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
+	public static final FakePlayerBuilder BUILDER = new FakePlayerBuilder(new ResourceLocation("create", "deployer"));
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
 
 	public DeployerFakePlayer(ServerLevel world) {
-		super(world, DEPLOYER_PROFILE);
+		super(BUILDER, world.getServer(), world, DEPLOYER_PROFILE);
 		connection = new FakePlayNetHandler(world.getServer(), this);
 	}
 

@@ -13,6 +13,7 @@ import com.simibubi.create.lib.helper.EntityHelper;
 
 import com.simibubi.create.lib.utility.NetworkUtil;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -73,7 +74,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.entity.FakePlayer;
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
@@ -347,7 +347,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
-		if (player instanceof FakePlayer)
+		if (player instanceof FakeServerPlayer)
 			return InteractionResult.PASS;
 
 		boolean holdingWrench = AllItems.WRENCH.isIn(player.getItemInHand(hand));

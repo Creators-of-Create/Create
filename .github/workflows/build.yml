@@ -1,0 +1,33 @@
+name: build
+on: [ pull_request, push ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        java: [ 17 ]
+    runs-on: ubuntu-latest
+    env:
+      PUBLISH_SUFFIX: snapshots
+      MAVEN_USER: ${{ secrets.MAVEN_USER }}
+      MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+
+      - name: setup jdk ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: publish
+        run: ./gradlew publish
+
+      - name: capture build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/libs/
