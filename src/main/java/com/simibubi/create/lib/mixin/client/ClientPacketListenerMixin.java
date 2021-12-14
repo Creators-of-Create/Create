@@ -52,21 +52,21 @@ public abstract class ClientPacketListenerMixin {
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;load(Lnet/minecraft/nbt/CompoundTag;)V"),
-		method = "lambda$handleBlockEntityData$4"
+		method = "method_38542"
 	)
 	private void create$teIsHandled1(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		create$tileEntityHandled = true;
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CommandBlockEditScreen;updateGui()V"),
-		method = "lambda$handleBlockEntityData$4"
+		method = "method_38542"
 	)
 	private void create$teIsHandled2(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		create$tileEntityHandled = true;
 	}
 
 	@Inject(at = @At("TAIL"),
-			method = "lambda$handleBlockEntityData$4",
+			method = "method_38542",
 			cancellable = true)
 	public void create$handleCustomTileEntity(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		if (!create$tileEntityHandled) {
