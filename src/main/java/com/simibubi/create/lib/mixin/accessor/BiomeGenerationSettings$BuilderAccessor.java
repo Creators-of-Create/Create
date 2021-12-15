@@ -13,6 +13,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 @Mixin(BiomeGenerationSettings.Builder.class)
 public interface BiomeGenerationSettings$BuilderAccessor {
@@ -24,9 +25,9 @@ public interface BiomeGenerationSettings$BuilderAccessor {
 	void setCarvers(Map<GenerationStep.Carving, List<Supplier<ConfiguredWorldCarver<?>>>> carvers);
 
 	@Accessor("features")
-	List<List<Supplier<ConfiguredFeature<?, ?>>>> getFeatures();
+	List<List<Supplier<PlacedFeature>>> getFeatures();
 
 	@Accessor("features")
-	void setFeatures(List<List<Supplier<ConfiguredFeature<?, ?>>>> features);
+	void setFeatures(List<List<Supplier<PlacedFeature>>> features);
 
 }

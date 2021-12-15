@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
@@ -19,12 +20,14 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	public final String id;
-	public BiomeFilter biomeFilter;
+	public Predicate<BiomeSelectionContext> biomeFilter;
 
 	private NonNullSupplier<? extends Block> block;
 	private NonNullSupplier<? extends Block> deepblock;

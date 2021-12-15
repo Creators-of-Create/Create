@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -10,6 +11,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
@@ -20,6 +22,9 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AllWorldFeatures {
@@ -33,11 +38,11 @@ public class AllWorldFeatures {
 
 	//
 
-	public static final ConfigDrivenFeatureEntry ZINC_ORE = register("zinc_ore", 12, 8, OVERWORLD_BIOMES).between(-63, 70)
+	public static final ConfigDrivenFeatureEntry ZINC_ORE = register("zinc_ore", 12, 8, BiomeSelectors.foundInOverworld()).between(-63, 70)
 		.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_OVERWORLD =
-		register("striated_ores_overworld", 32, 1 / 12f, OVERWORLD_BIOMES).between(-30, 70)
+		register("striated_ores_overworld", 32, 1 / 12f, BiomeSelectors.foundInOverworld()).between(-30, 70)
 			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
 			.withLayerPattern(AllLayerPatterns.MAGNETITE)
@@ -46,14 +51,14 @@ public class AllWorldFeatures {
 			.withLayerPattern(AllLayerPatterns.OCHRESTONE);
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_NETHER =
-		register("striated_ores_nether", 32, 1 / 12f, NETHER_BIOMES).between(40, 90)
+		register("striated_ores_nether", 32, 1 / 12f, BiomeSelectors.foundInTheNether()).between(40, 90)
 			.withLayerPattern(AllLayerPatterns.SCORIA_NETHER)
 			.withLayerPattern(AllLayerPatterns.SCORCHIA_NETHER);
 
 	//
 
 	private static ConfigDrivenFeatureEntry register(String id, int clusterSize, float frequency,
-		BiomeFilter biomeFilter) {
+		Predicate<BiomeSelectionContext> biomeFilter) {
 		ConfigDrivenFeatureEntry configDrivenFeatureEntry = new ConfigDrivenFeatureEntry(id, clusterSize, frequency);
 		configDrivenFeatureEntry.biomeFilter = biomeFilter;
 		ENTRIES.put(Create.asResource(id), configDrivenFeatureEntry);
@@ -79,16 +84,13 @@ public class AllWorldFeatures {
 			});
 	}
 
-	public static BiomeGenerationSettings.Builder reload(ResourceLocation key, Biome.BiomeCategory category, BiomeGenerationSettings.Builder generation) {
+	public static void reload() {
 		Decoration decoStep = GenerationStep.Decoration.UNDERGROUND_ORES;
-		ENTRIES.values()
+		ENTRIES.entrySet()
 			.forEach(entry -> {
-				if (!entry.biomeFilter.test(key, category))
-					return;
-				generation.addFeature(decoStep, entry.getFeature()
-					.getSecond());
+				System.out.println(BuiltinRegistries.PLACED_FEATURE.getResourceKey(entry.getValue().getFeature().getSecond()).get());
+				BiomeModifications.addFeature(entry.getValue().biomeFilter, decoStep, BuiltinRegistries.PLACED_FEATURE.getResourceKey(entry.getValue().getFeature().getSecond()).get());
 			});
-		return generation;
 	}
 
 	public static void fillConfig(ForgeConfigSpec.Builder builder) {

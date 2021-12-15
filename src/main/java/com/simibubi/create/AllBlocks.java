@@ -153,6 +153,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
+import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import me.alphamode.forgetags.Tags;
@@ -1492,10 +1493,10 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops()
 					.sound(SoundType.STONE))
 			.transform(pickaxeOnly())
-//		.loot((lt, b) -> lt.add(b,
-//			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-//				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
-//					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+		.loot((lt, b) -> lt.add(b,
+			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))
@@ -1508,10 +1509,10 @@ public class AllBlocks {
 		.properties(p -> p.requiresCorrectToolForDrops()
 			.sound(SoundType.DEEPSLATE))
 		.transform(pickaxeOnly())
-//		.loot((lt, b) -> lt.add(b,
-//			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-//				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
-//					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+		.loot((lt, b) -> lt.add(b,
+			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.tag(Tags.Blocks.ORES)
 			.transform(tagBlockAndItem("ores/zinc"))

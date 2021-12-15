@@ -195,8 +195,8 @@ public class CommonEvents {
 		CapabilityMinecartController.startTracking(target);
 	}
 
-	public static BiomeGenerationSettings.Builder onBiomeLoad(ResourceLocation key, Biome.BiomeCategory category, BiomeGenerationSettings.Builder generation) {
-		return AllWorldFeatures.reload(key, category, generation);
+	public static void onBiomeLoad() {
+		AllWorldFeatures.reload();
 	}
 
 	public static void leftClickEmpty(ServerPlayer player) {
@@ -230,7 +230,7 @@ public class CommonEvents {
 		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
 		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
-		BiomeLoadingCallback.EVENT.register(CommonEvents::onBiomeLoad);
+		CommonEvents.onBiomeLoad();
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
 
 		// External Events
