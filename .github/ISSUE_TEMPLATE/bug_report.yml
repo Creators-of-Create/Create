@@ -34,7 +34,7 @@ body:
     -   type: input
         attributes:
             label: Crash Report or Log
-            description: If applicable, please add a link to the crash report or log that was created when this issue occured
+            description: If applicable, please add a **link** to the crash report or log that was created when this issue occured. You can upload the crash report to a site like Pastebin or GitHub Gist. Please **do not** paste the whole crash report in this issue
         validations:
             required: false
     -   type: input
