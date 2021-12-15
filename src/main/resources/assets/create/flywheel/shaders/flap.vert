@@ -31,8 +31,8 @@ float getFlapAngle(float flapness, float intensity, float scale) {
 
     float halfAngle = angle * 0.5;
 
-    float which = step(0., flapness);// 0 if negative, 1 if positive
-    float degrees = which * halfAngle + (1. - which) * angle;// branchless conditional multiply
+    float which = step(0., flapness); // 0 if negative, 1 if positive
+    float degrees = which * halfAngle + (1. - which) * angle; // branchless conditional multiply
 
     return degrees;
 }

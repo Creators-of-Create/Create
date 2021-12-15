@@ -4,27 +4,16 @@ import org.lwjgl.system.MemoryUtil;
 
 import com.jozufozu.flywheel.api.struct.StructType;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
-import com.jozufozu.flywheel.backend.struct.UnsafeBufferWriter;
 
-public class UnsafeBeltWriter extends UnsafeBufferWriter<BeltData> {
+public class UnsafeBeltWriter extends UnsafeKineticWriter<BeltData> {
 	public UnsafeBeltWriter(VecBuffer backingBuffer, StructType<BeltData> vertexType) {
 		super(backingBuffer, vertexType);
 	}
 
 	@Override
-	public void write(BeltData d) {
+	protected void writeInternal(BeltData d) {
+		super.writeInternal(d);
 		long addr = writePointer;
-		MemoryUtil.memPutByte(addr, d.blockLight);
-		MemoryUtil.memPutByte(addr + 1, d.skyLight);
-		MemoryUtil.memPutByte(addr + 2, d.r);
-		MemoryUtil.memPutByte(addr + 3, d.g);
-		MemoryUtil.memPutByte(addr + 4, d.b);
-		MemoryUtil.memPutByte(addr + 5, d.a);
-		MemoryUtil.memPutFloat(addr + 6, d.x);
-		MemoryUtil.memPutFloat(addr + 10, d.y);
-		MemoryUtil.memPutFloat(addr + 14, d.z);
-		MemoryUtil.memPutFloat(addr + 18, d.rotationalSpeed);
-		MemoryUtil.memPutFloat(addr + 22, d.rotationOffset);
 		MemoryUtil.memPutFloat(addr + 26, d.qX);
 		MemoryUtil.memPutFloat(addr + 30, d.qY);
 		MemoryUtil.memPutFloat(addr + 34, d.qZ);
@@ -36,7 +25,5 @@ public class UnsafeBeltWriter extends UnsafeBufferWriter<BeltData> {
 		MemoryUtil.memPutFloat(addr + 58, d.maxU);
 		MemoryUtil.memPutFloat(addr + 62, d.maxV);
 		MemoryUtil.memPutByte(addr + 66, d.scrollMult);
-
-		advance();
 	}
 }

@@ -6,10 +6,11 @@ import com.jozufozu.flywheel.api.struct.Instanced;
 import com.jozufozu.flywheel.api.struct.StructWriter;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
-import com.jozufozu.flywheel.core.model.Model;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class FlapType implements Instanced<FlapData>, Batched<FlapData> {
@@ -34,7 +35,29 @@ public class FlapType implements Instanced<FlapData>, Batched<FlapData> {
 	}
 
 	@Override
-	public BatchingTransformer<FlapData> getTransformer(Model model) {
-		return null;
+	public BatchingTransformer<FlapData> getTransformer() {
+		return (d, sbb) -> {
+			sbb.translate(d.x, d.y, d.z)
+					.centre()
+					.rotateY(-d.horizontalAngle)
+					.unCentre()
+					.translate(d.pivotX, d.pivotY, d.pivotZ)
+					.rotateX(getFlapAngle(d.flapness, d.intensity, d.flapScale))
+					.translateBack(d.pivotX, d.pivotY, d.pivotZ)
+					.translate(d.segmentOffsetX, d.segmentOffsetY, d.segmentOffsetZ)
+					.light(d.getPackedLight());
+		};
+	}
+
+	private static float getFlapAngle(float flapness, float intensity, float scale) {
+		float absFlap = Math.abs(flapness);
+
+		float angle = (float) (Math.sin((1. - absFlap) * Math.PI * intensity) * 30. * flapness * scale);
+
+		if (flapness > 0) {
+			return angle * 0.5f;
+		} else {
+			return angle;
+		}
 	}
 }

@@ -11,6 +11,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.model.Model;
+import com.jozufozu.flywheel.util.ModelReader;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllItems;
@@ -95,7 +96,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				|| AllItems.SUPER_GLUE.isIn(player.getOffhandItem());
 	}
 
-	public static class GlueModel implements Model {
+	public static class GlueModel implements Model, ModelReader {
 
 		@Override
 		public String name() {
@@ -164,6 +165,81 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		@Override
 		public VertexFormat format() {
 			return Formats.UNLIT_MODEL;
+		}
+
+		@Override
+		public ModelReader getReader() {
+			return this;
+		}
+
+		@Override
+		public int getVertexCount() {
+			return 8;
+		}
+
+		@Override
+		public float getX(int index) {
+			return 0;
+		}
+
+		@Override
+		public float getY(int index) {
+			return 0;
+		}
+
+		@Override
+		public float getZ(int index) {
+			return 0;
+		}
+
+		@Override
+		public byte getR(int index) {
+			return (byte) 0xFF;
+		}
+
+		@Override
+		public byte getG(int index) {
+			return (byte) 0xFF;
+		}
+
+		@Override
+		public byte getB(int index) {
+			return (byte) 0xFF;
+		}
+
+		@Override
+		public byte getA(int index) {
+			return (byte) 0xFF;
+		}
+
+		@Override
+		public float getU(int index) {
+			return 0;
+		}
+
+		@Override
+		public float getV(int index) {
+			return 0;
+		}
+
+		@Override
+		public int getLight(int index) {
+			return 0;
+		}
+
+		@Override
+		public float getNX(int index) {
+			return 0;
+		}
+
+		@Override
+		public float getNY(int index) {
+			return 0;
+		}
+
+		@Override
+		public float getNZ(int index) {
+			return index > 4 ? -1 : 1;
 		}
 	}
 }
