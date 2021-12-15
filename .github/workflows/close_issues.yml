@@ -1,10 +1,11 @@
-name: "Manage Issues"
+name: "Close Issues"
 on:
     schedule:
         - cron: '0 */12 * * *'
+    workflow_dispatch:
 
 jobs:
-    stale:
+    close:
         runs-on: ubuntu-latest
         permissions:
             issues: write
