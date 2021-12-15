@@ -30,6 +30,7 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		if (VirtualRenderingStateManager.getVirtualState()) {
+			super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 			return;
 		}
 
@@ -40,10 +41,8 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 			data.putBracket(attachmentBehaviour.getBracket());
 
 		BakedModel bracket = data.getBracket();
-		if (bracket == null) {
-			super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		if (bracket == null)
 			return;
-		}
 		ModelRenderingUtil.emitBlockQuadsChecked(bracket, blockView, state, pos, randomSupplier, context);
 	}
 
