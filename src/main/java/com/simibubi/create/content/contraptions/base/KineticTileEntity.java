@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
@@ -51,7 +52,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 public class KineticTileEntity extends SmartTileEntity
-	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered {
+	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered, CustomRenderBoundingBox {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;

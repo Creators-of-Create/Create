@@ -10,8 +10,10 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -36,7 +38,7 @@ public class AllTags {
 	}
 
 	public static <T> Tag.Named<T> forgeTag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String path) {
-		return tag(wrapperFactory, "forge", path);
+		return tag(wrapperFactory, "c", path);
 	}
 
 	public static Tag.Named<Block> forgeBlockTag(String path) {
@@ -73,7 +75,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true), FORGE("forge"), TIC("tconstruct")
+		MOD(Create.ID, false, true), FORGE("c"), TIC("tconstruct")
 
 		;
 

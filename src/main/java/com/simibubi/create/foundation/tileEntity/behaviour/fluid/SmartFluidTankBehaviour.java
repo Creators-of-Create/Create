@@ -40,12 +40,12 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 	private BehaviourType<SmartFluidTankBehaviour> behaviourType;
 
-	public static SmartFluidTankBehaviour single(SmartTileEntity te, int capacity) {
+	public static SmartFluidTankBehaviour single(SmartTileEntity te, long capacity) {
 		return new SmartFluidTankBehaviour(TYPE, te, 1, capacity, false);
 	}
 
 	public SmartFluidTankBehaviour(BehaviourType<SmartFluidTankBehaviour> type, SmartTileEntity te, int tanks,
-		int tankCapacity, boolean enforceVariety) {
+		long tankCapacity, boolean enforceVariety) {
 		super(te);
 		insertionAllowed = true;
 		extractionAllowed = true;
@@ -232,7 +232,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		protected LerpedFloat fluidLevel;
 		protected FluidStack renderedFluid;
 
-		public TankSegment(int capacity) {
+		public TankSegment(long capacity) {
 			tank = new SmartFluidTank(capacity, f -> onFluidStackChanged());
 			fluidLevel = LerpedFloat.linear()
 				.startWithValue(0)

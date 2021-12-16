@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import com.simibubi.create.lib.transfer.TransferUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -82,7 +83,7 @@ public class FluidTankScenes {
 		scene.world.hideIndependentSection(chocLink, Direction.DOWN);
 		scene.idle(5);
 		FluidStack content = new FluidStack(AllFluids.CHOCOLATE.get()
-			.getSource(), 16000);
+			.getSource(), FluidConstants.BUCKET * 16);
 		scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
 			.fill(content, false));
 		scene.idle(25);
@@ -111,7 +112,7 @@ public class FluidTankScenes {
 
 		for (int i = 0; i < 4; i++) {
 			scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
-				.drain(2000, false));
+				.drain(FluidConstants.BUCKET * 2, false));
 			scene.idle(5);
 		}
 
@@ -128,7 +129,7 @@ public class FluidTankScenes {
 		scene.effects.rotationDirectionIndicator(pumpPos);
 		for (int i = 0; i < 4; i++) {
 			scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
-				.fill(FluidHelper.copyStackWithAmount(content, 2000), false));
+				.fill(FluidHelper.copyStackWithAmount(content, FluidConstants.BUCKET * 2), false));
 			scene.idle(5);
 		}
 		scene.idle(40);
@@ -381,7 +382,7 @@ public class FluidTankScenes {
 		scene.idle(7);
 		scene.world.modifyTileEntity(cTankPos, CreativeFluidTankTileEntity.class,
 			te -> ((CreativeSmartFluidTank) te.getTankInventory())
-				.setContainedFluid(new FluidStack(Fluids.FLOWING_LAVA, 1000)));
+				.setContainedFluid(new FluidStack(Fluids.FLOWING_LAVA, FluidConstants.BUCKET)));
 		scene.idle(5);
 
 		scene.overlay.showText(50)

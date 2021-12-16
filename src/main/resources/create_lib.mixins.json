@@ -28,6 +28,7 @@
     "accessor.HoneycombItemAccessor",
     "accessor.IngredientAccessor",
     "accessor.ItemTagsAccessor",
+    "accessor.LiquidBlockAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftServerAccessor",
     "accessor.PlayerAccessor",

@@ -20,6 +20,7 @@ import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
 import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LightTexture;
@@ -228,7 +229,7 @@ public class GuiGameElement {
 				return;
 
 			FluidRenderer.renderFluidBox(new FluidStack(blockState.getFluidState()
-				.getType(), 1000), 0, 0, 0, 1, 1, 1, buffer, ms, LightTexture.FULL_BRIGHT, false);
+				.getType(), FluidConstants.BUCKET), 0, 0, 0, 1, 1, 1, buffer, ms, LightTexture.FULL_BRIGHT, false);
 			buffer.endBatch();
 		}
 	}

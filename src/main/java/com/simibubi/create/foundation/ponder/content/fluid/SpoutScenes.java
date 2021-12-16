@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstructio
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -66,7 +67,7 @@ public class SpoutScenes {
 		scene.world.showSection(pipes, Direction.NORTH);
 
 		scene.idle(20);
-		FluidStack honey = new FluidStack(FluidHelper.convertToStill(AllFluids.HONEY.get()), 1000);
+		FluidStack honey = new FluidStack(FluidHelper.convertToStill(AllFluids.HONEY.get()), FluidConstants.BUCKET);
 		ItemStack bucket = new ItemStack(AllFluids.HONEY.get().getBucket());
 //			.getAttributes()
 //			.getBucket(honey);
@@ -108,7 +109,7 @@ public class SpoutScenes {
 		scene.world.removeItemsFromBelt(depotPos);
 		ItemStack potion = new ItemStack(Items.HONEY_BOTTLE);
 		scene.world.createItemOnBeltLike(depotPos, Direction.UP, potion);
-		ParticleOptions fluidParticle = FluidFX.getFluidParticle(new FluidStack(AllFluids.HONEY.get(), 1000));
+		ParticleOptions fluidParticle = FluidFX.getFluidParticle(new FluidStack(AllFluids.HONEY.get(), FluidConstants.BUCKET));
 		for (int i = 0; i < 10; i++) {
 			scene.effects.emitParticles(util.vector.topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),

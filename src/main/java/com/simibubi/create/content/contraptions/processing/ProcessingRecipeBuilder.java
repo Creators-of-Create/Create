@@ -116,11 +116,11 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
-	public ProcessingRecipeBuilder<T> require(Fluid fluid, int amount) {
+	public ProcessingRecipeBuilder<T> require(Fluid fluid, long amount) {
 		return require(FluidIngredient.fromFluid(fluid, amount));
 	}
 
-	public ProcessingRecipeBuilder<T> require(Tag.Named<Fluid> fluidTag, int amount) {
+	public ProcessingRecipeBuilder<T> require(Tag.Named<Fluid> fluidTag, long amount) {
 		return require(FluidIngredient.fromTag(fluidTag, amount));
 	}
 
@@ -159,7 +159,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
-	public ProcessingRecipeBuilder<T> output(Fluid fluid, int amount) {
+	public ProcessingRecipeBuilder<T> output(Fluid fluid, long amount) {
 		fluid = FluidHelper.convertToStill(fluid);
 		return output(new FluidStack(fluid, amount));
 	}
@@ -168,7 +168,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		params.fluidResults.add(fluidStack);
 		return this;
 	}
-	
+
 	public ProcessingRecipeBuilder<T> toolNotConsumed() {
 		params.keepHeldItem = true;
 		return this;
@@ -203,7 +203,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		protected NonNullList<FluidStack> fluidResults;
 		protected int processingDuration;
 		protected HeatCondition requiredHeat;
-		
+
 		public boolean keepHeldItem;
 
 		protected ProcessingRecipeParams(ResourceLocation id) {

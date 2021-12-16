@@ -271,7 +271,7 @@ public class OpenEndedPipe extends FlowSource {
 			long fill = super.fill(resource, sim);
 			if (sim)
 				return fill;
-			if (getFluidAmount() == 1000 || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
+			if (getFluidAmount() == FluidConstants.BUCKET || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
 				if (provideFluidToSpace(containedFluidStack, false))
 					setFluid(FluidStack.empty());
 			return fill;
@@ -297,8 +297,8 @@ public class OpenEndedPipe extends FlowSource {
 				return empty;
 			if (amount == 0)
 				return empty;
-			if (amount > 1000) {
-				amount = 1000;
+			if (amount > FluidConstants.BUCKET) {
+				amount = FluidConstants.BUCKET;
 				if (filterPresent)
 					filter = FluidHelper.copyStackWithAmount(filter, amount);
 			}

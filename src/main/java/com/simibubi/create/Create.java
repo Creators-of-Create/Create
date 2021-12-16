@@ -6,6 +6,7 @@ import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.events.CommonEvents;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.EnvType;
 
 import net.fabricmc.api.ModInitializer;
@@ -106,7 +107,7 @@ public class Create implements ModInitializer {
 		AllSoundEvents.register();
 
 //		forgeEventBus.register(CHUNK_UTIL);
-		//CHUNK_UTIL.fabricInitEvents();
+//		CHUNK_UTIL.fabricInitEvents();
 
 		// handled as ClientModInitializer
 //		EnvExecutor.runWhenOn(EnvType.CLIENT,

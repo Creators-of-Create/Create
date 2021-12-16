@@ -13,10 +13,12 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
+import com.simibubi.create.lib.mixin.accessor.LiquidBlockAccessor;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -93,9 +95,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			} else if (blockState.getBlock() instanceof LiquidBlock) {
 				LiquidBlock flowingFluid = (LiquidBlock) blockState.getBlock();
 				emptied = Blocks.AIR.defaultBlockState();
-//				if (blockState.getValue(LiquidBlock.LEVEL) == 0)
-//					fluid = flowingFluid.getFluid();
-//				else {
+				if (blockState.getValue(LiquidBlock.LEVEL) == 0)
+					fluid = ((LiquidBlockAccessor) flowingFluid).create$getFluid();
+				else {
 					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 					if (!tileEntity.isVirtual())
 						world.setBlock(currentPos, emptied, 2 | 16);
@@ -105,7 +107,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 						reset();
 					}
 					continue;
-//				}
+				}
 			} else if (blockState.getFluidState()
 				.getType() != Fluids.EMPTY
 				&& blockState.getCollisionShape(world, currentPos, CollisionContext.empty())
@@ -336,7 +338,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 	public FluidStack getDrainableFluid(BlockPos rootPos) {
 		return fluid == null || isSearching() || !pullNext(rootPos, true) ? FluidStack.empty()
-			: new FluidStack(fluid, 1000);
+			: new FluidStack(fluid, FluidConstants.BUCKET);
 	}
 
 }

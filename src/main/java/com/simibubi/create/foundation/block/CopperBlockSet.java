@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.lib.mixin.accessor.StairBlockAccessor;
 
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.AllTags;
@@ -53,7 +55,7 @@ public class CopperBlockSet {
 	protected final String name;
 	protected final Variant<?>[] variants;
 	protected final Map<Variant<?>, BlockEntry<?>[]> entries = new HashMap<>();
-	//protected final NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe;
+//	protected final NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe;
 	protected final String endTextureName;
 
 //	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants) {

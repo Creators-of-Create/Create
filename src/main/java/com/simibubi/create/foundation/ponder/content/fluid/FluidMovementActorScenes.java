@@ -38,7 +38,7 @@ public class FluidMovementActorScenes {
 		Selection kinetics = util.select.fromTo(1, 1, 7, 1, 1, 4);
 		Selection tank = util.select.fromTo(0, 1, 5, 0, 3, 5);
 		Selection largeCog = util.select.position(2, 0, 7);
-		FluidStack chocolate = new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000);
+		FluidStack chocolate = new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), FluidConstants.BUCKET);
 		BlockPos ct1 = util.grid.at(5, 3, 2);
 		BlockPos ct2 = util.grid.at(6, 3, 2);
 		BlockPos st = util.grid.at(0, 1, 5);
