@@ -31,14 +31,14 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public List<FluidStack> matchingFluidStacks;
 
-	public static FluidIngredient fromTag(Tag.Named<Fluid> tag, int amount) {
+	public static FluidIngredient fromTag(Tag.Named<Fluid> tag, long amount) {
 		FluidTagIngredient ingredient = new FluidTagIngredient();
 		ingredient.tag = tag;
 		ingredient.amountRequired = amount;
 		return ingredient;
 	}
 
-	public static FluidIngredient fromFluid(Fluid fluid, int amount) {
+	public static FluidIngredient fromFluid(Fluid fluid, long amount) {
 		FluidStackIngredient ingredient = new FluidStackIngredient();
 		ingredient.fluid = fluid;
 		ingredient.amountRequired = amount;

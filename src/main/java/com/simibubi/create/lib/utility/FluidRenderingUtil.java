@@ -23,7 +23,7 @@ public class FluidRenderingUtil {
 
 	public static TextureAtlasSprite getSprite(FluidVariant variant) {
 		FluidVariantRenderHandler handler = FluidVariantRendering.getHandler(variant.getFluid());
-		if (handler != null) return handler.getSprite(variant);
+		if (handler != null) return handler.getSprites(variant)[0];
 		Fluid fluid = variant.getFluid();
 		if (FluidTags.LAVA.contains(fluid)) return LAVA;
 		return WATER;

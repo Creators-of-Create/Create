@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
 import me.alphamode.forgetags.Tags;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -18,31 +19,31 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 	GeneratedRecipe
 
 	TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
-		.output(Fluids.LAVA, 50)
+		.output(Fluids.LAVA, FluidConstants.BUCKET / 20)
 		.requiresHeat(HeatCondition.SUPERHEATED)),
 
-		TEA = create("tea", b -> b.require(Fluids.WATER, 250)
-			.require(Tags.Fluids.MILK, 250)
+		TEA = create("tea", b -> b.require(Fluids.WATER, FluidConstants.BUCKET / 4)
+			.require(Tags.Fluids.MILK, FluidConstants.BUCKET / 4)
 			.require(ItemTags.LEAVES)
-			.output(AllFluids.TEA.get(), 500)
+			.output(AllFluids.TEA.get(), FluidConstants.BUCKET / 2)
 			.requiresHeat(HeatCondition.HEATED)),
 
-		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, 250)
+		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, FluidConstants.BUCKET / 4)
 			.require(Items.SUGAR)
 			.require(Items.COCOA_BEANS)
-			.output(AllFluids.CHOCOLATE.get(), 250)
+			.output(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 4)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		CHOCOLATE_MELTING = create("chocolate_melting", b -> b.require(AllItems.BAR_OF_CHOCOLATE.get())
-			.output(AllFluids.CHOCOLATE.get(), 250)
+			.output(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 4)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		HONEY = create("honey", b -> b.require(Items.HONEY_BLOCK)
-			.output(AllFluids.HONEY.get(), 1000)
+			.output(AllFluids.HONEY.get(), FluidConstants.BUCKET)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		DOUGH = create("dough_by_mixing", b -> b.require(AllItems.WHEAT_FLOUR.get())
-			.require(Fluids.WATER, 1000)
+			.require(Fluids.WATER, FluidConstants.BUCKET)
 			.output(AllItems.DOUGH.get(), 1)),
 
 		BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())

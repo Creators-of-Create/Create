@@ -9,7 +9,6 @@ public class BurnUtil {
 	public static int getBurnTime(ItemStack stack) {
 		if (stack.isEmpty()) {
 			return 0;
-
 		} else if (stack.is(AllItems.CREATIVE_BLAZE_CAKE.get())) {
 			return Integer.MAX_VALUE;
 		}else {

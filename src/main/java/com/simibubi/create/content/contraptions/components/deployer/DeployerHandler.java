@@ -111,7 +111,7 @@ public class DeployerHandler {
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
-			Fluid fluid = ((BucketItemAccessor) bucketItem).getContent();;
+			Fluid fluid = ((BucketItemAccessor) bucketItem).getContent();
 			if (fluid != Fluids.EMPTY && world.getFluidState(targetPos)
 				.getType() == fluid)
 				return false;
@@ -164,7 +164,7 @@ public class DeployerHandler {
 					((EntityExtensions) entity).create$captureDrops(null);
 					return;
 				}
-				if (cancelResult == null) {
+				if (cancelResult == null || cancelResult == InteractionResult.PASS) {
 					if (entity.interact(player, hand)
 						.consumesAction()) {
 						if (entity instanceof AbstractVillager) {

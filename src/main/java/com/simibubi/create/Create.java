@@ -7,6 +7,7 @@ import com.simibubi.create.events.CommonEvents;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import io.github.tropheusj.milk.Milk;
 import com.tterrag.registrate.fabric.GatherDataEvent;
 
 import net.fabricmc.api.EnvType;
@@ -59,7 +60,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4-unstable";
+	public static final String VERSION = "0.4a";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -112,7 +113,7 @@ public class Create implements ModInitializer {
 		AllSoundEvents.register();
 
 //		forgeEventBus.register(CHUNK_UTIL);
-		//CHUNK_UTIL.fabricInitEvents();
+//		CHUNK_UTIL.fabricInitEvents();
 
 		// handled as ClientModInitializer
 //		EnvExecutor.runWhenOn(EnvType.CLIENT,

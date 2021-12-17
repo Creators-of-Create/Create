@@ -1,5 +1,7 @@
 package com.simibubi.create.lib.mixin.client;
 
+import com.simibubi.create.Create;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
@@ -31,8 +33,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
-	@Unique
-	private static final Logger CREATE$LOGGER = LogManager.getLogger();
 	@Final
 	@Shadow
 	private Connection connection;
@@ -52,29 +52,33 @@ public abstract class ClientPacketListenerMixin {
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;load(Lnet/minecraft/nbt/CompoundTag;)V"),
-		method = "lambda$handleBlockEntityData$4"
+		method = "method_38542",
+			remap = false
 	)
 	private void create$teIsHandled1(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		create$tileEntityHandled = true;
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CommandBlockEditScreen;updateGui()V"),
-		method = "lambda$handleBlockEntityData$4"
+		method = "method_38542",
+			remap = false
 	)
 	private void create$teIsHandled2(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		create$tileEntityHandled = true;
 	}
 
 	@Inject(at = @At("TAIL"),
-			method = "lambda$handleBlockEntityData$4",
-			cancellable = true)
+			method = "method_38542",
+			remap = false,
+			cancellable = true
+	)
 	public void create$handleCustomTileEntity(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
 		if (!create$tileEntityHandled) {
 			if (blockEntity == null) {
-				CREATE$LOGGER.error("Received invalid update packet for null TileEntity");
+				Create.LOGGER.error("Received invalid update packet for null BlockEntity");
 				ci.cancel();
-			} else if (blockEntity instanceof CustomDataPacketHandlingTileEntity) {
-				((CustomDataPacketHandlingTileEntity) blockEntity).onDataPacket(connection, clientboundBlockEntityDataPacket);
+			} else if (blockEntity instanceof CustomDataPacketHandlingTileEntity custom) {
+				custom.onDataPacket(connection, clientboundBlockEntityDataPacket);
 			}
 		}
 		create$tileEntityHandled = false;

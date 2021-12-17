@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -27,11 +28,11 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		long totalAmountAfterFill = diff + internalTank.getFluidAmount();
 		FluidStack remaining = resource.copy();
 
-		if (predicate.get() && totalAmountAfterFill >= 1000) {
+		if (predicate.get() && totalAmountAfterFill >= FluidConstants.BUCKET) {
 			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), sim)) {
 				drainer.counterpartActed();
-				remaining.shrink(1000);
-				diff -= 1000;
+				remaining.shrink(FluidConstants.BUCKET);
+				diff -= FluidConstants.BUCKET;
 			}
 		}
 
@@ -65,7 +66,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 	private FluidStack drainInternal(long maxDrain, @Nullable FluidStack resource, boolean sim) {
 		if (resource != null && !internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
 			return FluidStack.empty();
-		if (internalTank.getFluidAmount() >= 1000)
+		if (internalTank.getFluidAmount() >= FluidConstants.BUCKET)
 			return internalTank.drain(maxDrain, sim);
 		BlockPos pos = rootPosGetter.get();
 		FluidStack returned = drainer.getDrainableFluid(pos);
@@ -74,7 +75,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 
 		filler.counterpartActed();
 		FluidStack leftover = returned.copy();
-		long available = 1000 + internalTank.getFluidAmount();
+		long available = FluidConstants.BUCKET + internalTank.getFluidAmount();
 		long drained;
 
 		if (!internalTank.isEmpty() && !internalTank.getFluid()
@@ -119,9 +120,9 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		return internalTank.getTankCapacity(tank);
 	}
 
-//	@Override
-//	public boolean isFluidValid(int tank, FluidStack stack) {
-//		return internalTank.isFluidValid(tank, stack);
-//	}
+	@Override
+	public boolean isFluidValid(int tank, FluidStack stack) {
+		return internalTank.isFluidValid(tank, stack);
+	}
 
 }

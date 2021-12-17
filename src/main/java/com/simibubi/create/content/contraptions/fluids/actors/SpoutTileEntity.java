@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -79,7 +80,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		tank = SmartFluidTankBehaviour.single(this, 1000);
+		tank = SmartFluidTankBehaviour.single(this, FluidConstants.BUCKET);
 		behaviours.add(tank);
 
 		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)

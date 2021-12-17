@@ -33,7 +33,7 @@ public class PotionFluid extends VirtualFluid {
 		super(properties);
 	}
 
-	public static FluidStack withEffects(int amount, Potion potion, List<MobEffectInstance> customEffects) {
+	public static FluidStack withEffects(long amount, Potion potion, List<MobEffectInstance> customEffects) {
 		FluidStack fluidStack = new FluidStack(AllFluids.POTION.get()
 				.getSource(), amount);
 		addPotionToFluidStack(fluidStack, potion);

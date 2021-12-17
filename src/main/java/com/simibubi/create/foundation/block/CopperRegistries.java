@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableBiMap;
 import com.simibubi.create.Create;
 import com.simibubi.create.lib.mixin.accessor.HoneycombItemAccessor;
 
+import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
@@ -42,37 +43,42 @@ public class CopperRegistries {
 		}
 		injected = true;
 
-		try {
-			Field delegateField = WeatheringCopper.NEXT_BY_BLOCK.getClass().getDeclaredField("delegate");
-			delegateField.setAccessible(true);
-			// Get the original delegate to prevent an infinite loop
-			@SuppressWarnings("unchecked")
-			Supplier<BiMap<Block, Block>> originalWeatheringMapDelegate = (Supplier<BiMap<Block, Block>>) delegateField.get(WeatheringCopper.NEXT_BY_BLOCK);
-			com.google.common.base.Supplier<BiMap<Block, Block>> weatheringMapDelegate = () -> {
-				weatheringMemoized = true;
-				ImmutableBiMap.Builder<Block, Block> builder = ImmutableBiMap.builder();
-				builder.putAll(originalWeatheringMapDelegate.get());
-				WEATHERING.forEach((original, weathered) -> {
-					builder.put(original.get(), weathered.get());
-				});
-				return builder.build();
-			};
-			// Replace the memoized supplier's delegate, since interface fields cannot be reassigned
-			delegateField.set(WeatheringCopper.NEXT_BY_BLOCK, weatheringMapDelegate);
-		} catch (Exception e) {
-			Create.LOGGER.error("Failed to inject weathering copper from CopperRegistries", e);
-		}
+//		try {
+//			Field delegateField = WeatheringCopper.NEXT_BY_BLOCK.getClass().getDeclaredField("delegate");
+//			delegateField.setAccessible(true);
+//			// Get the original delegate to prevent an infinite loop
+//			@SuppressWarnings("unchecked")
+//			Supplier<BiMap<Block, Block>> originalWeatheringMapDelegate = (Supplier<BiMap<Block, Block>>) delegateField.get(WeatheringCopper.NEXT_BY_BLOCK);
+//			com.google.common.base.Supplier<BiMap<Block, Block>> weatheringMapDelegate = () -> {
+//				weatheringMemoized = true;
+//				ImmutableBiMap.Builder<Block, Block> builder = ImmutableBiMap.builder();
+//				builder.putAll(originalWeatheringMapDelegate.get());
+//				WEATHERING.forEach((original, weathered) -> {
+//					builder.put(original.get(), weathered.get());
+//				});
+//				return builder.build();
+//			};
+//			// Replace the memoized supplier's delegate, since interface fields cannot be reassigned
+//			delegateField.set(WeatheringCopper.NEXT_BY_BLOCK, weatheringMapDelegate);
+//		} catch (Exception e) {
+//			Create.LOGGER.error("Failed to inject weathering copper from CopperRegistries", e);
+//		}
+//
+//		Supplier<BiMap<Block, Block>> originalWaxableMapSupplier = HoneycombItem.WAXABLES;
+//		Supplier<BiMap<Block, Block>> waxableMapSupplier = Suppliers.memoize(() -> {
+//			waxableMemoized = true;
+//			ImmutableBiMap.Builder<Block, Block> builder = ImmutableBiMap.builder();
+//			builder.putAll(originalWaxableMapSupplier.get());
+//			WAXABLE.forEach((original, waxed) -> {
+//				builder.put(original.get(), waxed.get());
+//			});
+//			return builder.build();
+//		});
+//		HoneycombItemAccessor.setWAXABLES(waxableMapSupplier);
 
-		Supplier<BiMap<Block, Block>> originalWaxableMapSupplier = HoneycombItem.WAXABLES;
-		Supplier<BiMap<Block, Block>> waxableMapSupplier = Suppliers.memoize(() -> {
-			waxableMemoized = true;
-			ImmutableBiMap.Builder<Block, Block> builder = ImmutableBiMap.builder();
-			builder.putAll(originalWaxableMapSupplier.get());
-			WAXABLE.forEach((original, waxed) -> {
-				builder.put(original.get(), waxed.get());
-			});
-			return builder.build();
-		});
-		HoneycombItemAccessor.setWAXABLES(waxableMapSupplier);
+		WEATHERING.forEach((original, weathered) -> OxidizableBlocksRegistry.registerOxidizableBlockPair(original.get(), weathered.get()));
+		weatheringMemoized = true;
+		WAXABLE.forEach((original, waxed) -> OxidizableBlocksRegistry.registerWaxableBlockPair(original.get(), waxed.get()));
+		waxableMemoized = true;
 	}
 }

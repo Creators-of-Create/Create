@@ -10,6 +10,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -42,7 +43,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.lib.entity.FakePlayer;
 import com.simibubi.create.lib.utility.NetworkUtil;
 
 public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, ITE<ToolboxTileEntity> {
@@ -98,7 +98,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	@Override
 	public void attack(BlockState state, Level world, BlockPos pos, Player player) {
-		if (player instanceof FakePlayer)
+		if (player instanceof FakeServerPlayer)
 			return;
 		if (world.isClientSide)
 			return;
@@ -159,7 +159,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return InteractionResult.SUCCESS;
 		}
 
-		if (player instanceof FakePlayer)
+		if (player instanceof FakeServerPlayer)
 			return InteractionResult.PASS;
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;

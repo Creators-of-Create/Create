@@ -4,11 +4,10 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
-import com.simibubi.create.lib.entity.FakePlayer;
-
 import com.simibubi.create.lib.utility.LevelUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 
@@ -318,7 +317,7 @@ public class SuperGlueEntity extends Entity
 
 	@Override
 	public InteractionResult interact(Player player, InteractionHand hand) {
-		if (player instanceof FakePlayer)
+		if (player instanceof FakeServerPlayer)
 			return InteractionResult.PASS;
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);

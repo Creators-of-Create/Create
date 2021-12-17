@@ -42,7 +42,6 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 // optimize discard usage
 #if defined(ALPHA_DISCARD)
 #if defined(GL_ARB_conservative_depth)
-#extension GL_ARB_conservative_depth : enable
 layout (depth_greater) out float gl_FragDepth;
 #endif
 #endif

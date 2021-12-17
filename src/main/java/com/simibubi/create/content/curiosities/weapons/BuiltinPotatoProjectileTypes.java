@@ -10,8 +10,12 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -39,7 +43,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.entity.FakePlayer;
 import com.simibubi.create.lib.utility.LevelUtil;
 import com.simibubi.create.lib.utility.PlantUtil;
 
@@ -47,8 +50,16 @@ public class BuiltinPotatoProjectileTypes {
 
 	private static final GameProfile ZOMBIE_CONVERTER_NAME =
 		new GameProfile(UUID.fromString("be12d3dc-27d3-4992-8c97-66be53fd49c5"), "Converter");
-	private static final WorldAttached<FakePlayer> ZOMBIE_CONVERTERS =
-		new WorldAttached<>(w -> new FakePlayer((ServerLevel) w, ZOMBIE_CONVERTER_NAME));
+	private static final WorldAttached<FakeServerPlayer> ZOMBIE_CONVERTERS =
+		new WorldAttached<>(w -> new ConverterFakePlayer((ServerLevel) w, ZOMBIE_CONVERTER_NAME){});
+
+	public static class ConverterFakePlayer extends FakeServerPlayer {
+		public static final FakePlayerBuilder BUILDER = new FakePlayerBuilder(new ResourceLocation("create", "converter"));
+
+		public ConverterFakePlayer(ServerLevel world, GameProfile profile) {
+			super(BUILDER, world.getServer(), world, profile);
+		}
+	}
 
 	public static final PotatoCannonProjectileType
 
@@ -155,7 +166,7 @@ public class BuiltinPotatoProjectileTypes {
 				if (world.isClientSide)
 					return false;
 
-				FakePlayer dummy = ZOMBIE_CONVERTERS.get(world);
+				FakeServerPlayer dummy = ZOMBIE_CONVERTERS.get(world);
 				dummy.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.GOLDEN_APPLE, 1));
 				((ZombieVillager) entity).mobInteract(dummy, InteractionHand.MAIN_HAND);
 				return true;

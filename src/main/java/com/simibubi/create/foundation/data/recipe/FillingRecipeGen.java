@@ -6,6 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
@@ -17,43 +18,43 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, 250)
+	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BUCKET / 10)
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
 
-		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), 250)
+		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), FluidConstants.BUCKET / 10)
 			.require(Items.GLASS_BOTTLE)
 			.output(AllItems.BUILDERS_TEA.get())),
 
-		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, 250)
+		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, FluidConstants.BUCKET / 10)
 			.require(AllItems.BLAZE_CAKE_BASE.get())
 			.output(AllItems.BLAZE_CAKE.get())),
 
-		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, 250)
+		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BUCKET / 10)
 			.require(Items.APPLE)
 			.output(AllItems.HONEYED_APPLE.get())),
 
-		SWEET_ROLL = create("sweet_roll", b -> b.require(Tags.Fluids.MILK, 250)
+		SWEET_ROLL = create("sweet_roll", b -> b.require(Tags.Fluids.MILK, FluidConstants.BUCKET / 10)
 			.require(Items.BREAD)
 			.output(AllItems.SWEET_ROLL.get())),
 
-		CHOCOLATE_BERRIES = create("chocolate_glazed_berries", b -> b.require(AllFluids.CHOCOLATE.get(), 250)
+		CHOCOLATE_BERRIES = create("chocolate_glazed_berries", b -> b.require(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 10)
 			.require(Items.SWEET_BERRIES)
 			.output(AllItems.CHOCOLATE_BERRIES.get())),
 
-		GRASS_BLOCK = create("grass_block", b -> b.require(Fluids.WATER, 500)
+		GRASS_BLOCK = create("grass_block", b -> b.require(Fluids.WATER, FluidConstants.BUCKET / 10)
 			.require(Items.DIRT)
 			.output(Items.GRASS_BLOCK)),
 
-		GUNPOWDER = create("gunpowder", b -> b.require(PotionFluidHandler.potionIngredient(Potions.HARMING, 25))
+		GUNPOWDER = create("gunpowder", b -> b.require(PotionFluidHandler.potionIngredient(Potions.HARMING, FluidConstants.BUCKET / 40))
 			.require(AllItems.CINDER_FLOUR.get())
 			.output(Items.GUNPOWDER)),
 
-		REDSTONE = create("redstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.STRENGTH, 25))
+		REDSTONE = create("redstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.STRENGTH, FluidConstants.BUCKET / 40))
 			.require(AllItems.CINDER_FLOUR.get())
 			.output(Items.REDSTONE)),
 
-		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.NIGHT_VISION, 25))
+		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.NIGHT_VISION, FluidConstants.BUCKET / 40))
 			.require(AllItems.CINDER_FLOUR.get())
 			.output(Items.GLOWSTONE_DUST))
 

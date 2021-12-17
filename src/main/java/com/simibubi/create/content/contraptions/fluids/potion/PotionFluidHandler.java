@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -45,7 +46,7 @@ public class PotionFluidHandler {
 		return Pair.of(fluid, new ItemStack(Items.GLASS_BOTTLE));
 	}
 
-	public static FluidIngredient potionIngredient(Potion potion, int amount) {
+	public static FluidIngredient potionIngredient(Potion potion, long amount) {
 		return FluidIngredient.fromFluidStack(FluidHelper.copyStackWithAmount(PotionFluidHandler
 			.getFluidFromPotionItem(PotionUtils.setPotion(new ItemStack(Items.POTION), potion)), amount));
 	}
@@ -53,7 +54,7 @@ public class PotionFluidHandler {
 	public static FluidStack getFluidFromPotionItem(ItemStack stack) {
 		Potion potion = PotionUtils.getPotion(stack);
 		List<MobEffectInstance> list = PotionUtils.getCustomEffects(stack);
-		FluidStack fluid = PotionFluid.withEffects(250, potion, list);
+		FluidStack fluid = PotionFluid.withEffects(FluidConstants.BUCKET / 4, potion, list);
 		BottleType bottleTypeFromItem = bottleTypeFromItem(stack);
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
 			return new FluidStack(Fluids.WATER, fluid.getAmount());

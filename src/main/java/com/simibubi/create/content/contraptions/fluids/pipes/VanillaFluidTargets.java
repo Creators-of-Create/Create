@@ -5,6 +5,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
@@ -34,13 +35,13 @@ public class VanillaFluidTargets {
 		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
-			return new FluidStack(Fluids.LAVA, 1000);
+			return new FluidStack(Fluids.LAVA, FluidConstants.BUCKET);
 		}
 
 		if (state.getBlock() == Blocks.WATER_CAULDRON) {
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
-			return new FluidStack(Fluids.WATER, 1000);
+			return new FluidStack(Fluids.WATER, FluidConstants.BUCKET);
 		}
 
 		return FluidStack.empty();
