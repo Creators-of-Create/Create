@@ -10,8 +10,10 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -36,15 +38,16 @@ public class AllTags {
 	}
 
 	public static <T> Tag.Named<T> forgeTag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String path) {
-		return tag(wrapperFactory, "forge", path);
+		return tag(wrapperFactory, "c", path);
 	}
 
 	public static Tag.Named<Block> forgeBlockTag(String path) {
 		return forgeTag(TagFactory.BLOCK::create, path);
 	}
 
-	public static Tag.Named<Item> forgeItemTag(String path) { // todo: these should be converted to common tags
-		return forgeTag(TagFactory.ITEM::create, path);
+	public static Tag.Named<Item> forgeItemTag(String path) {
+		String[] old = path.split("/");
+		return forgeTag(TagFactory.ITEM::create, old[1] + '_' + old[0]);
 	}
 
 	public static Tag.Named<Fluid> forgeFluidTag(String path) {
@@ -73,7 +76,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true), FORGE("forge"), TIC("tconstruct")
+		MOD(Create.ID, false, true), FORGE("c"), TIC("tconstruct")
 
 		;
 
@@ -141,9 +144,9 @@ public class AllTags {
 //			} else {
 //				tag = BlockTags.bind(id.toString());
 //			}
-//			if (alwaysDatagen) {
-//				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
-//			}
+			if (alwaysDatagen) {
+				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
+			}
 		}
 
 		public boolean matches(Block block) {
@@ -155,13 +158,13 @@ public class AllTags {
 		}
 
 		public void add(Block... values) {
-//			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
-//				.add(values));
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.Tag(tag)
+				.add(values));
 		}
 
 		public void includeIn(Tag.Named<Block> parent) {
-//			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(parent)
-//				.addTag(tag));
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.Tag(parent)
+				.addTag(tag));
 		}
 
 		public void includeIn(AllBlockTags parent) {
@@ -169,8 +172,11 @@ public class AllTags {
 		}
 
 		public void includeAll(Tag.Named<Block> child) {
-//			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
-//				.addTag(child));
+			// Minecraft tags need to be loaded
+			if(child.getName().getNamespace().equals("minecraft"))
+				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(child));
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.Tag(tag)
+				.addTag(child));
 		}
 
 	}
@@ -216,9 +222,9 @@ public class AllTags {
 //			} else {
 //				tag = ItemTags.bind(id.toString());
 //			}
-//			if (alwaysDatagen) {
-//				REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
-//			}
+			if (alwaysDatagen) {
+				REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
+			}
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -226,13 +232,13 @@ public class AllTags {
 		}
 
 		public void add(Item... values) {
-//			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
-//				.add(values));
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.Tag(tag)
+				.add(values));
 		}
 
 		public void includeIn(Tag.Named<Item> parent) {
-//			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(parent)
-//				.addTag(tag));
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.Tag(parent)
+				.addTag(tag));
 		}
 
 		public void includeIn(AllItemTags parent) {
@@ -240,8 +246,8 @@ public class AllTags {
 		}
 
 		public void includeAll(Tag.Named<Item> child) {
-//			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
-//				.addTag(child));
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.Tag(tag)
+				.addTag(child));
 		}
 
 	}
@@ -280,9 +286,9 @@ public class AllTags {
 //			} else {
 //				tag = FluidTags.bind(id.toString());
 //			}
-//			if (alwaysDatagen) {
-//				REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag));
-//			}
+			if (alwaysDatagen) {
+				REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag));
+			}
 		}
 
 		public boolean matches(Fluid fluid) {
@@ -290,13 +296,13 @@ public class AllTags {
 		}
 
 		public void add(Fluid... values) {
-//			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
-//				.add(values));
+			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.Tag(tag)
+				.add(values));
 		}
 
 		public void includeIn(Tag.Named<Fluid> parent) {
-//			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(parent)
-//				.addTag(tag));
+			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.Tag(parent)
+				.addTag(tag));
 		}
 
 		public void includeIn(AllFluidTags parent) {
@@ -304,8 +310,8 @@ public class AllTags {
 		}
 
 		public void includeAll(Tag.Named<Fluid> child) {
-//			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
-//				.addTag(child));
+			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.Tag(tag)
+				.addTag(child));
 		}
 
 		private static void loadClass() {}
@@ -316,7 +322,7 @@ public class AllTags {
 		AllFluidTags.loadClass();
 
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
-//		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
+		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 			Items.HONEY_BOTTLE, Items.CAKE);

@@ -96,8 +96,8 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 		return new EmptyBackground(width, height);
 	}
 
-	public static Renderer doubleItemIcon(ItemLike item1, ItemLike item2) {
-		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
+	public static Renderer doubleItemIcon(Supplier<? extends ItemLike> item1, Supplier<? extends ItemLike> item2) {
+		return new DoubleItemIcon(() -> new ItemStack(item1.get()), () -> new ItemStack(item2.get()));
 	}
 
 	public static Renderer itemIcon(ItemLike item) {

@@ -4,13 +4,20 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.events.CommonEvents;
+import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.tterrag.registrate.fabric.EnvExecutor;
+
+import com.tterrag.registrate.fabric.GatherDataEvent;
 
 import net.fabricmc.api.EnvType;
 
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.core.Registry;
+
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,6 +78,7 @@ public class Create implements ModInitializer {
 
 	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
+	@Override
 	public void onInitialize() {
 		onCtor();
 	}
@@ -97,10 +105,8 @@ public class Create implements ModInitializer {
 
 		CopperRegistries.inject();
 
-		init();
-		// datagen, not needed
-//		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		AllWorldFeatures.registerOreFeatures();
+//		GatherDataEvent.EVENT.register(Create::gatherData);
+
 		AllRecipeTypes.register();
 		AllParticleTypes.register();
 		AllSoundEvents.register();
@@ -112,9 +118,12 @@ public class Create implements ModInitializer {
 //		EnvExecutor.runWhenOn(EnvType.CLIENT,
 //			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
-		CommonEvents.register();
 
 		REGISTRATE.get().register();
+		init();
+		CommonEvents.register();
+		AllWorldFeatures.registerOreFeatures();
+
 		AllTileEntities.registerStorages();
 		AllPackets.channel.initServerListener();
 	}
@@ -134,16 +143,15 @@ public class Create implements ModInitializer {
 //		});
 	}
 
-//	public static void gatherData(GatherDataEvent event) { // datagen
-//		DataGenerator gen = event.getGenerator();
-//		gen.addProvider(new AllAdvancements(gen));
-//		gen.addProvider(new LangMerger(gen));
-//		gen.addProvider(AllSoundEvents.provider(gen));
-//		gen.addProvider(new StandardRecipeGen(gen));
-//		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-//		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-//		ProcessingRecipeGen.registerAll(gen);
-//	}
+	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) { // datagen
+		gen.addProvider(new AllAdvancements(gen));
+		gen.addProvider(new LangMerger(gen));
+		gen.addProvider(AllSoundEvents.provider(gen));
+		gen.addProvider(new StandardRecipeGen(gen));
+		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
+		ProcessingRecipeGen.registerAll(gen);
+	}
 
 	public static CreateRegistrate registrate() {
 		return REGISTRATE.get();

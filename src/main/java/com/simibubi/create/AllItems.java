@@ -50,6 +50,7 @@ import com.simibubi.create.content.logistics.item.LinkedControllerItemRenderer;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
@@ -93,12 +94,12 @@ public class AllItems {
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
 			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
-//					.model(AssetLookup.existingItemModel())
+					.model(AssetLookup.existingItemModel())
 					.register();
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
 			REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
-//					.model(AssetLookup.existingItemModel())
+					.model(AssetLookup.existingItemModel())
 					.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
@@ -158,7 +159,7 @@ public class AllItems {
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
 		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
 			.properties(p -> p.rarity(Rarity.UNCOMMON))
-//			.model(AssetLookup.existingItemModel())
+			.model(AssetLookup.existingItemModel())
 			.color(() -> ChromaticCompoundColor::new)
 			.register();
 
@@ -213,12 +214,12 @@ public class AllItems {
 
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-//			.model(AssetLookup.customBlockItemModel("gearbox", "item_vertical"))
+			.model(AssetLookup.customBlockItemModel("gearbox", "item_vertical"))
 			.register();
 
 	public static final ItemEntry<BlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =
 		REGISTRATE.item("empty_blaze_burner", BlazeBurnerBlockItem::empty)
-//			.model(AssetLookup.customBlockItemModel("blaze_burner", "block"))
+			.model(AssetLookup.customBlockItemModel("blaze_burner", "block"))
 			.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
@@ -243,7 +244,7 @@ public class AllItems {
 	COPPER_BACKTANK =
 		REGISTRATE
 			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-//			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
 			.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
@@ -253,20 +254,20 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
-		//.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
+//		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
-		//.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
+//		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperItemRenderer::new))
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.stacksTo(1))
-		//.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
-//		.model(AssetLookup.itemModelWithPartials())
+//		.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
+		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
@@ -290,34 +291,34 @@ public class AllItems {
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
 			.properties(p -> p.stacksTo(1))
-			//.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerItemRenderer::new))
-//			.model(AssetLookup.itemModelWithPartials())
+//			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerItemRenderer::new))
+			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
 			.properties(p -> p.stacksTo(1))
-			//.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
-//			.model(AssetLookup.itemModelWithPartials())
+//			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
+			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
-		//.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripItemRenderer::new))
-//		.model(AssetLookup.itemModelWithPartials())
+//		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripItemRenderer::new))
+		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
-			//.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandItemRenderer::new))
-//			.model(AssetLookup.itemModelWithPartials())
+//			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandItemRenderer::new))
+			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<WorldshaperItem> WORLDSHAPER =
 		REGISTRATE.item("handheld_worldshaper", WorldshaperItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
-			//.transform(CreateRegistrate.customRenderedItem(() -> WorldshaperItemRenderer::new))
+//			.transform(CreateRegistrate.customRenderedItem(() -> WorldshaperItemRenderer::new))
 			.lang("Creative Worldshaper")
-//			.model(AssetLookup.itemModelWithPartials())
+			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
@@ -331,12 +332,12 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
-//		.model(AssetLookup.existingItemModel())
+		.model(AssetLookup.existingItemModel())
 		.register();
 
 	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
 		REGISTRATE.item("attribute_filter", FilterItem::attribute)
-//			.model(AssetLookup.existingItemModel())
+			.model(AssetLookup.existingItemModel())
 			.register();
 
 	// Schematics

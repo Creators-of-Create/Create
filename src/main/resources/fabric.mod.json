@@ -24,6 +24,9 @@
     "client": [
       "com.simibubi.create.CreateClient"
     ],
+    "fabric-datagen": [
+      "com.simibubi.create.lib.data.DataInit"
+    ],
 
     "config": [
       "com.simibubi.create.foundation.config.CClient",

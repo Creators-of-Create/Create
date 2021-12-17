@@ -70,7 +70,7 @@ dependencies {
 
     // dependencies
     modImplementation(include("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"))
-    modImplementation(include("me.alphamode:ForgeTags:1.0"))
+    modImplementation(include("me.alphamode:ForgeTags:1.1"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
     implementation(include('com.electronwill.night-config:core:3.6.0'))
     implementation(include('com.electronwill.night-config:toml:3.6.0'))
@@ -91,6 +91,24 @@ loom {
         }
     }
 }
+
+loom {
+    runs {
+        datagen {
+            client()
+
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated_fabric/resources")}"
+            vmArg "-Dfabric-api.datagen.modid=create"
+            // from ae2
+            property "com.simibubi.create.existingData", file("src/main/resources").absolutePath
+
+            runDir "build/datagen"
+        }
+    }
+}
+assemble.dependsOn runDatagen
 
 processResources {
     inputs.property "version", project.version

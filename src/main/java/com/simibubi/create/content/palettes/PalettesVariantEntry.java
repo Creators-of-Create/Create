@@ -8,6 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
@@ -32,10 +33,10 @@ public class PalettesVariantEntry {
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
 				registrate.block(pattern.createName(name), pattern.getBlockFactory())
 					.initialProperties(baseBlock::get)
-					/*.transform(pickaxeOnly())
+					.transform(pickaxeOnly())
 					.blockstate(pattern.getBlockStateGenerator()
 						.apply(pattern)
-						.apply(name)::accept)*/;
+						.apply(name)::accept);
 
 			ItemBuilder<BlockItem, ? extends BlockBuilder<? extends Block, CreateRegistrate>> itemBuilder =
 				builder.item();
@@ -54,10 +55,10 @@ public class PalettesVariantEntry {
 			pattern.createCTBehaviour(name)
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
 
-//			builder.recipe((c, p) -> {
-//				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c::get);
-//				pattern.addRecipes(baseBlock, c, p);
-//			});
+			builder.recipe((c, p) -> {
+				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c::get);
+				pattern.addRecipes(baseBlock, c, p);
+			});
 
 			itemBuilder.register();
 			BlockEntry<? extends Block> block = builder.register();

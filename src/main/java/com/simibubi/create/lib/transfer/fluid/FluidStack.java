@@ -65,6 +65,12 @@ public class FluidStack {
 	}
 
 	public FluidStack(Fluid type, long amount) {
+		// todo: support virtual fluids
+		if(!type.isSource(type.defaultFluidState())) {
+			this.type = FluidVariant.blank();
+			this.amount = amount;
+			return;
+		}
 		this.type = FluidVariant.of(type);
 		this.amount = amount;
 	}

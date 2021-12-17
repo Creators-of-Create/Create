@@ -7,11 +7,11 @@
     {
       "fluid": "minecraft:water",
       "nbt": {},
-      "amount": 250
+      "amount": 20250
     },
     {
       "fluidTag": "c:milk",
-      "amount": 250
+      "amount": 20250
     }
   ],
   "results": [

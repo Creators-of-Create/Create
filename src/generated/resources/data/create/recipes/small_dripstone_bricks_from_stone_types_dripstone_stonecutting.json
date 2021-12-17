@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/dripstone"
-  },
-  "result": "create:small_dripstone_bricks",
-  "count": 1
-}

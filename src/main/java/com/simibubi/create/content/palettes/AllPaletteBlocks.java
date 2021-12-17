@@ -13,9 +13,11 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
+import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import me.alphamode.forgetags.Tags;
@@ -38,8 +40,8 @@ public class AllPaletteBlocks {
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
 		.addLayer(() -> RenderType::cutoutMipped)
-//		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
-//		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
+		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
+		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
 		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 		.item()
 		.tag(Tags.Items.GLASS_COLORLESS)

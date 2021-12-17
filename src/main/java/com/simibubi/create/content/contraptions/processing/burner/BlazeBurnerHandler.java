@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.processing.burner;
+//package com.simibubi.create.content.contraptions.processing.burner;
 
 //import com.simibubi.create.AllBlocks;
 //import com.simibubi.create.AllSoundEvents;

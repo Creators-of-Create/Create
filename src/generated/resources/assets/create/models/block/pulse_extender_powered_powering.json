@@ -1,7 +1,0 @@
-{
-  "parent": "create:block/diodes/pulse_extender",
-  "textures": {
-    "torch": "minecraft:block/redstone_torch",
-    "top": "create:block/diodes/pulse_extender/powered_powering"
-  }
-}

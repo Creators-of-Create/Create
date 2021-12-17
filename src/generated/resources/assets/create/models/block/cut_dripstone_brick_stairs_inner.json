@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "side": "create:block/palettes/stone_types/brick/dripstone_cut_brick",
-    "bottom": "create:block/palettes/stone_types/brick/dripstone_cut_brick",
-    "top": "create:block/palettes/stone_types/brick/dripstone_cut_brick"
-  }
-}

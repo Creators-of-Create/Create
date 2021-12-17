@@ -34,7 +34,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 public class SpoutCategory extends CreateRecipeCategory<FillingRecipe, SpoutDisplay> {
 
 	public SpoutCategory() {
-		super(doubleItemIcon(AllBlocks.SPOUT.get(), Items.WATER_BUCKET), emptyBackground(177, 80));
+		super(doubleItemIcon(AllBlocks.SPOUT, () -> Items.WATER_BUCKET), emptyBackground(177, 80));
 		setCategoryId("spout_filling");
 	}
 

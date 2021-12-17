@@ -146,11 +146,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		NonNullFunction<BlockBehaviour.Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 			.transform(pickaxeOnly())
-//			.blockstate((c, p) -> {
-//				final String location = "block/palettes/stone_types/" + c.getName();
-//				p.simpleBlock(c.get(), p.models()
-//					.cubeAll(c.getName(), p.modLoc(location)));
-//			})
+			.blockstate((c, p) -> {
+				final String location = "block/palettes/stone_types/" + c.getName();
+				p.simpleBlock(c.get(), p.models()
+					.cubeAll(c.getName(), p.modLoc(location)));
+			})
 			.item()
 			.build();
 		return builder;
