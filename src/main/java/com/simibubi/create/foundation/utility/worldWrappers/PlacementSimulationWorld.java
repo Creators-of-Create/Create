@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 
 import com.jozufozu.flywheel.api.FlywheelWorld;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
@@ -16,7 +18,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.lighting.LevelLightEngine;
+
+import org.jetbrains.annotations.NotNull;
 
 public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWorld {
 	public Map<BlockPos, BlockState> blocksAdded;
@@ -27,12 +33,15 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 	public WrappedChunkProvider chunkProvider;
 	private final BlockPos.MutableBlockPos scratch = new BlockPos.MutableBlockPos();
 
-	public PlacementSimulationWorld(Level wrapped) {
-		this(wrapped, new WrappedChunkProvider());
+	private final Contraption contraption;
+
+	public PlacementSimulationWorld(Level wrapped, Contraption c) {
+		this(wrapped, c, new WrappedChunkProvider());
 	}
 
-	public PlacementSimulationWorld(Level wrapped, WrappedChunkProvider chunkProvider) {
+	public PlacementSimulationWorld(Level wrapped, @NotNull Contraption c, WrappedChunkProvider chunkProvider) {
 		super(wrapped, chunkProvider);
+		contraption = c;
 		this.chunkProvider = chunkProvider.setPlacementWorld(this);
 		spannedSections = new HashSet<>();
 		lighter = new LevelLightEngine(chunkProvider, true, false); // blockLight, skyLight
@@ -116,5 +125,25 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 		if (state != null)
 			return state;
 		return Blocks.AIR.defaultBlockState();
+	}
+
+	@Override
+	public int getMinBuildHeight() {
+		return contraption.getContraptionWorld().getMinBuildHeight();
+	}
+
+	@Override
+	public int getHeight() {
+		return contraption.getContraptionWorld().getHeight();
+	}
+
+	// Override Starlight's ExtendedWorld interface methods:
+
+	public LevelChunk getChunkAtImmediately(final int chunkX, final int chunkZ) {
+		return chunkProvider.getChunk(chunkX, chunkZ, false);
+	}
+
+	public ChunkAccess getAnyChunkImmediately(final int chunkX, final int chunkZ) {
+		return chunkProvider.getChunk(chunkX, chunkZ);
 	}
 }
