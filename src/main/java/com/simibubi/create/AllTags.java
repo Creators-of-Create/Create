@@ -322,7 +322,7 @@ public class AllTags {
 		AllFluidTags.loadClass();
 
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
-		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
+		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS_IRON);
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 			Items.HONEY_BOTTLE, Items.CAKE);
