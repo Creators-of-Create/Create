@@ -7,6 +7,10 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import ca.spottedleaf.starlight.common.chunk.ExtendedChunk;
+
+import ca.spottedleaf.starlight.common.light.StarLightEngine;
+
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -30,6 +34,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.TickContainerAccess;
+import net.minecraftforge.fml.ModList;
 
 public class WrappedChunk extends ChunkAccess {
 
@@ -50,10 +55,16 @@ public class WrappedChunk extends ChunkAccess {
 		this.x = x;
 		this.z = z;
 
-		this.sections = new LevelChunkSection[16];
+		// Do not hard code the number of chunk sections
+		this.sections = new LevelChunkSection[world.getSectionsCount()];
 
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < this.sections.length; i++) {
 			sections[i] = new WrappedChunkSection(this, i << 4);
+		}
+		// If Starlight is loaded, initialize its NibbleArrays for this chunk to default values
+		if (ModList.get().isLoaded("starlight")) {
+			((ExtendedChunk)this).setBlockNibbles(StarLightEngine.getFilledEmptyLight(this));
+			((ExtendedChunk)this).setSkyNibbles(StarLightEngine.getFilledEmptyLight(this));
 		}
 	}
 

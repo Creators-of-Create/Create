@@ -104,7 +104,7 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static PlacementSimulationWorld setupRenderWorld(Level world, Contraption c) {
-		PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
+		PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world, c);
 
 		renderWorld.setTileEntities(c.presentTileEntities.values());
 
