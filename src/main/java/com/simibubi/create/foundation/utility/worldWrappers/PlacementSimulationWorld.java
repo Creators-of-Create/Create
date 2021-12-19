@@ -22,7 +22,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWorld {
 	public Map<BlockPos, BlockState> blocksAdded;
@@ -39,7 +39,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 		this(wrapped, c, new WrappedChunkProvider());
 	}
 
-	public PlacementSimulationWorld(Level wrapped, @NotNull Contraption c, WrappedChunkProvider chunkProvider) {
+	public PlacementSimulationWorld(Level wrapped, @Nonnull Contraption c, WrappedChunkProvider chunkProvider) {
 		super(wrapped, chunkProvider);
 		contraption = c;
 		this.chunkProvider = chunkProvider.setPlacementWorld(this);
