@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Wraps an IItemHandler in a Storage, for use outside Create
  */
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class StorageItemHandler implements Storage<ItemVariant> {
 	protected final IItemHandler handler;
 

@@ -5,17 +5,20 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.Util;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class FluidStack {
 	public static final Codec<FluidStack> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
@@ -99,10 +102,6 @@ public class FluidStack {
 
 	public Fluid getFluid() {
 		return getType().getFluid();
-	}
-
-	public Fluid getRawFluid() {
-		return getFluid();
 	}
 
 	public long getAmount() {
@@ -216,7 +215,20 @@ public class FluidStack {
 	}
 
 	public String getTranslationKey() {
-		return Util.makeDescriptionId("fluid", Registry.FLUID.getKey(getFluid()));
+		if (getFluid() == Fluids.EMPTY) {
+			return "";
+		} else if (getFluid() == Fluids.WATER) {
+			return "block.minecraft.water";
+		} else if (getFluid() == Fluids.LAVA) {
+			return "block.minecraft.lava";
+		}
+		ResourceLocation id = Registry.FLUID.getKey(getFluid());
+		String key = Util.makeDescriptionId("fluid", id);
+		String translated = I18n.get(key);
+		if (translated.equals(key)) {
+			return Util.makeDescriptionId("block", id);
+		}
+		return key;
 	}
 
 	public FluidStack copy() {

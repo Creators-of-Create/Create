@@ -12,21 +12,28 @@ import com.simibubi.create.lib.block.HarvestableBlock;
 import com.simibubi.create.lib.event.PlayerTickEndCallback;
 import com.simibubi.create.lib.utility.MixinHelper;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin {
+public abstract class PlayerMixin extends LivingEntity {
 	@Final
 	@Shadow
-	public Inventory inventory;
+	private Inventory inventory;
+
+	protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
+		super(entityType, level);
+	}
 
 	@Inject(at = @At("HEAD"), method = "hasCorrectToolForDrops", cancellable = true)
 	public void create$isUsingEffectiveTool(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {
-		if (blockState.getBlock() instanceof HarvestableBlock && inventory.getSelected().getItem() instanceof DiggerItem) {
-			cir.setReturnValue(((HarvestableBlock) blockState.getBlock()).isToolEffective(blockState, (DiggerItem) inventory.getSelected().getItem()));
+		if (blockState.getBlock() instanceof HarvestableBlock harvestable && inventory.getSelected().getItem() instanceof DiggerItem digger) {
+			cir.setReturnValue(harvestable.isToolEffective(blockState, digger));
 		}
 	}
 

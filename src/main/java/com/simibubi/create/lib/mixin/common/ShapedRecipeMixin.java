@@ -1,5 +1,7 @@
 package com.simibubi.create.lib.mixin.common;
 
+import com.simibubi.create.Create;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,9 +20,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 
 @Mixin(ShapedRecipe.class)
 public abstract class ShapedRecipeMixin implements ShapedRecipeExtensions {
-	@Unique
-	private static final Logger CREATE$LOGGER = LogManager.getLogger("Create");
-
 	@ModifyConstant(method = "patternFromJson(Lcom/google/gson/JsonArray;)[Ljava/lang/String;",
 			constant = @Constant(intValue = 3, ordinal = 0))
 	private static int modifyMaxHeight(int original) {
@@ -33,18 +32,9 @@ public abstract class ShapedRecipeMixin implements ShapedRecipeExtensions {
 		return Constants.Crafting.WIDTH;
 	}
 
-	// these should inject into before each thrown JsonSyntaxException
-	// 🍝
-
 	@Inject(method = "patternFromJson(Lcom/google/gson/JsonArray;)[Ljava/lang/String;",
 			at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lcom/google/gson/JsonSyntaxException;<init>(Ljava/lang/String;)V", remap = false))
 	private static void changeWidthAndHeightWarning(JsonArray jsonArray, CallbackInfoReturnable<String[]> cir) {
-		CREATE$LOGGER.warn("The following error may be inaccurate, there is no check for the actual maximum size of a recipe.");
-	}
-
-	@Override
-	public void setCraftingSize(int width, int height) {
-		if (Constants.Crafting.WIDTH < width) Constants.Crafting.WIDTH = width;
-		if (Constants.Crafting.HEIGHT < height) Constants.Crafting.HEIGHT = height;
+		Create.LOGGER.warn("The following error may be inaccurate, there is no check for the actual maximum size of a recipe.");
 	}
 }

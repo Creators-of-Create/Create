@@ -2,12 +2,12 @@ package com.simibubi.create.lib.utility;
 
 import java.lang.reflect.Method;
 
+import com.simibubi.create.Create;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MethodGetter {
-	private static final Logger LOGGER = LogManager.getLogger();
-
 	/**
 	 * remember, this is a Fabric mod, you need intermediary for obfuscatedName, not SRG
 	 */
@@ -22,7 +22,7 @@ public class MethodGetter {
 			try {
 				method = clas.getMethod(methodName, parameterTypes);
 			} catch (NoSuchMethodException ex) {
-				LOGGER.fatal("No method with the provided name or obfuscated name found!");
+				Create.LOGGER.fatal("No method with the provided name or obfuscated name found!");
 				throw new RuntimeException(ex);
 			}
 		}

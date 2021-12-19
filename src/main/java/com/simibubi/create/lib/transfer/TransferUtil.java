@@ -31,43 +31,50 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class TransferUtil {
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be) {
-		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
-		return handleTypeChecks(itemStorage).cast();
+		return simplifyItem(itemStorage).cast();
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be, Direction side) {
-		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
-		return handleTypeChecks(itemStorage).cast();
+		return simplifyItem(itemStorage).cast();
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos) {
+		if (level.isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, Direction.UP);
-		return handleTypeChecks(itemStorage).cast();
+		return simplifyItem(itemStorage).cast();
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos, Direction direction) {
 		if(level.isClientSide) return LazyOptional.empty();
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, direction);
-		return handleTypeChecks(itemStorage).cast();
+		return simplifyItem(itemStorage).cast();
 	}
 
 	// Fluids
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be) {
-		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
-		return handleTypeChecks(fluidStorage).cast();
+		return simplifyFluid(fluidStorage).cast();
 	}
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be, Direction side) {
-		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
-		return handleTypeChecks(fluidStorage).cast();
+		return simplifyFluid(fluidStorage).cast();
+	}
+
+	public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, Direction side) {
+		if (level.isClientSide) return LazyOptional.empty();
+		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(level, pos, side);
+		return simplifyFluid(fluidStorage).cast();
 	}
 
 	// Fluid-containing items
@@ -89,28 +96,16 @@ public class TransferUtil {
 		} else throw new RuntimeException("Handler class must be IItemHandler or IFluidHandler");
 	}
 
-	/**
-	 * Returns either an IFluidHandler or an IItemHandler, wrapped in a LazyOptional.
-	 */
-	public static LazyOptional<?> handleTypeChecks(Storage<?> storage) {
+	public static LazyOptional<IItemHandler> simplifyItem(Storage<ItemVariant> storage) {
 		if (storage == null) return LazyOptional.empty();
-		if (storage instanceof StorageItemHandler handler) {
-			return LazyOptional.ofObject(handler.getHandler());
-		} else if (storage instanceof StorageFluidHandler handler) {
-			return LazyOptional.ofObject(handler.getHandler());
-		} else {
-			try {
-				Storage<ItemVariant> itemStorage = ((Storage<ItemVariant>) storage);
-				return LazyOptional.ofObject(new ItemStorageHandler(itemStorage));
-			} catch (ClassCastException e) {
-				try {
-					Storage<FluidVariant> fluidStorage = ((Storage<FluidVariant>) storage);
-					return LazyOptional.ofObject(new FluidStorageHandler(fluidStorage));
-				} catch (ClassCastException ex) {
-					throw new RuntimeException("Storage did not contain an item or fluid.", ex);
-				}
-			}
-		}
+		if (storage instanceof StorageItemHandler handler) return LazyOptional.ofObject(handler.getHandler());
+		return LazyOptional.ofObject(new ItemStorageHandler(storage));
+	}
+
+	public static LazyOptional<IFluidHandler> simplifyFluid(Storage<FluidVariant> storage) {
+		if (storage == null) return LazyOptional.empty();
+		if (storage instanceof StorageFluidHandler handler) return LazyOptional.ofObject(handler.getHandler());
+		return LazyOptional.ofObject(new FluidStorageHandler(storage));
 	}
 
 	@Nullable

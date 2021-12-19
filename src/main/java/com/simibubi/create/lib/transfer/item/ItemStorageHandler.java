@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Wraps a Storage in an IItemHandler, for use in Create
  */
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class ItemStorageHandler implements IItemHandlerModifiable {
 	protected final Storage<ItemVariant> storage;
 

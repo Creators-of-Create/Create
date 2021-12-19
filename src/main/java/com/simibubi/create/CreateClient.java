@@ -32,6 +32,9 @@ import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import com.simibubi.create.lib.utility.FluidHandlerData;
+
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -104,6 +107,7 @@ public class CreateClient implements ClientModInitializer {
 		ClientEvents.register();
 		InputEvents.register();
 		AllPackets.channel.initClientListener();
+		FluidHandlerData.initClient();
 	}
 
 	private static void registerOverlays() {

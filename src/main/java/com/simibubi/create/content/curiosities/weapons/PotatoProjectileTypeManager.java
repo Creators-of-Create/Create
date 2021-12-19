@@ -147,9 +147,7 @@ public class PotatoProjectileTypeManager {
 
 		@Override
 		public void handle(Supplier<Context> context) {
-			context.get().enqueueWork(() -> {
-				fromBuffer(buffer);
-			});
+			fromBuffer(buffer);
 			context.get().setPacketHandled(true);
 		}
 

@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.utility.FluidHandlerData;
+import com.simibubi.create.lib.utility.FluidHandlerData.FluidTankData;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -47,26 +50,24 @@ public interface IHaveGoggleInformation {
 	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, LazyOptional<IFluidHandler> handler) {
 		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.goggles.fluid_container")));
 		TranslatableComponent mb = Lang.translate("generic.unit.millibuckets");
-		Optional<IFluidHandler> resolve = handler.resolve();
-		if (!resolve.isPresent())
-			return false;
-
-		IFluidHandler tank = resolve.get();
-		if (tank.getTanks() == 0)
+		FluidHandlerData tank = FluidHandlerData.CURRENT;
+		if (tank == null || tank.getTanks() == 0)
 			return false;
 
 		Component indent = new TextComponent(spacing + " ");
 
 		boolean isEmpty = true;
 		for (int i = 0; i < tank.getTanks(); i++) {
-			FluidStack fluidStack = tank.getFluidInTank(i);
-			if (fluidStack.isEmpty())
+			FluidTankData data = tank.data[i];
+			String translationKey = data.translationKey();
+			if ("block.minecraft.empty".equals(translationKey))
 				continue;
-
-			Component fluidName = new TranslatableComponent(fluidStack.getTranslationKey()).withStyle(ChatFormatting.GRAY);
-			Component contained = new TextComponent(format(fluidStack.getAmount())).append(mb).withStyle(ChatFormatting.GOLD);
+			long amount = data.amount();
+			long tankCapacity = data.capacity();
+			Component fluidName = new TranslatableComponent(translationKey).withStyle(ChatFormatting.GRAY);
+			Component contained = new TextComponent(format(amount)).append(mb).withStyle(ChatFormatting.GOLD);
 			Component slash = new TextComponent(" / ").withStyle(ChatFormatting.GRAY);
-			Component capacity = new TextComponent(format(tank.getTankCapacity(i))).append(mb).withStyle(ChatFormatting.DARK_GRAY);
+			Component capacity = new TextComponent(format(tankCapacity)).append(mb).withStyle(ChatFormatting.DARK_GRAY);
 
 			tooltip.add(indent.plainCopy()
 					.append(fluidName));
@@ -88,11 +89,11 @@ public interface IHaveGoggleInformation {
 			return true;
 
 		Component capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(ChatFormatting.GRAY);
-		Component amount = new TextComponent(format(Double.parseDouble(FluidTextUtil.getUnicodeMillibuckets(tank.getTankCapacity(0), true)))).append(mb).withStyle(ChatFormatting.GOLD);
+		Component amount = new TextComponent(format(tank.data[0].capacity())).append(mb).withStyle(ChatFormatting.GOLD);
 
 		tooltip.add(indent.plainCopy()
-			.append(capacity)
-			.append(amount));
+				.append(capacity)
+				.append(amount));
 		return true;
 	}
 

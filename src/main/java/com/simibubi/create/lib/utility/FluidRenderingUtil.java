@@ -1,7 +1,5 @@
 package com.simibubi.create.lib.utility;
 
-import com.jozufozu.flywheel.util.Lazy;
-
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -12,7 +10,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 
-@SuppressWarnings({"deprecation", "UnstableApiUsage"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class FluidRenderingUtil {
 	public static final ResourceLocation WATER_ID = new ResourceLocation("minecraft:blocks/water_still");
 	public static final TextureAtlasSprite WATER = Minecraft.getInstance()
