@@ -9,6 +9,8 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerAppl
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -78,7 +80,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 		)
 	;
 
-	public SequencedAssemblyRecipeGen(DataGenerator p_i48262_1_) {
+	public SequencedAssemblyRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

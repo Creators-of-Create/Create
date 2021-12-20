@@ -4,6 +4,8 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
 
@@ -27,7 +29,7 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public EmptyingRecipeGen(DataGenerator p_i48262_1_) {
+	public EmptyingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

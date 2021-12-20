@@ -6,6 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
@@ -60,7 +61,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public FillingRecipeGen(DataGenerator p_i48262_1_) {
+	public FillingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

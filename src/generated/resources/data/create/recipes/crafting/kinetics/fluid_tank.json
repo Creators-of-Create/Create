@@ -7,10 +7,10 @@
   ],
   "key": {
     "B": {
-      "tag": "forge:plates/copper"
+      "tag": "c:copper_plates"
     },
     "C": {
-      "tag": "forge:barrels/wooden"
+      "tag": "c:wooden_barrels"
     }
   },
   "result": {

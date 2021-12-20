@@ -7,6 +7,7 @@ import com.simibubi.create.AllTags.AllFluidTags;
 
 import com.simibubi.create.lib.utility.TagUtil;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
@@ -48,7 +49,7 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public CompactingRecipeGen(DataGenerator p_i48262_1_) {
+	public CompactingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

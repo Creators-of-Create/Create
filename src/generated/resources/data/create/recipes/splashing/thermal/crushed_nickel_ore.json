@@ -1,0 +1,15 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_nickel_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "thermal:nickel_nugget",
+      "count": 9
+    }
+  ],
+  "conditions": []
+}

@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:storage_blocks/brass"
+      "tag": "c:brass_storage_blocks"
     }
   ],
   "result": {

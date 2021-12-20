@@ -1,7 +1,7 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "tag": "c:brass_plates"
+    "tag": "c:gold_plates"
   },
   "transitionalItem": {
     "item": "create:incomplete_precision_mechanism"

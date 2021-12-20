@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
 import net.minecraft.data.DataGenerator;
 
 public class PolishingRecipeGen extends ProcessingRecipeGen {
@@ -13,7 +15,7 @@ public class PolishingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public PolishingRecipeGen(DataGenerator p_i48262_1_) {
+	public PolishingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

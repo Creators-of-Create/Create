@@ -5,7 +5,7 @@
       "item": "minecraft:paper"
     },
     {
-      "tag": "forge:dyes/light_blue"
+      "tag": "c:light_blue_dyes"
     }
   ],
   "result": {

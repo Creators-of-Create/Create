@@ -5,7 +5,7 @@
       "item": "minecraft:paper"
     },
     {
-      "tag": "forge:sand/red"
+      "tag": "c:red_sand"
     }
   ],
   "result": {

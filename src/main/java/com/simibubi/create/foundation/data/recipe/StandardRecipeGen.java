@@ -31,6 +31,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import me.alphamode.forgetags.Tags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Registry;
@@ -1087,16 +1088,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace();
 	}
 
+	// todo: port
 	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, String metalName, Mods... mods) {
-		for (Mods mod : mods) {
-			ResourceLocation ingot = mod.ingotOf(metalName);
-			String modId = mod.getId();
-			create(ingot).withSuffix("_compat_" + modId)
-//				.whenModLoaded(modId)
-				.viaCooking(ingredient::get)
-				.rewardXP(.1f)
-				.inBlastFurnace();
-		}
+//		for (Mods mod : mods) {
+//			ResourceLocation ingot = mod.ingotOf(metalName);
+//			String modId = mod.getId();
+//			create(ingot).withSuffix("_compat_" + modId)
+////				.whenModLoaded(modId)
+//				.viaCooking(ingredient::get)
+//				.rewardXP(.1f)
+//				.inBlastFurnace();
+//		}
 		return null;
 	}
 
@@ -1339,7 +1341,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return "Create's Standard Recipes";
 	}
 
-	public StandardRecipeGen(DataGenerator p_i48262_1_) {
+	public StandardRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

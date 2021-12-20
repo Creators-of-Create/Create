@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -41,7 +43,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 			.output(planks, 6));
 	}
 
-	public CuttingRecipeGen(DataGenerator p_i48262_1_) {
+	public CuttingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

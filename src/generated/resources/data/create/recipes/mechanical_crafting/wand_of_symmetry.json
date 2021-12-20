@@ -9,19 +9,19 @@
   ],
   "key": {
     "E": {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     "G": {
-      "tag": "forge:glass"
+      "tag": "c:glass"
     },
     "P": {
       "item": "create:precision_mechanism"
     },
     "O": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidian"
     },
     "B": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:brass_ingots"
     }
   },
   "result": {

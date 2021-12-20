@@ -1,0 +1,15 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_silver_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "thermal:silver_nugget",
+      "count": 9
+    }
+  ],
+  "conditions": []
+}

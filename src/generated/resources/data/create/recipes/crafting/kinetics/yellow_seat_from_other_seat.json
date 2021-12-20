@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dyes/yellow"
+      "tag": "c:yellow_dyes"
     },
     {
       "tag": "create:seats"

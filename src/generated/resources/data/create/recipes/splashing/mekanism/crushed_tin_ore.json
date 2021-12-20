@@ -1,0 +1,15 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_tin_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "mekanism:nugget_tin",
+      "count": 9
+    }
+  ],
+  "conditions": []
+}

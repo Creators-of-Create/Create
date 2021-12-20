@@ -2,7 +2,7 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "tag": "forge:stained_glass"
+      "tag": "c:stained_glass"
     }
   ],
   "results": [

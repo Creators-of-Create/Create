@@ -13,6 +13,8 @@ import com.simibubi.create.lib.condition.TagEmptyCondition;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
@@ -191,7 +193,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(.75f, AllItems.EXP_NUGGET.get(), amount));
 	}
 
-	public CrushingRecipeGen(DataGenerator p_i48262_1_) {
+	public CrushingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

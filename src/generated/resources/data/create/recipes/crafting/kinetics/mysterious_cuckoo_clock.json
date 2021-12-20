@@ -7,7 +7,7 @@
   ],
   "key": {
     "C": {
-      "tag": "forge:gunpowder"
+      "tag": "c:gunpowder"
     },
     "B": {
       "item": "create:cuckoo_clock"

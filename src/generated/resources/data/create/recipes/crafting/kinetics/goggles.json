@@ -9,10 +9,10 @@
       "tag": "c:glass"
     },
     "P": {
-      "tag": "c:brass_plates"
+      "tag": "c:gold_plates"
     },
     "S": {
-      "tag": "forge:string"
+      "tag": "c:string"
     }
   },
   "result": {

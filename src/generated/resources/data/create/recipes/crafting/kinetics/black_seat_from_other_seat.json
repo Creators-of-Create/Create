@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dyes/black"
+      "tag": "c:black_dyes"
     },
     {
       "tag": "create:seats"

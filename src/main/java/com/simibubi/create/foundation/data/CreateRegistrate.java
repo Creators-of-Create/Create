@@ -222,7 +222,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Environment(EnvType.CLIENT)
 	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
-															   Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
+		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
 		b//.properties(p -> p.setISTER(() -> supplier.get()::get))
 				.onRegister(entry -> {
 					BuiltinItemRendererRegistry.DynamicItemRenderer ister = supplier.get().get();

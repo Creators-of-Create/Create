@@ -2,13 +2,13 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "tag": "forge:cobblestone"
+      "tag": "c:cobblestone"
     }
   ],
   "results": [
     {
       "fluid": "minecraft:lava",
-      "amount": 50
+      "amount": 4050
     }
   ],
   "heatRequirement": "superheated"

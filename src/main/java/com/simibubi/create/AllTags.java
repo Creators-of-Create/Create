@@ -42,7 +42,8 @@ public class AllTags {
 	}
 
 	public static Tag.Named<Block> forgeBlockTag(String path) {
-		return forgeTag(TagFactory.BLOCK::create, path);
+		String[] old = path.split("/");
+		return forgeTag(TagFactory.BLOCK::create, old[1] + '_' + old[0]);
 	}
 
 	public static Tag.Named<Item> forgeItemTag(String path) {

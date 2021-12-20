@@ -1,0 +1,15 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_lead_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "mysticalworld:lead_nugget",
+      "count": 9
+    }
+  ],
+  "conditions": []
+}

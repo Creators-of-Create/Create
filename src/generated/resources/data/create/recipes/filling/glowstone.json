@@ -5,12 +5,9 @@
       "item": "create:cinder_flour"
     },
     {
-      "fluid": "create:potion",
-      "nbt": {
-        "Bottle": "REGULAR",
-        "Potion": "minecraft:night_vision"
-      },
-      "amount": 25
+      "fluid": "minecraft:empty",
+      "nbt": {},
+      "amount": 2025
     }
   ],
   "results": [

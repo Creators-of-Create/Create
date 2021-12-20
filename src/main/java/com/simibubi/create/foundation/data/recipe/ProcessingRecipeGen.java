@@ -12,6 +12,8 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -26,7 +28,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 //	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
 	protected static final int BOTTLE = 250;
 
-	public static void registerAll(DataGenerator gen) {
+	public static void registerAll(FabricDataGenerator gen) {
 		GENERATORS.add(new CrushingRecipeGen(gen));
 		GENERATORS.add(new MillingRecipeGen(gen));
 		GENERATORS.add(new CuttingRecipeGen(gen));
@@ -59,7 +61,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		});
 	}
 
-	public ProcessingRecipeGen(DataGenerator generator) {
+	public ProcessingRecipeGen(FabricDataGenerator generator) {
 		super(generator);
 	}
 

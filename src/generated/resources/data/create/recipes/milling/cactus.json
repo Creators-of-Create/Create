@@ -16,13 +16,5 @@
     }
   ],
   "processingTime": 50,
-  "conditions": [
-    {
-      "value": {
-        "modid": "quark",
-        "type": "forge:mod_loaded"
-      },
-      "type": "fabric:not"
-    }
-  ]
+  "conditions": []
 }

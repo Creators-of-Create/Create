@@ -6,7 +6,7 @@
   ],
   "key": {
     "I": {
-      "tag": "forge:storage_blocks/brass"
+      "tag": "c:brass_storage_blocks"
     },
     "P": {
       "tag": "c:brass_plates"

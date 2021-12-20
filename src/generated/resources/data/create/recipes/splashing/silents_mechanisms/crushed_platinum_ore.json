@@ -1,0 +1,15 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_platinum_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silents_mechanisms:platinum_nugget",
+      "count": 9
+    }
+  ],
+  "conditions": []
+}

@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dyes/magenta"
+      "tag": "c:magenta_dyes"
     },
     {
       "tag": "create:valve_handles"

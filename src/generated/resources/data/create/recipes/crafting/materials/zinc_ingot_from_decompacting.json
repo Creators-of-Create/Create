@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:storage_blocks/zinc"
+      "tag": "c:zinc_storage_blocks"
     }
   ],
   "result": {

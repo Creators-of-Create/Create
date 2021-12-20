@@ -7,16 +7,16 @@
   ],
   "key": {
     "S": {
-      "tag": "c:brass_plates"
+      "tag": "c:gold_plates"
     },
     "C": {
       "item": "create:cogwheel"
     },
     "W": {
-      "tag": "forge:chests/wooden"
+      "tag": "c:wooden_chests"
     },
     "L": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     }
   },
   "result": {

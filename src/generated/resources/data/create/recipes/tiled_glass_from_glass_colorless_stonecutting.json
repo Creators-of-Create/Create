@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "c:colorless_glass"
-  },
-  "result": "create:tiled_glass",
-  "count": 1
-}

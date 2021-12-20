@@ -8,6 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
 import me.alphamode.forgetags.Tags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
@@ -82,7 +83,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	public MechanicalCraftingRecipeGen(DataGenerator p_i48262_1_) {
+	public MechanicalCraftingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

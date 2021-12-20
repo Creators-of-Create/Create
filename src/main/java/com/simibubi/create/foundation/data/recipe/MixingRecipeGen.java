@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
 import me.alphamode.forgetags.Tags;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
@@ -61,7 +62,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public MixingRecipeGen(DataGenerator p_i48262_1_) {
+	public MixingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

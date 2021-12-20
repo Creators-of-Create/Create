@@ -15,6 +15,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.alphamode.forgetags.Tags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -106,7 +107,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public WashingRecipeGen(DataGenerator p_i48262_1_) {
+	public WashingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

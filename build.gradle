@@ -105,7 +105,7 @@ loom {
 
             name "Data Generation"
             vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated_fabric/resources")}"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}"
             vmArg "-Dfabric-api.datagen.modid=create"
             // from ae2
             property "com.simibubi.create.existingData", file("src/main/resources").absolutePath

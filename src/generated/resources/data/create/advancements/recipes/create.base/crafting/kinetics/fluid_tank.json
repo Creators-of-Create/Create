@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:barrels/wooden"
+            "tag": "c:wooden_barrels"
           }
         ]
       }

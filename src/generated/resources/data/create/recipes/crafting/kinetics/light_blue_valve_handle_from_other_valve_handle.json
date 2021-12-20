@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dyes/light_blue"
+      "tag": "c:light_blue_dyes"
     },
     {
       "tag": "create:valve_handles"

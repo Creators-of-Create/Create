@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dyes/red"
+      "tag": "c:red_dyes"
     },
     {
       "tag": "create:valve_handles"

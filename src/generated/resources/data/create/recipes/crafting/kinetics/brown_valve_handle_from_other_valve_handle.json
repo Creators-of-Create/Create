@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dyes/brown"
+      "tag": "c:brown_dyes"
     },
     {
       "tag": "create:valve_handles"
