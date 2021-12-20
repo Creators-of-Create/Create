@@ -70,19 +70,13 @@ public class MinecartAndRailUtil {
 	}
 
 	public static ItemStack getCartItem(AbstractMinecart.Type type) {
-		switch (type) {
-			case FURNACE:
-				return new ItemStack(Items.FURNACE_MINECART);
-			case CHEST:
-				return new ItemStack(Items.CHEST_MINECART);
-			case TNT:
-				return new ItemStack(Items.TNT_MINECART);
-			case HOPPER:
-				return new ItemStack(Items.HOPPER_MINECART);
-			case COMMAND_BLOCK:
-				return new ItemStack(Items.COMMAND_BLOCK_MINECART);
-			default:
-				return new ItemStack(Items.MINECART);
-		}
+		return switch (type) {
+			case FURNACE -> new ItemStack(Items.FURNACE_MINECART);
+			case CHEST -> new ItemStack(Items.CHEST_MINECART);
+			case TNT -> new ItemStack(Items.TNT_MINECART);
+			case HOPPER -> new ItemStack(Items.HOPPER_MINECART);
+			case COMMAND_BLOCK -> new ItemStack(Items.COMMAND_BLOCK_MINECART);
+			default -> new ItemStack(Items.MINECART);
+		};
 	}
 }
