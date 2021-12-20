@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.world.item.ItemStack;
 
-@SuppressWarnings({"deprecation", "UnstableApiUsage"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class FluidStorageHandlerItem extends FluidStorageHandler implements IFluidHandlerItem {
 	protected final ItemStack stack;
 

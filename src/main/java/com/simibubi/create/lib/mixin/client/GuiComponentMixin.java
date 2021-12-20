@@ -19,8 +19,8 @@ public class GuiComponentMixin {
 			ordinal = 5,
 			argsOnly = true
 	)
-	private static int create$replaceN(int n) {
-		return getColor(n);
+	private static int create$replaceA(int a) {
+		return getColor(a);
 	}
 
 	@ModifyVariable(
@@ -29,8 +29,8 @@ public class GuiComponentMixin {
 			ordinal = 6,
 			argsOnly = true
 	)
-	private static int create$replaceO(int o) {
-		return getColor(o);
+	private static int create$replaceB(int b) {
+		return getColor(b);
 	}
 
 	private static int getColor(int original) {
