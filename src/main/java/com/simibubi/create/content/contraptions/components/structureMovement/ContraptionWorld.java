@@ -14,11 +14,14 @@ import net.minecraft.world.phys.Vec3;
 
 public class ContraptionWorld extends WrappedWorld {
     final Contraption contraption;
+	private final int minBuildHeight, height;
 
     public ContraptionWorld(Level world, Contraption contraption) {
         super(world);
 
         this.contraption = contraption;
+		minBuildHeight = - (int) contraption.bounds.getYsize() + 1;
+		height = minBuildHeight * (-2);
     }
 
 
@@ -48,12 +51,12 @@ public class ContraptionWorld extends WrappedWorld {
     }
 
 	@Override
-	public int getMinBuildHeight() {
-		return -1 * (int)this.contraption.bounds.getYsize();
+	public int getHeight() {
+		return this.height;
 	}
 
 	@Override
-	public int getHeight() {
-		return -2 * getMinBuildHeight();
+	public int getMinBuildHeight() {
+		return this.minBuildHeight;
 	}
 }

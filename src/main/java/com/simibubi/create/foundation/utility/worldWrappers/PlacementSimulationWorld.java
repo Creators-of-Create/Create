@@ -11,6 +11,8 @@ import com.jozufozu.flywheel.api.FlywheelWorld;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
@@ -33,7 +35,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 	public WrappedChunkProvider chunkProvider;
 	private final BlockPos.MutableBlockPos scratch = new BlockPos.MutableBlockPos();
 
-	private final Contraption contraption;
+	private final ContraptionWorld contraptionWorld;
 
 	public PlacementSimulationWorld(Level wrapped, Contraption c) {
 		this(wrapped, c, new WrappedChunkProvider());
@@ -41,7 +43,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 
 	public PlacementSimulationWorld(Level wrapped, @Nonnull Contraption c, WrappedChunkProvider chunkProvider) {
 		super(wrapped, chunkProvider);
-		contraption = c;
+		contraptionWorld = c.getContraptionWorld();
 		this.chunkProvider = chunkProvider.setPlacementWorld(this);
 		spannedSections = new HashSet<>();
 		lighter = new LevelLightEngine(chunkProvider, true, false); // blockLight, skyLight
@@ -128,13 +130,13 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 	}
 
 	@Override
-	public int getMinBuildHeight() {
-		return contraption.getContraptionWorld().getMinBuildHeight();
+	public int getHeight() {
+		return contraptionWorld.getHeight();
 	}
 
 	@Override
-	public int getHeight() {
-		return contraption.getContraptionWorld().getHeight();
+	public int getMinBuildHeight() {
+		return contraptionWorld.getMinBuildHeight();
 	}
 
 	// Override Starlight's ExtendedWorld interface methods:
