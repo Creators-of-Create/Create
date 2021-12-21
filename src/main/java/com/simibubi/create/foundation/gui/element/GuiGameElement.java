@@ -20,6 +20,8 @@ import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
 import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import com.simibubi.create.lib.util.ItemRendererHelper;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -266,7 +268,7 @@ public class GuiGameElement {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
-			((ItemRendererAccessor) renderer).create$getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
+			Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

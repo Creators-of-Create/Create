@@ -1,10 +1,13 @@
 package com.simibubi.create.lib.transfer.fluid;
 
+import java.util.function.Predicate;
+
 import net.minecraft.nbt.CompoundTag;
 
 public class FluidTank implements IFluidHandler {
 	protected FluidStack fluid = FluidStack.empty();
 	protected long capacity;
+	protected Predicate<FluidStack> validator;
 
 	public FluidTank(FluidStack fluid, long capacity) {
 		this(capacity);
@@ -12,7 +15,21 @@ public class FluidTank implements IFluidHandler {
 	}
 
 	public FluidTank(long capacity) {
+		this(capacity, e -> true);
+	}
+
+	public FluidTank(long capacity, Predicate<FluidStack> validator)
+	{
 		this.capacity = capacity;
+		this.validator = validator;
+	}
+
+	public FluidTank setValidator(Predicate<FluidStack> validator)
+	{
+		if (validator != null) {
+			this.validator = validator;
+		}
+		return this;
 	}
 
 	public FluidTank setCapacity(long capacity) {
@@ -123,6 +140,11 @@ public class FluidTank implements IFluidHandler {
 		}
 
 		return out;
+	}
+
+	@Override
+	public boolean isFluidValid(int tank, FluidStack stack) {
+		return validator.test(stack);
 	}
 
 	protected void onContentsChanged() {

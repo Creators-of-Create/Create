@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ConfigTracker;
 import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -43,9 +44,13 @@ public class ConfigHelper {
 
 	// FIXME compat with other config libs?
 	private static EnumMap<ModConfig.Type, ModConfig> findModConfigsUncached(String modID) {
-//		ModContainer modContainer = ModList.get().getModContainerById(modID).orElseThrow(() -> new IllegalArgumentException("Unable to find ModContainer for id: " + modID));
-//		EnumMap<ModConfig.Type, ModConfig> configs = ObfuscationReflectionHelper.getPrivateValue(ModContainer.class, modContainer, "configs");
 		EnumMap<ModConfig.Type, ModConfig> configs = new EnumMap<>(ModConfig.Type.class);
+		ConfigTracker.INSTANCE.configSets().forEach((type, modConfigs) -> {
+			modConfigs.forEach(modConfig -> {
+				if(modConfig.getModId().equals(modID))
+					configs.put(type, modConfig);
+			});
+		});
 		return Objects.requireNonNull(configs);
 	}
 

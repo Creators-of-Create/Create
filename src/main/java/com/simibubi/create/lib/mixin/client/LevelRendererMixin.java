@@ -1,11 +1,21 @@
 package com.simibubi.create.lib.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import com.simibubi.create.lib.extensions.AbstractTextureExtension;
+
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.fabricmc.api.EnvType;
@@ -14,8 +24,10 @@ import net.minecraft.client.renderer.LevelRenderer;
 
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Iterator;
 
@@ -27,6 +39,10 @@ public abstract class LevelRendererMixin {
 
 	@Shadow
 	private Frustum cullingFrustum;
+
+	@Shadow
+	@Final
+	private Minecraft minecraft;
 
 	@Redirect(
 			method = "renderLevel",
@@ -60,5 +76,15 @@ public abstract class LevelRendererMixin {
 			}
 		}
 		return obj;
+	}
+
+	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V", ordinal = 0))
+	public void setBur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).setBlurMipmap(false, this.minecraft.options.mipmapLevels > 0);
+	}
+
+	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V", ordinal = 1))
+	public void lastBlur	(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).restoreLastBlurMipmap();
 	}
 }
