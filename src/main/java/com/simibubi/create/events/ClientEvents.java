@@ -283,9 +283,9 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos)) 
+        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
            return;
-        
+
 		Fluid fluid = fluidstate.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {

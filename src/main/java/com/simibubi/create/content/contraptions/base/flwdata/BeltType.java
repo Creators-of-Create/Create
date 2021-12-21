@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.api.struct.Batched;
-import com.jozufozu.flywheel.api.struct.BatchingTransformer;
 import com.jozufozu.flywheel.api.struct.Instanced;
 import com.jozufozu.flywheel.api.struct.StructWriter;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
+import com.jozufozu.flywheel.core.model.ModelTransformer;
 import com.jozufozu.flywheel.util.RenderMath;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.render.AllInstanceFormats;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class BeltType implements Instanced<BeltData>, Batched<BeltData> {
@@ -38,29 +37,26 @@ public class BeltType implements Instanced<BeltData>, Batched<BeltData> {
 	}
 
 	@Override
-	public BatchingTransformer<BeltData> getTransformer() {
-		return (d, sbb) -> {
+	public void transform(BeltData d, ModelTransformer.Params b) {
+		float spriteHeight = d.maxV - d.minV;
+		double scroll = d.rotationalSpeed * AnimationTickHolder.getRenderTime() / (31.5 * 16) + d.rotationOffset;
+		scroll = scroll - Math.floor(scroll);
+		scroll = scroll * spriteHeight * RenderMath.f(d.scrollMult);
 
-			float spriteHeight = d.maxV - d.minV;
-			double scroll = d.rotationalSpeed * AnimationTickHolder.getRenderTime() / (31.5 * 16) + d.rotationOffset;
-			scroll = scroll - Math.floor(scroll);
-			scroll = scroll * spriteHeight * RenderMath.f(d.scrollMult);
+		float finalScroll = (float) scroll;
+		b.shiftUV((builder, u, v) -> {
+			float targetU = u - d.sourceU + d.minU;
+			float targetV = v - d.sourceV + d.minV
+					+ finalScroll;
+			builder.uv(targetU, targetV);
+		});
 
-			float finalScroll = (float) scroll;
-			sbb.shiftUV((builder, u, v) -> {
-				float targetU = u - d.sourceU + d.minU;
-				float targetV = v - d.sourceV + d.minV
-						+ finalScroll;
-				builder.uv(targetU, targetV);
-			});
-
-			sbb.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
-					.multiply(new Quaternion(d.qX, d.qY, d.qZ, d.qW))
-					.unCentre()
-					.light(d.getPackedLight());
-			if (KineticDebugger.isActive()) {
-				sbb.color(d.r, d.g, d.b, d.a);
-			}
-		};
+		b.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
+				.multiply(new Quaternion(d.qX, d.qY, d.qZ, d.qW))
+				.unCentre()
+				.light(d.getPackedLight());
+		if (KineticDebugger.isActive()) {
+			b.color(d.r, d.g, d.b, d.a);
+		}
 	}
 }

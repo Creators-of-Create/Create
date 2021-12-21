@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.api.struct.Batched;
-import com.jozufozu.flywheel.api.struct.BatchingTransformer;
 import com.jozufozu.flywheel.api.struct.Instanced;
 import com.jozufozu.flywheel.api.struct.StructWriter;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
+import com.jozufozu.flywheel.core.model.ModelTransformer;
 import com.jozufozu.flywheel.util.RenderMath;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.render.AllInstanceFormats;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class RotatingType implements Instanced<RotatingData>, Batched<RotatingData> {
@@ -38,19 +37,17 @@ public class RotatingType implements Instanced<RotatingData>, Batched<RotatingDa
 	}
 
 	@Override
-	public BatchingTransformer<RotatingData> getTransformer() {
-		return (d, b) -> {
-			float angle = ((AnimationTickHolder.getRenderTime() * d.rotationalSpeed * 3f / 10 + d.rotationOffset) % 360);
+	public void transform(RotatingData d, ModelTransformer.Params b) {
+		float angle = ((AnimationTickHolder.getRenderTime() * d.rotationalSpeed * 3f / 10 + d.rotationOffset) % 360);
 
-			Vector3f axis = new Vector3f(RenderMath.f(d.rotationAxisX), RenderMath.f(d.rotationAxisY), RenderMath.f(d.rotationAxisZ));
-			b.light(d.getPackedLight())
-					.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
-					.multiply(axis.rotationDegrees(angle))
-					.unCentre();
+		Vector3f axis = new Vector3f(RenderMath.f(d.rotationAxisX), RenderMath.f(d.rotationAxisY), RenderMath.f(d.rotationAxisZ));
+		b.light(d.getPackedLight())
+				.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
+				.multiply(axis.rotationDegrees(angle))
+				.unCentre();
 
-			if (KineticDebugger.isActive()) {
-				b.color(d.r, d.g, d.b, d.a);
-			}
-		};
+		if (KineticDebugger.isActive()) {
+			b.color(d.r, d.g, d.b, d.a);
+		}
 	}
 }
