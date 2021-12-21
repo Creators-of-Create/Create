@@ -57,7 +57,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import com.tterrag.registrate.fabric.EnvExecutor;
 

@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import org.apache.commons.lang3.tuple.Pair;
 

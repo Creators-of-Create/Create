@@ -34,7 +34,7 @@ import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
 import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.utility.TagUtil;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.client.multiplayer.ClientLevel;

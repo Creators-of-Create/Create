@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
@@ -18,7 +17,7 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue
 
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,7 +33,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import com.simibubi.create.lib.extensions.BlockEntityExtensions;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;

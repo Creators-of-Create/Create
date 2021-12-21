@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.networking;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;

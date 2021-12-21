@@ -5,7 +5,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

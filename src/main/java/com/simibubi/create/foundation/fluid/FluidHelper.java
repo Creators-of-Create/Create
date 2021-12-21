@@ -16,8 +16,7 @@ import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.tterrag.registrate.fabric.SimpleFlowableFluid;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.TagParser;

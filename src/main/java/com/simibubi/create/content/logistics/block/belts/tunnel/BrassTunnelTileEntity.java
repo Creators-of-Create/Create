@@ -13,9 +13,9 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -55,7 +55,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 

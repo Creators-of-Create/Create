@@ -24,7 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import com.simibubi.create.lib.utility.NetworkUtil;
+import com.simibubi.create.lib.util.NetworkUtil;
 
 public class SchematicannonBlock extends Block implements ITE<SchematicannonTileEntity> {
 

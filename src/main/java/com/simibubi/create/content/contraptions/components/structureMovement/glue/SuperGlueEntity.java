@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;

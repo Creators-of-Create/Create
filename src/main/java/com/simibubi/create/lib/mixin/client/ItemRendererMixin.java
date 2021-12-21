@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.simibubi.create.lib.item.CustomGuiOverlayItem;
-import com.simibubi.create.lib.utility.DurabilityBarUtil;
+import com.simibubi.create.lib.util.DurabilityBarUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

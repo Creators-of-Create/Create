@@ -10,13 +10,9 @@ import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-
-import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
-import com.simibubi.create.lib.utility.LazyOptional;
 
 public class FluidContentsAttribute implements ItemAttribute {
     public static final FluidContentsAttribute EMPTY = new FluidContentsAttribute(null);

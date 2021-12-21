@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 /**
  * Behaviour for TileEntities to which belts can transfer items directly in a

@@ -2,7 +2,7 @@ package com.simibubi.create.lib.transfer.item;
 
 import java.util.Arrays;
 
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

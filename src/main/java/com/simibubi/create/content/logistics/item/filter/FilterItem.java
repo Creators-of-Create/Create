@@ -39,7 +39,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-import com.simibubi.create.lib.utility.NetworkUtil;
+import com.simibubi.create.lib.util.NetworkUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

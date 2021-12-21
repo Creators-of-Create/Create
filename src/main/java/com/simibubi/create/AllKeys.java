@@ -54,7 +54,7 @@ public enum AllKeys {
 	}
 
 	public int getBoundCode() {
-		return com.simibubi.create.lib.helper.KeyBindingHelper.getKeyCode(keybind)
+		return com.simibubi.create.lib.util.KeyBindingHelper.getKeyCode(keybind)
 				.getValue();
 	}
 

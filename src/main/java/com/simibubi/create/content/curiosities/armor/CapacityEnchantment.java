@@ -1,10 +1,9 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.lib.utility.EnchantmentUtil;
+import com.simibubi.create.lib.util.EnchantmentUtil;
 
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 

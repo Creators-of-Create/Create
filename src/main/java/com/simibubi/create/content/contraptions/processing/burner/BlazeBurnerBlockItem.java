@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.helper.AbstractSpawnerHelper;
+import com.simibubi.create.lib.util.AbstractSpawnerHelper;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

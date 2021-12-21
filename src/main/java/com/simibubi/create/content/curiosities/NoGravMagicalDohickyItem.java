@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities;
 
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.item.EntityTickListenerItem;
 
 import net.minecraft.core.NonNullList;

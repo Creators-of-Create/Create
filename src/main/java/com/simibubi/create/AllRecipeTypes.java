@@ -24,7 +24,7 @@ import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
-import com.simibubi.create.lib.utility.ShapedRecipeUtil;
+import com.simibubi.create.lib.util.ShapedRecipeUtil;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;

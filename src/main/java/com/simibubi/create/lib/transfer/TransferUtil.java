@@ -14,7 +14,7 @@ import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemStorageHandler;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.transfer.item.StorageItemHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;

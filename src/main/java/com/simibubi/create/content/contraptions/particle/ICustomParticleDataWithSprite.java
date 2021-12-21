@@ -2,9 +2,8 @@ package com.simibubi.create.content.contraptions.particle;
 
 import com.mojang.serialization.Codec;
 
-import com.simibubi.create.lib.helper.ParticleManagerHelper;
+import com.simibubi.create.lib.util.ParticleManagerHelper;
 
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.client.particle.ParticleProvider;

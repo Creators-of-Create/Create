@@ -16,7 +16,7 @@ import com.mojang.math.Vector4f;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.Color;
 
-import com.simibubi.create.lib.utility.LightUtil;
+import com.simibubi.create.lib.util.LightUtil;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;

@@ -63,9 +63,9 @@ import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.EmptyHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.LevelUtil;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.LevelUtil;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, FlywheelRendered, CustomRenderBoundingBox {
 

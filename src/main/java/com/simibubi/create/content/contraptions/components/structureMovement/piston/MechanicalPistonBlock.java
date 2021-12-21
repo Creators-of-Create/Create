@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
-import com.simibubi.create.lib.utility.TagUtil;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

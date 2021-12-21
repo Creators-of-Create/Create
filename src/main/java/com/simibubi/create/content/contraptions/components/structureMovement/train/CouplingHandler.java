@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
 
 public class CouplingHandler {
 

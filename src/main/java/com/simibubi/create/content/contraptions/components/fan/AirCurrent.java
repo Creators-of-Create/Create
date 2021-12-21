@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.simibubi.create.lib.helper.DamageSourceHelper;
+import com.simibubi.create.lib.util.DamageSourceHelper;
 
 import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
 

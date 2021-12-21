@@ -24,7 +24,7 @@ import com.simibubi.create.lib.event.ModelsBakedCallback;
 
 import com.simibubi.create.lib.event.OnModelRegistryCallback;
 
-import com.simibubi.create.lib.utility.SpecialModelUtil;
+import com.simibubi.create.lib.util.SpecialModelUtil;
 
 public class ModelSwapper {
 

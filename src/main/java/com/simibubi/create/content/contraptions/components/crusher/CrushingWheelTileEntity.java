@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.crusher;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.helper.DamageSourceHelper;
+import com.simibubi.create.lib.util.DamageSourceHelper;
 
 import java.util.Collection;
 

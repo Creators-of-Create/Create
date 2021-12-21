@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import com.simibubi.create.lib.block.MinecartPassHandlerBlock;
 
-import com.simibubi.create.lib.helper.AbstractMinecartEntityHelper;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -147,7 +147,7 @@ public class ControllerRailBlock extends BaseRailBlock implements IWrenchable, M
 		if (world.isClientSide)
 			return;
 		Vec3 accelerationVec = Vec3.atLowerCornerOf(getAccelerationVector(state));
-		double targetSpeed = AbstractMinecartEntityHelper.getMaximumSpeed(cart) * state.getValue(POWER) / 15f;
+		double targetSpeed = MinecartAndRailUtil.getMaximumSpeed(cart) * state.getValue(POWER) / 15f;
 
 		if (cart instanceof MinecartFurnace) {
 			MinecartFurnace fme = (MinecartFurnace) cart;

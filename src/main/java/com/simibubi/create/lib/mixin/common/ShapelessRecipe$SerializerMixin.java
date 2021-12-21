@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import com.simibubi.create.lib.utility.Constants;
+import com.simibubi.create.lib.util.Constants;
 
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 

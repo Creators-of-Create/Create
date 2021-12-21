@@ -37,8 +37,8 @@ import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
-import com.simibubi.create.lib.utility.ItemStackUtil;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.ItemStackUtil;
+import com.simibubi.create.lib.util.LazyOptional;
 
 public class DepotBehaviour extends TileEntityBehaviour {
 

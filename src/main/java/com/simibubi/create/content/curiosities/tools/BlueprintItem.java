@@ -31,7 +31,7 @@ import net.minecraft.world.level.Level;
 
 import com.simibubi.create.lib.mixin.accessor.IngredientAccessor;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.utility.MultiItemValue;
+import com.simibubi.create.lib.util.MultiItemValue;
 
 public class BlueprintItem extends Item {
 

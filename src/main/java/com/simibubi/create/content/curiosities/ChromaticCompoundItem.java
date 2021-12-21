@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities;
 
 import java.util.Random;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import com.simibubi.create.lib.item.CustomDurabilityBarItem;
 

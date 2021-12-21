@@ -24,8 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 
 import com.simibubi.create.lib.extensions.RenderTargetExtensions;
-import com.simibubi.create.lib.utility.FrameBufferUtil;
-import com.simibubi.create.lib.utility.GuiUtils;
+import com.simibubi.create.lib.util.GuiUtils;
 
 public class UIRenderHelper {
 
@@ -115,23 +114,14 @@ public class UIRenderHelper {
 		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
 	}
 
-	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
-	 */
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int breadth, int length, Couple<Color> c) {
 		angledGradient(ms, angle, x, y, 0, breadth, length, c);
 	}
 
-	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
-	 */
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int z, int breadth, int length, Couple<Color> c) {
 		angledGradient(ms, angle, x, y, z, breadth, length, c.getFirst(), c.getSecond());
 	}
 
-	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
-	 */
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int breadth, int length, Color color1, Color color2) {
 		angledGradient(ms, angle, x, y, 0, breadth, length, color1, color2);
 	}

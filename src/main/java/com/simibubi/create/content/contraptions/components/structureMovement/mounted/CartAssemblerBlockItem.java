@@ -6,7 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

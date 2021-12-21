@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.lib.extensions.Matrix4fExtensions;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 @Mixin(Matrix4f.class)
 public abstract class Matrix4fMixin implements Matrix4fExtensions {
