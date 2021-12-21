@@ -12,9 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.util.ItemStackUtil;
 
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
@@ -44,7 +44,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 		oldCap.invalidate();
 		super.stopTransferring();
 	}
-	
+
 	private LazyOptional<IItemHandlerModifiable> createEmptyHandler() {
 		return LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
 	}

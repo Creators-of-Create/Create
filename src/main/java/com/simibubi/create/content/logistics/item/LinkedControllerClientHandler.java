@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.mojang.blaze3d.platform.Window;
-import com.simibubi.create.lib.helper.KeyBindingHelper;
+import com.simibubi.create.lib.util.KeyBindingHelper;
 
 import org.lwjgl.glfw.GLFW;
 

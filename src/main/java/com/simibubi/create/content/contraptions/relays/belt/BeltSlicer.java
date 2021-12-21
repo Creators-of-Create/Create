@@ -40,8 +40,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.utility.Constants.BlockFlags;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

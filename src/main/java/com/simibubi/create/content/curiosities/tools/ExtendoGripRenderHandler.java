@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 import com.simibubi.create.lib.event.RenderHandCallback.RenderHandEvent;
 
-import com.simibubi.create.lib.helper.FirstPersonRendererHelper;
+import com.simibubi.create.lib.util.FirstPersonRendererHelper;
 
 public class ExtendoGripRenderHandler {
 

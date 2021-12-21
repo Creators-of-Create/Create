@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.lib.event.BlockPlaceCallback;
 import com.simibubi.create.lib.item.CustomMaxCountItem;
-import com.simibubi.create.lib.utility.MixinHelper;
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.MixinHelper;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;

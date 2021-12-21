@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
-import com.simibubi.create.lib.helper.ScreenHelper;
+import com.simibubi.create.lib.util.ScreenHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

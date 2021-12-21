@@ -5,7 +5,7 @@ import com.mojang.math.Matrix4f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.helper.Matrix4fHelper;
+import com.simibubi.create.lib.util.Matrix4fHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

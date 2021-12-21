@@ -21,7 +21,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,16 +43,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
-import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.util.ItemStackUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import org.jetbrains.annotations.Nullable;

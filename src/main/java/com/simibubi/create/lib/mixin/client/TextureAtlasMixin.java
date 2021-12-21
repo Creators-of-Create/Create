@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.simibubi.create.lib.event.OnTextureStitchCallback;
-import com.simibubi.create.lib.utility.MixinHelper;
-import com.simibubi.create.lib.utility.TextureStitchUtil;
+import com.simibubi.create.lib.util.MixinHelper;
+import com.simibubi.create.lib.util.TextureStitchUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

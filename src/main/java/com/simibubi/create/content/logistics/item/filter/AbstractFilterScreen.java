@@ -19,8 +19,8 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.lib.helper.PlayerEntityHelper;
-import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.util.PlayerEntityHelper;
+import com.simibubi.create.lib.util.ItemStackUtil;
 
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;

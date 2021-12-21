@@ -29,8 +29,8 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
-import com.simibubi.create.lib.utility.LevelUtil;
-import com.simibubi.create.lib.utility.StickinessUtil;
+import com.simibubi.create.lib.util.LevelUtil;
+import com.simibubi.create.lib.util.StickinessUtil;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;

@@ -6,9 +6,6 @@ import java.util.Map;
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
-
-import com.simibubi.create.lib.utility.TextureStitchUtil;
 
 public class SpriteShifter {
 

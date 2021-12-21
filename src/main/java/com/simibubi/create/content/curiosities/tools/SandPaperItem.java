@@ -1,13 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import java.util.Random;
-import java.util.function.Consumer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
-import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
@@ -40,7 +38,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.item.CustomItemEnchantabilityItem;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

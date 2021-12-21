@@ -3,24 +3,20 @@ package com.simibubi.create.content.contraptions.goggles;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import com.simibubi.create.foundation.utility.Lang;
 
-import com.simibubi.create.lib.utility.FluidHandlerData;
-import com.simibubi.create.lib.utility.FluidHandlerData.FluidTankData;
+import com.simibubi.create.lib.util.FluidHandlerData;
+import com.simibubi.create.lib.util.FluidHandlerData.FluidTankData;
 
+import com.simibubi.create.lib.util.MinecraftClientUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.utility.FluidTextUtil;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.MinecraftClientUtil;
+import com.simibubi.create.lib.util.LazyOptional;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen

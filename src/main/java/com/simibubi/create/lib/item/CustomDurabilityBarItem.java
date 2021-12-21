@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
-import com.simibubi.create.lib.utility.DurabilityBarUtil;
+import com.simibubi.create.lib.util.DurabilityBarUtil;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;

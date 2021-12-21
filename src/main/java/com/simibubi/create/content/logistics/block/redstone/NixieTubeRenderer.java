@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.lib.helper.FontRendererHelper;
+import com.simibubi.create.lib.util.FontRenderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -119,7 +119,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
 			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
 		if (buffer instanceof BufferSource) {
-			BakedGlyph texturedglyph = FontRendererHelper.getFontStorage(fontRenderer, Style.DEFAULT_FONT)
+			BakedGlyph texturedglyph = FontRenderUtil.getFontStorage(fontRenderer, Style.DEFAULT_FONT)
 				.whiteGlyph();
 			((BufferSource) buffer).endBatch(texturedglyph.renderType(Font.DisplayMode.NORMAL));
 		}

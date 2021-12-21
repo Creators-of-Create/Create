@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
-import com.simibubi.create.lib.helper.BiomeManagerHelper;
-import com.simibubi.create.lib.helper.MinecraftServerHelper;
+import com.simibubi.create.lib.util.BiomeManagerHelper;
+import com.simibubi.create.lib.util.MinecraftServerUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +11,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -134,6 +133,6 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	private static LevelStorageSource.LevelStorageAccess getLevelSaveFromWorld(Level world) {
-		return MinecraftServerHelper.getAnvilConverterForAnvilFile(world.getServer()); // storageSource
+		return MinecraftServerUtil.getAnvilConverterForAnvilFile(world.getServer()); // storageSource
 	}
 }

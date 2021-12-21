@@ -23,7 +23,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
-import com.simibubi.create.lib.helper.KeyBindingHelper;
+import com.simibubi.create.lib.util.KeyBindingHelper;
 
 public class PonderTooltipHandler {
 

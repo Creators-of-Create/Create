@@ -18,7 +18,7 @@ import com.simibubi.create.lib.extensions.BlockStateExtensions;
 import com.simibubi.create.lib.extensions.EntityExtensions;
 import com.simibubi.create.lib.item.EntitySwingListenerItem;
 import com.simibubi.create.lib.item.EquipmentItem;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

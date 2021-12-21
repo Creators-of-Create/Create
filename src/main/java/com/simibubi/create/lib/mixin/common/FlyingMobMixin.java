@@ -1,7 +1,7 @@
 package com.simibubi.create.lib.mixin.common;
 
 import com.simibubi.create.lib.extensions.BlockStateExtensions;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.level.block.Block;

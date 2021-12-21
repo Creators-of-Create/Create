@@ -5,12 +5,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
-import com.simibubi.create.lib.helper.TileEntityHelper;
-import com.simibubi.create.lib.utility.MixinHelper;
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.TileEntityHelper;
+import com.simibubi.create.lib.util.MixinHelper;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;

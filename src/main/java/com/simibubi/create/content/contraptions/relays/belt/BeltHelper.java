@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

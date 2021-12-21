@@ -2,7 +2,7 @@ package com.simibubi.create.lib.mixin.server;
 
 import com.simibubi.create.lib.event.OnDatapackSyncCallback;
 
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

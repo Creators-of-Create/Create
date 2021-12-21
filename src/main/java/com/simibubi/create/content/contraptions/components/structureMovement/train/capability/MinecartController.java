@@ -10,10 +10,9 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.helper.AbstractMinecartEntityHelper;
-import com.simibubi.create.lib.utility.ListenerProvider;
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.ListenerProvider;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
@@ -122,7 +121,7 @@ public class MinecartController implements NBTSerializable, ListenerProvider {
 		}
 		BlockPos blockpos = new BlockPos(i, j, k);
 		BlockState blockstate = world.getBlockState(blockpos);
-		if (AbstractMinecartEntityHelper.canCartUseRail(cart) && blockstate.is(BlockTags.RAILS)
+		if (MinecartAndRailUtil.canCartUseRail(cart) && blockstate.is(BlockTags.RAILS)
 				&& blockstate.getBlock() instanceof PoweredRailBlock
 				&& (MinecartAndRailUtil.isActivatorRail(
 				blockstate.getBlock()))) {

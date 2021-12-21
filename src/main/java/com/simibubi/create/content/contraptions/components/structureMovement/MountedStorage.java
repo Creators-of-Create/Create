@@ -22,8 +22,8 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 public class MountedStorage {
 

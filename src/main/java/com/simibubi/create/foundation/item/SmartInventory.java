@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 public class SmartInventory extends RecipeWrapper
 	implements IItemHandlerModifiableIntermediate, NBTSerializable {

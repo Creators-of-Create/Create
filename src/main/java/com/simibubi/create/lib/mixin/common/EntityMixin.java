@@ -17,10 +17,10 @@ import com.simibubi.create.lib.event.EntityEyeHeightCallback;
 import com.simibubi.create.lib.event.StartRidingCallback;
 import com.simibubi.create.lib.extensions.BlockStateExtensions;
 import com.simibubi.create.lib.extensions.EntityExtensions;
-import com.simibubi.create.lib.helper.EntityHelper;
-import com.simibubi.create.lib.utility.ListenerProvider;
-import com.simibubi.create.lib.utility.MixinHelper;
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.EntityHelper;
+import com.simibubi.create.lib.util.ListenerProvider;
+import com.simibubi.create.lib.util.MixinHelper;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

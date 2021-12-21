@@ -32,9 +32,8 @@ import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
-import com.simibubi.create.lib.utility.FluidHandlerData;
+import com.simibubi.create.lib.util.FluidHandlerData;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -48,7 +47,6 @@ import net.minecraft.network.chat.TextComponent;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 public class CreateClient implements ClientModInitializer {
 

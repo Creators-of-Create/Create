@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 

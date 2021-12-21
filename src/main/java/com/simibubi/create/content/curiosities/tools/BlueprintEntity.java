@@ -9,16 +9,14 @@ import javax.annotation.Nullable;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
-import com.simibubi.create.lib.utility.NetworkUtil;
+import com.simibubi.create.lib.util.NetworkUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-
-import net.minecraft.core.Registry;
 
 import org.apache.commons.lang3.Validate;
 

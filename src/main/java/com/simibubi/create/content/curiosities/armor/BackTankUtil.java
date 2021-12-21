@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 
 import com.simibubi.create.lib.item.CustomDurabilityBarItem;
 
-import com.simibubi.create.lib.utility.DurabilityBarUtil;
+import com.simibubi.create.lib.util.DurabilityBarUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
