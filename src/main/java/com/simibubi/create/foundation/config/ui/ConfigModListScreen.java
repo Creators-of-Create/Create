@@ -44,7 +44,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		addRenderableWidget(list);
 
 		allEntries = new ArrayList<>();
-		FabricLoader.getInstance().getAllMods().forEach(container -> allEntries.add(new ModEntry(container.getMetadata().getName(), this)));
+		FabricLoader.getInstance().getAllMods().forEach(container -> allEntries.add(new ModEntry(container.getMetadata().getId(), this)));
 //		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
 		allEntries.sort((e1, e2) -> {
 			int empty = (e2.button.active ? 1 : 0) - (e1.button.active ? 1 : 0);

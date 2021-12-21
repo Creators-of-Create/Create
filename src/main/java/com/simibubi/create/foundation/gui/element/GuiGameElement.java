@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.helper.ItemRendererHelper;
 import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
 import com.simibubi.create.lib.render.VirtualRenderingStateManager;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -266,7 +267,7 @@ public class GuiGameElement {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
-			((ItemRendererAccessor) renderer).create$getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
+//			ItemRendererHelper.getTextureManager(renderer).getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

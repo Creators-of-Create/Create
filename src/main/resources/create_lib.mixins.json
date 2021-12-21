@@ -41,6 +41,8 @@
     "accessor.Vector3fAccessor",
     "accessor.VoxelShapeAccessor",
     "accessor.WoodTypeAccessor",
+    "client.AbstractTextureMixin",
+    "client.TextureManagerMixin",
     "common.AbstractFurnaceBlockEntityMixin",
     "common.AbstractMinecartMixin",
     "common.BaseRailBlockMixin",
