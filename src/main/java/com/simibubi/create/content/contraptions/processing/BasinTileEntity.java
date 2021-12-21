@@ -197,10 +197,15 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	public void setRemoved() {
-		onEmptied();
 		itemCapability.invalidate();
 		fluidCapability.invalidate();
 		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
+		onEmptied();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Nonnull
@@ -288,7 +293,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			tryClearingSpoutputOverflow();
 		if (!contentsChanged)
 			return;
-		
+
 		contentsChanged = false;
 		getOperator().ifPresent(te -> te.basinChecker.scheduleUpdate());
 
@@ -312,7 +317,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		Direction direction = blockState.getValue(BasinBlock.FACING);
 		BlockEntity te = level.getBlockEntity(worldPosition.below()
 			.relative(direction));
-		
+
 		FilteringBehaviour filter = null;
 		InvManipulationBehaviour inserter = null;
 		if (te != null) {
@@ -362,7 +367,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				update = true;
 				continue;
 			}
-			
+
 			if (targetTank == null)
 				break;
 
@@ -459,7 +464,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		Direction direction = blockState.getValue(BasinBlock.FACING);
 		if (direction != Direction.DOWN) {
-			
+
 			BlockEntity te = level.getBlockEntity(worldPosition.below()
 				.relative(direction));
 
@@ -472,7 +477,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				: te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())
 					.orElse(null);
 			boolean externalTankNotPresent = targetTank == null;
-			
+
 			if (!outputItems.isEmpty() && targetInv == null)
 				return false;
 			if (!outputFluids.isEmpty() && externalTankNotPresent) {
@@ -484,7 +489,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 					return false;
 			}
-			
+
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {

@@ -107,7 +107,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		boolean contraptionPresent = movedContraption != null;
 		if (needsContraption && !contraptionPresent)
 			return;
-		
+
 		float movementSpeed = getMovementSpeed();
 		float newOffset = offset + movementSpeed;
 		if ((int) newOffset != (int) offset)
@@ -122,7 +122,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 				return;
 			}
 		}
-		
+
 		if (!contraptionPresent || !movedContraption.isStalled())
 			offset = newOffset;
 
@@ -173,10 +173,15 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 
 	@Override
 	public void setRemoved() {
+		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
 		this.remove = true;
 		if (!level.isClientSide)
 			disassemble();
-		super.setRemoved();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Override
@@ -261,13 +266,13 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 			movedContraption.setContraptionMotion(Vec3.ZERO);
 			return false;
 		}
-		
+
 		Vec3 motion = getMotionVector();
 		movedContraption.setContraptionMotion(getMotionVector());
 		movedContraption.move(motion.x, motion.y, motion.z);
 		return ContraptionCollider.collideBlocks(movedContraption);
 	}
-	
+
 	protected void collided() {
 		if (level.isClientSide) {
 			waitingForSpeedChange = true;
