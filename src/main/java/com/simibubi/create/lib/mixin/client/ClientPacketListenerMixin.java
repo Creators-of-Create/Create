@@ -33,8 +33,6 @@ public abstract class ClientPacketListenerMixin {
 	@Final
 	@Shadow
 	private Connection connection;
-	@Unique
-	private boolean create$blockEntityHandled;
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;putNonPlayerEntity(ILnet/minecraft/world/entity/Entity;)V", shift = Shift.AFTER),
 			method = "handleAddEntity",
@@ -48,33 +46,14 @@ public abstract class ClientPacketListenerMixin {
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;load(Lnet/minecraft/nbt/CompoundTag;)V"),
-		method = "method_38542"
-	)
-	private void create$beIsHandled1(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
-		create$blockEntityHandled = true;
-	}
-
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CommandBlockEditScreen;updateGui()V"),
-		method = "method_38542"
-	)
-	private void create$beIsHandled2(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
-		create$blockEntityHandled = true;
-	}
-
-	@Inject(at = @At("TAIL"),
+	@Inject(at = @At("HEAD"),
 			method = "method_38542",
 			cancellable = true
 	)
-	public void create$handleCustomBlockEntity(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
-		if (!create$blockEntityHandled) {
-			if (blockEntity == null) {
-				Create.LOGGER.error("Received invalid update packet for null BlockEntity");
-				ci.cancel();
-			} else if (blockEntity instanceof CustomDataPacketHandlingTileEntity custom) {
-				custom.onDataPacket(connection, clientboundBlockEntityDataPacket);
-			}
+	public void create$handleCustomBlockEntity(ClientboundBlockEntityDataPacket packet, BlockEntity blockEntity, CallbackInfo ci) {
+		if (blockEntity instanceof CustomDataPacketHandlingTileEntity handler) {
+			handler.onDataPacket(connection, packet);
+			ci.cancel();
 		}
-		create$blockEntityHandled = false;
 	}
 }
