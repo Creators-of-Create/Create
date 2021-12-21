@@ -2,8 +2,6 @@ package com.simibubi.create.lib.mixin.client;
 
 import com.simibubi.create.Create;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +19,6 @@ import com.simibubi.create.lib.extensions.ClientboundAddEntityPacketExtensions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -37,7 +34,7 @@ public abstract class ClientPacketListenerMixin {
 	@Shadow
 	private Connection connection;
 	@Unique
-	private boolean create$tileEntityHandled;
+	private boolean create$blockEntityHandled;
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;putNonPlayerEntity(ILnet/minecraft/world/entity/Entity;)V", shift = Shift.AFTER),
 			method = "handleAddEntity",
@@ -52,28 +49,25 @@ public abstract class ClientPacketListenerMixin {
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;load(Lnet/minecraft/nbt/CompoundTag;)V"),
-		method = "method_38542",
-			remap = false
+		method = "method_38542"
 	)
-	private void create$teIsHandled1(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
-		create$tileEntityHandled = true;
+	private void create$beIsHandled1(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
+		create$blockEntityHandled = true;
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CommandBlockEditScreen;updateGui()V"),
-		method = "method_38542",
-			remap = false
+		method = "method_38542"
 	)
-	private void create$teIsHandled2(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
-		create$tileEntityHandled = true;
+	private void create$beIsHandled2(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
+		create$blockEntityHandled = true;
 	}
 
 	@Inject(at = @At("TAIL"),
 			method = "method_38542",
-			remap = false,
 			cancellable = true
 	)
-	public void create$handleCustomTileEntity(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
-		if (!create$tileEntityHandled) {
+	public void create$handleCustomBlockEntity(ClientboundBlockEntityDataPacket clientboundBlockEntityDataPacket, BlockEntity blockEntity, CallbackInfo ci) {
+		if (!create$blockEntityHandled) {
 			if (blockEntity == null) {
 				Create.LOGGER.error("Received invalid update packet for null BlockEntity");
 				ci.cancel();
@@ -81,6 +75,6 @@ public abstract class ClientPacketListenerMixin {
 				custom.onDataPacket(connection, clientboundBlockEntityDataPacket);
 			}
 		}
-		create$tileEntityHandled = false;
+		create$blockEntityHandled = false;
 	}
 }

@@ -19,7 +19,7 @@ public class TextureManagerMixin {
 	@Final
 	private Map<ResourceLocation, AbstractTexture> byPath;
 
-	@Inject(method = "release", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/TextureUtil;releaseTextureId(I)V", shift = At.Shift.BEFORE))
+	@Inject(method = "release", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/TextureUtil;releaseTextureId(I)V", remap = false, shift = At.Shift.BEFORE))
 	public void fixRelease(ResourceLocation path, CallbackInfo ci) {
 		this.byPath.remove(path);
 	}
