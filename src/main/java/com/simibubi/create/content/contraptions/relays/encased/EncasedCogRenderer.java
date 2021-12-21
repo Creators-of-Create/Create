@@ -58,11 +58,10 @@ public class EncasedCogRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
 		return CachedBufferer.partialFacingVertical(
-			large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL, te.getBlockState(),
-			Direction.fromAxisAndDirection(te.getBlockState()
-				.getValue(EncasedCogwheelBlock.AXIS), AxisDirection.POSITIVE));
+			large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL, state,
+			Direction.fromAxisAndDirection(state.getValue(EncasedCogwheelBlock.AXIS), AxisDirection.POSITIVE));
 	}
 
 }

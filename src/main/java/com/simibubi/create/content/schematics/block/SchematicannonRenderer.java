@@ -31,11 +31,6 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
-		return true;
-	}
-
-	@Override
 	protected void renderSafe(SchematicannonTileEntity tileEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
@@ -210,6 +205,11 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			}
 
 		}
+	}
+
+	@Override
+	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
+		return true;
 	}
 
 	@Override

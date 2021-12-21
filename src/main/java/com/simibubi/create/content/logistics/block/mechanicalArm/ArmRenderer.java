@@ -32,11 +32,6 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticTileEntity te) {
-		return true;
-	}
-
-	@Override
 	protected void renderSafe(KineticTileEntity te, float pt, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		super.renderSafe(te, pt, ms, buffer, light, overlay);
@@ -187,8 +182,13 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.partial(AllBlockPartials.ARM_COG, te.getBlockState());
+	public boolean shouldRenderOffScreen(KineticTileEntity te) {
+		return true;
+	}
+
+	@Override
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partial(AllBlockPartials.ARM_COG, state);
 	}
 
 }

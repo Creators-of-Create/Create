@@ -85,6 +85,7 @@ public class SymmetryHandler {
 	public static void render(RenderLevelLastEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
+		Random random = new Random();
 
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			ItemStack stackInSlot = player.getInventory()
@@ -103,8 +104,7 @@ public class SymmetryHandler {
 			double speed = 1 / 16d;
 			yShift = Mth.sin((float) (AnimationTickHolder.getRenderTime() * speed)) / 5f;
 
-			MultiBufferSource.BufferSource buffer = Minecraft.getInstance()
-				.renderBuffers()
+			MultiBufferSource.BufferSource buffer = mc.renderBuffers()
 				.bufferSource();
 			Camera info = mc.gameRenderer.getMainCamera();
 			Vec3 view = info.getPosition();
@@ -122,7 +122,7 @@ public class SymmetryHandler {
 			mc.getBlockRenderer()
 				.getModelRenderer()
 				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
-					player.level.getRandom(), Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
 			buffer.endBatch();
 			ms.popPose();
