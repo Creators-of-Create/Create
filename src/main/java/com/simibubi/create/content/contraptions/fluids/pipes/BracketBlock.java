@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -41,8 +42,8 @@ public class BracketBlock extends WrenchableDirectionalBlock {
 			.add(TYPE));
 	}
 
-	public BracketBlock(Properties p_i48415_1_) {
-		super(p_i48415_1_);
+	public BracketBlock(Properties properties) {
+		super(properties);
 	}
 
 	public Optional<BlockState> getSuitableBracket(BlockState blockState, Direction direction) {
@@ -61,6 +62,13 @@ public class BracketBlock extends WrenchableDirectionalBlock {
 		return Optional.of(defaultBlockState().setValue(TYPE, type)
 			.setValue(FACING, direction)
 			.setValue(AXIS_ALONG_FIRST_COORDINATE, !alongFirst));
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		if (rot.ordinal() % 2 == 1)
+			state = state.cycle(AXIS_ALONG_FIRST_COORDINATE);
+		return super.rotate(state, rot);
 	}
 
 }

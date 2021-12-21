@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -23,14 +25,16 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(Dist.CLIENT)
 public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
 	public static final SuperByteBufferCache.Compartment<BlockState> KINETIC_TILE = new SuperByteBufferCache.Compartment<>();
 	public static boolean rainbowMode = false;
+
+	protected static final RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = RenderType.chunkBufferLayers().toArray(RenderType[]::new);
+	static {
+		ArrayUtils.reverse(REVERSED_CHUNK_BUFFER_LAYERS);
+	}
 
 	public KineticTileEntityRenderer(BlockEntityRendererProvider.Context context) {
 	}
@@ -40,9 +44,25 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		int light, int overlay) {
 		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		for (RenderType type : RenderType.chunkBufferLayers())
-			if (ItemBlockRenderTypes.canRenderInLayer(te.getBlockState(), type))
-				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
+		BlockState state = getRenderedBlockState(te);
+		RenderType type = getRenderType(te, state);
+		if (type != null)
+			renderRotatingBuffer(te, getRotatedModel(te, state), ms, buffer.getBuffer(type), light);
+	}
+
+	protected BlockState getRenderedBlockState(KineticTileEntity te) {
+		return te.getBlockState();
+	}
+
+	protected RenderType getRenderType(KineticTileEntity te, BlockState state) {
+		for (RenderType type : REVERSED_CHUNK_BUFFER_LAYERS)
+			if (ItemBlockRenderTypes.canRenderInLayer(state, type))
+				return type;
+		return null;
+	}
+
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.block(KINETIC_TILE, state);
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, PoseStack ms,
@@ -110,14 +130,6 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static Axis getRotationAxisOf(KineticTileEntity te) {
 		return ((IRotate) te.getBlockState()
 			.getBlock()).getRotationAxis(te.getBlockState());
-	}
-
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return te.getBlockState();
-	}
-
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.block(KINETIC_TILE, getRenderedBlockState(te));
 	}
 
 }

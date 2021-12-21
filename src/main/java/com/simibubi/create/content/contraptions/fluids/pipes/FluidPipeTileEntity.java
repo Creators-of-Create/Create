@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -15,7 +17,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FluidPipeTileEntity extends SmartTileEntity {
+public class FluidPipeTileEntity extends SmartTileEntity implements ITransformableTE {
 
 	public FluidPipeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -26,6 +28,14 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 		behaviours.add(new StandardPipeFluidTransportBehaviour(this));
 		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket)
 			.withTrigger(state -> AllTriggers.BRACKET_APPLY_TRIGGER.constructTriggerFor(state.getBlock())));
+	}
+
+	@Override
+	public void transform(StructureTransform transform) {
+		BracketedTileEntityBehaviour bracketBehaviour = getBehaviour(BracketedTileEntityBehaviour.TYPE);
+		if (bracketBehaviour != null) {
+			bracketBehaviour.transformBracket(transform);
+		}
 	}
 
 	private boolean canHaveBracket(BlockState state) {
