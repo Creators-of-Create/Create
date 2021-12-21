@@ -395,8 +395,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			ArmInteractionPoint.transformPos(transform, (CompoundTag) inbt);
 		}
 
-		sendData();
-		setChanged();
+		notifyUpdate();
 	}
 
 	protected void initInteractionPoints() {

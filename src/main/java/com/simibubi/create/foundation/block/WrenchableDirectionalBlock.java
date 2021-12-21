@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
 public class WrenchableDirectionalBlock extends DirectionalBlock implements IWrenchable {
 
-	public WrenchableDirectionalBlock(Properties p_i48415_1_) {
-		super(p_i48415_1_);
+	public WrenchableDirectionalBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

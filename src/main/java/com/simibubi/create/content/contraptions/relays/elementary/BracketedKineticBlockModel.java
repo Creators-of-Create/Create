@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -29,7 +29,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
-		if (tileData == VirtualEmptyModelData.INSTANCE)
+		if (VirtualEmptyModelData.is(tileData))
 			return tileData;
 		BracketedModelData data = new BracketedModelData();
 		BracketedTileEntityBehaviour attachmentBehaviour =
@@ -42,27 +42,19 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
-		if (data instanceof ModelDataMap) {
-			List<BakedQuad> quads = new ArrayList<>();
-			ModelDataMap modelDataMap = (ModelDataMap) data;
-			if (modelDataMap.hasProperty(BRACKET_PROPERTY)) {
-				quads = new ArrayList<>(quads);
-				addQuads(quads, state, side, rand, modelDataMap, modelDataMap.getData(BRACKET_PROPERTY));
+		if (!VirtualEmptyModelData.is(data)) {
+			if (data.hasProperty(BRACKET_PROPERTY)) {
+				BracketedModelData pipeData = data.getData(BRACKET_PROPERTY);
+				BakedModel bracket = pipeData.getBracket();
+				if (bracket != null)
+					return bracket.getQuads(state, side, rand, data);
 			}
-			return quads;
+			return Collections.emptyList();
 		}
 		return super.getQuads(state, side, rand, data);
 	}
 
-	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, Random rand, IModelData data,
-		BracketedModelData pipeData) {
-		BakedModel bracket = pipeData.getBracket();
-		if (bracket == null)
-			return;
-		quads.addAll(bracket.getQuads(state, side, rand, data));
-	}
-
-	private class BracketedModelData {
+	private static class BracketedModelData {
 		BakedModel bracket;
 
 		public void putBracket(BlockState state) {

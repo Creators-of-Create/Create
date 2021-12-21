@@ -21,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
@@ -52,12 +51,9 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
 		List<BakedQuad> quads = super.getQuads(state, side, rand, data);
-		if (data instanceof ModelDataMap) {
-			ModelDataMap modelDataMap = (ModelDataMap) data;
-			if (modelDataMap.hasProperty(PIPE_PROPERTY)) {
-				quads = new ArrayList<>(quads);
-				addQuads(quads, state, side, rand, modelDataMap, modelDataMap.getData(PIPE_PROPERTY));
-			}
+		if (data.hasProperty(PIPE_PROPERTY)) {
+			quads = new ArrayList<>(quads);
+			addQuads(quads, state, side, rand, data, data.getData(PIPE_PROPERTY));
 		}
 		return quads;
 	}
@@ -78,7 +74,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 			quads.addAll(bracket.getQuads(state, side, rand, data));
 	}
 
-	private class PipeModelData {
+	private static class PipeModelData {
 		AttachmentTypes[] rims;
 		boolean encased;
 		BakedModel bracket;

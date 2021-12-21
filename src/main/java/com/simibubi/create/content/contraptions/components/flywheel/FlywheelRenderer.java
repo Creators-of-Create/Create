@@ -85,8 +85,8 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, state, state
 				.getValue(BlockStateProperties.HORIZONTAL_FACING)
 				.getOpposite());
 	}

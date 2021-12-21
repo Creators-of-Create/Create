@@ -90,12 +90,8 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return transform(AllBlockPartials.SHAFT_HALF, te);
-	}
-
-	private SuperByteBuffer transform(PartialModel partial, KineticTileEntity te) {
-		return CachedBufferer.partialFacing(partial, te.getBlockState(), te.getBlockState()
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, state, state
 				.getValue(CuckooClockBlock.HORIZONTAL_FACING)
 				.getOpposite());
 	}
