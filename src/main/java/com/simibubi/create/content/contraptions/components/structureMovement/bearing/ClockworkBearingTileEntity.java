@@ -362,9 +362,14 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 
 	@Override
 	public void setRemoved() {
+		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
 		if (!level.isClientSide)
 			disassemble();
-		super.setRemoved();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Override
