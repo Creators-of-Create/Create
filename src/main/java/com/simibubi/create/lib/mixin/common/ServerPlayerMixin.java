@@ -39,9 +39,6 @@ public abstract class ServerPlayerMixin extends Player {
 		super(level, blockPos, f, gameProfile);
 	}
 
-	@Shadow
-	public abstract Level getLevel();
-
 	@Unique
 	private IFluidHandler create$lastViewedHandler = null;
 

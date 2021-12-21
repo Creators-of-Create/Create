@@ -39,7 +39,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, IFluidHandler, FluidTransferable, CustomRenderBoundingBox {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, FluidTransferable, CustomRenderBoundingBox {
 
 	private static final int MAX_SIZE = 3;
 
@@ -474,40 +474,11 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		this.fluidLevel = fluidLevel;
 	}
 
-	@Override
-	public int getTanks() {
-		return tankInventory.getTanks();
-	}
-
-	@Override
-	public FluidStack getFluidInTank(int tank) {
-		return tankInventory.getFluidInTank(tank);
-	}
-
-	@Override
-	public long getTankCapacity(int tank) {
-		return tankInventory.getTankCapacity(tank);
-	}
-
-	@Override
-	public long fill(FluidStack stack, boolean sim) {
-		return tankInventory.fill(stack, sim);
-	}
-
-	@Override
-	public FluidStack drain(FluidStack stack, boolean sim) {
-		return tankInventory.drain(stack, sim);
-	}
-
-	@Override
-	public FluidStack drain(long amount, boolean sim) {
-		return tankInventory.drain(amount, sim);
-	}
-
-	@Override
 	@Nullable
+	@Override
 	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
-		return tankInventory;
+		if (!fluidCapability.isPresent())
+			refreshCapability();
+		return fluidCapability.orElse(null);
 	}
-
 }
