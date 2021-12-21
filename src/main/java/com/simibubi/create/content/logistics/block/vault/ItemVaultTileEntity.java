@@ -25,7 +25,7 @@ import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import javax.annotation.Nullable;
 

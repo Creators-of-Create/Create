@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ass
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -23,8 +22,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +39,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplayAssemblyExceptions {
 	private static final int assemblyCooldown = 8;

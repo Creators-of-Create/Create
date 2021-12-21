@@ -17,15 +17,14 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
-import com.simibubi.create.lib.utility.NBTSerializable;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.NBTSerializable;
 
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -35,7 +34,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.utility.LazyOptional;
 
 public class CapabilityMinecartController implements NBTSerializable/*ICapabilitySerializable<CompoundTag>*/ {
 

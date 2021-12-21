@@ -33,7 +33,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
-import com.simibubi.create.lib.utility.TagUtil;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -4,7 +4,7 @@ import com.simibubi.create.content.contraptions.components.crusher.CrushingWheel
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 
-import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.util.ItemStackUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

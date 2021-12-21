@@ -22,8 +22,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +49,7 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 /**
  * Ex: Minecarts, Couplings <br>

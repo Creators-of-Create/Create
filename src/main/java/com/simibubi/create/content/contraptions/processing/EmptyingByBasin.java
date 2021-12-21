@@ -13,22 +13,13 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
-
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 public class EmptyingByBasin {
 

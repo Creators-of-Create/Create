@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
-import com.simibubi.create.lib.utility.ItemGroupUtil;
+import com.simibubi.create.lib.util.ItemGroupUtil;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.client.Minecraft;
@@ -22,8 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import static com.simibubi.create.lib.utility.ItemGroupUtil.getGroupCountSafe;
 
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 

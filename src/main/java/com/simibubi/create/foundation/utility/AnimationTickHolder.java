@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.utility;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
-import com.simibubi.create.lib.helper.MinecraftHelper;
+import com.simibubi.create.lib.util.MinecraftClientUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.LevelAccessor;
@@ -41,7 +41,7 @@ public class AnimationTickHolder {
 
 	public static float getPartialTicks() {
 		Minecraft mc = Minecraft.getInstance();
-		return (mc.isPaused() ? MinecraftHelper.getRenderPartialTicksPaused(mc) : mc.getFrameTime());
+		return (mc.isPaused() ? MinecraftClientUtil.getRenderPartialTicksPaused(mc) : mc.getFrameTime());
 	}
 
 	public static int getTicks(LevelAccessor world) {

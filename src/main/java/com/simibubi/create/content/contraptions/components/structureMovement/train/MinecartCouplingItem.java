@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -15,11 +14,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 
-import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import org.jetbrains.annotations.Nullable;

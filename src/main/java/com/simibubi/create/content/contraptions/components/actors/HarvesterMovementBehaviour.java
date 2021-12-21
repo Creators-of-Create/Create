@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.utility.PlantUtil;
+import com.simibubi.create.lib.util.PlantUtil;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 

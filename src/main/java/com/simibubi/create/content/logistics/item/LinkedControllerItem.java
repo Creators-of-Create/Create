@@ -1,12 +1,9 @@
 package com.simibubi.create.content.logistics.item;
 
-import java.util.function.Consumer;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
-import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
@@ -30,7 +27,7 @@ import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.simibubi.create.lib.item.UseFirstBehaviorItem;
-import com.simibubi.create.lib.utility.NetworkUtil;
+import com.simibubi.create.lib.util.NetworkUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

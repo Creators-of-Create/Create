@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;

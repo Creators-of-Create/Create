@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
 import org.apache.commons.lang3.tuple.Pair;
 

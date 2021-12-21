@@ -21,9 +21,9 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

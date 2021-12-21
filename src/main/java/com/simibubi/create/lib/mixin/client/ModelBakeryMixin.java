@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.event.OnModelRegistryCallback;
-import com.simibubi.create.lib.utility.SpecialModelUtil;
+import com.simibubi.create.lib.util.SpecialModelUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

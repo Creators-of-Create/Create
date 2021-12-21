@@ -14,8 +14,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.helper.AbstractRailBlockHelper;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -83,7 +83,7 @@ public class MinecartContraptionItem extends Item {
 				.relative(direction);
 			BlockState blockstate = world.getBlockState(blockpos);
 			RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock
-				? AbstractRailBlockHelper.getDirectionOfRail(blockstate, world, blockpos, null)
+				? MinecartAndRailUtil.getDirectionOfRail(blockstate, world, blockpos, null)
 				: RailShape.NORTH_SOUTH;
 			double d3;
 			if (blockstate.is(BlockTags.RAILS)) {
@@ -100,7 +100,7 @@ public class MinecartContraptionItem extends Item {
 
 				BlockState blockstate1 = world.getBlockState(blockpos.below());
 				RailShape railshape1 = blockstate1.getBlock() instanceof BaseRailBlock
-					? AbstractRailBlockHelper.getDirectionOfRail(blockstate1, world, blockpos.below(),
+					? MinecartAndRailUtil.getDirectionOfRail(blockstate1, world, blockpos.below(),
 						null)
 					: RailShape.NORTH_SOUTH;
 				if (direction != Direction.DOWN && railshape1.isAscending()) {
@@ -140,7 +140,7 @@ public class MinecartContraptionItem extends Item {
 			ItemStack itemstack = context.getItemInHand();
 			if (!world.isClientSide) {
 				RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock
-					? AbstractRailBlockHelper.getDirectionOfRail(blockstate, world, blockpos, null)
+					? MinecartAndRailUtil.getDirectionOfRail(blockstate, world, blockpos, null)
 					: RailShape.NORTH_SOUTH;
 				double d0 = 0.0D;
 				if (railshape.isAscending()) {

@@ -15,9 +15,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
-import com.simibubi.create.lib.utility.LazyOptional;
-
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 public abstract class FlowSource {
 

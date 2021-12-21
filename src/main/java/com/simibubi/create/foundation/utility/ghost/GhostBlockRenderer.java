@@ -9,7 +9,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.render.VirtualRenderingStateManager;
-import com.simibubi.create.lib.utility.VertexBuilderUtil;
+import com.simibubi.create.lib.util.VertexBuilderUtil;
 
 import org.lwjgl.system.MemoryStack;
 
@@ -25,7 +25,6 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;

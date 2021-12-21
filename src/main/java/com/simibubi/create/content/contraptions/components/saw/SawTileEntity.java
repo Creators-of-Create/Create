@@ -68,12 +68,12 @@ import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
-import com.simibubi.create.lib.utility.ItemStackUtil;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.ItemStackUtil;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import org.jetbrains.annotations.Nullable;
 

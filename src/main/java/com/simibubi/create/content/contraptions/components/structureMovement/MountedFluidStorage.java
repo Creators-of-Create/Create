@@ -12,15 +12,7 @@ import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
-
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-
-import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

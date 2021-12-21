@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.event.DataPackReloadCallback;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.commands.Commands;
 import net.minecraft.core.RegistryAccess;

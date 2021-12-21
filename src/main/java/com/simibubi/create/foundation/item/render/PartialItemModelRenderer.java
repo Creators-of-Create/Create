@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import com.simibubi.create.lib.helper.ItemRendererHelper;
+import com.simibubi.create.lib.util.ItemRendererHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

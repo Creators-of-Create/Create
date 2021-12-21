@@ -16,7 +16,7 @@ import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

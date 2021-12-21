@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import org.apache.commons.lang3.tuple.Pair;
 

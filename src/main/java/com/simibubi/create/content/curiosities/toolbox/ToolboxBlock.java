@@ -43,7 +43,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.lib.utility.NetworkUtil;
+import com.simibubi.create.lib.util.NetworkUtil;
 
 public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, ITE<ToolboxTileEntity> {
 

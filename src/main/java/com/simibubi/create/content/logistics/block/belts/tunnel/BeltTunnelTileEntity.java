@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.fabricmc.api.EnvType;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import org.jetbrains.annotations.Nullable;

@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
 public class FluidPropagator {
 

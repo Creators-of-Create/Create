@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.extensions.BlockStateExtensions;
 import com.simibubi.create.lib.extensions.ParticleEngineExtensions;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

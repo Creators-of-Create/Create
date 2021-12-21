@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

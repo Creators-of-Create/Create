@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 
-import com.simibubi.create.lib.utility.TagUtil;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
@@ -38,9 +38,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 

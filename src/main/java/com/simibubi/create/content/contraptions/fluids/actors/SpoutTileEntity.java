@@ -48,7 +48,6 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.LazyOptional;
 
 import org.jetbrains.annotations.Nullable;
 

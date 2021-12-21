@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

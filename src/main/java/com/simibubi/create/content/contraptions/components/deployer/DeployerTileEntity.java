@@ -55,8 +55,8 @@ import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-import com.simibubi.create.lib.utility.LazyOptional;
-import com.simibubi.create.lib.utility.NBTSerializer;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 public class DeployerTileEntity extends KineticTileEntity implements ItemTransferable {
 

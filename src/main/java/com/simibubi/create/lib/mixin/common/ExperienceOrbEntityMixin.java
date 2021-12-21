@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.simibubi.create.lib.extensions.BlockStateExtensions;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ExperienceOrb;

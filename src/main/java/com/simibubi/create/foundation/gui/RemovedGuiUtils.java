@@ -1,21 +1,14 @@
 package com.simibubi.create.foundation.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
-import com.simibubi.create.lib.utility.GuiUtils;
+import com.simibubi.create.lib.util.GuiUtils;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 
 public class RemovedGuiUtils {

@@ -3,7 +3,7 @@ package com.simibubi.create.content.palettes;
 import java.util.Random;
 
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.utility.LevelUtil;
+import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;

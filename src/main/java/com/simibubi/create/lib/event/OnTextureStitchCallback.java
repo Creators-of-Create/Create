@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.event;
 
-import com.simibubi.create.lib.utility.TextureStitchUtil;
+import com.simibubi.create.lib.util.TextureStitchUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

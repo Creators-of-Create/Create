@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
 

@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
-import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.util.ItemStackUtil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;

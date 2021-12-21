@@ -7,7 +7,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
-import com.simibubi.create.lib.helper.DamageSourceHelper;
+import com.simibubi.create.lib.util.DamageSourceHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

@@ -1,12 +1,9 @@
 package com.simibubi.create.content.logistics.block.chute;
 
-import java.util.function.Consumer;
-
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -28,9 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.utility.LazyOptional;
+
+import com.simibubi.create.lib.util.LazyOptional;
 
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
 

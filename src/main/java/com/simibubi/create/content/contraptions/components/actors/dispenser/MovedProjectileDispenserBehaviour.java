@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.lib.utility.MethodGetter;
+import com.simibubi.create.lib.util.MethodGetter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;

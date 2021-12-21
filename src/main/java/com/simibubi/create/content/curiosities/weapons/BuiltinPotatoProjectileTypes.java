@@ -15,7 +15,6 @@ import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -43,8 +42,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.utility.LevelUtil;
-import com.simibubi.create.lib.utility.PlantUtil;
+import com.simibubi.create.lib.util.LevelUtil;
+import com.simibubi.create.lib.util.PlantUtil;
 
 public class BuiltinPotatoProjectileTypes {
 

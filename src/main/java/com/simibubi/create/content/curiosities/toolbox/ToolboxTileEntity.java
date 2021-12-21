@@ -41,10 +41,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import org.jetbrains.annotations.Nullable;
 

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.block.SlopeCreationCheckingRail;
 import com.simibubi.create.lib.mixin.accessor.RailStateAccessor;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.lib.block.HarvestableBlock;
 import com.simibubi.create.lib.event.PlayerTickEndCallback;
-import com.simibubi.create.lib.utility.MixinHelper;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
