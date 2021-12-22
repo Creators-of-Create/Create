@@ -106,13 +106,6 @@ body:
                 - "1.14.4"
         validations:
             required: true
-    -   type: input
-        attributes:
-            label: Forge Version
-            description: The version of Forge you were using when the bug occured
-            placeholder: 36.2.0
-        validations:
-            required: true
     -   type: textarea
         attributes:
             label: Other Mods

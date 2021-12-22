@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
+import com.simibubi.create.lib.util.FluidRenderUtil;
+
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
@@ -46,7 +48,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		if (fluidStack.isEmpty())
 			return;
 
-		boolean top = FluidVariantRendering.fillsFromTop(fluidStack.getType());
+		boolean top = FluidRenderUtil.fillsFromTop(fluidStack.getType());
 
 		float xMin = tankHullWidth;
 		float xMax = xMin + te.width - 2 * tankHullWidth;
