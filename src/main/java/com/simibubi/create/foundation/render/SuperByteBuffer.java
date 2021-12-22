@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.util.BlockFormatReader;
-import com.jozufozu.flywheel.util.ModelReader;
+import com.jozufozu.flywheel.core.vertex.BlockVertexList;
+import com.jozufozu.flywheel.core.vertex.VertexList;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
@@ -32,7 +32,7 @@ import net.minecraftforge.client.model.pipeline.LightUtil;
 
 public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
-	private final ModelReader template;
+	private final VertexList template;
 
 	// Vertex Position
 	private final PoseStack transforms;
@@ -64,7 +64,7 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		template = new BlockFormatReader(buf);
+		template = new BlockVertexList(buf);
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}

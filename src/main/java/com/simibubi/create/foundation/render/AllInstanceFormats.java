@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.core.Formats;
 
 public class AllInstanceFormats {
 
@@ -27,7 +26,8 @@ public class AllInstanceFormats {
 			.build();
 
 	private static VertexFormat.Builder kineticInstance() {
-		return Formats.litInstance()
+		return VertexFormat.builder()
+				.addAttributes(CommonAttributes.LIGHT, CommonAttributes.RGBA)
 				.addAttributes(CommonAttributes.VEC3, CommonAttributes.FLOAT, CommonAttributes.FLOAT);
 	}
 }

@@ -25,8 +25,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.util.box.GridAlignedBB;
+import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
@@ -874,9 +874,9 @@ public abstract class Contraption {
 		}
 
 		ListTag paletteNBT = new ListTag();
-		for(int i = 0; i < palette.getSize(); ++i) 
+		for(int i = 0; i < palette.getSize(); ++i)
 			paletteNBT.add(NbtUtils.writeBlockState(palette.values.byId(i)));
-		
+
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
 
@@ -891,7 +891,7 @@ public abstract class Contraption {
 			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
 				throw new IllegalStateException("Palette Map index exceeded maximum");
 			});
-			
+
 			ListTag list = c.getList("Palette", 10);
 			palette.values.clear();
 			for (int i = 0; i < list.size(); ++i)

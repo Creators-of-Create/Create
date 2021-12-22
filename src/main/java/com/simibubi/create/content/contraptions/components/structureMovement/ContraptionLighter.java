@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.jozufozu.flywheel.light.GPULightVolume;
-import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.util.box.GridAlignedBB;
+import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
