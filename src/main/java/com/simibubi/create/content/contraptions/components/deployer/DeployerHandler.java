@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.extensions.EntityExtensions;
+import com.simibubi.create.lib.item.UseFirstBehaviorItem;
 import com.simibubi.create.lib.mixin.accessor.BucketItemAccessor;
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -225,12 +226,12 @@ public class DeployerHandler {
 				return;
 			}
 			InteractionResult actionResult = UseBlockCallback.EVENT.invoker().interact(player, player.level, player.getUsedItemHand(), result);
-			if (actionResult != InteractionResult.PASS)
+			if (actionResult == InteractionResult.FAIL)
 				return;
 			if (BlockHelper.extinguishFire(world, player, clickedPos, face)) // FIXME: is there an equivalent in world,
 																				// as there was in 1.15?
 				return;
-//			if (event.getUseBlock() != DENY)
+//			if (actionResult != InteractionResult.FAIL)
 				clickedState.attack(world, clickedPos, player);
 			if (stack.isEmpty())
 				return;
@@ -263,8 +264,8 @@ public class DeployerHandler {
 
 		// Right click
 		UseOnContext itemusecontext = new UseOnContext(player, hand, result);
-		InteractionResult useBlock = null;
-		InteractionResult useItem = null;
+		InteractionResult useBlock = InteractionResult.PASS;
+		InteractionResult useItem = InteractionResult.PASS;
 		if (!clickedState.getShape(world, clickedPos)
 			.isEmpty()) {
 			useBlock = UseBlockCallback.EVENT.invoker().interact(player, player.level, hand, result);
@@ -272,11 +273,11 @@ public class DeployerHandler {
 		}
 
 		// Item has custom active use
-//		if (useItem != DENY) {
-//			InteractionResult actionresult = stack.onItemUseFirst(itemusecontext);
-//			if (actionresult != InteractionResult.PASS)
-//				return;
-//		}
+		if (useItem != InteractionResult.FAIL && stack.getItem() instanceof UseFirstBehaviorItem first) {
+			InteractionResult actionresult = first.onItemUseFirst(stack, itemusecontext);
+			if (actionresult != InteractionResult.PASS)
+				return;
+		}
 
 		boolean holdingSomething = !player.getMainHandItem()
 			.isEmpty();
@@ -346,7 +347,7 @@ public class DeployerHandler {
 		BlockState blockstate = world.getBlockState(pos);
 		GameType gameType = interactionManager.getGameModeForPlayer();
 
-		if (PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, world.getBlockState(pos), world.getBlockEntity(pos)))
+		if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, world.getBlockState(pos), world.getBlockEntity(pos)))
 			return false;
 
 		BlockEntity tileentity = world.getBlockEntity(pos);
@@ -374,8 +375,9 @@ public class DeployerHandler {
 			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 35);
 			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), 35);
 		} else {
-			/*if (!*/blockstate.getBlock().playerWillDestroy(player.level, pos, blockstate, player/*, world.getFluidState(pos)))
-				return true*/);
+			blockstate.getBlock().playerWillDestroy(world, pos, blockstate, player);
+			if (!world.setBlock(pos, world.getFluidState(pos).getType().defaultFluidState().createLegacyBlock(), world.isClientSide ? 11 : 3))
+				return true;
 		}
 
 		blockstate.getBlock()
