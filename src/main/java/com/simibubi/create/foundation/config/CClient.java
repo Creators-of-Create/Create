@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.config;
 
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
+import com.simibubi.create.lib.util.FluidUnit;
 
 public class CClient extends ConfigBase {
 
@@ -50,6 +51,11 @@ public class CClient extends ConfigBase {
 			Comments.overlayBorderColorTop);
 	public final ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
 			Comments.overlayBorderColorBot);
+	// Fabric
+	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILIBUCKETS, "fluidUnitType",
+			Comments.fluidUnit);
+	public final ConfigBool simplifyFluidUnit = b(true, "simplifyFluidUnit",
+			Comments.simplifyFluidUnit);
 
 	//placement assist group
 	public final ConfigGroup placementAssist = group(1, "placementAssist",
@@ -128,6 +134,13 @@ public class CClient extends ConfigBase {
 		static String[] overlayBorderColorBot = new String[]{
 				"The custom bot color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled",
 				"[in Hex: #AaRrGgBb]", ConfigAnnotations.IntDisplay.HEX.asComment()
+		};
+		static String[] fluidUnit = new String[]{
+				"The fluid unit that will be displayed when viewing fluids",
+				"Example: 1000 mB or 81000 Droplets"
+		};
+		static String[] simplifyFluidUnit = new String[]{
+				"Determines if the fluid unit should be simplified"
 		};
 		static String placementAssist = "Settings for the Placement Assist";
 		static String[] placementIndicator = new String[]{

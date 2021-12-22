@@ -864,6 +864,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+  "create.generic.unit.droplets": "%1$s Droplets",
 	"create.generic.clockwise": "Clockwise",
 	"create.generic.counter_clockwise": "Counter-Clockwise",
 
