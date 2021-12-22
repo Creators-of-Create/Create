@@ -224,11 +224,12 @@ public class FluidStack {
 			translationKey = "block.minecraft.water";
 		} else if (getFluid() == Fluids.LAVA) {
 			translationKey = "block.minecraft.lava";
+		} else {
+			ResourceLocation id = Registry.FLUID.getKey(getFluid());
+			String key = Util.makeDescriptionId("block", id);
+			String translated = I18n.get(key);
+			translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
 		}
-		ResourceLocation id = Registry.FLUID.getKey(getFluid());
-		String key = Util.makeDescriptionId("block", id);
-		String translated = I18n.get(key);
-		translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
 		return translationKey;
 	}
 

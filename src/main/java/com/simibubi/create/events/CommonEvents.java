@@ -230,7 +230,10 @@ public class CommonEvents {
 		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
 		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
-		CommonEvents.onBiomeLoad();
+		BiomeLoadingCallback.EVENT.register((key, category, generation) -> {
+			CommonEvents.onBiomeLoad();
+			return generation;
+		});
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
 
 		// External Events
