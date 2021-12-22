@@ -2,7 +2,7 @@
   "required": true,
   "priority": 1100,
   "package": "com.simibubi.create.foundation.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "create-refmap.json",
   "mixins": [
     "CustomItemUseEffectsMixin"
