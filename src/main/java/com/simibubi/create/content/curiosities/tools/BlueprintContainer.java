@@ -153,9 +153,9 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 
 	}
 
-	class BlueprintCraftSlot extends SlotItemHandler {
+	public class BlueprintCraftSlot extends SlotItemHandler {
 
-		private int index;
+		public int index;
 
 		public BlueprintCraftSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 			super(itemHandler, index, xPosition, yPosition);

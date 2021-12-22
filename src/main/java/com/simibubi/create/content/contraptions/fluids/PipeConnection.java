@@ -207,8 +207,8 @@ public class PipeConnection {
 			particleSplashNextTick = false;
 		}
 
-		float flowSpeed = (1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f) * 81;
-		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 81));
+		float flowSpeed = (1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f);
+		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 1));
 		if (flow.progress.getValue() >= 1) {
 			flow.complete = true;
 			if (flow.inbound && AllBlocks.GLASS_FLUID_PIPE.has(world.getBlockState(pos)))
