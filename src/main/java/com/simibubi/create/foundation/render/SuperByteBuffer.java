@@ -1,8 +1,7 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.util.BufferBuilderReader;
+import com.jozufozu.flywheel.util.BlockFormatReader;
 import com.jozufozu.flywheel.util.ModelReader;
-import com.jozufozu.flywheel.util.RenderMath;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
@@ -63,12 +62,9 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
-	private final Vector4f pos = new Vector4f();
-	private final Vector3f normal = new Vector3f();
-	private final Vector4f lightPos = new Vector4f();
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		template = new BufferBuilderReader(buf);
+		template = new BlockFormatReader(buf);
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}
@@ -106,6 +102,10 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		if (useWorldLight) {
 			WORLD_LIGHT_CACHE.clear();
 		}
+
+		final Vector4f pos = new Vector4f();
+		final Vector3f normal = new Vector3f();
+		final Vector4f lightPos = new Vector4f();
 
 		float f = .5f;
 		int vertexCount = template.getVertexCount();

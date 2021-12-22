@@ -62,7 +62,7 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 			RenderLayer renderLayer = event.getLayer();
 			if (renderLayer != null) {
 				for (RenderedContraption renderer : visible) {
-					renderer.engine.render(event, event.buffers.bufferSource());
+					renderer.engine.render(event);
 				}
 			}
 		}

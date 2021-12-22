@@ -4,9 +4,7 @@ import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialGroup;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.ITickableInstance;
-import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
-import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
@@ -103,7 +101,6 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 			return "glue";
 		}
 
-		@Override
 		public void buffer(VertexConsumer buffer) {
 			Vec3 diff = Vec3.atLowerCornerOf(Direction.SOUTH.getNormal());
 			Vec3 extension = diff.normalize()
@@ -160,11 +157,6 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		@Override
 		public int vertexCount() {
 			return 8;
-		}
-
-		@Override
-		public VertexFormat format() {
-			return Formats.UNLIT_MODEL;
 		}
 
 		@Override
