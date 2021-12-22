@@ -6,6 +6,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelTileEntity;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -230,10 +231,7 @@ public class CommonEvents {
 		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
 		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
-		BiomeLoadingCallback.EVENT.register((key, category, generation) -> {
-			CommonEvents.onBiomeLoad();
-			return generation;
-		});
+		CommonEvents.onBiomeLoad();
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
 
 		// External Events
@@ -255,6 +253,7 @@ public class CommonEvents {
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
 		BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
+		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
 		PlayerTickEndCallback.EVENT.register(HauntedBellPulser::hauntedBellCreatesPulse);
 	}
 

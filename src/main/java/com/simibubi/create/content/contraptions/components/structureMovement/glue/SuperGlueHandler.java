@@ -61,15 +61,14 @@ public class SuperGlueHandler {
 
 	public static InteractionResult glueInOffHandAppliesOnBlockPlace(BlockState placedAgainst, BlockPos pos, Player placer) {
 		ItemStack itemstack = placer.getOffhandItem();
-		AttributeInstance reachAttribute = placer.getAttribute(ReachEntityAttributes.REACH);
-		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
+		if (!AllItems.SUPER_GLUE.isIn(itemstack))
 			return InteractionResult.PASS;
 		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
 			return InteractionResult.PASS;
 		if (placedAgainst == IPlacementHelper.ID)
 			return InteractionResult.PASS;
 
-		double distance = reachAttribute.getValue();
+		double distance = ReachEntityAttributes.getReachDistance(placer, 4);
 		Vec3 start = placer.getEyePosition(1);
 		Vec3 look = placer.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
