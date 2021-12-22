@@ -5,8 +5,8 @@ import org.lwjgl.system.MemoryUtil;
 import com.jozufozu.flywheel.api.struct.StructType;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 
-public class UnsafeBeltWriter extends UnsafeKineticWriter<BeltData> {
-	public UnsafeBeltWriter(VecBuffer backingBuffer, StructType<BeltData> vertexType) {
+public class BeltWriterUnsafe extends KineticWriterUnsafe<BeltData> {
+	public BeltWriterUnsafe(VecBuffer backingBuffer, StructType<BeltData> vertexType) {
 		super(backingBuffer, vertexType);
 	}
 

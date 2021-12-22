@@ -5,8 +5,8 @@ import org.lwjgl.system.MemoryUtil;
 import com.jozufozu.flywheel.api.struct.StructType;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 
-public class UnsafeRotatingWriter extends UnsafeKineticWriter<RotatingData> {
-	public UnsafeRotatingWriter(VecBuffer backingBuffer, StructType<RotatingData> vertexType) {
+public class RotatingWriterUnsafe extends KineticWriterUnsafe<RotatingData> {
+	public RotatingWriterUnsafe(VecBuffer backingBuffer, StructType<RotatingData> vertexType) {
 		super(backingBuffer, vertexType);
 	}
 

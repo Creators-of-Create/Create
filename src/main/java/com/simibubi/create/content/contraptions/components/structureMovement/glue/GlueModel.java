@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.model.Model;
-import com.jozufozu.flywheel.core.vertex.PosTexNormalVertexListUnsafe;
-import com.jozufozu.flywheel.core.vertex.PosTexNormalWriter;
-import com.jozufozu.flywheel.core.vertex.VertexList;
+import com.jozufozu.flywheel.core.vertex.PosTexNormalWriterUnsafe;
+import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.mojang.blaze3d.platform.MemoryTracker;
 import com.simibubi.create.AllStitchedTextures;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -21,10 +21,10 @@ public class GlueModel implements Model {
 		return INSTANCE;
 	}
 
-	private final PosTexNormalVertexListUnsafe reader;
+	private final VertexList reader;
 
 	private GlueModel() {
-		PosTexNormalWriter writer = new PosTexNormalWriter(MemoryTracker.create(size()));
+		PosTexNormalWriterUnsafe writer = Formats.POS_TEX_NORMAL.createWriter(MemoryTracker.create(size()));
 		createGlueModel(writer);
 		reader = writer.intoReader();
 	}
@@ -44,7 +44,7 @@ public class GlueModel implements Model {
 		return reader;
 	}
 
-	public static void createGlueModel(PosTexNormalWriter buffer) {
+	public static void createGlueModel(PosTexNormalWriterUnsafe buffer) {
 		Vec3 diff = Vec3.atLowerCornerOf(Direction.SOUTH.getNormal());
 		Vec3 extension = diff.normalize()
 				.scale(1 / 32f - 1 / 128f);

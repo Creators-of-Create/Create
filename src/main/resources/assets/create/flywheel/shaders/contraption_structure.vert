@@ -5,10 +5,10 @@
 
 struct Vertex {
     vec3 pos;
-    vec3 normal;
-    vec2 texCoords;
     vec4 color;
+    vec2 texCoords;
     vec2 modelLight;
+    vec3 normal;
 };
 
 #use "flywheel:block.frag"

@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors.flwdata;
 import com.jozufozu.flywheel.api.struct.Batched;
 import com.jozufozu.flywheel.api.struct.Instanced;
 import com.jozufozu.flywheel.api.struct.StructWriter;
-import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.core.layout.BufferLayout;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.model.ModelTransformer;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
@@ -18,7 +18,7 @@ public class ActorType implements Instanced<ActorData>, Batched<ActorData> {
 	}
 
 	@Override
-	public VertexFormat format() {
+	public BufferLayout getLayout() {
 		return AllInstanceFormats.ACTOR;
 	}
 

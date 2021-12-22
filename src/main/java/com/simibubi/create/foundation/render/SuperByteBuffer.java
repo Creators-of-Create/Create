@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
-import com.jozufozu.flywheel.core.vertex.VertexList;
+import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
