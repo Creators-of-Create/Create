@@ -60,7 +60,7 @@ public interface IHaveGoggleInformation {
 		for (int i = 0; i < tank.getTanks(); i++) {
 			FluidTankData data = tank.data[i];
 			String translationKey = data.translationKey();
-			if ("block.minecraft.empty".equals(translationKey))
+			if (translationKey.isEmpty())
 				continue;
 			long amount = data.amount();
 			long tankCapacity = data.capacity();

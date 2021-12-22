@@ -56,6 +56,7 @@ public class FluidStack {
 	@Nullable
 	private CompoundTag tag;
 	private long amount;
+	private String translationKey;
 
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
@@ -215,20 +216,20 @@ public class FluidStack {
 	}
 
 	public String getTranslationKey() {
+		if (translationKey != null) return translationKey;
+
 		if (getFluid() == Fluids.EMPTY) {
-			return "";
+			translationKey = "";
 		} else if (getFluid() == Fluids.WATER) {
-			return "block.minecraft.water";
+			translationKey = "block.minecraft.water";
 		} else if (getFluid() == Fluids.LAVA) {
-			return "block.minecraft.lava";
+			translationKey = "block.minecraft.lava";
 		}
 		ResourceLocation id = Registry.FLUID.getKey(getFluid());
-		String key = Util.makeDescriptionId("fluid", id);
+		String key = Util.makeDescriptionId("block", id);
 		String translated = I18n.get(key);
-		if (translated.equals(key)) {
-			return Util.makeDescriptionId("block", id);
-		}
-		return key;
+		translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
+		return translationKey;
 	}
 
 	public FluidStack copy() {
