@@ -172,10 +172,17 @@ import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class AllTileEntities {
 
@@ -726,35 +733,25 @@ public class AllTileEntities {
 	public static void register() {}
 
 	public static void registerStorages() {
-		TransferUtil.registerStorages(false,
-//				ADJUSTABLE_CRATE.get(),
-				BASIN.get(),
-				BELT.get(),
-				ANDESITE_TUNNEL.get(),
-				BRASS_TUNNEL.get(),
-				CHUTE.get(),
-				CREATIVE_CRATE.get(),
-				CRUSHING_WHEEL_CONTROLLER.get(),
-				DEPLOYER.get(),
-				DEPOT.get(),
-				WEIGHTED_EJECTOR.get(),
-				ITEM_DRAIN.get(),
-				MECHANICAL_CRAFTER.get(),
-				MILLSTONE.get(),
-				PORTABLE_STORAGE_INTERFACE.get(),
-				SAW.get(),
-				SMART_CHUTE.get(),
-				TOOLBOX.get(),
-				ITEM_VAULT.get()
-		);
-		TransferUtil.registerStorages(true,
-				BASIN.get(),
-				FLUID_TANK.get(),
-				CREATIVE_FLUID_TANK.get(),
-				HOSE_PULLEY.get(),
-				ITEM_DRAIN.get(),
-				PORTABLE_FLUID_INTERFACE.get(),
-				SPOUT.get()
-		);
+		for (Field field : AllTileEntities.class.getDeclaredFields()) {
+			field.setAccessible(true);
+			if (Modifier.isStatic(field.getModifiers())) {
+				try {
+					Object obj = field.get(null);
+					if (obj instanceof BlockEntityEntry entry) {
+						BlockEntityType<?> bet = (BlockEntityType<?>) entry.get();
+						BlockEntity be = bet.create(BlockPos.ZERO, Blocks.AIR.defaultBlockState());
+						if (be instanceof FluidTransferable) {
+							TransferUtil.registerFluidStorage(bet);
+						}
+						if (be instanceof ItemTransferable) {
+							TransferUtil.registerItemStorage(bet);
+						}
+					}
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException("Failure during BlockEntity registration", e);
+				}
+			}
+		}
 	}
 }

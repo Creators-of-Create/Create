@@ -77,7 +77,7 @@ public class FluidNetwork {
 				PipeConnection pipeConnection = get(blockFace);
 				if (pipeConnection != null) {
 					if (blockFace.equals(start))
-						transferSpeed = (int) Math.max(1, pipeConnection.pressure.get(true) / 2f);
+						transferSpeed = (int) Math.max(1, pipeConnection.pressure.get(true) / 2f) * 81;
 					frontier.add(Pair.of(blockFace, pipeConnection));
 				}
 				iterator.remove();

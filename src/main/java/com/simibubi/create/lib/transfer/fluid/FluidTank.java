@@ -18,14 +18,12 @@ public class FluidTank implements IFluidHandler {
 		this(capacity, e -> true);
 	}
 
-	public FluidTank(long capacity, Predicate<FluidStack> validator)
-	{
+	public FluidTank(long capacity, Predicate<FluidStack> validator) {
 		this.capacity = capacity;
 		this.validator = validator;
 	}
 
-	public FluidTank setValidator(Predicate<FluidStack> validator)
-	{
+	public FluidTank setValidator(Predicate<FluidStack> validator) {
 		if (validator != null) {
 			this.validator = validator;
 		}
@@ -135,7 +133,7 @@ public class FluidTank implements IFluidHandler {
 		if (amount > canRemove) amount = canRemove;
 		FluidStack out = fluid.copy().setAmount(amount);
 		if (!sim) {
-			fluid.setAmount(fluid.getAmount() - amount);
+			fluid.shrink(amount);
 			onContentsChanged();
 		}
 

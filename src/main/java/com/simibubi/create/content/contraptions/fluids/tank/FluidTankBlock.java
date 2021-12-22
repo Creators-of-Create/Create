@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.util.FluidRenderUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -114,6 +116,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
+		if (true) return InteractionResult.PASS;
 		ItemStack heldItem = player.getItemInHand(hand);
 		boolean onClient = world.isClientSide;
 
@@ -164,7 +167,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				.createLegacyBlock();
 //			FluidAttributes attributes = fluid.getAttributes();
 //			soundevent = attributes.getEmptySound();
-//			if (soundevent == null)
+			if (soundevent == null)
 				soundevent =
 					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		}
@@ -178,9 +181,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				.createLegacyBlock();
 //			soundevent = fluid.getAttributes()
 //				.getFillSound();
-//			if (soundevent == null)
-//				soundevent =
-//					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
+			if (soundevent == null)
+				soundevent =
+					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
 		}
 
 		if (soundevent != null && !onClient) {
@@ -200,7 +203,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
 						float level = (float) fluidInTank.getAmount() / fluidTank.getTankCapacity(0);
 
-						boolean reversed = FluidVariantRendering.fillsFromTop(fluidInTank.getType());
+						boolean reversed = FluidRenderUtil.fillsFromTop(fluidInTank.getType());
 						if (reversed)
 							level = 1 - level;
 

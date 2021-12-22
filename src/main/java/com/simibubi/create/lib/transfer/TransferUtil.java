@@ -126,11 +126,11 @@ public class TransferUtil {
 		return null;
 	}
 
-	public static void registerStorages(boolean fluid, BlockEntityType<?>... type) {
-		if (fluid) {
-			FluidStorage.SIDED.registerForBlockEntities(TransferUtil::getFluidStorageForBE, type);
-		} else {
-			ItemStorage.SIDED.registerForBlockEntities(TransferUtil::getItemStorageForBE, type);
-		}
+	public static void registerFluidStorage(BlockEntityType<?> type) {
+		FluidStorage.SIDED.registerForBlockEntities(TransferUtil::getFluidStorageForBE, type);
+	}
+
+	public static void registerItemStorage(BlockEntityType<?> type) {
+		ItemStorage.SIDED.registerForBlockEntities(TransferUtil::getItemStorageForBE, type);
 	}
 }
