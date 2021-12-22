@@ -146,7 +146,7 @@ public class OpenEndedPipe extends FlowSource {
 		if (fluidState.isEmpty() || !fluidState.isSource())
 			return empty;
 
-		FluidStack stack = new FluidStack(fluidState.getType(), 1000);
+		FluidStack stack = new FluidStack(fluidState.getType(), FluidConstants.BUCKET);
 
 		if (simulate)
 			return stack;

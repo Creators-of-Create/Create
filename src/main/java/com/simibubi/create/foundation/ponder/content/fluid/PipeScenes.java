@@ -39,6 +39,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+
 public class PipeScenes {
 
 	public static void flow(SceneBuilder scene, SceneBuildingUtil util) {
@@ -524,7 +526,7 @@ public class PipeScenes {
 			.pointAt(filterVec);
 		scene.idle(90);
 
-		FluidStack chocolate = new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000);
+		FluidStack chocolate = new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), FluidConstants.BUCKET);
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
 			.getBucket().getDefaultInstance();
 		ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
