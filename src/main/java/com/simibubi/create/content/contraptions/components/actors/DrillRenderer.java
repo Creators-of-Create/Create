@@ -26,8 +26,8 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.partialFacing(AllBlockPartials.DRILL_HEAD, te.getBlockState());
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partialFacing(AllBlockPartials.DRILL_HEAD, state);
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,

@@ -88,8 +88,13 @@ public class EngineTileEntity extends SmartTileEntity implements FlywheelRendere
 
 	@Override
 	public void setRemoved() {
-		detachWheel();
 		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
+		detachWheel();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	protected void refreshWheelSpeed() {

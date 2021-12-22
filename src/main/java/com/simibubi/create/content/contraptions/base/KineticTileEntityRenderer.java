@@ -23,7 +23,6 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.fabricmc.api.EnvType;
 
 public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
@@ -38,10 +37,22 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		int light, int overlay) {
 		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		// TODO
-//		for (RenderType type : RenderType.chunkBufferLayers())
-//			if (ItemBlockRenderTypes.getChunkRenderType(te.getBlockState()) == type)
-				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(/*type*/ ItemBlockRenderTypes.getChunkRenderType(te.getBlockState())), light);
+		BlockState state = getRenderedBlockState(te);
+		RenderType type = getRenderType(te, state);
+		if (type != null)
+			renderRotatingBuffer(te, getRotatedModel(te, state), ms, buffer.getBuffer(type), light);
+	}
+
+	protected BlockState getRenderedBlockState(KineticTileEntity te) {
+		return te.getBlockState();
+	}
+
+	protected RenderType getRenderType(KineticTileEntity te, BlockState state) {
+		return ItemBlockRenderTypes.getChunkRenderType(state);
+	}
+
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.block(KINETIC_TILE, state);
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, PoseStack ms,
@@ -109,14 +120,6 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static Axis getRotationAxisOf(KineticTileEntity te) {
 		return ((IRotate) te.getBlockState()
 			.getBlock()).getRotationAxis(te.getBlockState());
-	}
-
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return te.getBlockState();
-	}
-
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.block(KINETIC_TILE, getRenderedBlockState(te));
 	}
 
 }

@@ -200,10 +200,15 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	public void setRemoved() {
-		onEmptied();
 		itemCapability.invalidate();
 		fluidCapability.invalidate();
 		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
+		onEmptied();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 //	@Nonnull

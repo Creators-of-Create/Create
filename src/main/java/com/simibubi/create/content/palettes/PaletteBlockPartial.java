@@ -33,6 +33,8 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import static com.simibubi.create.AllTags.pickaxeOnly;
+
 public abstract class PaletteBlockPartial<B extends Block> {
 
 	public static final PaletteBlockPartial<StairBlock> STAIR = new Stairs();
@@ -76,7 +78,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 	protected BlockBuilder<B, CreateRegistrate> transformBlock(BlockBuilder<B, CreateRegistrate> builder,
 		String variantName, PaletteBlockPattern pattern) {
 		getBlockTags().forEach(builder::tag);
-		return builder;
+		return builder.transform(pickaxeOnly());
 	}
 
 	protected ItemBuilder<BlockItem, BlockBuilder<B, CreateRegistrate>> transformItem(

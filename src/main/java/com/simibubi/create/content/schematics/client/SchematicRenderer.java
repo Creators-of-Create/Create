@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -88,6 +89,7 @@ public class SchematicRenderer {
 		List<BlockState> blockstates = new LinkedList<>();
 		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
 		PoseStack ms = new PoseStack();
+		Random random = new Random();
 
 		BlockPos.betweenClosedStream(blockAccess.getBounds())
 			.forEach(localPos -> {
@@ -102,7 +104,7 @@ public class SchematicRenderer {
 						continue;
 //					ForgeHooksClient.setRenderType(blockRenderLayer);
 					if (!buffers.containsKey(blockRenderLayer))
-						buffers.put(blockRenderLayer, new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize()));
+						buffers.put(blockRenderLayer, new BufferBuilder(512));
 
 					BufferBuilder bufferBuilder = buffers.get(blockRenderLayer);
 					if (startedBufferBuilders.add(blockRenderLayer))
@@ -111,7 +113,7 @@ public class SchematicRenderer {
 					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
 
 					if (blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true,
-						minecraft.level.random)) {
+						random)) {
 						usedBlockRenderLayers.add(blockRenderLayer);
 					}
 					blockstates.add(state);

@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 
@@ -56,7 +56,7 @@ public class RecipeFinder {
 		return list;
 	}
 
-	public static final ISimpleReloadListener LISTENER = (resourceManager, profiler) -> {
+	public static final ResourceManagerReloadListener LISTENER = resourceManager -> {
 		cachedSearches.invalidateAll();
 	};
 

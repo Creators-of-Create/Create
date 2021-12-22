@@ -112,6 +112,32 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 		read(tag, false);
 	}
 
+	/* TODO: Remove this hack once this issue is resolved: https://github.com/MinecraftForge/MinecraftForge/issues/8302
+		Once the PR linked in the issue is accepted, we should use the new method for determining whether setRemoved was
+		called due to a chunk unload or not, and remove this volatile workaround
+	 */
+	private boolean unloaded;
+
+//	@Override
+	public void onChunkUnloaded() {
+//		super.onChunkUnloaded();
+		unloaded = true;
+	}
+
+	protected void setRemovedNotDueToChunkUnload() {
+
+	}
+
+	@Override
+	public void setRemoved() {
+		forEachBehaviour(TileEntityBehaviour::remove);
+		super.setRemoved();
+
+		if (!unloaded) {
+			setRemovedNotDueToChunkUnload();
+		}
+	}
+
 	@Override
 	public final void saveAdditional(CompoundTag tag) {
 		write(tag, false);
@@ -152,12 +178,6 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 		if (remove != null) {
 			remove.remove();
 		}
-	}
-
-	@Override
-	public void setRemoved() {
-		forEachBehaviour(TileEntityBehaviour::remove);
-		super.setRemoved();
 	}
 
 	public void setLazyTickRate(int slowTickRate) {
