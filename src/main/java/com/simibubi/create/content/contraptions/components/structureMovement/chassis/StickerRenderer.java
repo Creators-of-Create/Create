@@ -25,7 +25,7 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 	protected void renderSafe(StickerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
 		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.STICKER_HEAD, state);

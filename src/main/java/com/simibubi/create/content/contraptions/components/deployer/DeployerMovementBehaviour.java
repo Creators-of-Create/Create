@@ -257,7 +257,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!Backend.getInstance().canUseInstancing())
+        if (!Backend.isOn())
 			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 

@@ -28,7 +28,7 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
 		Block block = state.getBlock();

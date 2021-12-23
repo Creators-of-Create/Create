@@ -36,7 +36,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState blockState = te.getBlockState();
 		FlywheelTileEntity wte = (FlywheelTileEntity) te;

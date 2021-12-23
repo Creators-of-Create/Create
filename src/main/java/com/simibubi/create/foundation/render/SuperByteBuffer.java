@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.util.BufferBuilderReader;
+import com.jozufozu.flywheel.core.vertex.BlockVertexList;
+import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
@@ -31,10 +32,10 @@ import net.minecraftforge.client.model.pipeline.LightUtil;
 
 public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
-	private final BufferBuilderReader template;
+	private final VertexList template;
 
 	// Vertex Position
-	private PoseStack transforms;
+	private final PoseStack transforms;
 
 	// Vertex Coloring
 	private boolean shouldColor;
@@ -61,12 +62,9 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
-	private final Vector4f pos = new Vector4f();
-	private final Vector3f normal = new Vector3f();
-	private final Vector4f lightPos = new Vector4f();
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		template = new BufferBuilderReader(buf);
+		template = new BlockVertexList(buf);
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}
@@ -105,6 +103,10 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			WORLD_LIGHT_CACHE.clear();
 		}
 
+		final Vector4f pos = new Vector4f();
+		final Vector3f normal = new Vector3f();
+		final Vector4f lightPos = new Vector4f();
+
 		float f = .5f;
 		int vertexCount = template.getVertexCount();
 		for (int i = 0; i < vertexCount; i++) {
@@ -115,9 +117,9 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			byte g = template.getG(i);
 			byte b = template.getB(i);
 			byte a = template.getA(i);
-			float normalX = template.getNX(i) / 127f;
-			float normalY = template.getNY(i) / 127f;
-			float normalZ = template.getNZ(i) / 127f;
+			float normalX = template.getNX(i);
+			float normalY = template.getNY(i);
+			float normalZ = template.getNZ(i);
 
 			normal.set(normalX, normalY, normalZ);
 			normal.transform(normalMat);
@@ -132,6 +134,7 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			pos.transform(modelMat);
 			builder.vertex(pos.x(), pos.y(), pos.z());
 
+			//builder.color(nx, ny, nz, 1f);
 			if (shouldColor) {
 				if (disableDiffuseMult) {
 					builder.color(this.r, this.g, this.b, this.a);

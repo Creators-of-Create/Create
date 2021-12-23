@@ -55,7 +55,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		this.engine.addListener(this.kinetics);
 
 		buildLayers();
-		if (Backend.getInstance().canUseInstancing()) {
+		if (Backend.isOn()) {
 			buildInstancedTiles();
 			buildActors();
 		}

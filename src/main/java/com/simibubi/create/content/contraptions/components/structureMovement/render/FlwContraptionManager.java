@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.backend.RenderLayer;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
-import com.jozufozu.flywheel.util.TextureBinder;
+import com.jozufozu.flywheel.util.Textures;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.CreateContexts;
@@ -44,7 +44,7 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 
 		layer.setupRenderState();
 
-		TextureBinder.bindActiveTextures();
+		Textures.bindActiveTextures();
 
 		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
 
@@ -58,11 +58,11 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 
 		GlVertexArray.unbind();
 
-		if (Backend.getInstance().canUseInstancing()) {
+        if (Backend.isOn()) {
 			RenderLayer renderLayer = event.getLayer();
 			if (renderLayer != null) {
 				for (RenderedContraption renderer : visible) {
-					renderer.engine.render(event, event.buffers.bufferSource());
+					renderer.engine.render(event);
 				}
 			}
 		}
