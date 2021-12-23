@@ -4,6 +4,7 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.content.contraptions.KineticSolver;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -26,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractShaftBlock {
+public class ShaftBlock extends AbstractShaftBlock implements KineticSolver.SolverBlock {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -69,7 +70,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			
+
 			AllTriggers.triggerFor(AllTriggers.CASING_SHAFT, player);
 			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
 				.setValue(AXIS, state.getValue(AXIS)));
@@ -81,6 +82,21 @@ public class ShaftBlock extends AbstractShaftBlock {
 			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return InteractionResult.PASS;
+	}
+
+	@Override
+	public void created(KineticSolver solver, Level level, BlockPos pos) {
+		BlockState state = level.getBlockState(pos);
+
+		Direction.Axis axis = state.getValue(AXIS);
+
+		Direction positive = Direction.fromAxisAndDirection(axis, Direction.AxisDirection.POSITIVE);
+
+		KineticSolver.Connection.Shaft c1 = new KineticSolver.Connection.Shaft(pos, positive);
+		KineticSolver.Connection.Shaft c2 = new KineticSolver.Connection.Shaft(pos, positive.getOpposite());
+
+		solver.addGoal(new KineticSolver.Goal.EqualSpeed(c1));
+		solver.addGoal(new KineticSolver.Goal.EqualSpeed(c2));
 	}
 
 	@MethodsReturnNonnullByDefault
