@@ -2,8 +2,6 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.content.curiosities.armor.CapacityEnchantment.ICapacityEnchantable;
 
-import com.simibubi.create.lib.item.CustomDurabilityBarItem;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -14,7 +12,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
-public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable, CustomDurabilityBarItem {
+public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
 
 	public static final int DURABILITY_BAR = 0xEFEFEF;
 	private BlockItem blockItem;

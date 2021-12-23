@@ -40,7 +40,7 @@ public abstract class ItemInHandRendererMixin {
 			changed = slot != slotMainHand;
 			slotMainHand = slot;
 		}
-		return ((ItemExtensions) from.getItem()).create$shouldCauseReequipAnimation(from, to, changed);
+		return ((ItemExtensions) from.getItem()).shouldCauseReequipAnimation(from, to, changed);
 	}
 
 	@Inject(at = @At("HEAD"), method = "renderArmWithItem", cancellable = true)

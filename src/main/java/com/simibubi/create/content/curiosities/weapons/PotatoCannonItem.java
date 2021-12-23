@@ -2,7 +2,6 @@ package com.simibubi.create.content.curiosities.weapons;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllEnchantments;
@@ -12,10 +11,15 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
+
+import com.simibubi.create.lib.extensions.ItemExtensions;
+
+import com.simibubi.create.lib.item.CustomMaxCountItem;
+
+import com.simibubi.create.lib.item.EntitySwingListenerItem;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -44,20 +48,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.extensions.ItemExtensions;
-
-import com.simibubi.create.lib.item.CustomDurabilityBarItem;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class PotatoCannonItem extends ProjectileWeaponItem implements CustomDurabilityBarItem {
+public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxCountItem, EntitySwingListenerItem, ItemExtensions {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
 	public PotatoCannonItem(Properties properties) {
-		super(properties);
+		super(properties.defaultDurability(MAX_DAMAGE));
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomDura
 		return use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 	}
 
-	//@Override
+	@Override
 	public int getItemStackLimit(ItemStack stack) {
 		return 1;
 	}
@@ -119,6 +119,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomDura
 		return stack.getItem() instanceof PotatoCannonItem;
 	}
 
+//	done in item properties instead
 //	@Override
 //	public int getMaxDamage(ItemStack stack) {
 //		return MAX_DAMAGE;
@@ -200,7 +201,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomDura
 			.orElse(InteractionResultHolder.pass(stack));
 	}
 
-//	@Override
+	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged || newStack.getItem() != oldStack.getItem();
 	}
@@ -285,7 +286,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomDura
 		return 1;
 	}
 
-//	@Override
+	@Override
 	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
 		return true;
 	}

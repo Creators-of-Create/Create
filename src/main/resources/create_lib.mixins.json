@@ -105,7 +105,6 @@
     "client.GuiMixin",
     "client.HumanoidArmorLayerMixin",
     "client.ItemInHandRendererMixin",
-    "client.ItemRendererMixin",
     "client.KeyboardHandlerMixin",
     "client.LanguageInfoMixin",
     "client.LevelRendererMixin",

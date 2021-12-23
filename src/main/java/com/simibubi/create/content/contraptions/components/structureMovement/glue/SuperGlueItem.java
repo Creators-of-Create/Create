@@ -18,7 +18,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import com.simibubi.create.lib.util.CustomDurabilityPropertyHelper;
 import com.simibubi.create.lib.item.CustomMaxCountItem;
 
 import net.fabricmc.api.EnvType;
@@ -27,7 +26,7 @@ import net.fabricmc.api.Environment;
 public class SuperGlueItem extends Item implements CustomMaxCountItem {
 
 	public SuperGlueItem(Properties properties) {
-		super(CustomDurabilityPropertyHelper.setMaxDamage(99, properties));
+		super(properties.defaultDurability(99));
 	}
 
 	@Override
@@ -35,6 +34,7 @@ public class SuperGlueItem extends Item implements CustomMaxCountItem {
 		return true;
 	}
 
+//	done in item properties instead
 //	@Override
 //	public int getMaxDamage(ItemStack stack) {
 //		return 99;

@@ -70,7 +70,7 @@ public abstract class ZapperItem extends Item implements EntitySwingListenerItem
 	}
 
 	@Override
-	public boolean create$shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		boolean differentBlock = false;
 		if (oldStack.hasTag() && newStack.hasTag() && oldStack.getTag()
 			.contains("BlockUsed")

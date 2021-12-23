@@ -10,7 +10,7 @@ public interface ItemExtensions {
 		return () -> new Item(new Item.Properties());
 	}
 
-	default boolean create$shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+	default boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return !oldStack.equals(newStack);
 	}
 }

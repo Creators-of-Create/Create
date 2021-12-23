@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.event.ModelsBakedCallback;
-import com.simibubi.create.lib.extensions.ModelManagerExtensions;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,7 +21,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ModelManager.class)
-public abstract class ModelManagerMixin implements ModelManagerExtensions {
+public abstract class ModelManagerMixin {
 
 	@Shadow
 	private Map<ResourceLocation, BakedModel> bakedRegistry;
@@ -30,10 +29,5 @@ public abstract class ModelManagerMixin implements ModelManagerExtensions {
 	@Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", args = "ldc=cache", shift = At.Shift.BEFORE), method = "apply")
 	public void create$onModelBake(ModelBakery modelLoader, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
 		ModelsBakedCallback.EVENT.invoker().onModelsBaked((ModelManager) (Object) this, bakedRegistry, modelLoader);
-	}
-
-	@Override
-	public BakedModel create$getModel(ResourceLocation id) {
-		return bakedRegistry.get(id);
 	}
 }

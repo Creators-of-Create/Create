@@ -37,12 +37,10 @@ import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.util.EntityHelper;
 
-import com.simibubi.create.lib.item.CustomDurabilityBarItem;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
+public class ExtendoGripItem extends Item  {
 	private static DamageSource lastActiveDamageSource;
 
 	public static final int MAX_DAMAGE = 200;
@@ -65,7 +63,9 @@ public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
 	);
 
 	public ExtendoGripItem(Properties properties) {
-		super(properties.stacksTo(1)
+		super(properties
+			.defaultDurability(MAX_DAMAGE)
+			.stacksTo(1)
 			.rarity(Rarity.UNCOMMON));
 	}
 
@@ -228,6 +228,7 @@ public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
 		return true;
 	}
 
+//	done in item properties instead
 //	@Override
 //	public int getMaxDamage(ItemStack stack) {
 //		return MAX_DAMAGE;

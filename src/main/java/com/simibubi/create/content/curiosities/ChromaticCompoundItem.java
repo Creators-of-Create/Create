@@ -4,8 +4,6 @@ import java.util.Random;
 
 import com.simibubi.create.lib.util.EntityHelper;
 
-import com.simibubi.create.lib.item.CustomDurabilityBarItem;
-
 import com.simibubi.create.lib.item.CustomMaxCountItem;
 
 import com.simibubi.create.lib.item.EntityTickListenerItem;
@@ -46,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
-public class ChromaticCompoundItem extends Item implements CustomDurabilityBarItem, CustomMaxCountItem, EntityTickListenerItem {
+public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, EntityTickListenerItem {
 
 	public ChromaticCompoundItem(Properties properties) {
 		super(properties);
