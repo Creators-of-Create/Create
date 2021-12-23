@@ -78,23 +78,24 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		float totalSpace = 0;
 
 		observedInventory.findNewCapability();
-		if (observedInventory.hasInventory()) {
-			// Item inventory
-			IItemHandler inv = observedInventory.getInventory();
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack stackInSlot = inv.getStackInSlot(slot);
-				int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
-				int count = stackInSlot.getCount();
-				if (space == 0)
-					continue;
+		observedTank.findNewCapability();
+		if (observedInventory.hasInventory() || observedTank.hasInventory()) {
+			if (observedInventory.hasInventory()) {
+				// Item inventory
+				IItemHandler inv = observedInventory.getInventory();
+				for (int slot = 0; slot < inv.getSlots(); slot++) {
+					ItemStack stackInSlot = inv.getStackInSlot(slot);
+					int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+					int count = stackInSlot.getCount();
+					if (space == 0)
+						continue;
 
-				totalSpace += 1;
-				if (filtering.test(stackInSlot))
-					occupied += count * (1f / space);
+					totalSpace += 1;
+					if (filtering.test(stackInSlot))
+						occupied += count * (1f / space);
+				}
 			}
 
-		} else {
-			observedTank.findNewCapability();
 			if (observedTank.hasInventory()) {
 				// Fluid inventory
 				IFluidHandler tank = observedTank.getInventory();
@@ -109,18 +110,17 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 					if (filtering.test(stackInSlot))
 						occupied += count * (1f / space);
 				}
-
-			} else {
-				// No compatible inventories found
-				if (currentLevel == -1)
-					return;
-				level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
-				currentLevel = -1;
-				redstoneState = false;
-				sendData();
-				scheduleBlockTick();
-				return;
 			}
+		} else {
+			// No compatible inventories found
+			if (currentLevel == -1)
+				return;
+			level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
+			currentLevel = -1;
+			redstoneState = false;
+			sendData();
+			scheduleBlockTick();
+			return;
 		}
 
 		float stockLevel = occupied / totalSpace;
