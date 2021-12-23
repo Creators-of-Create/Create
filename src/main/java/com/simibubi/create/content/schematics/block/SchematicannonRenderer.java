@@ -43,8 +43,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance()
-			.canUseInstancing(tileEntity.getLevel()))
+		if (Backend.canUseInstancing(tileEntity.getLevel()))
 			return;
 
 		BlockPos pos = tileEntity.getBlockPos();

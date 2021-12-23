@@ -38,7 +38,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		for (RenderType type : RenderType.chunkBufferLayers())
 			if (ItemBlockRenderTypes.canRenderInLayer(te.getBlockState(), type))
@@ -97,7 +97,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		float offset = ICogWheel.isLargeCog(te.getBlockState()) ? 11.25f : 0;
 		double d = (((axis == Axis.X) ? 0 : pos.getX()) + ((axis == Axis.Y) ? 0 : pos.getY())
 			+ ((axis == Axis.Z) ? 0 : pos.getZ())) % 2;
-		if (d == 0) 
+		if (d == 0)
 			offset = 22.5f;
 		return offset;
 	}

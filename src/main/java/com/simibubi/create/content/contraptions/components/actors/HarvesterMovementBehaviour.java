@@ -58,8 +58,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!Backend.getInstance()
-			.canUseInstancing())
+        if (!Backend.isOn())
 			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 

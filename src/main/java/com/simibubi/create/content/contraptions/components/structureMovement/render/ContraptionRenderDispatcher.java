@@ -178,7 +178,7 @@ public class ContraptionRenderDispatcher {
 	public static void reset() {
 		WORLDS.empty(ContraptionRenderManager::delete);
 
-		if (Backend.getInstance().available()) {
+		if (Backend.isOn()) {
 			WORLDS = new WorldAttached<>(FlwContraptionManager::new);
 		} else {
 			WORLDS = new WorldAttached<>(SBBContraptionManager::new);

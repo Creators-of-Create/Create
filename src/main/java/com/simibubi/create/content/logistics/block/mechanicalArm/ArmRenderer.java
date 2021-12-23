@@ -44,7 +44,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		ArmTileEntity arm = (ArmTileEntity) te;
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
-		boolean usingFlywheel = Backend.getInstance().canUseInstancing(te.getLevel());
+		boolean usingFlywheel = Backend.canUseInstancing(te.getLevel());
 
 		if (usingFlywheel && !hasItem) return;
 

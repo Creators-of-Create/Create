@@ -58,7 +58,7 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 
 		GlVertexArray.unbind();
 
-		if (Backend.getInstance().canUseInstancing()) {
+        if (Backend.isOn()) {
 			RenderLayer renderLayer = event.getLayer();
 			if (renderLayer != null) {
 				for (RenderedContraption renderer : visible) {
