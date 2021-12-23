@@ -231,12 +231,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 		}
 
-		for (Iterator<Entry<Entity, MutableInt>> iterator = collidingEntities.entrySet()
-			.iterator(); iterator.hasNext();)
-			if (iterator.next()
-				.getValue()
-				.incrementAndGet() > 3)
-				iterator.remove();
+		collidingEntities.entrySet().removeIf(e -> e.getValue().incrementAndGet() > 3);
 
 		xo = getX();
 		yo = getY();

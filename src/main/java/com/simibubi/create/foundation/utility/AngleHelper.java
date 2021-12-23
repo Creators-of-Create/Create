@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.Mth;
 
 public class AngleHelper {
 
@@ -38,6 +39,14 @@ public class AngleHelper {
 		current = current % 360;
 		target = target % 360;
 		return (float) (((((target - current) % 360) + 540) % 360) - 180);
+	}
+
+	public static float getShortestAngleDiff(double current, double target, float hint) {
+		float diff = getShortestAngleDiff(current, target);
+		if (Mth.equal(Math.abs(diff), 180) && Math.signum(diff) != Math.signum(hint)) {
+			return diff + 360*Math.signum(hint);
+		}
+		return diff;
 	}
 
 }

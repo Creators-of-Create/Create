@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 import com.simibubi.create.lib.transfer.item.InvWrapper;
@@ -8,9 +9,9 @@ import com.simibubi.create.lib.transfer.item.InvWrapper;
 /**
  * For inserting items into a players' inventory anywhere except the hotbar
  */
-public class ItemReturnInvWrapper extends InvWrapper {
+public class ItemReturnInvWrapper extends PlayerMainInvWrapper {
 
-	public ItemReturnInvWrapper(Container inv) {
+	public ItemReturnInvWrapper(Inventory inv) {
 		super(inv);
 	}
 
