@@ -495,10 +495,9 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {
-				IFluidHandlerItem handler = TransferUtil.getFluidHandlerItem(itemStack).getValueUnsafer();
-				if (handler != null && handler.getContainer()
-					.sameItem(itemStack))
-					continue;
+				if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
+						.equals(itemStack.getItem()))
+						continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
 			if (!externalTankNotPresent)
@@ -540,9 +539,8 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, boolean simulate, IItemHandler targetInv) {
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
-			IFluidHandlerItem handler = TransferUtil.getFluidHandlerItem(itemStack).getValueUnsafer();
-			if (handler.getContainer()
-				.sameItem(itemStack))
+			if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
+					.equals(itemStack.getItem()))
 				continue;
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 				.isEmpty())
