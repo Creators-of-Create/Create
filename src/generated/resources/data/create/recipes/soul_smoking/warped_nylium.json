@@ -1,0 +1,13 @@
+{
+  "type": "create:soul_smoking",
+  "ingredients": [
+    {
+      "item": "minecraft:podzol"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:warped_nylium"
+    }
+  ]
+}

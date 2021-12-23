@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.particle;
 
-import javax.annotation.Nonnull;
-
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.fan.IAirCurrentSource;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
@@ -9,11 +7,7 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SimpleAnimatedParticle;
-import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -22,6 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nonnull;
 
 public class AirFlowParticle extends SimpleAnimatedParticle {
 
@@ -97,7 +93,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 	}
 
 	public void morphType(double distance) {
-		if(source.getAirCurrent() == null)
+		if (source.getAirCurrent() == null)
 			return;
 		InWorldProcessing.Type type = source.getAirCurrent().getSegmentAt((float) distance);
 
@@ -114,6 +110,18 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		}
 
 		if (type == InWorldProcessing.Type.SMOKING) {
+			setColor(Color.mixColors(0x0, 0x555555, level.random.nextFloat()));
+			setAlpha(1f);
+			selectSprite(level.random.nextInt(3));
+			if (level.random.nextFloat() < 1 / 32f)
+				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
+						zd * .125f);
+			if (level.random.nextFloat() < 1 / 32f)
+				level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, xd * .125f, yd * .125f,
+						zd * .125f);
+		}
+
+		if (type == InWorldProcessing.Type.SOUL_SMOKING) {//TODO soul smoking special particle?
 			setColor(Color.mixColors(0x0, 0x555555, level.random.nextFloat()));
 			setAlpha(1f);
 			selectSprite(level.random.nextInt(3));
@@ -165,7 +173,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		}
 
 		public Particle createParticle(AirFlowParticleData data, ClientLevel worldIn, double x, double y, double z,
-				double xSpeed, double ySpeed, double zSpeed) {
+									   double xSpeed, double ySpeed, double zSpeed) {
 			BlockEntity te = worldIn.getBlockEntity(new BlockPos(data.posX, data.posY, data.posZ));
 			if (!(te instanceof IAirCurrentSource))
 				te = null;

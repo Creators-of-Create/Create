@@ -1,0 +1,13 @@
+{
+  "type": "create:soul_smoking",
+  "ingredients": [
+    {
+      "item": "minecraft:red_mushroom"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:crimson_fungus"
+    }
+  ]
+}

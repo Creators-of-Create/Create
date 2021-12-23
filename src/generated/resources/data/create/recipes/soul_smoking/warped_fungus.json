@@ -1,0 +1,13 @@
+{
+  "type": "create:soul_smoking",
+  "ingredients": [
+    {
+      "item": "minecraft:brown_mushroom"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:warped_fungus"
+    }
+  ]
+}

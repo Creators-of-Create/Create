@@ -1,17 +1,9 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.components.fan.SoulSmokingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -27,11 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.BlastingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
-import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -45,15 +33,23 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import javax.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
+
 public class InWorldProcessing {
 
 	private static final RecipeWrapper WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
+	private static final SoulSmokingWrapper SOUL_SMOKING_WRAPPER = new SoulSmokingWrapper();
 
 	public enum Type {
-		SMOKING, BLASTING, SPLASHING, NONE
-
-		;
+		SMOKING, BLASTING, SPLASHING, SOUL_SMOKING, NONE;
 
 		public static Type byBlock(BlockGetter reader, BlockPos pos) {
 			BlockState blockState = reader.getBlockState(pos);
@@ -61,10 +57,12 @@ public class InWorldProcessing {
 			if (fluidState.getType() == Fluids.WATER || fluidState.getType() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			Block block = blockState.getBlock();
+			if (block == Blocks.SOUL_FIRE || block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT).orElse(false))
+				return Type.SOUL_SMOKING;
 			if (block == Blocks.FIRE || AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				|| (BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
+					|| (BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false))
-				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
+					|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
@@ -74,9 +72,9 @@ public class InWorldProcessing {
 
 	public static boolean canProcess(ItemEntity entity, Type type) {
 		if (entity.getPersistentData()
-			.contains("CreateData")) {
+				.contains("CreateData")) {
 			CompoundTag compound = entity.getPersistentData()
-				.getCompound("CreateData");
+					.getCompound("CreateData");
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
 
@@ -99,31 +97,34 @@ public class InWorldProcessing {
 		if (type == Type.BLASTING) {
 			WRAPPER.setItem(0, stack);
 			Optional<SmeltingRecipe> smeltingRecipe = world.getRecipeManager()
-				.getRecipeFor(RecipeType.SMELTING, WRAPPER, world);
+					.getRecipeFor(RecipeType.SMELTING, WRAPPER, world);
 
 			if (smeltingRecipe.isPresent())
 				return true;
 
 			WRAPPER.setItem(0, stack);
 			Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
-				.getRecipeFor(RecipeType.BLASTING, WRAPPER, world);
+					.getRecipeFor(RecipeType.BLASTING, WRAPPER, world);
 
 			if (blastingRecipe.isPresent())
 				return true;
 
 			return !stack.getItem()
-				.isFireResistant();
+					.isFireResistant();
 		}
 
 		if (type == Type.SMOKING) {
 			WRAPPER.setItem(0, stack);
 			Optional<SmokingRecipe> recipe = world.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, WRAPPER, world);
+					.getRecipeFor(RecipeType.SMOKING, WRAPPER, world);
 			return recipe.isPresent();
 		}
 
 		if (type == Type.SPLASHING)
 			return isWashable(stack, world);
+
+		if (type == Type.SOUL_SMOKING)
+			return isSoulSmokeable(stack, world);
 
 		return false;
 	}
@@ -131,6 +132,12 @@ public class InWorldProcessing {
 	public static boolean isWashable(ItemStack stack, Level world) {
 		SPLASHING_WRAPPER.setItem(0, stack);
 		Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
+		return recipe.isPresent();
+	}
+
+	public static boolean isSoulSmokeable(ItemStack stack, Level world) {
+		SOUL_SMOKING_WRAPPER.setItem(0, stack);
+		Optional<SoulSmokingRecipe> recipe = AllRecipeTypes.SOUL_SMOKING.find(SOUL_SMOKING_WRAPPER, world);
 		return recipe.isPresent();
 	}
 
@@ -158,7 +165,7 @@ public class InWorldProcessing {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+					(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			transported.processingTime = processingTime;
 			if (!canProcess(transported.stack, type, world))
 				transported.processingTime = -1;
@@ -190,23 +197,30 @@ public class InWorldProcessing {
 				return applyRecipeOn(stack, recipe.get());
 			return null;
 		}
+		if (type == Type.SOUL_SMOKING){
+			SOUL_SMOKING_WRAPPER.setItem(0, stack);
+			Optional<SoulSmokingRecipe> recipe = AllRecipeTypes.SOUL_SMOKING.find(SOUL_SMOKING_WRAPPER, world);
+			if (recipe.isPresent())
+				return applyRecipeOn(stack, recipe.get());
+			return null;
+		}
 
 		WRAPPER.setItem(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
-			.getRecipeFor(RecipeType.SMOKING, WRAPPER, world);
+				.getRecipeFor(RecipeType.SMOKING, WRAPPER, world);
 
 		if (type == Type.BLASTING) {
 			if (!smokingRecipe.isPresent()) {
 				WRAPPER.setItem(0, stack);
 				Optional<SmeltingRecipe> smeltingRecipe = world.getRecipeManager()
-					.getRecipeFor(RecipeType.SMELTING, WRAPPER, world);
+						.getRecipeFor(RecipeType.SMELTING, WRAPPER, world);
 
 				if (smeltingRecipe.isPresent())
 					return applyRecipeOn(stack, smeltingRecipe.get());
 
 				WRAPPER.setItem(0, stack);
 				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
-					.getRecipeFor(RecipeType.BLASTING, WRAPPER, world);
+						.getRecipeFor(RecipeType.BLASTING, WRAPPER, world);
 
 				if (blastingRecipe.isPresent())
 					return applyRecipeOn(stack, blastingRecipe.get());
@@ -235,9 +249,9 @@ public class InWorldProcessing {
 		if (!processing.contains("Type") || Type.valueOf(processing.getString("Type")) != type) {
 			processing.putString("Type", type.name());
 			int timeModifierForStackSize = ((entity.getItem()
-				.getCount() - 1) / 16) + 1;
+					.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+					(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
 		}
 
@@ -276,7 +290,7 @@ public class InWorldProcessing {
 						if (!ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
 							continue;
 						int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(),
-							stack.getCount());
+								stack.getCount());
 						previouslyRolled.grow(amount);
 						stack.shrink(amount);
 					}
@@ -289,7 +303,7 @@ public class InWorldProcessing {
 			}
 		} else {
 			ItemStack out = recipe.getResultItem()
-				.copy();
+					.copy();
 			stacks = ItemHelper.multipliedOutput(stackIn, out);
 		}
 
@@ -303,26 +317,33 @@ public class InWorldProcessing {
 			return;
 
 		switch (type) {
-		case BLASTING:
-			world.addParticle(ParticleTypes.LARGE_SMOKE, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
-			break;
-		case SMOKING:
-			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
-			break;
-		case SPLASHING:
-			Vector3f color = new Color(0x0055FF).asVectorF();
-			world.addParticle(new DustParticleOptions(color, 1), vec.x + (world.random.nextFloat() - .5f) * .5f,
-				vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
-			world.addParticle(ParticleTypes.SPIT, vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f,
-				vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
-			break;
-		default:
-			break;
+			case BLASTING:
+				world.addParticle(ParticleTypes.LARGE_SMOKE, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+				break;
+			case SMOKING:
+			case SOUL_SMOKING: // TODO add special soul smoking particle
+				world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+				break;
+			case SPLASHING:
+				Vector3f color = new Color(0x0055FF).asVectorF();
+				world.addParticle(new DustParticleOptions(color, 1), vec.x + (world.random.nextFloat() - .5f) * .5f,
+						vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+				world.addParticle(ParticleTypes.SPIT, vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f,
+						vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+				break;
+			default:
+				break;
 		}
 	}
 
 	public static class SplashingWrapper extends RecipeWrapper {
 		public SplashingWrapper() {
+			super(new ItemStackHandler(1));
+		}
+	}
+
+	public static class SoulSmokingWrapper extends RecipeWrapper {
+		public SoulSmokingWrapper() {
 			super(new ItemStackHandler(1));
 		}
 	}

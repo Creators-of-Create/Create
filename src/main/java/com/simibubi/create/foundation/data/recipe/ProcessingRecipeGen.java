@@ -38,6 +38,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		GENERATORS.add(new PressingRecipeGen(gen));
 		GENERATORS.add(new FillingRecipeGen(gen));
 		GENERATORS.add(new EmptyingRecipeGen(gen));
+		GENERATORS.add(new SoulSmokingRecipeGen(gen));
 
 		gen.addProvider(new DataProvider() {
 

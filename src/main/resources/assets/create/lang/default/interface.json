@@ -34,6 +34,8 @@
 	"create.recipe.fan_washing.fan": "Fan behind Flowing Water",
 	"create.recipe.fan_smoking": "Bulk Smoking",
 	"create.recipe.fan_smoking.fan": "Fan behind Fire",
+  "create.recipe.fan_soul_smoking": "Bulk Soul Smoking",
+  "create.recipe.fan_soul_smoking.fan": "Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Bulk Blasting",
 	"create.recipe.fan_blasting.fan": "Fan behind Lava",
 	"create.recipe.pressing": "Pressing",
@@ -106,7 +108,7 @@
 
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] to Focus",
 	"create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
-	
+
 	"create.toolbox.unequip": "Unequip: %1$s",
 	"create.toolbox.outOfRange": "Toolbox of held item not in Range",
 	"create.toolbox.detach": "Stop tracking and keep item",
@@ -508,7 +510,7 @@
 	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
 	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
-	
+  
 	"create.tooltip.brass_tunnel.contains": "Currently distributing:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "Right-Click to retrieve",

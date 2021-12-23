@@ -1,0 +1,18 @@
+{
+  "type": "create:soul_smoking",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:sand"
+      },
+      {
+        "item": "minecraft:red_sand"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "minecraft:soul_sand"
+    }
+  ]
+}
