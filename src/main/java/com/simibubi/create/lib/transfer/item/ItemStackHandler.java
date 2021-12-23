@@ -109,6 +109,7 @@ public class ItemStackHandler implements IItemHandlerModifiable, NBTSerializable
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
 		stacks[slot] = stack;
+		onContentsChanged(slot);
 	}
 
 	// NBTSerializable

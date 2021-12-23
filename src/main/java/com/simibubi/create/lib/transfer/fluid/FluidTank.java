@@ -134,6 +134,7 @@ public class FluidTank implements IFluidHandler {
 		FluidStack out = fluid.copy().setAmount(amount);
 		if (!sim) {
 			fluid.shrink(amount);
+			if (fluid.isEmpty()) fluid = FluidStack.empty();
 			onContentsChanged();
 		}
 
