@@ -41,6 +41,12 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 		BlockState blockState = getBlockState();
 		return blockState.hasProperty(SmartChuteBlock.POWERED) && !blockState.getValue(SmartChuteBlock.POWERED);
 	}
+	
+	@Override
+	protected boolean canOutputItems() {
+		BlockState blockState = getBlockState();
+		return blockState.hasProperty(SmartChuteBlock.POWERED) && !blockState.getValue(SmartChuteBlock.POWERED);
+	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {

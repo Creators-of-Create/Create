@@ -74,17 +74,12 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	public float prevPitch;
 	public float pitch;
-	public float targetPitch;
-
-	// When placed using a contraption item
-	private float initialYawOffset;
 
 	public OrientedContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 		motionBeforeStall = Vec3.ZERO;
 		attachedExtraInventories = false;
 		isSerializingFurnaceCart = false;
-		initialYawOffset = -1;
 	}
 
 	public static OrientedContraptionEntity create(Level world, Contraption contraption, Direction initialOrientation) {
@@ -110,11 +105,6 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	public Direction getInitialOrientation() {
 		return entityData.get(INITIAL_ORIENTATION);
-	}
-
-	public void deferOrientation(Direction newInitialAngle) {
-		entityData.set(INITIAL_ORIENTATION, Direction.UP);
-		yaw = initialYawOffset = newInitialAngle.toYRot();
 	}
 
 	@Override
@@ -398,7 +388,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 			prevYaw = yaw;
 			float maxApproachSpeed = (float) (motion.length() * 12f / (Math.max(1, getBoundingBox().getXsize() / 6f)));
-			float approach = AngleHelper.getShortestAngleDiff(yaw, targetYaw);
+			float yawHint = AngleHelper.getShortestAngleDiff(yaw, yawFromVector(locationDiff));
+			float approach = AngleHelper.getShortestAngleDiff(yaw, targetYaw, yawHint);
 			approach = Mth.clamp(approach, -maxApproachSpeed, maxApproachSpeed);
 			yaw += approach;
 			if (Math.abs(AngleHelper.getShortestAngleDiff(yaw, targetYaw)) < 1f)
