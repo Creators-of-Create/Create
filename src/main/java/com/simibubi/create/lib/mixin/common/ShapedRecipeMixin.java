@@ -10,13 +10,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.gson.JsonArray;
-import com.simibubi.create.lib.extensions.ShapedRecipeExtensions;
 import com.simibubi.create.lib.util.Constants;
 
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 @Mixin(ShapedRecipe.class)
-public abstract class ShapedRecipeMixin implements ShapedRecipeExtensions {
+public abstract class ShapedRecipeMixin {
 	@ModifyConstant(method = "patternFromJson(Lcom/google/gson/JsonArray;)[Ljava/lang/String;",
 			constant = @Constant(intValue = 3, ordinal = 0))
 	private static int modifyMaxHeight(int original) {
