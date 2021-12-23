@@ -64,8 +64,7 @@ public class ExtendoGripItem extends Item  {
 
 	public ExtendoGripItem(Properties properties) {
 		super(properties
-			.defaultDurability(MAX_DAMAGE)
-			.stacksTo(1)
+			.durability(MAX_DAMAGE)
 			.rarity(Rarity.UNCOMMON));
 	}
 

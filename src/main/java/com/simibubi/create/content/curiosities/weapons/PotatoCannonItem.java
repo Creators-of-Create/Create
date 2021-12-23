@@ -57,7 +57,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxC
 	public static final int MAX_DAMAGE = 100;
 
 	public PotatoCannonItem(Properties properties) {
-		super(properties.defaultDurability(MAX_DAMAGE));
+		super(properties.durability(MAX_DAMAGE));
 	}
 
 	@Override

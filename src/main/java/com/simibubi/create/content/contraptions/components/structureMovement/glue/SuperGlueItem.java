@@ -26,7 +26,7 @@ import net.fabricmc.api.Environment;
 public class SuperGlueItem extends Item implements CustomMaxCountItem {
 
 	public SuperGlueItem(Properties properties) {
-		super(properties.defaultDurability(99));
+		super(properties.durability(99));
 	}
 
 	@Override
