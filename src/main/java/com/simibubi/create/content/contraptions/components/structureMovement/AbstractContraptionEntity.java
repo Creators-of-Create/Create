@@ -224,12 +224,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		}
 
-		for (Iterator<Entry<Entity, MutableInt>> iterator = collidingEntities.entrySet()
-			.iterator(); iterator.hasNext();)
-			if (iterator.next()
-				.getValue()
-				.incrementAndGet() > 3)
-				iterator.remove();
+		collidingEntities.entrySet().removeIf(e -> e.getValue().incrementAndGet() > 3);
 
 		xo = getX();
 		yo = getY();
@@ -642,7 +637,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean hasExactlyOnePlayerPassenger() {
 		return false;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
 
