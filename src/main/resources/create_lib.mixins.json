@@ -83,6 +83,7 @@
     "common.StructureProcessorMixin",
     "common.StructureTemplateMixin",
     "common.WalkNodeEvaluatorMixin",
+    "compat.lithium.EntityMixin",
     "server.PlayerListMixin"
   ],
   "client": [

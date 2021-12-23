@@ -48,8 +48,11 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class PonderWorld extends SchematicWorld {
@@ -359,5 +362,33 @@ public class PonderWorld extends SchematicWorld {
 	@Override
 	public boolean hasNearbyAlivePlayer(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
 		return true; // always enable spawner animations
+	}
+
+	// In case another mod (read: Lithium) has overwritten noCollision and would break PonderWorlds, force vanilla behavior in PonderWorlds
+	@Override
+	public boolean noCollision(@Nullable Entity entity, AABB collisionBox) {
+		// Vanilla copy
+		Iterator var3 = this.getBlockCollisions(entity, collisionBox).iterator();
+
+		while(var3.hasNext()) {
+			VoxelShape voxelShape = (VoxelShape)var3.next();
+			if (!voxelShape.isEmpty()) {
+				return false;
+			}
+		}
+
+		if (!this.getEntityCollisions(entity, collisionBox).isEmpty()) {
+			return false;
+		} else if (entity == null) {
+			return true;
+		} else {
+			VoxelShape voxelShape2 = this.borderCollision(entity, collisionBox);
+			return voxelShape2 == null || !Shapes.joinIsNotEmpty(voxelShape2, Shapes.create(collisionBox), BooleanOp.AND);
+		}
+	}
+
+	VoxelShape borderCollision(Entity entity, AABB aABB) {
+		WorldBorder worldBorder = this.getWorldBorder();
+		return worldBorder.isInsideCloseToBorder(entity, aABB) ? worldBorder.getCollisionShape() : null;
 	}
 }
