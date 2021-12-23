@@ -54,9 +54,9 @@ public class FluidTank implements IFluidHandler {
 	}
 
 	public FluidTank readFromNBT(CompoundTag tag) {
-		FluidStack stack = FluidStack.loadFluidStackFromNBT(tag);
-		long capacity = tag.getLong("Capacity");
-		return new FluidTank(stack, capacity);
+		this.fluid = FluidStack.loadFluidStackFromNBT(tag);
+		this.capacity = tag.getLong("Capacity");
+		return this;
 	}
 
 	public boolean isEmpty() {

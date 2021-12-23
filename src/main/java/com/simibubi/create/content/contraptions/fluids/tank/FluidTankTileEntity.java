@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue
 
 import com.simibubi.create.lib.block.CustomRenderBoundingBox;
 
+import com.simibubi.create.lib.util.FluidRenderUtil;
 import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.api.EnvType;

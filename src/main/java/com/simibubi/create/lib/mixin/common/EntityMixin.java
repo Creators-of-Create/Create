@@ -2,8 +2,8 @@ package com.simibubi.create.lib.mixin.common;
 
 import java.util.Collection;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.simibubi.create.Create;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,8 +33,6 @@ import net.minecraft.world.level.Level;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
-	@Unique
-	private static final Logger CREATE$LOGGER = LogManager.getLogger();
 	@Shadow
 	public Level level;
 	@Shadow
@@ -85,7 +83,7 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 			method = "saveWithoutId")
 	public void create$beforeWriteCustomData(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
 		if (create$extraCustomData != null && !create$extraCustomData.isEmpty()) {
-			CREATE$LOGGER.debug("Create: writing custom data to entity [{}]", MixinHelper.<Entity>cast(this).toString());
+			Create.LOGGER.debug("writing custom data to entity [{}]", MixinHelper.<Entity>cast(this).toString());
 			tag.put(EntityHelper.EXTRA_DATA_KEY, create$extraCustomData);
 		}
 	}

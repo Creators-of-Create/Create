@@ -40,11 +40,10 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
-	// todo: port?
 	//@Override
-	public void handleUpdateTag(CompoundTag tag) {
-		readClient(tag);
-	}
+//	public void handleUpdateTag(CompoundTag tag) {
+//		readClient(tag);
+//	}
 
 	@Override
 	public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet) {

@@ -38,10 +38,10 @@ public abstract class ClientPacketListenerMixin {
 			method = "handleAddEntity",
 			locals = LocalCapture.CAPTURE_FAILHARD)
 	public void create$afterAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci, EntityType<?> entityType, Entity entity) {
-		if (entity instanceof ExtraSpawnDataEntity) {
+		if (entity instanceof ExtraSpawnDataEntity extra) {
 			FriendlyByteBuf extraData = ((ClientboundAddEntityPacketExtensions) packet).create$getExtraDataBuf();
 			if (extraData != null) {
-				((ExtraSpawnDataEntity) entity).readSpawnData(extraData);
+				extra.readSpawnData(extraData);
 			}
 		}
 	}
