@@ -77,10 +77,8 @@ public class BackTankUtil {
 		if (player == null)
 			return false;
 		ItemStack backtank = get(player);
-		System.out.println("Hellodjgj");
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
 			return stack.isDamaged();
-		System.out.println("Hello");
 		return true;
 	}
 
