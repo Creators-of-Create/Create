@@ -11,7 +11,4 @@ import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 public interface BeaconBlockEntityAccessor {
 	@Accessor("beamSections")
 	List<BeaconBlockEntity.BeaconBeamSection> create$beamSections();
-
-	@Accessor("levels")
-	int create$getLevels();
 }

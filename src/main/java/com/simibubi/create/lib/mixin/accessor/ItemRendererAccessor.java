@@ -22,18 +22,9 @@ import net.minecraft.world.item.ItemStack;
 @Environment(EnvType.CLIENT)
 @Mixin(ItemRenderer.class)
 public interface ItemRendererAccessor {
-	@Accessor("textureManager")
-	TextureManager create$getTextureManager();
-
-	@Invoker("renderModelLists")
-	void create$renderModelLists(BakedModel model, ItemStack stack, int light, int overlay, PoseStack matrices, VertexConsumer vertices);
-
 	@Invoker("renderQuadList")
 	void create$renderQuadList(PoseStack matrices, VertexConsumer vertices, List<BakedQuad> quads, ItemStack stack, int light, int overlay);
 
 	@Invoker("fillRect")
 	void create$fillRect(BufferBuilder buffer, int x, int y, int width, int height, int red, int green, int blue, int alpha);
-
-	@Accessor
-	BlockEntityWithoutLevelRenderer getBlockEntityRenderer();
 }
