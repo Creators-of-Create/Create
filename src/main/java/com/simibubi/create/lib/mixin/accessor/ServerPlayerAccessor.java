@@ -8,9 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 @Mixin(ServerPlayer.class)
 public interface ServerPlayerAccessor {
-	@Invoker("nextContainerCounter")
-	void callNextContainerCounter();
-
 	@Accessor("containerCounter")
 	int getContainerCounter();
 }
