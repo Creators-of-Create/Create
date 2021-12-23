@@ -88,7 +88,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		drained = Math.min(maxDrain, available);
 		returned.setAmount(drained);
 		leftover.setAmount(available - drained);
-		if (sim && !leftover.isEmpty())
+		if (!sim && !leftover.isEmpty())
 			internalTank.setFluid(leftover);
 		return returned;
 	}
