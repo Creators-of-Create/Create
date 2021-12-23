@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.nbt.Tag;
+
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -113,9 +115,15 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public void readAdditionalSaveData(CompoundTag p_70037_1_) {
-		this.direction = Direction.from3DDataValue(p_70037_1_.getByte("Facing"));
-		this.verticalOrientation = Direction.from3DDataValue(p_70037_1_.getByte("Orientation"));
-		this.size = p_70037_1_.getInt("Size");
+		if (p_70037_1_.contains("Facing", Tag.TAG_ANY_NUMERIC)) {
+			this.direction = Direction.from3DDataValue(p_70037_1_.getByte("Facing"));
+			this.verticalOrientation = Direction.from3DDataValue(p_70037_1_.getByte("Orientation"));
+			this.size = p_70037_1_.getInt("Size");
+		} else {
+			this.direction = Direction.SOUTH;
+			this.verticalOrientation = Direction.DOWN;
+			this.size = 1;
+		}
 		super.readAdditionalSaveData(p_70037_1_);
 		this.updateFacingWithBoundingBox(this.direction, this.verticalOrientation);
 	}
