@@ -1,4 +1,4 @@
-# Library Mod Guidelines
+# Library Package Guidelines
 
 1. **Mixin Naming**
 	- **Class Names**
@@ -12,15 +12,13 @@
 	- Shadowed methods should always be abstract.
 	- The body of static accessor or invoker methods should always throw an `AssertionError`.
 	- `@Accessor` methods should always go before `@Invoker` methods.
-	- Mixin classes are considered internal API, meaning that the main mod should never reference these classes directly. Instead, all functionality gained by casting to a mixin class should be put into a helper class.
-	- The mixin config JSON file should have all mixins in alphabetical order, with accessor mixins being listed after regular mixins.
+	- The mixin config JSON file should have all mixins in alphabetical order, with accessor mixins being listed before regular mixins.
 
 3. **Utility Classes**
-	- Helper classes are also considered utility classes.
 	- All utility classes should be final and have a private nullary (empty) constructor. This constructor should go at the very end before inner classes, if there are any.
 
 4. **Organization**
 	- Regular mixins should go into the `com.simibubi.create.lib.mixin` package.
 	- Accessor mixins should go into the `com.simibubi.create.lib.mixin.accessor` package.
 	- Extension interfaces should go into the `com.simibubi.create.lib.extensions` package.
-	- Helper classes should go into the `com.simibubi.create.lib.helper` package.
+	- Helper/utility classes should go into the `com.simibubi.create.lib.util` package.
