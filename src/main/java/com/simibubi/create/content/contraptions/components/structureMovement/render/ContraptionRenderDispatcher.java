@@ -43,7 +43,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ContraptionRenderDispatcher {
 
-	private static WorldAttached<ContraptionRenderManager<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
+	private static WorldAttached<ContraptionRenderingWorld<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 
 	/**
 	 * Reset a contraption's renderer.
@@ -113,8 +113,7 @@ public class ContraptionRenderDispatcher {
 			// Skip individual lighting updates to prevent lag with large contraptions
 			renderWorld.setBlock(info.pos, info.state, Block.UPDATE_SUPPRESS_LIGHT);
 
-		renderWorld.updateLightSources();
-		renderWorld.lighter.runUpdates(Integer.MAX_VALUE, false, false);
+		renderWorld.runLightingEngine();
 
 		return renderWorld;
 	}
@@ -176,7 +175,7 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static void reset() {
-		WORLDS.empty(ContraptionRenderManager::delete);
+		WORLDS.empty(ContraptionRenderingWorld::delete);
 
 		if (Backend.isOn()) {
 			WORLDS = new WorldAttached<>(FlwContraptionManager::new);

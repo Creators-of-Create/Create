@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import com.jozufozu.flywheel.api.FlywheelWorld;
 
 import net.minecraft.core.BlockPos;
@@ -19,33 +21,31 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 
 public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWorld {
-	public Map<BlockPos, BlockState> blocksAdded;
-	public Map<BlockPos, BlockEntity> tesAdded;
+	public Map<BlockPos, BlockState> blocksAdded = new HashMap<>();
+	public Map<BlockPos, BlockEntity> tesAdded = new HashMap<>();
 
-	public Set<SectionPos> spannedSections;
+	public Set<SectionPos> spannedSections = new HashSet<>();
 	public LevelLightEngine lighter;
-	public WrappedChunkProvider chunkProvider;
+	public final WrappedChunkProvider chunkSource;
 	private final BlockPos.MutableBlockPos scratch = new BlockPos.MutableBlockPos();
 
 	public PlacementSimulationWorld(Level wrapped) {
 		this(wrapped, new WrappedChunkProvider());
 	}
 
-	public PlacementSimulationWorld(Level wrapped, WrappedChunkProvider chunkProvider) {
-		super(wrapped, chunkProvider);
-		this.chunkProvider = chunkProvider.setPlacementWorld(this);
-		spannedSections = new HashSet<>();
-		lighter = new LevelLightEngine(chunkProvider, true, false); // blockLight, skyLight
-		blocksAdded = new HashMap<>();
-		tesAdded = new HashMap<>();
+	public PlacementSimulationWorld(Level wrapped, WrappedChunkProvider chunkSource) {
+		super(wrapped, chunkSource);
+		// You can't leak this before the super ctor is called.
+		// You can't create inner classes before super ctor is called.
+		chunkSource.setPlacementWorld(this);
+		this.chunkSource = chunkSource;
+		lighter = new LevelLightEngine(chunkSource, true, false);
 	}
 
-	@Override
-	public LevelLightEngine getLightEngine() {
-		return lighter;
-	}
-
-	public void updateLightSources() {
+	/**
+	 * Run this after you're done using setBlock().
+	 */
+	public void runLightingEngine() {
 		for (Map.Entry<BlockPos, BlockState> entry : blocksAdded.entrySet()) {
 			BlockPos pos = entry.getKey();
 			BlockState state = entry.getValue();
@@ -54,6 +54,13 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 				lighter.onBlockEmissionIncrease(pos, light);
 			}
 		}
+
+		lighter.runUpdates(Integer.MAX_VALUE, false, false);
+	}
+
+	@Override
+	public LevelLightEngine getLightEngine() {
+		return lighter;
 	}
 
 	public void setTileEntities(Collection<BlockEntity> tileEntities) {
@@ -87,6 +94,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements FlywheelWo
 	}
 
 	@Override
+	@Nullable
 	public BlockEntity getBlockEntity(BlockPos pos) {
 		return tesAdded.get(pos);
 	}

@@ -45,7 +45,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	protected List<BlockEntity> renderedTileEntities;
 	protected List<Entity> entities;
 	protected BoundingBox bounds;
-	
+
 	public BlockPos anchor;
 	public boolean renderMode;
 
@@ -149,12 +149,12 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public int getBrightness(LightLayer p_226658_1_, BlockPos p_226658_2_) {
 		return 10;
 	}
-	
+
 	@Override
 	public LevelTickAccess<Block> getBlockTicks() {
 		return BlackholeTickAccess.emptyLevelList();
 	}
-	
+
 	@Override
 	public LevelTickAccess<Fluid> getFluidTicks() {
 		return BlackholeTickAccess.emptyLevelList();
@@ -170,7 +170,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public List<? extends Player> players() {
 		return Collections.emptyList();

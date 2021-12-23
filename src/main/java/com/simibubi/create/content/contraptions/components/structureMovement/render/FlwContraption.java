@@ -7,13 +7,18 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.Engine;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
+import com.jozufozu.flywheel.backend.instancing.SerialTaskEngine;
+import com.jozufozu.flywheel.backend.instancing.TaskEngine;
+import com.jozufozu.flywheel.backend.instancing.batching.BatchingEngine;
 import com.jozufozu.flywheel.backend.instancing.instancing.InstancingEngine;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
+import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -30,29 +35,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class RenderedContraption extends ContraptionRenderInfo {
+public class FlwContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
-
-	public final InstancingEngine<ContraptionProgram> engine;
-	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
 
 	private final Matrix4f modelViewPartial = new Matrix4f();
+	private final ContraptionInstanceWorld instanceWorld;
 	private boolean modelViewPartialReady;
-	// floats because we're uploading this to the gpu
+	// floats because we upload this to the gpu
 	private AABB lightBox;
 
-	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
+	public FlwContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.engine = InstancingEngine.builder(CreateContexts.CWORLD)
-				.setGroupFactory(ContraptionGroup.forContraption(this))
-				.setIgnoreOriginCoordinate(true)
-				.build();
-		this.kinetics = new ContraptionInstanceManager(this, engine);
-		this.engine.addListener(this.kinetics);
+
+		instanceWorld = new ContraptionInstanceWorld(this);
 
 		buildLayers();
 		if (Backend.isOn()) {
@@ -65,12 +64,27 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		return lighter;
 	}
 
-	public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
+	public void renderStructureLayer(RenderType layer, ContraptionProgram shader) {
 		ModelRenderer structure = renderLayers.get(layer);
 		if (structure != null) {
 			setup(shader);
 			structure.draw();
 		}
+	}
+
+	public void renderInstanceLayer(RenderLayerEvent event) {
+
+		event.stack.pushPose();
+		float partialTicks = AnimationTickHolder.getPartialTicks();
+		AbstractContraptionEntity entity = contraption.entity;
+		double x = Mth.lerp(partialTicks, entity.xOld, entity.getX());
+		double y = Mth.lerp(partialTicks, entity.yOld, entity.getY());
+		double z = Mth.lerp(partialTicks, entity.zOld, entity.getZ());
+		event.stack.translate(x - event.camX, y - event.camY, z - event.camZ);
+		ContraptionMatrices.transform(event.stack, getMatrices().getModel());
+		instanceWorld.engine.render(SerialTaskEngine.INSTANCE, event);
+
+		event.stack.popPose();
 	}
 
 	public void beginFrame(BeginFrameEvent event) {
@@ -81,7 +95,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		if (!isVisible()) return;
 
-		kinetics.beginFrame(event.getInfo());
+		instanceWorld.tileInstanceManager.beginFrame(SerialTaskEngine.INSTANCE, event.getInfo());
 
 		Vec3 cameraPos = event.getCameraPos();
 
@@ -113,8 +127,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		lighter.delete();
 
-		engine.delete();
-		kinetics.invalidate();
+		instanceWorld.delete();
 	}
 
 	private void buildLayers() {
@@ -141,7 +154,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 						.canInstance(te.getType())) {
 					Level world = te.getLevel();
 					te.setLevel(renderWorld);
-					kinetics.add(te);
+					instanceWorld.tileInstanceManager.add(te);
 					te.setLevel(world);
 				}
 			}
@@ -149,7 +162,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	}
 
 	private void buildActors() {
-		contraption.getActors().forEach(kinetics::createActor);
+		contraption.getActors().forEach(instanceWorld.tileInstanceManager::createActor);
 	}
 
 	public static void setupModelViewPartial(Matrix4f matrix, Matrix4f modelMatrix, AbstractContraptionEntity entity, double camX, double camY, double camZ, float pt) {
@@ -160,4 +173,38 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		matrix.multiply(modelMatrix);
 	}
 
+	public void tick() {
+		instanceWorld.tileInstanceManager.tick();
+	}
+
+	public static class ContraptionInstanceWorld {
+
+		private final Engine engine;
+		private final ContraptionInstanceManager tileInstanceManager;
+
+		public ContraptionInstanceWorld(FlwContraption parent) {
+			switch (Backend.getInstance().getEngine()) {
+			case INSTANCING -> {
+				InstancingEngine<ContraptionProgram> engine = InstancingEngine.builder(CreateContexts.CWORLD)
+						.setGroupFactory(ContraptionGroup.forContraption(parent))
+						.setIgnoreOriginCoordinate(true)
+						.build();
+				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld);
+				engine.addListener(tileInstanceManager);
+
+				this.engine = engine;
+			}
+			case BATCHING -> {
+				engine = new BatchingEngine();
+				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld);
+			}
+			default -> throw new IllegalArgumentException("Unknown engine type");
+			}
+		}
+
+		public void delete() {
+			engine.delete();
+			tileInstanceManager.invalidate();
+		}
+	}
 }

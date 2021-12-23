@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.LevelAccessor;
 
-public class SBBContraptionManager extends ContraptionRenderManager<ContraptionRenderInfo> {
+public class SBBContraptionManager extends ContraptionRenderingWorld<ContraptionRenderInfo> {
 	public static final SuperByteBufferCache.Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
 
 	public SBBContraptionManager(LevelAccessor world) {

@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.LevelAccessor;
 
-public class FlwContraptionManager extends ContraptionRenderManager<RenderedContraption> {
+public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContraption> {
 
 	public FlwContraptionManager(LevelAccessor world) {
 		super(world);
@@ -27,8 +27,8 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 	public void tick() {
 		super.tick();
 
-		for (RenderedContraption contraption : visible) {
-			contraption.kinetics.tick();
+		for (FlwContraption contraption : visible) {
+			contraption.tick();
 		}
 	}
 
@@ -52,8 +52,8 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 		structureShader.uploadViewProjection(event.viewProjection);
 		structureShader.uploadCameraPos(event.camX, event.camY, event.camZ);
 
-		for (RenderedContraption renderedContraption : visible) {
-			renderedContraption.doRenderLayer(layer, structureShader);
+		for (FlwContraption flwContraption : visible) {
+			flwContraption.renderStructureLayer(layer, structureShader);
 		}
 
 		GlVertexArray.unbind();
@@ -61,8 +61,9 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
         if (Backend.isOn()) {
 			RenderLayer renderLayer = event.getLayer();
 			if (renderLayer != null) {
-				for (RenderedContraption renderer : visible) {
-					renderer.engine.render(event);
+
+				for (FlwContraption renderer : visible) {
+					renderer.renderInstanceLayer(event);
 				}
 			}
 		}
@@ -76,9 +77,9 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 	}
 
 	@Override
-	protected RenderedContraption create(Contraption c) {
+	protected FlwContraption create(Contraption c) {
 		PlacementSimulationWorld renderWorld = ContraptionRenderDispatcher.setupRenderWorld(world, c);
-		return new RenderedContraption(c, renderWorld);
+		return new FlwContraption(c, renderWorld);
 	}
 
 	@Override
