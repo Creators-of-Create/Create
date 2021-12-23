@@ -119,8 +119,7 @@
     "client.RenderTargetMixin",
     "client.ScreenMixin",
     "client.TerrainParticle$ProviderMixin",
-    "client.TerrainParticleMixin",
-    "client.TextureAtlasMixin"
+    "client.TerrainParticleMixin"
   ],
   "server": [
     "server.Vec3Mixin",

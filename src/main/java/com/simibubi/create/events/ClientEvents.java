@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -40,7 +39,6 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -80,7 +78,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
@@ -88,7 +85,6 @@ import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.event.ClientWorldEvents;
 import com.simibubi.create.lib.event.FogEvents;
 import com.simibubi.create.lib.event.LeftClickAirCallback;
-import com.simibubi.create.lib.event.OnTextureStitchCallback;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 
 import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
@@ -389,8 +385,6 @@ public class ClientEvents {
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
-//		OnTextureStitchCallback.PRE.register(SpriteShifter::onTextureStitchPre);
-//		OnTextureStitchCallback.POST.register(SpriteShifter::onTextureStitchPost);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
 		// Flywheel Events
