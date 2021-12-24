@@ -2,24 +2,6 @@ package com.simibubi.create;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.event.GatherContextEvent;
-import com.simibubi.create.events.CommonEvents;
-import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import io.github.tropheusj.milk.Milk;
-import com.tterrag.registrate.fabric.GatherDataEvent;
-
-import net.fabricmc.api.EnvType;
-
-import net.fabricmc.api.ModInitializer;
-
-import net.minecraft.core.Registry;
-
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-
-import net.minecraftforge.common.data.ExistingFileHelper;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +18,7 @@ import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
+import com.simibubi.create.events.CommonEvents;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
@@ -46,15 +29,17 @@ import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
+import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.data.DataGenerator;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class Create implements ModInitializer {
 

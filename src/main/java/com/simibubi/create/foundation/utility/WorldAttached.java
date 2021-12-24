@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.utility;
 
-import com.tterrag.registrate.util.nullness.NonNullFunction;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.world.level.LevelAccessor;
 

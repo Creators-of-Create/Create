@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.CreateClient;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class ClearBufferCacheCommand {
 

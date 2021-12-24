@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
@@ -24,8 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.HitResult;
-
-import org.jetbrains.annotations.Nullable;
 
 public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<GearboxTileEntity>, BlockPickInteractionAware {
 

@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-
 import com.simibubi.create.foundation.utility.DyeHelper;
 
 import net.minecraft.core.Registry;

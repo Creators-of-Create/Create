@@ -1,9 +1,8 @@
 package com.simibubi.create;
 
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-
 import org.lwjgl.glfw.GLFW;
 
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

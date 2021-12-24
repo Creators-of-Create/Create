@@ -14,8 +14,6 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.mixin.accessor.AbstractSelectionListAccessor;
-
 import org.lwjgl.glfw.GLFW;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
@@ -41,6 +39,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.lib.mixin.accessor.AbstractSelectionListAccessor;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

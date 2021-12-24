@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.util.NBTSerializer;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -30,6 +28,8 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -44,8 +44,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 

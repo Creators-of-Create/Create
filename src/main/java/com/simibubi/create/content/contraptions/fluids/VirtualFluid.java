@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import com.tterrag.registrate.fabric.SimpleFlowableFluid;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-
-import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 
 public class VirtualFluid extends SimpleFlowableFluid {
 

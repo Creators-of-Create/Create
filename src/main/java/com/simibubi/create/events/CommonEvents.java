@@ -1,5 +1,10 @@
 package com.simibubi.create.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
@@ -27,18 +32,37 @@ import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.foundation.command.AllCommands;
-import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
+import com.simibubi.create.lib.event.BlockPlaceCallback;
+import com.simibubi.create.lib.event.DataPackReloadCallback;
+import com.simibubi.create.lib.event.EntityEyeHeightCallback;
+import com.simibubi.create.lib.event.FluidPlaceBlockCallback;
+import com.simibubi.create.lib.event.LivingEntityEvents;
+import com.simibubi.create.lib.event.MobEntitySetTargetCallback;
+import com.simibubi.create.lib.event.OnDatapackSyncCallback;
+import com.simibubi.create.lib.event.PlayerTickEndCallback;
+import com.simibubi.create.lib.event.ServerPlayerCreationCallback;
+import com.simibubi.create.lib.event.StartRidingCallback;
 
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerResources;
 import net.minecraft.server.level.ServerPlayer;
@@ -54,45 +78,10 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.EntityHitResult;
-
-import com.simibubi.create.lib.event.BiomeLoadingCallback;
-import com.simibubi.create.lib.event.BlockPlaceCallback;
-import com.simibubi.create.lib.event.DataPackReloadCallback;
-import com.simibubi.create.lib.event.EntityEyeHeightCallback;
-import com.simibubi.create.lib.event.FluidPlaceBlockCallback;
-
-import com.simibubi.create.lib.event.LivingEntityEvents;
-
-import com.simibubi.create.lib.event.MobEntitySetTargetCallback;
-import com.simibubi.create.lib.event.OnDatapackSyncCallback;
-import com.simibubi.create.lib.event.PlayerTickEndCallback;
-import com.simibubi.create.lib.event.ServerPlayerCreationCallback;
-
-import com.simibubi.create.lib.event.StartRidingCallback;
-
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommonEvents {
 

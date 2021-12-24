@@ -2,14 +2,14 @@ package com.simibubi.create.foundation.gui.container;
 
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public abstract class ContainerBase<T> extends AbstractContainerMenu {
 

@@ -5,8 +5,6 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
-import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;

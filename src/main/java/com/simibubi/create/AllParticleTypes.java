@@ -13,14 +13,14 @@ import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
 import com.simibubi.create.content.curiosities.bell.SoulParticle;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public enum AllParticleTypes {
 

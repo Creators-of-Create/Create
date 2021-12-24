@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.lib.extensions.BlockExtensions;
-import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

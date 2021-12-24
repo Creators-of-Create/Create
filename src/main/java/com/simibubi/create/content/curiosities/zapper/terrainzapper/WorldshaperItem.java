@@ -2,15 +2,15 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -21,8 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class WorldshaperItem extends ZapperItem {
 

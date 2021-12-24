@@ -7,7 +7,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;

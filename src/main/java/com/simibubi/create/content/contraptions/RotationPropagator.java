@@ -18,7 +18,6 @@ import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEnt
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;

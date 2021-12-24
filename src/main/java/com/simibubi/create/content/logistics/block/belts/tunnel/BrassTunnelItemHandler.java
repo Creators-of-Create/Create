@@ -1,8 +1,9 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import net.minecraft.world.item.ItemStack;
-import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.util.LazyOptional;
+
+import net.minecraft.world.item.ItemStack;
 
 public class BrassTunnelItemHandler implements IItemHandler {
 

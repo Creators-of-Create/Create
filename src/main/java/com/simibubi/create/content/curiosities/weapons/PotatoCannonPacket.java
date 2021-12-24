@@ -4,12 +4,12 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.zapper.ShootGadgetPacket;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetRenderHandler;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class PotatoCannonPacket extends ShootGadgetPacket {
 

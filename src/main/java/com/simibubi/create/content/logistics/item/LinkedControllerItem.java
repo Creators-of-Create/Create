@@ -5,7 +5,13 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.lib.item.UseFirstBehaviorItem;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.util.NetworkUtil;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,14 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
-
-import com.simibubi.create.lib.item.UseFirstBehaviorItem;
-import com.simibubi.create.lib.util.NetworkUtil;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.tterrag.registrate.fabric.EnvExecutor;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class LinkedControllerItem extends Item implements MenuProvider, UseFirstBehaviorItem {
 

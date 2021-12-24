@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -18,11 +20,18 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import com.simibubi.create.lib.util.EntityHelper;
+import com.simibubi.create.lib.util.ItemStackUtil;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.NBTSerializer;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -42,20 +51,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-
-import com.simibubi.create.lib.util.ItemStackUtil;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import org.jetbrains.annotations.Nullable;
 
 public class CrushingWheelControllerTileEntity extends SmartTileEntity implements ItemTransferable {
 

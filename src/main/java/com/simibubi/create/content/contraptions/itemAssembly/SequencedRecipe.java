@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.itemAssembly;
 
+import java.util.Arrays;
+
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
-
 import com.simibubi.create.lib.mixin.accessor.IngredientAccessor;
 
 import net.minecraft.core.Registry;
@@ -15,8 +16,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-
-import java.util.Arrays;
 
 public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 

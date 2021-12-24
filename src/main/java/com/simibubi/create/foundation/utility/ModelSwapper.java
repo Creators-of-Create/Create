@@ -9,6 +9,9 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.item.render.CustomItemModels;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItems;
+import com.simibubi.create.lib.event.ModelsBakedCallback;
+import com.simibubi.create.lib.event.OnModelRegistryCallback;
+import com.simibubi.create.lib.util.SpecialModelUtil;
 
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
@@ -19,12 +22,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-
-import com.simibubi.create.lib.event.ModelsBakedCallback;
-
-import com.simibubi.create.lib.event.OnModelRegistryCallback;
-
-import com.simibubi.create.lib.util.SpecialModelUtil;
 
 public class ModelSwapper {
 

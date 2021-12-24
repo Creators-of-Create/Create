@@ -5,10 +5,6 @@ import static net.minecraft.world.entity.Entity.collideBoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
-
-import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -27,7 +23,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,9 +47,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class ContraptionCollider {
 

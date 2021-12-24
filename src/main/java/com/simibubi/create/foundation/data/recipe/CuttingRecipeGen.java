@@ -4,8 +4,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-
-import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 

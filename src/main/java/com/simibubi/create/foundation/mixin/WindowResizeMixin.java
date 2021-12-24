@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.platform.Window;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 
-import net.minecraft.client.Minecraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)

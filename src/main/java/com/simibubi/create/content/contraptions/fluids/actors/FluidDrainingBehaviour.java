@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-
 import com.simibubi.create.lib.mixin.accessor.LiquidBlockAccessor;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 

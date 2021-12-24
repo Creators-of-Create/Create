@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import javax.annotation.Nullable;
 
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
@@ -8,9 +11,6 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public class DeployerRecipeSearchEvent {
 	private boolean canceled = false;

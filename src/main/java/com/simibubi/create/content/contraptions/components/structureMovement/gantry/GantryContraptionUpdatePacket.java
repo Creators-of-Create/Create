@@ -3,10 +3,10 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.fabricmc.api.EnvType;
 import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class GantryContraptionUpdatePacket extends SimplePacketBase {
 

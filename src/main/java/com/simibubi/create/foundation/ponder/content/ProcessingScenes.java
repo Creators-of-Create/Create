@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
-
 import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;

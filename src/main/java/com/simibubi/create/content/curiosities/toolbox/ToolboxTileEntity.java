@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -18,8 +20,11 @@ import com.simibubi.create.foundation.utility.ResetableLazy;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
+import com.simibubi.create.lib.util.EntityHelper;
+import com.simibubi.create.lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,13 +45,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.util.LazyOptional;
-
-import org.jetbrains.annotations.Nullable;
 
 public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, FlywheelRendered, ItemTransferable {
 

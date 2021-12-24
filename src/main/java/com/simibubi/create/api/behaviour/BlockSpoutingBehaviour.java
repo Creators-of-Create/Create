@@ -6,12 +6,11 @@ import java.util.function.Consumer;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.tconstruct.SpoutCasting;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public abstract class BlockSpoutingBehaviour {
 

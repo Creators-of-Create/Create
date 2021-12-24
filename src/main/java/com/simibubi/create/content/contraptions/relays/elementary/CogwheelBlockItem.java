@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-
 import com.simibubi.create.lib.item.UseFirstBehaviorItem;
 
 import net.minecraft.MethodsReturnNonnullByDefault;

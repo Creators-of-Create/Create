@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
@@ -15,9 +17,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

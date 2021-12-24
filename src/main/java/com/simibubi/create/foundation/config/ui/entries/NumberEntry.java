@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.config.ui.ConfigTextField;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.TextStencilElement;
-
 import com.simibubi.create.lib.mixin.accessor.AbstractWidgetAccessor;
 
 import net.minecraft.client.Minecraft;

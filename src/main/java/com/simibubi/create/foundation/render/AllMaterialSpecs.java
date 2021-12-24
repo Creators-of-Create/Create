@@ -12,9 +12,9 @@ import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorT
 import com.simibubi.create.content.logistics.block.flap.FlapData;
 import com.simibubi.create.content.logistics.block.flap.FlapType;
 
-import net.minecraft.resources.ResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class AllMaterialSpecs {

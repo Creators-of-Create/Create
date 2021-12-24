@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.worldgen;
 
-import com.simibubi.create.Create;
-
 import java.util.BitSet;
 import java.util.Random;
+
+import com.simibubi.create.Create;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;

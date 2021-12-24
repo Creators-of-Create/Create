@@ -6,6 +6,8 @@ import java.util.List;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.lib.transfer.fluid.FluidAttributes;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -19,9 +21,6 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-
-import com.simibubi.create.lib.transfer.fluid.FluidAttributes;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class PotionFluid extends VirtualFluid {
 

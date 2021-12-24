@@ -1,18 +1,14 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import me.pepperbell.simplenetworking.C2SPacket;
-import me.pepperbell.simplenetworking.SimpleChannel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import java.util.function.Supplier;
 
 
 public class EjectorElytraPacket extends SimplePacketBase {

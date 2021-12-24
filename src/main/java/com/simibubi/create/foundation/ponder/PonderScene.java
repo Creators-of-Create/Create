@@ -15,8 +15,6 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
-
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -42,6 +40,7 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;

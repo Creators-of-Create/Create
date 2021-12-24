@@ -1,7 +1,5 @@
 package com.simibubi.create.lib.mixin.common;
 
-import com.simibubi.create.Create;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -10,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.gson.JsonArray;
+import com.simibubi.create.Create;
 import com.simibubi.create.lib.util.Constants;
 
 import net.minecraft.world.item.crafting.ShapedRecipe;

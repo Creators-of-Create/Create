@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.ImmutableBox;
@@ -34,9 +36,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
-
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -55,15 +60,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.util.LazyOptional;
-
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import net.fabricmc.api.EnvType;
-
-import org.jetbrains.annotations.Nullable;
 
 public class BeltTileEntity extends KineticTileEntity implements LightListener, ItemTransferable {
 

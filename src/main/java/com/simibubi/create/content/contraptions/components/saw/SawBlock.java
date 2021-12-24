@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-
 import com.simibubi.create.lib.util.DamageSourceHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;

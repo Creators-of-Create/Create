@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.crusher;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
-
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 public abstract class AbstractCrushingRecipe extends ProcessingRecipe<RecipeWrapper> {

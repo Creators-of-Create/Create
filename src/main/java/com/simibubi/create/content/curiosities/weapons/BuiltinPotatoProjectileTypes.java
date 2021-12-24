@@ -9,6 +9,8 @@ import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.WorldAttached;
+import com.simibubi.create.lib.util.LevelUtil;
+import com.simibubi.create.lib.util.PlantUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
@@ -42,8 +44,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.util.LevelUtil;
-import com.simibubi.create.lib.util.PlantUtil;
 
 public class BuiltinPotatoProjectileTypes {
 

@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
-import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
-
-import me.alphamode.forgetags.Tags;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -28,6 +23,8 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
@@ -36,6 +33,7 @@ import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.util.TagUtil;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;

@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
 
 public class SymmetryEffectPacket extends SimplePacketBase {

@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.util.EntityHelper;
 

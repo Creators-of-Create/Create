@@ -11,8 +11,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import com.simibubi.create.lib.util.NBTSerializer;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
@@ -21,6 +19,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

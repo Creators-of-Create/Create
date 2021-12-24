@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
-
 import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.tags.FluidTags;

@@ -2,11 +2,11 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.lib.util.EntityHelper;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,8 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class ToolboxDisposeAllPacket extends SimplePacketBase {
 

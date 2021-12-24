@@ -5,8 +5,6 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
-import net.minecraft.data.DataGenerator;
-
 public class PolishingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

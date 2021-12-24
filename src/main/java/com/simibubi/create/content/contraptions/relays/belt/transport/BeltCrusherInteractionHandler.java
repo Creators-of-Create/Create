@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.util.ItemStackUtil;
 
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class BeltCrusherInteractionHandler {
 

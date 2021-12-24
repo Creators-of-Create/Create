@@ -6,7 +6,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
-
 import com.simibubi.create.lib.util.DamageSourceHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;

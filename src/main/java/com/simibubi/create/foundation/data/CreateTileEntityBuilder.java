@@ -10,8 +10,8 @@ import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.fabricmc.api.EnvType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CreateTileEntityBuilder<T extends BlockEntity, P> extends BlockEntityBuilder<T, P> {
 

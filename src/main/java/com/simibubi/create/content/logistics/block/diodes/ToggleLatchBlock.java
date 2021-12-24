@@ -5,8 +5,6 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
-import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

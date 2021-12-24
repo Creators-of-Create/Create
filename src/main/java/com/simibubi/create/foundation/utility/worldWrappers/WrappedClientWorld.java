@@ -8,6 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.lib.mixin.accessor.BiomeManagerAccessor;
 import com.simibubi.create.lib.mixin.accessor.ClientPacketListenerAccessor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,8 +26,6 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("deprecation")

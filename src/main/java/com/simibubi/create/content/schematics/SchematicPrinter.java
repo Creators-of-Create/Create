@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
-
 import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;

@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Pair;
-
 import com.simibubi.create.lib.mixin.accessor.AbstractSelectionList$EntryAccessor;
 
 import net.minecraft.ChatFormatting;

@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
-
 import com.simibubi.create.lib.util.DamageSourceHelper;
 
 import net.minecraft.core.BlockPos;

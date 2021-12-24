@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.fluid;
 import java.util.function.Consumer;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
 
 public class SmartFluidTank extends FluidTank {

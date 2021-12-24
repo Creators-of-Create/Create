@@ -15,7 +15,6 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
-
 import com.simibubi.create.lib.block.MinecartPassHandlerBlock;
 import com.simibubi.create.lib.block.SlopeCreationCheckingRail;
 

@@ -1,10 +1,9 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 import net.minecraft.world.item.ItemStack;
-
-import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class DepotItemHandler implements IItemHandler {
 

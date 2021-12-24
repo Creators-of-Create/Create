@@ -5,13 +5,12 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
-
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.util.NBTSerializable;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class SmartInventory extends RecipeWrapper
 	implements IItemHandlerModifiableIntermediate, NBTSerializable {

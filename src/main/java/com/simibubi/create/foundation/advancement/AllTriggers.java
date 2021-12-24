@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 
 import net.fabricmc.fabric.mixin.object.builder.CriteriaAccessor;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerPlayer;

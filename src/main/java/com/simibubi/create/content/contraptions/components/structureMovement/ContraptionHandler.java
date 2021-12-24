@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
-
 import com.simibubi.create.lib.util.EntityHelper;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

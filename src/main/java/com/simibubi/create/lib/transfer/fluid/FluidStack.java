@@ -1,5 +1,9 @@
 package com.simibubi.create.lib.transfer.fluid;
 
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -12,11 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 @SuppressWarnings({"UnstableApiUsage"})
 public class FluidStack {

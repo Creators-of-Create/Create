@@ -14,11 +14,9 @@ import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-
 import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
 import com.simibubi.create.lib.mixin.accessor.TitleScreenAccessor;
 
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.Button;

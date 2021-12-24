@@ -1,5 +1,8 @@
 package com.simibubi.create;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 import com.simibubi.create.content.contraptions.base.CutoutRotatingInstance;
 import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
@@ -180,9 +183,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 public class AllTileEntities {
 

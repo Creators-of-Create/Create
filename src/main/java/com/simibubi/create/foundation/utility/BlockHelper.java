@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
-
 import com.simibubi.create.lib.util.LevelUtil;
 import com.simibubi.create.lib.util.PlantUtil;
 

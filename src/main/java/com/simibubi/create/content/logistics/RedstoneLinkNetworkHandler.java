@@ -7,14 +7,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.simibubi.create.lib.util.LevelUtil;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.WorldHelper;
+import com.simibubi.create.lib.util.LevelUtil;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;

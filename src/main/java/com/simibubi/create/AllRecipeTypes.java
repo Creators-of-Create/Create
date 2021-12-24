@@ -23,7 +23,6 @@ import com.simibubi.create.content.curiosities.toolbox.ToolboxDyeingRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
-
 import com.simibubi.create.lib.util.ShapedRecipeUtil;
 
 import net.minecraft.core.Registry;

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.simibubi.create.lib.util.NBTSerializer;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -9,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.Tag;

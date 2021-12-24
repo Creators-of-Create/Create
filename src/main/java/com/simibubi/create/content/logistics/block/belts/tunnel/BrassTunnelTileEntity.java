@@ -11,12 +11,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.LevelUtil;
-
-import com.simibubi.create.lib.util.NBTSerializer;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -37,6 +31,13 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.LevelUtil;
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -54,10 +55,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHaveGoggleInformation, ItemTransferable {
 

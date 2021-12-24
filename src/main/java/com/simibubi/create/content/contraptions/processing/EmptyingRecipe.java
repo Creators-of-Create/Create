@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.processing;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
-
-import net.minecraft.world.level.Level;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
+import net.minecraft.world.level.Level;
 
 public class EmptyingRecipe extends ProcessingRecipe<RecipeWrapper> {
 

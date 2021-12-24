@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import com.simibubi.create.lib.extensions.Matrix4fExtensions;
 
 import net.minecraft.util.Mth;

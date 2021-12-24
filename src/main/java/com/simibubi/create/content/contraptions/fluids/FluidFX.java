@@ -6,6 +6,7 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -18,8 +19,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class FluidFX {
 

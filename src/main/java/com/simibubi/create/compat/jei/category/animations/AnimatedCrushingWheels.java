@@ -1,11 +1,11 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
-
-import java.util.List;
 
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.Direction.Axis;

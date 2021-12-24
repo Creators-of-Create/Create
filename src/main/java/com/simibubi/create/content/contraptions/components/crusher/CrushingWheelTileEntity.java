@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
+import java.util.Collection;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.util.DamageSourceHelper;
-
-import java.util.Collection;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
-import com.simibubi.create.lib.util.TileEntityHelper;
 import com.simibubi.create.lib.util.MixinHelper;
 import com.simibubi.create.lib.util.NBTSerializable;
+import com.simibubi.create.lib.util.TileEntityHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;

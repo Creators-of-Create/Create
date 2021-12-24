@@ -5,13 +5,13 @@ import java.util.function.Supplier;
 import com.google.common.base.Suppliers;
 import com.simibubi.create.AllSoundEvents;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public enum AllArmorMaterials implements ArmorMaterial {
 

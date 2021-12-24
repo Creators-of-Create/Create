@@ -8,20 +8,18 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
-import com.electronwill.nightconfig.core.ConfigSpec;
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {

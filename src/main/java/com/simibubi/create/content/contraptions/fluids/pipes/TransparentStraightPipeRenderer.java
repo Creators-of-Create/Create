@@ -8,11 +8,11 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class TransparentStraightPipeRenderer extends SafeTileEntityRenderer<StraightPipeTileEntity> {
 

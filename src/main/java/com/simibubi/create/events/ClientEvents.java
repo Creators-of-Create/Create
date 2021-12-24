@@ -61,8 +61,28 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+import com.simibubi.create.lib.event.ClientWorldEvents;
+import com.simibubi.create.lib.event.FogEvents;
+import com.simibubi.create.lib.event.LeftClickAirCallback;
+import com.simibubi.create.lib.event.OverlayRenderCallback;
+import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
+import com.simibubi.create.lib.event.PlayerTickEndCallback;
+import com.simibubi.create.lib.event.RenderHandCallback;
+import com.simibubi.create.lib.event.RenderTickStartCallback;
+import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -81,31 +101,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.event.ClientWorldEvents;
-import com.simibubi.create.lib.event.FogEvents;
-import com.simibubi.create.lib.event.LeftClickAirCallback;
-import com.simibubi.create.lib.event.OverlayRenderCallback;
-
-import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
-import com.simibubi.create.lib.event.PlayerTickEndCallback;
-
-import com.simibubi.create.lib.event.RenderHandCallback;
-
-import com.simibubi.create.lib.event.RenderTickStartCallback;
-import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
-
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 
 public class ClientEvents {
 

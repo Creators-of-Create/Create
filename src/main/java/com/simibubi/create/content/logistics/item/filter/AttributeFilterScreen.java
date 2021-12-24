@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
-
 import com.simibubi.create.lib.util.ItemStackUtil;
 
 import net.minecraft.ChatFormatting;

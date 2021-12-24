@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 
-import com.simibubi.create.lib.mixin.accessor.DimensionTypeAccessor;
-
 import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
+
+import com.simibubi.create.lib.mixin.accessor.DimensionTypeAccessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

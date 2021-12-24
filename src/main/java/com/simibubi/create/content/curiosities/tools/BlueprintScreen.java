@@ -18,7 +18,6 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-
 import com.simibubi.create.lib.mixin.accessor.PlayerAccessor;
 import com.simibubi.create.lib.mixin.accessor.SlotAccessor;
 

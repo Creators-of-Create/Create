@@ -14,13 +14,12 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import com.simibubi.create.lib.extensions.ItemExtensions;
-
 import com.simibubi.create.lib.item.CustomMaxCountItem;
-
 import com.simibubi.create.lib.item.EntitySwingListenerItem;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -47,9 +46,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxCountItem, EntitySwingListenerItem, ItemExtensions {
 

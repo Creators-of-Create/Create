@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.tileEntity.behaviour;
 
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;

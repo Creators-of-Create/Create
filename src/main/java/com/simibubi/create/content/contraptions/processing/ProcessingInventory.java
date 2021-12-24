@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.function.Consumer;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
-
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.util.ItemStackUtil;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class ProcessingInventory extends ItemStackHandler {
 	public float remainingTime;

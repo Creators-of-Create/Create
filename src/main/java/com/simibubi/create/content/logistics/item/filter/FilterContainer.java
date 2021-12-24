@@ -1,14 +1,14 @@
 package com.simibubi.create.content.logistics.item.filter;
 
 import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.SlotItemHandler;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.SlotItemHandler;
 
 public class FilterContainer extends AbstractFilterContainer {
 

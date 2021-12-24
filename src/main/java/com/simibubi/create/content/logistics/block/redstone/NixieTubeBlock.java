@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.Random;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -11,7 +13,6 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
@@ -41,8 +42,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import org.jetbrains.annotations.Nullable;
 
 public class NixieTubeBlock extends HorizontalDirectionalBlock
 	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement, BlockPickInteractionAware, CanConnectRedstoneBlock {

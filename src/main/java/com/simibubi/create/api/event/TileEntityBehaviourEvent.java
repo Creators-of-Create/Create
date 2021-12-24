@@ -7,9 +7,9 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Event that is fired just before a SmartTileEntity is being deserialized<br>

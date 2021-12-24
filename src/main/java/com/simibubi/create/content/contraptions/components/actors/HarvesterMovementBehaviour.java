@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.util.PlantUtil;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -16,6 +14,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import com.simibubi.create.lib.util.PlantUtil;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;

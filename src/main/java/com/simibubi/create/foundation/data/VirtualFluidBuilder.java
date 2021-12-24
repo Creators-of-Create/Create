@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import java.util.function.BiFunction;
-
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.FluidBuilder;

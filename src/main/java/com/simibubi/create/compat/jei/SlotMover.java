@@ -2,8 +2,6 @@ package com.simibubi.create.compat.jei;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 

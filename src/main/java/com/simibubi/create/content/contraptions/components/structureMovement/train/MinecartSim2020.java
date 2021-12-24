@@ -6,7 +6,7 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.VecHelper;
-
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecartAndRailUtil;
 
 import net.minecraft.Util;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.util.LazyOptional;
 
 /**
  * Useful methods for dealing with Minecarts

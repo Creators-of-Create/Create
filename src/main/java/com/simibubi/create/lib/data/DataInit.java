@@ -1,16 +1,15 @@
 package com.simibubi.create.lib.data;
 
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+
 import com.simibubi.create.Create;
 import com.tterrag.registrate.fabric.GatherDataEvent;
-import com.tterrag.registrate.providers.RegistrateDataProvider;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
-
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class DataInit implements DataGeneratorEntrypoint {
 	@Override

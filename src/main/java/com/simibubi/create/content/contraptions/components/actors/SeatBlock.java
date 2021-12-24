@@ -8,7 +8,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
-
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
 

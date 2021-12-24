@@ -32,7 +32,6 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
-
 import com.simibubi.create.lib.util.TagUtil;
 
 import net.minecraft.core.BlockPos;

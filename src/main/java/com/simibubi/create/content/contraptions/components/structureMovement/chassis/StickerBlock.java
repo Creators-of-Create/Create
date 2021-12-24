@@ -4,10 +4,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-
 import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
 import com.simibubi.create.lib.extensions.BlockExtensions;
-
 import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
 
 import net.minecraft.core.BlockPos;

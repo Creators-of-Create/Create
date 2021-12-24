@@ -16,11 +16,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
-
 import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecartAndRailUtil;
 import com.simibubi.create.lib.util.NBTSerializable;
-
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

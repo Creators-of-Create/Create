@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.lib.block.CustomDataPacketHandlingTileEntity;
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.ponder.element.ParrotElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
-
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 import net.minecraft.core.BlockPos;

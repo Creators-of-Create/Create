@@ -3,13 +3,11 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import java.util.Iterator;
 
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class DeployerItemHandler implements IItemHandlerModifiable {
 

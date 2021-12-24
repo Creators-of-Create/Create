@@ -8,16 +8,10 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-
 import com.simibubi.create.lib.transfer.item.IItemHandler;
-
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 import net.minecraft.world.item.ItemStack;
-
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItemHandler, InvManipulationBehaviour> {
 

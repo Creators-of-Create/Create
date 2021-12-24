@@ -1,18 +1,16 @@
 package com.simibubi.create.lib.mixin.client;
 
-import com.mojang.datafixers.util.Pair;
+import java.nio.ByteBuffer;
 
 import org.spongepowered.asm.mixin.Mixin;
-
-import com.mojang.blaze3d.vertex.BufferBuilder;
-
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.nio.ByteBuffer;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.datafixers.util.Pair;
 
 @Mixin(BufferBuilder.class)
 public class BufferBuilderMixin {

@@ -11,7 +11,6 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity.State
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import com.simibubi.create.lib.extensions.BlockExtensions;
 
 import net.minecraft.core.BlockPos;

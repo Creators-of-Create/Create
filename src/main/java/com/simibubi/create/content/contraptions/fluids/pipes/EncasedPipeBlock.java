@@ -10,6 +10,8 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.Map;
 import java.util.Random;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
@@ -40,8 +42,6 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.ticks.TickPriority;
-
-import org.jetbrains.annotations.Nullable;
 
 public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity>, BlockPickInteractionAware {
 

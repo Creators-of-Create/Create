@@ -3,14 +3,14 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class GlueEffectPacket extends SimplePacketBase {
 

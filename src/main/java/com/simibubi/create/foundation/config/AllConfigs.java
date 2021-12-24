@@ -5,19 +5,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-import com.simibubi.create.Create;
-
-import net.minecraftforge.api.ModLoadingContext;
-
-import net.minecraftforge.api.fml.event.config.ModConfigEvent;
-
-import net.minecraftforge.fml.config.ModConfig;
-
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.BlockStressValues;
 
+import net.minecraftforge.api.ModLoadingContext;
+import net.minecraftforge.api.fml.event.config.ModConfigEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
 
 public class AllConfigs {
 

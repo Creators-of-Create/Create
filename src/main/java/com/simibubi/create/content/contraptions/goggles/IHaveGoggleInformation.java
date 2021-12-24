@@ -6,20 +6,18 @@ import java.util.Locale;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
-
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.util.FluidHandlerData;
 import com.simibubi.create.lib.util.FluidHandlerData.FluidTankData;
-
 import com.simibubi.create.lib.util.FluidTextUtil;
 import com.simibubi.create.lib.util.FluidUnit;
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecraftClientUtil;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.util.LazyOptional;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen

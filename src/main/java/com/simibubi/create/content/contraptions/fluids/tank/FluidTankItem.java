@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.util.EntityHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,9 +15,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class FluidTankItem extends BlockItem {
 

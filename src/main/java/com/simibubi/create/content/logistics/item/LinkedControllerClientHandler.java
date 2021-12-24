@@ -6,12 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
-import com.mojang.blaze3d.platform.Window;
-import com.simibubi.create.lib.util.KeyBindingHelper;
-
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -22,6 +20,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.lib.util.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;

@@ -1,12 +1,12 @@
 package com.simibubi.create.lib.condition;
 
+import java.util.function.Predicate;
+
 import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-
-import java.util.function.Predicate;
 
 public class TagEmptyCondition implements Condition {
 	private final ResourceLocation tag_name;

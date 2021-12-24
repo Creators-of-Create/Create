@@ -12,7 +12,11 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,13 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class PipeConnection {
 

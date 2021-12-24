@@ -1,19 +1,12 @@
 package com.simibubi.create.foundation.block;
 
-import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.simibubi.create.Create;
-import com.simibubi.create.lib.mixin.accessor.HoneycombItemAccessor;
 
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
-import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.WeatheringCopper;
 
 public class CopperRegistries {
 	private static final BiMap<Supplier<Block>, Supplier<Block>> WEATHERING = HashBiMap.create();

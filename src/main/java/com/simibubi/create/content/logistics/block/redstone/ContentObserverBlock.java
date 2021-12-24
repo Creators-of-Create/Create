@@ -16,8 +16,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
 import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

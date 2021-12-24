@@ -9,6 +9,8 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.lib.util.ItemGroupUtil;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -20,8 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 

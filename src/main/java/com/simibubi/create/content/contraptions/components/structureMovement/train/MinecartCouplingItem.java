@@ -1,9 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -13,15 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import org.jetbrains.annotations.Nullable;
 
 public class MinecartCouplingItem extends Item {
 

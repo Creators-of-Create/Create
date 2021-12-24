@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
@@ -38,8 +40,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
-
-import org.jetbrains.annotations.Nullable;
 
 public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWithBracket, IAxisPipe, BlockPickInteractionAware {
 

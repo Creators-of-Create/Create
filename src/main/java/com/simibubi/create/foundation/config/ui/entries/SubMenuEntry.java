@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
-
 import com.simibubi.create.lib.mixin.accessor.AbstractWidgetAccessor;
 
 import net.minecraftforge.common.ForgeConfigSpec;

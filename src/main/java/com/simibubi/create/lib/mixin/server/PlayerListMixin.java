@@ -1,13 +1,12 @@
 package com.simibubi.create.lib.mixin.server;
 
-import com.simibubi.create.lib.event.OnDatapackSyncCallback;
-
-import com.simibubi.create.lib.util.MixinHelper;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.simibubi.create.lib.event.OnDatapackSyncCallback;
+import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;

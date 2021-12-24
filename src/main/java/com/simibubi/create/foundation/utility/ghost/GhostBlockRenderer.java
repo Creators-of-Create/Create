@@ -8,9 +8,6 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.render.VirtualRenderingStateManager;
-import com.simibubi.create.lib.util.VertexBuilderUtil;
-
 import org.lwjgl.system.MemoryStack;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -21,6 +18,8 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.lib.render.VirtualRenderingStateManager;
+import com.simibubi.create.lib.util.VertexBuilderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;

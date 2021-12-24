@@ -13,9 +13,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSeria
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-
 import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;

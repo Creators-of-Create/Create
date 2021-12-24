@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -23,8 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-
-import org.jetbrains.annotations.Nullable;
 
 public class HosePulleyTileEntity extends KineticTileEntity implements FluidTransferable {
 

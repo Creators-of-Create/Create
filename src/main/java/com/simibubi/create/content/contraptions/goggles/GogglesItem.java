@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.goggles;
 
 import com.simibubi.create.AllItems;
-
 import com.simibubi.create.lib.item.EquipmentItem;
 
 import net.minecraft.world.InteractionHand;

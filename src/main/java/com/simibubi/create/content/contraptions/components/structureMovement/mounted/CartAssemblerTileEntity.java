@@ -21,7 +21,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-
+import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecartAndRailUtil;
 import com.simibubi.create.lib.util.NBTSerializer;
 
@@ -39,7 +39,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
-import com.simibubi.create.lib.util.LazyOptional;
 
 public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplayAssemblyExceptions {
 	private static final int assemblyCooldown = 8;

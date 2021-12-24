@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.networking;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 import me.pepperbell.simplenetworking.C2SPacket;
 import me.pepperbell.simplenetworking.S2CPacket;
 import me.pepperbell.simplenetworking.SimpleChannel;
@@ -13,8 +15,6 @@ import net.minecraft.network.PacketListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-
-import org.jetbrains.annotations.Nullable;
 
 public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 

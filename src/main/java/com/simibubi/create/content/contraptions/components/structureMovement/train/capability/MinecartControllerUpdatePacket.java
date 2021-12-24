@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train.capability;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecartAndRailUtil;
@@ -13,8 +15,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-
-import java.util.function.Supplier;
 
 public class MinecartControllerUpdatePacket extends SimplePacketBase {
 

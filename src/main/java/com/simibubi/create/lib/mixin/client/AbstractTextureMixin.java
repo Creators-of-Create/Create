@@ -1,10 +1,10 @@
 package com.simibubi.create.lib.mixin.client;
 
-import com.simibubi.create.lib.extensions.AbstractTextureExtension;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+
+import com.simibubi.create.lib.extensions.AbstractTextureExtension;
 
 import net.minecraft.client.renderer.texture.AbstractTexture;
 

@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.ArrayList;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
@@ -24,8 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
-import org.jetbrains.annotations.Nullable;
 
 public class LecternControllerBlock extends LecternBlock
 	implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement, BlockPickInteractionAware {

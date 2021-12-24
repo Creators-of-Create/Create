@@ -6,9 +6,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
-
 import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +18,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
+import com.simibubi.create.lib.extensions.BlockStateExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;

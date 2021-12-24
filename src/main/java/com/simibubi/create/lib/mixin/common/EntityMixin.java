@@ -2,8 +2,6 @@ package com.simibubi.create.lib.mixin.common;
 
 import java.util.Collection;
 
-import com.simibubi.create.Create;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.lib.event.EntityEyeHeightCallback;
 import com.simibubi.create.lib.event.StartRidingCallback;
 import com.simibubi.create.lib.extensions.BlockStateExtensions;

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.palettes;
 
+import static com.simibubi.create.AllTags.pickaxeOnly;
+
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -17,8 +19,6 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
-import net.minecraftforge.client.model.generators.ModelFile;
-
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +32,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-import static com.simibubi.create.AllTags.pickaxeOnly;
+import net.minecraftforge.client.model.generators.ModelFile;
 
 public abstract class PaletteBlockPartial<B extends Block> {
 

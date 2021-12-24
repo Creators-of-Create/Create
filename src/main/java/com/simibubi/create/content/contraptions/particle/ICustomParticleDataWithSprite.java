@@ -1,17 +1,16 @@
 package com.simibubi.create.content.contraptions.particle;
 
 import com.mojang.serialization.Codec;
-
 import com.simibubi.create.lib.util.ParticleManagerHelper;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleOptions.Deserializer;
 import net.minecraft.core.particles.ParticleType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extends ICustomParticleData<T> {
 

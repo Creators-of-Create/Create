@@ -11,11 +11,11 @@ import com.tterrag.registrate.builders.EntityBuilder;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 @ParametersAreNonnullByDefault
 public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBuilder<T>, P> extends EntityBuilder<T, P> {

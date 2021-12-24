@@ -2,15 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
-
-import com.simibubi.create.lib.util.LevelUtil;
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-
 import org.apache.commons.lang3.Validate;
 
 import com.jozufozu.flywheel.api.FlywheelRendered;
@@ -29,7 +20,14 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
+import com.simibubi.create.lib.util.LevelUtil;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -39,6 +37,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -68,8 +67,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class SuperGlueEntity extends Entity
 	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, FlywheelRendered {

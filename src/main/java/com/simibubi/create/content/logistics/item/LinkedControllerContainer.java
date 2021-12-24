@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.item;
 
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.SlotItemHandler;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,8 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.SlotItemHandler;
 
 public class LinkedControllerContainer extends GhostItemContainer<ItemStack> {
 

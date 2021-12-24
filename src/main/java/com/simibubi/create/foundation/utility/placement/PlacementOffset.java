@@ -1,9 +1,8 @@
 package com.simibubi.create.foundation.utility.placement;
 
-import com.simibubi.create.lib.extensions.BlockExtensions;
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
-
 import java.util.function.Function;
+
+import com.simibubi.create.lib.extensions.BlockExtensions;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;

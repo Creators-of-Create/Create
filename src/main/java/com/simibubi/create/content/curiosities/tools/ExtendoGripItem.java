@@ -12,7 +12,10 @@ import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.lib.util.EntityHelper;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -34,11 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-
-import com.simibubi.create.lib.util.EntityHelper;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class ExtendoGripItem extends Item  {
 	private static DamageSource lastActiveDamageSource;

@@ -1,17 +1,12 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
-
-import me.shedaniel.math.Point;
-import me.shedaniel.rei.api.client.gui.widgets.Widget;
-import me.shedaniel.rei.api.client.gui.widgets.Widgets;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
 public class WidgetUtil {

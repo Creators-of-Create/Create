@@ -4,13 +4,12 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class ContraptionFluidPacket extends SimplePacketBase {
 

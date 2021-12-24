@@ -14,9 +14,9 @@ import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.util.PlayerEntityHelper;
 import com.simibubi.create.lib.mixin.accessor.SlotAccessor;
 import com.simibubi.create.lib.util.ItemStackUtil;
+import com.simibubi.create.lib.util.PlayerEntityHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.Rect2i;
