@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
 import com.simibubi.create.lib.extensions.AbstractTextureExtension;
 
 import net.fabricmc.api.EnvType;
@@ -61,7 +61,7 @@ public abstract class LevelRendererMixin {
 	private <E> E create$redirectBlockEntityIterator(Iterator<E> instance) {
 		E obj = instance.next();
 		BlockEntity next = (BlockEntity) obj;
-		if (next instanceof CustomRenderBoundingBox custom) {
+		if (next instanceof CustomRenderBoundingBoxBlockEntity custom) {
 			Frustum frustum = capturedFrustum != null ? capturedFrustum : cullingFrustum;
 			// skip this BE if not visible
 			if (!frustum.isVisible(custom.getRenderBoundingBox())) {

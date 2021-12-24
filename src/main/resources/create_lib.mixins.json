@@ -36,8 +36,6 @@
     "accessor.StructureTemplateAccessor",
     "accessor.Vector3fAccessor",
     "accessor.VoxelShapeAccessor",
-    "client.AbstractTextureMixin",
-    "client.TextureManagerMixin",
     "common.AbstractFurnaceBlockEntityMixin",
     "common.AbstractMinecartMixin",
     "common.BaseRailBlockMixin",
@@ -95,6 +93,7 @@
     "accessor.ScreenAccessor",
     "accessor.TitleScreenAccessor",
     "client.AbstractContainerScreenMixin",
+    "client.AbstractTextureMixin",
     "client.BufferBuilderMixin",
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
@@ -103,11 +102,11 @@
     "client.GuiMixin",
     "client.HumanoidArmorLayerMixin",
     "client.ItemInHandRendererMixin",
+    "client.ItemRendererMixin",
     "client.KeyboardHandlerMixin",
     "client.LanguageInfoMixin",
     "client.LevelRendererMixin",
     "client.MinecraftMixin",
-    "client.ModelBakeryMixin",
     "client.ModelManagerMixin",
     "client.MouseHandlerMixin",
     "client.MultiPlayerGameModeMixin",
@@ -116,7 +115,8 @@
     "client.RenderTargetMixin",
     "client.ScreenMixin",
     "client.TerrainParticle$ProviderMixin",
-    "client.TerrainParticleMixin"
+    "client.TerrainParticleMixin",
+    "client.TextureManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

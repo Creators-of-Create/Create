@@ -340,6 +340,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.pose(),
 				overlayMS.last()
 					.normal());
+			// FIXME VIRTUAL RENDERING
 			Minecraft.getInstance()
 				.getBlockRenderer()
 				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random);

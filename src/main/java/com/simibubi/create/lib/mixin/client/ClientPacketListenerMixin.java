@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import com.simibubi.create.lib.block.CustomDataPacketHandlingTileEntity;
+import com.simibubi.create.lib.block.CustomDataPacketHandlingBlockEntity;
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 import com.simibubi.create.lib.extensions.ClientboundAddEntityPacketExtensions;
 
@@ -51,7 +51,7 @@ public abstract class ClientPacketListenerMixin {
 
 	@Inject(method = "method_38542", at = @At("HEAD"), cancellable = true)
 	public void create$handleCustomBlockEntity(ClientboundBlockEntityDataPacket packet, BlockEntity blockEntity, CallbackInfo ci) {
-		if (blockEntity instanceof CustomDataPacketHandlingTileEntity handler) {
+		if (blockEntity instanceof CustomDataPacketHandlingBlockEntity handler) {
 			handler.onDataPacket(connection, packet);
 			ci.cancel();
 		}

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.simibubi.create.lib.block.SlopeCreationCheckingRail;
+import com.simibubi.create.lib.block.SlopeCreationCheckingRailBlock;
 import com.simibubi.create.lib.mixin.accessor.RailStateAccessor;
 import com.simibubi.create.lib.util.MixinHelper;
 
@@ -69,8 +69,8 @@ public abstract class RailStateMixin {
 	)
 	public void create$RailState(Level world, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
 		create$canMakeSlopes = true;
-		if (block instanceof SlopeCreationCheckingRail) {
-			create$canMakeSlopes = ((SlopeCreationCheckingRail) block).canMakeSlopes(blockState, world, pos);
+		if (block instanceof SlopeCreationCheckingRailBlock) {
+			create$canMakeSlopes = ((SlopeCreationCheckingRailBlock) block).canMakeSlopes(blockState, world, pos);
 		}
 	}
 

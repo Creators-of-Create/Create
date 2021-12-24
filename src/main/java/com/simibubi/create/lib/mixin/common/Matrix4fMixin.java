@@ -1,15 +1,14 @@
 package com.simibubi.create.lib.mixin.common;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.lib.extensions.Matrix4fExtensions;
 import com.simibubi.create.lib.util.MixinHelper;
-
-import javax.annotation.Nonnull;
 
 @Mixin(Matrix4f.class)
 public abstract class Matrix4fMixin implements Matrix4fExtensions {

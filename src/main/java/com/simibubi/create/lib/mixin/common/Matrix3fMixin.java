@@ -1,13 +1,13 @@
 package com.simibubi.create.lib.mixin.common;
 
+import javax.annotation.Nonnull;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.lib.extensions.Matrix3fExtensions;
 import com.simibubi.create.lib.util.MixinHelper;
-
-import javax.annotation.Nonnull;
 
 @Mixin(Matrix3f.class)
 public abstract class Matrix3fMixin implements Matrix3fExtensions {

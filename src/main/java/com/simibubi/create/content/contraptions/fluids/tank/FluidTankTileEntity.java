@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
-import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, FluidTransferable, CustomRenderBoundingBox {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, FluidTransferable, CustomRenderBoundingBoxBlockEntity {
 
 	private static final int MAX_SIZE = 3;
 
@@ -318,7 +318,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (renderBoundingBox == null) {
-			renderBoundingBox = CustomRenderBoundingBox.super.getRenderBoundingBox();
+			renderBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox();
 		}
 		return renderBoundingBox;
 	}

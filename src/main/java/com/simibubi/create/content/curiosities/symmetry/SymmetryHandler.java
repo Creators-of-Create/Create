@@ -112,6 +112,7 @@ public class SymmetryHandler {
 				.get();
 			VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
+			// FIXME VIRTUAL RENDERING
 			mc.getBlockRenderer()
 				.getModelRenderer()
 				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,

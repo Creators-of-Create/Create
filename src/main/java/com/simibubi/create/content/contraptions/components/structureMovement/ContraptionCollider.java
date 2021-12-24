@@ -5,8 +5,6 @@ import static net.minecraft.world.entity.Entity.collideBoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;

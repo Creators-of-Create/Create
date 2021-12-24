@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.tileEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.lib.block.CustomDataPacketHandlingTileEntity;
+import com.simibubi.create.lib.block.CustomDataPacketHandlingBlockEntity;
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class SyncedTileEntity extends BlockEntity implements BlockEntityExtensions, CustomDataPacketHandlingTileEntity {
+public abstract class SyncedTileEntity extends BlockEntity implements BlockEntityExtensions, CustomDataPacketHandlingBlockEntity {
 
 	public SyncedTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

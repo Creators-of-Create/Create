@@ -30,7 +30,7 @@ import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.EmptyHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
@@ -65,7 +65,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 
-public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, FlywheelRendered, CustomRenderBoundingBox {
+public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, FlywheelRendered, CustomRenderBoundingBoxBlockEntity {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;

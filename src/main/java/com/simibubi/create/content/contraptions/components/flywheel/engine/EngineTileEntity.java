@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBloc
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class EngineTileEntity extends SmartTileEntity implements FlywheelRendered, CustomRenderBoundingBox {
+public class EngineTileEntity extends SmartTileEntity implements FlywheelRendered, CustomRenderBoundingBoxBlockEntity {
 
 	public float appliedCapacity;
 	public float appliedSpeed;
@@ -38,7 +38,7 @@ public class EngineTileEntity extends SmartTileEntity implements FlywheelRendere
 	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
-			cachedBoundingBox = CustomRenderBoundingBox.super.getRenderBoundingBox().inflate(1.5f);
+			cachedBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox().inflate(1.5f);
 		}
 		return cachedBoundingBox;
 	}

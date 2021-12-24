@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
@@ -10,9 +11,8 @@ import com.simibubi.create.foundation.item.render.CustomItemModels;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 import com.simibubi.create.lib.event.ModelsBakedCallback;
-import com.simibubi.create.lib.event.OnModelRegistryCallback;
-import com.simibubi.create.lib.util.SpecialModelUtil;
 
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -20,6 +20,7 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
@@ -41,12 +42,10 @@ public class ModelSwapper {
 		return customRenderedItems;
 	}
 
-	public void onModelRegistry() {
-		OnModelRegistryCallback.EVENT.register(this::onModelRegistry);
-		ModelsBakedCallback.EVENT.register(this::onModelBake);
+	public void onModelRegistry(ResourceManager manager, Consumer<ResourceLocation> out) {
 		customRenderedItems.forEach((item, modelFunc) -> modelFunc.apply(null)
 			.getModelLocations()
-			.forEach(SpecialModelUtil::addSpecialModel));
+			.forEach(out));
 	}
 
 	public void onModelBake(ModelManager manager, Map<ResourceLocation, BakedModel> modelRegistry, ModelBakery loader) {
@@ -62,7 +61,7 @@ public class ModelSwapper {
 	}
 
 	public void registerListeners() {
-		OnModelRegistryCallback.EVENT.register(this::onModelRegistry);
+		ModelLoadingRegistry.INSTANCE.registerModelProvider(this::onModelRegistry);
 		ModelsBakedCallback.EVENT.register(this::onModelBake);
 	}
 

@@ -112,6 +112,7 @@ public class SchematicRenderer {
 
 					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
 
+					// FIXME VIRTUAL RENDERING
 					if (blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true,
 						random)) {
 						usedBlockRenderLayers.add(blockRenderLayer);

@@ -18,7 +18,6 @@ import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;

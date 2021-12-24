@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
-
 import com.simibubi.create.lib.mixin.accessor.AbstractSelectionListAccessor;
 import com.simibubi.create.lib.mixin.accessor.AbstractWidgetAccessor;
 

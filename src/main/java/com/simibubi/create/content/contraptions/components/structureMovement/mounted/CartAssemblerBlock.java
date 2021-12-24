@@ -16,7 +16,7 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.lib.block.MinecartPassHandlerBlock;
-import com.simibubi.create.lib.block.SlopeCreationCheckingRail;
+import com.simibubi.create.lib.block.SlopeCreationCheckingRailBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -62,7 +62,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CartAssemblerBlock extends BaseRailBlock
-	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement, SlopeCreationCheckingRail, MinecartPassHandlerBlock {
+	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement, SlopeCreationCheckingRailBlock, MinecartPassHandlerBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");

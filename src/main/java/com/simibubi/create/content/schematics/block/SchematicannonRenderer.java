@@ -169,6 +169,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			if (launched instanceof ForBlockState) {
 				float scale = .3f;
 				ms.scale(scale, scale, scale);
+				// FIXME VIRTUAL RENDERING
 				Minecraft.getInstance()
 					.getBlockRenderer()
 					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay);
