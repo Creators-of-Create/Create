@@ -82,8 +82,8 @@ public class PotionFluidHandler {
 		}
 	}
 
-	public static int getRequiredAmountForFilledBottle(ItemStack stack, FluidStack availableFluid) {
-		return 250;
+	public static long getRequiredAmountForFilledBottle(ItemStack stack, FluidStack availableFluid) {
+		return FluidConstants.BUCKET / 4;
 	}
 
 	public static ItemStack fillBottle(ItemStack stack, FluidStack availableFluid) {
