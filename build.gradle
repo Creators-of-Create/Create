@@ -11,7 +11,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 
-boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
+boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false')
 ext.buildnumber = 0
 project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
 
