@@ -116,6 +116,10 @@ public class ItemStackHandler implements IItemHandlerModifiable, NBTSerializable
 
 	@Override
 	public CompoundTag create$serializeNBT() {
+		return serializeNBT();
+	}
+
+	public CompoundTag serializeNBT() {
 		ListTag nbtTagList = new ListTag();
 		for (int i = 0; i < stacks.length; i++) {
 			if (!stacks[i].isEmpty()) {
@@ -131,15 +135,14 @@ public class ItemStackHandler implements IItemHandlerModifiable, NBTSerializable
 		return nbt;
 	}
 
-	public CompoundTag serializeNBT() {
-		return create$serializeNBT();
-	}
-
 	@Override
 	public void create$deserializeNBT(CompoundTag nbt) {
-		int size = nbt.getInt("Size");
-		setSize(size);
-		ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
+		deserializeNBT(nbt);
+	}
+
+	public void deserializeNBT(CompoundTag tag) {
+		setSize(tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : stacks.length);
+		ListTag tagList = tag.getList("Items", Tag.TAG_COMPOUND);
 		for (int i = 0; i < tagList.size(); i++) {
 			CompoundTag itemTags = tagList.getCompound(i);
 			int slot = itemTags.getInt("Slot");
@@ -148,9 +151,5 @@ public class ItemStackHandler implements IItemHandlerModifiable, NBTSerializable
 				stacks[slot] = ItemStack.of(itemTags);
 			}
 		}
-	}
-
-	public void deserializeNBT(CompoundTag tag) {
-		create$deserializeNBT(tag);
 	}
 }
