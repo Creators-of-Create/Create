@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.EntityRendererManagerHelper;
 import com.simibubi.create.lib.util.LivingRendererHelper;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +21,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -34,7 +32,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -87,12 +84,12 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		ms.popPose();
 	}
 
-	public static void registerOnAll(EntityRenderDispatcher renderManager) {
-		for (EntityRenderer<? extends Player> renderer : EntityRendererManagerHelper.getSkinMap(renderManager).values())
-			registerOn(renderer);
-		for (EntityRenderer<?> renderer : EntityRendererManagerHelper.getRenderers(renderManager).values())
-			registerOn(renderer);
-	}
+//	public static void registerOnAll(EntityRenderDispatcher renderManager) {
+//		for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap().values())
+//			registerOn(renderer);
+//		for (EntityRenderer<?> renderer : renderManager.renderers.values())
+//			registerOn(renderer);
+//	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void registerOn(EntityRenderer<?> entityRenderer) {

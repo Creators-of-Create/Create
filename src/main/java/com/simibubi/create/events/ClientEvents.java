@@ -76,6 +76,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -88,7 +89,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -320,10 +320,11 @@ public class ClientEvents {
 				reloadable.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
 		}
 
-		public static void addEntityRendererLayers() {
-			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-			CopperBacktankArmorLayer.registerOnAll(dispatcher);
-		}
+//		@SubscribeEvent
+//		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
+//			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+//			CopperBacktankArmorLayer.registerOnAll(dispatcher);
+//		}
 
 //		@SubscribeEvent
 //		public static void loadCompleted(FMLLoadCompleteEvent event) {
@@ -338,10 +339,7 @@ public class ClientEvents {
 
 	public static void register() {
 		ModBusEvents.registerClientReloadListeners();
-		ParticleManagerRegistrationCallback.EVENT.register(() -> {
-			AllParticleTypes.registerFactories();
-			ModBusEvents.addEntityRendererLayers();
-		});
+		ParticleManagerRegistrationCallback.EVENT.register(AllParticleTypes::registerFactories);
 
 		ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onTick);
 		ClientTickEvents.START_CLIENT_TICK.register(ClientEvents::onTickStart);
@@ -381,6 +379,9 @@ public class ClientEvents {
 		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(
+				(__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer)
+		);
 
 		// Flywheel Events
 
