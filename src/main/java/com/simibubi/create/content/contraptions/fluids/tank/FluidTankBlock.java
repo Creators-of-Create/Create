@@ -15,8 +15,9 @@ import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.FluidRenderUtil;
 import com.simibubi.create.lib.util.LazyOptional;
+
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -198,7 +199,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
 						float level = (float) fluidInTank.getAmount() / fluidTank.getTankCapacity(0);
 
-						boolean reversed = FluidRenderUtil.fillsFromTop(fluidInTank.getType());
+						boolean reversed = FluidVariantRendering.fillsFromTop(fluidInTank.getType());
 						if (reversed)
 							level = 1 - level;
 

@@ -34,6 +34,8 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 import com.simibubi.create.lib.util.FluidHandlerData;
 
+import com.simibubi.create.lib.util.FluidTileDataHandler;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
@@ -103,6 +105,7 @@ public class CreateClient implements ClientModInitializer {
 		InputEvents.register();
 		AllPackets.channel.initClientListener();
 		FluidHandlerData.initClient();
+		FluidTileDataHandler.initClient();
 	}
 
 	private static void registerOverlays() {

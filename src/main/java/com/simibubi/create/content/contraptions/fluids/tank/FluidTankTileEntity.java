@@ -20,6 +20,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.util.FluidTileDataHandler;
 import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.api.EnvType;
@@ -31,6 +32,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -104,8 +106,11 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			updateConnectivity();
 		if (fluidLevel != null)
 			fluidLevel.tick();
+		if (isController() && !level.isClientSide)
+			FluidTileDataHandler.sendDataToClients((ServerLevel) level, this);
 	}
-@Override
+
+	@Override
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
 	}

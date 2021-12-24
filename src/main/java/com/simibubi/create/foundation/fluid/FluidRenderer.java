@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.util.FluidRenderUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -102,16 +101,16 @@ public class FluidRenderer {
 		FluidVariant fluidVariant = fluidStack.getType();
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-			.apply(FluidRenderUtil.getSprite(fluidVariant).getName());
+			.apply(FluidVariantRendering.getSprite(fluidVariant).getName());
 
-		int color = FluidRenderUtil.getColor(fluidStack.getType());
+		int color = FluidVariantRendering.getColor(fluidStack.getType());
 		int blockLightIn = (light >> 4) & 0xF;
 		int luminosity = 0;//Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
-		if (FluidRenderUtil.fillsFromTop(fluidStack.getType()))
+		if (FluidVariantRendering.fillsFromTop(fluidStack.getType()))
 			TransformStack.cast(ms)
 				.translate(center)
 				.rotateX(180)

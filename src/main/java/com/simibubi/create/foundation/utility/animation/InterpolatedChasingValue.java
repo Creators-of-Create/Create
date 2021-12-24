@@ -20,7 +20,7 @@ public class InterpolatedChasingValue extends InterpolatedValue {
 	protected float getCurrentDiff() {
 		return getTarget() - value;
 	}
-	
+
 	public InterpolatedChasingValue withSpeed(float speed) {
 		this.speed = speed;
 		return this;
@@ -30,7 +30,7 @@ public class InterpolatedChasingValue extends InterpolatedValue {
 		this.target = target;
 		return this;
 	}
-	
+
 	public InterpolatedChasingValue start(float value) {
 		lastValue = this.value = value;
 		target(value);
