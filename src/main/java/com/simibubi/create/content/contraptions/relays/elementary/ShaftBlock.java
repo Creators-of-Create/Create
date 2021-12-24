@@ -4,9 +4,12 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.KineticSolver;
+import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.contraptions.solver.Connection;
+import com.simibubi.create.content.contraptions.solver.ConnectionGoal;
+import com.simibubi.create.content.contraptions.solver.SolverBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -27,7 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractShaftBlock implements KineticSolver.SolverBlock {
+public class ShaftBlock extends AbstractShaftBlock implements SolverBlock {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -92,11 +95,11 @@ public class ShaftBlock extends AbstractShaftBlock implements KineticSolver.Solv
 
 		Direction positive = Direction.fromAxisAndDirection(axis, Direction.AxisDirection.POSITIVE);
 
-		KineticSolver.Connection.Shaft c1 = new KineticSolver.Connection.Shaft(pos, positive);
-		KineticSolver.Connection.Shaft c2 = new KineticSolver.Connection.Shaft(pos, positive.getOpposite());
+		Connection.Shaft c1 = new Connection.Shaft(pos, positive);
+		Connection.Shaft c2 = new Connection.Shaft(pos, positive.getOpposite());
 
-		solver.addGoal(new KineticSolver.Goal.EqualSpeed(c1));
-		solver.addGoal(new KineticSolver.Goal.EqualSpeed(c2));
+		solver.addGoal(new ConnectionGoal.EqualSpeed(c1));
+		solver.addGoal(new ConnectionGoal.EqualSpeed(c2));
 	}
 
 	@MethodsReturnNonnullByDefault

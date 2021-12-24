@@ -18,6 +18,8 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.contraptions.solver.KineticSolver;
+import com.simibubi.create.content.contraptions.solver.SolverBlock;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -344,6 +346,12 @@ public class KineticTileEntity extends SmartTileEntity
 
 	public void attachKinetics() {
 		updateSpeed = false;
+		KineticSolver solver = KineticSolver.getSolver(level);
+
+		BlockState state = getBlockState();
+		if (state.getBlock() instanceof SolverBlock sb) {
+			sb.created(solver, level, worldPosition);
+		}
 		RotationPropagator.handleAdded(level, worldPosition, this);
 	}
 

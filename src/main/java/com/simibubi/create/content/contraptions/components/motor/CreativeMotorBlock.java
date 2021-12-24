@@ -3,6 +3,9 @@ package com.simibubi.create.content.contraptions.components.motor;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.content.contraptions.solver.GeneratorGoal;
+import com.simibubi.create.content.contraptions.solver.KineticSolver;
+import com.simibubi.create.content.contraptions.solver.SolverBlock;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
@@ -10,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +21,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<CreativeMotorTileEntity> {
+public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<CreativeMotorTileEntity>, SolverBlock {
 
 	public CreativeMotorBlock(Properties properties) {
 		super(properties);
@@ -54,7 +58,7 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 	public boolean hideStressImpact() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
@@ -69,5 +73,9 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 	public BlockEntityType<? extends CreativeMotorTileEntity> getTileEntityType() {
 		return AllTileEntities.MOTOR.get();
 	}
-	
+
+	@Override
+	public void created(KineticSolver solver, Level level, BlockPos pos) {
+		solver.addGoal(new GeneratorGoal(pos, 16));
+	}
 }
