@@ -10,6 +10,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.lib.mixin.accessor.ParticleAccessor;
 
+import com.simibubi.create.lib.util.ParticleHelper;
+
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -100,7 +102,7 @@ public class CubeParticle extends Particle {
 		if (this.hot && this.age > 0) {
 			if (this.yo == this.y) {
 				billowing = true;
-				((ParticleAccessor) this).create$setStoppedByCollision(false); // Prevent motion being ignored due to vertical collision
+				ParticleHelper.setStoppedByCollision(this, false); // Prevent motion being ignored due to vertical collision
 				if (this.xd == 0 && this.zd == 0) {
 					Vec3 diff = Vec3.atLowerCornerOf(new BlockPos(x, y, z)).add(0.5, 0.5, 0.5).subtract(x, y, z);
 					this.xd = -diff.x * 0.1;

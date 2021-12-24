@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.particle;
 
 import com.mojang.serialization.Codec;
-import com.simibubi.create.lib.util.ParticleManagerHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.client.particle.ParticleProvider;
@@ -38,7 +38,7 @@ public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extend
 	@Override
 	@Environment(EnvType.CLIENT)
 	public default void register(ParticleType<T> type, ParticleEngine particles) {
-		ParticleManagerHelper.registerFactory(particles, type, getMetaFactory());
+		ParticleFactoryRegistry.getInstance().register(type, provider -> getMetaFactory().create(provider));
 	}
 
 }
