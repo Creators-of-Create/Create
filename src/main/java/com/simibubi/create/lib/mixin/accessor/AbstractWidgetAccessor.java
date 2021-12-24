@@ -11,8 +11,5 @@ import net.minecraft.client.gui.components.AbstractWidget;
 @Mixin(AbstractWidget.class)
 public interface AbstractWidgetAccessor {
 	@Accessor("height")
-	int create$getHeight();
-
-	@Accessor("height")
 	void create$setHeight(int height);
 }

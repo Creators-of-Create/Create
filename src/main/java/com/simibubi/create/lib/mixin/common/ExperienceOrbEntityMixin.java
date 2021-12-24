@@ -14,9 +14,6 @@ import net.minecraft.world.entity.player.Player;
 
 @Mixin(ExperienceOrb.class)
 public abstract class ExperienceOrbEntityMixin {
-	@Shadow
-	private Player followingPlayer;
-
 	@ModifyVariable(
 			method = "tick",
 			at = @At(

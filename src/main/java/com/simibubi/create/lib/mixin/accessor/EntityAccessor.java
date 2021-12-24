@@ -16,9 +16,6 @@ public interface EntityAccessor {
 	@Accessor("removalReason")
 	void create$setRemovalReason(Entity.RemovalReason removalReason);
 
-	@Accessor("onGround")
-	boolean create$isOnGround();
-
 	@Invoker("getEncodeId")
 	String create$getEntityString();
 

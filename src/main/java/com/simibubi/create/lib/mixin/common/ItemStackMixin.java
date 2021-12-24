@@ -5,16 +5,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.simibubi.create.lib.event.BlockPlaceCallback;
 import com.simibubi.create.lib.item.CustomMaxCountItem;
 import com.simibubi.create.lib.util.MixinHelper;
 import com.simibubi.create.lib.util.NBTSerializable;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements NBTSerializable {

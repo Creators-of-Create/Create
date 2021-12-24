@@ -1,5 +1,7 @@
 package com.simibubi.create.lib.mixin.common;
 
+import com.simibubi.create.lib.mixin.accessor.RedStoneWireBlockAccessor;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,13 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(RedStoneWireBlock.class)
 public abstract class RedStoneWireBlockMixin {
-	// I have concerns for this Shadow but it should be fine? :tiny_potato:
-	// :concern:
-	@Shadow
-	protected static boolean shouldConnectTo(BlockState blockState, @Nullable Direction side) {
-		return false;
-	}
-
 	@Inject(
 			method = "shouldConnectTo(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;)Z",
 			at = @At(
@@ -51,6 +46,6 @@ public abstract class RedStoneWireBlockMixin {
 			)
 	)
 	private boolean create$canConnectUpwardsTo(BlockState state, BlockGetter world, BlockPos pos, Direction side, boolean bl) {
-		return shouldConnectTo(state, side);
+		return RedStoneWireBlockAccessor.create$shouldConnectTo(state, side);
 	}
 }
