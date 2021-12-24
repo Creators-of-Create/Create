@@ -13,5 +13,5 @@ import net.minecraft.client.particle.ParticleProvider;
 @Mixin(ParticleEngine.class)
 public interface ParticleEngineAccessor {
 	@Accessor("providers")
-	Int2ObjectMap<ParticleProvider<?>> getProviders();
+	Int2ObjectMap<ParticleProvider<?>> create$getProviders();
 }

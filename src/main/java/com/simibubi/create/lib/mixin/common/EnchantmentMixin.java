@@ -15,8 +15,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 
 @Mixin(Enchantment.class)
 public abstract class EnchantmentMixin {
-	@Inject(at = @At("HEAD"), method = "canEnchant", cancellable = true)
-	private void canEnchant(ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
+	@Inject(method = "canEnchant", at = @At("HEAD"), cancellable = true)
+	private void create$canEnchant(ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
 		Set<Supplier<Enchantment>> enchants = EnchantmentUtil.ITEMS_TO_ENCHANTS.get(itemStack.getItem());
 		if (enchants != null) {
 			for (Supplier<Enchantment> enchant : enchants) {

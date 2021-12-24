@@ -29,21 +29,25 @@ public abstract class GuiMixin {
 	@Unique
 	public float create$partialTicks;
 
-	@Inject(at = @At("HEAD"),
-			method = "render")
+	@Inject(method = "render", at = @At("HEAD"))
 	public void create$render(PoseStack matrixStack, float f, CallbackInfo ci) {
 		create$partialTicks = f;
 	}
 
 	//This might be the wrong method to inject to
-	@Inject(at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"),
-			method = "renderPlayerHealth")
+	@Inject(
+			method = "renderPlayerHealth",
+			at = @At(
+					value = "INVOKE",
+					shift = At.Shift.AFTER,
+					target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"
+			)
+	)
 	private void create$renderStatusBars(PoseStack matrixStack, CallbackInfo ci) {
 		OverlayRenderCallback.EVENT.invoker().onOverlayRender(matrixStack, create$partialTicks, minecraft.getWindow(), OverlayRenderCallback.Types.AIR);
 	}
 
-	@Inject(at = @At("HEAD"),
-			method = "renderCrosshair")
+	@Inject(method = "renderCrosshair", at = @At("HEAD"))
 	private void create$renderCrosshair(PoseStack matrixStack, CallbackInfo ci) {
 		OverlayRenderCallback.EVENT.invoker().onOverlayRender(matrixStack, create$partialTicks, minecraft.getWindow(), OverlayRenderCallback.Types.CROSSHAIRS);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

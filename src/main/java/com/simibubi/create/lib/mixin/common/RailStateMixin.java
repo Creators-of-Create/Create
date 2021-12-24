@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 
 @Mixin(value = RailState.class, priority = 1501) // bigger number is applied first right?
+//I'm pretty sure lower priorities are applied first but I'm not sure :(
 public abstract class RailStateMixin {
 	// I hate everything about this file so much
 	@Unique
@@ -53,14 +54,19 @@ public abstract class RailStateMixin {
 	protected abstract void updateConnections(RailShape railShape);
 
 	@Shadow
-	@Nullable
-	protected abstract RailState getRail(BlockPos blockPos);
+	protected abstract @Nullable RailState getRail(BlockPos blockPos);
 
 	@Shadow
 	protected abstract boolean hasConnection(BlockPos blockPos);
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/RailState;updateConnections(Lnet/minecraft/world/level/block/state/properties/RailShape;)V", shift = At.Shift.BEFORE),
-			method = "<init>")
+	@Inject(
+			method = "<init>",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/block/RailState;updateConnections(Lnet/minecraft/world/level/block/state/properties/RailShape;)V",
+					shift = At.Shift.BEFORE
+			)
+	)
 	public void create$RailState(Level world, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
 		create$canMakeSlopes = true;
 		if (block instanceof SlopeCreationCheckingRail) {
@@ -77,7 +83,7 @@ public abstract class RailStateMixin {
 	 */
 	@Overwrite
 	private void connectTo(RailState railState) {
-		this.connections.add(((RailStateAccessor) railState).create$pos());
+		this.connections.add(((RailStateAccessor) railState).create$getPos());
 		BlockPos blockPos = this.pos.north();
 		BlockPos blockPos2 = this.pos.south();
 		BlockPos blockPos3 = this.pos.west();

@@ -8,5 +8,5 @@ import net.minecraft.server.level.ServerPlayer;
 @Mixin(ServerPlayer.class)
 public interface ServerPlayerAccessor {
 	@Accessor("containerCounter")
-	int getContainerCounter();
+	int create$getContainerCounter();
 }

@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.FogRenderer;
 @Environment(EnvType.CLIENT)
 @Mixin(FogRenderer.class)
 public abstract class FogRendererMixin {
-
 	@Shadow
 	private static float fogRed;
 
@@ -37,9 +36,8 @@ public abstract class FogRendererMixin {
 //		blue = color.z();
 //	}
 
-	@Inject(at = @At("HEAD"),
-			method = "setupFog", cancellable = true)
-	private static void setupFog(Camera activeRenderInfo, FogRenderer.FogMode fogType, float f, boolean bl, CallbackInfo ci) {
+	@Inject(method = "setupFog", at = @At("HEAD"), cancellable = true)
+	private static void create$setupFog(Camera activeRenderInfo, FogRenderer.FogMode fogType, float f, boolean bl, CallbackInfo ci) {
 		float density = FogEvents.SET_DENSITY.invoker().setDensity(activeRenderInfo, 0.1f);
 		if (density != 0.1f) {
 			//I am not 100% sure this is the same as RenderSystem.fogDensity(density) ¯\_(ツ)_/¯

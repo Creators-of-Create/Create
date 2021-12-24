@@ -118,7 +118,7 @@ public class AirCurrent {
 				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayer)
-				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).create$aboveGroundTickCount(0);
+				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).create$setAboveGroundTickCount(0);
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);

@@ -22,11 +22,10 @@ import net.minecraft.util.profiling.ProfilerFiller;
 @Environment(EnvType.CLIENT)
 @Mixin(ModelManager.class)
 public abstract class ModelManagerMixin {
-
 	@Shadow
 	private Map<ResourceLocation, BakedModel> bakedRegistry;
 
-	@Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", args = "ldc=cache", shift = At.Shift.BEFORE), method = "apply")
+	@Inject(method = "apply", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", args = "ldc=cache", shift = At.Shift.BEFORE))
 	public void create$onModelBake(ModelBakery modelLoader, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
 		ModelsBakedCallback.EVENT.invoker().onModelsBaked((ModelManager) (Object) this, bakedRegistry, modelLoader);
 	}

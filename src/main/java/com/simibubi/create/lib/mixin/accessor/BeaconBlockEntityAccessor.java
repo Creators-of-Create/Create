@@ -10,5 +10,5 @@ import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 @Mixin(BeaconBlockEntity.class)
 public interface BeaconBlockEntityAccessor {
 	@Accessor("beamSections")
-	List<BeaconBlockEntity.BeaconBeamSection> create$beamSections();
+	List<BeaconBlockEntity.BeaconBeamSection> create$getBeamSections();
 }

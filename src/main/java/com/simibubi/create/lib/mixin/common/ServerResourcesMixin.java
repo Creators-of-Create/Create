@@ -22,8 +22,7 @@ public abstract class ServerResourcesMixin {
 	@Final
 	private ReloadableResourceManager resources;
 
-	@Inject(at = @At("TAIL"),
-			method = "<init>")
+	@Inject(method = "<init>",at = @At("TAIL"))
 	public void create$DataPackRegistries(RegistryAccess registryAccess, Commands.CommandSelection commandSelection, int i, CallbackInfo ci) {
 		for (PreparableReloadListener listener : DataPackReloadCallback.EVENT.invoker().onDataPackReload(MixinHelper.cast(this))) {
 			resources.registerReloadListener(listener);

@@ -10,8 +10,8 @@ import net.minecraft.world.level.SpawnData;
 @Mixin(BaseSpawner.class)
 public interface BaseSpawnerAccessor {
 	@Accessor("spawnPotentials")
-	SimpleWeightedRandomList<SpawnData> create$spawnPotentials();
+	SimpleWeightedRandomList<SpawnData> create$getSpawnPotentials();
 
 	@Accessor("nextSpawnData")
-	SpawnData create$nextSpawnData();
+	SpawnData create$getNextSpawnData();
 }

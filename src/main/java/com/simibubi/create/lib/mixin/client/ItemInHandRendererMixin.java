@@ -29,7 +29,7 @@ public abstract class ItemInHandRendererMixin {
 	private ItemStack mainHandItem;
 	@Shadow
 	private ItemStack offHandItem;
-	private static int slotMainHand = 0;
+	private static int create$mainHandSlot = 0;
 
 	private static boolean create$shouldCauseReequipAnimation(@Nonnull ItemStack from, @Nonnull ItemStack to, int slot) {
 		if (from.isEmpty() && to.isEmpty()) return false;
@@ -37,13 +37,13 @@ public abstract class ItemInHandRendererMixin {
 
 		boolean changed = false;
 		if (slot != -1) {
-			changed = slot != slotMainHand;
-			slotMainHand = slot;
+			changed = slot != create$mainHandSlot;
+			create$mainHandSlot = slot;
 		}
 		return ((ItemExtensions) from.getItem()).shouldCauseReequipAnimation(from, to, changed);
 	}
 
-	@Inject(at = @At("HEAD"), method = "renderArmWithItem", cancellable = true)
+	@Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
 	private void create$renderArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
 		RenderHandCallback.RenderHandEvent event = new RenderHandCallback.RenderHandEvent(player, hand, stack, matrices, vertexConsumers, tickDelta, pitch, swingProgress, equipProgress, light);
 		RenderHandCallback.EVENT.invoker().onRenderHand(event);
@@ -52,11 +52,17 @@ public abstract class ItemInHandRendererMixin {
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/player/LocalPlayer;getAttackStrengthScale(F)F"),
-			locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "tick()V")
-	public void tick(CallbackInfo ci,
-					 LocalPlayer clientPlayerEntity, ItemStack itemStack, ItemStack itemStack2) {
+	@Inject(
+			method = "tick",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/player/LocalPlayer;getAttackStrengthScale(F)F",
+					shift = At.Shift.AFTER
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	public void create$tick(CallbackInfo ci,
+							LocalPlayer clientPlayerEntity, ItemStack itemStack, ItemStack itemStack2) {
 		if (create$shouldCauseReequipAnimation(mainHandItem, itemStack, clientPlayerEntity.getInventory().selected)) {
 			mainHandItem = itemStack;
 		}

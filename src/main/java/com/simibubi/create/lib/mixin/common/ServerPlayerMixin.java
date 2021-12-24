@@ -37,12 +37,12 @@ public abstract class ServerPlayerMixin extends Player {
 	@Unique
 	private IFluidHandler create$lastViewedHandler = null;
 
-	@Inject(at = @At("RETURN"), method = "<init>")
-	private void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, CallbackInfo ci) {
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void create$init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, CallbackInfo ci) {
 		ServerPlayerCreationCallback.EVENT.invoker().onCreate((ServerPlayer) (Object) this);
 	}
 
-	@Inject(at = @At("TAIL"), method = "tick()V")
+	@Inject(method = "tick", at = @At("TAIL"))
 	public void create$clientEndOfTickEvent(CallbackInfo ci) {
 		if (!getLevel().isClientSide()) {
 			if (getItemBySlot(EquipmentSlot.HEAD).is(AllItems.GOGGLES.get())) {
@@ -52,7 +52,7 @@ public abstract class ServerPlayerMixin extends Player {
 					LazyOptional<IFluidHandler> optional = TransferUtil.getFluidHandler(level, blockHit.getBlockPos(), blockHit.getDirection());
 					if (optional.isPresent()) {
 						IFluidHandler handler = optional.orElse(null);
-						if (!checkSameAndUpdate(handler)) {
+						if (!create$checkSameAndUpdate(handler)) {
 							FluidHandlerData.sendToClient((ServerPlayer) (Object) this, handler);
 						}
 					}
@@ -65,7 +65,7 @@ public abstract class ServerPlayerMixin extends Player {
 	/**
 	 * @return true if handlers are equivalent
 	 */
-	private boolean checkSameAndUpdate(IFluidHandler handler) {
+	private boolean create$checkSameAndUpdate(IFluidHandler handler) {
 		if (create$lastViewedHandler == null) return handler == null;
 
 		if (create$lastViewedHandler.getTanks() != handler.getTanks()) {

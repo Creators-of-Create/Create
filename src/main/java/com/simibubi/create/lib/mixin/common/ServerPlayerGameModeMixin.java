@@ -21,9 +21,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 @Mixin(ServerPlayerGameMode.class)
-public class ServerPlayerGameModeMixin {
-	@Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"),
-			method = "useItemOn")
+public abstract class ServerPlayerGameModeMixin {
+	@Redirect(
+			method = "useItemOn",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/block/state/BlockState;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"
+			)
+	)
 	public InteractionResult create$bypassBlockUse(BlockState instance, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
 		if (player.getItemInHand(interactionHand).getItem() instanceof BlockUseBypassingItem bypassing) {
 			if (bypassing.shouldBypass(instance, blockHitResult.getBlockPos(), level, player, interactionHand)) return InteractionResult.PASS;
@@ -31,7 +36,16 @@ public class ServerPlayerGameModeMixin {
 		return instance.use(level, player, interactionHand, blockHitResult);
 	}
 
-	@Inject(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 0, shift = At.Shift.BEFORE), cancellable = true)
+	@Inject(
+			method = "useItemOn",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z",
+					ordinal = 0,
+					shift = At.Shift.BEFORE
+			),
+			cancellable = true
+	)
 	public void create$onItemFirstUse(ServerPlayer serverPlayer, Level level, ItemStack itemStack, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<InteractionResult> cir) {
 		if (itemStack.getItem() instanceof UseFirstBehaviorItem first) {
 			UseOnContext useoncontext = new UseOnContext(serverPlayer, interactionHand, blockHitResult);

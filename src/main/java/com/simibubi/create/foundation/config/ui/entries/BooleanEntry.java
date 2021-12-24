@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.RenderElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
+
 import com.simibubi.create.lib.mixin.accessor.AbstractWidgetAccessor;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -54,7 +55,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 		button.x = x + width - 80 - resetWidth;
 		button.y = y + 10;
 		button.setWidth(35);
-		((AbstractWidgetAccessor) button).setHeight(height - 20);
+		((AbstractWidgetAccessor) button).create$setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 

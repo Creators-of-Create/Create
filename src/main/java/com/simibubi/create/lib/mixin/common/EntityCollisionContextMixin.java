@@ -17,14 +17,13 @@ public abstract class EntityCollisionContextMixin implements EntityCollisionCont
 	@Unique
 	private Entity create$cachedEntity;
 
-	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/world/entity/Entity;)V")
+	@Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("TAIL"))
 	private void create$onTailEntityInit(Entity entity, CallbackInfo ci) {
 		create$cachedEntity = entity;
 	}
 
 	@Override
-	@Nullable
-	public Entity create$getCachedEntity() {
+	public @Nullable Entity create$getCachedEntity() {
 		return create$cachedEntity;
 	}
 }

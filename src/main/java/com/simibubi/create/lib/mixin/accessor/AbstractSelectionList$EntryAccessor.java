@@ -8,5 +8,5 @@ import net.minecraft.client.gui.components.AbstractSelectionList;
 @Mixin(AbstractSelectionList.Entry.class)
 public interface AbstractSelectionList$EntryAccessor<E extends AbstractSelectionList.Entry<E>> {
 	@Accessor("list")
-	AbstractSelectionList<E> getList();
+	AbstractSelectionList<E> create$getList();
 }

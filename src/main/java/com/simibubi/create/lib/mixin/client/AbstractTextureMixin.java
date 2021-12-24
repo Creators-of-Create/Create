@@ -11,28 +11,28 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 @Mixin(AbstractTexture.class)
 public abstract class AbstractTextureMixin implements AbstractTextureExtension {
 	@Shadow
-	public abstract void setFilter(boolean blur, boolean mipmap);
-
+	protected boolean blur;
 	@Shadow
 	protected boolean mipmap;
+	@Unique
+	private boolean create$lastBlur;
+	@Unique
+	private boolean create$lastMipmap;
+
 	@Shadow
-	protected boolean blur;
-	@Unique
-	private boolean lastBlur;
-	@Unique
-	private boolean lastMipmap;
+	public abstract void setFilter(boolean blur, boolean mipmap);
 
 	@Unique
 	@Override
-	public void setBlurMipmap(boolean blur, boolean mipmap) {
-		this.lastBlur = this.blur;
-		this.lastMipmap = this.mipmap;
+	public void create$setBlurMipmap(boolean blur, boolean mipmap) {
+		this.create$lastBlur = this.blur;
+		this.create$lastMipmap = this.mipmap;
 		setFilter(blur, mipmap);
 	}
 
 	@Unique
 	@Override
-	public void restoreLastBlurMipmap() {
-		setFilter(this.lastBlur, this.lastMipmap);
+	public void create$restoreLastBlurMipmap() {
+		setFilter(this.create$lastBlur, this.create$lastMipmap);
 	}
 }

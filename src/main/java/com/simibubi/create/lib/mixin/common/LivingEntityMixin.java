@@ -60,7 +60,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@ModifyVariable(method = "dropAllDeathLoot",
 			at = @At(value = "STORE", ordinal = 0))
-	private int create$spawnDropsBODY(int j) {
+	private int create$spawnDropsBODY1(int j) {
 		int modifiedLevel = LivingEntityEvents.LOOTING_LEVEL.invoker().modifyLootingLevel(create$currentDamageSource);
 		if (modifiedLevel != 0) {
 			return modifiedLevel;
@@ -87,10 +87,10 @@ public abstract class LivingEntityMixin extends Entity {
 	private void create$swingHand(InteractionHand hand, boolean bl, CallbackInfo ci) {
 		ItemStack stack = getItemInHand(hand);
 		if (!stack.isEmpty() && stack.getItem() instanceof EntitySwingListenerItem && ((EntitySwingListenerItem) stack.getItem())
-				.onEntitySwing(stack, (LivingEntity) (Object) this)) ci.cancel();
+				.onEntitySwing(stack, (LivingEntity) (Object) this)) { ci.cancel();	}
 	}
 
-	@Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
 	private void create$tick(CallbackInfo ci) {
 		LivingEntityEvents.TICK.invoker().onLivingEntityTick((LivingEntity) (Object) this);
 	}
@@ -108,11 +108,18 @@ public abstract class LivingEntityMixin extends Entity {
 		return LivingEntityEvents.HURT.invoker().onHurt(source, amount);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I", shift = At.Shift.BEFORE),
+	@Inject(
+			method = "checkFallDamage",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I",
+					shift = At.Shift.BEFORE
+			),
 			locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "checkFallDamage", cancellable = true)
-	protected void create$updateFallState(double d, boolean bl, BlockState blockState, BlockPos blockPos, CallbackInfo ci,
-										  float f, double e, int i) {
+			cancellable = true
+	)
+	protected void create$updateFallState(double d, boolean bl, BlockState blockState, BlockPos blockPos,
+										  CallbackInfo ci, float f, double e, int i) {
 		if (((BlockStateExtensions) blockState).create$addLandingEffects((ServerLevel) level, blockPos, blockState, MixinHelper.cast(this), i)) {
 			super.checkFallDamage(d, bl, blockState, blockPos);
 			ci.cancel();
@@ -120,16 +127,14 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	// TODO Make this less :concern: when fabric's mixin fork updates
-	@ModifyVariable(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"),
-			method = "travel",
-			index = 7)
+	@ModifyVariable(method = "travel", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"), index = 7)
 	public float create$setSlipperiness(float t) {
 		return ((BlockStateExtensions) MixinHelper.<LivingEntity>cast(this).level.getBlockState(getBlockPosBelowThatAffectsMyMovement()))
 				.create$getSlipperiness(MixinHelper.<LivingEntity>cast(this).level, getBlockPosBelowThatAffectsMyMovement(), MixinHelper.<LivingEntity>cast(this));
 	}
 
 	//Moved from MobMixin
-	@Inject(at = @At("HEAD"), method = "getEquipmentSlotForItem", cancellable = true)
+	@Inject(method = "getEquipmentSlotForItem", at = @At("HEAD"), cancellable = true)
 	private static void create$getSlotForItemStack(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
 		if (itemStack.getItem() instanceof EquipmentItem equipment) {
 			cir.setReturnValue(equipment.getEquipmentSlot(itemStack));

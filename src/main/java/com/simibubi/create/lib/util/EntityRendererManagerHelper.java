@@ -12,10 +12,10 @@ import net.minecraft.world.entity.player.Player;
 public class EntityRendererManagerHelper {
 
 	public static Map<String, EntityRenderer<? extends Player>> getSkinMap(EntityRenderDispatcher manager) {
-		return ((EntityRenderDispatcherAccessor) manager).getPlayerRenderers();
+		return ((EntityRenderDispatcherAccessor) manager).create$getPlayerRenderers();
 	}
 
 	public static Map<EntityType<?>, EntityRenderer<?>> getRenderers(EntityRenderDispatcher manager) {
-		return ((EntityRenderDispatcherAccessor) manager).getRenderers();
+		return ((EntityRenderDispatcherAccessor) manager).create$getRenderers();
 	}
 }

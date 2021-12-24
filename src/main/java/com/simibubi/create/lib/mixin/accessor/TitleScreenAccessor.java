@@ -12,5 +12,5 @@ import net.minecraft.client.renderer.PanoramaRenderer;
 @Mixin(TitleScreen.class)
 public interface TitleScreenAccessor {
 	@Accessor("panorama")
-	PanoramaRenderer getPanorama();
+	PanoramaRenderer create$getPanorama();
 }

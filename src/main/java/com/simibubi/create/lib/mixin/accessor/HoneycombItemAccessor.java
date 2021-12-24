@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.Block;
 @Mixin(HoneycombItem.class)
 public interface HoneycombItemAccessor {
 	@Mutable
-	@Accessor
-	static void setWAXABLES(Supplier<BiMap<Block, Block>> WAXABLES) {
-		throw new UnsupportedOperationException();
+	@Accessor("WAXABLES")
+	static void create$setWaxables(Supplier<BiMap<Block, Block>> WAXABLES) {
+		throw new AssertionError("Mixin application failed!");
 	}
 }

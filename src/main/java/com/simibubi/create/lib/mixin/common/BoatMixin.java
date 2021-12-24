@@ -31,9 +31,14 @@ public abstract class BoatMixin {
 	@Unique
 	Entity create$entity;
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"),
-			locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "getGroundFriction()F")
+	@Inject(
+			method = "getGroundFriction()F",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/block/Block;getFriction()F"
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
 	public void create$getBoatGlide(CallbackInfoReturnable<Float> cir,
 									AABB AABB, AABB AABB2, int i, int j, int k,
 									int l, int m, int n, VoxelShape shape, float f, int o, BlockPos.MutableBlockPos mutable,
@@ -44,8 +49,14 @@ public abstract class BoatMixin {
 		create$entity = MixinHelper.<Boat>cast(this);
 	}
 
-	@ModifyVariable(at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/level/block/Block;getFriction()F"),
-			method = "getGroundFriction()F")
+	@ModifyVariable(
+			method = "getGroundFriction()F",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/block/Block;getFriction()F",
+					shift = At.Shift.AFTER
+			)
+	)
 	public float create$setSlipperiness(float f) {
 		return ((BlockStateExtensions) create$state).create$getSlipperiness(create$world, create$pos, create$entity);
 	}

@@ -10,7 +10,7 @@ import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
 @Mixin(ArrayVoxelShape.class)
 public interface ArrayVoxelShapeAccessor {
 	@Invoker("<init>")
-	static ArrayVoxelShape create(DiscreteVoxelShape discreteVoxelShape, DoubleList doubleList, DoubleList doubleList2, DoubleList doubleList3) {
-		throw new RuntimeException("Mixin application failed!");
+	static ArrayVoxelShape create$init(DiscreteVoxelShape discreteVoxelShape, DoubleList doubleList, DoubleList doubleList2, DoubleList doubleList3) {
+		throw new AssertionError("Mixin application failed!");
 	}
 }

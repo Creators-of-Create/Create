@@ -15,12 +15,12 @@ import net.minecraft.client.gui.screens.Screen;
 @Environment(EnvType.CLIENT)
 @Mixin(Screen.class)
 public interface ScreenAccessor {
+	@Accessor("children")
+	List<GuiEventListener> create$getChildren();
+
 	@Accessor("minecraft")
-	Minecraft create$client();
+	Minecraft create$getMinecraft();
 
 	@Accessor("renderables")
 	List<Widget> create$getRenderables();
-
-	@Accessor("children")
-	List<GuiEventListener> create$getChildren();
 }

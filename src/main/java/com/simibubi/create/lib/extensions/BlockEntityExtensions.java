@@ -13,7 +13,7 @@ public interface BlockEntityExtensions {
 	void create$deserializeNBT(BlockState state, CompoundTag nbt);
 
 	default CompoundTag create$save(CompoundTag tag) {
-		((BlockEntityAccessor) this).callSaveMetadata(tag);
+		((BlockEntityAccessor) this).create$saveMetadata(tag);
 		return tag;
 	};
 }

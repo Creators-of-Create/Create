@@ -95,7 +95,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 			super.renderTooltip(ms, x, y);
 			return;
 		};
-		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), ((SlotAccessor) hoveredSlot).getSlotIndex(), true), x, y);
+		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), ((SlotAccessor) hoveredSlot).create$getSlotIndex(), true), x, y);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		List<Component> list = super.getTooltipFromItem(stack);
 		if (hoveredSlot.container == menu.playerInventory)
 			return list;
-		return hoveredSlot != null ? addToTooltip(list, ((SlotAccessor) hoveredSlot).getSlotIndex(), false) : list;
+		return hoveredSlot != null ? addToTooltip(list, ((SlotAccessor) hoveredSlot).create$getSlotIndex(), false) : list;
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot, boolean isEmptySlot) {

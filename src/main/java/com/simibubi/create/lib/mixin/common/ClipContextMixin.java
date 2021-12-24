@@ -12,19 +12,13 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
 @Mixin(ClipContext.class)
-public class ClipContextMixin {
+public abstract class ClipContextMixin {
 	@Mutable
 	@Shadow
 	@Final
 	private CollisionContext collisionContext;
 
-	@Redirect(
-			method = "<init>",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/world/phys/shapes/CollisionContext;of(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/shapes/CollisionContext;"
-			)
-	)
+	@Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/shapes/CollisionContext;of(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/shapes/CollisionContext;"))
 	private CollisionContext create$redirectCollisionContext(Entity entity) {
 		if (entity == null) {
 			return CollisionContext.empty();

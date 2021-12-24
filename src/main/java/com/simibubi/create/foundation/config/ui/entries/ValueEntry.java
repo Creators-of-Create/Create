@@ -139,7 +139,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
 	protected void bumpCog() {bumpCog(10f);}
 	protected void bumpCog(float force) {
-		AbstractSelectionList<?> list = ((AbstractSelectionList$EntryAccessor<?>) this).getList();
+		AbstractSelectionList<?> list = ((AbstractSelectionList$EntryAccessor<?>) this).create$getList();
 		if (list != null && list instanceof ConfigScreenList)
 			((ConfigScreenList) list).bumpCog(force);
 	}

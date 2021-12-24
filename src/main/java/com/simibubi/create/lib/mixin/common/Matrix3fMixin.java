@@ -1,12 +1,13 @@
 package com.simibubi.create.lib.mixin.common;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.lib.extensions.Matrix3fExtensions;
 import com.simibubi.create.lib.util.MixinHelper;
+
+import javax.annotation.Nonnull;
 
 @Mixin(Matrix3f.class)
 public abstract class Matrix3fMixin implements Matrix3fExtensions {
@@ -45,7 +46,7 @@ public abstract class Matrix3fMixin implements Matrix3fExtensions {
 	}
 
 	@Override
-	public void create$set(@NotNull Matrix3f other) {
+	public void create$set(@Nonnull Matrix3f other) {
 		Matrix3fMixin o = MixinHelper.cast(other); // This will look weird in the merged class
 
 		m00 = o.m00;

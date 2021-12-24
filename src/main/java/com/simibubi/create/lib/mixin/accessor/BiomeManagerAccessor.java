@@ -8,5 +8,5 @@ import net.minecraft.world.level.biome.BiomeManager;
 @Mixin(BiomeManager.class)
 public interface BiomeManagerAccessor {
 	@Accessor("biomeZoomSeed")
-	long create$biomeZoomSeed();
+	long create$getBiomeZoomSeed();
 }

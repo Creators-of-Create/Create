@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 public interface StructureTemplateExtensions {
 	List<StructureTemplate.StructureEntityInfo> create$getEntities();
 
-	Vec3 transformedVec3d(StructurePlaceSettings placementIn, Vec3 pos);
+	Vec3 create$transformedVec3d(StructurePlaceSettings placementIn, Vec3 pos);
 
 	List<StructureTemplate.StructureEntityInfo> create$processEntityInfos(@Nullable StructureTemplate template, LevelAccessor world, BlockPos blockPos, StructurePlaceSettings settings, List<StructureTemplate.StructureEntityInfo> infos);
 

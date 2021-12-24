@@ -152,7 +152,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		textField.x = x + width - 82 - resetWidth;
 		textField.y = y + 8;
 		textField.setWidth(Math.min(width - getLabelWidth(width) - resetWidth - minOffset - maxOffset, 40));
-		((AbstractWidgetAccessor) textField).setHeight(20);
+		((AbstractWidgetAccessor) textField).create$setHeight(20);
 		textField.render(ms, mouseX, mouseY, partialTicks);
 
 		if (minText != null)

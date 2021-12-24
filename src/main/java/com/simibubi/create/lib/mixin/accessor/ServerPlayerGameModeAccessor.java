@@ -10,8 +10,8 @@ import net.minecraft.server.level.ServerPlayerGameMode;
 @Mixin(ServerPlayerGameMode.class)
 public interface ServerPlayerGameModeAccessor {
 	@Accessor("level")
-	ServerLevel getLevel();
+	ServerLevel create$getLevel();
 
 	@Accessor("player")
-	ServerPlayer getPlayer();
+	ServerPlayer create$getPlayer();
 }

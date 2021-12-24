@@ -7,10 +7,10 @@ import net.minecraft.world.item.ItemStack;
 
 public class FirstPersonRendererHelper {
 	public static ItemStack getStackInMainHand(ItemInHandRenderer renderer) {
-		return ((ItemInHandRendererAccessor) renderer).getItemStackMainHand();
+		return ((ItemInHandRendererAccessor) renderer).create$getMainHandItem();
 	}
 
 	public static ItemStack getStackInOffHand(ItemInHandRenderer renderer) {
-		return ((ItemInHandRendererAccessor) renderer).getItemStackOffHand();
+		return ((ItemInHandRendererAccessor) renderer).create$getOffHandItem();
 	}
 }

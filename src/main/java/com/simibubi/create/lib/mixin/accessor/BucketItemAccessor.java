@@ -9,5 +9,5 @@ import net.minecraft.world.level.material.Fluid;
 @Mixin(BucketItem.class)
 public interface BucketItemAccessor {
 	@Accessor("content")
-	Fluid getContent();
+	Fluid create$getContent();
 }

@@ -30,13 +30,17 @@ public abstract class TerrainParticleMixin extends TextureSheetParticle implemen
 		throw new AssertionError("Create Refabricated's TerrainParticleMixin dummy constructor called!");
 	}
 
-	@Inject(at = @At("RETURN"), method = "<init>(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V")
-	private void create$init(ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
+	@Inject(
+			method = "<init>(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V",
+			at = @At("RETURN")
+	)
+	private void create$init(ClientLevel clientLevel, double d, double e, double f, double g, double h, double i,
+							 BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
 		this.create$state = blockState;
 	}
 
-	@Override
 	@Unique
+	@Override
 	public Particle create$updateSprite(BlockPos pos) {
 		if (pos != null)
 			this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getParticleIcon(create$state));

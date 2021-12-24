@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.world.level.chunk.ChunkStatus;
 
 @Mixin(ChunkStatus.class)
-public class ChunkStatusMixin {
+public abstract class ChunkStatusMixin {
 	@Shadow
 	@Final
 	@Mutable

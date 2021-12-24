@@ -10,7 +10,7 @@ import net.minecraft.client.KeyMapping;
 @Environment(EnvType.CLIENT)
 public final class KeyBindingHelper {
 	public static InputConstants.Key getKeyCode(KeyMapping keyBinding) {
-		return get(keyBinding).create$key();
+		return get(keyBinding).create$getKey();
 	}
 
 	private static KeyMappingAccessor get(KeyMapping keyBinding) {

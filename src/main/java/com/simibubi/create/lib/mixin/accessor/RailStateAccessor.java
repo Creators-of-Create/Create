@@ -10,11 +10,11 @@ import net.minecraft.world.level.block.RailState;
 @Mixin(RailState.class)
 public interface RailStateAccessor {
 	@Accessor("pos")
-	BlockPos create$pos();
-
-	@Invoker("removeSoftConnections")
-	void create$removeSoftConnections();
+	BlockPos create$getPos();
 
 	@Invoker("canConnectTo")
 	boolean create$canConnectTo(RailState railState);
+
+	@Invoker("removeSoftConnections")
+	void create$removeSoftConnections();
 }

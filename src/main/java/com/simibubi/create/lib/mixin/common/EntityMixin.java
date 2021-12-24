@@ -36,14 +36,13 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 	public Level level;
 	@Shadow
 	private float eyeHeight;
-
-	@Shadow
-	protected abstract void readAdditionalSaveData(CompoundTag compoundTag);
-
 	@Unique
 	private CompoundTag create$extraCustomData;
 	@Unique
 	private Collection<ItemEntity> create$captureDrops = null;
+
+	@Shadow
+	protected abstract void readAdditionalSaveData(CompoundTag compoundTag);
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	public void create$entityInit(EntityType<?> entityType, Level world, CallbackInfo ci) {
@@ -54,9 +53,16 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 
 	// CAPTURE DROPS
 
-	@Inject(locals = LocalCapture.CAPTURE_FAILHARD,
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;setDefaultPickUpDelay()V", shift = At.Shift.AFTER),
-			method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;", cancellable = true)
+	@Inject(
+			method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;",
+			locals = LocalCapture.CAPTURE_FAILHARD,
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/item/ItemEntity;setDefaultPickUpDelay()V",
+					shift = At.Shift.AFTER
+			),
+			cancellable = true
+	)
 	public void create$spawnAtLocation(ItemStack stack, float f, CallbackInfoReturnable<ItemEntity> cir, ItemEntity itemEntity) {
 		if (create$captureDrops != null) create$captureDrops.add(itemEntity);
 		else cir.cancel();
@@ -78,8 +84,7 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 
 	// EXTRA CUSTOM DATA
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"),
-			method = "saveWithoutId")
+	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	public void create$beforeWriteCustomData(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
 		if (create$extraCustomData != null && !create$extraCustomData.isEmpty()) {
 			Create.LOGGER.debug("writing custom data to entity [{}]", MixinHelper.<Entity>cast(this).toString());
@@ -87,7 +92,7 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"), method = "load")
+	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	public void create$beforeReadCustomData(CompoundTag tag, CallbackInfo ci) {
 		if (tag.contains(EntityHelper.EXTRA_DATA_KEY)) {
 			create$extraCustomData = tag.getCompound(EntityHelper.EXTRA_DATA_KEY);
@@ -96,26 +101,40 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 
 	// RUNNING EFFECTS
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;", shift = At.Shift.AFTER),
+	@Inject(
+			method = "spawnSprintParticle",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
+					shift = At.Shift.AFTER
+			),
 			locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "spawnSprintParticle", cancellable = true)
+			cancellable = true
+	)
 	public void create$spawnSprintParticle(CallbackInfo ci, int i, int j, int k, BlockPos blockPos) {
 		if (((BlockStateExtensions) level.getBlockState(blockPos)).create$addRunningEffects(level, blockPos, MixinHelper.cast(this))) {
 			ci.cancel();
 		}
 	}
 
-	//
+	// (did someone intend to write something here?)
 
-	@Inject(method = "discard()V", at = @At("HEAD"))
+	@Inject(method = "discard", at = @At("HEAD"))
 	public void create$discard(CallbackInfo ci) {
 		if (this instanceof ListenerProvider) {
 			((ListenerProvider) this).invalidate();
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;canAddPassenger(Lnet/minecraft/world/entity/Entity;)Z", shift = At.Shift.BEFORE),
-			method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", cancellable = true)
+	@Inject(
+			method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/Entity;canAddPassenger(Lnet/minecraft/world/entity/Entity;)Z",
+					shift = At.Shift.BEFORE
+			),
+			cancellable = true
+	)
 	public void create$startRiding(Entity entity, boolean bl, CallbackInfoReturnable<Boolean> cir) {
 		if (StartRidingCallback.EVENT.invoker().onStartRiding(MixinHelper.cast(this), entity) == InteractionResult.FAIL) {
 			cir.setReturnValue(false);

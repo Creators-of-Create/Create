@@ -11,5 +11,5 @@ import net.minecraft.client.particle.Particle;
 @Mixin(Particle.class)
 public interface ParticleAccessor {
 	@Accessor("stoppedByCollision")
-	void create$stoppedByCollision(boolean stoppedByCollision);
+	void create$setStoppedByCollision(boolean stoppedByCollision);
 }

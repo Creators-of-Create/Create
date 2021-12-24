@@ -13,13 +13,14 @@ import net.minecraft.world.item.ArmorItem;
 
 @Environment(EnvType.CLIENT)
 @Mixin(HumanoidArmorLayer.class)
-public class HumanoidArmorLayerMixin {
-	private static final ResourceLocation copperArmorLocation = new ResourceLocation("create", "textures/models/armor/copper.png");
+public abstract class HumanoidArmorLayerMixin {
 
-	@Inject(at = @At("HEAD"), method = "getArmorLocation(Lnet/minecraft/world/item/ArmorItem;ZLjava/lang/String;)Lnet/minecraft/resources/ResourceLocation;", cancellable = true)
-	private void getArmorLocation(ArmorItem armorItem, boolean bl, String string, CallbackInfoReturnable<ResourceLocation> cir) {
+	private static final ResourceLocation create$copperArmorLocation = new ResourceLocation("create", "textures/models/armor/copper.png");
+
+	@Inject(method = "getArmorLocation", at = @At("HEAD"), cancellable = true)
+	private void create$getArmorLocation(ArmorItem armorItem, boolean bl, String string, CallbackInfoReturnable<ResourceLocation> cir) {
 		if (armorItem.getMaterial().getName().equals("copper")) {
-			cir.setReturnValue(copperArmorLocation);
+			cir.setReturnValue(create$copperArmorLocation);
 		}
 	}
 }

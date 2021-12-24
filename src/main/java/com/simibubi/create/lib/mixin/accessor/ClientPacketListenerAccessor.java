@@ -11,5 +11,5 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 @Mixin(ClientPacketListener.class)
 public interface ClientPacketListenerAccessor {
 	@Accessor("serverChunkRadius")
-	int create$serverChunkRadius();
+	int create$getServerChunkRadius();
 }

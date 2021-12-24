@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
-public class AbstractFurnaceBlockEntityMixin {
+public abstract class AbstractFurnaceBlockEntityMixin {
 	@Inject(method = "getBurnDuration", at = @At("HEAD"), cancellable = true)
 	protected void create$getBurnDuration(ItemStack itemStack, CallbackInfoReturnable<Integer> cir) {
 		if (itemStack.is(AllItems.CREATIVE_BLAZE_CAKE.get())) {

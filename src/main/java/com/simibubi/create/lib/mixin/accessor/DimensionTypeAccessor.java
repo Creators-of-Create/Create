@@ -7,8 +7,8 @@ import net.minecraft.world.level.dimension.DimensionType;
 
 @Mixin(DimensionType.class)
 public interface DimensionTypeAccessor {
-	@Accessor
-	static DimensionType getDEFAULT_OVERWORLD() {
-		throw new UnsupportedOperationException();
+	@Accessor("DEFAULT_OVERWORLD")
+	static DimensionType create$getDefaultOverworld() {
+		throw new AssertionError("Mixin application failed!");
 	}
 }

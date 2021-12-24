@@ -9,5 +9,5 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @Mixin(VoxelShape.class)
 public interface VoxelShapeAccessor {
 	@Accessor("shape")
-	DiscreteVoxelShape getShape();
+	DiscreteVoxelShape create$getShape();
 }

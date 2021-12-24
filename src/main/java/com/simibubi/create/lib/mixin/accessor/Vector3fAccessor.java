@@ -8,11 +8,11 @@ import com.mojang.math.Vector3f;
 @Mixin(Vector3f.class)
 public interface Vector3fAccessor {
 	@Accessor("x")
-	void create$x(float x);
+	void create$setX(float x);
 
 	@Accessor("y")
-	void create$y(float y);
+	void create$setY(float y);
 
 	@Accessor("z")
-	void create$z(float z);
+	void create$setZ(float z);
 }

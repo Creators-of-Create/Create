@@ -8,5 +8,5 @@ import net.minecraft.world.inventory.Slot;
 @Mixin(Slot.class)
 public interface SlotAccessor {
 	@Accessor("slot")
-	int getSlotIndex();
+	int create$getSlotIndex();
 }

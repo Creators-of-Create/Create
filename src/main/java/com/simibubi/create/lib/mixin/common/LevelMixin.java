@@ -25,8 +25,8 @@ public abstract class LevelMixin {
 	@Shadow
 	public abstract BlockState getBlockState(BlockPos blockPos);
 
-	@Inject(at = @At("RETURN"), method = "getSignal", cancellable = true)
-	public void create$getRedstonePower(BlockPos blockPos, Direction direction, CallbackInfoReturnable<Integer> cir) {
+	@Inject(method = "getSignal", at = @At("RETURN"), cancellable = true)
+	public void create$getRedstoneSignal(BlockPos blockPos, Direction direction, CallbackInfoReturnable<Integer> cir) {
 		BlockState create$blockstate = MixinHelper.<Level>cast(this).getBlockState(blockPos);
 		int create$i = create$blockstate.getSignal(MixinHelper.<Level>cast(this), blockPos, direction);
 
@@ -38,9 +38,15 @@ public abstract class LevelMixin {
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"),
-			locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "updateNeighbourForOutputSignal")
+	@Inject(
+			method = "updateNeighbourForOutputSignal",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
+					shift = At.Shift.AFTER
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
 	public void create$updateComparatorOutputLevel(BlockPos blockPos, Block block, CallbackInfo ci,
 												   Iterator<?> var3, Direction direction, BlockPos blockPos2) {
 		((BlockStateExtensions) getBlockState(blockPos2)).create$onNeighborChange(MixinHelper.cast(this), blockPos2, blockPos);

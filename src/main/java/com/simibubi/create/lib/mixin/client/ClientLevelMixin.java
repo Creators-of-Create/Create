@@ -22,8 +22,8 @@ public abstract class ClientLevelMixin {
 	@Final
 	private Minecraft minecraft;
 
-	@Inject(at = @At("TAIL"), method = "<init>")
-	public void create$onTailInit(CallbackInfo ci) {
+	@Inject(method = "<init>", at = @At("TAIL"))
+	public void create$init(CallbackInfo ci) {
 		ClientWorldEvents.LOAD.invoker().onWorldLoad(minecraft, MixinHelper.cast(this));
 	}
 }

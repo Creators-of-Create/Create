@@ -12,8 +12,8 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(ItemInHandRenderer.class)
 public interface ItemInHandRendererAccessor {
 	@Accessor("mainHandItem")
-	ItemStack getItemStackMainHand();
+	ItemStack create$getMainHandItem();
 
 	@Accessor("offHandItem")
-	ItemStack getItemStackOffHand();
+	ItemStack create$getOffHandItem();
 }

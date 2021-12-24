@@ -39,11 +39,12 @@ public abstract class FireBlockMixin extends BaseFireBlock implements FireBlockE
 	}
 
 	@Override
-	public boolean canCatchFire(BlockGetter world, BlockPos pos, Direction face) {
+	public boolean create$canCatchFire(BlockGetter world, BlockPos pos, Direction face) {
 		return ((BlockStateExtensions) world.getBlockState(pos)).create$isFlammable(world, pos, face);
 	}
 
-	public int invokeGetBurnOdd(BlockState state) {
+	@Override
+	public int create$invokeGetBurnOdd(BlockState state) {
 		return getBurnOdd(state);
 	}
 
@@ -65,7 +66,7 @@ public abstract class FireBlockMixin extends BaseFireBlock implements FireBlockE
 				Direction direction = var6[var8];
 				BooleanProperty booleanProperty = PROPERTY_BY_DIRECTION.get(direction);
 				if (booleanProperty != null) {
-					blockState2 = blockState2.setValue(booleanProperty, this.canBurn(blockState2) || canCatchFire(iBlockReader, blockPos, direction));
+					blockState2 = blockState2.setValue(booleanProperty, this.canBurn(blockState2) || create$canCatchFire(iBlockReader, blockPos, direction));
 				}
 			}
 
@@ -75,21 +76,36 @@ public abstract class FireBlockMixin extends BaseFireBlock implements FireBlockE
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", shift = At.Shift.BEFORE, ordinal = 1, target = "Ljava/util/Random;nextInt(I)I"),
-			method = "tick", cancellable = true)
+	@Inject(
+			method = "tick",
+			at = @At(
+					value = "INVOKE",
+					target = "Ljava/util/Random;nextInt(I)I",
+					ordinal = 1,
+					shift = At.Shift.BEFORE
+			),
+			cancellable = true
+	)
 	public void create$scheduledTick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, Random random, CallbackInfo ci) {
-		if (blockState.getValue(FireBlock.AGE) == 15 && random.nextInt(4) == 0 && !canCatchFire(serverWorld, blockPos.below(), Direction.UP)) {
+		if (blockState.getValue(FireBlock.AGE) == 15 && random.nextInt(4) == 0 && !create$canCatchFire(serverWorld, blockPos.below(), Direction.UP)) {
 			serverWorld.removeBlock(blockPos, false);
 			ci.cancel();
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/level/block/FireBlock;canBurn(Lnet/minecraft/world/level/block/state/BlockState;)Z"),
+	@Inject(
+			method = "isValidFireLocation",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/block/FireBlock;canBurn(Lnet/minecraft/world/level/block/state/BlockState;)Z",
+					shift = At.Shift.BEFORE
+			),
 			locals = LocalCapture.CAPTURE_FAILHARD,
-			method = "isValidFireLocation", cancellable = true)
+			cancellable = true
+	)
 	private void create$areNeighborsFlammable(BlockGetter iBlockReader, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir,
 											  Direction[] var3, int var4, int var5, Direction direction) {
-		if (this.canCatchFire(iBlockReader, blockPos.relative(direction), direction.getOpposite())) {
+		if (this.create$canCatchFire(iBlockReader, blockPos.relative(direction), direction.getOpposite())) {
 			cir.setReturnValue(true);
 		}
 	}

@@ -8,4 +8,5 @@ import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(BlockState.class)
 public abstract class BlockStateMixin implements BlockStateExtensions {
+	// This space for rent
 }

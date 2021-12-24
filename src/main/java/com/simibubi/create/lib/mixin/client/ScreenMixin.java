@@ -30,18 +30,18 @@ public abstract class ScreenMixin {
 	}
 
 	@Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("RETURN"))
-	private void create$wipeCachedItemStack(PoseStack matrixStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+	private void create$clearCachedItemStack(PoseStack matrixStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
 		create$cachedStack = ItemStack.EMPTY;
 	}
 
-	@Inject(method = "renderTooltipInternal(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;II)V", at = @At("HEAD"))
-	private void create$getBorderColors(PoseStack matrixStack, List<? extends FormattedCharSequence> list, int i, int j, CallbackInfo ci) {
+	@Inject(method = "renderTooltipInternal", at = @At("HEAD"))
+	private void create$cacheBorderColors(PoseStack matrixStack, List<? extends FormattedCharSequence> list, int i, int j, CallbackInfo ci) {
 		ScreenHelper.CURRENT_COLOR = RenderTooltipBorderColorCallback.EVENT.invoker()
 				.onTooltipBorderColor(create$cachedStack, ScreenHelper.DEFAULT_BORDER_COLOR_START, ScreenHelper.DEFAULT_BORDER_COLOR_END);
 	}
 
-	@Inject(method = "renderTooltipInternal(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;II)V", at = @At("RETURN"))
-	private void create$wipeBorderColors(PoseStack matrixStack, List<? extends FormattedCharSequence> list, int i, int j, CallbackInfo ci) {
+	@Inject(method = "renderTooltipInternal", at = @At("RETURN"))
+	private void create$clearBorderColors(PoseStack matrixStack, List<? extends FormattedCharSequence> list, int i, int j, CallbackInfo ci) {
 		ScreenHelper.CURRENT_COLOR = null;
 	}
 }

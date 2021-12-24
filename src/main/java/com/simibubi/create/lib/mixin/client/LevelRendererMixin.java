@@ -32,14 +32,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
 	@Shadow
+	@Final
+	private Minecraft minecraft;
+
+	@Shadow
 	private @Nullable Frustum capturedFrustum;
 
 	@Shadow
 	private Frustum cullingFrustum;
-
-	@Shadow
-	@Final
-	private Minecraft minecraft;
 
 	@Redirect(
 			method = "renderLevel",
@@ -58,7 +58,7 @@ public abstract class LevelRendererMixin {
 					target = "Ljava/util/Iterator;next()Ljava/lang/Object;"
 			)
 	)
-	private <E> E redirectBlockEntityIterator(Iterator<E> instance) {
+	private <E> E create$redirectBlockEntityIterator(Iterator<E> instance) {
 		E obj = instance.next();
 		BlockEntity next = (BlockEntity) obj;
 		if (next instanceof CustomRenderBoundingBox custom) {
@@ -69,19 +69,32 @@ public abstract class LevelRendererMixin {
 				if (!instance.hasNext()) {
 					return obj;
 				}
-				return redirectBlockEntityIterator(instance);
+				return create$redirectBlockEntityIterator(instance);
 			}
 		}
 		return obj;
 	}
 
-	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V", ordinal = 0))
-	public void setBur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).setBlurMipmap(false, this.minecraft.options.mipmapLevels > 0);
+	@Inject(method = "renderLevel",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V",
+					ordinal = 0
+			)
+	)
+	public void create$setBlur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).create$setBlurMipmap(false, this.minecraft.options.mipmapLevels > 0);
 	}
 
-	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V", ordinal = 1))
-	public void lastBlur	(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).restoreLastBlurMipmap();
+	@Inject(
+			method = "renderLevel",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V",
+					ordinal = 1
+			)
+	)
+	public void create$lastBlur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).create$restoreLastBlurMipmap();
 	}
 }

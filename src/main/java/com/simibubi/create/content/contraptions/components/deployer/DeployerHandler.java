@@ -110,7 +110,7 @@ public class DeployerHandler {
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
-			Fluid fluid = ((BucketItemAccessor) bucketItem).getContent();
+			Fluid fluid = ((BucketItemAccessor) bucketItem).create$getContent();
 			if (fluid != Fluids.EMPTY && world.getFluidState(targetPos)
 				.getType() == fluid)
 				return false;

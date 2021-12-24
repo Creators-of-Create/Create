@@ -10,8 +10,10 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 @Mixin(ShapelessRecipe.Serializer.class)
 public abstract class ShapelessRecipe$SerializerMixin {
-	@ModifyConstant(method = "fromJson",
-			constant = @Constant(intValue = 9))
+	@ModifyConstant(
+			method = "fromJson",
+			constant = @Constant(intValue = 9)
+	)
 	private static int modifyMaxItemsInRecipe(int original) {
 		return Constants.Crafting.HEIGHT * Constants.Crafting.WIDTH;
 	}

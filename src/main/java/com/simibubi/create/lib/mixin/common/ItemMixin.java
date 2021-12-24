@@ -19,8 +19,8 @@ public abstract class ItemMixin implements ItemExtensions {
 	@Unique
 	private Supplier<Item> create$supplier;
 
-	@Override
 	@Unique
+	@Override
 	public Supplier<Item> create$getSupplier() {
 		return create$supplier;
 	}

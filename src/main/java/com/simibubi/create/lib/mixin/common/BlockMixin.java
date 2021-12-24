@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(Block.class)
 public abstract class BlockMixin extends BlockBehaviour implements BlockExtensions {
+
 	private BlockMixin(Properties properties) {
 		super(properties);
 	}

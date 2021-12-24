@@ -17,9 +17,10 @@ import net.minecraft.world.level.block.Blocks;
 @Environment(EnvType.CLIENT)
 @Mixin(TerrainParticle.Provider.class)
 public abstract class TerrainParticle$ProviderMixin implements TerrainParticle$ProviderExtensions {
-	@Override
 	@Unique
-	public Particle create$makeParticleAtPos(BlockParticleOption blockParticleData, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+	@Override
+	public Particle create$makeParticleAtPos(BlockParticleOption blockParticleData, ClientLevel clientWorld,
+											 double d, double e, double f, double g, double h, double i) {
 		return !blockParticleData.getState().isAir() && !blockParticleData.getState().is(Blocks.MOVING_PISTON)
 				? ((TerrainParticle$ProviderExtensions) (new TerrainParticle(clientWorld, d, e, f, g, h, i, blockParticleData.getState()))).create$updateSprite(((BlockParticleOptionExtensions) blockParticleData).create$getPos())
 				: null;

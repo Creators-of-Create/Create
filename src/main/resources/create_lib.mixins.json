@@ -78,8 +78,7 @@
     "common.StructureProcessorMixin",
     "common.StructureTemplateMixin",
     "common.WalkNodeEvaluatorMixin",
-    "compat.lithium.EntityMixin",
-    "server.PlayerListMixin"
+    "compat.lithium.EntityMixin"
   ],
   "client": [
     "accessor.AbstractWidgetAccessor",
@@ -119,10 +118,6 @@
     "client.ScreenMixin",
     "client.TerrainParticle$ProviderMixin",
     "client.TerrainParticleMixin"
-  ],
-  "server": [
-    "server.Vec3Mixin",
-    "server.WoodTypeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

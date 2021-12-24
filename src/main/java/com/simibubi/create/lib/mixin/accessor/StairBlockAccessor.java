@@ -11,6 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface StairBlockAccessor {
 	@Invoker("<init>")
 	static StairBlock create$init(BlockState baseBlockState, BlockBehaviour.Properties properties) {
-		throw new AssertionError();
+		throw new AssertionError("Mixin application failed!");
 	}
 }

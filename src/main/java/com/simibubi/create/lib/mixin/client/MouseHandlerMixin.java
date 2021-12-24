@@ -19,12 +19,31 @@ import net.minecraft.client.MouseHandler;
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
 	// First return opcode is jumped over if condition is met.
-	@Inject(slice = @Slice(from = @At(value = "RETURN", ordinal = 0, shift = Shift.AFTER)), at = @At(value = "RETURN"), method = "onPress(JIII)V")
+	@Inject(
+			method = "onPress",
+			slice = @Slice(
+					from = @At(
+							value = "RETURN",
+							ordinal = 0,
+							shift = Shift.AFTER
+					)
+			),
+			at = @At(value = "RETURN"
+			)
+	)
 	private void create$onHandleMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
 		MouseButtonCallback.EVENT.invoker().onMouseButton(button, action, mods);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z"), method = "onScroll(JDD)V", locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	@Inject(
+			method = "onScroll",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z"
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD,
+			cancellable = true
+	)
 	private void create$onHandleMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci, double delta) {
 		boolean cancelled = MouseScrolledCallback.EVENT.invoker().onMouseScrolled(delta);
 		if (cancelled) {

@@ -14,13 +14,21 @@ import com.simibubi.create.lib.extensions.RenderTargetExtensions;
 import net.minecraft.client.renderer.PostChain;
 
 @Mixin(PostChain.class)
-public class PostChainMixin {
+public abstract class PostChainMixin {
 	@Shadow
 	@Final
 	private RenderTarget screenTarget;
 
-	@Inject(method = "addTempTarget", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;setClearColor(FFFF)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-	public void isStenicl(String name, int width, int height, CallbackInfo ci, RenderTarget rendertarget) {
-		if (((RenderTargetExtensions)screenTarget).isStencilEnabled()) { ((RenderTargetExtensions)rendertarget).enableStencil(); }
+	@Inject(
+			method = "addTempTarget",
+			at = @At(
+					value = "INVOKE",
+					target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;setClearColor(FFFF)V",
+					shift = At.Shift.AFTER
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	public void create$isStencil(String name, int width, int height, CallbackInfo ci, RenderTarget rendertarget) {
+		if (((RenderTargetExtensions)screenTarget).create$isStencilEnabled()) { ((RenderTargetExtensions)rendertarget).create$enableStencil(); }
 	}
 }

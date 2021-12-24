@@ -9,6 +9,8 @@ import com.mojang.math.Matrix4f;
 import com.simibubi.create.lib.extensions.Matrix4fExtensions;
 import com.simibubi.create.lib.util.MixinHelper;
 
+import javax.annotation.Nonnull;
+
 @Mixin(Matrix4f.class)
 public abstract class Matrix4fMixin implements Matrix4fExtensions {
 	@Shadow
@@ -45,7 +47,7 @@ public abstract class Matrix4fMixin implements Matrix4fExtensions {
 	protected float m33;
 
 	@Override
-	public void create$set(@NotNull Matrix4f other) {
+	public void create$set(@Nonnull Matrix4f other) {
 		Matrix4fMixin o = MixinHelper.cast(other); // This will look weird in the merged class
 
 		m00 = o.m00;
@@ -115,6 +117,7 @@ public abstract class Matrix4fMixin implements Matrix4fExtensions {
 		};
 	}
 
+	@Override
 	public void create$setTranslation(float x, float y, float z) {
 		m00 = 1.0F;
 		m11 = 1.0F;

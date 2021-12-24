@@ -5,15 +5,15 @@ import com.simibubi.create.lib.mixin.accessor.Vector3fAccessor;
 
 public final class Vector3fHelper {
 	public static void setX(Vector3f vector, float x) {
-		get(vector).create$x(x);
+		get(vector).create$setX(x);
 	}
 
 	public static void setY(Vector3f vector, float y) {
-		get(vector).create$y(y);
+		get(vector).create$setY(y);
 	}
 
 	public static void setZ(Vector3f vector, float z) {
-		get(vector).create$z(z);
+		get(vector).create$setZ(z);
 	}
 
 	private static Vector3fAccessor get(Vector3f vector) {

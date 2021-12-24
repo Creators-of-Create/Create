@@ -16,7 +16,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractContainerScreen.class)
-public class AbstractContainerScreenMixin implements AbstractContainerScreenExtensions {
+public abstract class AbstractContainerScreenMixin implements AbstractContainerScreenExtensions {
+
 	private Inventory create$inventory;
 
 	@Override

@@ -18,7 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements NBTSerializable {
-	@Inject(at = @At("HEAD"), method = "getMaxStackSize()I", cancellable = true)
+	@Inject(method = "getMaxStackSize", at = @At("HEAD"), cancellable = true)
 	public void create$onGetMaxCount(CallbackInfoReturnable<Integer> cir) {
 		ItemStack self = (ItemStack) (Object) this;
 		Item item = self.getItem();
@@ -39,9 +39,8 @@ public abstract class ItemStackMixin implements NBTSerializable {
 		MixinHelper.<ItemStack>cast(this).setTag(ItemStack.of(nbt).getTag());
 	}
 
-	@Inject(at = @At("HEAD"),
-			method = "useOn", cancellable = true)
-	public void onItemUse(UseOnContext itemUseContext, CallbackInfoReturnable<InteractionResult> cir) {
+	@Inject(method = "useOn", at = @At("HEAD"),	cancellable = true)
+	public void create$onItemUse(UseOnContext itemUseContext, CallbackInfoReturnable<InteractionResult> cir) {
 		if (!itemUseContext.getLevel().isClientSide) {
 			InteractionResult result = BlockPlaceCallback.EVENT.invoker().onBlockPlace(itemUseContext);
 			if (result != InteractionResult.PASS)

@@ -11,18 +11,19 @@ import net.minecraft.core.particles.BlockParticleOption;
 
 @Mixin(BlockParticleOption.class)
 public abstract class BlockParticleOptionMixin implements BlockParticleOptionExtensions {
-	private BlockPos pos;
 
-	@Override
+	private BlockPos create$pos;
+
 	@Unique
+	@Override
 	public BlockParticleOption create$setPos(BlockPos pos) {
-		this.pos = pos;
+		this.create$pos = pos;
 		return MixinHelper.cast(this);
 	}
 
-	@Override
 	@Unique
+	@Override
 	public BlockPos create$getPos() {
-		return pos;
+		return create$pos;
 	}
 }

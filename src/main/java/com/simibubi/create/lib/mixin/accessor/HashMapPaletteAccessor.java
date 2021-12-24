@@ -8,6 +8,6 @@ import net.minecraft.world.level.chunk.HashMapPalette;
 
 @Mixin(HashMapPalette.class)
 public interface HashMapPaletteAccessor<T> {
-	@Accessor
-	CrudeIncrementalIntIdentityHashBiMap<T> getValues();
+	@Accessor("values")
+	CrudeIncrementalIntIdentityHashBiMap<T> create$getValues();
 }

@@ -148,7 +148,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 
 				BeaconBlockEntity bte = (BeaconBlockEntity) te;
 
-				if (!((BeaconBlockEntityAccessor) bte).create$beamSections().isEmpty())
+				if (!((BeaconBlockEntityAccessor) bte).create$getBeamSections().isEmpty())
 					isOverBeacon = true;
 
 				break;

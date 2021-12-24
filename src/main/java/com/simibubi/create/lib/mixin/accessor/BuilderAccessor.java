@@ -13,6 +13,6 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 @Mixin(BiomeGenerationSettings.Builder.class)
 public interface BuilderAccessor {
 	@Mutable
-	@Accessor
-	void setFeatures(List<List<Supplier<PlacedFeature>>> features);
+	@Accessor("features")
+	void create$setFeatures(List<List<Supplier<PlacedFeature>>> features);
 }

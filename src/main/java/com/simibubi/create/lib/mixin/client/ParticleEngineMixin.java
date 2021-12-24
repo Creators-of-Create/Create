@@ -42,8 +42,15 @@ public abstract class ParticleEngineMixin implements ParticleEngineExtensions {
 		register(type, factory);
 	}
 
-	@Inject(at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/level/block/state/BlockState;getShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;"),
-			method = "destroy", cancellable = true)
+	@Inject(
+			method = "destroy",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/level/block/state/BlockState;getShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
+					shift = At.Shift.BEFORE
+			),
+			cancellable = true
+	)
 	public void create$addBlockDestroyEffects(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
 		if (((BlockStateExtensions) blockState).create$addDestroyEffects(level, blockPos, MixinHelper.cast(this))) {
 			ci.cancel();

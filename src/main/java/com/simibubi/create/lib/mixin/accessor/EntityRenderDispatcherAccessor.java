@@ -16,8 +16,8 @@ import net.minecraft.world.entity.player.Player;
 @Mixin(EntityRenderDispatcher.class)
 public interface EntityRenderDispatcherAccessor {
 	@Accessor("renderers")
-	Map<EntityType<?>, EntityRenderer<?>> getRenderers();
+	Map<EntityType<?>, EntityRenderer<?>> create$getRenderers();
 
 	@Accessor("playerRenderers")
-	Map<String, EntityRenderer<? extends Player>> getPlayerRenderers();
+	Map<String, EntityRenderer<? extends Player>> create$getPlayerRenderers();
 }

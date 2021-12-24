@@ -27,8 +27,9 @@ import net.minecraft.world.phys.Vec3;
 
 @Mixin(AbstractMinecart.class)
 public abstract class AbstractMinecartMixin extends Entity implements AbstractMinecartExtensions {
-	public boolean create$canUseRail = true;
+
 	public MinecartController create$controller = null;
+	public boolean create$canUseRail = true;
 
 	private AbstractMinecartMixin(EntityType<?> entityType, Level world) {
 		super(entityType, world);
@@ -40,14 +41,13 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 	@Shadow
 	public abstract AbstractMinecart.Type getMinecartType();
 
-	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V")
+	@Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V", at = @At("TAIL"))
 	public void create$abstractMinecartEntity(EntityType<?> entityType, Level world, CallbackInfo ci) {
 		create$controller = new MinecartController(MixinHelper.cast(this));
 		CapabilityMinecartController.attach(MixinHelper.cast(this));
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;floor(D)I", ordinal = 4),
-			method = "moveAlongTrack")
+	@Inject(method = "moveAlongTrack", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;floor(D)I", ordinal = 4))
 	protected void create$moveAlongTrack(BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
 		if (blockState.getBlock() instanceof MinecartPassHandlerBlock handler) {
 			handler.onMinecartPass(blockState, level, blockPos, MixinHelper.cast(this));

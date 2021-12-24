@@ -8,5 +8,5 @@ import net.minecraft.client.gui.components.AbstractSelectionList;
 @Mixin(AbstractSelectionList.class)
 public interface AbstractSelectionListAccessor {
 	@Accessor("width")
-	int getWidth();
+	int create$getWidth();
 }

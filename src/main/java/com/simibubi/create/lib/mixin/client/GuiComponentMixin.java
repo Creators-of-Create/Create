@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiComponent;
 
 @Environment(EnvType.CLIENT)
 @Mixin(GuiComponent.class)
-public class GuiComponentMixin {
+public abstract class GuiComponentMixin {
 	@ModifyVariable(
 			method = "fillGradient(Lcom/mojang/math/Matrix4f;Lcom/mojang/blaze3d/vertex/BufferBuilder;IIIIIII)V",
 			at = @At("HEAD"),
@@ -20,7 +20,7 @@ public class GuiComponentMixin {
 			argsOnly = true
 	)
 	private static int create$replaceA(int a) {
-		return getColor(a);
+		return create$getColor(a);
 	}
 
 	@ModifyVariable(
@@ -30,10 +30,10 @@ public class GuiComponentMixin {
 			argsOnly = true
 	)
 	private static int create$replaceB(int b) {
-		return getColor(b);
+		return create$getColor(b);
 	}
 
-	private static int getColor(int original) {
+	private static int create$getColor(int original) {
 		if (ScreenHelper.CURRENT_COLOR != null) {
 			if (original == ScreenHelper.DEFAULT_BORDER_COLOR_START) {
 				return ScreenHelper.CURRENT_COLOR.getBorderColorStart();

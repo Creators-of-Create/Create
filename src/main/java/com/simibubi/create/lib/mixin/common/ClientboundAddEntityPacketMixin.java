@@ -22,13 +22,13 @@ public abstract class ClientboundAddEntityPacketMixin implements ClientboundAddE
 	@Unique
 	private FriendlyByteBuf create$extraDataBuf;
 
-	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/world/entity/Entity;I)V")
-	public void create$onEntityCtor(Entity entity, int entityData, CallbackInfo ci) {
+	@Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;I)V", at = @At("TAIL"))
+	public void create$onEntityInit(Entity entity, int entityData, CallbackInfo ci) {
 		create$setExtraData(entity);
 	}
 
-	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/EntityType;ILnet/minecraft/core/BlockPos;)V")
-	public void create$onEntityCtor(Entity entity, EntityType<?> entityType, int data, BlockPos pos, CallbackInfo ci) {
+	@Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/EntityType;ILnet/minecraft/core/BlockPos;)V", at = @At("TAIL"))
+	public void create$onEntityInit(Entity entity, EntityType<?> entityType, int data, BlockPos pos, CallbackInfo ci) {
 		create$setExtraData(entity);
 	}
 
@@ -40,14 +40,14 @@ public abstract class ClientboundAddEntityPacketMixin implements ClientboundAddE
 		}
 	}
 
-	@Inject(at = @At("TAIL"), method = "write")
+	@Inject(method = "write", at = @At("TAIL"))
 	public void create$onTailWrite(FriendlyByteBuf buf, CallbackInfo ci) {
 		if (create$extraDataBuf != null) {
 			buf.writeBytes(create$extraDataBuf);
 		}
 	}
 
-	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V")
+	@Inject(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("TAIL"))
 	public void create$onTailRead(FriendlyByteBuf buf, CallbackInfo ci) {
 		int readable = buf.readableBytes();
 		if (readable != 0) {
@@ -55,7 +55,7 @@ public abstract class ClientboundAddEntityPacketMixin implements ClientboundAddE
 		}
 	}
 
-	@Inject(at = @At("TAIL"), method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V")
+	@Inject(method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V", at = @At("TAIL"))
 	public void create$onTailApply(ClientGamePacketListener listener, CallbackInfo ci) {
 		if (create$extraDataBuf != null) {
 			create$extraDataBuf.release();
