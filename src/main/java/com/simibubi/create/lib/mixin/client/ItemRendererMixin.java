@@ -17,9 +17,9 @@ import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
 @Mixin(value = ItemRenderer.class, priority = 10000)
-public class ItemRendererMixin {
+public abstract class ItemRendererMixin {
 	@ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
-	private BakedModel handleModel(BakedModel model, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean leftHand, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model1) {
+	private BakedModel create$handleModel(BakedModel model, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean leftHand, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model1) {
 		if (model instanceof TransformTypeDependentItemBakedModel handler) {
 			return handler.create$handlePerspective(transformType);
 		}

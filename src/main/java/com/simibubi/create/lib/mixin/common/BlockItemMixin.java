@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockItem.class)
-public class BlockItemMixin {
+public abstract class BlockItemMixin {
 	@Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
 	private void create$useOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
 		InteractionResult result = BlockPlaceCallback.EVENT.invoker().onBlockPlace(new BlockPlaceContext(context));
