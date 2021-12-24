@@ -17,14 +17,14 @@ public class FogEvents {
 		return density;
 	});
 
-	public static final Event<SetColor> SET_COLOR = EventFactory.createArrayBacked(SetColor.class, callbacks -> (info, color) -> {
+	public static final Event<SetColor> SET_COLOR = EventFactory.createArrayBacked(SetColor.class, callbacks -> data -> {
 		for (SetColor callback : callbacks) {
-			callback.setColor(info, color);
+			callback.setColor(data);
 		}
-		return color;
 	});
 
-	private FogEvents() {}
+	private FogEvents() {
+	}
 
 	@FunctionalInterface
 	public interface SetDensity {
@@ -33,6 +33,48 @@ public class FogEvents {
 
 	@FunctionalInterface
 	public interface SetColor {
-		Vector3f setColor(Camera activeRenderInfo, Vector3f color);
+		void setColor(ColorData d);
+	}
+
+	public static class ColorData {
+		private final Camera camera;
+		private float red;
+		private float green;
+		private float blue;
+
+		public ColorData(Camera camera, float r, float g, float b) {
+			this.camera = camera;
+			this.red = r;
+			this.green = g;
+			this.blue = b;
+		}
+
+		public Camera getCamera() {
+			return camera;
+		}
+
+		public float getRed() {
+			return red;
+		}
+
+		public float getGreen() {
+			return green;
+		}
+
+		public float getBlue() {
+			return blue;
+		}
+
+		public void setRed(float red) {
+			this.red = red;
+		}
+
+		public void setGreen(float green) {
+			this.green = green;
+		}
+
+		public void setBlue(float blue) {
+			this.blue = blue;
+		}
 	}
 }

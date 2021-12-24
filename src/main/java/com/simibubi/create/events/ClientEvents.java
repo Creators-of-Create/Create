@@ -63,6 +63,7 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import com.simibubi.create.lib.event.ClientWorldEvents;
 import com.simibubi.create.lib.event.FogEvents;
+import com.simibubi.create.lib.event.FogEvents.ColorData;
 import com.simibubi.create.lib.event.LeftClickAirCallback;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
@@ -280,29 +281,27 @@ public class ClientEvents {
 		return currentDensity;
 	}
 
-	public static Vector3f getFogColor(Camera info, Vector3f currentColor) {
+	public static void getFogColor(ColorData event) {
+		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
-           return currentColor;
+		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+			return;
 
 		Fluid fluid = fluidstate.getType();
 
 		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
-//			event.setRed(98 / 256f);
-//			event.setGreen(32 / 256f);
-//			event.setBlue(32 / 256f);
-			return new Vector3f(98 / 256f, 32 / 256f, 32 / 256f);
+			event.setRed(98 / 256f);
+			event.setGreen(32 / 256f);
+			event.setBlue(32 / 256f);
 		}
 
 		if (AllFluids.HONEY.get().isSame(fluid)) {
-//			event.setRed(234 / 256f);
-//			event.setGreen(174 / 256f);
-//			event.setBlue(47 / 256f);
-			return new Vector3f(234 / 256f, 174 / 256f, 47 / 256f);
+			event.setRed(234 / 256f);
+			event.setGreen(174 / 256f);
+			event.setBlue(47 / 256f);
 		}
-		return currentColor;
 	}
 
 	public static void leftClickEmpty(LocalPlayer player) {
