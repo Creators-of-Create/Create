@@ -346,16 +346,24 @@ public class KineticTileEntity extends SmartTileEntity
 
 	public void attachKinetics() {
 		updateSpeed = false;
-		KineticSolver solver = KineticSolver.getSolver(level);
 
+		KineticSolver solver = KineticSolver.getSolver(level);
 		BlockState state = getBlockState();
 		if (state.getBlock() instanceof SolverBlock sb) {
+			solver.removeAllRules(worldPosition);
 			sb.created(solver, level, worldPosition);
 		}
+
 		RotationPropagator.handleAdded(level, worldPosition, this);
 	}
 
 	public void detachKinetics() {
+		KineticSolver solver = KineticSolver.getSolver(level);
+		BlockState state = getBlockState();
+		if (state.getBlock() instanceof SolverBlock) {
+			solver.removeAllRules(worldPosition);
+		}
+
 		RotationPropagator.handleRemoved(level, worldPosition, this);
 	}
 

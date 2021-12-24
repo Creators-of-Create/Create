@@ -1,12 +1,10 @@
 package com.simibubi.create.content.contraptions.solver;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -23,89 +21,70 @@ public class KineticSolver {
 	}
 
 	private final PropertyMap properties = new PropertyMap();
+	private final Map<BlockPos, Set<RewriteRule.Tracker<?>>> rules = new HashMap<>();
+	private final HashSet<RewriteRule.Tracker<?>> allRules = new HashSet<>();
 
-	private final List<Goal> goals = new ArrayList<>();
+	private Set<RewriteRule.Tracker<?>> rulesFrontier = new HashSet<>();
 
-	public static class PropertyMap {
-		private final Map<BlockPos, Map<String, Value>> properties = new HashMap<>();
-		private final Map<BlockPos, Set<Connection>> connections = new HashMap<>();
+	public <T> RewriteRule<T> addRule(BlockPos pos, RewriteRule.Descriptor<T> ruleDesc) {
+		RewriteRule<T> rule = new RewriteRule<>(ruleDesc);
+		RewriteRule.Tracker<?> tracker = new RewriteRule.Tracker<>(rule, pos, properties::trackReader);
+		rules.computeIfAbsent(pos, $ -> new HashSet<>()).add(tracker);
+		allRules.add(tracker);
+		rulesFrontier.add(tracker);
+		return rule;
+	}
 
-		public Optional<Value> getProperty(BlockPos pos, String property) {
-			Map<String, Value> map = properties.get(pos);
+	public void removeRule(BlockPos pos, RewriteRule<?> rule) {
+		Set<RewriteRule.Tracker<?>> trackers = rules.get(pos);
+		if (trackers == null) return;
+		trackers.stream()
+				.filter(t -> t.rule == rule)
+				.findAny()
+				.ifPresent(tracker -> {
+					allRules.remove(tracker);
+					trackers.remove(tracker);
+					if (trackers.isEmpty()) {
+						rules.remove(pos);
+					}
+					properties.untrackReader(tracker);
+					rulesFrontier.addAll(properties.unwrite(tracker.writes));
+				});
+	}
 
-			if (map != null) {
-				return Optional.of(map.computeIfAbsent(property, $ -> new Value.Unknown()));
-			} else {
-				return Optional.empty();
-			}
+	public void removeAllRules(BlockPos pos) {
+		Set<RewriteRule.Tracker<?>> trackers = rules.remove(pos);
+		if (trackers == null) return;
+		for (RewriteRule.Tracker<?> tracker: trackers) {
+			allRules.remove(tracker);
+			properties.untrackReader(tracker);
 		}
-
-		public Value getOrCreateProperty(BlockPos pos, String property) {
-			return properties.computeIfAbsent(pos, $ -> new HashMap<>())
-					.computeIfAbsent(property, $ -> new Value.Unknown());
-		}
-
-		public void setProperty(BlockPos pos, String property, Value value) {
-			properties.computeIfAbsent(pos, $ -> new HashMap<>())
-					.put(property, value);
-		}
-
-		public boolean isComplete(Connection connection) {
-			Set<Connection> connections = this.connections.get(connection.to);
-
-			if (connections == null) return false;
-
-			for (Connection other : connections) {
-				if (connection.isCompatible(other) && other.to.equals(connection.from)) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		public void addConnection(Connection connection) {
-			properties.computeIfAbsent(connection.from, $ -> new HashMap<>());
-			connections.computeIfAbsent(connection.from, $ -> new HashSet<>()).add(connection);
-		}
-
-		public void clear() {
-			properties.clear();
+		for (RewriteRule.Tracker<?> tracker: trackers) {
+			rulesFrontier.addAll(properties.unwrite(tracker.writes));
 		}
 	}
 
-	private boolean needsUpdate;
+	public Set<BlockPos> solve() {
+		Set<BlockPos> contradictions = new HashSet<>();
 
-	public List<BlockPos> solve() {
-		if (!needsUpdate) return Collections.emptyList();
-		needsUpdate = false;
+		while (!rulesFrontier.isEmpty()) {
+			Set<RewriteRule.Tracker<?>> next = new HashSet<>();
 
-		List<BlockPos> troublemakers = new ArrayList<>();
+			for (RewriteRule.Tracker<?> rule : rulesFrontier) {
+				if (!allRules.contains(rule) || !rule.canRewrite()) continue;
 
-		outer:
-		while (true) {
-			properties.clear();
-
-			for (Goal goal : goals) {
-				Goal.SolveResult result = goal.solve(properties);
-
-				switch (result) {
-				case CONTRADICTION -> {
-					troublemakers.add(goal.getPos());
-					continue outer;
-				}
-				case OK -> {}
+				PropertyMap.WriteResult res = rule.rewrite(properties);
+				if (res instanceof PropertyMap.WriteResult.Ok ok) {
+					next.addAll(ok.readyToRewrite);
+				} else if (res instanceof PropertyMap.WriteResult.Contradiction) {
+					removeAllRules(rule.pos);
+					contradictions.add(rule.pos);
 				}
 			}
-			break;
+
+			rulesFrontier = next;
 		}
 
-		return troublemakers;
-	}
-
-	public void addGoal(Goal goal) {
-		goals.add(goal);
-		needsUpdate = true;
-		goal.onAdded(properties);
+		return contradictions;
 	}
 }

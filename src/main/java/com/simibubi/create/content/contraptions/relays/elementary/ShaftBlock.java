@@ -7,8 +7,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
-import com.simibubi.create.content.contraptions.solver.Connection;
-import com.simibubi.create.content.contraptions.solver.ConnectionGoal;
+import com.simibubi.create.content.contraptions.solver.ShaftConnectionRule;
+import com.simibubi.create.content.contraptions.solver.ShaftEqualSpeedRule;
 import com.simibubi.create.content.contraptions.solver.SolverBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -90,16 +90,13 @@ public class ShaftBlock extends AbstractShaftBlock implements SolverBlock {
 	@Override
 	public void created(KineticSolver solver, Level level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-
 		Direction.Axis axis = state.getValue(AXIS);
-
 		Direction positive = Direction.fromAxisAndDirection(axis, Direction.AxisDirection.POSITIVE);
+		Direction negative = positive.getOpposite();
 
-		Connection.Shaft c1 = new Connection.Shaft(pos, positive);
-		Connection.Shaft c2 = new Connection.Shaft(pos, positive.getOpposite());
-
-		solver.addGoal(new ConnectionGoal.EqualSpeed(c1));
-		solver.addGoal(new ConnectionGoal.EqualSpeed(c2));
+		solver.addRule(pos, new ShaftConnectionRule(axis));
+		solver.addRule(pos, new ShaftEqualSpeedRule(positive));
+		solver.addRule(pos, new ShaftEqualSpeedRule(negative));
 	}
 
 	@MethodsReturnNonnullByDefault
