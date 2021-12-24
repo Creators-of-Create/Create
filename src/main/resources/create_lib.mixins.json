@@ -41,6 +41,7 @@
     "common.BaseRailBlockMixin",
     "common.BiomeMixin",
     "common.BlockEntityMixin",
+    "common.BlockItemMixin",
     "common.BlockMixin",
     "common.BlockParticleOptionMixin",
     "common.BlockStateMixin",

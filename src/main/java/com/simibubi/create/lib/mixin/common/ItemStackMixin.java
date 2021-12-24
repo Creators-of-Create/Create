@@ -38,13 +38,4 @@ public abstract class ItemStackMixin implements NBTSerializable {
 	public void create$deserializeNBT(CompoundTag nbt) {
 		MixinHelper.<ItemStack>cast(this).setTag(ItemStack.of(nbt).getTag());
 	}
-
-	@Inject(method = "useOn", at = @At("HEAD"),	cancellable = true)
-	public void create$onItemUse(UseOnContext itemUseContext, CallbackInfoReturnable<InteractionResult> cir) {
-		if (!itemUseContext.getLevel().isClientSide) {
-			InteractionResult result = BlockPlaceCallback.EVENT.invoker().onBlockPlace(itemUseContext);
-			if (result != InteractionResult.PASS)
-				cir.setReturnValue(result);
-		}
-	}
 }

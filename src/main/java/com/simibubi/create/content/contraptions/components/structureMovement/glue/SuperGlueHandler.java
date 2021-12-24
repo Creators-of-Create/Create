@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -39,7 +40,7 @@ public class SuperGlueHandler {
 		return map;
 	}
 
-	public static InteractionResult glueListensForBlockPlacement(UseOnContext context) {
+	public static InteractionResult glueListensForBlockPlacement(BlockPlaceContext context) {
 		LevelAccessor world = context.getLevel();
 		Entity entity = context.getPlayer();
 		BlockPos pos = context.getClickedPos();
