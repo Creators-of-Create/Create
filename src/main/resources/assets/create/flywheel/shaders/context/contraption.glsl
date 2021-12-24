@@ -1,5 +1,12 @@
 #use "flywheel:context/fog.glsl"
 
+// optimize discard usage
+#if defined(ALPHA_DISCARD)
+#if defined(GL_ARB_conservative_depth)
+layout (depth_greater) out float gl_FragDepth;
+#endif
+#endif
+
 uniform sampler3D uLightVolume;
 
 uniform sampler2D uBlockAtlas;
@@ -39,12 +46,6 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 #use "flywheel:core/lightutil.glsl"
 
 #define ALPHA_DISCARD 0.1
-// optimize discard usage
-#if defined(ALPHA_DISCARD)
-#if defined(GL_ARB_conservative_depth)
-layout (depth_greater) out float gl_FragDepth;
-#endif
-#endif
 
 in vec3 BoxCoord;
 
