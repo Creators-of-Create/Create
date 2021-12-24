@@ -84,7 +84,6 @@
   "client": [
     "accessor.AbstractWidgetAccessor",
     "accessor.ClientPacketListenerAccessor",
-    "accessor.EntityRenderDispatcherAccessor",
     "accessor.FontAccessor",
     "accessor.GameRendererAccessor",
     "accessor.ItemInHandRendererAccessor",
