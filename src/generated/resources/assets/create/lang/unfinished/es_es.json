@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 330",
+	"_": "Missing Localizations: 333",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -602,6 +602,7 @@
 	"item.create.honeyed_apple": "Manzana con miel",
 	"item.create.incomplete_cogwheel": "Engranaje pequeño incompleto",
 	"item.create.incomplete_large_cogwheel": "Engranaje grande incompleto",
+	"item.create.incomplete_netherrack": "UNLOCALIZED: Incomplete Netherrack",
 	"item.create.incomplete_precision_mechanism": "Mecanismo de precisión incompleto",
 	"item.create.iron_sheet": "Lámina de hierro",
 	"item.create.linked_controller": "Controlador enlazado",
@@ -821,6 +822,8 @@
 	"create.recipe.fan_washing.fan": "Ventilador detrás del agua fluyente",
 	"create.recipe.fan_smoking": "Ahumador a granel",
 	"create.recipe.fan_smoking.fan": "Ventilador detrás del fuego",
+	"create.recipe.fan_soul_smoking": "UNLOCALIZED: Bulk Soul Smoking",
+	"create.recipe.fan_soul_smoking.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Voladuras a granel",
 	"create.recipe.fan_blasting.fan": "Ventilador detrás de la lava",
 	"create.recipe.pressing": "Prensando",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 388",
+	"_": "Missing Localizations: 391",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -602,6 +602,7 @@
 	"item.create.honeyed_apple": "蜂蜜蘋果",
 	"item.create.incomplete_cogwheel": "未完成的小齒輪",
 	"item.create.incomplete_large_cogwheel": "未完成的大齒輪",
+	"item.create.incomplete_netherrack": "UNLOCALIZED: Incomplete Netherrack",
 	"item.create.incomplete_precision_mechanism": "未完成的精確控制器",
 	"item.create.iron_sheet": "鐵板",
 	"item.create.linked_controller": "遙控器",
@@ -821,6 +822,8 @@
 	"create.recipe.fan_washing.fan": "在水後放置鼓風機",
 	"create.recipe.fan_smoking": "批次煙燻",
 	"create.recipe.fan_smoking.fan": "在火焰後放置鼓風機",
+	"create.recipe.fan_soul_smoking": "UNLOCALIZED: Bulk Soul Smoking",
+	"create.recipe.fan_soul_smoking.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "批次融煉",
 	"create.recipe.fan_blasting.fan": "在熔岩後放置鼓風機",
 	"create.recipe.pressing": "金屬壓片",
