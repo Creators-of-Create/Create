@@ -32,11 +32,14 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.SawingCategory;
 //import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.category.display.AbstractCreateDisplay;
 import com.simibubi.create.compat.jei.category.display.CrushingDisplay;
+import com.simibubi.create.compat.jei.category.display.PressingDisplay;
 import com.simibubi.create.compat.jei.category.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
+import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -75,9 +78,9 @@ public class CreateJEI implements REIClientPlugin {
 			.catalyst(AllBlocks.CRUSHING_WHEEL::get)
 			.build();
 
-//	private final CreateRecipeCategory pressing = register("pressing", PressingCategory::new).recipes(AllRecipeTypes.PRESSING)
-//			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
-//			.build();
+	private final CreateRecipeCategory pressing = register("pressing", PressingCategory::new).recipes(AllRecipeTypes.PRESSING)
+			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
+			.build();
 //
 //	private final CreateRecipeCategory washing = register("fan_washing", FanWashingCategory::new).recipes(AllRecipeTypes.SPLASHING)
 //			.catalystStack(ProcessingViaFanCategory.getFan("fan_washing"))
@@ -219,6 +222,7 @@ public class CreateJEI implements REIClientPlugin {
 	public void registerDisplays(DisplayRegistry registry) {
 		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
 		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
+		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
 	}
 
 	//	@Override

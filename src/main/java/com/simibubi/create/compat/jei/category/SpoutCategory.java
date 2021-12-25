@@ -139,7 +139,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe, SpoutDisp
 
 		AnimatedSpout spout = new AnimatedSpout();
 
-		spout.setPos(new Point(origin.getX() + (getDisplayWidth(display) / 2 - 13), origin.getY() +22));
+		spout.setPos(new Point(origin.getX() + (getDisplayWidth(display) / 2 - 13), origin.getY() + 22));
 		spout.withFluids(display.getRecipe().getRequiredFluid()
 						.getMatchingFluidStacks());
 		widgets.add(spout);
