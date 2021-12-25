@@ -130,7 +130,7 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 			method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/entity/Entity;canAddPassenger(Lnet/minecraft/world/entity/Entity;)Z",
+					target = "Lnet/minecraft/world/entity/Entity;isPassenger()Z",
 					shift = At.Shift.BEFORE
 			),
 			cancellable = true
