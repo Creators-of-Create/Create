@@ -103,7 +103,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		Point origin = new Point(bounds.getX(), bounds.getY() + 4);
 		CraftingRecipe recipe = display.getRecipe();
 		float scale = getScale(recipe);
-		Point offset = new Point(getXPadding(recipe), getYPadding(recipe));
+		Point offset = new Point(origin.getX() + getXPadding(recipe), origin.getY() + getYPadding(recipe));
 
 		for (int row = 0; row < getHeight(recipe); row++)
 			for (int col = 0; col < getWidth(recipe); col++)
@@ -111,13 +111,14 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 						.get(row * getWidth(recipe) + col)
 						.isEmpty()) {
 					Matrix4f matrix4f = Matrix4f.createScaleMatrix(scale, scale, scale);
-					matrix4f.multiplyWithTranslation(origin.getX() + col * 19 * scale, origin.getY() + row * 19 * scale, 0);
+					matrix4f.multiplyWithTranslation(offset.getX() + col * 19 * scale, offset.getY() + row * 19 * scale, 0);
 					widgets.add(Widgets.withTranslate(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, 0, 0), matrix4f));
-					widgets.add(Widgets.createSlot(new Point((origin.getX() + col * 19 * scale) + 1, (origin.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(0)));
+					widgets.add(Widgets.createSlot(new Point((offset.getX() + col * 19 * scale) + 1, (offset.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(row * getWidth(recipe) + col)));
 				}
 
 
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 133, origin.getY() + 80));
+		widgets.add(Widgets.createSlot(new Point(origin.getX() + 133, origin.getY() + 80)).disableBackground().markOutput().entries(display.getOutputEntries().get(0)));
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_DOWN_ARROW, origin.getX() + 128, origin.getY() + 59));
 
 		AnimatedCrafter crafter = new AnimatedCrafter();
@@ -131,11 +132,21 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			amount++;
 		}
 
-//		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
+		int finalAmount = amount;
+		widgets.add(Widgets.createDrawableWidget((helper, matrices, mouseX, mouseY, delta) -> {
+			matrices.pushPose();
+			RenderSystem.enableDepthTest();
+			matrices.translate(0,0,300);
+			Minecraft.getInstance().font.drawShadow(matrices, finalAmount + "", origin.getX() + 142, origin.getY() + 39, 0xFFFFFF);
+			RenderSystem.disableDepthTest();
+			matrices.popPose();
+		}));
 
 		return widgets;
 	}
 
+
+	// todo: idk if I should use this instead
 	@Override
 	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		matrixStack.pushPose();
