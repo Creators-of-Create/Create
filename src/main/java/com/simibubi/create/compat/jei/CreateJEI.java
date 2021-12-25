@@ -32,6 +32,7 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.SawingCategory;
 //import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
 import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.display.AbstractCreateDisplay;
@@ -193,11 +194,11 @@ public class CreateJEI implements REIClientPlugin {
 //			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 //			.enableWhen(c -> c.allowRegularCraftingInCrafter)
 //			.build();
-//
-//	private final CreateRecipeCategory mechanicalCrafting =
-//			register("mechanical_crafting", MechanicalCraftingCategory::new).recipes(AllRecipeTypes.MECHANICAL_CRAFTING)
-//				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-//				.build();
+
+	private final CreateRecipeCategory mechanicalCrafting =
+			register("mechanical_crafting", MechanicalCraftingCategory::new).recipes(AllRecipeTypes.MECHANICAL_CRAFTING)
+				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
+				.build();
 
 	private <T extends Recipe<?>, D extends AbstractCreateDisplay<T>> CategoryBuilder register(String name,
 		Supplier<CreateRecipeCategory<T, D>> supplier) {
