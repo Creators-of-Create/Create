@@ -9,16 +9,16 @@
     "group": "minecraft:misc",
     "ingredients": [
     	{
-    		"item": "minecraft:cactus"
+    		"item": "minecraft:moss_block"
     	}
-    ], 
+    ],
 	"results": [
 		{
-			"item": "quark:cactus_paste",
+			"item": "quark:moss_paste",
 			"count": 2
 		},
 		{
-			"item": "quark:cactus_paste",
+			"item": "quark:moss_paste",
 			"count": 1,
 			"chance": 0.1
 		}

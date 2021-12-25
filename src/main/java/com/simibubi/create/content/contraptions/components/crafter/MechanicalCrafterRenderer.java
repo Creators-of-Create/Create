@@ -169,8 +169,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		BlockState blockState = te.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		if (!Backend.getInstance()
-			.canUseInstancing(te.getLevel())) {
+		if (!Backend.canUseInstancing(te.getLevel())) {
 			SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, te, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.getValue(HORIZONTAL_FACING)

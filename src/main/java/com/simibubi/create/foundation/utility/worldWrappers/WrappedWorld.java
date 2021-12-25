@@ -33,8 +33,6 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class WrappedWorld extends Level {
 
 	protected Level world;
@@ -68,17 +66,18 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public boolean isStateAtPosition(@Nullable BlockPos p_217375_1_, @Nullable Predicate<BlockState> p_217375_2_) {
+	public boolean isStateAtPosition(BlockPos p_217375_1_, Predicate<BlockState> p_217375_2_) {
 		return world.isStateAtPosition(p_217375_1_, p_217375_2_);
 	}
 
 	@Override
-	public BlockEntity getBlockEntity(@Nullable BlockPos pos) {
+	@Nullable
+	public BlockEntity getBlockEntity(BlockPos pos) {
 		return world.getBlockEntity(pos);
 	}
 
 	@Override
-	public boolean setBlock(@Nullable BlockPos pos, @Nullable BlockState newState, int flags) {
+	public boolean setBlock(BlockPos pos, BlockState newState, int flags) {
 		return world.setBlock(pos, newState, flags);
 	}
 

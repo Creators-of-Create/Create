@@ -29,11 +29,11 @@ public class WrappedChunkProvider extends ChunkSource {
 		fallbackWorld = world;
 		return this;
 	}
-	
-	public WrappedChunkProvider setPlacementWorld(PlacementSimulationWorld world) {
+
+	// VirtualChunkSource is created before VirtualRenderWorld, so we can't initialize it in the ctor.
+	public void setPlacementWorld(PlacementSimulationWorld world) {
 		fallbackWorld = this.world = world;
 		this.chunks = new HashMap<>();
-		return this;
 	}
 
 	public Stream<BlockPos> getLightSources() {

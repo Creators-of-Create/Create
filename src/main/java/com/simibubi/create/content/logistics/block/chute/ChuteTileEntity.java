@@ -153,7 +153,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		float nextOffset = itemPosition.value + itemMotion;
-		
+
 		if (itemMotion < 0) {
 			if (nextOffset < .5f) {
 				if (!handleDownwardOutput(true))
@@ -352,7 +352,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		ChuteTileEntity targetChute = getTargetChute(blockState);
 		Direction direction = AbstractChuteBlock.getChuteFacing(blockState);
 
-		if (level == null)
+		if (level == null || direction == null || !this.canOutputItems())
 			return false;
 		if (!capBelow.isPresent())
 			capBelow = grabCapability(Direction.DOWN);
@@ -404,7 +404,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private boolean handleUpwardOutput(boolean simulate) {
 		BlockState stateAbove = level.getBlockState(worldPosition.above());
 
-		if (level == null)
+		if (level == null || !this.canOutputItems())
 			return false;
 
 		if (AbstractChuteBlock.isOpenChute(getBlockState())) {
@@ -474,6 +474,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	protected boolean canCollectItemsFromBelow() {
+		return true;
+	}
+
+	protected boolean canOutputItems() {
 		return true;
 	}
 

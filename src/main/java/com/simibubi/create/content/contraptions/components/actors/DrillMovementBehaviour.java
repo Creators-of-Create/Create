@@ -37,7 +37,7 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		if (!Backend.getInstance().canUseInstancing())
+        if (!Backend.isOn())
 			DrillRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 

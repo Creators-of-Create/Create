@@ -47,7 +47,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		float lidProgress = ((EjectorTileEntity) te).getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
+		if (!Backend.canUseInstancing(te.getLevel())) {
 			SuperByteBuffer model = CachedBufferer.partial(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
 			applyLidAngle(te, angle, model);
 			model.light(light)

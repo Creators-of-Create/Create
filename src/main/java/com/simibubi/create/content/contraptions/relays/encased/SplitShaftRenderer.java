@@ -28,7 +28,7 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 			int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		Block block = te.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());

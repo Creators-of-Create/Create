@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
@@ -59,10 +59,11 @@ public class BracketedKineticTileInstance extends SingleRotatingInstance {
 	private PoseStack rotateToAxis(Axis axis) {
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		PoseStack poseStack = new PoseStack();
-		new MatrixTransformStack(poseStack).centre()
-			.rotateToFace(facing)
-			.multiply(Vector3f.XN.rotationDegrees(-90))
-			.unCentre();
+		TransformStack.cast(poseStack)
+				.centre()
+				.rotateToFace(facing)
+				.multiply(Vector3f.XN.rotationDegrees(-90))
+				.unCentre();
 		return poseStack;
 	}
 

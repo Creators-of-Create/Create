@@ -54,7 +54,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
@@ -113,7 +113,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
+		if (!Backend.canUseInstancing(te.getLevel())) {
 			KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
 		}
 
@@ -193,10 +193,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			IRotate def = (IRotate) context.state.getBlock();
 			axis = def.getRotationAxis(context.state);
 		}
-		
+
 		float time = AnimationTickHolder.getRenderTime(context.world) / 20;
 		float angle = (time * speed) % 360;
-		
+
 		new MatrixTransformStack(m)
 			.centre()
 			.rotateY(axis == Axis.Z ? 90 : 0)

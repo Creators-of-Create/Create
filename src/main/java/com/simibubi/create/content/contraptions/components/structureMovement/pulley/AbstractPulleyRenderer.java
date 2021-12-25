@@ -44,8 +44,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance()
-			.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(te.getLevel()))
 			return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
