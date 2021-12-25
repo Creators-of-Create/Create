@@ -6,7 +6,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 
 public interface StartRidingCallback {
-	public static final Event<StartRidingCallback> EVENT = EventFactory.createArrayBacked(StartRidingCallback.class, callbacks -> (mounted, mounting) -> {
+	Event<StartRidingCallback> EVENT = EventFactory.createArrayBacked(StartRidingCallback.class, callbacks -> (mounted, mounting) -> {
 		InteractionResult result = InteractionResult.PASS;
 		for (StartRidingCallback callback : callbacks) {
 			result = callback.onStartRiding(mounted, mounting);
