@@ -3,11 +3,18 @@ package com.simibubi.create.foundation.block.connected;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 
 public class CTSpriteShifter extends SpriteShifter {
 
 	public static CTSpriteShiftEntry getCT(CTType type, ResourceLocation blockTexture, ResourceLocation connectedTexture) {
+		// TODO remove
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			return null;
+		}
+
 		String key = type.name() + ":" + blockTexture + "->" + connectedTexture;
 		if (ENTRY_CACHE.containsKey(key))
 			return (CTSpriteShiftEntry) ENTRY_CACHE.get(key);
