@@ -24,7 +24,7 @@ import java.util.List;
 public class PressingCategory extends CreateRecipeCategory<PressingRecipe, PressingDisplay> {
 
 	public PressingCategory() {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS, AllItems.IRON_SHEET), emptyBackground(177, 70));
+		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS, AllItems.IRON_SHEET), emptyBackground(177, 80));
 	}
 //
 //	private AnimatedPress press = new AnimatedPress(false);
