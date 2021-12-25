@@ -8,13 +8,14 @@
 //import com.mojang.blaze3d.vertex.PoseStack;
 //import com.simibubi.create.AllBlocks;
 //import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
+//import com.simibubi.create.compat.jei.display.AbstractCreateDisplay;
+//import com.simibubi.create.compat.jei.display.MechanicalCraftingDisplay;
 //import com.simibubi.create.foundation.gui.AllGuiTextures;
 //
-//import mezz.jei.api.constants.VanillaTypes;
-//import mezz.jei.api.gui.IRecipeLayout;
-//import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-//import mezz.jei.api.ingredients.IIngredientRenderer;
-//import mezz.jei.api.ingredients.IIngredients;
+//import me.shedaniel.math.Point;
+//import me.shedaniel.math.Rectangle;
+//import me.shedaniel.rei.api.client.gui.widgets.Widget;
+//
 //import net.minecraft.ChatFormatting;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.Font;
@@ -29,7 +30,7 @@
 //import net.minecraft.world.item.crafting.Ingredient;
 //import net.minecraft.world.item.crafting.ShapedRecipe;
 //
-//public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
+//public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe, MechanicalCraftingDisplay> {
 //
 //	private final AnimatedCrafter crafter = new AnimatedCrafter();
 //
@@ -94,6 +95,16 @@
 //	}
 //
 //	@Override
+//	public List<Widget> setupDisplay(MechanicalCraftingDisplay display, Rectangle bounds) {
+//		List<Widget> widgets = new ArrayList<>();
+//		CraftingRecipe recipe = display.getRecipe();
+//		float scale = getScale(recipe);
+//		Point offset = new Point(getXPadding(recipe), getYPadding(recipe));
+//
+//		return widgets;
+//	}
+//
+//	@Override
 //	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 //		matrixStack.pushPose();
 //		float scale = getScale(recipe);
@@ -131,10 +142,10 @@
 //		matrixStack.popPose();
 //	}
 //
-//	@Override
-//	public Class<? extends CraftingRecipe> getRecipeClass() {
-//		return CraftingRecipe.class;
-//	}
+////	@Override
+////	public Class<? extends CraftingRecipe> getRecipeClass() {
+////		return CraftingRecipe.class;
+////	}
 //
 //	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
 //

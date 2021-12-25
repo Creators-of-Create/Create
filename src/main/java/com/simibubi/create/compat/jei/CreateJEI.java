@@ -36,6 +36,7 @@ import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.display.AbstractCreateDisplay;
 import com.simibubi.create.compat.jei.display.CrushingDisplay;
+import com.simibubi.create.compat.jei.display.MechanicalCraftingDisplay;
 import com.simibubi.create.compat.jei.display.PressingDisplay;
 import com.simibubi.create.compat.jei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
@@ -57,6 +58,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
@@ -222,8 +224,9 @@ public class CreateJEI implements REIClientPlugin {
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
-		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
 		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
+		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
+		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::new);
 	}
 
 	//	@Override
@@ -334,13 +337,13 @@ public class CreateJEI implements REIClientPlugin {
 		}
 
 		public CreateRecipeCategory<T, D> build() {
-			if (pred.test(AllConfigs.SERVER.recipes))
-				category.recipes.add(() -> {
-					List<Recipe<?>> recipes = new ArrayList<>();
-					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
-						consumer.accept(recipes);
-					return recipes;
-				});
+//			if (pred.test(AllConfigs.SERVER.recipes))
+//				category.recipes.add(() -> {
+//					List<Recipe<?>> recipes = new ArrayList<>();
+//					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
+//						consumer.accept(recipes);
+//					return recipes;
+//				});
 			allCategories.add(category);
 			return category;
 		}

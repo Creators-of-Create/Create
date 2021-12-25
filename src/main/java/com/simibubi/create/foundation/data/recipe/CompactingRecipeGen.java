@@ -6,6 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.lib.util.TagUtil;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.Items;
@@ -37,7 +38,7 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 		CHOCOLATE = create("chocolate", b -> b.require(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 4)
 			.output(AllItems.BAR_OF_CHOCOLATE.get(), 1)),
 
-		BLAZE_CAKE = create("blaze_cake", b -> b.require(TagUtil.EGGS)
+		BLAZE_CAKE = create("blaze_cake", b -> b.require(Tags.Items.EGGS)
 			.require(Items.SUGAR)
 			.require(AllItems.CINDER_FLOUR.get())
 			.output(AllItems.BLAZE_CAKE_BASE.get(), 1)),

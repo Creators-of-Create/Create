@@ -133,11 +133,11 @@ public abstract class CreateRecipeProvider extends FabricRecipesProvider {
 		}
 
 		static Tag.Named<Item> brassBlock() {
-			return AllTags.forgeItemTag("storage_blocks/brass");
+			return AllTags.forgeItemTag("blocks/brass");
 		}
 
 		static Tag.Named<Item> zincBlock() {
-			return AllTags.forgeItemTag("storage_blocks/zinc");
+			return AllTags.forgeItemTag("blocks/zinc");
 		}
 
 		static ItemLike copper() {

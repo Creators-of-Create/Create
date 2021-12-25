@@ -287,7 +287,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShaped(b -> b.define('B', I.andesite())
 				.define('S', I.cog())
 				.define('C', I.andesiteCasing())
-				.define('I', AllTags.forgeItemTag("storage_blocks/iron"))
+				.define('I', AllTags.forgeItemTag("blocks/iron"))
 				.pattern(" B ")
 				.pattern("SCS")
 				.pattern(" I ")),
