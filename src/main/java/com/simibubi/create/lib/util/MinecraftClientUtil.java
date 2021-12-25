@@ -3,7 +3,7 @@ package com.simibubi.create.lib.util;
 import java.util.Locale;
 
 import com.simibubi.create.lib.extensions.LanguageInfoExtensions;
-import com.simibubi.create.lib.mixin.accessor.MinecraftAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.MinecraftAccessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

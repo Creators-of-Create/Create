@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.ItemRendererAccessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

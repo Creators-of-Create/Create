@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
-import com.simibubi.create.lib.mixin.accessor.IngredientAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.IngredientAccessor;
 
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;

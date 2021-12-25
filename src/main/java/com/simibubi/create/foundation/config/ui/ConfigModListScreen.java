@@ -11,8 +11,8 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.lib.mixin.accessor.AbstractSelectionListAccessor;
-import com.simibubi.create.lib.mixin.accessor.AbstractWidgetAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.AbstractSelectionListAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.AbstractWidgetAccessor;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;

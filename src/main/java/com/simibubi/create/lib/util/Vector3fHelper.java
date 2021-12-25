@@ -1,7 +1,7 @@
 package com.simibubi.create.lib.util;
 
 import com.mojang.math.Vector3f;
-import com.simibubi.create.lib.mixin.accessor.Vector3fAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.Vector3fAccessor;
 
 public final class Vector3fHelper {
 	public static void setX(Vector3f vector, float x) {

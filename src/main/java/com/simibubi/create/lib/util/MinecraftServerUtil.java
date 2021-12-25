@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.MinecraftServerAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.MinecraftServerAccessor;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelStorageSource;

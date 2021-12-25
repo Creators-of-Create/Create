@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.lib.extensions.AbstractMinecartExtensions;
 import com.simibubi.create.lib.extensions.BaseRailBlockExtensions;
-import com.simibubi.create.lib.mixin.accessor.AbstractMinecartAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.AbstractMinecartAccessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;

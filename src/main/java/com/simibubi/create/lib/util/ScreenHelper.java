@@ -1,7 +1,7 @@
 package com.simibubi.create.lib.util;
 
 import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
-import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.ScreenAccessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

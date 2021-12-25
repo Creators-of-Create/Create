@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.PlayerAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.PlayerAccessor;
 
 import net.minecraft.world.entity.player.Player;
 

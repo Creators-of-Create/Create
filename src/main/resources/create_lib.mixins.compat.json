@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.simibubi.create.lib.mixin.compat",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "lithium.EntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.ParticleAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.ParticleAccessor;
 
 import net.minecraft.client.particle.Particle;
 

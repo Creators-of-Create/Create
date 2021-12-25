@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.BiomeManagerAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.BiomeManagerAccessor;
 
 import net.minecraft.world.level.biome.BiomeManager;
 

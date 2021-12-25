@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.BaseSpawnerAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.BaseSpawnerAccessor;
 
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.level.BaseSpawner;

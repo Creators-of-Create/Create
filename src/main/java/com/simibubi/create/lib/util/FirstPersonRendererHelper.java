@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.ItemInHandRendererAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.ItemInHandRendererAccessor;
 
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.item.ItemStack;

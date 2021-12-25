@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.FontAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.FontAccessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

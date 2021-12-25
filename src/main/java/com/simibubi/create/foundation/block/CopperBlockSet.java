@@ -11,7 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.mixin.accessor.StairBlockAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.StairBlockAccessor;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;

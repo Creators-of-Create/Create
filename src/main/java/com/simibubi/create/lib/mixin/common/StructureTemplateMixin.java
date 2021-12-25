@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.google.common.collect.Lists;
 import com.simibubi.create.lib.extensions.StructureProcessorExtensions;
 import com.simibubi.create.lib.extensions.StructureTemplateExtensions;
-import com.simibubi.create.lib.mixin.accessor.StructureTemplateAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.StructureTemplateAccessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

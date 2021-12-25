@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.mixin.accessor.SlotAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.SlotAccessor;
 import com.simibubi.create.lib.util.ItemStackUtil;
 import com.simibubi.create.lib.util.PlayerEntityHelper;
 

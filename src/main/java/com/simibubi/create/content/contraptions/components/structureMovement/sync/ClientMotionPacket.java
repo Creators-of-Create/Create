@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

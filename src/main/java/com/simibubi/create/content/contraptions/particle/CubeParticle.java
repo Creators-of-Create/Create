@@ -8,8 +8,6 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.lib.mixin.accessor.ParticleAccessor;
-
 import com.simibubi.create.lib.util.ParticleHelper;
 
 import net.minecraft.client.Camera;
