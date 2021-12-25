@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei.category.widgets;
+package com.simibubi.create.compat.jei.widgets;
 
 import java.util.List;
 

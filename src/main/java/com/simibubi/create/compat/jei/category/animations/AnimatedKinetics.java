@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.compat.jei.category.widgets.AnimatedKineticsWidget;
+import com.simibubi.create.compat.jei.widgets.AnimatedKineticsWidget;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;

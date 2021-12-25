@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei.category.display;
+package com.simibubi.create.compat.jei.display;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;

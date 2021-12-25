@@ -99,6 +99,7 @@ public class FluidRenderer {
 	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
 		float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
 		FluidVariant fluidVariant = fluidStack.getType();
+		if(fluidStack.isVirtual()) return;
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
 			.apply(FluidVariantRendering.getSprite(fluidVariant).getName());

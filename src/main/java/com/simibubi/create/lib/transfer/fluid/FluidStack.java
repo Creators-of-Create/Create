@@ -57,6 +57,7 @@ public class FluidStack {
 	private CompoundTag tag;
 	private long amount;
 	private String translationKey;
+	private boolean virtual = false;
 
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
@@ -71,8 +72,9 @@ public class FluidStack {
 	public FluidStack(Fluid type, long amount) {
 		// todo: support virtual fluids
 		if(!type.isSource(type.defaultFluidState())) {
-			this.type = FluidVariant.blank();
+			this.type = FluidVariant.of(type.getStateDefinition().getOwner());
 			this.amount = amount;
+			this.virtual = true;
 			return;
 		}
 		this.type = FluidVariant.of(type);
@@ -91,6 +93,10 @@ public class FluidStack {
 	public FluidStack setAmount(long amount) {
 		this.amount = amount;
 		return this;
+	}
+
+	public boolean isVirtual() {
+		return virtual;
 	}
 
 	public void grow(long amount) {

@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
-import com.simibubi.create.compat.jei.category.display.PressingDisplay;
+import com.simibubi.create.compat.jei.display.PressingDisplay;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;

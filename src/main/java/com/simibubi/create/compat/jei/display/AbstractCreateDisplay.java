@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei.category.display;
+package com.simibubi.create.compat.jei.display;
 
 import me.shedaniel.rei.api.common.display.Display;
 import net.minecraft.world.item.crafting.Recipe;

@@ -34,13 +34,14 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
-import com.simibubi.create.compat.jei.category.display.AbstractCreateDisplay;
-import com.simibubi.create.compat.jei.category.display.CrushingDisplay;
-import com.simibubi.create.compat.jei.category.display.PressingDisplay;
-import com.simibubi.create.compat.jei.category.display.SpoutDisplay;
+import com.simibubi.create.compat.jei.display.AbstractCreateDisplay;
+import com.simibubi.create.compat.jei.display.CrushingDisplay;
+import com.simibubi.create.compat.jei.display.PressingDisplay;
+import com.simibubi.create.compat.jei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
@@ -63,7 +64,7 @@ import net.minecraft.world.level.ItemLike;
 @SuppressWarnings("unused")
 public class CreateJEI implements REIClientPlugin {
 
-	private static final ResourceLocation ID = Create.asResource("jei_plugin");
+	private static final ResourceLocation ID = Create.asResource("rei_plugin");
 
 //	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory> allCategories = new ArrayList<>();
@@ -333,13 +334,13 @@ public class CreateJEI implements REIClientPlugin {
 		}
 
 		public CreateRecipeCategory<T, D> build() {
-//			if (pred.test(AllConfigs.SERVER.recipes))
-//				category.recipes.add(() -> {
-//					List<Recipe<?>> recipes = new ArrayList<>();
-//					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
-//						consumer.accept(recipes);
-//					return recipes;
-//				});
+			if (pred.test(AllConfigs.SERVER.recipes))
+				category.recipes.add(() -> {
+					List<Recipe<?>> recipes = new ArrayList<>();
+					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
+						consumer.accept(recipes);
+					return recipes;
+				});
 			allCategories.add(category);
 			return category;
 		}

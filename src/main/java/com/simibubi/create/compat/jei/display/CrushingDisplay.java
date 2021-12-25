@@ -1,24 +1,24 @@
-package com.simibubi.create.compat.jei.category.display;
+package com.simibubi.create.compat.jei.display;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 
-public class SpoutDisplay extends AbstractCreateDisplay<FillingRecipe> {
-	public SpoutDisplay(FillingRecipe recipe) {
+public class CrushingDisplay extends AbstractCreateDisplay<AbstractCrushingRecipe> {
+	public CrushingDisplay(AbstractCrushingRecipe recipe) {
 		super(recipe);
 	}
 
 	@Override
 	public List<EntryIngredient> getInputEntries() {
-		return new ArrayList<>();
+		return EntryIngredients.ofIngredients(recipe.getIngredients());
 	}
 
 	@Override
@@ -28,6 +28,8 @@ public class SpoutDisplay extends AbstractCreateDisplay<FillingRecipe> {
 
 	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier() {
-		return CategoryIdentifier.of(Create.asResource("spout_filling"));
+		return CategoryIdentifier.of(Create.asResource("crushing"));
 	}
+
+
 }
