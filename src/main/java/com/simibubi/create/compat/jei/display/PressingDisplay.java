@@ -17,16 +17,6 @@ public class PressingDisplay extends AbstractCreateDisplay<PressingRecipe> {
 	}
 
 	@Override
-	public List<EntryIngredient> getInputEntries() {
-		return EntryIngredients.ofIngredients(recipe.getIngredients());
-	}
-
-	@Override
-	public List<EntryIngredient> getOutputEntries() {
-		return List.of(EntryIngredient.of(EntryStack.of(VanillaEntryTypes.ITEM, recipe.getResultItem())));
-	}
-
-	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier() {
 		return CategoryIdentifier.of(Create.asResource("pressing"));
 	}
