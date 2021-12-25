@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -35,19 +33,18 @@ import net.minecraft.world.ticks.LevelTickAccess;
 public class WrappedWorld extends Level {
 
 	protected Level world;
-	protected ChunkSource provider;
+	protected ChunkSource chunkSource;
 
 	protected LevelEntityGetter<Entity> entityGetter = new DummyLevelEntityGetter<>();
 
-	public WrappedWorld(Level world, ChunkSource provider) {
+	public WrappedWorld(Level world) {
 		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionType(), world::getProfiler,
 				world.isClientSide, world.isDebug(), 0);
 		this.world = world;
-		this.provider = provider;
 	}
 
-	public WrappedWorld(Level world) {
-		this(world, null);
+	public void setChunkSource(ChunkSource source) {
+		this.chunkSource = source;
 	}
 
 	public Level getLevel() {
@@ -102,7 +99,7 @@ public class WrappedWorld extends Level {
 
 	@Override
 	public ChunkSource getChunkSource() {
-		return provider;
+		return chunkSource != null ? chunkSource : world.getChunkSource();
 	}
 
 	@Override

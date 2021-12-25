@@ -7,12 +7,12 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderLayer;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.Textures;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.CreateContexts;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.LevelAccessor;
@@ -78,7 +78,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 
 	@Override
 	protected FlwContraption create(Contraption c) {
-		PlacementSimulationWorld renderWorld = ContraptionRenderDispatcher.setupRenderWorld(world, c);
+		VirtualRenderWorld renderWorld = ContraptionRenderDispatcher.setupRenderWorld(world, c);
 		return new FlwContraption(c, renderWorld);
 	}
 

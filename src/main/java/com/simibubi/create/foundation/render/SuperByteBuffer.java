@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.api.vertex.VertexList;
+import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
@@ -127,7 +127,6 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			float ny = normal.y();
 			float nz = normal.z();
 
-			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
 			float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
 
 			pos.set(x, y, z, 1F);
@@ -152,9 +151,9 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 					if (disableDiffuseDiv) {
 						diffuseMult = instanceDiffuse;
 					} else if (disableDiffuseMult) {
-						diffuseMult = 1 / staticDiffuse;
+						diffuseMult = 1;
 					} else {
-						diffuseMult = instanceDiffuse / staticDiffuse;
+						diffuseMult = instanceDiffuse;
 					}
 					int colorR = transformColor(r, diffuseMult);
 					int colorG = transformColor(g, diffuseMult);

@@ -1,23 +1,22 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import com.jozufozu.flywheel.backend.instancing.TaskEngine;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.util.Mth;
 
 public class ContraptionRenderInfo {
 	public final Contraption contraption;
-	public final PlacementSimulationWorld renderWorld;
+	public final VirtualRenderWorld renderWorld;
 
 	private final ContraptionMatrices matrices = new ContraptionMatrices();
 	private boolean visible;
 
-	public ContraptionRenderInfo(Contraption contraption, PlacementSimulationWorld renderWorld) {
+	public ContraptionRenderInfo(Contraption contraption, VirtualRenderWorld renderWorld) {
 		this.contraption = contraption;
 		this.renderWorld = renderWorld;
 	}

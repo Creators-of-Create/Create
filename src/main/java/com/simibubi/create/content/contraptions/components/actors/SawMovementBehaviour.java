@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.Optional;
 
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
@@ -10,7 +11,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -86,7 +86,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 									ContraptionMatrices matrices, MultiBufferSource buffer) {
 		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}

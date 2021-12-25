@@ -5,6 +5,7 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -26,7 +27,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -155,7 +155,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		return buffer;
 	}
 
-	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		BlockState blockState = context.state;

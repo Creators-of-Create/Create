@@ -29,7 +29,7 @@ BlockFrag vertex(Vertex v) {
     #if defined(DEBUG_NORMAL)
     b.color = vec4(norm, 1.);
     #else
-    b.color = vec4(v.color.rgb / diffuse(v.normal), v.color.a);
+    b.color = v.color;
     #endif
 
     return b;

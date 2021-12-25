@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.error.GlError;
 import com.jozufozu.flywheel.core.model.ModelUtil;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
@@ -22,7 +23,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -93,7 +93,7 @@ public class ContraptionRenderDispatcher {
 		// something went wrong with the other rendering
 		if (!matrices.isReady()) return;
 
-		PlacementSimulationWorld renderWorld = renderInfo.renderWorld;
+		VirtualRenderWorld renderWorld = renderInfo.renderWorld;
 
 		renderTileEntities(world, renderWorld, contraption, matrices, buffers);
 
@@ -103,8 +103,8 @@ public class ContraptionRenderDispatcher {
 		renderActors(world, renderWorld, contraption, matrices, buffers);
 	}
 
-	public static PlacementSimulationWorld setupRenderWorld(Level world, Contraption c) {
-		PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
+	public static VirtualRenderWorld setupRenderWorld(Level world, Contraption c) {
+		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world);
 
 		renderWorld.setTileEntities(c.presentTileEntities.values());
 
@@ -118,13 +118,13 @@ public class ContraptionRenderDispatcher {
 		return renderWorld;
 	}
 
-	public static void renderTileEntities(Level world, PlacementSimulationWorld renderWorld, Contraption c,
+	public static void renderTileEntities(Level world, VirtualRenderWorld renderWorld, Contraption c,
 										  ContraptionMatrices matrices, MultiBufferSource buffer) {
 		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities,
 				matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 
-	protected static void renderActors(Level world, PlacementSimulationWorld renderWorld, Contraption c,
+	protected static void renderActors(Level world, VirtualRenderWorld renderWorld, Contraption c,
 									   ContraptionMatrices matrices, MultiBufferSource buffer) {
 		PoseStack m = matrices.getModel();
 
@@ -147,7 +147,7 @@ public class ContraptionRenderDispatcher {
 		}
 	}
 
-	public static SuperByteBuffer buildStructureBuffer(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c, RenderType layer) {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getBlocks()
 				.values();
 		BufferBuilder builder = ModelUtil.getBufferBuilderFromTemplate(renderWorld, layer, values);
@@ -170,7 +170,7 @@ public class ContraptionRenderDispatcher {
 		return LightTexture.pack((int) block, (int) sky);
 	}
 
-	public static int getContraptionWorldLight(MovementContext context, PlacementSimulationWorld renderWorld) {
+	public static int getContraptionWorldLight(MovementContext context, VirtualRenderWorld renderWorld) {
 		return LevelRenderer.getLightColor(renderWorld, context.localPos);
 	}
 

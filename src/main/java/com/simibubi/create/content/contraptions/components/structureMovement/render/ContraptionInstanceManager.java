@@ -9,10 +9,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TaskEngine;
 import com.jozufozu.flywheel.backend.instancing.tile.TileInstanceManager;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
@@ -22,9 +22,9 @@ public class ContraptionInstanceManager extends TileInstanceManager {
 
     protected ArrayList<ActorInstance> actors = new ArrayList<>();
 
-    private final PlacementSimulationWorld renderWorld;
+    private final VirtualRenderWorld renderWorld;
 
-    ContraptionInstanceManager(MaterialManager materialManager, PlacementSimulationWorld contraption) {
+    ContraptionInstanceManager(MaterialManager materialManager, VirtualRenderWorld contraption) {
 		super(materialManager);
 		this.renderWorld = contraption;
 	}

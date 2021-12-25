@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.VirtualEmptyModelData;
+import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.client.Minecraft;

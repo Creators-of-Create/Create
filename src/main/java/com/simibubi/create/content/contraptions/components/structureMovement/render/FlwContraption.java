@@ -10,13 +10,13 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.Engine;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.backend.instancing.SerialTaskEngine;
-import com.jozufozu.flywheel.backend.instancing.TaskEngine;
 import com.jozufozu.flywheel.backend.instancing.batching.BatchingEngine;
 import com.jozufozu.flywheel.backend.instancing.instancing.InstancingEngine;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.model.WorldModel;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -26,7 +26,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
@@ -47,7 +46,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 	// floats because we upload this to the gpu
 	private AABB lightBox;
 
-	public FlwContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
+	public FlwContraption(Contraption contraption, VirtualRenderWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
 
