@@ -3,7 +3,7 @@ package com.simibubi.create;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import com.simibubi.create.compat.jei.ConversionRecipe;
+import com.simibubi.create.compat.rei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;

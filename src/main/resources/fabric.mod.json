@@ -42,7 +42,7 @@
       "com.simibubi.create.foundation.config.CWorldGen"
     ],
     "rei": [
-      "com.simibubi.create.compat.jei.CreateJEI"
+      "com.simibubi.create.compat.rei.CreateREI"
     ]
   },
 
