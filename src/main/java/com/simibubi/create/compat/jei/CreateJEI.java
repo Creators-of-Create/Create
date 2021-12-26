@@ -22,7 +22,7 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 //import com.simibubi.create.compat.jei.category.FanWashingCategory;
 //import com.simibubi.create.compat.jei.category.ItemDrainCategory;
 //import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
-//import com.simibubi.create.compat.jei.category.MillingCategory;
+import com.simibubi.create.compat.jei.category.MillingCategory;
 //import com.simibubi.create.compat.jei.category.MixingCategory;
 //import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
 //import com.simibubi.create.compat.jei.category.PackingCategory;
@@ -38,6 +38,7 @@ import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.display.AbstractCreateDisplay;
 import com.simibubi.create.compat.jei.display.CrushingDisplay;
 import com.simibubi.create.compat.jei.display.MechanicalCraftingDisplay;
+import com.simibubi.create.compat.jei.display.MillingDisplay;
 import com.simibubi.create.compat.jei.display.PressingDisplay;
 import com.simibubi.create.compat.jei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
@@ -73,9 +74,9 @@ public class CreateJEI implements REIClientPlugin {
 	private final List<CreateRecipeCategory> allCategories = new ArrayList<>();
 //	private final CreateRecipeCategory<?, ?>
 
-//	milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
-//		.catalyst(AllBlocks.MILLSTONE::get)
-//		.build();
+	private final CreateRecipeCategory milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
+		.catalyst(AllBlocks.MILLSTONE::get)
+		.build();
 
 	private final CreateRecipeCategory crushing = register("crushing", CrushingCategory::new).recipes(AllRecipeTypes.CRUSHING)
 			.recipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
@@ -225,6 +226,7 @@ public class CreateJEI implements REIClientPlugin {
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
+		registry.registerFiller(AbstractCrushingRecipe.class, MillingDisplay::new);
 		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
 		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
 		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::new);
