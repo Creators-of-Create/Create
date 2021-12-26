@@ -203,6 +203,10 @@ public class WrappedWorld extends Level {
 		return entityGetter;
 	}
 
+	// Override all LevelHeightAccessor methods except for getHeight() and getMinBuildHeight() with vanilla-copied
+	// implementations. This avoids issues which arise in combination with mods such as Lithium, which overwrite
+	// LevelHeightAccessor methods with custom versions which are incompatible with non-default world heights.
+
 	@Override
 	public int getMaxBuildHeight() {
 		return this.getMinBuildHeight() + this.getHeight();
