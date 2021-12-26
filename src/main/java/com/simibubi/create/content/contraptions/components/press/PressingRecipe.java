@@ -2,11 +2,13 @@ package com.simibubi.create.content.contraptions.components.press;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
@@ -59,9 +61,9 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 		list.add(AllBlocks.MECHANICAL_PRESS.get());
 	}
 
-//	@Override
-//	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
-//		return () -> SequencedAssemblySubCategory.AssemblyPressing::new;
-//	}
+	@Override
+	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
+		return () -> SequencedAssemblySubCategory.AssemblyPressing::new;
+	}
 
 }

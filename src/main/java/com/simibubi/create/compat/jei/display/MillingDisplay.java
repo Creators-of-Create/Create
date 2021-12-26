@@ -7,11 +7,6 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 
 public class MillingDisplay extends AbstractCreateDisplay<AbstractCrushingRecipe> {
 	public MillingDisplay(AbstractCrushingRecipe recipe) {
-		super(recipe);
-	}
-
-	@Override
-	public CategoryIdentifier<?> getCategoryIdentifier() {
-		return CategoryIdentifier.of(Create.asResource("milling"));
+		super(recipe, "milling");
 	}
 }

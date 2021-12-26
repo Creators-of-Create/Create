@@ -7,11 +7,6 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 
 public class PressingDisplay extends AbstractCreateDisplay<PressingRecipe> {
 	public PressingDisplay(PressingRecipe recipe) {
-		super(recipe);
-	}
-
-	@Override
-	public CategoryIdentifier<?> getCategoryIdentifier() {
-		return CategoryIdentifier.of(Create.asResource("pressing"));
+		super(recipe, "pressing");
 	}
 }

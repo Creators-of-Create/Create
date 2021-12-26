@@ -20,6 +20,7 @@ import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
@@ -183,10 +184,14 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 	@Override
 	public List<Widget> setupDisplay(D display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
+		widgets.add(Widgets.createRecipeBase(bounds));
 		widgets.add(new Widget() {
 			@Override
 			public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+				poseStack.pushPose();
+				poseStack.translate(bounds.getX(), bounds.getY() + 4, 0);
 				draw(display.getRecipe(), poseStack, mouseX, mouseY);
+				poseStack.popPose();
 			}
 
 			@Override

@@ -1,19 +1,23 @@
 package com.simibubi.create.compat.jei.display;
 
+import java.util.Collections;
 import java.util.List;
 
+import com.simibubi.create.Create;
+
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.crafting.Recipe;
 
 public abstract class AbstractCreateDisplay<R extends Recipe<?>> implements Display {
 	protected final R recipe;
+	private final CategoryIdentifier uid;
 
-	public AbstractCreateDisplay(R recipe) {
+	public AbstractCreateDisplay(R recipe, String id) {
 		this.recipe = recipe;
+		this.uid = CategoryIdentifier.of(Create.asResource(id));
 	}
 
 	public R getRecipe() {
@@ -27,6 +31,11 @@ public abstract class AbstractCreateDisplay<R extends Recipe<?>> implements Disp
 
 	@Override
 	public List<EntryIngredient> getOutputEntries() {
-		return List.of(EntryIngredient.of(EntryStack.of(VanillaEntryTypes.ITEM, recipe.getResultItem())));
+		return Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+	}
+
+	@Override
+	public CategoryIdentifier<?> getCategoryIdentifier() {
+		return uid;
 	}
 }
