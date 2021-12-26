@@ -80,7 +80,7 @@ public class CTModel extends ForwardingBakedModel {
 					if (index != -1) {
 						for (int vertex = 0; vertex < 4; vertex++) {
 							float u = quad.spriteU(vertex, 0);
-							float v = quad.spriteU(vertex, 0);
+							float v = quad.spriteV(vertex, 0);
 							quad.sprite(vertex, 0,
 									spriteShift.getTargetU(u, index),
 									spriteShift.getTargetV(v, index)

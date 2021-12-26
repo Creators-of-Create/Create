@@ -50,9 +50,9 @@ public class BeltModel extends ForwardingBakedModel {
 				if (sprite == original) {
 					for (int vertex = 0; vertex < 4; vertex++) {
 						float u = quad.spriteU(vertex, 0);
-						float v = quad.spriteU(vertex, 0);
+						float v = quad.spriteV(vertex, 0);
 						quad.sprite(vertex, 0,
-								target.getU(SuperByteBuffer.getUnInterpolatedU(sprite, u)),
+								target.getU(SuperByteBuffer.getUnInterpolatedU(original, u)),
 								target.getV(SuperByteBuffer.getUnInterpolatedV(original, v))
 						);
 					}
