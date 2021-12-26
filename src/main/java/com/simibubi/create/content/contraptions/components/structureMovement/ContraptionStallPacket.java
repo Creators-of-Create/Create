@@ -33,7 +33,7 @@ public class ContraptionStallPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		writeAll(buffer, x, y, z, angle);
 	}

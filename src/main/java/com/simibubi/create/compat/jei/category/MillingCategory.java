@@ -1,5 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //import java.util.Arrays;
 
 //import com.mojang.blaze3d.vertex.PoseStack;
@@ -8,11 +11,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
 import com.simibubi.create.compat.jei.display.MillingDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
-
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import com.simibubi.create.foundation.utility.Lang;
 
 import me.shedaniel.math.Point;
@@ -23,9 +23,6 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 //import mezz.jei.api.constants.VanillaTypes;
 //import mezz.jei.api.gui.IRecipeLayout;

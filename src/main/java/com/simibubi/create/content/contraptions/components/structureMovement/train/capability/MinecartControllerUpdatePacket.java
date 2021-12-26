@@ -33,7 +33,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
  		buffer.writeInt(entityID);
 		buffer.writeNbt(nbt);
 	}

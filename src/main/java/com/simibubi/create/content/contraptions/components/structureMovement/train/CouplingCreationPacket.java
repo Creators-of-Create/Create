@@ -23,7 +23,7 @@ public class CouplingCreationPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(id1);
 		buffer.writeInt(id2);
 	}

@@ -14,6 +14,7 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -77,10 +77,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		}
 
 		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
-		DyeColor dye = null;
-		if (heldItem.getItem() instanceof DyeItem dyed) {
-			dye = dyed.getDyeColor();
-		}
+		DyeColor dye = TagUtil.getColorFromStack(heldItem);
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;

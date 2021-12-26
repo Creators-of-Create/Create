@@ -30,7 +30,7 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(toolboxPos);
 	}
 

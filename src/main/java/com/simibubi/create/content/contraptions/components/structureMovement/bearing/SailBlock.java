@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -28,7 +29,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -90,10 +90,7 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 		if (frame)
 			return InteractionResult.PASS;
 
-		DyeColor color = null;
-		if (heldItem.getItem() instanceof DyeItem dyed) {
-			color = dyed.getDyeColor();
-		}
+		DyeColor color = TagUtil.getColorFromStack(heldItem);
 
 		if (color != null) {
 			if (!world.isClientSide)

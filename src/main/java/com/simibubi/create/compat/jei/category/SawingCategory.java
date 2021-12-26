@@ -1,5 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //import java.util.Arrays;
 //import java.util.List;
 
@@ -8,13 +11,11 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.compat.jei.display.SawingDisplay;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
-
 //import mezz.jei.api.constants.VanillaTypes;
 //import mezz.jei.api.gui.IRecipeLayout;
 //import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 //import mezz.jei.api.ingredients.IIngredients;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -27,9 +28,6 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SawingCategory extends CreateRecipeCategory<CuttingRecipe, SawingDisplay> {
 

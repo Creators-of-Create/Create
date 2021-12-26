@@ -21,7 +21,7 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeResourceLocation(recipeID);
 	}
 

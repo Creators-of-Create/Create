@@ -8,8 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
+import com.simibubi.create.lib.util.TagUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -108,8 +108,7 @@ public class SeatBlock extends Block implements CustomPathNodeTypeBlock {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		DyeColor color = DyeHelper.getColor(heldItem);
-
+		DyeColor color = TagUtil.getColorFromStack(heldItem);
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;

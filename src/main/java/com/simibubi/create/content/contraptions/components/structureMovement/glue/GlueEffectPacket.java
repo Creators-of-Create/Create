@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,7 +29,7 @@ public class GlueEffectPacket extends SimplePacketBase {
 		fullBlock = buffer.readBoolean();
 	}
 
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeByte(direction.get3DDataValue());
 		buffer.writeBoolean(fullBlock);

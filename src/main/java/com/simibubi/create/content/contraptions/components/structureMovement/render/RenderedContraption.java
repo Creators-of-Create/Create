@@ -14,6 +14,7 @@ import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
+import com.jozufozu.flywheel.fabric.helper.Matrix4fHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -22,7 +23,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-import com.simibubi.create.lib.extensions.Matrix4fExtensions;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
@@ -157,7 +157,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		float x = (float) (Mth.lerp(pt, entity.xOld, entity.getX()) - camX);
 		float y = (float) (Mth.lerp(pt, entity.yOld, entity.getY()) - camY);
 		float z = (float) (Mth.lerp(pt, entity.zOld, entity.getZ()) - camZ);
-		((Matrix4fExtensions) (Object) matrix).create$setTranslation(x, y, z);
+		Matrix4fHelper.setTranslation(matrix, x, y, z);
 		matrix.multiply(modelMatrix);
 	}
 

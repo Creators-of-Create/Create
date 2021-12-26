@@ -18,17 +18,22 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 
-	public abstract void encode(FriendlyByteBuf buffer);
+	public abstract void write(FriendlyByteBuf buffer);
 
 	public abstract void handle(Supplier<Context> context);
 
 	@Override
-	public void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, SimpleChannel.ResponseTarget responseTarget) {
+	public final void encode(FriendlyByteBuf buffer) {
+		write(buffer);
+	}
+
+	@Override
+	public final void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, SimpleChannel.ResponseTarget responseTarget) {
 		handle(new Context(server, handler, player, responseTarget));
 	}
 
 	@Override
-	public void execute(Minecraft client, ClientPacketListener handler, SimpleChannel.ResponseTarget responseTarget) {
+	public final void handle(Minecraft client, ClientPacketListener handler, SimpleChannel.ResponseTarget responseTarget) {
 		handle(new Context(client, handler, null, responseTarget));
 	}
 

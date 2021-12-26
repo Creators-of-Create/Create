@@ -35,7 +35,7 @@ public interface ISyncPersistentData {
 		}
 
 		@Override
-		public void encode(FriendlyByteBuf buffer) {
+		public void write(FriendlyByteBuf buffer) {
 			buffer.writeInt(entityId);
 			buffer.writeNbt(EntityHelper.getExtraCustomData(entity));
 		}

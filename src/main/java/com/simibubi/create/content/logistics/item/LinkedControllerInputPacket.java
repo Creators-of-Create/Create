@@ -36,8 +36,8 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		super.encode(buffer);
+	public void write(FriendlyByteBuf buffer) {
+		super.write(buffer);
 		buffer.writeBoolean(press);
 		buffer.writeVarInt(activatedButtons.size());
 		activatedButtons.forEach(buffer::writeVarInt);

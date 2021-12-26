@@ -32,7 +32,7 @@ public class ArmPlacementPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		CompoundTag nbt = new CompoundTag();
 		ListTag pointsNBT = new ListTag();
 		points.stream()

@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.foundation.utility.DyeHelper;
+import com.simibubi.create.lib.util.TagUtil;
 
 import me.alphamode.forgetags.Tags;
 import net.minecraft.resources.ResourceLocation;
@@ -56,7 +56,7 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 				if (Block.byItem(stack.getItem()) instanceof ToolboxBlock) {
 					toolbox = stack;
 				} else {
-					DyeColor color1 = DyeHelper.getColor(stack);
+					DyeColor color1 = TagUtil.getColorFromStack(stack);
 					if (color1 != null) {
 						color = color1;
 					}

@@ -25,7 +25,7 @@ public class ContraptionDisassemblyPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		transform.writeToBuffer(buffer);
 	}

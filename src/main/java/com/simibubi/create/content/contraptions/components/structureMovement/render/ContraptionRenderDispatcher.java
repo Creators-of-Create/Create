@@ -66,7 +66,7 @@ public class ContraptionRenderDispatcher {
 	public static void renderLayer(RenderLayerEvent event) {
 		WORLDS.get(event.getWorld()).renderLayer(event);
 
-		GlError.poll();//() -> "contraption layer: " + event.getLayer());
+		GlError.pollAndThrow(() -> "contraption layer: " + event.getLayer());
 	}
 
 	public static void onRendererReload(ReloadRenderersEvent event) {

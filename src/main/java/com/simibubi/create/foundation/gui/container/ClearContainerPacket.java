@@ -14,7 +14,7 @@ public class ClearContainerPacket extends SimplePacketBase {
 	public ClearContainerPacket(FriendlyByteBuf buffer) {}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {}
+	public void write(FriendlyByteBuf buffer) {}
 
 	@Override
 	public void handle(Supplier<Context> context) {

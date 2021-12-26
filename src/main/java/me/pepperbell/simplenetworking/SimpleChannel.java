@@ -214,7 +214,7 @@ public class SimpleChannel {
 				LOGGER.error("Could not create S2C packet in channel '" + channelName + "' with id " + id, e);
 			}
 			if (packet != null) {
-				packet.execute(client, handler, new ResponseTarget(responseSender));
+				packet.handle(client, handler, new ResponseTarget(responseSender));
 			}
 		}
 	}

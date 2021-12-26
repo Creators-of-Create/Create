@@ -9,8 +9,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.lib.util.NetworkUtil;
+import com.simibubi.create.lib.util.TagUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
@@ -148,7 +148,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return InteractionResult.PASS;
 
 		ItemStack stack = player.getItemInHand(hand);
-		DyeColor color = DyeHelper.getColor(stack);
+		DyeColor color = TagUtil.getColorFromStack(stack);
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;

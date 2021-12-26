@@ -37,8 +37,8 @@ public class ConfigureWorldshaperPacket extends ConfigureZapperPacket {
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		super.encode(buffer);
+	public void write(FriendlyByteBuf buffer) {
+		super.write(buffer);
 		buffer.writeEnum(brush);
 		buffer.writeVarInt(brushParamX);
 		buffer.writeVarInt(brushParamY);

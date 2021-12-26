@@ -58,7 +58,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 		int brightnessForRender = super.getLightColor(p_189214_1_);
 		int skyLight = brightnessForRender >> 20;
 		int blockLight = (brightnessForRender >> 4) & 0xf;
-		blockLight = 0;//Math.max(blockLight, fluid.getFluid()
+//		blockLight = Math.max(blockLight, fluid.getFluid()
 //			.getAttributes()
 //			.getLuminosity(fluid));
 		return (skyLight << 20) | (blockLight << 4);

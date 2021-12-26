@@ -28,7 +28,7 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 		this(buffer.readEnum(Option.class), buffer.readBoolean());
 	}
 
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeEnum(option);
 		buffer.writeBoolean(set);
 	}

@@ -603,10 +603,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		return false;
 	}
 
-	public static class RenderProperties extends ReducedDestroyEffects {
-
-	}
-
 	@Environment(EnvType.CLIENT)
 	@Override
 	public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {

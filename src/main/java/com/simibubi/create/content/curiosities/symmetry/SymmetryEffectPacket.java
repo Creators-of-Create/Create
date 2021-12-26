@@ -33,7 +33,7 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 		}
 	}
 
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(mirror);
 		buffer.writeInt(positions.size());
 		for (BlockPos blockPos : positions) {

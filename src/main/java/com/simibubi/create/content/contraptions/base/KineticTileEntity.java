@@ -602,7 +602,4 @@ public class KineticTileEntity extends SmartTileEntity
 		return true;
 	}
 
-	// ----- fabric -----
-
-
 }

@@ -23,7 +23,7 @@ public class SawInstance extends SingleRotatingInstance {
 		if (blockState.getValue(BlockStateProperties.FACING)
 			.getAxis()
 			.isHorizontal()) {
-			BlockState referenceState = blockState.rotate(/*tile.getLevel(), tile.getBlockPos(), */Rotation.CLOCKWISE_180);
+			BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_180);
 			Direction facing = referenceState.getValue(BlockStateProperties.FACING);
 			return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, referenceState, facing);
 		} else {

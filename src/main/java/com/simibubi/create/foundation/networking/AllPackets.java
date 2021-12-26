@@ -170,7 +170,7 @@ public enum AllPackets {
 		private NetworkDirection direction;
 
 		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
-			encoder = T::encode;
+			encoder = T::write;
 			decoder = factory;
 			handler = T::handle;
 			this.type = type;

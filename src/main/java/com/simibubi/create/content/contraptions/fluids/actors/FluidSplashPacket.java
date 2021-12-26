@@ -29,7 +29,7 @@ public class FluidSplashPacket extends SimplePacketBase {
 		fluid =FluidStack.fromBuffer(buffer);
 	}
 
-	public void encode(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		fluid.toBuffer(buffer);
 	}

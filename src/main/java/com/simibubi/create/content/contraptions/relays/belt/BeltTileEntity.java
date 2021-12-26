@@ -42,6 +42,7 @@ import com.simibubi.create.lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -61,7 +62,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class BeltTileEntity extends KineticTileEntity implements LightListener, ItemTransferable {
+public class BeltTileEntity extends KineticTileEntity implements LightListener, ItemTransferable, RenderAttachmentBlockEntity {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -499,14 +500,10 @@ public class BeltTileEntity extends KineticTileEntity implements LightListener, 
 		return empty;
 	}
 
-	//todo: maybe look at this?
-//	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
-//
-//	@Override
-//	public IModelData getModelData() {
-//		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
-//			.build();
-//	}
+	@Override
+	public CasingType getRenderAttachmentData() {
+		return casing;
+	}
 
 	@Override
 	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
