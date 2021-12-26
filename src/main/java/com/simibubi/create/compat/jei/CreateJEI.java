@@ -29,7 +29,7 @@ import com.simibubi.create.compat.jei.category.MillingCategory;
 //import com.simibubi.create.compat.jei.category.PolishingCategory;
 //import com.simibubi.create.compat.jei.category.PressingCategory;
 //import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
-//import com.simibubi.create.compat.jei.category.SawingCategory;
+import com.simibubi.create.compat.jei.category.SawingCategory;
 //import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 //import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
@@ -40,9 +40,11 @@ import com.simibubi.create.compat.jei.display.CrushingDisplay;
 import com.simibubi.create.compat.jei.display.MechanicalCraftingDisplay;
 import com.simibubi.create.compat.jei.display.MillingDisplay;
 import com.simibubi.create.compat.jei.display.PressingDisplay;
+import com.simibubi.create.compat.jei.display.SawingDisplay;
 import com.simibubi.create.compat.jei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
+import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -124,11 +126,11 @@ public class CreateJEI implements REIClientPlugin {
 //			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 //			.catalyst(AllBlocks.BASIN::get)
 //			.build();
-//
-//	private final CreateRecipeCategory sawing = register("sawing", SawingCategory::new).recipes(AllRecipeTypes.CUTTING)
-//			.catalyst(AllBlocks.MECHANICAL_SAW::get)
-//			.build();
-//
+
+	private final CreateRecipeCategory sawing = register("sawing", SawingCategory::new).recipes(AllRecipeTypes.CUTTING)
+			.catalyst(AllBlocks.MECHANICAL_SAW::get)
+			.build();
+
 //	private final CreateRecipeCategory blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
 //			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(RecipeType.STONECUTTING)))
 //			.catalyst(AllBlocks.MECHANICAL_SAW::get)
@@ -227,6 +229,7 @@ public class CreateJEI implements REIClientPlugin {
 		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
 		registry.registerFiller(AbstractCrushingRecipe.class, MillingDisplay::new);
 		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
+		registry.registerFiller(CuttingRecipe.class, SawingDisplay::new);
 		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
 		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::new);
 	}
