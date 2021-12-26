@@ -38,4 +38,14 @@ public enum Mods {
 			return Optional.of(toRun.get().get());
 		return Optional.empty();
 	}
+
+	/**
+	 * Simple hook to execute code if a mod is installed
+	 * @param toExecute will be executed only if the mod is loaded
+	 */
+	public void executeIfInstalled(Supplier<Runnable> toExecute) {
+		if (isLoaded()) {
+			toExecute.get().run();
+		}
+	}
 }

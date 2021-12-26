@@ -19,6 +19,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -104,7 +105,8 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static VirtualRenderWorld setupRenderWorld(Level world, Contraption c) {
-		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world);
+		ContraptionWorld contraptionWorld = c.getContraptionWorld();
+		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, contraptionWorld.getHeight(), contraptionWorld.getMinBuildHeight());
 
 		renderWorld.setTileEntities(c.presentTileEntities.values());
 

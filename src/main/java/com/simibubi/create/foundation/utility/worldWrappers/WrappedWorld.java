@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.SectionPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagContainer;
@@ -197,5 +198,52 @@ public class WrappedWorld extends Level {
 	@Override
 	protected LevelEntityGetter<Entity> getEntities() {
 		return entityGetter;
+	}
+
+	// Intentionally copied from LevelHeightAccessor. Lithium overrides these methods so we need to, too.
+
+	@Override
+	public int getMaxBuildHeight() {
+		return this.getMinBuildHeight() + this.getHeight();
+	}
+
+	@Override
+	public int getSectionsCount() {
+		return this.getMaxSection() - this.getMinSection();
+	}
+
+	@Override
+	public int getMinSection() {
+		return SectionPos.blockToSectionCoord(this.getMinBuildHeight());
+	}
+
+	@Override
+	public int getMaxSection() {
+		return SectionPos.blockToSectionCoord(this.getMaxBuildHeight() - 1) + 1;
+	}
+
+	@Override
+	public boolean isOutsideBuildHeight(BlockPos pos) {
+		return this.isOutsideBuildHeight(pos.getY());
+	}
+
+	@Override
+	public boolean isOutsideBuildHeight(int y) {
+		return y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight();
+	}
+
+	@Override
+	public int getSectionIndex(int y) {
+		return this.getSectionIndexFromSectionY(SectionPos.blockToSectionCoord(y));
+	}
+
+	@Override
+	public int getSectionIndexFromSectionY(int sectionY) {
+		return sectionY - this.getMinSection();
+	}
+
+	@Override
+	public int getSectionYFromSectionIndex(int sectionIndex) {
+		return sectionIndex + this.getMinSection();
 	}
 }
