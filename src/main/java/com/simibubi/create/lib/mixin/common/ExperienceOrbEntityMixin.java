@@ -1,7 +1,6 @@
 package com.simibubi.create.lib.mixin.common;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -10,7 +9,6 @@ import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.player.Player;
 
 @Mixin(ExperienceOrb.class)
 public abstract class ExperienceOrbEntityMixin {

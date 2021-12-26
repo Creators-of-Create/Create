@@ -25,7 +25,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
-import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.EntityAccessor;
 import com.simibubi.create.lib.util.EntityHelper;
 
 import net.fabricmc.api.EnvType;

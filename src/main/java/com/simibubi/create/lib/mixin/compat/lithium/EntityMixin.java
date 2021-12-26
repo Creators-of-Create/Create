@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.ponder.PonderWorld;
-import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.EntityAccessor;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;

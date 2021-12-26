@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.lib.mixin.accessor.BiomeManagerAccessor;
-import com.simibubi.create.lib.mixin.accessor.ClientPacketListenerAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.ClientPacketListenerAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.BiomeManagerAccessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

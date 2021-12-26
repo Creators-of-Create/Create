@@ -43,7 +43,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.ScreenAccessor;
 import com.simibubi.create.lib.util.GuiUtils;
 import com.simibubi.create.lib.util.KeyBindingHelper;
 

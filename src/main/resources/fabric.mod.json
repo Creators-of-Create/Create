@@ -48,7 +48,9 @@
 
   "mixins": [
     "create.mixins.json",
-    "create_lib.mixins.json"
+    "create_lib.mixins.common.json",
+    "create_lib.mixins.client.json",
+    "create_lib.mixins.compat.json"
   ],
   "accessWidener": "create.accesswidener",
 

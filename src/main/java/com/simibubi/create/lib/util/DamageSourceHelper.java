@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.DamageSourceAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.DamageSourceAccessor;
 
 import net.minecraft.world.damagesource.DamageSource;
 

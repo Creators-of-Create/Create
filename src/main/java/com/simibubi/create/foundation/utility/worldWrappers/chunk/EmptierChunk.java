@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.mixin.accessor.DimensionTypeAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.DimensionTypeAccessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

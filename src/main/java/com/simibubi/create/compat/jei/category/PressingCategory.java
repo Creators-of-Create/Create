@@ -1,5 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
@@ -17,9 +20,6 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PressingCategory extends CreateRecipeCategory<PressingRecipe, PressingDisplay> {
 

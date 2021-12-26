@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.extensions;
 
-import com.simibubi.create.lib.mixin.accessor.BlockEntityAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.BlockEntityAccessor;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;

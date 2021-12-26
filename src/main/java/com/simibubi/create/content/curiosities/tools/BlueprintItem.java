@@ -6,7 +6,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import com.simibubi.create.lib.mixin.accessor.IngredientAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.IngredientAccessor;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.util.MultiItemValue;
 

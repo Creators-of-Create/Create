@@ -6,7 +6,6 @@ import java.util.List;
 import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllParticleTypes;

@@ -1,15 +1,13 @@
 package com.simibubi.create.compat.jei.display;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.simibubi.create.Create;
 
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import net.minecraft.world.item.crafting.CraftingRecipe;
 
 public class MechanicalCraftingDisplay extends AbstractCreateDisplay<CraftingRecipe> {

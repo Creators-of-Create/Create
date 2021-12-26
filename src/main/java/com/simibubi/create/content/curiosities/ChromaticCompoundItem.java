@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.item.CustomMaxCountItem;
 import com.simibubi.create.lib.item.EntityTickListenerItem;
-import com.simibubi.create.lib.mixin.accessor.BeaconBlockEntityAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.BeaconBlockEntityAccessor;
 import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;

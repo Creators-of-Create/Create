@@ -1,13 +1,13 @@
 package com.simibubi.create.compat.jei.display;
 
+import java.util.List;
+
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.crafting.Recipe;
-
-import java.util.List;
 
 public abstract class AbstractCreateDisplay<R extends Recipe<?>> implements Display {
 	protected final R recipe;

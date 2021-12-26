@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.GameRendererAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.GameRendererAccessor;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;

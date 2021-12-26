@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
-import com.simibubi.create.lib.mixin.accessor.RenderTypeAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;

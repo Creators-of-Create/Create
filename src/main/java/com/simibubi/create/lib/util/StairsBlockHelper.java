@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.mixin.accessor.StairBlockAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.StairBlockAccessor;
 
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;

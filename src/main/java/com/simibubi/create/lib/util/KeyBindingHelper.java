@@ -1,7 +1,7 @@
 package com.simibubi.create.lib.util;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.simibubi.create.lib.mixin.accessor.KeyMappingAccessor;
+import com.simibubi.create.lib.mixin.client.accessor.KeyMappingAccessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

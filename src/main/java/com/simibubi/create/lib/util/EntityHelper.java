@@ -1,7 +1,7 @@
 package com.simibubi.create.lib.util;
 
 import com.simibubi.create.lib.extensions.EntityExtensions;
-import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
+import com.simibubi.create.lib.mixin.common.accessor.EntityAccessor;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;

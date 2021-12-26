@@ -1,16 +1,13 @@
 package com.simibubi.create.lib.mixin.common;
 
-import com.simibubi.create.lib.mixin.accessor.RedStoneWireBlockAccessor;
-
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.mixin.common.accessor.RedStoneWireBlockAccessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
