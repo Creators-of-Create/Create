@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.fluid;
 
-import java.util.function.Function;
-
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
@@ -13,11 +11,8 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -25,10 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 
 @Environment(EnvType.CLIENT)
@@ -39,23 +31,23 @@ public class FluidRenderer {
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
-										 boolean inbound, MultiBufferSource buffer, PoseStack ms, int light) {
+		boolean inbound, MultiBufferSource buffer, PoseStack ms, int light) {
 		renderFluidStream(fluidStack, direction, radius, progress, inbound, getFluidBuilder(buffer), ms, light);
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, VertexConsumer builder, PoseStack ms, int light) {
-		Fluid fluid = fluidStack.getFluid();
-		//FluidAttributes fluidAttributes = fluid.getAttributes();
-		FluidRenderHandler handler = FluidRenderHandlerRegistry.INSTANCE.get(fluid);
-		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
-			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite flowTexture = spriteAtlas.apply(handler.getFluidSprites(null, null, fluidStack.getFluid().defaultFluidState())[1].getName());
-		TextureAtlasSprite stillTexture = spriteAtlas.apply(FluidVariantRendering.getSprite(fluidStack.getType()).getName());
+		FluidVariant fluidVariant = fluidStack.getType();
+		TextureAtlasSprite[] sprites = FluidVariantRendering.getSprites(fluidVariant);
+		if (sprites == null) {
+			return;
+		}
+		TextureAtlasSprite flowTexture = sprites[1];
+		TextureAtlasSprite stillTexture = sprites[0];
 
-		int color = FluidVariantRendering.getColor(fluidStack.getType());
+		int color = FluidVariantRendering.getColor(fluidVariant);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = 0;//Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = Math.max(blockLightIn, fluidVariant.getFluid().defaultFluidState().createLegacyBlock().getLightEmission());
 		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
@@ -99,19 +91,18 @@ public class FluidRenderer {
 	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
 		float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
 		FluidVariant fluidVariant = fluidStack.getType();
-		if(fluidStack.isVirtual()) return;
-		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
-			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-			.apply(FluidVariantRendering.getSprite(fluidVariant).getName());
+		TextureAtlasSprite fluidTexture = FluidVariantRendering.getSprite(fluidVariant);
+		if (fluidTexture == null)
+			return;
 
-		int color = FluidVariantRendering.getColor(fluidStack.getType());
+		int color = FluidVariantRendering.getColor(fluidVariant);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = 0;//Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = Math.max(blockLightIn, fluidVariant.getFluid().defaultFluidState().createLegacyBlock().getLightEmission());
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
-		if (FluidVariantRendering.fillsFromTop(fluidStack.getType()))
+		if (FluidVariantRendering.fillsFromTop(fluidVariant))
 			TransformStack.cast(ms)
 				.translate(center)
 				.rotateX(180)
