@@ -1,19 +1,15 @@
 package com.simibubi.create.lib.condition;
 
-import java.util.function.Predicate;
+import com.simibubi.create.lib.data.ICondition;
 
-import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 
-public class NotCondition implements Condition
+public class NotCondition implements ICondition
 {
 	private static final ResourceLocation NAME = new ResourceLocation("forge", "not");
-	private final Condition child;
+	private final ICondition child;
 
-	public NotCondition(Condition child) {
+	public NotCondition(ICondition child) {
 		this.child = child;
 	}
 
@@ -23,7 +19,12 @@ public class NotCondition implements Condition
 	}
 
 	@Override
-	public Predicate<BlockState> getPredicate(StateDefinition<Block, BlockState> stateContainer) {
-		return child.getPredicate(stateContainer).negate();
+	public ResourceLocation getID() {
+		return NAME;
+	}
+
+	@Override
+	public boolean test() {
+		return !child.test();
 	}
 }

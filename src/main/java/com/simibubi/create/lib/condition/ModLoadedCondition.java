@@ -1,20 +1,18 @@
 package com.simibubi.create.lib.condition;
 
-import java.util.function.Predicate;
+import com.simibubi.create.lib.data.ICondition;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 
-public class ModLoadedCondition implements Condition {
+public class ModLoadedCondition implements ICondition {
 	private static final ResourceLocation NAME = new ResourceLocation("create", "mod_loaded");
 	private final String modid;
+	private final boolean loaded;
 
 	public ModLoadedCondition(String modid) {
 		this.modid = modid;
+		this.loaded = FabricLoader.getInstance().isModLoaded(modid);
 	}
 
 	@Override
@@ -23,7 +21,12 @@ public class ModLoadedCondition implements Condition {
 	}
 
 	@Override
-	public Predicate<BlockState> getPredicate(StateDefinition<Block, BlockState> stateContainer) {
-		return (blockState) -> FabricLoader.getInstance().isModLoaded(modid);
+	public ResourceLocation getID() {
+		return NAME;
+	}
+
+	@Override
+	public boolean test() {
+		return loaded;
 	}
 }

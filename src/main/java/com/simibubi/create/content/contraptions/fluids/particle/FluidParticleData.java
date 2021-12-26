@@ -10,6 +10,8 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -33,8 +35,13 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 	@Override
 	@Environment(EnvType.CLIENT)
 	public ParticleProvider<FluidParticleData> getFactory() {
-		return (data, world, x, y, z, vx, vy, vz) -> FluidStackParticle.create(data.type, world, data.fluid, x, y, z,
-			vx, vy, vz);
+		return this::create;
+	}
+
+	// fabric: lambda funk
+	@Environment(EnvType.CLIENT)
+	private Particle create(FluidParticleData type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		return FluidStackParticle.create(type.type, level, type.fluid, x, y, z, xSpeed, ySpeed, zSpeed);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
@@ -38,7 +39,12 @@ public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extend
 	@Override
 	@Environment(EnvType.CLIENT)
 	public default void register(ParticleType<T> type, ParticleEngine particles) {
-		ParticleFactoryRegistry.getInstance().register(type, provider -> getMetaFactory().create(provider));
+		ParticleFactoryRegistry.getInstance().register(type, this::register);
 	}
 
+	// fabric: lambda funk
+	@Environment(EnvType.CLIENT)
+	private ParticleProvider<T> register(FabricSpriteProvider prov) {
+		return getMetaFactory().create(prov);
+	}
 }

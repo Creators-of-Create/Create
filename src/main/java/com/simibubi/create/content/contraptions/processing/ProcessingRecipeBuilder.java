@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 import com.simibubi.create.lib.condition.ModLoadedCondition;
 import com.simibubi.create.lib.condition.NotCondition;
+import com.simibubi.create.lib.data.ICondition;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
-import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +30,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	protected ProcessingRecipeFactory<T> factory;
 	protected ProcessingRecipeParams params;
-	protected List<Condition> recipeConditions;
+	protected List<ICondition> recipeConditions;
 
 	public ProcessingRecipeBuilder(ProcessingRecipeFactory<T> factory, ResourceLocation recipeId) {
 		params = new ProcessingRecipeParams(recipeId);
@@ -183,7 +183,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
 	}
 
-	public ProcessingRecipeBuilder<T> withCondition(Condition condition) {
+	public ProcessingRecipeBuilder<T> withCondition(ICondition condition) {
 		recipeConditions.add(condition);
 		return this;
 	}
@@ -220,13 +220,13 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	public static class DataGenResult<S extends ProcessingRecipe<?>> implements FinishedRecipe {
 
-		private List<Condition> recipeConditions;
+		private List<ICondition> recipeConditions;
 		private ProcessingRecipeSerializer<S> serializer;
 		private ResourceLocation id;
 		private S recipe;
 
 		@SuppressWarnings("unchecked")
-		public DataGenResult(S recipe, List<Condition> recipeConditions) {
+		public DataGenResult(S recipe, List<ICondition> recipeConditions) {
 			this.recipe = recipe;
 			this.recipeConditions = recipeConditions;
 			IRecipeTypeInfo recipeType = this.recipe.getTypeInfo();
