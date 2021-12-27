@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import io.github.tropheusj.milk.Milk;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -482,9 +483,9 @@ public class PipeScenes {
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
 
-//		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-//			te -> TransferUtil.getFluidHandler(te)
-//				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), false))); // FIXME PORT: MILK
+		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
+			te -> TransferUtil.getFluidHandler(te)
+				.ifPresent(ifh -> ifh.fill(new FluidStack(Milk.STILL_MILK, FluidConstants.BUCKET), false)));
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);
