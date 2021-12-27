@@ -4,8 +4,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
@@ -61,7 +59,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnels()
 			.setInsertionHandler(this::tryInsertingFromSide));
-		behaviours.add(internalTank = SmartFluidTankBehaviour.single(this, (long) (FluidConstants.BUCKET * 1.5))
+		behaviours.add(internalTank = SmartFluidTankBehaviour.single(this, 1500)
 			.allowExtraction()
 			.forbidInsertion());
 	}
@@ -288,7 +286,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Override
 	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
 		if (direction != Direction.UP) {
-			return internalTank.getCapability().orElse(null);
+			return internalTank.getCapability().getValueUnsafer();
 		}
 		return null;
 	}

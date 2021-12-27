@@ -1,6 +1,5 @@
 package com.simibubi.create.lib.transfer.fluid;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
@@ -132,17 +131,23 @@ public class FluidStack {
 		if (this == other) return true;
 		if (other == null) return false;
 
-		boolean amountsEqual = getAmount() == other.getAmount();
-
 		FluidVariant mine = getType();
 		FluidVariant theirs = other.getType();
 		boolean fluidsEqual = mine.isOf(theirs.getFluid());
 
+
 		CompoundTag myTag = mine.getNbt();
 		CompoundTag theirTag = theirs.getNbt();
-		boolean tagsEqual = Objects.equals(myTag, theirTag);
 
-		return fluidsEqual && tagsEqual && amountsEqual;
+		if (myTag == null) {
+			return theirTag == null && fluidsEqual;
+		} else if (theirTag == null) {
+			return false;
+		}
+
+		boolean tagsEqual = myTag.equals(theirTag);
+
+		return fluidsEqual && tagsEqual;
 	}
 
 	public CompoundTag writeToNBT(CompoundTag nbt) {
@@ -217,19 +222,19 @@ public class FluidStack {
 	}
 
 	public String getTranslationKey() {
-		if (translationKey == null) {
-			if (getFluid() == Fluids.EMPTY) {
-				translationKey = "";
-			} else if (getFluid() == Fluids.WATER) {
-				translationKey = "block.minecraft.water";
-			} else if (getFluid() == Fluids.LAVA) {
-				translationKey = "block.minecraft.lava";
-			} else {
-				ResourceLocation id = Registry.FLUID.getKey(getFluid());
-				String key = Util.makeDescriptionId("block", id);
-				String translated = I18n.get(key);
-				translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
-			}
+		if (translationKey != null) return translationKey;
+
+		if (getFluid() == Fluids.EMPTY) {
+			translationKey = "";
+		} else if (getFluid() == Fluids.WATER) {
+			translationKey = "block.minecraft.water";
+		} else if (getFluid() == Fluids.LAVA) {
+			translationKey = "block.minecraft.lava";
+		} else {
+			ResourceLocation id = Registry.FLUID.getKey(getFluid());
+			String key = Util.makeDescriptionId("block", id);
+			String translated = I18n.get(key);
+			translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
 		}
 		return translationKey;
 	}
