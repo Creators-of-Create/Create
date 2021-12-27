@@ -60,46 +60,53 @@ public class FluidStorageHandler implements IFluidHandler {
 
 	@Override
 	public long fill(FluidStack stack, boolean sim) {
-		long finalVal = stack.getAmount();
-		if(stack.getType().isBlank())
-			return finalVal;
+		if (stack.isEmpty())
+			return 0;
 		try (Transaction t = Transaction.openOuter()) {
-			long remainder = storage.insert(stack.getType(), stack.getAmount(), t);
-			if (remainder != 0) {
-				finalVal = remainder;
-			}
+			long filled = storage.insert(stack.getType(), stack.getAmount(), t);
 			if (!sim) {
 				t.commit();
 			}
+			return filled;
 		}
-		return finalVal;
 	}
 
 	@Override
 	public FluidStack drain(FluidStack stack, boolean sim) {
-		FluidStack finalVal;
+		if (stack.isEmpty())
+			return FluidStack.empty();
 		try (Transaction t = Transaction.openOuter()) {
 			long extracted = storage.extract(stack.getType(), stack.getAmount(), t);
-			finalVal = new FluidStack(stack.getType(), extracted);
 			if (!sim) {
 				t.commit();
 			}
+			return stack.copy().setAmount(extracted);
 		}
-		return finalVal;
 	}
 
 	@Override
 	public FluidStack drain(long amount, boolean sim) {
+		FluidStack extracted = FluidStack.empty();
+		if (amount == 0)
+			return extracted;
+		long toExtract = amount;
 		try (Transaction t = Transaction.openOuter()) {
 			for (StorageView<FluidVariant> view : storage.iterable(t)) {
 				FluidVariant var = view.getResource();
-				if (var.isBlank()) continue;
-				long extracted = view.extract(var, amount, t);
-				if (extracted != 0) {
-					if (!sim) t.commit();
-					return new FluidStack(var, extracted);
+				if (var.isBlank() || !extracted.isOf(var, false)) continue;
+				long drained = view.extract(var, toExtract, t);
+				toExtract -= drained;
+				if (drained != 0) {
+					if (extracted.isEmpty()) {
+						extracted = new FluidStack(var, drained);
+					} else if (extracted.isOf(var, false)) {
+						extracted.grow(drained);
+					}
 				}
+				if (toExtract == 0) break;
 			}
+			if (!sim)
+				t.commit();
 		}
 		return FluidStack.empty();
 	}

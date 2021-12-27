@@ -117,7 +117,7 @@ public class FluidStack {
 	}
 
 	public boolean isEmpty() {
-		return amount == 0;
+		return amount == 0 || getType().isBlank();
 	}
 
 	public void shrink(int amount) {
@@ -141,6 +141,13 @@ public class FluidStack {
 		boolean tagsEqual = Objects.equals(myTag, theirTag);
 
 		return fluidsEqual && tagsEqual;
+	}
+
+	public boolean isOf(FluidVariant var, boolean ignoreNbt) {
+		if (ignoreNbt) {
+			return var.isOf(getFluid());
+		}
+		return var.isOf(getFluid()) && Objects.equals(var.getNbt(), getType().getNbt());
 	}
 
 	public CompoundTag writeToNBT(CompoundTag nbt) {

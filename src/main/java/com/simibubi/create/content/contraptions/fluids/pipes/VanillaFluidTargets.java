@@ -29,7 +29,7 @@ public class VanillaFluidTargets {
 			if (!simulate)
 				level.setBlock(pos, state.setValue(LEVEL_HONEY, 0), 3);
 			return new FluidStack(AllFluids.HONEY.get()
-				.getSource(), 250);
+				.getSource(), FluidConstants.BOTTLE);
 		}
 
 		if (state.getBlock() == Blocks.LAVA_CAULDRON) {

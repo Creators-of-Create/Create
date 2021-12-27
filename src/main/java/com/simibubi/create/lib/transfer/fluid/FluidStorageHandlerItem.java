@@ -1,5 +1,8 @@
 package com.simibubi.create.lib.transfer.fluid;
 
+import com.simibubi.create.AllFluids;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
+import com.simibubi.create.lib.mixin.compat.fapi.accessor.EmptyItemFluidStorageAccessor;
 import com.simibubi.create.lib.mixin.compat.fapi.accessor.FullItemFluidStorageAccessor;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -9,21 +12,24 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.BottleItem;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.HoneyBottleItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+
 import net.minecraft.world.level.material.Fluid;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings({"UnstableApiUsage"})
 public class FluidStorageHandlerItem extends FluidStorageHandler implements IFluidHandlerItem {
-	public static final Map<Fluid, BucketItem> BUCKETS = new HashMap<>();
-
 	protected ContainerItemContext ctx;
 	protected boolean emptied;
 
@@ -54,6 +60,7 @@ public class FluidStorageHandlerItem extends FluidStorageHandler implements IFlu
 				if (ctx.exchange(getFilled(stack), 1, t) == 1) {
 					emptied = !sim;
 				}
+				if (!sim) t.commit();
 			}
 		}
 		if (emptied) return 0;
@@ -78,8 +85,12 @@ public class FluidStorageHandlerItem extends FluidStorageHandler implements IFlu
 	public FluidStack drain(FluidStack stack, boolean sim) {
 		if (emptied) return FluidStack.empty();
 		FluidStack drained = super.drain(stack, sim);
-		if (!sim && empty()) {
-			emptied = true;
+		if (empty()) {
+			try (Transaction t = Transaction.openOuter()) {
+				if (ctx.exchange(getEmptied(), 1, t) == 1) {
+					emptied = !sim;
+				}
+			}
 		}
 		return drained;
 	}
@@ -87,16 +98,22 @@ public class FluidStorageHandlerItem extends FluidStorageHandler implements IFlu
 	public ItemVariant getEmptied() {
 		if (emptied) return ItemVariant.blank();
 		ItemStack stack = getContainer();
-		if (stack.getItem() instanceof BucketItem) {
+		Item item = stack.getItem();
+		if (item instanceof BucketItem) {
 			return ItemVariant.of(Items.BUCKET);
-		} else if (stack.getItem() instanceof BottleItem) {
+		} else if (item instanceof BottleItem || item instanceof HoneyBottleItem) {
 			return ItemVariant.of(Items.GLASS_BOTTLE);
 		} else if (storage instanceof FullItemFluidStorageAccessor access) {
 			return access.create$fullToEmptyMapping().apply(ItemVariant.of(stack));
+		} else if (storage instanceof EmptyItemFluidStorageAccessor access) {
+			return ItemVariant.of(access.create$emptyItem());
 		} else if (storage instanceof CombinedStorage combined) {
 			if (combined.parts.size() == 1) {
-				if (combined.parts.get(0) instanceof FullItemFluidStorageAccessor access) {
+				Object storage = combined.parts.get(0);
+				if (storage instanceof FullItemFluidStorageAccessor access) {
 					return access.create$fullToEmptyMapping().apply(ItemVariant.of(stack));
+				} else if (storage instanceof EmptyItemFluidStorageAccessor access) {
+					return ItemVariant.of(access.create$emptyItem());
 				}
 			}
 		}
@@ -105,21 +122,42 @@ public class FluidStorageHandlerItem extends FluidStorageHandler implements IFlu
 
 	public ItemVariant getFilled(FluidStack fluid) {
 		ItemStack stack = getContainer();
-		if (stack.getItem() instanceof BucketItem) {
-			BucketItem bucket = BUCKETS.get(fluid.getFluid());
-			if (bucket != null) return ItemVariant.of(bucket);
-		} else if (stack.getItem() instanceof BottleItem) {
-			return ItemVariant.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
+		Item item = stack.getItem();
+		ItemVariant var = ItemVariant.of(stack);
+		Fluid contained = fluid.getFluid();
+		if (item instanceof BucketItem) {
+			Item bucket = fluid.getFluid().getBucket();
+			if (bucket != Items.AIR) return ItemVariant.of(bucket);
+		}
+
+		if (item instanceof BottleItem) {
+			if (AllFluids.HONEY.is(contained)) {
+				return ItemVariant.of(Items.HONEY_BOTTLE);
+			} else if (AllFluids.POTION.is(contained)) {
+				String potion = fluid.getOrCreateTag().getString("Potion");
+				if (!potion.isEmpty()) {
+					ItemStack potionStack = new ItemStack(Items.POTION);
+					PotionUtils.setPotion(potionStack, Registry.POTION.get(new ResourceLocation(potion)));
+					return ItemVariant.of(potionStack);
+				}
+			} else if (FluidTags.WATER.contains(contained)) {
+				return ItemVariant.of(PotionUtils.setPotion(Items.POTION.getDefaultInstance(), Potions.WATER));
+			}
 		} else if (storage instanceof FullItemFluidStorageAccessor access) {
 			return ItemVariant.of(access.create$fullItem());
+		} else if (storage instanceof EmptyItemFluidStorageAccessor access) {
+			return access.create$emptyToFullMapping().apply(var);
 		} else if (storage instanceof CombinedStorage combined) {
 			if (combined.parts.size() == 1) {
-				if (combined.parts.get(0) instanceof FullItemFluidStorageAccessor access) {
+				Object storage = combined.parts.get(0);
+				if (storage instanceof FullItemFluidStorageAccessor access) {
 					return ItemVariant.of(access.create$fullItem());
+				} else if (storage instanceof EmptyItemFluidStorageAccessor access) {
+					return access.create$emptyToFullMapping().apply(var);
 				}
 			}
 		}
-		return ItemVariant.of(stack);
+		return var;
 	}
 
 	public boolean empty() {

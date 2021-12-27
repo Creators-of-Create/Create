@@ -24,7 +24,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		TEA = create("tea", b -> b.require(Fluids.WATER, FluidConstants.BOTTLE)
 			.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(ItemTags.LEAVES)
-			.output(AllFluids.TEA.get(), FluidConstants.BUCKET / 2)
+			.output(AllFluids.TEA.get(), FluidConstants.BOTTLE * 2)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)

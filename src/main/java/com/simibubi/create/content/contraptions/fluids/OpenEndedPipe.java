@@ -342,7 +342,7 @@ public class OpenEndedPipe extends FlowSource {
 		public void applyEffects(OpenEndedPipe pipe, FluidStack fluid) {
 			if (pipe.cachedFluid == null || pipe.cachedEffects == null || !fluid.isFluidEqual(pipe.cachedFluid)) {
 				FluidStack copy = fluid.copy();
-				copy.setAmount(250);
+				copy.setAmount(FluidConstants.BOTTLE);
 				ItemStack bottle = PotionFluidHandler.fillBottle(new ItemStack(Items.GLASS_BOTTLE), fluid);
 				pipe.cachedEffects = PotionUtils.getMobEffects(bottle);
 			}
