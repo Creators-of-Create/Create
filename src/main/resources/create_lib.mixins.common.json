@@ -68,7 +68,7 @@
     "ShapelessRecipe$SerializerMixin",
     "StructureProcessorMixin",
     "StructureTemplateMixin",
-    "WalkNodeEvaluatorMixin",
+    "WalkNodeEvaluatorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

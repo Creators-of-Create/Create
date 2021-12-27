@@ -4,7 +4,8 @@
   "package": "com.simibubi.create.lib.mixin.compat",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "lithium.EntityMixin"
+    "lithium.EntityMixin",
+    "fapi.accessor.FullItemFluidStorageAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

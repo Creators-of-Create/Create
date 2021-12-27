@@ -84,9 +84,10 @@ public class TransferUtil {
 
 	public static LazyOptional<IFluidHandlerItem> getFluidHandlerItem(ItemStack stack) {
 		if (stack == null || stack.isEmpty()) return LazyOptional.empty();
-		ContainerItemContext ctx = new ItemStackContainerItemContext(stack);
+//		ContainerItemContext ctx = new ItemStackContainerItemContext(stack);
+		ContainerItemContext ctx = ContainerItemContext.withInitial(stack);
 		Storage<FluidVariant> fluidStorage = FluidStorage.ITEM.find(stack, ctx);
-		return fluidStorage == null ? LazyOptional.empty() : LazyOptional.ofObject(new FluidStorageHandlerItem(stack, ctx, fluidStorage));
+		return fluidStorage == null ? LazyOptional.empty() : LazyOptional.ofObject(new FluidStorageHandlerItem(ctx, fluidStorage));
 	}
 
 	// Helpers
