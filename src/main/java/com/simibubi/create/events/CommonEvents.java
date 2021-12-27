@@ -3,6 +3,10 @@ package com.simibubi.create.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
+
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -220,8 +224,8 @@ public class CommonEvents {
 		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
 		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
-		CommonEvents.onBiomeLoad();
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
+		CommonEvents.onBiomeLoad();
 
 		// External Events
 
@@ -244,6 +248,7 @@ public class CommonEvents {
 		BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
 		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
 		PlayerTickEndCallback.EVENT.register(HauntedBellPulser::hauntedBellCreatesPulse);
+		UseItemCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 	}
 
 }

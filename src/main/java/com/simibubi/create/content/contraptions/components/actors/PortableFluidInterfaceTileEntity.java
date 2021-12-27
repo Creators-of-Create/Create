@@ -52,7 +52,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 	@Nullable
 	@Override
 	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
-		return capability.getValueUnsafer();
+		return capability.orElse(null);
 	}
 
 	public class InterfaceFluidHandler implements IFluidHandler {

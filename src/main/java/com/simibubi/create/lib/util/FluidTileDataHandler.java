@@ -29,7 +29,7 @@ public class FluidTileDataHandler {
 	private static final Map<BlockPos, FluidTankData[]> CACHED_DATA = new HashMap<>();
 
 	public static void sendDataToClients(ServerLevel world, FluidTransferable transferable) {
-		world.getPlayers(player ->  {
+		world.getPlayers(player -> {
 			IFluidHandler handler = TransferUtil.getFluidHandler((BlockEntity) transferable).orElse(null);
 			FluidTankData[] tankData = new FluidTankData[handler.getTanks()];
 			for (int i = 0; i < tankData.length; i++) {

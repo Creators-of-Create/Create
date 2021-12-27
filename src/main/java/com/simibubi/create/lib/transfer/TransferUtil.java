@@ -46,7 +46,7 @@ public class TransferUtil {
 
 	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos) {
 		if (level.isClientSide) return LazyOptional.empty();
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, Direction.UP);
+		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, Direction.WEST); // both up and down break stuff, lets hope other blocks are symmetrical
 		return simplifyItem(itemStorage).cast();
 	}
 
@@ -64,7 +64,7 @@ public class TransferUtil {
 				return LazyOptional.empty();
 			return LazyOptional.ofObject(Objects.requireNonNull(FluidTileDataHandler.getCachedHandler(be.getBlockPos())));
 		}
-		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
+		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.WEST); // both up and down break stuff, lets hope other blocks are symmetrical
 		return simplifyFluid(fluidStorage).cast();
 	}
 
@@ -84,8 +84,9 @@ public class TransferUtil {
 
 	public static LazyOptional<IFluidHandlerItem> getFluidHandlerItem(ItemStack stack) {
 		if (stack == null || stack.isEmpty()) return LazyOptional.empty();
-		Storage<FluidVariant> fluidStorage = FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
-		return fluidStorage == null ? LazyOptional.empty() : LazyOptional.ofObject(new FluidStorageHandlerItem(stack, fluidStorage));
+		ContainerItemContext ctx = new ItemStackContainerItemContext(stack);
+		Storage<FluidVariant> fluidStorage = FluidStorage.ITEM.find(stack, ctx);
+		return fluidStorage == null ? LazyOptional.empty() : LazyOptional.ofObject(new FluidStorageHandlerItem(stack, ctx, fluidStorage));
 	}
 
 	// Helpers
