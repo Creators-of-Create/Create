@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import io.github.tropheusj.milk.Milk;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,6 +90,7 @@ public class Create implements ModInitializer {
 		BlockSpoutingBehaviour.register();
 
 //		ForgeMod.enableMilkFluid();
+		Milk.enableMilkFluid();
 
 		CopperRegistries.inject();
 

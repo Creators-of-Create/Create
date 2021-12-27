@@ -83,7 +83,7 @@ dependencies {
     modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
-    modImplementation(include("io.github.tropheusj:milk-lib:0.1.1"))
+    modImplementation(include("io.github.tropheusj:milk-lib:0.1.5"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
 }
 
