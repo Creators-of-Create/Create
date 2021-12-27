@@ -132,8 +132,6 @@ public class FluidStack {
 		if (this == other) return true;
 		if (other == null) return false;
 
-		boolean amountsEqual = getAmount() == other.getAmount();
-
 		FluidVariant mine = getType();
 		FluidVariant theirs = other.getType();
 		boolean fluidsEqual = mine.isOf(theirs.getFluid());
@@ -142,7 +140,7 @@ public class FluidStack {
 		CompoundTag theirTag = theirs.getNbt();
 		boolean tagsEqual = Objects.equals(myTag, theirTag);
 
-		return fluidsEqual && tagsEqual && amountsEqual;
+		return fluidsEqual && tagsEqual;
 	}
 
 	public CompoundTag writeToNBT(CompoundTag nbt) {

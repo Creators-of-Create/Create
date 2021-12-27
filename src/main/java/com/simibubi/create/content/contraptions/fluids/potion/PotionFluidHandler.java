@@ -52,7 +52,7 @@ public class PotionFluidHandler {
 	public static FluidStack getFluidFromPotionItem(ItemStack stack) {
 		Potion potion = PotionUtils.getPotion(stack);
 		List<MobEffectInstance> list = PotionUtils.getCustomEffects(stack);
-		FluidStack fluid = PotionFluid.withEffects(FluidConstants.BUCKET / 4, potion, list);
+		FluidStack fluid = PotionFluid.withEffects(FluidConstants.BOTTLE, potion, list);
 		BottleType bottleTypeFromItem = bottleTypeFromItem(stack);
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
 			return new FluidStack(Fluids.WATER, fluid.getAmount());
@@ -83,7 +83,7 @@ public class PotionFluidHandler {
 	}
 
 	public static long getRequiredAmountForFilledBottle(ItemStack stack, FluidStack availableFluid) {
-		return FluidConstants.BUCKET / 4;
+		return FluidConstants.BOTTLE;
 	}
 
 	public static ItemStack fillBottle(ItemStack stack, FluidStack availableFluid) {

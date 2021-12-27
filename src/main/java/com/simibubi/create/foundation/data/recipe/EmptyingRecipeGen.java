@@ -5,6 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.Items;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
@@ -17,12 +18,12 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 		HONEY_BOTTLE = create("honey_bottle", b -> b
 			.require(Items.HONEY_BOTTLE)
-			.output(AllFluids.HONEY.get(), 250)
+			.output(AllFluids.HONEY.get(), FluidConstants.BOTTLE)
 			.output(Items.GLASS_BOTTLE)),
 
 		BUILDERS_TEA = create("builders_tea", b -> b
 			.require(AllItems.BUILDERS_TEA.get())
-			.output(AllFluids.TEA.get(), 250)
+			.output(AllFluids.TEA.get(), FluidConstants.BOTTLE)
 			.output(Items.GLASS_BOTTLE))
 
 	;

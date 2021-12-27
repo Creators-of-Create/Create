@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.BottleItem;
 import net.minecraft.world.item.BucketItem;
@@ -92,6 +93,12 @@ public class FluidStorageHandlerItem extends FluidStorageHandler implements IFlu
 			return ItemVariant.of(Items.GLASS_BOTTLE);
 		} else if (storage instanceof FullItemFluidStorageAccessor access) {
 			return access.create$fullToEmptyMapping().apply(ItemVariant.of(stack));
+		} else if (storage instanceof CombinedStorage combined) {
+			if (combined.parts.size() == 1) {
+				if (combined.parts.get(0) instanceof FullItemFluidStorageAccessor access) {
+					return access.create$fullToEmptyMapping().apply(ItemVariant.of(stack));
+				}
+			}
 		}
 		return ItemVariant.of(stack);
 	}
@@ -105,6 +112,12 @@ public class FluidStorageHandlerItem extends FluidStorageHandler implements IFlu
 			return ItemVariant.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
 		} else if (storage instanceof FullItemFluidStorageAccessor access) {
 			return ItemVariant.of(access.create$fullItem());
+		} else if (storage instanceof CombinedStorage combined) {
+			if (combined.parts.size() == 1) {
+				if (combined.parts.get(0) instanceof FullItemFluidStorageAccessor access) {
+					return ItemVariant.of(access.create$fullItem());
+				}
+			}
 		}
 		return ItemVariant.of(stack);
 	}
