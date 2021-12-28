@@ -112,7 +112,7 @@ public class CommonEvents {
 		CouplingPhysics.tick(world);
 		LinkedControllerServerHandler.tick(world);
 
-		KineticSolver.getSolver(world).solve();
+		KineticSolver.getSolver(world).flushChangedSpeeds();
 	}
 
 	@SubscribeEvent

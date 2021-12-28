@@ -3,10 +3,7 @@ package com.simibubi.create.content.contraptions.components.motor;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.solver.ConstantSpeedRule;
-import com.simibubi.create.content.contraptions.solver.HalfShaftConnectionRule;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
-import com.simibubi.create.content.contraptions.solver.SolverBlock;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
@@ -22,7 +19,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<CreativeMotorTileEntity>, SolverBlock {
+public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<CreativeMotorTileEntity> {
 
 	public CreativeMotorBlock(Properties properties) {
 		super(properties);
@@ -75,13 +72,4 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 		return AllTileEntities.MOTOR.get();
 	}
 
-	@Override
-	public void created(KineticSolver solver, Level level, BlockPos pos) {
-		BlockState state = level.getBlockState(pos);
-		Direction to = state.getValue(FACING);
-		int speed = getTileEntityOptional(level, pos).map(te -> te.generatedSpeed.getValue()).orElse(0);
-
-		solver.addRule(pos, new HalfShaftConnectionRule(to));
-		solver.addRule(pos, new ConstantSpeedRule(speed));
-	}
 }

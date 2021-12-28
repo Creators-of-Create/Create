@@ -18,8 +18,9 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
+import com.simibubi.create.content.contraptions.solver.KineticNodeState;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
-import com.simibubi.create.content.contraptions.solver.SolverBlock;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -72,6 +73,26 @@ public class KineticTileEntity extends SmartTileEntity
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
 
+	private KineticNodeState kineticNodeState;
+
+	public KineticNodeState getKineticNodeState() {
+		return kineticNodeState;
+	}
+
+	public KineticNodeState getInitialKineticNodeState() {
+		return new KineticNodeState(new KineticConnections(), 0);
+	}
+
+	private void addToSolver() {
+		kineticNodeState = getInitialKineticNodeState();
+		KineticSolver.getSolver(level).addNode(this);
+	}
+
+	private void removeFromSolver() {
+		KineticSolver.getSolver(level).removeNode(this);
+	}
+
+
 	public KineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
 		effects = new KineticEffectHandler(this);
@@ -87,6 +108,10 @@ public class KineticTileEntity extends SmartTileEntity
 			network.addSilently(this, lastCapacityProvided, lastStressApplied);
 		}
 
+		if (!level.isClientSide) {
+			addToSolver();
+		}
+
 		super.initialize();
 	}
 
@@ -97,6 +122,10 @@ public class KineticTileEntity extends SmartTileEntity
 
 		super.tick();
 		effects.tick();
+
+		if (!level.isClientSide && !isRemoved()) {
+			KineticSolver.getSolver(level).updateNode(this);
+		}
 
 		if (level.isClientSide) {
 			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
@@ -196,6 +225,7 @@ public class KineticTileEntity extends SmartTileEntity
 			if (hasNetwork())
 				getOrCreateNetwork().remove(this);
 			detachKinetics();
+			removeFromSolver();
 		}
 		super.setRemovedNotDueToChunkUnload();
 	}
@@ -346,24 +376,10 @@ public class KineticTileEntity extends SmartTileEntity
 
 	public void attachKinetics() {
 		updateSpeed = false;
-
-		KineticSolver solver = KineticSolver.getSolver(level);
-		BlockState state = getBlockState();
-		if (state.getBlock() instanceof SolverBlock sb) {
-			solver.removeAllRules(worldPosition);
-			sb.created(solver, level, worldPosition);
-		}
-
 		RotationPropagator.handleAdded(level, worldPosition, this);
 	}
 
 	public void detachKinetics() {
-		KineticSolver solver = KineticSolver.getSolver(level);
-		BlockState state = getBlockState();
-		if (state.getBlock() instanceof SolverBlock) {
-			solver.removeAllRules(worldPosition);
-		}
-
 		RotationPropagator.handleRemoved(level, worldPosition, this);
 	}
 

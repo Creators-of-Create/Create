@@ -1,12 +1,10 @@
 package com.simibubi.create.content.contraptions.solver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -20,71 +18,39 @@ public class KineticSolver {
 		return SOLVERS.get(level);
 	}
 
-	private final PropertyMap properties = new PropertyMap();
-	private final Map<BlockPos, Set<RewriteRule.Tracker<?>>> rules = new HashMap<>();
-	private final HashSet<RewriteRule.Tracker<?>> allRules = new HashSet<>();
+	private final Map<BlockPos, KineticNode> nodes = new HashMap<>();
 
-	private Set<RewriteRule.Tracker<?>> rulesFrontier = new HashSet<>();
-
-	public <T> RewriteRule<T> addRule(BlockPos pos, RewriteRule.Descriptor<T> ruleDesc) {
-		RewriteRule<T> rule = new RewriteRule<>(ruleDesc);
-		RewriteRule.Tracker<?> tracker = new RewriteRule.Tracker<>(rule, pos, properties::trackReader);
-		rules.computeIfAbsent(pos, $ -> new HashSet<>()).add(tracker);
-		allRules.add(tracker);
-		rulesFrontier.add(tracker);
-		return rule;
+	public void addNode(KineticTileEntity entity) {
+		removeNode(entity);
+		KineticNode node = new KineticNode(entity, this::getNode);
+		nodes.put(entity.getBlockPos(), node);
+		node.onAdded();
 	}
 
-	public void removeRule(BlockPos pos, RewriteRule<?> rule) {
-		Set<RewriteRule.Tracker<?>> trackers = rules.get(pos);
-		if (trackers == null) return;
-		trackers.stream()
-				.filter(t -> t.rule == rule)
-				.findAny()
-				.ifPresent(tracker -> {
-					allRules.remove(tracker);
-					trackers.remove(tracker);
-					if (trackers.isEmpty()) {
-						rules.remove(pos);
-					}
-					properties.untrackReader(tracker);
-					rulesFrontier.addAll(properties.unwrite(tracker.writes));
-				});
-	}
+	public void updateNode(KineticTileEntity entity) {
+		KineticNode node = nodes.get(entity.getBlockPos());
+		KineticNodeState state = entity.getKineticNodeState();
 
-	public void removeAllRules(BlockPos pos) {
-		Set<RewriteRule.Tracker<?>> trackers = rules.remove(pos);
-		if (trackers == null) return;
-		for (RewriteRule.Tracker<?> tracker: trackers) {
-			allRules.remove(tracker);
-			properties.untrackReader(tracker);
-		}
-		for (RewriteRule.Tracker<?> tracker: trackers) {
-			rulesFrontier.addAll(properties.unwrite(tracker.writes));
+		if (!node.getConnections().equals(state.getConnections())) {
+			// connections changed, so things could've been disconnected
+			removeNode(entity);
+			addNode(entity);
+		} else {
+			// connections are the same, so just set speed in case it changed
+			node.setGeneratedSpeed(state.getGeneratedSpeed());
 		}
 	}
 
-	public Set<BlockPos> solve() {
-		Set<BlockPos> contradictions = new HashSet<>();
+	protected Optional<KineticNode> getNode(BlockPos pos) {
+		return Optional.ofNullable(nodes.get(pos));
+	}
 
-		while (!rulesFrontier.isEmpty()) {
-			Set<RewriteRule.Tracker<?>> next = new HashSet<>();
+	public void removeNode(KineticTileEntity entity) {
+		KineticNode node = nodes.remove(entity.getBlockPos());
+		if (node != null) node.onRemoved();
+	}
 
-			for (RewriteRule.Tracker<?> rule : rulesFrontier) {
-				if (!allRules.contains(rule) || !rule.canRewrite()) continue;
-
-				PropertyMap.WriteResult res = rule.rewrite(properties);
-				if (res instanceof PropertyMap.WriteResult.Ok ok) {
-					next.addAll(ok.readyToRewrite);
-				} else if (res instanceof PropertyMap.WriteResult.Contradiction) {
-					removeAllRules(rule.pos);
-					contradictions.add(rule.pos);
-				}
-			}
-
-			rulesFrontier = next;
-		}
-
-		return contradictions;
+	public void flushChangedSpeeds() {
+		nodes.values().forEach(KineticNode::flushChangedSpeed);
 	}
 }

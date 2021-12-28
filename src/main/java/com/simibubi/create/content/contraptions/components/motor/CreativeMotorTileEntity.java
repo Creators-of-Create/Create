@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticNodeState;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -37,9 +39,17 @@ public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
 		generatedSpeed.value = DEFAULT_SPEED;
 		generatedSpeed.scrollableValue = DEFAULT_SPEED;
 		generatedSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
-		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
+		generatedSpeed.withCallback(i -> this.getKineticNodeState().setGeneratedSpeed(getGeneratedSpeed()));
 		generatedSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(generatedSpeed);
+	}
+
+	@Override
+	public KineticNodeState getInitialKineticNodeState() {
+		return new KineticNodeState(
+				AllConnections.HALF_SHAFT.apply(getBlockState().getValue(CreativeMotorBlock.FACING)),
+				getGeneratedSpeed()
+		);
 	}
 
 	@Override

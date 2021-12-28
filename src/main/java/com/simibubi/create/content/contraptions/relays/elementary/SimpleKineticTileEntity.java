@@ -1,9 +1,11 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.List;
-
-import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+
+import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
+import com.simibubi.create.content.contraptions.solver.KineticNodeState;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,21 +24,18 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public List<BlockPos> addPropagationLocations(IRotate block, BlockState state, List<BlockPos> neighbours) {
-		if (!ICogWheel.isLargeCog(state))
-			return super.addPropagationLocations(block, state, neighbours);
-
-		BlockPos.betweenClosedStream(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
-			.forEach(offset -> {
-				if (offset.distSqr(0, 0, 0, false) == BlockPos.ZERO.distSqr(1, 1, 0, false))
-					neighbours.add(worldPosition.offset(offset));
-			});
-		return neighbours;
+	protected boolean isNoisy() {
+		return false;
 	}
 
 	@Override
-	protected boolean isNoisy() {
-		return false;
+	public KineticNodeState getInitialKineticNodeState() {
+		KineticConnections connections = AllConnections.EMPTY;
+		BlockState state = getBlockState();
+		if (state.getBlock() instanceof ISimpleConnectable connectable) {
+			connections = connectable.getConnections(state);
+		}
+		return new KineticNodeState(connections, 0);
 	}
 
 }

@@ -4,12 +4,10 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
-import com.simibubi.create.content.contraptions.solver.ShaftConnectionRule;
-import com.simibubi.create.content.contraptions.solver.ShaftEqualSpeedRule;
-import com.simibubi.create.content.contraptions.solver.SolverBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -30,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractShaftBlock implements SolverBlock {
+public class ShaftBlock extends AbstractShaftBlock implements ISimpleConnectable {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -40,6 +38,11 @@ public class ShaftBlock extends AbstractShaftBlock implements SolverBlock {
 
 	public static boolean isShaft(BlockState state) {
 		return AllBlocks.SHAFT.has(state);
+	}
+
+	@Override
+	public KineticConnections getConnections(BlockState state) {
+		return AllConnections.FULL_SHAFT.apply(state.getValue(AXIS));
 	}
 
 	@Override
@@ -85,18 +88,6 @@ public class ShaftBlock extends AbstractShaftBlock implements SolverBlock {
 			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	public void created(KineticSolver solver, Level level, BlockPos pos) {
-		BlockState state = level.getBlockState(pos);
-		Direction.Axis axis = state.getValue(AXIS);
-		Direction positive = Direction.fromAxisAndDirection(axis, Direction.AxisDirection.POSITIVE);
-		Direction negative = positive.getOpposite();
-
-		solver.addRule(pos, new ShaftConnectionRule(axis));
-		solver.addRule(pos, new ShaftEqualSpeedRule(positive));
-		solver.addRule(pos, new ShaftEqualSpeedRule(negative));
 	}
 
 	@MethodsReturnNonnullByDefault
