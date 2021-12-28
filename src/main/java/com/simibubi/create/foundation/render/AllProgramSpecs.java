@@ -6,11 +6,11 @@ import net.minecraft.resources.ResourceLocation;
 
 public class AllProgramSpecs {
 
+	public static final ResourceLocation PASSTHRU = asResource("passthru");
 	public static final ResourceLocation ROTATING = asResource("rotating");
 	public static final ResourceLocation CHROMATIC = asResource("chromatic");
 	public static final ResourceLocation BELT = asResource("belt");
 	public static final ResourceLocation FLAPS = asResource("flap");
-	public static final ResourceLocation STRUCTURE = asResource("contraption_structure");
 	public static final ResourceLocation ACTOR = asResource("contraption_actor");
 
 }

@@ -2,7 +2,6 @@
 
 #use "flywheel:core/matutils.glsl"
 #use "flywheel:core/quaternion.glsl"
-#use "flywheel:core/diffuse.glsl"
 
 struct Flap {
     vec3 instancePos;
@@ -15,7 +14,6 @@ struct Flap {
     float flapness;
 };
 
-#use "flywheel:data/modelvertex.glsl"
 #use "flywheel:block.frag"
 
 #if defined(VERTEX_SHADER)
@@ -37,7 +35,7 @@ float getFlapAngle(float flapness, float intensity, float scale) {
     return degrees;
 }
 
-BlockFrag vertex(Vertex v, Flap flap) {
+void vertex(inout Vertex v, Flap flap) {
     float flapAngle = getFlapAngle(flap.flapness, flap.intensity, flap.flapScale);
 
     vec4 orientation = quat(vec3(0., 1., 0.), -flap.horizontalAngle);
@@ -46,21 +44,8 @@ BlockFrag vertex(Vertex v, Flap flap) {
     vec3 rotated = rotateVertexByQuat(v.pos - flap.pivot, flapRotation) + flap.pivot + flap.segmentOffset;
     rotated = rotateVertexByQuat(rotated - .5, orientation) + flap.instancePos + .5;
 
-    vec4 worldPos = vec4(rotated, 1.);
-    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(v.normal, flapRotation), orientation);
-
-    FLWFinalizeWorldPos(worldPos);
-    FLWFinalizeNormal(norm);
-
-    BlockFrag b;
-    b.diffuse = diffuse(norm);
-    b.texCoords = v.texCoords;
-    b.light = flap.light;
-    #if defined(DEBUG_NORMAL)
-    b.color = vec4(norm, 1.);
-    #else
-    b.color = vec4(1.);
-    #endif
-    return b;
+    v.pos = rotated;
+    v.normal = rotateVertexByQuat(rotateVertexByQuat(v.normal, flapRotation), orientation);
+    v.light = flap.light;
 }
 #endif

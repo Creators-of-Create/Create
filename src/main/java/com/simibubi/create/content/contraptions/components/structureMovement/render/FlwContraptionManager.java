@@ -7,6 +7,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderLayer;
 import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
+import com.jozufozu.flywheel.backend.gl.GlVertexArray;
+import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.Textures;
@@ -47,7 +49,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 
 		Textures.bindActiveTextures();
 
-		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
+		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.PASSTHRU, Formats.BLOCK);
 
 		structureShader.bind();
 		structureShader.uploadViewProjection(event.viewProjection);

@@ -1,5 +1,5 @@
 {
-  "source": "create:contraption_structure.vert",
+  "source": "create:passthru.vert",
   "states": [
     {
       "when": {

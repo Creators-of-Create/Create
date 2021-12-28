@@ -4,12 +4,11 @@ import java.util.stream.Stream;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.GameStateRegistry;
-import com.jozufozu.flywheel.backend.pipeline.InstancingTemplate;
-import com.jozufozu.flywheel.backend.pipeline.OneShotTemplate;
 import com.jozufozu.flywheel.backend.pipeline.ShaderPipeline;
 import com.jozufozu.flywheel.backend.pipeline.WorldShaderPipeline;
 import com.jozufozu.flywheel.backend.source.FileResolution;
 import com.jozufozu.flywheel.backend.source.Resolver;
+import com.jozufozu.flywheel.core.Templates;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.util.ResourceUtil;
@@ -33,14 +32,14 @@ public class CreateContexts {
 		GameStateRegistry.register(RainbowDebugStateProvider.INSTANCE);
         FileResolution header = Resolver.INSTANCE.findShader(ResourceUtil.subPath(CONTRAPTION, ".glsl"));
 
-		ShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(ContraptionProgram::new, InstancingTemplate.INSTANCE, header);
-		ShaderPipeline<ContraptionProgram> structure = new WorldShaderPipeline<>(ContraptionProgram::new, OneShotTemplate.INSTANCE, header);
+		ShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(ContraptionProgram::new, Templates.INSTANCING, header);
+		ShaderPipeline<ContraptionProgram> structure = new WorldShaderPipeline<>(ContraptionProgram::new, Templates.ONE_SHOT, header);
 
 		CWORLD = backend.register(WorldContext.builder(backend, CONTRAPTION)
 				.build(instancing));
 
 		STRUCTURE = backend.register(WorldContext.builder(backend, CONTRAPTION)
-				.setSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
+				.setSpecStream(() -> Stream.of(AllProgramSpecs.PASSTHRU))
 				.build(structure));
 	}
 
