@@ -143,6 +143,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
+	public void remove(RemovalReason p_146834_) {
+		super.remove(p_146834_);
+	}
+
+	@Override
 	public void stopRiding() {
 		if (!level.isClientSide && isAlive())
 			disassemble();

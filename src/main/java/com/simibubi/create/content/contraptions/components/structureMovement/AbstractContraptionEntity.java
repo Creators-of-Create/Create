@@ -1,11 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+
+import com.simibubi.create.lib.entity.RemovalFromWorldListener;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -57,7 +60,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class AbstractContraptionEntity extends Entity implements ExtraSpawnDataEntity {
+public abstract class AbstractContraptionEntity extends Entity implements ExtraSpawnDataEntity, RemovalFromWorldListener {
 
 	private static final EntityDataAccessor<Boolean> STALLED =
 		SynchedEntityData.defineId(AbstractContraptionEntity.class, EntityDataSerializers.BOOLEAN);
@@ -483,8 +486,6 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	public void remove(RemovalReason p_146834_) {
-		if (p_146834_ == RemovalReason.DISCARDED) onRemovedFromWorld();
-
 		if (!level.isClientSide && !isRemoved() && contraption != null)
 			if (!ticking)
 				contraption.stop(level);
@@ -507,9 +508,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		super.outOfWorld();
 	}
 
-//	@Override
+	@Override
 	public void onRemovedFromWorld() {
-//		super.onRemovedFromWorld();
 		if (level != null && level.isClientSide)
 			return;
 		getPassengers().forEach(Entity::discard);
