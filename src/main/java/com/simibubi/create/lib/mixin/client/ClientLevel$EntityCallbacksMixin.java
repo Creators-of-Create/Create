@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net.minecraft.client.multiplayer.ClientLevel.EntityCallbacks")
-public class ClientLevel$EntityCallbacksMixin {
-	@Inject(at = @At("RETURN"), method = "onTrackingEnd(Lnet/minecraft/world/entity/Entity;)V")
+public abstract class ClientLevel$EntityCallbacksMixin {
+	@Inject(method = "onTrackingEnd(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
 	private void create$onTrackingEnd(Entity entity, CallbackInfo ci) {
 		if (entity instanceof RemovalFromWorldListener listener) {
 			listener.onRemovedFromWorld();

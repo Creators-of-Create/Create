@@ -26,7 +26,7 @@ public abstract class ItemMixin implements ItemExtensions {
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void create$item(Item.Properties properties, CallbackInfo ci) {
+	public void create$init(Item.Properties properties, CallbackInfo ci) {
 		create$supplier = new ItemSupplier(MixinHelper.cast(this));
 	}
 }
