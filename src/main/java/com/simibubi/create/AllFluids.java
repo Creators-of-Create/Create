@@ -13,10 +13,17 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+
+import static net.minecraft.world.item.Items.GLASS_BOTTLE;
 
 public class AllFluids {
 
@@ -27,9 +34,13 @@ public class AllFluids {
 					.lang(f -> "fluid.create.potion", "Potion")
 					.register();
 
+	@SuppressWarnings("UnstableApiUsage")
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang(f -> "fluid.create.tea", "Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
+			.onRegister(tea -> FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
+					new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(tea), FluidConstants.BUCKET / 10)
+			))
 			.register();
 
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> HONEY =

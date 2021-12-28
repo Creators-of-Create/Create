@@ -10,7 +10,7 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluid": "minecraft:empty",
+      "fluid": "create:tea",
       "amount": 27000
     }
   ]

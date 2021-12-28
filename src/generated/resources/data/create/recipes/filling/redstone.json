@@ -5,7 +5,7 @@
       "item": "create:cinder_flour"
     },
     {
-      "fluid": "minecraft:empty",
+      "fluid": "create:potion",
       "nbt": {},
       "amount": 2025
     }
