@@ -21,20 +21,20 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		.output(Fluids.LAVA, FluidConstants.BUCKET / 20)
 		.requiresHeat(HeatCondition.SUPERHEATED)),
 
-		TEA = create("tea", b -> b.require(Fluids.WATER, FluidConstants.BUCKET / 4)
-			.require(Tags.Fluids.MILK, FluidConstants.BUCKET / 4)
+		TEA = create("tea", b -> b.require(Fluids.WATER, FluidConstants.BOTTLE)
+			.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(ItemTags.LEAVES)
-			.output(AllFluids.TEA.get(), FluidConstants.BUCKET / 2)
+			.output(AllFluids.TEA.get(), FluidConstants.BOTTLE * 2)
 			.requiresHeat(HeatCondition.HEATED)),
 
-		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, FluidConstants.BUCKET / 4)
+		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(Items.SUGAR)
 			.require(Items.COCOA_BEANS)
-			.output(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 4)
+			.output(AllFluids.CHOCOLATE.get(), FluidConstants.BOTTLE)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		CHOCOLATE_MELTING = create("chocolate_melting", b -> b.require(AllItems.BAR_OF_CHOCOLATE.get())
-			.output(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 4)
+			.output(AllFluids.CHOCOLATE.get(), FluidConstants.BOTTLE)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		HONEY = create("honey", b -> b.require(Items.HONEY_BLOCK)

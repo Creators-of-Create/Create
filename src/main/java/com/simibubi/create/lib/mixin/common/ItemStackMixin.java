@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements NBTSerializable {
+
 	@Inject(method = "getMaxStackSize", at = @At("HEAD"), cancellable = true)
 	public void create$onGetMaxCount(CallbackInfoReturnable<Integer> cir) {
 		ItemStack self = (ItemStack) (Object) this;

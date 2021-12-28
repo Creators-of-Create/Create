@@ -9,6 +9,10 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.lib.transfer.fluid.FluidAttributes;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -19,8 +23,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+
+import org.jetbrains.annotations.Nullable;
 
 public class PotionFluid extends VirtualFluid {
 
@@ -28,8 +35,15 @@ public class PotionFluid extends VirtualFluid {
 		REGULAR, SPLASH, LINGERING;
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	public PotionFluid(Properties properties) {
 		super(properties);
+		FluidVariantRendering.register(this, new FluidVariantRenderHandler() {
+			@Override
+			public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
+				return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
+			}
+		});
 	}
 
 	public static FluidStack withEffects(long amount, Potion potion, List<MobEffectInstance> customEffects) {
@@ -70,7 +84,7 @@ public class PotionFluid extends VirtualFluid {
 
 	}
 
-	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
+	public static FluidStack  addPotionToFluidStack(FluidStack fs, Potion potion) {
 		ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
 		if (potion == Potions.EMPTY) {
 			fs.removeChildTag("Potion");
