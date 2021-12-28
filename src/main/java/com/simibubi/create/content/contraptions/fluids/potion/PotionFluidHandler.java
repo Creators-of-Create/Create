@@ -15,6 +15,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -58,7 +59,8 @@ public class PotionFluidHandler {
 			return new FluidStack(Fluids.WATER, fluid.getAmount());
 		CompoundTag tagInfo = fluid.getTag();
 		NBTHelper.writeEnum(tagInfo, "Bottle", bottleTypeFromItem);
-		return new FluidStack(fluid.getFluid(), fluid.getAmount(), tagInfo);
+		FluidVariant variant = FluidVariant.of(fluid.getFluid(), tagInfo);
+		return new FluidStack(variant, fluid.getAmount(), tagInfo);
 	}
 
 	public static BottleType bottleTypeFromItem(ItemStack stack) {

@@ -37,7 +37,7 @@ public class VirtualFluid extends SimpleFlowableFluid {
 
 	@Override
 	public boolean isSource(FluidState p_207193_1_) {
-		return false;
+		return true;
 	}
 
 	@Override

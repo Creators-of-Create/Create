@@ -58,7 +58,6 @@ public class FluidStack {
 	private CompoundTag tag;
 	private long amount;
 	private String translationKey;
-	private boolean virtual = false;
 
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
@@ -71,20 +70,12 @@ public class FluidStack {
 	}
 
 	public FluidStack(Fluid type, long amount) {
-		// todo: support virtual fluids
-		if(!type.isSource(type.defaultFluidState())) {
-			this.type = FluidVariant.blank();
-			this.amount = amount;
-			this.virtual = true;
-			return;
-		}
-		this.type = FluidVariant.of(type);
-		this.amount = amount;
+		this(FluidVariant.of(type), amount);
 	}
 
 	public FluidStack(Fluid type, long amount, CompoundTag nbt) {
-		this.type = FluidVariant.of(type, nbt);
-		this.amount = amount;
+		this(type, amount);
+		this.tag = nbt;
 	}
 
 	public FluidStack(FluidStack copy, long amount) {
@@ -94,10 +85,6 @@ public class FluidStack {
 	public FluidStack setAmount(long amount) {
 		this.amount = amount;
 		return this;
-	}
-
-	public boolean isVirtual() {
-		return virtual;
 	}
 
 	public void grow(long amount) {
@@ -143,11 +130,8 @@ public class FluidStack {
 		return fluidsEqual && tagsEqual;
 	}
 
-	public boolean isOf(FluidVariant var, boolean ignoreNbt) {
-		if (ignoreNbt) {
-			return var.isOf(getFluid());
-		}
-		return var.isOf(getFluid()) && Objects.equals(var.getNbt(), getType().getNbt());
+	public boolean canFill(FluidVariant var) {
+		return isEmpty() || var.isOf(getFluid()) && Objects.equals(var.getNbt(), getType().getNbt());
 	}
 
 	public CompoundTag writeToNBT(CompoundTag nbt) {
@@ -167,14 +151,6 @@ public class FluidStack {
 		return stack;
 	}
 
-	public CompoundTag toTag() {
-		return writeToNBT(new CompoundTag());
-	}
-
-	public CompoundTag toTag(CompoundTag tag) {
-		return writeToNBT(tag);
-	}
-
 	public void setTag(CompoundTag tag) {
 		this.tag = tag;
 	}
@@ -185,7 +161,7 @@ public class FluidStack {
 	}
 
 	public CompoundTag getOrCreateTag() {
-		if (getTag() == null) tag = new CompoundTag();
+		if (tag == null) tag = new CompoundTag();
         return tag;
 	}
 
