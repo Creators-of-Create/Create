@@ -1,12 +1,22 @@
 package com.simibubi.create.compat.rei.category.sequencedAssembly;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.Create;
+import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.rei.category.animations.AnimatedDeployer;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSaw;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSpout;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.client.gui.widgets.Widgets;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+
+import java.util.List;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -20,13 +30,9 @@ public abstract class SequencedAssemblySubCategory {
 		return width;
 	}
 
-//	public int addItemIngredients(SequencedRecipe<?> recipe, IGuiItemStackGroup itemStacks, int x, int index) {
-//		return 0;
-//	}
-//
-//	public int addFluidIngredients(SequencedRecipe<?> recipe, IGuiFluidStackGroup fluidStacks, int x, int index) {
-//		return 0;
-//	}
+	public int addIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index) {
+		return 0;
+	}
 
 	public abstract void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index);
 
@@ -60,18 +66,14 @@ public abstract class SequencedAssemblySubCategory {
 			spout = new AnimatedSpout();
 		}
 
-//		@Override
-//		public int addFluidIngredients(SequencedRecipe<?> recipe, IGuiFluidStackGroup fluidStacks, int x, int index) {
-//			FluidIngredient fluidIngredient = recipe.getRecipe()
-//				.getFluidIngredients()
-//				.get(0);
-//			fluidStacks.init(index, true, x + 4, 15);
-//			fluidStacks.set(index,
-//				CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()));
-//			CreateRecipeCategory.addFluidTooltip(fluidStacks, ImmutableList.of(fluidIngredient),
-//				Collections.emptyList(), index);
-//			return 1;
-//		}
+		@Override
+		public int addIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index) {
+			FluidIngredient fluidIngredient = recipe.getRecipe()
+				.getFluidIngredients()
+				.get(0);
+			widgets.add(Widgets.createSlot(new Point(x + 4, 15)).markInput().entries(EntryIngredient.of(CreateRecipeCategory.createFluidEntryStack(CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()).get(index)))));
+			return 1;
+		}
 
 		@Override
 		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {

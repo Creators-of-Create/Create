@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.Recipe;
 
 public abstract class AbstractCreateDisplay<R extends Recipe<?>> implements Display {
 	protected final R recipe;
-	private final CategoryIdentifier uid;
+	private final CategoryIdentifier<AbstractCreateDisplay<R>> uid;
 
 	public AbstractCreateDisplay(R recipe, String id) {
 		this.recipe = recipe;

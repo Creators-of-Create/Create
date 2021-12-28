@@ -4,9 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
+import com.simibubi.create.compat.rei.display.BasinDisplay;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
+
+import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,11 +32,11 @@ public class PackingCategory extends BasinCategory {
 	}
 
 	public static PackingCategory standard() {
-		return new PackingCategory(PackingType.COMPACTING, AllBlocks.BASIN.get(), 103);
+		return new PackingCategory(PackingType.COMPACTING, AllBlocks.BASIN.get(), 108);
 	}
 
 	public static PackingCategory autoSquare() {
-		return new PackingCategory(PackingType.AUTO_SQUARE, Blocks.CRAFTING_TABLE, 85);
+		return new PackingCategory(PackingType.AUTO_SQUARE, Blocks.CRAFTING_TABLE, 90);
 	}
 
 	protected PackingCategory(PackingType type, ItemLike icon, int height) {
@@ -61,6 +69,33 @@ public class PackingCategory extends BasinCategory {
 //		itemStacks.set(i, recipe.getResultItem());
 //	}
 
+
+	@Override
+	public void addWidgets(BasinDisplay display, List<Widget> ingredients, Point origin) {
+		BasinRecipe recipe = display.getRecipe();
+		if (type == PackingType.COMPACTING) {
+			super.addWidgets(display, ingredients, origin);
+			return;
+		}
+
+		int i = 0;
+
+		NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
+		int size = ingredients2.size();
+		int rows = size == 4 ? 2 : 3;
+		while (i < size) {
+			Ingredient ingredient = ingredients2.get(i);
+			ingredients.add(basicSlot(new Point(origin.x + (rows == 2 ? 26 : 17) + (i % rows) * 19, origin.y + 50 - (i / rows) * 19))
+					.markInput()
+					.entries(EntryIngredients.ofIngredient(ingredient)));
+			i++;
+		}
+
+		ingredients.add(basicSlot(point(origin.x + 142, origin.y + 51))
+				.markOutput()
+				.entries(display.getOutputEntries().get(0)));
+	}
+
 	@Override
 	public void draw(BasinRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		if (type == PackingType.COMPACTING) {
@@ -81,8 +116,8 @@ public class PackingCategory extends BasinCategory {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(matrixStack, /*getBackground().getWidth() / 2 + */3, 55);
-		press.draw(matrixStack, /*getBackground().getWidth() / 2 + */3, 34);
+				.draw(matrixStack, getDisplayWidth(null) / 2 + 3, 55);
+		press.draw(matrixStack, getDisplayWidth(null) / 2 + 3, 34);
 	}
 
 }

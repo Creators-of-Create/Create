@@ -3,10 +3,18 @@ package com.simibubi.create.compat.rei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.display.PolishingDisplay;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.lib.util.NBTSerializer;
+
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
+
+import java.util.List;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -49,6 +57,21 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 //		addStochasticTooltip(itemStacks, results);
 //	}
 
+
+	@Override
+	public void addWidgets(PolishingDisplay display, List<Widget> ingredients, Point origin) {
+		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
+
+		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 29))
+				.markInput()
+				.entries(display.getInputEntries().get(0)));
+		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 29))
+				.markOutput()
+				.entries(EntryIngredients.of(results.get(0).getStack())));
+
+//		addStochasticTooltip(itemStacks, results);
+	}
+
 	@Override
 	public void draw(SandPaperPolishingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 28);
@@ -67,7 +90,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		tag.put("Polishing", NBTSerializer.serializeNBT(matchingStacks[0]));
 		tag.putBoolean("JEI", true);
 		GuiGameElement.of(renderedSandpaper)
-				.<GuiGameElement.GuiRenderBuilder>at(/*getBackground().getWidth() / 2 - */16, 0, 0)
+				.<GuiGameElement.GuiRenderBuilder>at(getDisplayWidth(null) / 2 - 16, 0, 0)
 				.scale(2)
 				.render(matrixStack);
 	}

@@ -8,7 +8,13 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.ConversionRecipe;
 import com.simibubi.create.compat.rei.display.MysteriousItemConversionDisplay;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 
 public class MysteriousItemConversionCategory extends CreateRecipeCategory<ConversionRecipe, MysteriousItemConversionDisplay> {
 
@@ -45,6 +51,18 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 //		itemStacks.init(1, false, 131, 16);
 //		itemStacks.set(1, results.get(0).getStack());
 //	}
+
+
+	@Override
+	public void addWidgets(MysteriousItemConversionDisplay display, List<Widget> ingredients, Point origin) {
+		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
+		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 17))
+				.markInput()
+				.entries(display.getInputEntries().get(0)));
+		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 17))
+				.markOutput()
+				.entries(EntryIngredients.of(results.get(0).getStack())));
+	}
 
 	@Override
 	public void draw(ConversionRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {

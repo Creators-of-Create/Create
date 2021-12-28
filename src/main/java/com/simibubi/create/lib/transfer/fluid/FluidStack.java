@@ -25,9 +25,10 @@ public class FluidStack {
 			instance -> instance.group(
 					Registry.FLUID.byNameCodec().fieldOf("FluidName").forGetter(FluidStack::getFluid),
 					Codec.LONG.fieldOf("Amount").forGetter(FluidStack::getAmount),
+					CompoundTag.CODEC.optionalFieldOf("VariantTag", null).forGetter(fluidStack -> fluidStack.getType().copyNbt()),
 					CompoundTag.CODEC.optionalFieldOf("Tag").forGetter(stack -> Optional.ofNullable(stack.getTag()))
-			).apply(instance, (fluid, amount, tag) -> {
-				FluidStack stack = new FluidStack(fluid, amount);
+			).apply(instance, (fluid, amount, variantTag, tag) -> {
+				FluidStack stack = new FluidStack(fluid, amount, variantTag);
 				tag.ifPresent(stack::setTag);
 				return stack;
 			})

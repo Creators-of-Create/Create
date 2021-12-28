@@ -104,9 +104,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 					widgets.add(Widgets.createSlot(new Point((offset.getX() + col * 19 * scale) + 1, (offset.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(row * getWidth(recipe) + col)));
 				}
 
-
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 133, origin.getY() + 80));
-		widgets.add(Widgets.createSlot(new Point(origin.getX() + 133, origin.getY() + 80)).disableBackground().markOutput().entries(display.getOutputEntries().get(0)));
+		widgets.add(Widgets.createSlot(new Point(origin.getX() + 134, origin.getY() + 81)).disableBackground().markOutput().entries(display.getOutputEntries().get(0)));
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_DOWN_ARROW, origin.getX() + 128, origin.getY() + 59));
 
 		AnimatedCrafter crafter = new AnimatedCrafter();

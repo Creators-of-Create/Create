@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.DoubleItemIcon;
 import com.simibubi.create.compat.rei.EmptyBackground;
+import com.simibubi.create.compat.rei.FluidStackEntryRenderer;
 import com.simibubi.create.compat.rei.display.AbstractCreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -16,16 +17,32 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import com.simibubi.create.lib.util.FluidTextUtil;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
+import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
+import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
+
+import me.shedaniel.rei.api.common.util.EntryStacks;
+
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -103,11 +120,11 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
 	}
 
-	public static void addStochasticTooltip(List<EntryStack> itemStacks, List<ProcessingOutput> results) {
+	public static void addStochasticTooltip(List<EntryStack<ItemStack>> itemStacks, List<ProcessingOutput> results) {
 		addStochasticTooltip(itemStacks, results, 1);
 	}
 
-	public static void addStochasticTooltip(List<EntryStack> itemStacks, List<ProcessingOutput> results,
+	public static void addStochasticTooltip(List<EntryStack<ItemStack>> itemStacks, List<ProcessingOutput> results,
 											int startIndex) {
 //		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 //			if (input)
@@ -122,6 +139,15 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 //		});
 	}
 
+	public Slot basicSlot(Point point) {
+		return Widgets.createSlot(point).disableBackground();
+	}
+
+	@SuppressWarnings("all")
+	public static EntryStack<dev.architectury.fluid.FluidStack> createFluidEntryStack(FluidStack fluidStack) {
+		return ClientEntryStacks.setRenderer(EntryStacks.of(fluidStack.getFluid(), fluidStack.getAmount()), new FluidStackEntryRenderer());
+	}
+
 	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
 		return stacks.stream()
 			.map(CreateRecipeCategory::withImprovedVisibility)
@@ -133,6 +159,10 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
 		display.setAmount(displayedAmount);
 		return display;
+	}
+
+	public static dev.architectury.fluid.FluidStack convertToREIFluid(FluidStack stack) {
+		return dev.architectury.fluid.FluidStack.create(stack.getFluid(), stack.getAmount(), stack.getTag());
 	}
 
 //	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
@@ -181,24 +211,21 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 		return new Point(x, y);
 	}
 
+	public void addWidgets(D display, List<Widget> ingredients, Point origin) {
+
+	}
+
 	@Override
 	public List<Widget> setupDisplay(D display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
-		widgets.add(new Widget() {
-			@Override
-			public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-				poseStack.pushPose();
-				poseStack.translate(bounds.getX(), bounds.getY() + 4, 0);
-				draw(display.getRecipe(), poseStack, mouseX, mouseY);
-				poseStack.popPose();
-			}
-
-			@Override
-			public List<? extends GuiEventListener> children() {
-				return new ArrayList<>();
-			}
-		});
+		widgets.add(Widgets.createDrawableWidget((helper, poseStack, mouseX, mouseY, partialTick) -> {
+			poseStack.pushPose();
+			poseStack.translate(bounds.getX(), bounds.getY() + 4, 0);
+			draw(display.getRecipe(), poseStack, mouseX, mouseY);
+			poseStack.popPose();
+		}));
+		addWidgets(display, widgets, new Point(bounds.getX(), bounds.getY() + 4));
 		return widgets;
 	}
 

@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.rei.category;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -13,7 +15,12 @@ import com.simibubi.create.compat.rei.display.AbstractCreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
+import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.client.gui.widgets.Widgets;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -24,31 +31,24 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>, D extends Ab
 	}
 
 	protected ProcessingViaFanCategory(int width, Renderer icon) {
-		super(icon, emptyBackground(width, 71));
+		super(icon, emptyBackground(width, 76));
 	}
-
-//	@Override
-//	public void setIngredients(T recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-//	}
 
 	public static Supplier<ItemStack> getFan(String name) {
 		return () -> AllBlocks.ENCASED_FAN.asStack()
 			.setHoverName(Lang.translate("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
 	}
 
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, T recipe, @Nullable IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		itemStacks.init(0, true, 20, 47);
-//		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
-//			.get(0)
-//			.getItems()));
-//
-//		itemStacks.init(1, false, 139, 47);
-//		itemStacks.set(1, recipe.getResultItem());
-//	}
+	@Override
+	public void addWidgets(D display, List<Widget> ingredients, Point origin) {
+		ingredients.add(basicSlot(new Point(origin.x + 21, origin.y + 48))
+				.markInput()
+				.entries(display.getInputEntries().get(0)));
+
+		ingredients.add(basicSlot(new Point(origin.x + 140, origin.y + 48))
+				.markOutput()
+				.entries(display.getOutputEntries().get(0)));
+	}
 
 	protected void renderWidgets(PoseStack matrixStack, T recipe, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.render(matrixStack, 20, 47);

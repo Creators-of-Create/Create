@@ -13,6 +13,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.rei.category.BlockCuttingCategory;
+import com.simibubi.create.compat.rei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.rei.category.CrushingCategory;
 import com.simibubi.create.compat.rei.category.DeployingCategory;
@@ -32,6 +34,8 @@ import com.simibubi.create.compat.rei.category.SawingCategory;
 import com.simibubi.create.compat.rei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.rei.category.SpoutCategory;
 import com.simibubi.create.compat.rei.display.AbstractCreateDisplay;
+import com.simibubi.create.compat.rei.display.AutomaticPackingDisplay;
+import com.simibubi.create.compat.rei.display.BlockCuttingDisplay;
 import com.simibubi.create.compat.rei.display.CrushingDisplay;
 import com.simibubi.create.compat.rei.display.DeployingDisplay;
 import com.simibubi.create.compat.rei.display.FanBlastingDisplay;
@@ -51,9 +55,12 @@ import com.simibubi.create.compat.rei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
+import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
@@ -69,13 +76,16 @@ import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.ItemLike;
@@ -126,51 +136,51 @@ public class CreateREI implements REIClientPlugin {
 			.recipes(AllRecipeTypes.SEQUENCED_ASSEMBLY::getType)
 			.build();
 
-//	private final CreateRecipeCategory autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-//			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
-//				.size() > 1 && !MechanicalPressTileEntity.canCompress(r),
-//				BasinRecipe::convertShapeless)
-//			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
-//			.catalyst(AllBlocks.BASIN::get)
-//			.enableWhen(c -> c.allowShapelessInMixer)
-//			.build();
-//
-//	private final CreateRecipeCategory brewing = register("automatic_brewing", MixingCategory::autoBrewing)
-//			.recipeList(PotionMixingRecipeManager::getAllBrewingRecipes)
-//			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
-//			.catalyst(AllBlocks.BASIN::get)
-//			.build();
+	private final CreateRecipeCategory autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
+			.recipes(r -> ((BasinRecipe)r).getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && ((BasinRecipe)r).getIngredients()
+				.size() > 1 && !MechanicalPressTileEntity.canCompress((BasinRecipe)r),
+				r -> BasinRecipe.convertShapeless((BasinRecipe)r))
+			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
+			.catalyst(AllBlocks.BASIN::get)
+			.enableWhen(c -> ((CRecipes)c).allowShapelessInMixer)
+			.build();
+
+	private final CreateRecipeCategory brewing = register("automatic_brewing", MixingCategory::autoBrewing)
+			.recipeList(PotionMixingRecipeManager::getAllBrewingRecipes)
+			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
+			.catalyst(AllBlocks.BASIN::get)
+			.build();
 
 	private final CreateRecipeCategory sawing = register("sawing", SawingCategory::new).recipes(AllRecipeTypes.CUTTING)
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
 			.build();
 
-//	private final CreateRecipeCategory blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
-//			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(RecipeType.STONECUTTING)))
-//			.catalyst(AllBlocks.MECHANICAL_SAW::get)
-//			.enableWhen(c -> c.allowStonecuttingOnSaw)
-//			.build();
-//
-//	private final CreateRecipeCategory woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
-//			.recipeList(() -> CondensedBlockCuttingRecipe
-//				.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.get())))
-//			.catalyst(AllBlocks.MECHANICAL_SAW::get)
-//			.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
-//				.isLoaded("druidcraft"))
-//			.build();
+	private final CreateRecipeCategory blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
+			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(RecipeType.STONECUTTING)))
+			.catalyst(AllBlocks.MECHANICAL_SAW::get)
+			.enableWhen(c -> ((CRecipes)c).allowStonecuttingOnSaw)
+			.build();
+
+	private final CreateRecipeCategory woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
+			.recipeList(() -> CondensedBlockCuttingRecipe
+				.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.get())))
+			.catalyst(AllBlocks.MECHANICAL_SAW::get)
+			.enableWhenBool(c -> ((CRecipes)c).allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
+				.isModLoaded("druidcraft"))
+			.build();
 
 	private final CreateRecipeCategory packing = register("packing", PackingCategory::standard).recipes(AllRecipeTypes.COMPACTING)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.catalyst(AllBlocks.BASIN::get)
 			.build();
 
-//	private final CreateRecipeCategory autoSquare = register("automatic_packing", PackingCategory::autoSquare)
-//			.recipes(r -> (r instanceof CraftingRecipe) && MechanicalPressTileEntity.canCompress(r),
-//				BasinRecipe::convertShapeless)
-//			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
-//			.catalyst(AllBlocks.BASIN::get)
-//			.enableWhen(c -> c.allowShapedSquareInPress)
-//			.build();
+	private final CreateRecipeCategory autoSquare = register("automatic_packing", PackingCategory::autoSquare)
+			.recipes(re -> (re instanceof CraftingRecipe r) && MechanicalPressTileEntity.canCompress(r),
+					(r) -> BasinRecipe.convertShapeless((Recipe<?>) r))
+			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
+			.catalyst(AllBlocks.BASIN::get)
+			.enableWhen(c -> ((CRecipes)c).allowShapedSquareInPress)
+			.build();
 
 	private final CreateRecipeCategory polishing = register("sandpaper_polishing", PolishingCategory::new).recipes(AllRecipeTypes.SANDPAPER_POLISHING)
 			.catalyst(AllItems.SAND_PAPER::get)
@@ -254,8 +264,13 @@ public class CreateREI implements REIClientPlugin {
 		registry.registerFiller(ConversionRecipe.class, MysteriousItemConversionDisplay::new);
 		registry.registerFiller(EmptyingRecipe.class, ItemDrainDisplay::new);
 		registry.registerFiller(BasinRecipe.class, MixingDisplay::new);
-		registry.registerFiller(SandPaperPolishingRecipe.class, PolishingDisplay::new);
+		registry.registerFiller(BasinRecipe.class, MixingDisplay::shapeless);
+		registry.registerFiller(BasinRecipe.class, MixingDisplay::autoBrewing);
 		registry.registerFiller(BasinRecipe.class, PackingDisplay::new);
+		registry.registerFiller(BasinRecipe.class, AutomaticPackingDisplay::new);
+		registry.registerFiller(SandPaperPolishingRecipe.class, PolishingDisplay::new);
+		registry.registerFiller(CondensedBlockCuttingRecipe.class, BlockCuttingDisplay::new);
+		registry.registerFiller(CondensedBlockCuttingRecipe.class, BlockCuttingDisplay::woodCutting);
 	}
 
 	//	@Override

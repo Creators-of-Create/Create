@@ -22,15 +22,15 @@ public class MixingCategory extends BasinCategory {
 	}
 
 	public static MixingCategory autoShapeless() {
-		return new MixingCategory(MixingType.AUTO_SHAPELESS, Items.CRAFTING_TABLE, 85);
+		return new MixingCategory(MixingType.AUTO_SHAPELESS, Items.CRAFTING_TABLE, 90);
 	}
 
 	public static MixingCategory standard() {
-		return new MixingCategory(MixingType.MIXING, AllBlocks.BASIN.get(), 103);
+		return new MixingCategory(MixingType.MIXING, AllBlocks.BASIN.get(), 108);
 	}
 
 	public static MixingCategory autoBrewing() {
-		return new MixingCategory(MixingType.AUTO_BREWING, Blocks.BREWING_STAND, 103);
+		return new MixingCategory(MixingType.AUTO_BREWING, Blocks.BREWING_STAND, 108);
 	}
 
 	protected MixingCategory(MixingType type, ItemLike secondaryItem, int height) {
@@ -45,8 +45,8 @@ public class MixingCategory extends BasinCategory {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(matrixStack, /*getBackground().getWidth() / 2 + */3, 55);
-		mixer.draw(matrixStack, /*getBackground().getWidth() / 2 + */3, 34);
+				.draw(matrixStack, getDisplayWidth(null) / 2 + 3, 55);
+		mixer.draw(matrixStack, getDisplayWidth(null) / 2 + 3, 34);
 	}
 
 }

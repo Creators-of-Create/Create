@@ -7,20 +7,21 @@ import com.simibubi.create.compat.rei.display.DeployingDisplay;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
+
+import java.util.List;
+
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe, DeployingDisplay> {
 
 	AnimatedDeployer deployer;
 
 	public DeployingCategory() {
-		super(itemIcon(AllBlocks.DEPLOYER.get()), emptyBackground(177, 70));
+		super(itemIcon(AllBlocks.DEPLOYER.get()), emptyBackground(177, 75));
 		deployer = new AnimatedDeployer();
 	}
 
-//	@Override
-//	public Class<DeployerApplicationRecipe> getRecipeClass() {
-//		return DeployerApplicationRecipe.class;
-//	}
-//
 //	@Override
 //	public void setIngredients(DeployerApplicationRecipe recipe, IIngredients ingredients) {
 //		ingredients.setInputIngredients(recipe.getIngredients());
@@ -60,6 +61,21 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 //		addStochasticTooltip(itemStacks, recipe.getRollableResults(), 2);
 //	}
 
+
+	@Override
+	public void addWidgets(DeployingDisplay display, List<Widget> ingredients, Point origin) {
+		DeployerApplicationRecipe recipe = display.getRecipe();
+		ingredients.add(basicSlot(new Point(origin.getX() + 27, origin.getY() + 51))
+				.markInput()
+				.entries(EntryIngredients.ofIngredient(recipe.getProcessedItem())));
+		ingredients.add(basicSlot(new Point(origin.getX() + 51, origin.getY() + 5))
+				.markInput()
+				.entries(EntryIngredients.ofIngredient(recipe.getRequiredHeldItem())));
+		ingredients.add(basicSlot(new Point(origin.getX() + 132, origin.getY() + 51))
+				.markOutput()
+				.entries(EntryIngredients.of(recipe.getResultItem())));
+	}
+
 	@Override
 	public void draw(DeployerApplicationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
@@ -67,7 +83,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
-		deployer.draw(matrixStack, /*getBackground().getWidth() / 2 - */13, 22);
+		deployer.draw(matrixStack, getDisplayWidth(null) / 2 - 13, 22);
 	}
 
 }

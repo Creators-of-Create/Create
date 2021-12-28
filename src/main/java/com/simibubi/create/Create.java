@@ -89,7 +89,6 @@ public class Create implements ModInitializer {
 		FurnaceEngineModifiers.register();
 		BlockSpoutingBehaviour.register();
 
-//		ForgeMod.enableMilkFluid();
 		Milk.enableMilkFluid();
 
 		CopperRegistries.inject();

@@ -16,11 +16,6 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 		super(doubleItemIcon(AllItems.PROPELLER, () -> Items.LAVA_BUCKET));
 	}
 
-//	@Override
-//	public Class<? extends AbstractCookingRecipe> getRecipeClass() {
-//		return AbstractCookingRecipe.class;
-//	}
-
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack) {
 		matrixStack.pushPose();

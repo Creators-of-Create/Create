@@ -50,7 +50,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 //		int size = results.size();
 //		int offset = -size * 19 / 2;
 //		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
-//			itemStacks.init(outputIndex + 1, false, getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
+//			itemStacks.init(outputIndex + 1, false, getDisplayWidth(null) / 2 + offset + 19 * outputIndex, 78);
 //			itemStacks.set(outputIndex + 1, results.get(outputIndex)
 //				.getStack());
 //		}

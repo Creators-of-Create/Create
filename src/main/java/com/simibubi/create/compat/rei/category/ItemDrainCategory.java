@@ -111,7 +111,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, Item
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 37);
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())
-			.draw(matrixStack, /*getBackground().getWidth() / 2 - */13, 40);
+			.draw(matrixStack, getDisplayWidth(null) / 2 - 13, 40);
 	}
 
 }

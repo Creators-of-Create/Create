@@ -9,10 +9,14 @@ import com.simibubi.create.compat.rei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.Items;
 
 public class SpoutCategory extends CreateRecipeCategory<FillingRecipe, SpoutDisplay> {
@@ -126,10 +130,14 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe, SpoutDisp
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 		// Create slots
-		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 32)).disableBackground().markInput().entries(display.getInputEntries().get(0)));
+
+		FluidStack fluidStack = withImprovedVisibility(display.getRecipe().getRequiredFluid().getMatchingFluidStacks()).get(0);
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 26, origin.getY() + 31));
-//		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 51)).disableBackground().markInput().entries(display.getInputEntries().get(1)));
+		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 32)).disableBackground().markInput().entries(EntryIngredient.of(createFluidEntryStack(fluidStack))));
+
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 26, origin.getY() + 50));
+		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 51)).disableBackground().markInput().entries(display.getInputEntries().get(0)));
+
 
 		widgets.add(WidgetUtil.textured(getRenderedSlot(display.getRecipe(), 0), origin.getX() + 131, origin.getY() + 50));
 		// Draw arrow with shadow
@@ -155,7 +163,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe, SpoutDisp
 //		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
 //		spout.withFluids(recipe.getRequiredFluid()
 //			.getMatchingFluidStacks())
-//			.draw(matrixStack, getBackground().getWidth() / 2 - 13, 22);
+//			.draw(matrixStack, getDisplayWidth(null) / 2 - 13, 22);
 //	}
 
 }

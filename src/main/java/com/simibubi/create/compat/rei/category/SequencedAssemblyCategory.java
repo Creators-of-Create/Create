@@ -70,7 +70,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 //		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence())
 //			width += getSubCategory(sequencedRecipe).getWidth() + margin;
 //		width -= margin;
-//		int x = width / -2 + getBackground().getWidth() / 2;
+//		int x = width / -2 + getDisplayWidth(null) / 2;
 //		int index = 2;
 //		int fluidIndex = 0;
 //		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence()) {
@@ -147,7 +147,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence())
 			width += getSubCategory(sequencedRecipe).getWidth() + margin;
 		width -= margin;
-		matrixStack.translate(width / -2 /*+ getBackground().getWidth() / 2 todo*/, 0, 0);
+		matrixStack.translate(width / -2 + getDisplayWidth(null) / 2, 0, 0);
 
 		matrixStack.pushPose();
 		List<SequencedRecipe<?>> sequence = recipe.getSequence();
@@ -200,7 +200,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 //			for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence())
 //				width += getSubCategory(sequencedRecipe).getWidth() + margin;
 //			width -= margin;
-//			xOffset = width / 2 /*+ getBackground().getWidth() / -2*/;
+//			xOffset = width / 2 /*+ getDisplayWidth(null) / -2*/;
 //
 //			double relativeX = mouseX + xOffset;
 //			List<SequencedRecipe<?>> sequence = recipe.getSequence();

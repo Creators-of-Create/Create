@@ -35,11 +35,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe, SawingDi
 		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW, () -> Items.OAK_LOG), emptyBackground(177, 70 + 10));
 	}
 
-//	@Override
-//	public Class<? extends CuttingRecipe> getRecipeClass() {
-//		return CuttingRecipe.class;
-//	}
-//
+
 //	@Override
 //	public void setIngredients(CuttingRecipe recipe, IIngredients ingredients) {
 //		ingredients.setInputIngredients(recipe.getIngredients());

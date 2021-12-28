@@ -11,6 +11,10 @@ import com.simibubi.create.compat.rei.display.BlockCuttingDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +56,24 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 //			itemStacks.set(outputIndex + 1, results.get(outputIndex));
 //		}
 //	}
+
+
+	@Override
+	public void addWidgets(BlockCuttingDisplay display, List<Widget> ingredients, Point origin) {
+		ingredients.add(basicSlot(point(origin.x + 5, origin.y + 5))
+				.markInput()
+				.entries(display.getInputEntries().get(0)));
+
+		List<List<ItemStack>> results = display.getRecipe().getCondensedOutputs();
+		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
+			int xOffset = (outputIndex % 5) * 19;
+			int yOffset = (outputIndex / 5) * -19;
+
+			ingredients.add(basicSlot(point(origin.x + 78 + xOffset, origin.y + 48 + yOffset))
+					.markOutput()
+					.entries(EntryIngredients.of(results.get(outputIndex).get(outputIndex + 1))));
+		}
+	}
 
 	@Override
 	public void draw(CondensedBlockCuttingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
