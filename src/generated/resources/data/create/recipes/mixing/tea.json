@@ -16,8 +16,8 @@
   ],
   "results": [
     {
-      "fluid": "minecraft:empty",
-      "amount": 40500
+      "fluid": "create:tea",
+      "amount": 54000
     }
   ],
   "heatRequirement": "heated"
