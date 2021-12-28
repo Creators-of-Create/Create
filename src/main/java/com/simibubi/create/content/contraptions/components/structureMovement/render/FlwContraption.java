@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.Engine;
@@ -13,7 +12,6 @@ import com.jozufozu.flywheel.backend.instancing.SerialTaskEngine;
 import com.jozufozu.flywheel.backend.instancing.batching.BatchingEngine;
 import com.jozufozu.flywheel.backend.instancing.instancing.InstancingEngine;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
-import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
@@ -38,7 +36,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
 
-	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
+	private final Map<RenderType, ArrayModelRenderer> renderLayers = new HashMap<>();
 
 	private final Matrix4f modelViewPartial = new Matrix4f();
 	private final ContraptionInstanceWorld instanceWorld;
@@ -64,7 +62,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 	}
 
 	public void renderStructureLayer(RenderType layer, ContraptionProgram shader) {
-		ModelRenderer structure = renderLayers.get(layer);
+		ArrayModelRenderer structure = renderLayers.get(layer);
 		if (structure != null) {
 			setup(shader);
 			structure.draw();
@@ -119,7 +117,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 	}
 
 	public void invalidate() {
-		for (ModelRenderer buffer : renderLayers.values()) {
+		for (ArrayModelRenderer buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 		renderLayers.clear();
@@ -130,7 +128,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 	}
 
 	private void buildLayers() {
-		for (ModelRenderer buffer : renderLayers.values()) {
+		for (ArrayModelRenderer buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 
@@ -139,7 +137,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
 
 		for (RenderType layer : blockLayers) {
-			Supplier<Model> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
+			Model layerModel = new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
 
 			renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 		}
