@@ -95,7 +95,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				LiquidBlock flowingFluid = (LiquidBlock) blockState.getBlock();
 				emptied = Blocks.AIR.defaultBlockState();
 				if (blockState.getValue(LiquidBlock.LEVEL) == 0)
-					fluid = ((LiquidBlockAccessor) flowingFluid).create$getFluid();
+					fluid = ((LiquidBlockAccessor) flowingFluid).create$getFluid().getSource();
 				else {
 					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 					if (!tileEntity.isVirtual())
