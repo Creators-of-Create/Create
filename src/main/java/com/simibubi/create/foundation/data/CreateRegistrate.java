@@ -33,6 +33,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -146,6 +147,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
 			})
+			.tag(BlockTags.DRIPSTONE_REPLACEABLE)
+			.tag(BlockTags.AZALEA_ROOT_REPLACEABLE)
+			.tag(BlockTags.MOSS_REPLACEABLE)
+			.tag(BlockTags.LUSH_GROUND_REPLACEABLE)
 			.item()
 			.build();
 		return builder;
