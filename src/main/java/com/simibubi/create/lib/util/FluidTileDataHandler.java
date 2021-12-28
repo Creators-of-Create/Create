@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.util.FluidHandlerData.FluidTankData;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,7 +32,7 @@ public class FluidTileDataHandler {
 	private static final Map<BlockPos, FluidTankData[]> CACHED_DATA = new HashMap<>();
 
 	public static void sendDataToClients(ServerLevel world, FluidTransferable transferable) {
-		world.getPlayers(player ->  {
+		world.getPlayers(player -> {
 			IFluidHandler handler = TransferUtil.getFluidHandler((BlockEntity) transferable).orElse(null);
 			FluidTankData[] tankData = new FluidTankData[handler.getTanks()];
 			for (int i = 0; i < tankData.length; i++) {
@@ -69,24 +72,29 @@ public class FluidTileDataHandler {
 		return data;
 	}
 
-	public static IFluidHandler getCachedHandler(BlockPos pos) {
-		FluidTankData[] data = CACHED_DATA.get(pos);
-		if(data == null)
-			return null;
+	public static IFluidHandler getCachedHandler(BlockEntity be) {
+		FluidTankData[] data = CACHED_DATA.get(be.getBlockPos());
+		if(data == null) {
+			if (be instanceof FluidTankTileEntity tank) {
+				data = CACHED_DATA.get(tank.getController());
+			}
+			if (data == null) return null;
+		}
+		FluidTankData[] finalData = data;
 		return new IFluidHandler() {
 			@Override
 			public int getTanks() {
-				return data.length;
+				return finalData.length;
 			}
 
 			@Override
 			public FluidStack getFluidInTank(int tank) {
-				return new FluidStack(data[tank].fluid(), data[tank].amount());
+				return new FluidStack(finalData[tank].fluid(), finalData[tank].amount());
 			}
 
 			@Override
 			public long getTankCapacity(int tank) {
-				return data[tank].capacity();
+				return finalData[tank].capacity();
 			}
 
 			@Override

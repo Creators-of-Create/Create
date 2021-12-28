@@ -58,9 +58,10 @@ public interface IHaveGoggleInformation {
 		for (int i = 0; i < tank.getTanks(); i++) {
 			FluidTankData data = tank.data[i];
 			String translationKey = data.translationKey();
-			if (translationKey.isEmpty())
-				continue;
 			long amount = data.amount();
+			if (translationKey.isEmpty() || amount == 0)
+				continue;
+
 			long tankCapacity = data.capacity();
 			Component fluidName = new TranslatableComponent(translationKey).withStyle(ChatFormatting.GRAY);
 			Component contained = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(amount)).append(mb).withStyle(ChatFormatting.GOLD);

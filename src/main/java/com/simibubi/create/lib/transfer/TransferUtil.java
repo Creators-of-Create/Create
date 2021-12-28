@@ -34,12 +34,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public class TransferUtil {
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be) {
 		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
+		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(Direction.WEST));
+		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.WEST);
 		return simplifyItem(itemStorage).cast();
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be, Direction side) {
 		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(side));
 		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
 		return simplifyItem(itemStorage).cast();
 	}
@@ -60,16 +62,19 @@ public class TransferUtil {
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be) {
 		if (Objects.requireNonNull(be.getLevel()).isClientSide) {
-			if(FluidTileDataHandler.getCachedHandler(be.getBlockPos()) == null)
+			IFluidHandler cached = FluidTileDataHandler.getCachedHandler(be);
+			if(cached == null)
 				return LazyOptional.empty();
-			return LazyOptional.ofObject(Objects.requireNonNull(FluidTileDataHandler.getCachedHandler(be.getBlockPos())));
+			return LazyOptional.ofObject(cached);
 		}
+		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(Direction.WEST));
 		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.WEST); // both up and down break stuff, lets hope other blocks are symmetrical
 		return simplifyFluid(fluidStorage).cast();
 	}
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be, Direction side) {
 		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(side));
 		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
 		return simplifyFluid(fluidStorage).cast();
 	}

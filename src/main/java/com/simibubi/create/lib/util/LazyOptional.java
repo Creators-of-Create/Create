@@ -49,7 +49,7 @@ public class LazyOptional<T> {
 	}
 
 	public static <T> LazyOptional<T> ofObject(T o) {
-		return LazyOptional.of(() -> o);
+		return o == null ? empty() : LazyOptional.of(() -> o);
 	}
 
 	public static <T> LazyOptional<T> empty() {
