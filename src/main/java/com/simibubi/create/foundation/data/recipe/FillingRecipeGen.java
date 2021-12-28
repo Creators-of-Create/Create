@@ -17,31 +17,31 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BUCKET / 10)
+	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BOTTLE)
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
 
-		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), FluidConstants.BUCKET / 10)
+		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), FluidConstants.BOTTLE)
 			.require(Items.GLASS_BOTTLE)
 			.output(AllItems.BUILDERS_TEA.get())),
 
-		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, FluidConstants.BUCKET / 10)
+		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, FluidConstants.BOTTLE)
 			.require(AllItems.BLAZE_CAKE_BASE.get())
 			.output(AllItems.BLAZE_CAKE.get())),
 
-		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BUCKET / 10)
+		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BOTTLE)
 			.require(Items.APPLE)
 			.output(AllItems.HONEYED_APPLE.get())),
 
-		SWEET_ROLL = create("sweet_roll", b -> b.require(Tags.Fluids.MILK, FluidConstants.BUCKET / 10)
+		SWEET_ROLL = create("sweet_roll", b -> b.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(Items.BREAD)
 			.output(AllItems.SWEET_ROLL.get())),
 
-		CHOCOLATE_BERRIES = create("chocolate_glazed_berries", b -> b.require(AllFluids.CHOCOLATE.get(), FluidConstants.BUCKET / 10)
+		CHOCOLATE_BERRIES = create("chocolate_glazed_berries", b -> b.require(AllFluids.CHOCOLATE.get(), FluidConstants.BOTTLE)
 			.require(Items.SWEET_BERRIES)
 			.output(AllItems.CHOCOLATE_BERRIES.get())),
 
-		GRASS_BLOCK = create("grass_block", b -> b.require(Fluids.WATER, FluidConstants.BUCKET / 10)
+		GRASS_BLOCK = create("grass_block", b -> b.require(Fluids.WATER, FluidConstants.BUCKET / 2)
 			.require(Items.DIRT)
 			.output(Items.GRASS_BLOCK)),
 

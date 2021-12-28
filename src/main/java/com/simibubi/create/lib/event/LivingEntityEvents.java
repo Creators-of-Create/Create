@@ -10,25 +10,27 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 
 public class LivingEntityEvents {
-	public static final Event<ExperienceDrop> EXPERIENCE_DROP = EventFactory.createArrayBacked(ExperienceDrop.class, callbacks -> (i, player) -> {
+	public static final Event<ExperienceDrop> EXPERIENCE_DROP = EventFactory.createArrayBacked(ExperienceDrop.class, callbacks -> (amount, player) -> {
 		for (ExperienceDrop callback : callbacks) {
-			return callback.onLivingEntityExperienceDrop(i, player);
+			int newAmount = callback.onLivingEntityExperienceDrop(amount, player);
+			if (newAmount != amount) return newAmount;
 		}
 
-		return 0;
+		return amount;
 	});
 
 	public static final Event<KnockBackStrength> KNOCKBACK_STRENGTH = EventFactory.createArrayBacked(KnockBackStrength.class, callbacks -> (strength, player) -> {
 		for (KnockBackStrength callback : callbacks) {
-			return callback.onLivingEntityTakeKnockback(strength, player);
+			double newStrength = callback.onLivingEntityTakeKnockback(strength, player);
+			if (newStrength != strength) return newStrength;
 		}
 
-		return 0;
+		return strength;
 	});
 
 	public static final Event<Drops> DROPS = EventFactory.createArrayBacked(Drops.class, callbacks -> (source, drops) -> {
 		for (Drops callback : callbacks) {
-			return callback.onLivingEntityDrops(source, drops);
+			if (callback.onLivingEntityDrops(source, drops)) return true;
 		}
 
 		return false;
@@ -66,7 +68,7 @@ public class LivingEntityEvents {
 
 	@FunctionalInterface
 	public interface ExperienceDrop {
-		int onLivingEntityExperienceDrop(int i, Player player);
+		int onLivingEntityExperienceDrop(int amount, Player player);
 	}
 
 	@FunctionalInterface

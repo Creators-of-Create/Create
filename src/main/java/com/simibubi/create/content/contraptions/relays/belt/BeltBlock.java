@@ -24,11 +24,9 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
-import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
-import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.util.TagUtil;
@@ -85,7 +83,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement,
-		BlockPickInteractionAware, CustomPathNodeTypeBlock, BlockExtensions, DestroyProgressRenderingHandler {
+		BlockPickInteractionAware, CustomPathNodeTypeBlock, DestroyProgressRenderingHandler {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -156,10 +154,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				.ejectAll();
 	}
 
-	@Override
-	public boolean create$isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-		return false;
-	}
+//	@Override
+//	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+//		return false;
+//	}
 
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {

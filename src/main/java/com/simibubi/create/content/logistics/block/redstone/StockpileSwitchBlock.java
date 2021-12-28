@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
-import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.block.NeighborChangeListeningBlock;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
@@ -38,7 +38,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, BlockExtensions, CanConnectRedstoneBlock {
+public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, NeighborChangeListeningBlock, CanConnectRedstoneBlock {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -52,7 +52,7 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 	}
 
 	@Override
-	public void create$onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
+	public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
 		if (world.isClientSide())
 			return;
 		if (!isObserving(state, pos, neighbor))

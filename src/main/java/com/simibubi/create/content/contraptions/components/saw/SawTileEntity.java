@@ -31,7 +31,6 @@ import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.util.ItemStackUtil;
@@ -146,7 +145,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 			Item item = playEvent.getItem();
 			if (item instanceof BlockItem) {
 				Block block = ((BlockItem) item).getBlock();
-				isWood = ((BlockExtensions)block).create$getSoundType(block.defaultBlockState(), level, worldPosition, null) == SoundType.WOOD;
+				isWood = block.getSoundType(block.defaultBlockState()) == SoundType.WOOD;
 			}
 			spawnEventParticles(playEvent);
 			playEvent = ItemStack.EMPTY;

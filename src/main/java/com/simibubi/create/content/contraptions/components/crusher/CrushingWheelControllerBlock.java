@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
 import com.simibubi.create.lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
@@ -41,7 +41,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CrushingWheelControllerBlock extends DirectionalBlock implements ITE<CrushingWheelControllerTileEntity>, BlockExtensions {
+public class CrushingWheelControllerBlock extends DirectionalBlock implements ITE<CrushingWheelControllerTileEntity>, CustomRunningEffectsBlock {
 
 	public CrushingWheelControllerBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -55,7 +55,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 	}
 
 	@Override
-	public boolean create$addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
+	public boolean addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
 		return true;
 	}
 

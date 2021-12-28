@@ -7,7 +7,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.block.CustomSoundTypeBlock;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.util.EntityHelper;
 
@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 
-public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultTileEntity>, BlockExtensions {
+public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultTileEntity>, CustomSoundTypeBlock {
 
 	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	public static final BooleanProperty LARGE = BooleanProperty.create("large");
@@ -144,8 +144,8 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 			SoundEvents.NETHERITE_BLOCK_FALL);
 
 	@Override
-	public SoundType create$getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
-		SoundType soundType = ((BlockExtensions)this).create$getSoundType(state, world, pos, entity);
+	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+		SoundType soundType = getSoundType(state);
 		if (entity != null && EntityHelper.getExtraCustomData(entity)
 			.contains("SilenceVaultSound"))
 			return SILENCED_METAL;

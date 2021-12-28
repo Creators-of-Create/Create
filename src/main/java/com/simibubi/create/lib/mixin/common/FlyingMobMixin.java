@@ -4,24 +4,28 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
-import com.simibubi.create.lib.util.MixinHelper;
+import com.simibubi.create.lib.block.CustomFrictionBlock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 @Mixin(FlyingMob.class)
-public abstract class FlyingMobMixin {
+public abstract class FlyingMobMixin extends Mob {
+	protected FlyingMobMixin(EntityType<? extends Mob> entityType, Level level) {
+		super(entityType, level);
+	}
+
 	@Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"))
 	public float create$setSlipperiness(Block instance) {
-		FlyingMob self = MixinHelper.cast(this);
-		BlockPos ground = new BlockPos(
-				self.getX(),
-				self.getY() - 1.0D,
-				self.getZ());
+		if (instance instanceof CustomFrictionBlock custom) {
+			BlockPos ground = new BlockPos(getX(), getY() - 1.0D, getZ());
 
-		return ((BlockStateExtensions) self.level.getBlockState(ground))
-				.create$getSlipperiness(self.level, ground, self) * 0.91F;
+			return custom.getFriction(level.getBlockState(ground), level, ground, this);
+		}
+		return instance.getFriction();
 	}
 }

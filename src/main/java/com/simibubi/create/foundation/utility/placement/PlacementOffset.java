@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.utility.placement;
 
 import java.util.function.Function;
 
-import com.simibubi.create.lib.extensions.BlockExtensions;
-
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -132,7 +130,7 @@ public class PlacementOffset {
 //		}
 
 		BlockState newState = world.getBlockState(newPos);
-		SoundType soundtype = ((BlockExtensions)newState.getBlock()).create$getSoundType(newState, world, newPos, player);
+		SoundType soundtype = newState.getSoundType();
 		world.playSound(null, newPos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 		player.awardStat(Stats.ITEM_USED.get(blockItem));

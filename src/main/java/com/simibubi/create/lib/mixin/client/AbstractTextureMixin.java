@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import com.simibubi.create.lib.extensions.AbstractTextureExtension;
+import com.simibubi.create.lib.extensions.AbstractTextureExtensions;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractTexture.class)
-public abstract class AbstractTextureMixin implements AbstractTextureExtension {
+public abstract class AbstractTextureMixin implements AbstractTextureExtensions {
 	@Shadow
 	protected boolean blur;
 	@Shadow

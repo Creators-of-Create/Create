@@ -10,18 +10,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.simibubi.create.lib.block.NeighborChangeListeningBlock;
 import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
 import com.simibubi.create.lib.util.MixinHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(Level.class)
-public abstract class LevelMixin {
+public abstract class LevelMixin implements LevelAccessor {
 	@Shadow
 	public abstract BlockState getBlockState(BlockPos blockPos);
 
@@ -47,8 +48,10 @@ public abstract class LevelMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	public void create$updateComparatorOutputLevel(BlockPos blockPos, Block block, CallbackInfo ci,
+	public void create$updateNeighbourForOutputSignal(BlockPos pos, Block block, CallbackInfo ci,
 												   Iterator<?> var3, Direction direction, BlockPos blockPos2) {
-		((BlockStateExtensions) getBlockState(blockPos2)).create$onNeighborChange(MixinHelper.cast(this), blockPos2, blockPos);
+		if (block instanceof NeighborChangeListeningBlock listener) {
+			listener.onNeighborChange(getBlockState(blockPos2), this, blockPos2, pos);
+		}
 	}
 }

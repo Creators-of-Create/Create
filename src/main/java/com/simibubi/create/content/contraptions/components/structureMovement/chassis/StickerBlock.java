@@ -4,8 +4,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
+import com.simibubi.create.lib.block.CustomLandingEffectsBlock;
+import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
 import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
-import com.simibubi.create.lib.extensions.BlockExtensions;
 import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
 
 import net.minecraft.core.BlockPos;
@@ -29,7 +30,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 
-public class StickerBlock extends WrenchableDirectionalBlock implements ITE<StickerTileEntity>, BlockExtensions, WeakPowerCheckingBlock {
+public class StickerBlock extends WrenchableDirectionalBlock implements ITE<StickerTileEntity>, CustomRunningEffectsBlock,
+		CustomLandingEffectsBlock, WeakPowerCheckingBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
@@ -131,7 +133,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 	}
 
 	@Override
-	public boolean create$addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2,
+	public boolean addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2,
 		LivingEntity entity, int numberOfParticles) {
 		if (isUprightSticker(worldserver, pos)) {
 			worldserver.sendParticles(
@@ -139,11 +141,11 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 				entity.getY(), entity.getZ(), numberOfParticles, 0.0D, 0.0D, 0.0D, (double) 0.15F);
 			return true;
 		}
-		return BlockExtensions.super.create$addLandingEffects(state1, worldserver, pos, state2, entity, numberOfParticles);
+		return false;
 	}
 
 	@Override
-	public boolean create$addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
+	public boolean addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
 		if (state.getValue(FACING) == Direction.UP) {
 			Vec3 Vector3d = entity.getDeltaMovement();
 			world.addParticle(
@@ -154,7 +156,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 				Vector3d.x * -4.0D, 1.5D, Vector3d.z * -4.0D);
 			return true;
 		}
-		return BlockExtensions.super.create$addRunningEffects(state, world, pos, entity);
+		return false;
 	}
 
 }

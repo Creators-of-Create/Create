@@ -12,6 +12,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 @Mixin(BlockParticleOption.class)
 public abstract class BlockParticleOptionMixin implements BlockParticleOptionExtensions {
 
+	@Unique
 	private BlockPos create$pos;
 
 	@Unique

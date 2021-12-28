@@ -2,6 +2,8 @@ package com.simibubi.create.lib.mixin.client;
 
 import java.util.Iterator;
 
+import net.minecraft.world.inventory.InventoryMenu;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
-import com.simibubi.create.lib.extensions.AbstractTextureExtension;
+import com.simibubi.create.lib.extensions.AbstractTextureExtensions;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -83,7 +85,7 @@ public abstract class LevelRendererMixin {
 			)
 	)
 	public void create$setBlur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).create$setBlurMipmap(false, this.minecraft.options.mipmapLevels > 0);
+		((AbstractTextureExtensions)this.minecraft.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)).create$setBlurMipmap(false, this.minecraft.options.mipmapLevels > 0);
 	}
 
 	@Inject(
@@ -95,6 +97,6 @@ public abstract class LevelRendererMixin {
 			)
 	)
 	public void create$lastBlur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		((AbstractTextureExtension)this.minecraft.getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).create$restoreLastBlurMipmap();
+		((AbstractTextureExtensions)this.minecraft.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)).create$restoreLastBlurMipmap();
 	}
 }

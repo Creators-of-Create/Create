@@ -10,7 +10,8 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.block.CustomLightEmissionBlock;
+import com.simibubi.create.lib.block.CustomSoundTypeBlock;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
@@ -50,7 +51,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, BlockExtensions {
+public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock, CustomLightEmissionBlock {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
 	public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
@@ -93,7 +94,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public int create$getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
 		if (tankAt == null)
 			return 0;
@@ -300,8 +301,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			SoundEvents.METAL_PLACE, SoundEvents.METAL_HIT, SoundEvents.METAL_FALL);
 
 	@Override
-	public SoundType create$getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
-		SoundType soundType = ((BlockExtensions) this).create$getSoundType(state, world, pos, entity);
+	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+		SoundType soundType = getSoundType(state);
 		if (entity != null && EntityHelper.getExtraCustomData(entity)
 			.contains("SilenceTankSound"))
 			return SILENCED_METAL;

@@ -2,37 +2,31 @@ package com.simibubi.create.lib.mixin.common;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
-import com.simibubi.create.lib.util.MixinHelper;
+import com.simibubi.create.lib.block.CustomFrictionBlock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(ExperienceOrb.class)
-public abstract class ExperienceOrbEntityMixin {
-	@ModifyVariable(
-			method = "tick",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/world/level/block/Block;getFriction()F",
-					shift = At.Shift.AFTER
-			)
-	)
-	public float create$setSlipperiness(float g) {
-		BlockPos create$pos = new BlockPos(
-				MixinHelper.<ExperienceOrb>cast(this).getX(),
-				MixinHelper.<ExperienceOrb>cast(this).getY(),
-				MixinHelper.<ExperienceOrb>cast(this).getZ()
-		);
-
-		return ((BlockStateExtensions) MixinHelper.<ExperienceOrb>cast(this).level.getBlockState(create$pos))
-				.create$getSlipperiness(MixinHelper.<ExperienceOrb>cast(this).level, create$pos, MixinHelper.<ExperienceOrb>cast(this)) * 0.98F;
+public abstract class ExperienceOrbEntityMixin extends Entity {
+	public ExperienceOrbEntityMixin(EntityType<?> entityType, Level level) {
+		super(entityType, level);
 	}
 
-	@ModifyVariable(method = "award", at = @At("STORE"), ordinal = 0, argsOnly = true)
-	private static int create$award(int i) {
-		return i;//LivingEntityEvents.EXPERIENCE_DROP.invoker().onLivingEntityExperienceDrop(i, this.followingPlayer);
+	@Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"))
+	public float create$setFriction(Block instance) {
+		if (instance instanceof CustomFrictionBlock custom) {
+			BlockPos pos = blockPosition();
+			BlockState state = level.getBlockState(pos);
+			return custom.getFriction(state, level, pos, this);
+		}
+		return instance.getFriction();
 	}
 }

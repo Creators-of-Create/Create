@@ -11,7 +11,7 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity.State
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.block.CustomFrictionBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorTileEntity>, BlockExtensions {
+public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorTileEntity>, CustomFrictionBlock {
 
 	public EjectorBlock(Properties properties) {
 		super(properties);
@@ -47,10 +47,10 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public float create$getSlipperiness(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+	public float getFriction(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		return getTileEntityOptional(world, pos).filter(ete -> ete.state == State.LAUNCHING)
-			.map($ -> 1f)
-			.orElse(super.getFriction());
+				.map($ -> 1f)
+				.orElse(getFriction());
 	}
 
 	@Override

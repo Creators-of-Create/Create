@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
+
 import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +21,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -108,8 +109,10 @@ public abstract class EntityContraptionInteractionMixin {
 		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
-			if (!((BlockStateExtensions) blockstate).create$addRunningEffects(self.level, blockpos, self)
-				&& blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+			if (blockstate.getBlock() instanceof CustomRunningEffectsBlock custom &&
+					!custom.addRunningEffects(blockstate, self.level, blockpos, self) &&
+					blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+
 				Vec3 vec3d = self.getDeltaMovement();
 				self.level.addParticle(((BlockParticleOptionExtensions) new BlockParticleOption(ParticleTypes.BLOCK, blockstate)).create$setPos(pos),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,

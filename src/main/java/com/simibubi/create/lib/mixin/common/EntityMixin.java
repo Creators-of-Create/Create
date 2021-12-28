@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
 import com.simibubi.create.lib.event.EntityEyeHeightCallback;
 import com.simibubi.create.lib.event.StartRidingCallback;
-import com.simibubi.create.lib.extensions.BlockStateExtensions;
 import com.simibubi.create.lib.extensions.EntityExtensions;
 import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.util.ListenerProvider;
@@ -29,6 +29,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
@@ -112,12 +113,11 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 			cancellable = true
 	)
 	public void create$spawnSprintParticle(CallbackInfo ci, int i, int j, int k, BlockPos blockPos) {
-		if (((BlockStateExtensions) level.getBlockState(blockPos)).create$addRunningEffects(level, blockPos, MixinHelper.cast(this))) {
-			ci.cancel();
+		BlockState state = level.getBlockState(blockPos);
+		if (state.getBlock() instanceof CustomRunningEffectsBlock custom) {
+			if (custom.addRunningEffects(state, level, blockPos, (Entity) (Object) this)) ci.cancel();
 		}
 	}
-
-	// (did someone intend to write something here?)
 
 	@Inject(method = "discard", at = @At("HEAD"))
 	public void create$discard(CallbackInfo ci) {

@@ -1,17 +1,12 @@
 package com.simibubi.create.content.palettes;
 
-import com.simibubi.create.lib.extensions.BlockExtensions;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 
-public class ConnectedGlassBlock extends GlassBlock implements BlockExtensions {
+public class ConnectedGlassBlock extends GlassBlock {
 
 	public ConnectedGlassBlock(Properties p_i48392_1_) {
 		super(p_i48392_1_);
@@ -24,8 +19,8 @@ public class ConnectedGlassBlock extends GlassBlock implements BlockExtensions {
 			: super.skipRendering(state, adjacentBlockState, side);
 	}
 
-	@Override
-	public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidState) {
-		return true;
-	}
+//	@Override
+//	public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidState) {
+//		return true;
+//	}
 }
