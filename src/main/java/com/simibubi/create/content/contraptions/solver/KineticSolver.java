@@ -1,8 +1,13 @@
 package com.simibubi.create.content.contraptions.solver;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -24,11 +29,7 @@ public class KineticSolver {
 		removeNode(entity);
 		KineticNode node = new KineticNode(entity, this::getNode);
 		nodes.put(entity.getBlockPos(), node);
-		if (node.tryUpdateSpeed().isOk()) {
-			node.onAdded();
-		} else {
-			node.onPopBlock();
-		}
+		node.onAdded();
 	}
 
 	public void updateNode(KineticTileEntity entity) {
@@ -54,7 +55,20 @@ public class KineticSolver {
 		if (node != null) node.onRemoved();
 	}
 
-	public void flushChangedSpeeds() {
-		nodes.values().forEach(KineticNode::flushChangedSpeed);
+	public void tick() {
+		Set<KineticNetwork> visited = new HashSet<>();
+		List<KineticNetwork> frontier = new LinkedList<>();
+
+		Set<KineticNetwork> networks = nodes.values().stream().map(KineticNode::getNetwork).collect(Collectors.toSet());
+		for (KineticNetwork network : networks) {
+			frontier.add(network);
+			while (!frontier.isEmpty()) {
+				KineticNetwork cur = frontier.remove(0);
+				if (visited.contains(cur)) continue;
+				visited.add(cur);
+				frontier.addAll(cur.tick());
+			}
+		}
 	}
+
 }

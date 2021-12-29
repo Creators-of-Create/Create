@@ -11,10 +11,10 @@ import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KineticNode {
 
@@ -46,18 +46,25 @@ public class KineticNode {
 		return connections;
 	}
 
+	public KineticNetwork getNetwork() {
+		return network;
+	}
+
 	/**
-	 * @return a map where the keys are every node with a compatible connection to this node, and the values are the
-	 * speed ratios of those connections
+	 * @return 	a Stream containing a pair for each compatible connection with this node, where the first value is
+	 * 			the connecting node and the second value is the speed ratio of the connection
 	 */
-	public Map<KineticNode, Float> getActiveConnections() {
+	public Stream<Pair<KineticNode, Float>> getActiveConnections() {
 		return connections.getDirections().stream()
 				.map(d -> nodeAccessor.apply(entity.getBlockPos().offset(d))
 						.map(n -> connections.checkConnection(n.connections, d)
 								.map(r -> Pair.of(n, r))))
 				.flatMap(Optional::stream)
-				.flatMap(Optional::stream)
-				.collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+				.flatMap(Optional::stream);
+	}
+
+	public Iterable<Pair<KineticNode, Float>> getActiveConnectionsList() {
+		return getActiveConnections().collect(Collectors.toList());
 	}
 
 	public float getGeneratedSpeed() {
@@ -73,87 +80,92 @@ public class KineticNode {
 	}
 
 	public void setGeneratedSpeed(float newSpeed) {
-		if (Mth.equal(generatedSpeed, newSpeed)) return;
+		if (generatedSpeed == newSpeed) return;
 		generatedSpeed = newSpeed;
 		network.updateMember(this);
-		if (network.recalculateSpeed(this, false).isContradiction())
+		if (network.recalculateSpeed().isContradiction()) {
 			onPopBlock();
+		}
 	}
 
-	private void setNetwork(KineticNetwork network) {
+	private SolveResult setNetwork(KineticNetwork network) {
 		this.network.removeMember(this);
 		this.network = network;
 		network.addMember(this);
+		return network.recalculateSpeed();
 	}
 
-	private void setSource(KineticNode from, float ratio) {
+	private SolveResult setSource(KineticNode from, float ratio) {
 		source = from;
 		speedRatio = from.speedRatio * ratio;
-		setNetwork(from.network);
+		return setNetwork(from.network);
 	}
 
 	public void onAdded() {
 		getActiveConnections()
-				.keySet()
-				.stream()
 				.findAny()
-				.ifPresent(n -> {
-					if (n.propagateSource(this).isContradiction())
+				.ifPresent(e -> {
+					if (setSource(e.getFirst(), 1/e.getSecond()).isOk()) {
+						propagateSource();
+					} else {
 						onPopBlock();
+					}
 				});
 	}
 
 	/**
 	 * Propagates this node's source and network to any connected nodes that aren't yet part of the same network, then
 	 * repeats this recursively with the connected nodes in a breadth-first order.
-	 * @param checkRoot Node to start searching from when looking for nodes that started speeding because of this call
-	 * @return			whether or not this propagation caused a contradiction in the kinetic network
 	 */
-	private SolveResult propagateSource(KineticNode checkRoot) {
+	private void propagateSource() {
 		List<KineticNode> frontier = new LinkedList<>();
 		frontier.add(this);
 
 		while (!frontier.isEmpty()) {
 			KineticNode cur = frontier.remove(0);
-			for (Map.Entry<KineticNode, Float> entry : cur.getActiveConnections().entrySet()) {
-				KineticNode next = entry.getKey();
-				float ratio = entry.getValue();
+			for (Pair<KineticNode, Float> pair : cur.getActiveConnectionsList()) {
+				KineticNode next = pair.getFirst();
+				float ratio = pair.getSecond();
 
 				if (next == cur.source) continue;
+
 				if (next.network == network) {
 					if (!Mth.equal(next.speedRatio, cur.speedRatio * ratio)) {
-						// we found a cycle with conflicting speed ratios
-						network.markConflictingCycle(cur, next);
+						// this node will cause a cycle with conflicting speed ratios
+						if (network.isStopped()) {
+							network.markConflictingCycle(cur, next);
+						} else {
+							onPopBlock();
+							return;
+						}
 					}
 					continue;
 				}
 
-				next.setSource(cur, ratio);
-				frontier.add(next);
+				if (next.setSource(cur, ratio).isOk()) {
+					frontier.add(next);
+				} else {
+					// this node will run against the network
+					onPopBlock();
+					return;
+				}
 			}
 		}
-
-		return network.recalculateSpeed(checkRoot, true);
 	}
 
 	public void onRemoved() {
 		network.removeMember(this);
-		for (KineticNode neighbor : getActiveConnections().keySet()) {
-			if (neighbor.source != this) continue;
-			neighbor.rerootHere();
-		}
-		network.recalculateSpeed(null, false);
+		getActiveConnections()
+				.map(Pair::getFirst)
+				.filter(n -> n.source == this)
+				.forEach(KineticNode::rerootHere);
 	}
 
 	private void rerootHere() {
 		source = null;
 		speedRatio = 1;
 		setNetwork(new KineticNetwork(this));
-		if (tryUpdateSpeed().isOk()) {
-			propagateSource(this);
-		} else {
-			onPopBlock();
-		}
+		propagateSource();
 	}
 
 	/**
@@ -182,5 +194,4 @@ public class KineticNode {
 	public boolean isSourceOf(KineticNode other) {
 		return other.source == this;
 	}
-
 }
