@@ -4,6 +4,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
@@ -18,7 +19,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRe
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -46,8 +46,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance()
-			.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(te.getLevel()))
 			return;
 
 		renderShaft(te, ms, buffer, light, overlay);
@@ -158,7 +157,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
 	}
 
-	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState state = context.state;
 		Direction facing = state.getValue(SawBlock.FACING);

@@ -25,8 +25,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.util.box.GridAlignedBB;
+import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
@@ -877,7 +877,6 @@ public abstract class Contraption {
 		ListTag paletteNBT = new ListTag();
 		for(int i = 0; i < palette.getSize(); ++i)
 			paletteNBT.add(NbtUtils.writeBlockState(((HashMapPaletteAccessor<BlockState>)palette).create$getValues().byId(i)));
-
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
 

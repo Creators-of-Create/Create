@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.Optional;
 
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
@@ -86,7 +87,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	@Environment(value = EnvType.CLIENT)
-	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 									ContraptionMatrices matrices, MultiBufferSource buffer) {
 		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}

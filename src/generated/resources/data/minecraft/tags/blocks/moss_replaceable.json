@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "create:asurine",
+    "create:crimsite",
+    "create:limestone",
+    "create:ochrum",
+    "create:scoria",
+    "create:scorchia",
+    "create:veridium"
+  ]
+}

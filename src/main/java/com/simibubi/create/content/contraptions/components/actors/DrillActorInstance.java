@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorData;
@@ -10,7 +11,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +20,7 @@ public class DrillActorInstance extends ActorInstance {
     ActorData drillHead;
     private final Direction facing;
 
-    public DrillActorInstance(MaterialManager materialManager, PlacementSimulationWorld contraption, MovementContext context) {
+    public DrillActorInstance(MaterialManager materialManager, VirtualRenderWorld contraption, MovementContext context) {
         super(materialManager, contraption, context);
 
         Material<ActorData> material = materialManager.defaultSolid()

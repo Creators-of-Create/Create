@@ -14,6 +14,7 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
@@ -243,10 +244,10 @@ public class ContraptionCollider {
 			boolean hasNormal = !collisionNormal.equals(Vec3.ZERO);
 			boolean anyCollision = hardCollision || temporalCollision;
 
-			if (bounce > 0 && hasNormal && anyCollision && bounceEntity(entity, collisionNormal, contraptionEntity, bounce)) {
-				entity.level.playSound(playerType == PlayerType.CLIENT ? (Player) entity : null,
-					entity.getX(), entity.getY(), entity.getZ(), SoundEvents.SLIME_BLOCK_FALL,
-					SoundSource.BLOCKS, .5f, 1);
+			if (bounce > 0 && hasNormal && anyCollision
+				&& bounceEntity(entity, collisionNormal, contraptionEntity, bounce)) {
+				entity.level.playSound(playerType == PlayerType.CLIENT ? (Player) entity : null, entity.getX(),
+					entity.getY(), entity.getZ(), SoundEvents.SLIME_BLOCK_FALL, SoundSource.BLOCKS, .5f, 1);
 				continue;
 			}
 
@@ -340,25 +341,30 @@ public class ContraptionCollider {
 			return false;
 
 		Vec3 contactPointMotion = contraption.getContactPointMotion(entity.position());
-		Vec3 motion = entity.getDeltaMovement().subtract(contactPointMotion);
-		Vec3 deltav = normal.scale(factor*2*motion.dot(normal));
+		Vec3 motion = entity.getDeltaMovement()
+			.subtract(contactPointMotion);
+		Vec3 deltav = normal.scale(factor * 2 * motion.dot(normal));
 		if (deltav.dot(deltav) < 0.1f)
-		 	return false;
-		entity.setDeltaMovement(entity.getDeltaMovement().subtract(deltav));
+			return false;
+		entity.setDeltaMovement(entity.getDeltaMovement()
+			.subtract(deltav));
 		return true;
 	}
 
 	public static Vec3 getWorldToLocalTranslation(Entity entity, AbstractContraptionEntity contraptionEntity) {
-		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(), contraptionEntity.getRotationState());
+		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(),
+			contraptionEntity.getRotationState());
 	}
 
 	public static Vec3 getWorldToLocalTranslation(Entity entity, Vec3 anchorVec, ContraptionRotationState rotation) {
 		return getWorldToLocalTranslation(entity, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
 	}
 
-	public static Vec3 getWorldToLocalTranslation(Entity entity, Vec3 anchorVec, Matrix3d rotationMatrix, float yawOffset) {
+	public static Vec3 getWorldToLocalTranslation(Entity entity, Vec3 anchorVec, Matrix3d rotationMatrix,
+		float yawOffset) {
 		Vec3 entityPosition = entity.position();
-		Vec3 centerY = new Vec3(0, entity.getBoundingBox().getYsize() / 2, 0);
+		Vec3 centerY = new Vec3(0, entity.getBoundingBox()
+			.getYsize() / 2, 0);
 		Vec3 position = entityPosition;
 		position = position.add(centerY);
 		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
@@ -372,14 +378,16 @@ public class ContraptionCollider {
 	}
 
 	public static Vec3 getWorldToLocalTranslation(Vec3 entity, AbstractContraptionEntity contraptionEntity) {
-		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(), contraptionEntity.getRotationState());
+		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(),
+			contraptionEntity.getRotationState());
 	}
 
 	public static Vec3 getWorldToLocalTranslation(Vec3 inPos, Vec3 anchorVec, ContraptionRotationState rotation) {
 		return getWorldToLocalTranslation(inPos, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
 	}
 
-	public static Vec3 getWorldToLocalTranslation(Vec3 inPos, Vec3 anchorVec, Matrix3d rotationMatrix, float yawOffset) {
+	public static Vec3 getWorldToLocalTranslation(Vec3 inPos, Vec3 anchorVec, Matrix3d rotationMatrix,
+		float yawOffset) {
 		Vec3 position = inPos;
 		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
 		position = position.subtract(anchorVec);
@@ -437,8 +445,7 @@ public class ContraptionCollider {
 		return entity instanceof LocalPlayer;
 	}
 
-	private static List<VoxelShape> getPotentiallyCollidedShapes(Level world, Contraption contraption,
-		AABB localBB) {
+	private static List<VoxelShape> getPotentiallyCollidedShapes(Level world, Contraption contraption, AABB localBB) {
 
 		double height = localBB.getYsize();
 		double width = localBB.getXsize();
@@ -537,16 +544,24 @@ public class ContraptionCollider {
 			BlockState collidedState = world.getBlockState(colliderPos);
 			StructureBlockInfo blockInfo = contraption.getBlocks()
 				.get(pos);
+			boolean emptyCollider = collidedState.getCollisionShape(world, pos)
+				.isEmpty();
 
 			if (AllMovementBehaviours.contains(blockInfo.state.getBlock())) {
 				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state.getBlock());
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
 					BlockBreakingMovementBehaviour behaviour = (BlockBreakingMovementBehaviour) movementBehaviour;
-					if (!behaviour.canBreak(world, colliderPos, collidedState)
-						&& !collidedState.getCollisionShape(world, pos)
-							.isEmpty()) {
+					if (!behaviour.canBreak(world, colliderPos, collidedState) && !emptyCollider)
 						return true;
-					}
+					continue;
+				}
+				if (movementBehaviour instanceof HarvesterMovementBehaviour) {
+					HarvesterMovementBehaviour harvesterMovementBehaviour =
+						(HarvesterMovementBehaviour) movementBehaviour;
+					if (!harvesterMovementBehaviour.isValidCrop(world, colliderPos, collidedState)
+						&& !harvesterMovementBehaviour.isValidOther(world, colliderPos, collidedState)
+						&& !emptyCollider)
+						return true;
 					continue;
 				}
 			}
@@ -557,9 +572,7 @@ public class ContraptionCollider {
 			if (collidedState.getBlock() instanceof CocoaBlock)
 				continue;
 			if (!collidedState.getMaterial()
-				.isReplaceable()
-				&& !collidedState.getCollisionShape(world, colliderPos)
-					.isEmpty()) {
+				.isReplaceable() && !emptyCollider) {
 				return true;
 			}
 

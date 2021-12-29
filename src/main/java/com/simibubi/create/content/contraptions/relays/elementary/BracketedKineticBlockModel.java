@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.util.VirtualEmptyBlockGetter;
+import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;

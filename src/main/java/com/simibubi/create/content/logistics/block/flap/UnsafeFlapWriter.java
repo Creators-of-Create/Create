@@ -12,13 +12,13 @@ public class UnsafeFlapWriter extends UnsafeBufferWriter<FlapData> {
 	}
 
 	@Override
-	public void write(FlapData d) {
+    protected void writeInternal(FlapData d) {
 		long addr = writePointer;
 		MemoryUtil.memPutFloat(addr, d.x);
 		MemoryUtil.memPutFloat(addr + 4, d.y);
 		MemoryUtil.memPutFloat(addr + 8, d.z);
-		MemoryUtil.memPutByte(addr + 12, d.blockLight);
-		MemoryUtil.memPutByte(addr + 13, d.skyLight);
+		MemoryUtil.memPutByte(addr + 12, (byte) (d.blockLight << 4));
+		MemoryUtil.memPutByte(addr + 13, (byte) (d.skyLight << 4));
 		MemoryUtil.memPutFloat(addr + 14, d.segmentOffsetX);
 		MemoryUtil.memPutFloat(addr + 18, d.segmentOffsetY);
 		MemoryUtil.memPutFloat(addr + 22, d.segmentOffsetZ);
@@ -29,7 +29,5 @@ public class UnsafeFlapWriter extends UnsafeBufferWriter<FlapData> {
 		MemoryUtil.memPutFloat(addr + 42, d.intensity);
 		MemoryUtil.memPutFloat(addr + 46, d.flapScale);
 		MemoryUtil.memPutFloat(addr + 50, d.flapness);
-
-		advance();
 	}
 }

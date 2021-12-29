@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.SectionPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagContainer;
@@ -32,24 +31,21 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class WrappedWorld extends Level {
 
 	protected Level world;
-	protected ChunkSource provider;
+	protected ChunkSource chunkSource;
 
 	protected LevelEntityGetter<Entity> entityGetter = new DummyLevelEntityGetter<>();
 
-	public WrappedWorld(Level world, ChunkSource provider) {
+	public WrappedWorld(Level world) {
 		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionType(), world::getProfiler,
 				world.isClientSide, world.isDebug(), 0);
 		this.world = world;
-		this.provider = provider;
 	}
 
-	public WrappedWorld(Level world) {
-		this(world, null);
+	public void setChunkSource(ChunkSource source) {
+		this.chunkSource = source;
 	}
 
 	public Level getLevel() {
@@ -67,17 +63,18 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public boolean isStateAtPosition(@Nullable BlockPos p_217375_1_, @Nullable Predicate<BlockState> p_217375_2_) {
+	public boolean isStateAtPosition(BlockPos p_217375_1_, Predicate<BlockState> p_217375_2_) {
 		return world.isStateAtPosition(p_217375_1_, p_217375_2_);
 	}
 
 	@Override
-	public BlockEntity getBlockEntity(@Nullable BlockPos pos) {
+	@Nullable
+	public BlockEntity getBlockEntity(BlockPos pos) {
 		return world.getBlockEntity(pos);
 	}
 
 	@Override
-	public boolean setBlock(@Nullable BlockPos pos, @Nullable BlockState newState, int flags) {
+	public boolean setBlock(BlockPos pos, BlockState newState, int flags) {
 		return world.setBlock(pos, newState, flags);
 	}
 
@@ -95,7 +92,7 @@ public class WrappedWorld extends Level {
 	public LevelTickAccess<Block> getBlockTicks() {
 		return world.getBlockTicks();
 	}
-	
+
 	@Override
 	public LevelTickAccess<Fluid> getFluidTicks() {
 		return world.getFluidTicks();
@@ -103,7 +100,7 @@ public class WrappedWorld extends Level {
 
 	@Override
 	public ChunkSource getChunkSource() {
-		return provider;
+		return chunkSource != null ? chunkSource : world.getChunkSource();
 	}
 
 	@Override
@@ -201,5 +198,52 @@ public class WrappedWorld extends Level {
 	@Override
 	protected LevelEntityGetter<Entity> getEntities() {
 		return entityGetter;
+	}
+
+	// Intentionally copied from LevelHeightAccessor. Lithium overrides these methods so we need to, too.
+
+	@Override
+	public int getMaxBuildHeight() {
+		return this.getMinBuildHeight() + this.getHeight();
+	}
+
+	@Override
+	public int getSectionsCount() {
+		return this.getMaxSection() - this.getMinSection();
+	}
+
+	@Override
+	public int getMinSection() {
+		return SectionPos.blockToSectionCoord(this.getMinBuildHeight());
+	}
+
+	@Override
+	public int getMaxSection() {
+		return SectionPos.blockToSectionCoord(this.getMaxBuildHeight() - 1) + 1;
+	}
+
+	@Override
+	public boolean isOutsideBuildHeight(BlockPos pos) {
+		return this.isOutsideBuildHeight(pos.getY());
+	}
+
+	@Override
+	public boolean isOutsideBuildHeight(int y) {
+		return y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight();
+	}
+
+	@Override
+	public int getSectionIndex(int y) {
+		return this.getSectionIndexFromSectionY(SectionPos.blockToSectionCoord(y));
+	}
+
+	@Override
+	public int getSectionIndexFromSectionY(int sectionY) {
+		return sectionY - this.getMinSection();
+	}
+
+	@Override
+	public int getSectionYFromSectionIndex(int sectionIndex) {
+		return sectionIndex + this.getMinSection();
 	}
 }

@@ -5,10 +5,10 @@
 
 struct Vertex {
     vec3 pos;
-    vec3 normal;
-    vec2 texCoords;
     vec4 color;
+    vec2 texCoords;
     vec2 modelLight;
+    vec3 normal;
 };
 
 #use "flywheel:block.frag"
@@ -29,7 +29,7 @@ BlockFrag vertex(Vertex v) {
     #if defined(DEBUG_NORMAL)
     b.color = vec4(norm, 1.);
     #else
-    b.color = vec4(v.color.rgb / diffuse(v.normal), v.color.a);
+    b.color = v.color;
     #endif
 
     return b;

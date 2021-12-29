@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.Optional;
 
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,7 +32,7 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}

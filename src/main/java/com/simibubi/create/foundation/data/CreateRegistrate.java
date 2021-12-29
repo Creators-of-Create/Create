@@ -41,6 +41,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -144,6 +145,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
 			})
+			.tag(BlockTags.DRIPSTONE_REPLACEABLE)
+			.tag(BlockTags.AZALEA_ROOT_REPLACEABLE)
+			.tag(BlockTags.MOSS_REPLACEABLE)
+			.tag(BlockTags.LUSH_GROUND_REPLACEABLE)
 			.item()
 			.build();
 		return builder;

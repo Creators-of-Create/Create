@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.core.materials.FlatLit;
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 
 public class FlapData extends InstanceData implements FlatLit<FlapData> {
@@ -42,16 +43,21 @@ public class FlapData extends InstanceData implements FlatLit<FlapData> {
 
 	@Override
 	public FlapData setBlockLight(int blockLight) {
-		this.blockLight = (byte) ((blockLight & 0xF) << 4);
+		this.blockLight = (byte) (blockLight & 0xF);
 		markDirty();
 		return this;
 	}
 
 	@Override
 	public FlapData setSkyLight(int skyLight) {
-		this.skyLight = (byte) ((skyLight & 0xF) << 4);
+		this.skyLight = (byte) (skyLight & 0xF);
 		markDirty();
 		return this;
+	}
+
+	@Override
+	public int getPackedLight() {
+		return LightTexture.pack(this.blockLight, this.skyLight);
 	}
 
 	public FlapData setSegmentOffset(float x, float y, float z) {
