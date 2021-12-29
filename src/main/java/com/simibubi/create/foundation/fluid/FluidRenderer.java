@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.util.FluidUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,7 +48,7 @@ public class FluidRenderer {
 
 		int color = FluidVariantRendering.getColor(fluidVariant);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidVariant.getFluid().defaultFluidState().createLegacyBlock().getLightEmission());
+		int luminosity = Math.max(blockLightIn, FluidUtil.getLuminosity(fluidVariant.getFluid()));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
@@ -97,7 +98,7 @@ public class FluidRenderer {
 
 		int color = FluidVariantRendering.getColor(fluidVariant);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidVariant.getFluid().defaultFluidState().createLegacyBlock().getLightEmission());
+		int luminosity = Math.max(blockLightIn, FluidUtil.getLuminosity(fluidVariant.getFluid()));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);

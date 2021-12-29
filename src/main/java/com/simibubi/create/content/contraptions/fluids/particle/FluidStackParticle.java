@@ -4,6 +4,7 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.util.FluidUtil;
 
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -58,7 +59,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 		int brightnessForRender = super.getLightColor(p_189214_1_);
 		int skyLight = brightnessForRender >> 20;
 		int blockLight = (brightnessForRender >> 4) & 0xf;
-		blockLight = Math.max(blockLight, fluid.getFluid().defaultFluidState().createLegacyBlock().getLightEmission());
+		blockLight = Math.max(blockLight, FluidUtil.getLuminosity(fluid.getFluid()));
 		return (skyLight << 20) | (blockLight << 4);
 	}
 

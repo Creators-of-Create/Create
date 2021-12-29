@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.block.CustomLightEmissionBlock;
 import com.simibubi.create.lib.block.CustomSoundTypeBlock;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -34,7 +33,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -47,15 +45,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock, CustomLightEmissionBlock {
+public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
 	public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
 	public static final EnumProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
+	public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
 
 	private boolean creative;
 
@@ -68,11 +68,16 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	protected FluidTankBlock(Properties p_i48440_1_, boolean creative) {
-		super(p_i48440_1_);
+		super(setLightFunction(p_i48440_1_));
 		this.creative = creative;
 		registerDefaultState(defaultBlockState().setValue(TOP, true)
 			.setValue(BOTTOM, true)
-			.setValue(SHAPE, Shape.WINDOW));
+			.setValue(SHAPE, Shape.WINDOW)
+			.setValue(LIGHT_LEVEL, 0));
+	}
+
+	private static Properties setLightFunction(Properties properties) {
+		return properties.lightLevel(state -> state.getValue(LIGHT_LEVEL));
 	}
 
 	public static boolean isTank(BlockState state) {
@@ -90,19 +95,20 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		p_206840_1_.add(TOP, BOTTOM, SHAPE);
+		p_206840_1_.add(TOP, BOTTOM, SHAPE, LIGHT_LEVEL);
 	}
 
-	@Override
-	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
-		if (tankAt == null)
-			return 0;
-		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
-		if (controllerTE == null || !controllerTE.window)
-			return 0;
-		return tankAt.luminosity;
-	}
+	// Handled via LIGHT_LEVEL state property
+//	@Override
+//	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+//		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
+//		if (tankAt == null)
+//			return 0;
+//		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
+//		if (controllerTE == null || !controllerTE.window)
+//			return 0;
+//		return tankAt.luminosity;
+//	}
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {

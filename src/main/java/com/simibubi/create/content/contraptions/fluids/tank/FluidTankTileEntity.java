@@ -21,6 +21,7 @@ import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.util.FluidTileDataHandler;
+import com.simibubi.create.lib.util.FluidUtil;
 import com.simibubi.create.lib.util.LazyOptional;
 
 import net.fabricmc.api.EnvType;
@@ -138,9 +139,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (!hasLevel())
 			return;
 
-//		FluidAttributes attributes = newFluidStack.getFluid()
-//			.getAttributes();
-		int luminosity = 0;//(int) (attributes.getLuminosity(newFluidStack) / 1.2f);
+		int luminosity = (int) (FluidUtil.getLuminosity(newFluidStack.getFluid()) / 1.2f);
 		boolean reversed = FluidVariantRendering.fillsFromTop(newFluidStack.getType());
 		int maxY = (int) ((getFillState() * height) + 1);
 
@@ -181,7 +180,20 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (this.luminosity == luminosity)
 			return;
 		this.luminosity = luminosity;
-		sendData();
+		updateStateLuminosity();
+	}
+
+	protected void updateStateLuminosity() {
+		if (level.isClientSide)
+			return;
+		int actualLuminosity = luminosity;
+		FluidTankTileEntity controllerTE = getControllerTE();
+		if (controllerTE == null || !controllerTE.window)
+			actualLuminosity = 0;
+		BlockState state = getBlockState();
+		if (state.getValue(FluidTankBlock.LIGHT_LEVEL) != actualLuminosity) {
+			level.setBlock(worldPosition, state.setValue(FluidTankBlock.LIGHT_LEVEL, actualLuminosity), 22);
+		}
 	}
 
 	public FluidTankTileEntity getControllerTE() {
@@ -275,9 +287,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 					}
 
 					level.setBlock(pos, blockState.setValue(FluidTankBlock.SHAPE, shape), 22);
-					level.getChunkSource()
-						.getLightEngine()
-						.checkBlock(pos);
+					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(level, pos);
+					if (tankAt != null)
+						tankAt.updateStateLuminosity();
 				}
 			}
 		}
@@ -309,9 +321,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	public void updateRenderBoundingBox() {
 		if (isController())
-			renderBoundingBox = getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
+			renderBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
 		else
-			renderBoundingBox = getRenderBoundingBox();
+			renderBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox();
 	}
 
 	@Override
