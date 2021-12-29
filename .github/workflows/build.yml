@@ -1,5 +1,5 @@
 name: build
-on: [ push ]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -7,11 +7,6 @@ jobs:
       matrix:
         java: [ 17 ]
     runs-on: ubuntu-latest
-    env:
-        PUBLISH_SUFFIX: snapshots
-        MAVEN_USER: ${{ secrets.MAVEN_USER }}
-        MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-        MAIN_REPO: ${{ secrets.MAIN_REPO }}
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
@@ -24,12 +19,7 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
 
-      - name: publish
-        if: ${{ env.MAIN_REPO }} == "true"
-        run: ./gradlew publish
-
       - name: build
-        if: ${{ env.MAIN_REPO }} != "true"
         run: ./gradlew build
 
       - name: capture build artifacts
