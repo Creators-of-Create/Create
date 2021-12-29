@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.rei.category;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,14 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 
+import com.simibubi.create.foundation.utility.Lang;
+
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -23,6 +32,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAssemblyRecipe, SequencedAssemblyDisplay> {
@@ -30,7 +40,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	Map<ResourceLocation, SequencedAssemblySubCategory> subCategories = new HashMap<>();
 
 	public SequencedAssemblyCategory() {
-		super(itemIcon(AllItems.PRECISION_MECHANISM.get()), new EmptyBackground(180, 115));
+		super(itemIcon(AllItems.PRECISION_MECHANISM.get()), new EmptyBackground(180, 120));
 	}
 
 //	@Override
@@ -79,9 +89,9 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 //			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, fluidStacks, x, fluidIndex);
 //			x += subCategory.getWidth() + margin;
 //		}
-
-		// In case machines should be displayed as ingredients
-
+//
+//		 // In case machines should be displayed as ingredients
+//
 //		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
 //		int catalystX = -2;
 //		int catalystY = 14;
@@ -90,7 +100,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 //			itemStacks.set(index, inputs.get(index));
 //			catalystY += 19;
 //		}
-
+//
 //		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 //			if (slotIndex != 1)
 //				return;
@@ -100,6 +110,61 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 //					.withStyle(ChatFormatting.GOLD));
 //		});
 //	}
+
+	@Override
+	public void addWidgets(SequencedAssemblyDisplay display, List<Widget> ingredients, Point origin) {
+		int xOffset = display.getRecipe().getOutputChance() == 1 ? 0 : -7;
+
+		ingredients.add(basicSlot(point(origin.x + 27 + xOffset, origin.y + 91))
+				.markInput()
+				.entries(EntryIngredients.ofItemStacks(Arrays.asList(display.getRecipe().getIngredient()
+						.getItems()))));
+
+		ingredients.add(basicSlot(point(origin.x + 132 + xOffset, origin.y + 91))
+				.markOutput()
+				.entries(display.getOutputEntries().get(0)));
+
+		int width = 0;
+		int margin = 3;
+		for (SequencedRecipe<?> sequencedRecipe : display.getRecipe().getSequence())
+			width += getSubCategory(sequencedRecipe).getWidth() + margin;
+		width -= margin;
+		int x = width / -2 + getDisplayWidth(null) / 2;
+		int index = 2;
+		int fluidIndex = 0;
+		for (SequencedRecipe<?> sequencedRecipe : display.getRecipe().getSequence()) {
+			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
+			index += subCategory.addItemIngredients(sequencedRecipe, ingredients, x, index, origin);
+			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, ingredients, x, fluidIndex, origin);
+			x += subCategory.getWidth() + margin;
+		}
+
+		// In case machines should be displayed as ingredients
+
+		List<Widget> inputs = ingredients.stream().filter(widget -> {
+			if(widget instanceof Slot slot)
+				return slot.getCurrentEntry().getType() == VanillaEntryTypes.ITEM;
+			return false;
+		}).toList();
+		int catalystX = -2;
+		int catalystY = 14;
+		for (; index < inputs.size(); index++) {
+			Slot slot = (Slot) inputs.get(index);
+			ingredients.add(basicSlot(point(origin.x + catalystX,  origin.y + catalystY))
+					.markInput()
+					.entries(slot.getEntries()));
+			catalystY += 19;
+		}
+
+//		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+//			if (slotIndex != 1)
+//				return;
+//			float chance = recipe.getOutputChance();
+//			if (chance != 1)
+//				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+//						.withStyle(ChatFormatting.GOLD));
+//		});
+	}
 
 	private SequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> sequencedRecipe) {
 		return subCategories.computeIfAbsent(Registry.RECIPE_SERIALIZER.getKey(sequencedRecipe.getRecipe()

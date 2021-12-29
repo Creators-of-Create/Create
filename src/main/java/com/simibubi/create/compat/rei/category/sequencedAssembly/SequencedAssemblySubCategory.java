@@ -7,16 +7,29 @@ import com.simibubi.create.compat.rei.category.animations.AnimatedDeployer;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSaw;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSpout;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import com.simibubi.create.foundation.utility.Lang;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 
+import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.basicSlot;
+import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.point;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -30,7 +43,11 @@ public abstract class SequencedAssemblySubCategory {
 		return width;
 	}
 
-	public int addIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index) {
+	public int addItemIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index, Point origin) {
+		return 0;
+	}
+
+	public int addFluidIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index, Point origin) {
 		return 0;
 	}
 
@@ -67,11 +84,11 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public int addIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index) {
+		public int addFluidIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index, Point origin) {
 			FluidIngredient fluidIngredient = recipe.getRecipe()
 				.getFluidIngredients()
 				.get(0);
-			widgets.add(Widgets.createSlot(new Point(x + 4, 15)).markInput().entries(EntryIngredient.of(CreateRecipeCategory.createFluidEntryStack(CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()).get(index)))));
+			widgets.add(Widgets.createSlot(point(x + 4, 15)).markInput().entries(EntryIngredient.of(CreateRecipeCategory.createFluidEntryStack(CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()).get(index)))));
 			return 1;
 		}
 
@@ -101,28 +118,25 @@ public abstract class SequencedAssemblySubCategory {
 			deployer = new AnimatedDeployer();
 		}
 
-//		@Override
-//		public int addItemIngredients(SequencedRecipe<?> recipe, IGuiItemStackGroup itemStacks, int x, int index) {
-//			itemStacks.init(index, true, x + 3, 14);
-//			itemStacks.set(index, Arrays.asList(recipe.getRecipe()
-//				.getIngredients()
-//				.get(1)
-//				.getItems()));
-//
-//			IAssemblyRecipe contained = recipe.getAsAssemblyRecipe();
-//			if (contained instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) contained).shouldKeepHeldItem()) {
-//				itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-//					if (!input)
-//						return;
-//					if (slotIndex != index)
-//						return;
-//					tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
-//						.withStyle(ChatFormatting.GOLD));
-//				});
-//			}
-//
-//			return 1;
-//		}
+		@Override
+		public int addItemIngredients(SequencedRecipe<?> recipe, List<Widget> widgets, int x, int index, Point origin) {
+			EntryIngredient entryIngredient = EntryIngredients.ofItemStacks(Arrays.asList(recipe.getRecipe()
+					.getIngredients()
+					.get(1)
+					.getItems()));
+			entryIngredient.forEach(entryStack -> {
+				IAssemblyRecipe contained = recipe.getAsAssemblyRecipe();
+				if (contained instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) contained).shouldKeepHeldItem()) {
+					entryStack.tooltip(Lang.translate("recipe.deploying.not_consumed")
+							.withStyle(ChatFormatting.GOLD));
+				}
+			});
+			widgets.add(basicSlot(point(x + 3, 14))
+					.markInput()
+					.entries(entryIngredient));
+
+			return 1;
+		}
 
 		@Override
 		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {

@@ -7,6 +7,17 @@ import com.simibubi.create.compat.rei.display.ItemDrainDisplay;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
+
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, ItemDrainDisplay> {
@@ -14,7 +25,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, Item
 	AnimatedItemDrain drain;
 
 	public ItemDrainCategory() {
-		super(doubleItemIcon(AllBlocks.ITEM_DRAIN, () -> Items.WATER_BUCKET), emptyBackground(177, 50));
+		super(doubleItemIcon(AllBlocks.ITEM_DRAIN, () -> Items.WATER_BUCKET), emptyBackground(177, 57));
 		drain = new AnimatedItemDrain();
 	}
 
@@ -102,6 +113,27 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, Item
 //
 //		addFluidTooltip(fluidStacks, Collections.emptyList(), ImmutableList.of(fluidOutput));
 //	}
+
+
+	@Override
+	public void addWidgets(ItemDrainDisplay display, List<Widget> ingredients, Point origin) {
+		FluidStack fluidOutput = display.getRecipe().getResultingFluid();
+		List<ItemStack> matchingIngredients = Arrays.asList(display.getRecipe().getIngredients()
+				.get(0)
+				.getItems());
+
+		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 8))
+				.markOutput()
+				.entries(EntryIngredient.of(createFluidEntryStack(withImprovedVisibility(fluidOutput)))));
+		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 8))
+				.markOutput()
+				.entries(EntryIngredients.ofItemStacks(matchingIngredients)));
+		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 27))
+				.markInput()
+				.entries(display.getOutputEntries().get(0)));
+
+//		addFluidTooltip(fluidStacks, Collections.emptyList(), ImmutableList.of(fluidOutput));
+	}
 
 	@Override
 	public void draw(EmptyingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {

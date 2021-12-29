@@ -139,7 +139,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 //		});
 	}
 
-	public Slot basicSlot(Point point) {
+	public static Slot basicSlot(Point point) {
 		return Widgets.createSlot(point).disableBackground();
 	}
 

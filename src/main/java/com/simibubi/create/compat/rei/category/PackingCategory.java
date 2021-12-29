@@ -36,7 +36,7 @@ public class PackingCategory extends BasinCategory {
 	}
 
 	public static PackingCategory autoSquare() {
-		return new PackingCategory(PackingType.AUTO_SQUARE, Blocks.CRAFTING_TABLE, 90);
+		return new PackingCategory(PackingType.AUTO_SQUARE, Blocks.CRAFTING_TABLE, 105);
 	}
 
 	protected PackingCategory(PackingType type, ItemLike icon, int height) {
@@ -85,7 +85,7 @@ public class PackingCategory extends BasinCategory {
 		int rows = size == 4 ? 2 : 3;
 		while (i < size) {
 			Ingredient ingredient = ingredients2.get(i);
-			ingredients.add(basicSlot(new Point(origin.x + (rows == 2 ? 26 : 17) + (i % rows) * 19, origin.y + 50 - (i / rows) * 19))
+			ingredients.add(basicSlot(new Point(origin.x + (rows == 2 ? 26 : 17) + (i % rows) * 19 + 1, origin.y + 50 - (i / rows) * 19 + 1))
 					.markInput()
 					.entries(EntryIngredients.ofIngredient(ingredient)));
 			i++;
@@ -93,7 +93,7 @@ public class PackingCategory extends BasinCategory {
 
 		ingredients.add(basicSlot(point(origin.x + 142, origin.y + 51))
 				.markOutput()
-				.entries(display.getOutputEntries().get(0)));
+				.entries(EntryIngredients.of(recipe.getResultItem())));
 	}
 
 	@Override
