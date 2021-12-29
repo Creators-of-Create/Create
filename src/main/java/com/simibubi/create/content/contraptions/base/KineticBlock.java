@@ -31,7 +31,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (tileEntity instanceof KineticTileEntity) {
 			KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
-			kineticTileEntity.preventSpeedUpdate = 0;
+			//kineticTileEntity.preventSpeedUpdate = 0;
 
 			if (oldState.getBlock() != state.getBlock())
 				return;
@@ -40,7 +40,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 			if (!areStatesKineticallyEquivalent(oldState, state))
 				return;
 
-			kineticTileEntity.preventSpeedUpdate = 2;
+			//kineticTileEntity.preventSpeedUpdate = 2;
 		}
 	}
 
@@ -65,15 +65,15 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
 
-		if (kte.preventSpeedUpdate > 0) {
-			kte.preventSpeedUpdate--;
-			return;
-		}
+//		if (kte.preventSpeedUpdate > 0) {
+//			kte.preventSpeedUpdate--;
+//			return;
+//		}
 
 		// Remove previous information when block is added
 		kte.warnOfMovement();
 		kte.clearKineticInformation();
-		kte.updateSpeed = true;
+	//	kte.updateSpeed = true;
 	}
 
 	@Override

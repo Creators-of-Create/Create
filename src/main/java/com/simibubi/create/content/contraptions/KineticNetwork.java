@@ -67,7 +67,7 @@ public class KineticNetwork {
 			sources.put(te, te.calculateAddedStressCapacity());
 		members.put(te, te.calculateStressApplied());
 		updateFromNetwork(te);
-		te.networkDirty = true;
+		//te.networkDirty = true;
 	}
 
 	public void updateCapacityFor(KineticTileEntity te, float capacity) {
@@ -94,10 +94,10 @@ public class KineticNetwork {
 			return;
 		}
 
-		members.keySet()
-			.stream()
-			.findFirst()
-			.map(member -> member.networkDirty = true);
+//		members.keySet()
+//			.stream()
+//			.findFirst()
+//			.map(member -> member.networkDirty = true);
 	}
 
 	public void sync() {

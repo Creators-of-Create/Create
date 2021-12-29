@@ -24,7 +24,11 @@ public class KineticSolver {
 		removeNode(entity);
 		KineticNode node = new KineticNode(entity, this::getNode);
 		nodes.put(entity.getBlockPos(), node);
-		node.onAdded();
+		if (node.tryUpdateSpeed().isOk()) {
+			node.onAdded();
+		} else {
+			node.onPopBlock();
+		}
 	}
 
 	public void updateNode(KineticTileEntity entity) {
