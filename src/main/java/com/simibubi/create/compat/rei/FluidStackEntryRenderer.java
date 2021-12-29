@@ -10,8 +10,11 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.lib.util.FluidTextUtil;
+
+import com.simibubi.create.lib.util.FluidUnit;
 
 import dev.architectury.fluid.FluidStack;
 import me.shedaniel.math.Point;
@@ -62,14 +65,14 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 		RenderSystem.disableBlend();
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	@Override
 	public @Nullable Tooltip getTooltip(EntryStack<FluidStack> entry, Point mouse) {
-		FluidVariant variant = FluidVariant.of(entry.getValue().getFluid());
+		FluidVariant variant = FluidVariant.of(entry.getValue().getFluid(), entry.getValue().getOrCreateTag());
 		List<Component> tooltip = FluidVariantRendering.getTooltip(variant);
 		FluidStack fluid = entry.getValue();
 
-		if (fluid.getFluid()
-				.isSame(AllFluids.POTION.get())) {
+		if (AllFluids.POTION.is(fluid.getFluid())) {
 			Component name = FluidVariantRendering.getName(FluidVariant.of(fluid.getFluid()));
 			if (tooltip.isEmpty())
 				tooltip.add(0, name);
@@ -78,12 +81,12 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 
 			ArrayList<Component> potionTooltip = new ArrayList<>();
 			PotionFluidHandler.addPotionTooltip(new com.simibubi.create.lib.transfer.fluid.FluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getTag()), potionTooltip, 1);
-			tooltip.addAll(1, potionTooltip.stream()
-					.collect(Collectors.toList()));
+			tooltip.addAll(1, new ArrayList<>(potionTooltip));
 		}
 
-		long amount = fluid.getAmount();
-		Component text = (Lang.translate("generic.unit.millibuckets", amount)).withStyle(ChatFormatting.GOLD);
+		String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount());
+		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
+		Component text = Lang.translate(unit.getTranslationKey(), amount).withStyle(ChatFormatting.GOLD);
 		if (tooltip.isEmpty())
 			tooltip.add(0, text);
 		else {

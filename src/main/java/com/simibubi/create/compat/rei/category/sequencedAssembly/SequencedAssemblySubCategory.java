@@ -88,7 +88,7 @@ public abstract class SequencedAssemblySubCategory {
 			FluidIngredient fluidIngredient = recipe.getRecipe()
 				.getFluidIngredients()
 				.get(0);
-			widgets.add(Widgets.createSlot(point(x + 4, 15)).markInput().entries(EntryIngredient.of(CreateRecipeCategory.createFluidEntryStack(CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()).get(index)))));
+			widgets.add(Widgets.createSlot(point(x + 4, 15)).markInput().entries(EntryIngredient.of(CreateRecipeCategory.createFluidEntryStack(fluidIngredient.getMatchingFluidStacks().get(index)))));
 			return 1;
 		}
 

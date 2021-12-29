@@ -124,7 +124,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, Item
 
 		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 8))
 				.markOutput()
-				.entries(EntryIngredient.of(createFluidEntryStack(withImprovedVisibility(fluidOutput)))));
+				.entries(EntryIngredient.of(createFluidEntryStack(fluidOutput))));
 		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 8))
 				.markOutput()
 				.entries(EntryIngredients.ofItemStacks(matchingIngredients)));

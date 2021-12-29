@@ -5,10 +5,14 @@ import java.util.List;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.lib.transfer.fluid.FluidAttributes;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -38,11 +42,22 @@ public class PotionFluid extends VirtualFluid {
 	@SuppressWarnings("UnstableApiUsage")
 	public PotionFluid(Properties properties) {
 		super(properties);
-		FluidVariantRendering.register(this, new FluidVariantRenderHandler() {
-			@Override
-			public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
-				return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
-			}
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
+			FluidVariantRendering.register(this, new FluidVariantRenderHandler() {
+				@Override
+				public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
+					return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
+				}
+
+				@Override
+				public Component getName(FluidVariant fluidVariant) {
+					List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
+					for (MobEffectInstance effect : list) {
+						return new TranslatableComponent(effect.getDescriptionId());
+					}
+					return FluidVariantRenderHandler.super.getName(fluidVariant);
+				}
+			});
 		});
 	}
 

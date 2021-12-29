@@ -145,7 +145,8 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 
 	@SuppressWarnings("all")
 	public static EntryStack<dev.architectury.fluid.FluidStack> createFluidEntryStack(FluidStack fluidStack) {
-		return ClientEntryStacks.setRenderer(EntryStacks.of(fluidStack.getFluid(), fluidStack.getAmount()), new FluidStackEntryRenderer());
+		return ClientEntryStacks.setRenderer(EntryStacks.of(dev.architectury.fluid.FluidStack
+				.create(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getOrCreateTag())), new FluidStackEntryRenderer());
 	}
 
 	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {

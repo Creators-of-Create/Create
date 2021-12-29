@@ -185,7 +185,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe, BasinDispla
 					.getMatchingFluidStacks();
 			widgets.add(basicSlot(point(origin.x + 17 + xOffset + (i2 % 3) * 19, origin.y + 51 - (i2 / 3) * 19 + yOffset))
 					.markInput()
-					.entries(EntryIngredient.of(createFluidEntryStack(withImprovedVisibility(stacks).get(0)))));
+					.entries(EntryIngredient.of(createFluidEntryStack(stacks.get(0)))));
 		}
 
 		int outSize = fluidOutputs.size() + recipe.getRollableResults()
@@ -207,7 +207,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe, BasinDispla
 			} else {
 				widgets.add(basicSlot(point(origin.x + xPosition + 1, origin.y + yPosition + 1 + yOffset))
 						.markOutput()
-						.entries(EntryIngredient.of(createFluidEntryStack(withImprovedVisibility(fluidOutputs.get(outputIndex - itemOutputs.size()))))));
+						.entries(EntryIngredient.of(createFluidEntryStack(fluidOutputs.get(outputIndex - itemOutputs.size())))));
 				j++;
 			}
 

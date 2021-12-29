@@ -131,7 +131,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe, SpoutDisp
 		widgets.add(Widgets.createRecipeBase(bounds));
 		// Create slots
 
-		FluidStack fluidStack = withImprovedVisibility(display.getRecipe().getRequiredFluid().getMatchingFluidStacks()).get(0);
+		FluidStack fluidStack = display.getRecipe().getRequiredFluid().getMatchingFluidStacks().get(0);
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 26, origin.getY() + 31));
 		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 32)).disableBackground().markInput().entries(EntryIngredient.of(createFluidEntryStack(fluidStack))));
 
