@@ -12,7 +12,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-@Mixin(targets = "net.minecraft.client.multiplayer.ClientLevel.EntityCallbacks")
+@Mixin(targets = "net.minecraft.client.multiplayer.ClientLevel$EntityCallbacks")
 public abstract class ClientLevel$EntityCallbacksMixin {
 	@Inject(method = "onTrackingEnd(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
 	private void create$onTrackingEnd(Entity entity, CallbackInfo ci) {

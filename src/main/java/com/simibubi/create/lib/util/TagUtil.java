@@ -28,6 +28,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
+import javax.annotation.Nullable;
+
 public class TagUtil {
 	private static final String CREATE = "create";
 	private static final String TIC = "tconstruct";
@@ -62,6 +64,7 @@ public class TagUtil {
 
 	// misc
 
+	@Nullable
 	public static DyeColor getColorFromStack(ItemStack stack) {
 		Item item = stack.getItem();
 		if (item instanceof DyeItem dyeItem) {
@@ -85,7 +88,6 @@ public class TagUtil {
 		if (DYES_WHITE.contains(item)) return DyeColor.WHITE;
 		if (DYES_YELLOW.contains(item)) return DyeColor.YELLOW;
 
-		// item is not in color tags, default to white I guess
-		return DyeColor.WHITE;
+		return null;
 	}
 }
