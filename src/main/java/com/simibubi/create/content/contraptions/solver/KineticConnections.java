@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.solver;
 
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,19 +15,22 @@ import java.util.stream.Stream;
 
 public class KineticConnections {
 
-	public enum Type {
-		SHAFT, SMALL_COG, LARGE_COG, BELT
+	public interface Type {
+		boolean compatible(Type other);
 	}
 
 	public static record Entry(Vec3i offset, Value value) {
 		public Entry(Vec3i offset, Type from, Type to, float ratio) {
 			this(offset, new Value(from, to, ratio));
 		}
+		public Entry(Vec3i offset, Type from, Type to) {
+			this(offset, from, to, 1);
+		}
 		public Entry(Vec3i offset, Type type, float ratio) {
 			this(offset, type, type, ratio);
 		}
 		public Entry(Vec3i offset, Type type) {
-			this(offset, type, 1);
+			this(offset, type, type, 1);
 		}
 	}
 
@@ -61,7 +65,8 @@ public class KineticConnections {
 		Value toValue = to.connections.get(offset.multiply(-1));
 		if (toValue == null) return Optional.empty();
 
-		if (fromValue.from.equals(toValue.to) && fromValue.to.equals(toValue.from))
+		if (fromValue.from.compatible(toValue.to) && fromValue.to.compatible(toValue.from)
+				&& (Mth.equal(fromValue.ratio, 1/toValue.ratio) || (Mth.equal(toValue.ratio, 1/fromValue.ratio))))
 			return Optional.of(fromValue.ratio);
 		return Optional.empty();
 	}
