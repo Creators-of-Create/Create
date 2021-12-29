@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.mixin.common.accessor.DimensionTypeAccessor;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -41,7 +43,6 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class SchematicChunkSource extends ChunkSource {
 	private final Level fallbackWorld;
@@ -204,7 +205,7 @@ public class SchematicChunkSource extends ChunkSource {
 		}
 
 		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null,
-			ObfuscationReflectionHelper.getPrivateValue(DimensionType.class, null, "f_63848_"), null, false, false, 0);
+				DimensionTypeAccessor.create$getDefaultOverworld(), null, false, false, 0);
 
 		public EmptierChunk(RegistryAccess registryAccess) {
 			super(DUMMY_LEVEL.withAccess(registryAccess), null);

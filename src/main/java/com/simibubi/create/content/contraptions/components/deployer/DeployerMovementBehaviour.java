@@ -28,7 +28,6 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.util.NBTSerializer;
 
