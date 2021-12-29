@@ -70,7 +70,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	}
 
 	public ProcessingRecipeBuilder<T> withFluidOutputs(FluidStack... outputs) {
-		return withFluidOutputs(NonNullList.of(FluidStack.empty(), outputs));
+		return withFluidOutputs(NonNullList.of(FluidStack.EMPTY, outputs));
 	}
 
 	public ProcessingRecipeBuilder<T> withFluidOutputs(NonNullList<FluidStack> outputs) {

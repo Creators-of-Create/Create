@@ -154,7 +154,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		SoundEvent soundevent = null;
 		BlockState fluidState = null;
 		FluidStack fluidInTank = tankCapability.map(fh -> fh.getFluidInTank(0))
-			.orElse(FluidStack.empty());
+			.orElse(FluidStack.EMPTY);
 
 		if (exchange == FluidExchange.ITEM_TO_TANK) {
 			if (creative && !onClient) {
@@ -176,7 +176,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
 				if (fluidTank instanceof CreativeSmartFluidTank)
-					((CreativeSmartFluidTank) fluidTank).setContainedFluid(FluidStack.empty());
+					((CreativeSmartFluidTank) fluidTank).setContainedFluid(FluidStack.EMPTY);
 
 			Fluid fluid = prevFluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()

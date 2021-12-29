@@ -26,7 +26,7 @@ public abstract class FlowSource {
 	public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
 		IFluidHandler tank = provideHandler().orElse(null);
 		if (tank == null)
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		FluidStack immediateFluid = tank.drain(1, true);
 		if (extractionPredicate.test(immediateFluid))
 			return immediateFluid;
@@ -42,7 +42,7 @@ public abstract class FlowSource {
 			return tank.drain(toExtract, true);
 		}
 
-		return FluidStack.empty();
+		return FluidStack.EMPTY;
 	}
 
 	// Layer III. PFIs need active attention to prevent them from disengaging early
@@ -106,10 +106,10 @@ public abstract class FlowSource {
 		@Override
 		public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
 			if (cached == null || cached.get() == null)
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 			FluidTransportBehaviour behaviour = cached.get();
 			FluidStack providedOutwardFluid = behaviour.getProvidedOutwardFluid(location.getOppositeFace());
-			return extractionPredicate.test(providedOutwardFluid) ? providedOutwardFluid : FluidStack.empty();
+			return extractionPredicate.test(providedOutwardFluid) ? providedOutwardFluid : FluidStack.EMPTY;
 		}
 
 		@Override

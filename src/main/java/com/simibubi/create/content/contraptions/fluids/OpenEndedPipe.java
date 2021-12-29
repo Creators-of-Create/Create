@@ -123,7 +123,7 @@ public class OpenEndedPipe extends FlowSource {
 	}
 
 	private FluidStack removeFluidFromSpace(boolean simulate) {
-		FluidStack empty = FluidStack.empty();
+		FluidStack empty = FluidStack.EMPTY;
 		if (world == null)
 			return empty;
 		if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
@@ -259,7 +259,7 @@ public class OpenEndedPipe extends FlowSource {
 
 			FluidStack containedFluidStack = getFluid();
 			if (!containedFluidStack.isEmpty() && !containedFluidStack.isFluidEqual(resource))
-				setFluid(FluidStack.empty());
+				setFluid(FluidStack.EMPTY);
 			if (wasPulling)
 				wasPulling = false;
 			if (canApplyEffects(resource))
@@ -270,7 +270,7 @@ public class OpenEndedPipe extends FlowSource {
 				return fill;
 			if (getFluidAmount() == FluidConstants.BUCKET || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
 				if (provideFluidToSpace(containedFluidStack, false))
-					setFluid(FluidStack.empty());
+					setFluid(FluidStack.EMPTY);
 			return fill;
 		}
 
@@ -285,7 +285,7 @@ public class OpenEndedPipe extends FlowSource {
 		}
 
 		private FluidStack drainInner(long amount, @Nullable FluidStack filter, boolean sim) {
-			FluidStack empty = FluidStack.empty();
+			FluidStack empty = FluidStack.EMPTY;
 			boolean filterPresent = filter != null;
 
 			if (world == null)
@@ -309,16 +309,16 @@ public class OpenEndedPipe extends FlowSource {
 
 			FluidStack drainedFromWorld = removeFluidFromSpace(sim);
 			if (drainedFromWorld.isEmpty())
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 			if (filterPresent && !drainedFromWorld.isFluidEqual(filter))
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 
 			long remainder = drainedFromWorld.getAmount() - amount;
 			drainedFromWorld.setAmount(amount);
 
 			if (!sim && remainder > 0) {
 				if (!getFluid().isEmpty() && !getFluid().isFluidEqual(drainedFromWorld))
-					setFluid(FluidStack.empty());
+					setFluid(FluidStack.EMPTY);
 				super.fill(FluidHelper.copyStackWithAmount(drainedFromWorld, remainder), false);
 			}
 			return drainedFromWorld;

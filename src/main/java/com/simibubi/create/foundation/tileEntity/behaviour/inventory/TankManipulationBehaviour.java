@@ -26,7 +26,7 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 
 	public FluidStack extractAny() {
 		if (!hasInventory())
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		IFluidHandler inventory = getInventory();
 		Predicate<FluidStack> filterTest = getFilterTest(Predicates.alwaysTrue());
 		for (int i = 0; i < inventory.getTanks(); i++) {
@@ -41,7 +41,7 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 				return drained;
 		}
 
-		return FluidStack.empty();
+		return FluidStack.EMPTY;
 	}
 
 	protected Predicate<FluidStack> getFilterTest(Predicate<FluidStack> customFilter) {

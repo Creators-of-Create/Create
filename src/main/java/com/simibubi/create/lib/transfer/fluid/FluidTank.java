@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 import net.minecraft.nbt.CompoundTag;
 
 public class FluidTank implements IFluidHandler {
-	protected FluidStack fluid = FluidStack.empty();
+	protected FluidStack fluid = FluidStack.EMPTY;
 	protected long capacity;
 	protected Predicate<FluidStack> validator;
 
@@ -134,7 +134,7 @@ public class FluidTank implements IFluidHandler {
 		FluidStack out = fluid.copy().setAmount(amount);
 		if (!sim) {
 			fluid.shrink(amount);
-			if (fluid.isEmpty()) fluid = FluidStack.empty();
+			if (fluid.isEmpty()) fluid = FluidStack.EMPTY;
 			onContentsChanged();
 		}
 

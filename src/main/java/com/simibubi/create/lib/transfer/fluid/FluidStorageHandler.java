@@ -40,7 +40,7 @@ public class FluidStorageHandler implements IFluidHandler {
 			}
 			t.abort();
 		}
-		return FluidStack.empty();
+		return FluidStack.EMPTY;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class FluidStorageHandler implements IFluidHandler {
 	@Override
 	public FluidStack drain(FluidStack stack, boolean sim) {
 		if (stack.isEmpty())
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		try (Transaction t = Transaction.openOuter()) {
 			int index = 0;
 			long extracted = storage.extract(stack.getType(), stack.getAmount(), t);
@@ -87,7 +87,7 @@ public class FluidStorageHandler implements IFluidHandler {
 
 	@Override
 	public FluidStack drain(long amount, boolean sim) {
-		FluidStack extracted = FluidStack.empty();
+		FluidStack extracted = FluidStack.EMPTY;
 		if (amount == 0)
 			return extracted;
 		long toExtract = amount;

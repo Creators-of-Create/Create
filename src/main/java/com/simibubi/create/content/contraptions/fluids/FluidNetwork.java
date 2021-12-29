@@ -52,7 +52,7 @@ public class FluidNetwork {
 		this.start = location;
 		this.sourceSupplier = sourceSupplier;
 		this.source = LazyOptional.empty();
-		this.fluid = FluidStack.empty();
+		this.fluid = FluidStack.EMPTY;
 		this.frontier = new HashSet<>();
 		this.visited = new HashSet<>();
 		this.targets = new ArrayList<>();
@@ -189,7 +189,7 @@ public class FluidNetwork {
 			if (handler == null)
 				return;
 
-			FluidStack transfer = FluidStack.empty();
+			FluidStack transfer = FluidStack.EMPTY;
 			for (int i = 0; i < handler.getTanks(); i++) {
 				FluidStack contained = handler.getFluidInTank(i);
 				if (contained.isEmpty())
@@ -245,7 +245,7 @@ public class FluidNetwork {
 			}
 
 			flowSpeed -= transfer.getAmount();
-			transfer = FluidStack.empty();
+			transfer = FluidStack.EMPTY;
 		}
 	}
 
@@ -277,7 +277,7 @@ public class FluidNetwork {
 		visited.clear();
 		targets.clear();
 		queued.clear();
-		fluid = FluidStack.empty();
+		fluid = FluidStack.EMPTY;
 		queued.add(start);
 		pauseBeforePropagation = 2;
 	}

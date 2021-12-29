@@ -154,7 +154,7 @@ public class FluidTankConnectivityHandler {
 		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
 		FluidTank teTank = (FluidTank) capability.orElse(null);
 		FluidStack fluid = capability.map(ifh -> ifh.getFluidInTank(0))
-			.orElse(FluidStack.empty());
+			.orElse(FluidStack.EMPTY);
 
 		Search:
 
@@ -217,7 +217,7 @@ public class FluidTankConnectivityHandler {
 							((CreativeSmartFluidTank) teTank).setContainedFluid(fluidInTank);
 						teTank.fill(fluidInTank, false);
 					}
-					tankTank.setFluid(FluidStack.empty());
+					tankTank.setFluid(FluidStack.EMPTY);
 
 					splitTankAndInvalidate(tank, cache, false);
 					tank.setController(origin);

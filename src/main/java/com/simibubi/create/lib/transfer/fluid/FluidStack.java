@@ -34,7 +34,7 @@ public class FluidStack {
 			})
 	);
 
-	private static final FluidStack EMPTY = new FluidStack(FluidVariant.blank(), 0) {
+	public static final FluidStack EMPTY = new FluidStack(FluidVariant.blank(), 0) {
 		@Override
 		public FluidStack setAmount(long amount) {
 			return this;
@@ -105,7 +105,7 @@ public class FluidStack {
 	}
 
 	public boolean isEmpty() {
-		return amount == 0 || getType().isBlank();
+		return amount <= 0 || getType().isBlank();
 	}
 
 	public void shrink(int amount) {

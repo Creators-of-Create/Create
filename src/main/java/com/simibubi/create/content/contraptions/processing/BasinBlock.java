@@ -98,7 +98,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					.equals(Items.SPONGE)
 					&& !TransferUtil.getFluidHandler(te)
 						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, false))
-						.orElse(FluidStack.empty())
+						.orElse(FluidStack.EMPTY)
 						.isEmpty()) {
 					return InteractionResult.SUCCESS;
 				}

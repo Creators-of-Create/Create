@@ -336,7 +336,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	public FluidStack getDrainableFluid(BlockPos rootPos) {
-		return fluid == null || isSearching() || !pullNext(rootPos, true) ? FluidStack.empty()
+		return fluid == null || isSearching() || !pullNext(rootPos, true) ? FluidStack.EMPTY
 			: new FluidStack(fluid, FluidConstants.BUCKET);
 	}
 

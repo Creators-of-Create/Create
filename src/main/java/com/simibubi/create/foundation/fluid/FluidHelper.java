@@ -54,9 +54,9 @@ public class FluidHelper {
 
 	public static FluidStack copyStackWithAmount(FluidStack fs, long amount) {
 		if (amount <= 0)
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		if (fs.isEmpty())
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		FluidStack copy = fs.copy();
 		copy.setAmount(amount);
 		return copy;

@@ -4,7 +4,7 @@ public class EmptyTank extends FluidTank {
 	public static final EmptyTank INSTANCE = new EmptyTank();
 
 	private EmptyTank() {
-		super(FluidStack.empty(), 0);
+		super(FluidStack.EMPTY, 0);
 	}
 
 	@Override

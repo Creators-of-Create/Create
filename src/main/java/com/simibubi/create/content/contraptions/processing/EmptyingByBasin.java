@@ -46,7 +46,7 @@ public class EmptyingByBasin {
 	}
 
 	public static Pair<FluidStack, ItemStack> emptyItem(Level world, ItemStack stack, boolean simulate) {
-		FluidStack resultingFluid = FluidStack.empty();
+		FluidStack resultingFluid = FluidStack.EMPTY;
 		ItemStack resultingItem = ItemStack.EMPTY;
 
 		if (stack.getItem() instanceof PotionItem)

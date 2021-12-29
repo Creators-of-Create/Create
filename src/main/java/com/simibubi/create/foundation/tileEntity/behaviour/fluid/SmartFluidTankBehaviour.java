@@ -211,14 +211,14 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		@Override
 		public FluidStack drain(FluidStack resource, boolean sim) {
 			if (!extractionAllowed)
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 			return super.drain(resource, sim);
 		}
 
 		@Override
 		public FluidStack drain(long maxDrain, boolean sim) {
 			if (!extractionAllowed)
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 			return super.drain(maxDrain, sim);
 		}
 
@@ -235,7 +235,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 			fluidLevel = LerpedFloat.linear()
 				.startWithValue(0)
 				.chase(0, .25, Chaser.EXP);
-			renderedFluid = FluidStack.empty();
+			renderedFluid = FluidStack.EMPTY;
 		}
 
 		public void onFluidStackChanged() {

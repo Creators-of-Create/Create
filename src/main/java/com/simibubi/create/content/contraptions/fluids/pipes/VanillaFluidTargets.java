@@ -44,7 +44,7 @@ public class VanillaFluidTargets {
 			return new FluidStack(Fluids.WATER, FluidConstants.BUCKET);
 		}
 
-		return FluidStack.empty();
+		return FluidStack.EMPTY;
 	}
 
 }

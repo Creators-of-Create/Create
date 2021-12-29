@@ -64,7 +64,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 
 	private FluidStack drainInternal(long maxDrain, @Nullable FluidStack resource, boolean sim) {
 		if (resource != null && !internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		if (internalTank.getFluidAmount() >= FluidConstants.BUCKET)
 			return internalTank.drain(maxDrain, sim);
 		BlockPos pos = rootPosGetter.get();
@@ -82,7 +82,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 			return internalTank.drain(maxDrain, sim);
 
 		if (resource != null && !returned.isFluidEqual(resource))
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 
 		drained = Math.min(maxDrain, available);
 		returned.setAmount(drained);

@@ -98,7 +98,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 		if (resource.isEmpty())
 			return resource;
 
-		FluidStack drained = FluidStack.empty();
+		FluidStack drained = FluidStack.EMPTY;
 		resource = resource.copy();
 
 		for (IFluidHandler iFluidHandler : itemHandler) {
@@ -118,7 +118,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 
 	@Override
 	public FluidStack drain(long maxDrain, boolean sim) {
-		FluidStack drained = FluidStack.empty();
+		FluidStack drained = FluidStack.EMPTY;
 
 		for (IFluidHandler iFluidHandler : itemHandler) {
 			FluidStack drainedFromCurrent = iFluidHandler.drain(maxDrain, sim);

@@ -96,7 +96,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		@Override
 		public FluidStack drain(FluidStack resource, boolean sim) {
 			if (!canTransfer())
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 			FluidStack drain = wrapped.drain(resource, sim);
 			if (!drain.isEmpty() && !sim)
 				keepAlive();
@@ -106,7 +106,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		@Override
 		public FluidStack drain(long maxDrain, boolean sim) {
 			if (!canTransfer())
-				return FluidStack.empty();
+				return FluidStack.EMPTY;
 			FluidStack drain = wrapped.drain(maxDrain, sim);
 			if (!drain.isEmpty() && !sim)
 				keepAlive();

@@ -59,7 +59,7 @@ public class PipeConnection {
 	}
 
 	public FluidStack getProvidedFluid() {
-		FluidStack empty = FluidStack.empty();
+		FluidStack empty = FluidStack.EMPTY;
 		if (!hasFlow())
 			return empty;
 		Flow flow = this.flow.get();
@@ -303,10 +303,10 @@ public class PipeConnection {
 
 	public FluidStack provideOutboundFlow() {
 		if (!hasFlow())
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		Flow flow = this.flow.get();
 		if (!flow.complete || flow.inbound)
-			return FluidStack.empty();
+			return FluidStack.EMPTY;
 		return flow.fluid;
 	}
 
