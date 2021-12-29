@@ -27,6 +27,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -46,6 +48,10 @@ public class SymmetryHandler {
 //		if (!(event.getEntity() instanceof Player))
 //			return;
 
+		Item held = context.getItemInHand().getItem();
+		if (!(held instanceof BlockItem block))
+			return InteractionResult.PASS;
+
 		Player player = (Player) context.getPlayer();
 		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
@@ -53,7 +59,7 @@ public class SymmetryHandler {
 				.isEmpty()
 				&& inv.getItem(i)
 					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
-				SymmetryWandItem.apply(player.level, inv.getItem(i), player, context.getClickedPos(), context.getLevel().getBlockState(context.getClickedPos()));
+				SymmetryWandItem.apply(player.level, inv.getItem(i), player, context.getClickedPos(), block.getBlock().getStateForPlacement(context));
 			}
 		}
 		return InteractionResult.PASS;
