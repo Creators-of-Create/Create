@@ -241,16 +241,17 @@ public class KineticTileEntity extends SmartTileEntity
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
-		boolean overStressedBefore = overStressed;
-		clearKineticInformation();
+		//boolean overStressedBefore = overStressed;
+		//clearKineticInformation();
 
 		// DO NOT READ kinetic information when placed after movement
-		if (wasMoved) {
-			super.read(compound, clientPacket);
-			return;
-		}
+		//if (wasMoved) {
+		//	super.read(compound, clientPacket);
+		//	return;
+		//}
 
-		speed = compound.getFloat("Speed");
+		if (clientPacket)
+			speed = compound.getFloat("Speed");
 
 //		if (compound.contains("Source"))
 //			source = NbtUtils.readBlockPos(compound.getCompound("Source"));
@@ -268,8 +269,8 @@ public class KineticTileEntity extends SmartTileEntity
 
 		super.read(compound, clientPacket);
 
-		if (clientPacket && overStressedBefore != overStressed && speed != 0)
-			effects.triggerOverStressedEffect();
+//		if (clientPacket && overStressedBefore != overStressed && speed != 0)
+//			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
@@ -294,7 +295,10 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	public void setSpeed(float speed) {
+		float prevSpeed = this.speed;
 		this.speed = speed;
+		onSpeedChanged(prevSpeed);
+		sendData();
 	}
 
 	public boolean hasSource() {

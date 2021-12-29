@@ -170,8 +170,7 @@ public class KineticNode {
 	public void flushChangedSpeed() {
 		if (speedCur != speedNext) {
 			speedCur = speedNext;
-			// TODO: update entity's speed
-			System.out.printf("Set speed of %s to %f\n", this, speedNext);
+			entity.setSpeed(speedCur);
 		}
 	}
 

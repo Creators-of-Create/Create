@@ -71,7 +71,7 @@ public class KineticNetwork {
 			return SolveResult.CONTRADICTION;
 		}
 
-		// find the generator that would maximize the root speed
+		// search over all generators to maximize the root speed
 		float newSpeed = 0;
 		float sign = 0;
 		for (KineticNode generator : generators) {
