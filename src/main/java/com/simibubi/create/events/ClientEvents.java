@@ -367,7 +367,6 @@ public class ClientEvents {
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);
 		UseBlockCallback.EVENT.register(EjectorTargetHandler::rightClickingBlocksSelectsThem);
-		UseBlockCallback.EVENT.register(FurnaceEngineBlock::usingFurnaceEngineOnFurnacePreventsGUI);
 		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
 		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
 		WorldRenderEvents.END.register(SymmetryHandler::render);
@@ -377,9 +376,7 @@ public class ClientEvents {
 		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(
-				(__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer)
-		);
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer));
 
 		// Flywheel Events
 

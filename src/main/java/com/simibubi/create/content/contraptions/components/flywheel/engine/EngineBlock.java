@@ -6,11 +6,15 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.item.BlockUseBypassingItem;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -21,7 +25,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
-public abstract class EngineBlock extends HorizontalDirectionalBlock implements IWrenchable {
+public abstract class EngineBlock extends HorizontalDirectionalBlock implements IWrenchable, BlockUseBypassingItem {
 
 	protected EngineBlock(Properties builder) {
 		super(builder);
@@ -90,4 +94,8 @@ public abstract class EngineBlock extends HorizontalDirectionalBlock implements 
 
 	protected abstract boolean isValidBaseBlock(BlockState baseBlock, BlockGetter world, BlockPos pos);
 
+	@Override
+	public boolean shouldBypass(BlockState state, BlockPos pos, Level level, Player player, InteractionHand hand) {
+		return isValidBaseBlock(state, level, pos);
+	}
 }

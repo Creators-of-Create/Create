@@ -1,5 +1,8 @@
 package com.simibubi.create.lib.mixin.client;
 
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +38,10 @@ public abstract class MultiPlayerGameModeMixin {
 
 	@Redirect(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"))
 	public InteractionResult create$bypassBlockUse(BlockState instance, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-		if (player.getItemInHand(interactionHand).getItem() instanceof BlockUseBypassingItem bypassing) {
+		Item held = player.getItemInHand(interactionHand).getItem();
+		if (held instanceof BlockUseBypassingItem bypassing) {
+			if (bypassing.shouldBypass(instance, blockHitResult.getBlockPos(), level, player, interactionHand)) return InteractionResult.PASS;
+		} else if (held instanceof BlockItem blockItem && blockItem.getBlock() instanceof BlockUseBypassingItem bypassing) {
 			if (bypassing.shouldBypass(instance, blockHitResult.getBlockPos(), level, player, interactionHand)) return InteractionResult.PASS;
 		}
 		return instance.use(level, player, interactionHand, blockHitResult);

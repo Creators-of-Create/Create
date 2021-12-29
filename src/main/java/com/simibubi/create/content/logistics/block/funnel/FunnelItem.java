@@ -15,19 +15,19 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import org.apache.logging.log4j.core.Filter.Result;
+
 public class FunnelItem extends BlockItem implements BlockUseBypassingItem {
 
 	public FunnelItem(Block p_i48527_1_, Properties p_i48527_2_) {
 		super(p_i48527_1_, p_i48527_2_);
 	}
 
-	public static InteractionResult funnelItemAlwaysPlacesWhenUsed(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
-//		if (player.getItemInHand(hand)
-//			.getItem() instanceof FunnelItem)
+//	public static void funnelItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
+//		if (event.getItemStack()
+//				.getItem() instanceof FunnelItem)
 //			event.setUseBlock(Result.DENY);
-//			return InteractionResult.FAIL;
-		return InteractionResult.PASS;
-	}
+//	}
 
 	@Override
 	protected BlockState getPlacementState(BlockPlaceContext ctx) {
