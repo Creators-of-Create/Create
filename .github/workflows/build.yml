@@ -25,12 +25,12 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: publish
-        run: ./gradlew publish
         if: ${{ env.MAIN_REPO }} == "true"
+        run: ./gradlew publish
 
       - name: build
-        run: ./gradlew build
         if: ${{ env.MAIN_REPO }} != "true"
+        run: ./gradlew build
 
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
