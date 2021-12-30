@@ -65,8 +65,11 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 			cancellable = true
 	)
 	public void create$spawnAtLocation(ItemStack stack, float f, CallbackInfoReturnable<ItemEntity> cir, ItemEntity itemEntity) {
-		if (create$captureDrops != null) create$captureDrops.add(itemEntity);
-		else cir.cancel();
+		if (create$captureDrops != null) {
+			create$captureDrops.add(itemEntity);
+			cir.setReturnValue(itemEntity);
+		}
+
 	}
 
 	@Unique
