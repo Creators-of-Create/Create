@@ -381,7 +381,7 @@ public class FluidTankScenes {
 		scene.idle(7);
 		scene.world.modifyTileEntity(cTankPos, CreativeFluidTankTileEntity.class,
 			te -> ((CreativeSmartFluidTank) te.getTankInventory())
-				.setContainedFluid(new FluidStack(Fluids.FLOWING_LAVA, FluidConstants.BUCKET)));
+				.setContainedFluid(new FluidStack(Fluids.LAVA, FluidConstants.BUCKET)));
 		scene.idle(5);
 
 		scene.overlay.showText(50)

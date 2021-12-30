@@ -2,6 +2,8 @@ package com.simibubi.create.lib.transfer;
 
 import java.util.Objects;
 
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStorageHandler;
@@ -61,28 +63,26 @@ public class TransferUtil {
 	// Fluids
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be) {
-		if (Objects.requireNonNull(be.getLevel()).isClientSide) {
-			IFluidHandler cached = FluidTileDataHandler.getCachedHandler(be);
-			if(cached == null)
-				return LazyOptional.empty();
-			return LazyOptional.ofObject(cached);
-		}
-		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(null));
-		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
-		return simplifyFluid(fluidStorage).cast();
+		return getFluidHandler(be, null);
 	}
 
-	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be, Direction side) {
-		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be, @Nullable Direction side) {
 		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(side));
-		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
+		if (be.getLevel().isClientSide()) {
+			IFluidHandler cached = FluidTileDataHandler.getCachedHandler(be);
+			if(cached == null) return LazyOptional.empty();
+			return LazyOptional.ofObject(cached);
+		}
+		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side == null ? Direction.UP : side);
 		return simplifyFluid(fluidStorage).cast();
 	}
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, Direction side) {
-		if (level.isClientSide) return LazyOptional.empty();
-		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(level, pos, side);
-		return simplifyFluid(fluidStorage).cast();
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be != null) {
+			return getFluidHandler(be, side);
+		}
+		return LazyOptional.empty();
 	}
 
 	// Fluid-containing items

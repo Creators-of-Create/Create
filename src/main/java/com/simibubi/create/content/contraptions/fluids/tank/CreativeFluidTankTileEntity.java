@@ -56,7 +56,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 		}
 
 		@Override
-		public FluidStack drain(long maxDrain, boolean simn) {
+		public FluidStack drain(long maxDrain, boolean sim) {
 			return super.drain(maxDrain, true);
 		}
 

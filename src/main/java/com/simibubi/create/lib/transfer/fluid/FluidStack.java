@@ -144,11 +144,23 @@ public class FluidStack {
 	}
 
 	public static FluidStack loadFluidStackFromNBT(CompoundTag tag) {
-		Tag fluidTag = tag.get("Variant");
-		FluidVariant fluid = FluidVariant.fromNbt((CompoundTag) fluidTag);
-		FluidStack stack = new FluidStack(fluid, tag.getLong("Amount"));
-		if(tag.contains("Tag", Tag.TAG_COMPOUND))
-			stack.tag = tag.getCompound("Tag");
+		FluidStack stack;
+		if (tag.contains("FluidName")) {
+			Fluid fluid = Registry.FLUID.get(new ResourceLocation(tag.getString("FluidName")));
+			int amount = tag.getInt("Amount");
+			if (tag.contains("Tag")) {
+				stack = new FluidStack(fluid, amount, tag.getCompound("Tag"));
+			} else {
+				stack = new FluidStack(fluid, amount);
+			}
+		} else {
+			CompoundTag fluidTag = tag.getCompound("Variant");
+			FluidVariant fluid = FluidVariant.fromNbt(fluidTag);
+			stack = new FluidStack(fluid, tag.getLong("Amount"));
+			if(tag.contains("Tag", Tag.TAG_COMPOUND))
+				stack.tag = tag.getCompound("Tag");
+		}
+
 		return stack;
 	}
 

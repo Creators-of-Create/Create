@@ -16,7 +16,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 /**
  * Wraps an IFluidHandler in a Storage, for use outside Create
  */
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class StorageFluidHandler implements Storage<FluidVariant> {
 	protected final IFluidHandler handler;
 

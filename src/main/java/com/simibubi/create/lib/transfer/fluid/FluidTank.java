@@ -55,7 +55,7 @@ public class FluidTank implements IFluidHandler {
 
 	public FluidTank readFromNBT(CompoundTag tag) {
 		this.fluid = FluidStack.loadFluidStackFromNBT(tag);
-		this.capacity = tag.getLong("Capacity");
+		if (tag.contains("Capacity")) this.capacity = tag.getLong("Capacity");
 		return this;
 	}
 
@@ -83,7 +83,7 @@ public class FluidTank implements IFluidHandler {
 
 	@Override
 	public long getTankCapacity(int tank) {
-		return capacity;
+		return getCapacity();
 	}
 
 	@Override
