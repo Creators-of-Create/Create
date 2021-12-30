@@ -84,7 +84,7 @@ public class KineticNode {
 			generatedSpeed = newSpeed;
 			network.updateMember(this);
 			if (network.tryRecalculateSpeed().isContradiction()) {
-				onPopBlock();
+				popBlock();
 			}
 		}
 
@@ -111,6 +111,10 @@ public class KineticNode {
 		return network.tryRecalculateSpeed();
 	}
 
+	public KineticNode getSource() {
+		return source;
+	}
+
 	private SolveResult setSource(KineticNode from, float ratio) {
 		source = from;
 		speedRatio = from.speedRatio * ratio;
@@ -124,7 +128,7 @@ public class KineticNode {
 					if (setSource(e.getFirst(), 1/e.getSecond()).isOk()) {
 						propagateSource();
 					} else {
-						onPopBlock();
+						popBlock();
 					}
 				});
 	}
@@ -151,7 +155,7 @@ public class KineticNode {
 						if (network.isStopped()) {
 							network.markConflictingCycle(cur, next);
 						} else {
-							onPopBlock();
+							popBlock();
 							return;
 						}
 					}
@@ -162,7 +166,7 @@ public class KineticNode {
 					frontier.add(next);
 				} else {
 					// this node will run against the network or activate a conflicting cycle
-					onPopBlock();
+					popBlock();
 					return;
 				}
 			}
@@ -208,12 +212,9 @@ public class KineticNode {
 		}
 	}
 
-	public void onPopBlock() {
+	public void popBlock() {
 		// this should cause the node to get removed from the solver and lead to onRemoved() being called
 		entity.getLevel().destroyBlock(entity.getBlockPos(), true);
 	}
 
-	public boolean isSourceOf(KineticNode other) {
-		return other.source == this;
-	}
 }
