@@ -6,7 +6,10 @@
     },
     {
       "fluid": "create:potion",
-      "nbt": {},
+      "nbt": {
+        "Bottle": "REGULAR",
+        "Potion": "minecraft:night_vision"
+      },
       "amount": 2025
     }
   ],

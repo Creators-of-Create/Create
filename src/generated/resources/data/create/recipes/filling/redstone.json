@@ -6,7 +6,10 @@
     },
     {
       "fluid": "create:potion",
-      "nbt": {},
+      "nbt": {
+        "Bottle": "REGULAR",
+        "Potion": "minecraft:strength"
+      },
       "amount": 2025
     }
   ],

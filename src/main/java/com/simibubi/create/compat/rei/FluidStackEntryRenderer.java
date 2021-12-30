@@ -73,14 +73,14 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 		FluidStack fluid = entry.getValue();
 
 		if (AllFluids.POTION.is(fluid.getFluid())) {
-			Component name = FluidVariantRendering.getName(FluidVariant.of(fluid.getFluid()));
+			Component name = FluidVariantRendering.getName(variant);
 			if (tooltip.isEmpty())
 				tooltip.add(0, name);
 			else
 				tooltip.set(0, name);
 
 			ArrayList<Component> potionTooltip = new ArrayList<>();
-			PotionFluidHandler.addPotionTooltip(new com.simibubi.create.lib.transfer.fluid.FluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getTag()), potionTooltip, 1);
+			PotionFluidHandler.addPotionTooltip(new com.simibubi.create.lib.transfer.fluid.FluidStack(variant, fluid.getAmount(), fluid.getTag()), potionTooltip, 1);
 			tooltip.addAll(1, new ArrayList<>(potionTooltip));
 		}
 
@@ -109,7 +109,7 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 			return;
 		}
 
-		FluidVariant fluidVariant = FluidVariant.of(fluidStack.getFluid());
+		FluidVariant fluidVariant = FluidVariant.of(fluidStack.getFluid(), fluidStack.getOrCreateTag());
 		TextureAtlasSprite fluidStillSprite = FluidVariantRendering.getSprite(fluidVariant);
 
 		int fluidColor = FluidVariantRendering.getColor(fluidVariant);

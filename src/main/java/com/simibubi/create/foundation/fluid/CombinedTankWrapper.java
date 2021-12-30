@@ -53,13 +53,13 @@ public class CombinedTankWrapper implements IFluidHandler {
 		return handler.getTankCapacity(localSlot);
 	}
 
-//	@Override
-//	public boolean isFluidValid(int tank, FluidStack stack) {
-//		int index = getIndexForSlot(tank);
-//		IFluidHandler handler = getHandlerFromIndex(index);
-//		int localSlot = getSlotFromIndex(tank, index);
-//		return handler.isFluidValid(localSlot, stack);
-//	}
+	@Override
+	public boolean isFluidValid(int tank, FluidStack stack) {
+		int index = getIndexForSlot(tank);
+		IFluidHandler handler = getHandlerFromIndex(index);
+		int localSlot = getSlotFromIndex(tank, index);
+		return handler.isFluidValid(localSlot, stack);
+	}
 
 	@Override
 	public long fill(FluidStack resource, boolean sim) {
@@ -107,7 +107,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 			resource.shrink(amount);
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))
-				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount(),
+				drained = new FluidStack(drainedFromCurrent.getType(), amount + drained.getAmount(),
 					drainedFromCurrent.getTag());
 			if (resource.isEmpty())
 				break;
@@ -126,7 +126,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 			maxDrain -= amount;
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))
-				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount(),
+				drained = new FluidStack(drainedFromCurrent.getType(), amount + drained.getAmount(),
 					drainedFromCurrent.getTag());
 			if (maxDrain == 0)
 				break;

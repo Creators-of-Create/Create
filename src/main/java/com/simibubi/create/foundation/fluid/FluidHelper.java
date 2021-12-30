@@ -18,7 +18,9 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -99,21 +101,17 @@ public class FluidHelper {
 		if (fluid == null)
 			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
 		int amount = GsonHelper.getAsInt(json, "amount");
-		FluidStack stack = new FluidStack(fluid, amount);
-
 		if (!json.has("nbt"))
-			return stack;
+			return new FluidStack(fluid, amount);
 
 		try {
 			JsonElement element = json.get("nbt");
-			stack.setTag(TagParser.parseTag(
-				element.isJsonObject() ? Create.GSON.toJson(element) : GsonHelper.convertToString(element, "nbt")));
-
+			CompoundTag nbt = TagParser.parseTag(
+					element.isJsonObject() ? Create.GSON.toJson(element) : GsonHelper.convertToString(element, "nbt"));
+			return new FluidStack(FluidVariant.of(fluid, nbt), amount, nbt);
 		} catch (CommandSyntaxException e) {
-			e.printStackTrace();
+			throw new JsonSyntaxException("Failed to read NBT", e);
 		}
-
-		return stack;
 	}
 
 	public static boolean tryEmptyItemIntoTE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,

@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -191,7 +192,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected List<FluidStack> determineMatchingFluidStacks() {
 			return ImmutableList.of(tagToMatch.isEmpty() ? new FluidStack(fluid, amountRequired)
-				: new FluidStack(fluid, amountRequired, tagToMatch));
+				: new FluidStack(FluidVariant.of(fluid, tagToMatch), amountRequired, tagToMatch));
 		}
 
 	}
