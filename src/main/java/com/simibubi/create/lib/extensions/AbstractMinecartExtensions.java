@@ -8,8 +8,6 @@ import net.minecraft.world.item.ItemStack;
 public interface AbstractMinecartExtensions {
 	void create$moveMinecartOnRail(BlockPos pos);
 
-	ItemStack create$getCartItem();
-
 	boolean create$canUseRail();
 
 	BlockPos create$getCurrentRailPos();

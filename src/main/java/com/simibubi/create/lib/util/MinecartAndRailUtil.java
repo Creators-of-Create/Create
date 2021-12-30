@@ -27,18 +27,18 @@ public class MinecartAndRailUtil {
 		return rail == Blocks.ACTIVATOR_RAIL;
 	}
 
-	public static RailShape getDirectionOfRail(BlockState state, BlockGetter world, BlockPos pos, @Nullable BaseRailBlock cart) {
-		return ((BaseRailBlockExtensions) state.getBlock()).create$getRailDirection(state, world, pos, cart);
+	public static RailShape getDirectionOfRail(BlockState state, BlockGetter world, BlockPos pos, @Nullable BaseRailBlock block) {
+		return ((BaseRailBlockExtensions) state.getBlock()).create$getRailDirection(state, world, pos, block);
 	}
 
 	// carts
 
 	public static void moveMinecartOnRail(AbstractMinecart cart, BlockPos pos) {
-		((AbstractMinecartExtensions) MixinHelper.cast(cart)).create$moveMinecartOnRail(pos);
+		((AbstractMinecartExtensions) cart).create$moveMinecartOnRail(pos);
 	}
 
 	public static double getMaximumSpeed(AbstractMinecart cart) {
-		return ((AbstractMinecartAccessor) MixinHelper.cast(cart)).create$getMaxSpeed();
+		return ((AbstractMinecartAccessor) cart).create$getMaxSpeed();
 	}
 
 	public static boolean canCartUseRail(AbstractMinecart cart) {
@@ -59,16 +59,5 @@ public class MinecartAndRailUtil {
 
 	public static LazyOptional<MinecartController> getControllerLazy(AbstractMinecart cart) {
 		return LazyOptional.ofObject(getController(cart));
-	}
-
-	public static ItemStack getCartItem(AbstractMinecart.Type type) {
-		return switch (type) {
-			case FURNACE -> new ItemStack(Items.FURNACE_MINECART);
-			case CHEST -> new ItemStack(Items.CHEST_MINECART);
-			case TNT -> new ItemStack(Items.TNT_MINECART);
-			case HOPPER -> new ItemStack(Items.HOPPER_MINECART);
-			case COMMAND_BLOCK -> new ItemStack(Items.COMMAND_BLOCK_MINECART);
-			default -> new ItemStack(Items.MINECART);
-		};
 	}
 }

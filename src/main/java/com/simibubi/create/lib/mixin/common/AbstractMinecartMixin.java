@@ -63,11 +63,6 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 	}
 
 	@Override
-	public ItemStack create$getCartItem() {
-		return MinecartAndRailUtil.getCartItem(getMinecartType());
-	}
-
-	@Override
 	public boolean create$canUseRail() {
 		return create$canUseRail;
 	}
