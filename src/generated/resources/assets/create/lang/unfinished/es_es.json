@@ -526,7 +526,7 @@
 	"block.create.white_seat": "Asiento blanco",
 	"block.create.white_toolbox": "Caja de herramientas blanca",
 	"block.create.white_valve_handle": "Asa de válvula blanco",
-	"block.create.windmill_bearing": "Rodamiento del molino de viento",
+	"block.create.windmill_bearing": "Rodamiento de molino de viento",
 	"block.create.wooden_bracket": "Soporte de madera para ejes",
 	"block.create.yellow_nixie_tube": "Tubo Nixie amarillo",
 	"block.create.yellow_sail": "Vela amarilla",
@@ -595,7 +595,7 @@
 	"item.create.extendo_grip": "Agarre extendido",
 	"item.create.filter": "Filtro",
 	"item.create.furnace_minecart_contraption": "Artilugio de vagoneta de horno",
-	"item.create.goggles": "Gafas del constructor",
+	"item.create.goggles": "Gafas del ingeniero",
 	"item.create.golden_sheet": "Lámina de oro",
 	"item.create.handheld_worldshaper": "Moldeador de mundos",
 	"item.create.honey_bucket": "Cubo con miel",
@@ -669,11 +669,11 @@
 	"advancement.create.wrench": "Configurar convenientemente",
 	"advancement.create.wrench.desc": "Crea una llave inglesa para ayudarte a construir tus artilugios.",
 	"advancement.create.goggles": "Estresóvisión",
-	"advancement.create.goggles.desc": "Crea unas gafas del constructor para ayudarte a obtener más información cinética de los componentes.",
+	"advancement.create.goggles.desc": "Crea unas gafas del ingeniero para ayudarte a obtener más información cinética de los componentes.",
 	"advancement.create.speedometer": "Pero, ¿con qué rapidez exactamente?",
-	"advancement.create.speedometer.desc": "Coloca y alimenta un velocímetro. Míralo a través de las gafas para leer su valor exacto.",
-	"advancement.create.stressometer": "Pero, ¿cuán estresado exactamente??",
-	"advancement.create.stressometer.desc": "Coloca y alimenta un estresómetro. Míralo a través de las gafas para leer su valor exacto.",
+	"advancement.create.speedometer.desc": "Coloca y alimenta un velocímetro. Míralo a través de las gafas del ingeniero para leer su valor exacto.",
+	"advancement.create.stressometer": "Pero, ¿cuán estresado exactamente?",
+	"advancement.create.stressometer.desc": "Coloca y alimenta un estresómetro. Míralo a través de las gafas del ingeniero para leer su valor exacto.",
 	"advancement.create.aesthetics": "Boom, ¡Estética!",
 	"advancement.create.aesthetics.desc": "Coloca soportes en ejes, ductos y engranajes.",
 	"advancement.create.reinforced": "Boom, ¡Reforzado!",
@@ -1085,7 +1085,7 @@
 	"create.gui.schematicTable.noSchematics": "No hay esquemas guardados",
 	"create.gui.schematicTable.uploading": "Subiendo...",
 	"create.gui.schematicTable.finished": "¡Subida finalizada!",
-	"create.gui.schematicannon.title": "Cañón de esquemas",
+	"create.gui.schematicannon.title": "Esquematicañón",
 	"create.gui.schematicannon.listPrinter": "Lista de control de la impresora",
 	"create.gui.schematicannon.gunpowderLevel": "Pólvora %1$s%%",
 	"create.gui.schematicannon.shotsRemaining": "Disparos restantes: %1$s",
@@ -1449,7 +1449,7 @@
 	"item.create.empty_schematic.tooltip.summary": "Se utiliza como 'ingrediente' de las recetas y para escribir en la _tabla de esquemas_.",
 
 	"item.create.schematic.tooltip": "ESQUEMA",
-	"item.create.schematic.tooltip.summary": "Contiene una estructura para ser posicionada y colocada en el mundo. Posiciona el holograma como desees y utiliza un _cañón de esquemas_ para construirla.",
+	"item.create.schematic.tooltip.summary": "Contiene una estructura para ser posicionada y colocada en el mundo. Posiciona el holograma como desees y utiliza un _esquematicañón_ para construirla.",
 	"item.create.schematic.tooltip.condition1": "Cuando se sostiene en la mano",
 	"item.create.schematic.tooltip.behaviour1": "Se puede posicionar utilizando las herramientas en pantalla.",
 	"item.create.schematic.tooltip.control1": "Mayús izdo. + clic derecho",
@@ -1478,7 +1478,7 @@
 	"block.create.schematic_table.tooltip.condition1": "Cuando se da un esquema vacío",
 	"block.create.schematic_table.tooltip.behaviour1": "Carga un archivo elegido de la carpeta de esquemas.",
 
-	"item.create.goggles.tooltip": "GAFAS DEL CONSTRUCTOR",
+	"item.create.goggles.tooltip": "GAFAS DEL INGENIERO",
 	"item.create.goggles.tooltip.summary": "Un par de gafas para aumentar tu visión con útil información _cinética_.",
 	"item.create.goggles.tooltip.condition1": "Cuando se llevan puestas",
 	"item.create.goggles.tooltip.behaviour1": "Muestra _indicadores de color_ correspondientes al _nivel de velocidad_ de un componente cinético colocado, así como el _impacto de estrés_ y la _carga_ de los componentes individuales.",
@@ -1527,7 +1527,7 @@
 	"block.create.content_observer.tooltip.behaviour2": "Emite un pulso de Redstone cuando se transfiere un objeto que coincide.",
 
 	"block.create.creative_crate.tooltip": "CAJA CREATIVA",
-	"block.create.creative_crate.tooltip.summary": "Este _contenedor de objetos_ permite la replicación infinita de cualquier objeto. Colócalo junto a un _cañón de esquemas_ para eliminar cualquier requisito de material.",
+	"block.create.creative_crate.tooltip.summary": "Este _contenedor de objetos_ permite la replicación infinita de cualquier objeto. Colócalo junto a un _esquematicañón_ para eliminar cualquier requisito de material.",
 	"block.create.creative_crate.tooltip.condition1": "Cuando el objeto está en la ranura para filtros",
 	"block.create.creative_crate.tooltip.behaviour1": "Todo lo que se _extraiga_ de este contenedor proporcionará un suministro _ilimitado_ del objeto especificado. Los objetos _insertados_ en esta caja serán _evitados_.",
 
@@ -1795,7 +1795,7 @@
 
 	"create.ponder.chute_upward.header": "Transportar objetos hacia arriba mediante ductos",
 	"create.ponder.chute_upward.text_1": "Usando ventiladores revestidos en la parte superior o inferior, un ducto puede transportar objetos hacia arriba",
-	"create.ponder.chute_upward.text_2": "Al inspeccionar los ductos con las gafas del constructor, se revela información sobre la dirección del movimiento",
+	"create.ponder.chute_upward.text_2": "Al inspeccionar los ductos con las gafas del ingeniero, se revela información sobre la dirección del movimiento",
 	"create.ponder.chute_upward.text_3": "En el extremo 'bloqueado', los objetos tendrán que ser insertados/tomados de los lados",
 
 	"create.ponder.clockwork_bearing.header": "Animar estructuras con rodamientos tipo reloj",
@@ -2349,7 +2349,7 @@
 
 	"create.ponder.speedometer.header": "Controlar la información cinética mediante el velocímetro",
 	"create.ponder.speedometer.text_1": "El velocímetro muestra la velocidad actual de los componentes conectados",
-	"create.ponder.speedometer.text_2": "Cuando se usan las gafas del constructor, el jugador puede obtener información más detallada del medidor",
+	"create.ponder.speedometer.text_2": "Cuando se usan las gafas del ingeniero, el jugador puede obtener información más detallada del medidor",
 	"create.ponder.speedometer.text_3": "Los comparadores pueden emitir señales analógicas de redstone en relación con las mediciones del velocímetro",
 
 	"create.ponder.spout_filling.header": "Llenar objetos con un surtidor",
@@ -2374,13 +2374,13 @@
 
 	"create.ponder.stressometer.header": "Supervisar la información cinética con el estresómetro",
 	"create.ponder.stressometer.text_1": "El estresómetro muestra la capacidad de estrés actual de la red cinética conectada",
-	"create.ponder.stressometer.text_2": "Cuando se usan las gafas del constructor, el jugador puede obtener información más detallada del medidor",
+	"create.ponder.stressometer.text_2": "Cuando se usan las gafas del ingeniero, el jugador puede obtener información más detallada del medidor",
 	"create.ponder.stressometer.text_3": "Los comparadores pueden emitir señales analógicas de redstone en relación con las mediciones del estresómetro",
 
 	"create.ponder.super_glue.header": "Fijar bloques con pegamento",
 	"create.ponder.super_glue.text_1": "Se puede utilizar pegamento entre dos bloques cualquiera",
 	"create.ponder.super_glue.text_2": "Los bloques fijados se moverán juntos cuando se ensamblen en un artilugio",
-	"create.ponder.super_glue.text_3": "Cada vez que el pegamento es sostenido en la mano...",
+	"create.ponder.super_glue.text_3": "Cada vez que el pegamento es sostenido en la mano secundaria...",
 	"create.ponder.super_glue.text_4": "...los bloques añadidos se pegarán a la cara en la que fueron colocados automáticamente",
 	"create.ponder.super_glue.text_5": "El pegamento se puede quitar con un clic izquierdo",
 
@@ -2393,9 +2393,9 @@
 
 	"create.ponder.valve_pipe.header": "Controlar el flujo de fluidos mediante válvulas",
 	"create.ponder.valve_pipe.text_1": "Las tuberías con válvulas ayudan a controlar los fluidos que se propagan por las redes de tuberías",
-	"create.ponder.valve_pipe.text_2": "Su entrada en el eje controla si el fluido puede pasar por",
-	"create.ponder.valve_pipe.text_3": "Dada la fuerza de rotación en la dirección de apertura, la válvula se abrirá",
-	"create.ponder.valve_pipe.text_4": "Se puede volver a cerrar invirtiendo el giro de entrada",
+	"create.ponder.valve_pipe.text_2": "La entrada con eje controla si el fluido puede pasar",
+	"create.ponder.valve_pipe.text_3": "Dada una fuerza de rotación en la dirección de apertura, la válvula se abrirá",
+	"create.ponder.valve_pipe.text_4": "Se puede volver a cerrar invirtiendo el sentido del eje",
 
 	"create.ponder.water_wheel.header": "Generar fuerza rotacional mediante ruedas hidráulicas",
 	"create.ponder.water_wheel.text_1": "Las ruedas hidráulicas extraen la fuerza de las corrientes de agua adyacentes",
@@ -2411,7 +2411,7 @@
 	"create.ponder.weighted_ejector.text_3": "Un objetivo válido puede estar a cualquier altura o distancia dentro del alcance",
 	"create.ponder.weighted_ejector.text_4": "Sin embargo, no pueden estar a un costado",
 	"create.ponder.weighted_ejector.text_5": "Si no se ha seleccionado ningún objetivo válido, simplemente se dirigirá al bloque que se encuentra justo delante",
-	"create.ponder.weighted_ejector.text_6": "Suministrale fuerza rotacional para cargarlo",
+	"create.ponder.weighted_ejector.text_6": "Suminístralo fuerza rotacional para cargarlo",
 	"create.ponder.weighted_ejector.text_7": "Los objetos colocados en el eyector hacen que se dispare",
 	"create.ponder.weighted_ejector.text_8": "Si se dirigen a un inventario, el eyector esperará hasta que haya espacio",
 	"create.ponder.weighted_ejector.text_9": "Con la llave inglesa se puede configurar el tamaño de pila requerido",
@@ -2427,17 +2427,17 @@
 	"create.ponder.weighted_ejector_tunnel.text_4": "Mientras una nueva pila del tamaño configurado se expulse por la salida lateral...",
 	"create.ponder.weighted_ejector_tunnel.text_5": "...el resto seguirá su camino",
 
-	"create.ponder.windmill_source.header": "Generar fuerza rotacional mediante rodamientos del molino de viento",
+	"create.ponder.windmill_source.header": "Generar fuerza rotacional mediante rodamientos de molino de viento",
 	"create.ponder.windmill_source.text_1": "Los rodamientos del molino de viento se fijan al bloque que tienen delante",
-	"create.ponder.windmill_source.text_2": "Si se unen suficientes bloques tipo vela al bloque, éste puede actuar como un molino de viento",
-	"create.ponder.windmill_source.text_3": "Activado con un clic derecho, el rodamiento del molino de viento comenzará a proporcionar fuerza rotacional",
-	"create.ponder.windmill_source.text_4": "La cantidad de bloques de vela determina su velocidad de rotación",
+	"create.ponder.windmill_source.text_2": "Si se unen suficientes velas al bloque, éste puede actuar como un molino de viento",
+	"create.ponder.windmill_source.text_3": "Activado con un clic derecho, el rodamiento de molino de viento comenzará a proporcionar fuerza rotacional",
+	"create.ponder.windmill_source.text_4": "La cantidad de velas determina su velocidad de rotación",
 	"create.ponder.windmill_source.text_5": "Utiliza una llave inglesa para configurar su sentido de rotación",
-	"create.ponder.windmill_source.text_6": "Haga clic derecho sobre el rodamiento del molino en cualquier momento para detener y editar la estructura de nuevo",
+	"create.ponder.windmill_source.text_6": "Haga clic derecho sobre el rodamiento de molino de viento en cualquier momento para detener y editar la estructura de nuevo",
 
-	"create.ponder.windmill_structure.header": "Artilugios para molinos de viento",
-	"create.ponder.windmill_structure.text_1": "Cualquier estructura puede contar como un molino de viento válido, siempre que contenga al menos 8 bloques tipo vela.",
+	"create.ponder.windmill_structure.header": "Artilugios de molinos de viento",
+	"create.ponder.windmill_structure.text_1": "Cualquier estructura puede contar como un molino de viento válido, siempre que contenga al menos 8 velas.",
 
-	"_": "Thank you for translating Create!"
+	"_": "¡Gracias por traducir Create!"
 
 }
