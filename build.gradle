@@ -150,18 +150,5 @@ publishing {
     }
 
     repositories {
-        String suffix = System.getenv().PUBLISH_SUFFIX // 'releases' or 'snapshots'
-        if (suffix == null || suffix.isEmpty()) {
-            System.out.println("Failed to publish to maven!")
-            return
-        }
-        maven {
-            url = "https://maven.devos.community/${suffix}/"
-            credentials {
-                username = System.getenv().MAVEN_USER
-                password = System.getenv().MAVEN_PASS
-            }
-            authentication { basic(BasicAuthentication) }
-        }
     }
 }

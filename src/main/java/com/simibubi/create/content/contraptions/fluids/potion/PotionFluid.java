@@ -39,26 +39,8 @@ public class PotionFluid extends VirtualFluid {
 		REGULAR, SPLASH, LINGERING;
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	public PotionFluid(Properties properties) {
 		super(properties);
-		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
-			FluidVariantRendering.register(this, new FluidVariantRenderHandler() {
-				@Override
-				public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
-					return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
-				}
-
-				@Override
-				public Component getName(FluidVariant fluidVariant) {
-					List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
-					for (MobEffectInstance effect : list) {
-						return new TranslatableComponent(effect.getDescriptionId());
-					}
-					return FluidVariantRenderHandler.super.getName(fluidVariant);
-				}
-			});
-		});
 	}
 
 	public static FluidStack withEffects(long amount, Potion potion, List<MobEffectInstance> customEffects) {

@@ -179,7 +179,7 @@ public class FluidStack {
 		FluidVariant fluid = FluidVariant.fromPacket(buffer);
 		long amount = buffer.readVarLong();
 		CompoundTag tag = buffer.readNbt();
-		if (fluid.isBlank()) return empty();
+		if (fluid.isBlank()) return EMPTY;
 		return new FluidStack(fluid, amount, tag);
 	}
 
@@ -192,10 +192,6 @@ public class FluidStack {
 		buffer.writeVarLong(stack.getAmount());
 		buffer.writeNbt(stack.tag);
 		return buffer;
-	}
-
-	public static FluidStack empty() {
-		return EMPTY.copy();
 	}
 
 	public String getTranslationKey() {
@@ -217,6 +213,6 @@ public class FluidStack {
 	}
 
 	public FluidStack copy() {
-		return new FluidStack(FluidVariant.of(getFluid(), getType().copyNbt()), getAmount());
+		return new FluidStack(FluidVariant.of(getFluid(), getType().copyNbt()), getAmount(), getTag());
 	}
 }

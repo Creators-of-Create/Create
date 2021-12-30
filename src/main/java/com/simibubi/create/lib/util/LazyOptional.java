@@ -48,7 +48,7 @@ public class LazyOptional<T> {
 		return instanceSupplier == null ? empty() : new LazyOptional<>(instanceSupplier);
 	}
 
-	public static <T> LazyOptional<T> ofObject(T o) {
+	public static <T> LazyOptional<T> ofObject(@Nullable T o) {
 		return o == null ? empty() : LazyOptional.of(() -> o);
 	}
 

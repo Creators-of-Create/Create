@@ -8,18 +8,23 @@ import com.simibubi.create.lib.util.FluidUtil;
 
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
 public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
 	private final float vo;
-	private int color;
 	private FluidStack fluid;
 
 	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid, double x,
@@ -29,21 +34,18 @@ public class FluidStackParticle extends TextureSheetParticle {
 		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	public FluidStackParticle(ClientLevel world, FluidStack fluid, double x, double y, double z, double vx, double vy,
-		double vz) {
+							  double vz) {
 		super(world, x, y, z, vx, vy, vz);
 		this.fluid = fluid;
-		BlockPos pos = new BlockPos(this.x, this.y, this.z);
-		FluidState state = fluid.getFluid().defaultFluidState();
-		FluidRenderHandler handler = FluidRenderHandlerRegistry.INSTANCE.get(fluid.getFluid());
-		this.setSprite(handler.getFluidSprites(world, pos, state)[0]);
-
+		FluidVariantRenderHandler handler = FluidVariantRendering.getHandlerOrDefault(fluid.getFluid());
+		this.setSprite(handler.getSprites(fluid.getType())[0]);
 		this.gravity = 1.0F;
-		this.rCol = 0.8F;
-		this.gCol = 0.8F;
-		this.bCol = 0.8F;
-		color = handler.getFluidColor(world, pos, state);
-		this.multiplyColor(color);
+		int color = handler.getColor(fluid.getType(), world, new BlockPos(x, y, z));
+		this.rCol *= (float) (color >> 16 & 255) / 255.0F;
+		this.gCol *= (float) (color >> 8 & 255) / 255.0F;
+		this.bCol *= (float) (color & 255) / 255.0F;
 
 		this.xd = vx;
 		this.yd = vy;
@@ -97,7 +99,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 		if (!onGround && level.random.nextFloat() < 1 / 8f)
 			return;
 
-		Color color = new Color(this.color);
+		Color color = new Color(rCol, gCol, bCol, 1);
 		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, color.getRedAsFloat(), color.getGreenAsFloat(), color.getBlueAsFloat());
 	}
 

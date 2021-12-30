@@ -34,8 +34,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public class TransferUtil {
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be) {
 		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
-		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(Direction.WEST));
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.WEST);
+		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(null));
+		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
 		return simplifyItem(itemStorage).cast();
 	}
 
@@ -48,7 +48,7 @@ public class TransferUtil {
 
 	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos) {
 		if (level.isClientSide) return LazyOptional.empty();
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, Direction.WEST); // both up and down break stuff, lets hope other blocks are symmetrical
+		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, Direction.UP);
 		return simplifyItem(itemStorage).cast();
 	}
 
@@ -67,8 +67,8 @@ public class TransferUtil {
 				return LazyOptional.empty();
 			return LazyOptional.ofObject(cached);
 		}
-		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(Direction.WEST));
-		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.WEST); // both up and down break stuff, lets hope other blocks are symmetrical
+		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(null));
+		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
 		return simplifyFluid(fluidStorage).cast();
 	}
 

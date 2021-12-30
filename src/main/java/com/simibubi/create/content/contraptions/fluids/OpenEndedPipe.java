@@ -20,6 +20,7 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.LevelUtil;
 
+import io.github.tropheusj.milk.Milk;
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
@@ -175,7 +176,7 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (fluid.isEmpty())
 			return false;
-		if (!FluidHelper.hasBlockState(fluid.getFluid())) {
+		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_TAG)) { // fabric: milk logic is different
 			if (!simulate)
 				applyEffects(fluid);
 			return true;
@@ -263,12 +264,12 @@ public class OpenEndedPipe extends FlowSource {
 			if (wasPulling)
 				wasPulling = false;
 			if (canApplyEffects(resource))
-				resource = FluidHelper.copyStackWithAmount(resource, 1);
+				resource = FluidHelper.copyStackWithAmount(resource, 81); // fabric: deplete fluids 81 times faster to account for larger amounts
 
 			long fill = super.fill(resource, sim);
 			if (sim)
 				return fill;
-			if (getFluidAmount() == FluidConstants.BUCKET || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
+			if (getFluidAmount() == FluidConstants.BUCKET || (!FluidHelper.hasBlockState(containedFluidStack.getFluid()) || containedFluidStack.getFluid().is(Milk.MILK_TAG))) // fabric: milk logic is different
 				if (provideFluidToSpace(containedFluidStack, false))
 					setFluid(FluidStack.EMPTY);
 			return fill;
@@ -378,7 +379,7 @@ public class OpenEndedPipe extends FlowSource {
 				return;
 			List<LivingEntity> list =
 				world.getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
-			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
+//			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
 			for (LivingEntity livingentity : list)
 				livingentity.removeAllEffects();
 		}

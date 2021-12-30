@@ -23,12 +23,18 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+
+import java.util.List;
 
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.GLASS_BOTTLE;
@@ -42,12 +48,32 @@ public class AllFluids {
 	public static final FluidEntry<PotionFluid> POTION =
 			REGISTRATE.virtualFluid("potion", /*PotionFluidAttributes::new, */PotionFluid::new)
 					.lang(f -> "fluid.create.potion", "Potion")
+					.onRegister(flowing -> {
+						Fluid potion = flowing.getSource();
+						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () ->
+								FluidVariantRendering.register(potion, new FluidVariantRenderHandler() {
+									@Override
+									public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
+										return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
+									}
+
+									@Override
+									public Component getName(FluidVariant fluidVariant) {
+										List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
+										for (MobEffectInstance effect : list) {
+											return new TranslatableComponent(effect.getDescriptionId());
+										}
+										return FluidVariantRenderHandler.super.getName(fluidVariant);
+									}
+								}));
+					})
 					.register();
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang(f -> "fluid.create.tea", "Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
-			.onRegister(tea -> {
+			.onRegisterAfter(Item.class, flowing -> {
+				Fluid tea = flowing.getSource();
 				FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
 						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(tea), FluidConstants.BUCKET / 10));
 				FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
@@ -77,7 +103,8 @@ public class AllFluids {
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
 					.build()
-					.onRegister(honey -> {
+					.onRegisterAfter(Item.class, flowing -> {
+						Fluid honey = flowing.getSource();
 						FluidStorage.combinedItemApiProvider(HONEY_BOTTLE).register(context ->
 								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(honey), FluidConstants.BOTTLE));
 						FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
@@ -99,7 +126,8 @@ public class AllFluids {
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
-					.onRegister(chocolate -> {
+					.onRegisterAfter(Item.class, flowing -> {
+						Fluid chocolate = flowing.getSource();
 						FluidStorage.combinedItemApiProvider(chocolate.getBucket()).register(context ->
 								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(chocolate), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
