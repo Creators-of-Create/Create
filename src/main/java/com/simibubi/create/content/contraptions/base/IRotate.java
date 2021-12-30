@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -101,7 +103,7 @@ public interface IRotate extends IWrenchable {
 			else if (stressPercent > .5d) return StressImpact.MEDIUM;
 			else return StressImpact.LOW;
 		}
-		
+
 		public static boolean isEnabled() {
 			return !AllConfigs.SERVER.kinetics.disableStress.get();
 		}
@@ -119,19 +121,23 @@ public interface IRotate extends IWrenchable {
 		}
 	}
 
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face);
+	boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face);
 
-	public Axis getRotationAxis(BlockState state);
+	Axis getRotationAxis(BlockState state);
 
-	public default SpeedLevel getMinimumRequiredSpeedLevel() {
+	default KineticConnections getInitialConnections(BlockState state) {
+		return AllConnections.EMPTY;
+	}
+
+	default SpeedLevel getMinimumRequiredSpeedLevel() {
 		return SpeedLevel.NONE;
 	}
 
-	public default boolean hideStressImpact() {
+	default boolean hideStressImpact() {
 		return false;
 	}
 
-	public default boolean showCapacityWithAnnotation() {
+	default boolean showCapacityWithAnnotation() {
 		return false;
 	}
 

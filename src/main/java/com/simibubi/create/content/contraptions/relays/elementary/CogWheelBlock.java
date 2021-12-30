@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel, ISimpleConnectable {
+public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 
 	boolean isLarge;
 
@@ -63,7 +63,7 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel, ISim
 	}
 
 	@Override
-	public KineticConnections getConnections(BlockState state) {
+	public KineticConnections getInitialConnections(BlockState state) {
 		return (isLargeCog() ? AllConnections.LARGE_COG_FULL_SHAFT : AllConnections.SMALL_COG_FULL_SHAFT)
 				.apply(state.getValue(AXIS));
 	}

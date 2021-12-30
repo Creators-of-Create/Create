@@ -27,6 +27,8 @@ public class KineticNode {
 
 	private final KineticConnections connections;
 	private float generatedSpeed;
+	private float stressCapacity;
+	private float stressImpact;
 
 	private float speedCur;
 	private float speedNext;
@@ -35,9 +37,10 @@ public class KineticNode {
 		this.nodeAccessor = nodeAccessor;
 		this.entity = entity;
 
-		KineticNodeState state = entity.getKineticNodeState();
-		this.connections = state.getConnections();
-		this.generatedSpeed = state.getGeneratedSpeed();
+		this.connections = entity.getConnections();
+		this.generatedSpeed = entity.getGeneratedSpeed();
+		this.stressCapacity = entity.getStressCapacity();
+		this.stressImpact = entity.getStressImpact();
 
 		this.network = new KineticNetwork(this);
 	}
@@ -67,10 +70,6 @@ public class KineticNode {
 		return getActiveConnections().collect(Collectors.toList());
 	}
 
-	public float getGeneratedSpeed() {
-		return generatedSpeed;
-	}
-
 	public float getGeneratedSpeedAtRoot() {
 		return generatedSpeed / speedRatio;
 	}
@@ -79,20 +78,37 @@ public class KineticNode {
 		return generatedSpeed != 0;
 	}
 
-	public void setGeneratedSpeed(float newSpeed) {
-		if (generatedSpeed == newSpeed) return;
-		generatedSpeed = newSpeed;
-		network.updateMember(this);
-		if (network.recalculateSpeed().isContradiction()) {
-			onPopBlock();
+	public void onUpdated() {
+		float newSpeed = entity.getGeneratedSpeed();
+		if (generatedSpeed != newSpeed) {
+			generatedSpeed = newSpeed;
+			network.updateMember(this);
+			if (network.tryRecalculateSpeed().isContradiction()) {
+				onPopBlock();
+			}
 		}
+
+		stressImpact = entity.getStressImpact();
+		stressCapacity = entity.getStressCapacity();
+	}
+
+	public float getTheoreticalSpeed(float speedAtRoot) {
+		return speedAtRoot * speedRatio;
+	}
+
+	public float getStressCapacity() {
+		return Math.abs(stressCapacity * generatedSpeed);
+	}
+
+	public float getTotalStressImpact(float speedAtRoot) {
+		return Math.abs(stressImpact * getTheoreticalSpeed(speedAtRoot));
 	}
 
 	private SolveResult setNetwork(KineticNetwork network) {
 		this.network.removeMember(this);
 		this.network = network;
 		network.addMember(this);
-		return network.recalculateSpeed();
+		return network.tryRecalculateSpeed();
 	}
 
 	private SolveResult setSource(KineticNode from, float ratio) {
@@ -145,7 +161,7 @@ public class KineticNode {
 				if (next.setSource(cur, ratio).isOk()) {
 					frontier.add(next);
 				} else {
-					// this node will run against the network
+					// this node will run against the network or activate a conflicting cycle
 					onPopBlock();
 					return;
 				}
@@ -164,19 +180,25 @@ public class KineticNode {
 	private void rerootHere() {
 		source = null;
 		speedRatio = 1;
-		setNetwork(new KineticNetwork(this));
+		SolveResult recalculateSpeedResult = setNetwork(new KineticNetwork(this));
+		assert(recalculateSpeedResult.isOk());
 		propagateSource();
 	}
 
 	/**
 	 * Updates the speed of this node based on its network's root speed and its own speed ratio.
-	 * @return CONTRADICTION if the node's new speed exceeds the maximum value, and OK otherwise
+	 * @param speedAtRoot 	Current speed at the root of this node's network
+	 * @return 				CONTRADICTION if the node's new speed exceeds the maximum value, and OK otherwise
 	 */
-	protected SolveResult tryUpdateSpeed() {
-		speedNext = network.getRootSpeed() * speedRatio;
+	protected SolveResult tryUpdateSpeed(float speedAtRoot) {
+		speedNext = getTheoreticalSpeed(speedAtRoot);
 		if (Math.abs(speedNext) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get())
 			return SolveResult.CONTRADICTION;
 		return SolveResult.OK;
+	}
+
+	protected void stop() {
+		speedNext = 0;
 	}
 
 	public void flushChangedSpeed() {

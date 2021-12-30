@@ -11,15 +11,14 @@ import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
-import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
-import com.simibubi.create.content.contraptions.solver.KineticNodeState;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -37,7 +36,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
@@ -70,18 +68,17 @@ public class KineticTileEntity extends SmartTileEntity
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
 
-	private KineticNodeState kineticNodeState;
+	private KineticConnections connections = AllConnections.EMPTY;
 
-	public KineticNodeState getKineticNodeState() {
-		return kineticNodeState;
-	}
-
-	public KineticNodeState getInitialKineticNodeState() {
-		return new KineticNodeState(new KineticConnections(), 0);
+	public KineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
+		effects = new KineticEffectHandler(this);
+		if (state.getBlock() instanceof IRotate rotate) {
+			connections = rotate.getInitialConnections(state);
+		}
 	}
 
 	private void addToSolver() {
-		kineticNodeState = getInitialKineticNodeState();
 		KineticSolver.getSolver(level).addNode(this);
 	}
 
@@ -89,11 +86,30 @@ public class KineticTileEntity extends SmartTileEntity
 		KineticSolver.getSolver(level).removeNode(this);
 	}
 
-
-	public KineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
-		super(typeIn, pos, state);
-		effects = new KineticEffectHandler(this);
+	public KineticConnections getConnections() {
+		return connections;
 	}
+
+	public float getGeneratedSpeed() {
+		return 0;
+	}
+
+	public float getStressImpact() {
+		return getDefaultStressImpact();
+	}
+
+	public float getStressCapacity() {
+		return getDefaultStressCapacity();
+	}
+
+	public float getDefaultStressImpact() {
+		return (float) BlockStressValues.getImpact(getStressConfigKey());
+	}
+
+	public float getDefaultStressCapacity() {
+		return (float) BlockStressValues.getCapacity(getStressConfigKey());
+	}
+
 
 	@Override
 	public void initialize() {
@@ -274,10 +290,6 @@ public class KineticTileEntity extends SmartTileEntity
 
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
-	}
-
-	public float getGeneratedSpeed() {
-		return 0;
 	}
 
 	public boolean isSource() {

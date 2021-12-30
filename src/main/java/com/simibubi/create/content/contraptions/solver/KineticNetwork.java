@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class KineticNetwork {
 
@@ -17,6 +18,7 @@ public class KineticNetwork {
 	private float rootSpeed;
 	private @Nullable KineticNode mainGenerator;
 	private boolean speedDirty;
+	private boolean overstressed;
 
 	public KineticNetwork(KineticNode root) {
 		addMember(root);
@@ -55,18 +57,18 @@ public class KineticNetwork {
 		conflictingCycles.add(Pair.of(from, to));
 	}
 
-	public float getRootSpeed() {
-		return rootSpeed;
-	}
-
-	public boolean isStopped() { return generators.isEmpty(); }
+	public boolean isStopped() { return generators.isEmpty() || overstressed; }
 
 	/**
 	 * Recalculates the speed at the root node of this network.
-	 * @return	CONTRADICTION if the network has generators turning against each other, and OK otherwise
+	 * @return	CONTRADICTION if the network has cycles with conflicting speed ratios or generators turning against
+	 * 			each other, and OK otherwise
 	 */
-	public SolveResult recalculateSpeed() {
+	public SolveResult tryRecalculateSpeed() {
+		if (!conflictingCycles.isEmpty() && !isStopped()) return SolveResult.CONTRADICTION;
 		if (!speedDirty) return SolveResult.OK;
+
+		SolveResult result = SolveResult.OK;
 
 		float newSpeed = 0;
 		KineticNode newGenerator = null;
@@ -82,7 +84,8 @@ public class KineticNetwork {
 
 			if (Math.signum(speedAtRoot) != sign) {
 				// generators are turning against each other
-				return SolveResult.CONTRADICTION;
+				result = SolveResult.CONTRADICTION;
+				continue;
 			}
 
 			if (newSpeed < speedAtRoot * sign) {
@@ -93,7 +96,9 @@ public class KineticNetwork {
 		rootSpeed = newSpeed * sign;
 		mainGenerator = newGenerator;
 		speedDirty = false;
-		return SolveResult.OK;
+
+		if (overstressed) return SolveResult.OK;
+		return result;
 	}
 
 	/**
@@ -101,23 +106,42 @@ public class KineticNetwork {
 	 */
 	public List<KineticNetwork> tick() {
 		List<KineticNetwork> newNetworks = updateMemberSpeeds();
+
+		if (generators.isEmpty()) {
+			overstressed = false;
+			return newNetworks;
+		}
+
+		float stressImpact = (float) members.stream().mapToDouble(n -> n.getTotalStressImpact(rootSpeed)).sum();
+		float stressCapacity = (float) members.stream().mapToDouble(KineticNode::getStressCapacity).sum();
+
+		if (stressImpact > stressCapacity) {
+			if (!overstressed) {
+				overstressed = true;
+				members.forEach(KineticNode::stop);
+			}
+		} else {
+			if (overstressed) {
+				overstressed = false;
+				newNetworks.addAll(bulldozeContradictingMembers());
+				newNetworks.addAll(updateMemberSpeeds());
+			}
+		}
+
 		members.forEach(KineticNode::flushChangedSpeed);
 		return newNetworks;
 	}
 
 	private List<KineticNetwork> updateMemberSpeeds() {
-		SolveResult recalculateSpeedResult = recalculateSpeed();
-		// generators should not be turning against each other by now
-		assert(recalculateSpeedResult.isOk());
-
-		// if we're stopped then all members' speeds will be 0, so no need to check for speeding nodes
+		// if we're stopped, then all members' speeds will be 0, so no need to check for speeding nodes
 		if (isStopped()) {
-			members.forEach(KineticNode::tryUpdateSpeed);
-			return List.of();
+			members.forEach(KineticNode::stop);
+			return new LinkedList<>();
 		}
 
-		// there should be no cycles with conflicting speed ratios by now
-		assert(conflictingCycles.isEmpty());
+		SolveResult recalculateSpeedResult = tryRecalculateSpeed();
+		// generators should not be turning against each other or have conflicting cycles by now
+		assert(recalculateSpeedResult.isOk());
 
 		// update node speeds in a breadth-first order, checking for speeding nodes along the way
 		List<KineticNetwork> newNetworks = new LinkedList<>();
@@ -128,7 +152,7 @@ public class KineticNetwork {
 		while (!frontier.isEmpty()) {
 			KineticNode cur = frontier.remove(0);
 			visited.add(cur);
-			if (cur.tryUpdateSpeed().isOk()) {
+			if (cur.tryUpdateSpeed(rootSpeed).isOk()) {
 				cur.getActiveConnections()
 						.map(Pair::getFirst)
 						.filter(n -> !visited.contains(n))
@@ -139,6 +163,25 @@ public class KineticNetwork {
 				newNetworks.add(cur.getNetwork());
 			}
 		}
+
+		return newNetworks;
+	}
+
+	private List<KineticNetwork> bulldozeContradictingMembers() {
+		List<KineticNetwork> newNetworks = new LinkedList<>();
+
+		// generators running against network
+		float sign = Math.signum(rootSpeed);
+		List<KineticNode> runningAgainst = generators.stream()
+				.filter(n -> Math.signum(n.getGeneratedSpeedAtRoot()) != sign)
+				.collect(Collectors.toList());
+		runningAgainst.forEach(n -> { n.onPopBlock(); newNetworks.add(n.getNetwork()); });
+
+		// conflicting cycles
+		List<KineticNode> cycles = conflictingCycles.stream()
+				.map(Pair::getFirst)
+				.collect(Collectors.toList());
+		cycles.forEach(n -> { n.onPopBlock(); newNetworks.add(n.getNetwork()); });
 
 		return newNetworks;
 	}

@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.components.motor;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -50,6 +52,11 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(FACING)
 			.getAxis();
+	}
+
+	@Override
+	public KineticConnections getInitialConnections(BlockState state) {
+		return AllConnections.HALF_SHAFT.apply(state.getValue(FACING));
 	}
 
 	@Override

@@ -28,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractShaftBlock implements ISimpleConnectable {
+public class ShaftBlock extends AbstractShaftBlock {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -41,7 +41,7 @@ public class ShaftBlock extends AbstractShaftBlock implements ISimpleConnectable
 	}
 
 	@Override
-	public KineticConnections getConnections(BlockState state) {
+	public KineticConnections getInitialConnections(BlockState state) {
 		return AllConnections.FULL_SHAFT.apply(state.getValue(AXIS));
 	}
 

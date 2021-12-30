@@ -34,15 +34,14 @@ public class KineticSolver {
 
 	public void updateNode(KineticTileEntity entity) {
 		KineticNode node = nodes.get(entity.getBlockPos());
-		KineticNodeState state = entity.getKineticNodeState();
 
-		if (!node.getConnections().equals(state.getConnections())) {
+		if (!node.getConnections().equals(entity.getConnections())) {
 			// connections changed, so things could've been disconnected
 			removeNode(entity);
 			addNode(entity);
 		} else {
-			// connections are the same, so just set speed in case it changed
-			node.setGeneratedSpeed(state.getGeneratedSpeed());
+			// connections are the same, so just update in case other properties changed
+			node.onUpdated();
 		}
 	}
 
