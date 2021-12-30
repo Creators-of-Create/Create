@@ -55,6 +55,6 @@ public class ContraptionWorld extends WrappedWorld {
 
 	@Override
 	public int getMinBuildHeight() {
-		return - (int) contraption.bounds.getYsize() + 1;
+		return - (int) contraption.bounds.getYsize();
 	}
 }
