@@ -46,7 +46,8 @@ public class ContraptionWorld extends WrappedWorld {
         world.playLocalSound(x, y, z, p_184134_7_, p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
     }
 
-	// Calculate lazily to avoid issues on load when the bounds are yet to be determined.
+	// Ensure that we provide accurate information about ContraptionWorld height to mods (such as Starlight) which
+	// expect Levels to only have blocks located in chunks within their height range.
 
 	@Override
 	public int getHeight() {
@@ -55,6 +56,6 @@ public class ContraptionWorld extends WrappedWorld {
 
 	@Override
 	public int getMinBuildHeight() {
-		return - (int) contraption.bounds.getYsize() + 1;
+		return - (int) contraption.bounds.getYsize();
 	}
 }
