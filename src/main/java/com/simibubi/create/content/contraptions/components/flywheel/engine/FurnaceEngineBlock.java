@@ -33,7 +33,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 
 	@Override
 	protected boolean isValidBaseBlock(BlockState baseBlock, BlockGetter world, BlockPos pos) {
-		return baseBlock.getBlock() instanceof AbstractFurnaceBlock;
+		return FurnaceEngineModifiers.INSTANCE.getEngineState(baseBlock).isEngine();
 	}
 
 	@Override
