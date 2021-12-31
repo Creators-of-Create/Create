@@ -50,12 +50,14 @@ public class FurnaceEngineModifiers {
 	}
 
 	public static void register() {
-		INSTANCE.register(Blocks.BLAST_FURNACE.delegate, 2f);
+		get().register(Blocks.BLAST_FURNACE.delegate, 2f);
 		
-		// 	Example:
-		//	INSTANCE.register(Blocks.REDSTONE_LAMP.delegate, 1f, 
-		//		s -> s.getBlock() instanceof RedstoneLampBlock && s.hasProperty(RedstoneLampBlock.LIT) ? 
-		//			(s.getValue(RedstoneLampBlock.LIT) ? EngineState.ACTIVE : EngineState.VALID) : EngineState.EMPTY);
+		/*
+		Example:
+		INSTANCE.register(Blocks.REDSTONE_LAMP.delegate, 1f, 
+			s -> s.getBlock() instanceof RedstoneLampBlock && s.hasProperty(RedstoneLampBlock.LIT) ? 
+				(s.getValue(RedstoneLampBlock.LIT) ? EngineState.ACTIVE : EngineState.VALID) : EngineState.EMPTY);
+		*/
 	}
 	
 	public static FurnaceEngineModifiers get() {
