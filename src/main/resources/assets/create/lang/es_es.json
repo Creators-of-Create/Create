@@ -1,5 +1,4 @@
 {
-	"_": "Missing Localizations: 330",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1143,8 +1142,8 @@
 	"create.item_attributes.placeable.inverted": "no se puede colocar",
 	"create.item_attributes.consumable": "se puede comer",
 	"create.item_attributes.consumable.inverted": "no se puede comer",
-	"create.item_attributes.fluid_container": "puede almacenar fluídos",
-	"create.item_attributes.fluid_container.inverted": "puede almacenar fluídos",
+	"create.item_attributes.fluid_container": "puede almacenar fluidos",
+	"create.item_attributes.fluid_container.inverted": "puede almacenar fluidos",
 	"create.item_attributes.enchanted": "está encantado",
 	"create.item_attributes.enchanted.inverted": "no está encantado",
 	"create.item_attributes.max_enchanted": "está encantado en el nivel máximo",
@@ -1826,7 +1825,7 @@
 	"create.ponder.cogwheel_casing.text_2": "Los componentes que se añadan por la salida del eje no se conectarán",
 	"create.ponder.cogwheel_casing.text_3": "La llave inglesa puede usarse para alternar las conexiones",
 
-	"create.ponder.creative_fluid_tank.header": "Tanque de fluídos creativo",
+	"create.ponder.creative_fluid_tank.header": "Tanque de fluidos creativo",
 	"create.ponder.creative_fluid_tank.text_1": "Los depósitos de fluidos creativos pueden utilizarse para proporcionar un suministro de fluidos sin fondo",
 	"create.ponder.creative_fluid_tank.text_2": "Haga clic con el botón derecho en un objeto que contenga fluido para configurarlo",
 	"create.ponder.creative_fluid_tank.text_3": "Las redes de tuberías pueden ahora extraer sin cesar el fluido asignado del depósito",
@@ -1893,7 +1892,7 @@
 	"create.ponder.empty_blaze_burner.text_5": "La llama puede transformarse utilizando un objeto con alma",
 	"create.ponder.empty_blaze_burner.text_6": "Sin embargo, no son adecuados para la calefacción industrial",
 
-	"create.ponder.encased_fluid_pipe.header": "Revestir tuberías de fluídos",
+	"create.ponder.encased_fluid_pipe.header": "Revestir tuberías de fluidos",
 	"create.ponder.encased_fluid_pipe.text_1": "El revestidor de cobre puede utilizarse para decorar las tuberías de fluidos",
 	"create.ponder.encased_fluid_pipe.text_2": "Además de estar ocultas, las tuberías revestidas están bloqueadas en su estado de conectividad",
 	"create.ponder.encased_fluid_pipe.text_3": "Ya no reaccionará a los bloques vecinos que se añadan o eliminen",
