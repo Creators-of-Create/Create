@@ -11,6 +11,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedMillstone;
 import com.simibubi.create.compat.rei.display.MillingDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
+import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
@@ -29,7 +30,7 @@ import net.minecraft.network.chat.Component;
 //import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 //import mezz.jei.api.ingredients.IIngredients;
 
-public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe, MillingDisplay> {
+public class MillingCategory extends CreateRecipeCategory<MillingRecipe, MillingDisplay> {
 
 //	private AnimatedMillstone millstone = new AnimatedMillstone();
 
@@ -104,7 +105,6 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_DOWN_ARROW, origin.x + 43, origin.y + 4));
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_ARROW, origin.x + 85, origin.y + 32));
 
-		int size = results.size();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
 			int yOffset = (outputIndex / 2) * -19;
