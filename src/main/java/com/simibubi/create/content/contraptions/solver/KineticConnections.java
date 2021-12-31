@@ -32,9 +32,16 @@ public class KineticConnections {
 		public Entry(Vec3i offset, Type type) {
 			this(offset, type, type, 1);
 		}
+		public Entry stressOnly() {
+			return new Entry(offset, new Value(value.from, value.to, 0));
+		}
 	}
 
-	private static record Value(Type from, Type to, float ratio) { }
+	private static record Value(Type from, Type to, float ratio) {
+		public boolean isStressOnly() {
+			return ratio == 0;
+		}
+	}
 
 	private final Map<Vec3i, Value> connections;
 
@@ -65,10 +72,24 @@ public class KineticConnections {
 		Value toValue = to.connections.get(offset.multiply(-1));
 		if (toValue == null) return Optional.empty();
 
+		if (fromValue.isStressOnly() || toValue.isStressOnly()) return Optional.empty();
+
 		if (fromValue.from.compatible(toValue.to) && fromValue.to.compatible(toValue.from)
 				&& (Mth.equal(fromValue.ratio, 1/toValue.ratio) || (Mth.equal(toValue.ratio, 1/fromValue.ratio))))
 			return Optional.of(fromValue.ratio);
 		return Optional.empty();
+	}
+
+	public boolean checkStressOnlyConnection(KineticConnections to, Vec3i offset) {
+		Value fromValue = connections.get(offset);
+		if (fromValue == null) return false;
+
+		Value toValue = to.connections.get(offset.multiply(-1));
+		if (toValue == null) return false;
+
+		if (!fromValue.isStressOnly() || !toValue.isStressOnly()) return false;
+
+		return fromValue.from.compatible(toValue.to) && fromValue.to.compatible(toValue.from);
 	}
 
 	@Override
@@ -89,6 +110,10 @@ public class KineticConnections {
 		out.putAll(other.connections);
 		out.putAll(connections);
 		return new KineticConnections(out);
+	}
+
+	public boolean hasStressOnlyConnections() {
+		return connections.values().stream().anyMatch(Value::isStressOnly);
 	}
 
 }

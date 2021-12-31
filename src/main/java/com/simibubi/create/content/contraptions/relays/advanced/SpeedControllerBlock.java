@@ -10,6 +10,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -41,6 +43,11 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 
 	public SpeedControllerBlock(Properties properties) {
 		super(properties);
+	}
+
+	@Override
+	public KineticConnections getInitialConnections(BlockState state) {
+		return AllConnections.SPEED_CONTROLLER.apply(state.getValue(HORIZONTAL_AXIS));
 	}
 
 	@Override
@@ -111,7 +118,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	public Class<SpeedControllerTileEntity> getTileEntityClass() {
 		return SpeedControllerTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SpeedControllerTileEntity> getTileEntityType() {
 		return AllTileEntities.ROTATION_SPEED_CONTROLLER.get();

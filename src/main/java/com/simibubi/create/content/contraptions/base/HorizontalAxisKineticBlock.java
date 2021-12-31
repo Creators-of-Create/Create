@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -59,6 +61,11 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(HORIZONTAL_AXIS);
+	}
+
+	@Override
+	public KineticConnections getInitialConnections(BlockState state) {
+		return AllConnections.FULL_SHAFT.apply(state.getValue(HORIZONTAL_AXIS));
 	}
 
 	@Override

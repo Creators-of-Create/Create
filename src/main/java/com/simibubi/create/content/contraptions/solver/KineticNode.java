@@ -39,8 +39,8 @@ public class KineticNode {
 
 		this.connections = entity.getConnections();
 		this.generatedSpeed = entity.getGeneratedSpeed();
-		this.stressCapacity = entity.getStressCapacity();
 		this.stressImpact = entity.getStressImpact();
+		this.stressCapacity = entity.getStressCapacity();
 
 		this.network = new KineticNetwork(this);
 	}
@@ -70,6 +70,14 @@ public class KineticNode {
 		return getActiveConnections().collect(Collectors.toList());
 	}
 
+	public Stream<KineticNetwork> getActiveStressOnlyConnections() {
+		return connections.getDirections().stream()
+				.map(d -> nodeAccessor.apply(entity.getBlockPos().offset(d))
+						.filter(n -> connections.checkStressOnlyConnection(n.connections, d)))
+				.flatMap(Optional::stream)
+				.map(KineticNode::getNetwork);
+	}
+
 	public float getGeneratedSpeedAtRoot() {
 		return generatedSpeed / speedRatio;
 	}
@@ -79,17 +87,34 @@ public class KineticNode {
 	}
 
 	public void onUpdated() {
-		float newSpeed = entity.getGeneratedSpeed();
-		if (generatedSpeed != newSpeed) {
-			generatedSpeed = newSpeed;
-			network.updateMember(this);
+		float generatedSpeedNew = entity.getGeneratedSpeed();
+		if (this.generatedSpeed != generatedSpeedNew) {
+			this.generatedSpeed = generatedSpeedNew;
+			network.onMemberGeneratedSpeedUpdated(this);
 			if (network.tryRecalculateSpeed().isContradiction()) {
 				popBlock();
 			}
 		}
 
-		stressImpact = entity.getStressImpact();
-		stressCapacity = entity.getStressCapacity();
+		float stressImpactNew = entity.getStressImpact();
+		if (this.stressImpact != stressImpactNew) {
+			this.stressImpact = stressImpactNew;
+			network.onMemberStressImpactUpdated();
+		}
+
+		float stressCapacityNew = entity.getStressCapacity();
+		if (this.stressCapacity != stressCapacityNew) {
+			this.stressCapacity = stressCapacityNew;
+			network.onMemberStressCapacityUpdated();
+		}
+	}
+
+	public boolean hasStressCapacity() {
+		return stressCapacity != 0;
+	}
+
+	public boolean hasStressImpact() {
+		return stressImpact != 0;
 	}
 
 	public float getTheoreticalSpeed(float speedAtRoot) {
@@ -111,7 +136,7 @@ public class KineticNode {
 		return network.tryRecalculateSpeed();
 	}
 
-	public KineticNode getSource() {
+	public @Nullable KineticNode getSource() {
 		return source;
 	}
 

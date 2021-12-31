@@ -11,6 +11,7 @@ import net.minecraft.core.Vec3i;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
 
@@ -30,7 +31,8 @@ public class AllConnections {
 	public static final LazyMap<Axis, Type>
 			TYPE_SHAFT = ValueType.map(),
 			TYPE_LARGE_COG = ValueType.map(),
-			TYPE_SMALL_COG = ValueType.map();
+			TYPE_SMALL_COG = ValueType.map(),
+			TYPE_SPEED_CONTROLLER_TOP = ValueType.map();
 
 
 	private static Direction pos(Axis axis) {
@@ -48,6 +50,14 @@ public class AllConnections {
 		return new Entry(diff, TYPE_LARGE_COG.apply(from), TYPE_LARGE_COG.apply(to), ratio);
 	}
 
+	private static Optional<Axis> oppAxis(Axis axis) {
+		return switch (axis) {
+			case X -> Optional.of(Axis.Z);
+			case Z -> Optional.of(Axis.X);
+			default -> Optional.empty();
+		};
+	}
+
 
 	public static final KineticConnections EMPTY = new KineticConnections();
 
@@ -61,6 +71,7 @@ public class AllConnections {
 			LARGE_COG = new LazyMap<>(axis -> {
 				Type large = TYPE_LARGE_COG.apply(axis);
 				Type small = TYPE_SMALL_COG.apply(axis);
+
 				List<Entry> out = new LinkedList<>();
 				Direction cur = DirectionHelper.getPositivePerpendicular(axis);
 				for (int i = 0; i < 4; i++) {
@@ -70,12 +81,18 @@ public class AllConnections {
 					out.add(new Entry(cur.getNormal().relative(next), large, small, -2));
 					cur = next;
 				}
+
+				oppAxis(axis).ifPresent(opp -> {
+					Type sc = TYPE_SPEED_CONTROLLER_TOP.apply(opp);
+					out.add(new Entry(Direction.DOWN.getNormal(), large, sc).stressOnly());
+				});
 				return new KineticConnections(out);
 			}),
 
 			SMALL_COG = new LazyMap<>(axis -> {
 				Type large = TYPE_LARGE_COG.apply(axis);
 				Type small = TYPE_SMALL_COG.apply(axis);
+
 				List<Entry> out = new LinkedList<>();
 				Direction cur = DirectionHelper.getPositivePerpendicular(axis);
 				for (int i = 0; i < 4; i++) {
@@ -84,11 +101,19 @@ public class AllConnections {
 					out.add(new Entry(cur.getNormal().relative(next), small, large, -0.5f));
 					cur = next;
 				}
+
 				return new KineticConnections(out);
 			}),
 
 			LARGE_COG_FULL_SHAFT = new LazyMap<>(axis -> LARGE_COG.apply(axis).merge(FULL_SHAFT.apply(axis))),
 
-			SMALL_COG_FULL_SHAFT = new LazyMap<>(axis -> SMALL_COG.apply(axis).merge(FULL_SHAFT.apply(axis)));
+			SMALL_COG_FULL_SHAFT = new LazyMap<>(axis -> SMALL_COG.apply(axis).merge(FULL_SHAFT.apply(axis))),
+
+			SPEED_CONTROLLER = new LazyMap<>(axis -> {
+				Type sc = TYPE_SPEED_CONTROLLER_TOP.apply(axis);
+				Type large = TYPE_LARGE_COG.apply(oppAxis(axis).get());
+				Vec3i up = Direction.UP.getNormal();
+				return new KineticConnections(new Entry(up, sc, large).stressOnly()).merge(FULL_SHAFT.apply(axis));
+			});
 
 }

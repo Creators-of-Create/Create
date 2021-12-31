@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.solver;
 
 import com.simibubi.create.foundation.utility.Pair;
 
+import com.simibubi.create.foundation.utility.ResetableLazy;
+
 import javax.annotation.Nullable;
 
 import java.util.HashSet;
@@ -15,14 +17,23 @@ public class KineticNetwork {
 	private final Set<KineticNode> members = new HashSet<>();
 	private final Set<KineticNode> generators = new HashSet<>();
 	private final Set<Pair<KineticNode, KineticNode>> conflictingCycles = new HashSet<>();
+
 	private float rootTheoreticalSpeed;
-	private @Nullable KineticNode mainGenerator;
 	private boolean rootSpeedDirty;
+	private @Nullable KineticNode mainGenerator;
+
 	private boolean overstressed;
 
-	private float rootSpeedCur;
-	private float rootSpeedPrev;
+	private boolean rootSpeedChanged;
 	private final Set<KineticNode> potentialNewBranches = new HashSet<>();
+
+	private final ResetableLazy<Float> totalStressImpact = ResetableLazy.of(() ->
+			(float) members.stream().mapToDouble(n -> n.getTotalStressImpact(rootTheoreticalSpeed)).sum());
+	private final ResetableLazy<Float> totalStressCapacity = ResetableLazy.of(() ->
+			(float) members.stream().mapToDouble(KineticNode::getStressCapacity).sum());
+
+	private boolean ticked;
+	private final Set<KineticNode> stressConnectors = new HashSet<>();
 
 	public KineticNetwork(KineticNode root) {
 		addMember(root);
@@ -30,31 +41,47 @@ public class KineticNetwork {
 
 	public void addMember(KineticNode node) {
 		members.add(node);
+		potentialNewBranches.add(node);
+		if (node.getConnections().hasStressOnlyConnections()) stressConnectors.add(node);
+
 		if (node.isGenerator() && !generators.contains(node)) {
 			generators.add(node);
 			rootSpeedDirty = true;
+			rootSpeedChanged = true;
 		}
-
-		potentialNewBranches.add(node);
+		if (node.hasStressImpact()) onMemberStressImpactUpdated();
+		if (node.hasStressCapacity()) onMemberStressCapacityUpdated();
 	}
 
-	public void updateMember(KineticNode node) {
-		if (!members.contains(node)) throw new IllegalArgumentException();
-
+	public void onMemberGeneratedSpeedUpdated(KineticNode node) {
 		if (node.isGenerator()) {
 			generators.add(node);
 		} else {
 			generators.remove(node);
 		}
 		rootSpeedDirty = true;
+		rootSpeedChanged = true;
+	}
+
+	public void onMemberStressImpactUpdated() {
+		totalStressImpact.reset();
+	}
+
+	public void onMemberStressCapacityUpdated() {
+		totalStressCapacity.reset();
 	}
 
 	public void removeMember(KineticNode node) {
-		members.remove(node);
 		if (node.isGenerator() && generators.contains(node)) {
 			generators.remove(node);
 			rootSpeedDirty = true;
+			rootSpeedChanged = true;
 		}
+		if (node.hasStressImpact()) onMemberStressImpactUpdated();
+		if (node.hasStressCapacity()) onMemberStressCapacityUpdated();
+
+		members.remove(node);
+		stressConnectors.remove(node);
 		conflictingCycles.removeIf(p -> p.getFirst() == node || p.getSecond() == node);
 	}
 
@@ -105,73 +132,88 @@ public class KineticNetwork {
 		}
 
 		rootTheoreticalSpeed = newSpeed * sign;
-		if (!overstressed) {
-			rootSpeedCur = rootTheoreticalSpeed;
-		}
-
 		mainGenerator = newGenerator;
 		rootSpeedDirty = false;
 
 		return result;
 	}
 
-	/**
-	 * @return	a List of new networks created during this function call
-	 */
-	public List<KineticNetwork> tick() {
-		List<KineticNetwork> newNetworks = updateMemberSpeeds();
+	public float getTotalStressImpact() {
+		return totalStressImpact.get();
+	}
 
-		if (generators.isEmpty()) {
-			overstressed = false;
-			members.forEach(KineticNode::stop);
-			members.forEach(KineticNode::flushChangedSpeed);
-			return newNetworks;
+	public float getTotalStressCapacity() {
+		return totalStressCapacity.get();
+	}
+
+	private float getRootSpeed() {
+		return isStopped() ? 0 : rootTheoreticalSpeed;
+	}
+
+	public void untick() {
+		ticked = false;
+	}
+
+	public void tick(List<KineticNetwork> newNetworks) {
+		if (ticked) return;
+
+		Set<KineticNetwork> stressConnected = stressConnectors.stream()
+				.flatMap(KineticNode::getActiveStressOnlyConnections)
+				.collect(Collectors.toSet());
+		stressConnected.add(this);
+
+		float stressImpact = 0;
+		float stressCapacity = 0;
+
+		for (KineticNetwork cur : stressConnected) {
+			cur.ticked = true;
+			cur.updateMemberSpeeds(newNetworks);
+			stressImpact += cur.getTotalStressImpact();
+			stressCapacity += cur.getTotalStressCapacity();
 		}
 
-		float stressImpact = (float) members.stream().mapToDouble(n -> n.getTotalStressImpact(rootTheoreticalSpeed)).sum();
-		float stressCapacity = (float) members.stream().mapToDouble(KineticNode::getStressCapacity).sum();
+		boolean nowOverstressed = stressImpact > stressCapacity;
 
-		if (stressImpact > stressCapacity) {
-			if (!overstressed) {
-				overstressed = true;
-				rootSpeedCur = 0;
-				members.forEach(KineticNode::stop);
+		for (KineticNetwork cur : stressConnected) {
+			if (cur.generators.isEmpty()) {
+				cur.overstressed = false;
+			} else if (nowOverstressed) {
+				if (!cur.overstressed) {
+					cur.overstressed = true;
+					rootSpeedChanged = true;
+					cur.members.forEach(KineticNode::stop);
+				}
+			} else {
+				if (cur.overstressed) {
+					cur.overstressed = false;
+					rootSpeedChanged = true;
+					cur.bulldozeContradictingMembers(newNetworks);
+					cur.updateMemberSpeeds(newNetworks);
+				}
 			}
-		} else {
-			if (overstressed) {
-				overstressed = false;
-				rootSpeedCur = rootTheoreticalSpeed;
-				newNetworks.addAll(bulldozeContradictingMembers());
-				newNetworks.addAll(updateMemberSpeeds());
-			}
+
+			cur.members.forEach(KineticNode::flushChangedSpeed);
 		}
-
-		members.forEach(KineticNode::flushChangedSpeed);
-		return newNetworks;
 	}
 
 	/**
 	 * Update the speed of every member, starting from the main generator and popping off speeding nodes along the way
-	 * @return	a List of new networks created during this function call
+	 * @param newNetworks 	a List that any new networks created during this call will be added to
 	 */
-	private List<KineticNetwork> updateMemberSpeeds() {
-		boolean rootSpeedChanged = rootSpeedPrev != rootSpeedCur;
-		rootSpeedPrev = rootSpeedCur;
-
+	private void updateMemberSpeeds(List<KineticNetwork> newNetworks) {
 		// if we're stopped, then all members' speeds will be 0, so no need to check for speeding nodes
 		if (isStopped()) {
 			members.forEach(KineticNode::stop);
-			return new LinkedList<>();
+			return;
 		}
 
 		SolveResult recalculateSpeedResult = tryRecalculateSpeed();
 		// generators should not be turning against each other or have conflicting cycles by now
 		assert(recalculateSpeedResult.isOk());
 
-		List<KineticNetwork> newNetworks = new LinkedList<>();
-
 		if (rootSpeedChanged) {
 			// root speed changed, update all nodes starting from the main generator
+			rootSpeedChanged = false;
 			bfs(mainGenerator, newNetworks, false);
 		} else if (!potentialNewBranches.isEmpty()) {
 			// new nodes added, update only the new network branches
@@ -180,8 +222,6 @@ public class KineticNetwork {
 					.forEach(n -> bfs(n, newNetworks, true));
 			potentialNewBranches.clear();
 		}
-
-		return newNetworks;
 	}
 
 	private void bfs(KineticNode root, List<KineticNetwork> newNetworks, boolean followSource) {
@@ -195,7 +235,7 @@ public class KineticNetwork {
 			if (!members.contains(cur) || visited.contains(cur)) continue;
 			visited.add(cur);
 
-			if (cur.tryUpdateSpeed(rootSpeedCur).isOk()) {
+			if (cur.tryUpdateSpeed(getRootSpeed()).isOk()) {
 				cur.getActiveConnections()
 						.map(Pair::getFirst)
 						.filter(n -> !followSource || n.getSource() == cur)
@@ -208,7 +248,7 @@ public class KineticNetwork {
 		}
 	}
 
-	private List<KineticNetwork> bulldozeContradictingMembers() {
+	private void bulldozeContradictingMembers(List<KineticNetwork> newNetworks) {
 		/*
 		This method is necessary to handle the edge case where contradicting nodes have been added to the network while
 		it was overstressed and now that it's moving again we need to pop them. Here we can't just stop following a
@@ -216,10 +256,8 @@ public class KineticNetwork {
 		just pop all potentially contradicting nodes off and hope no one cares
 		 */
 
-		List<KineticNetwork> newNetworks = new LinkedList<>();
-
 		// generators running against network
-		float sign = Math.signum(rootSpeedCur);
+		float sign = Math.signum(rootTheoreticalSpeed);
 		List<KineticNode> runningAgainst = generators.stream()
 				.filter(n -> Math.signum(n.getGeneratedSpeedAtRoot()) != sign)
 				.collect(Collectors.toList());
@@ -230,8 +268,6 @@ public class KineticNetwork {
 				.map(Pair::getFirst)
 				.collect(Collectors.toList());
 		cycles.forEach(n -> { n.popBlock(); newNetworks.add(n.getNetwork()); });
-
-		return newNetworks;
 	}
 
 }

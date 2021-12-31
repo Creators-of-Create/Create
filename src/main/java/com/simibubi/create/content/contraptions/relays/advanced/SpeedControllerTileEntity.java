@@ -49,9 +49,12 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.moveText(new Vec3(9, 0, 10));
 		targetSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
-		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
+	}
+
+	public float getTargetSpeed() {
+		return targetSpeed.getValue();
 	}
 
 	private void updateTargetRotation() {
@@ -123,7 +126,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		return true;
 	}
 
-	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
+	private static class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override
 		protected Vec3 getSouthLocation() {

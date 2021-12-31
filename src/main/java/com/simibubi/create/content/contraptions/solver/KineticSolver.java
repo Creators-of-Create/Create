@@ -55,17 +55,16 @@ public class KineticSolver {
 	}
 
 	public void tick() {
-		Set<KineticNetwork> visited = new HashSet<>();
+		Set<KineticNetwork> networks = nodes.values().stream().map(KineticNode::getNetwork).collect(Collectors.toSet());
+		networks.forEach(KineticNetwork::untick);
+
 		List<KineticNetwork> frontier = new LinkedList<>();
 
-		Set<KineticNetwork> networks = nodes.values().stream().map(KineticNode::getNetwork).collect(Collectors.toSet());
 		for (KineticNetwork network : networks) {
 			frontier.add(network);
 			while (!frontier.isEmpty()) {
 				KineticNetwork cur = frontier.remove(0);
-				if (visited.contains(cur)) continue;
-				visited.add(cur);
-				frontier.addAll(cur.tick());
+				cur.tick(frontier);
 			}
 		}
 	}
