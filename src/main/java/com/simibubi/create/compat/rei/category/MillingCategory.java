@@ -10,7 +10,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedMillstone;
 import com.simibubi.create.compat.rei.display.MillingDisplay;
-import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
