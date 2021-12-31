@@ -22,11 +22,11 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 
 	public void updateFurnace() {
 		BlockState state = level.getBlockState(EngineBlock.getBaseBlockPos(getBlockState(), worldPosition));
-		EngineState engineState = FurnaceEngineModifiers.INSTANCE.getEngineState(state);
+		EngineState engineState = FurnaceEngineModifiers.get().getEngineState(state);
 		if (engineState.isEmpty())
 			return;
 
-		float modifier = FurnaceEngineModifiers.INSTANCE.getModifier(state);
+		float modifier = FurnaceEngineModifiers.get().getModifier(state);
 		boolean active = engineState.isActive();
 		float speed = active ? 16 * modifier : 0;
 		float capacity =
