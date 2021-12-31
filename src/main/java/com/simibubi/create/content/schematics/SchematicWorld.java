@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
@@ -45,7 +44,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	protected List<BlockEntity> renderedTileEntities;
 	protected List<Entity> entities;
 	protected BoundingBox bounds;
-	
+
 	public BlockPos anchor;
 	public boolean renderMode;
 
@@ -54,12 +53,8 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	public SchematicWorld(BlockPos anchor, Level original) {
-		this(anchor, original,new WrappedChunkProvider());
-	}
-
-	public SchematicWorld(BlockPos anchor, Level original, WrappedChunkProvider provider) {
-		super(original, provider);
-		provider.setFallbackWorld(this);
+		super(original);
+		setChunkSource(new SchematicChunkSource(this));
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
 		this.bounds = new BoundingBox(BlockPos.ZERO);
@@ -149,12 +144,12 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public int getBrightness(LightLayer p_226658_1_, BlockPos p_226658_2_) {
 		return 10;
 	}
-	
+
 	@Override
 	public LevelTickAccess<Block> getBlockTicks() {
 		return BlackholeTickAccess.emptyLevelList();
 	}
-	
+
 	@Override
 	public LevelTickAccess<Fluid> getFluidTicks() {
 		return BlackholeTickAccess.emptyLevelList();
@@ -170,7 +165,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public List<? extends Player> players() {
 		return Collections.emptyList();

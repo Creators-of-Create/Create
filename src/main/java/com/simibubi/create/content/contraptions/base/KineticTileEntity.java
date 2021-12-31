@@ -151,6 +151,7 @@ public class KineticTileEntity extends SmartTileEntity
 		this.stress = currentStress;
 		this.networkSize = networkSize;
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
+		setChanged();
 
 		if (overStressed != this.overStressed) {
 			float prevSpeed = getSpeed();
@@ -181,16 +182,22 @@ public class KineticTileEntity extends SmartTileEntity
 		boolean directionSwap = !fromOrToZero && Math.signum(previousSpeed) != Math.signum(getSpeed());
 		if (fromOrToZero || directionSwap)
 			flickerTally = getFlickerScore() + 5;
+		setChanged();
 	}
 
 	@Override
 	public void setRemoved() {
+		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
 		if (!level.isClientSide) {
 			if (hasNetwork())
 				getOrCreateNetwork().remove(this);
 			detachKinetics();
 		}
-		super.setRemoved();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Override
@@ -319,6 +326,7 @@ public class KineticTileEntity extends SmartTileEntity
 			getOrCreateNetwork().remove(this);
 
 		network = networkIn;
+		setChanged();
 
 		if (networkIn == null)
 			return;

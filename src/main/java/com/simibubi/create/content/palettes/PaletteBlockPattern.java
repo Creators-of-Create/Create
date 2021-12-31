@@ -153,24 +153,6 @@ public class PaletteBlockPattern {
 		return this;
 	}
 
-//	@SafeVarargs
-//	private final PaletteBlockPattern blockTags(Tag.Named<Block>... tags) {
-//		blockTags = tags;
-//		return this;
-//	}
-//
-//	@SafeVarargs
-//	private final PaletteBlockPattern itemTags(Tag.Named<Item>... tags) {
-//		itemTags = tags;
-//		return this;
-//	}
-//
-//	private PaletteBlockPattern addRecipes(
-//		NonNullFunction<NonNullSupplier<Block>, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> func) {
-//		this.additionalRecipes = func;
-//		return this;
-//	}
-
 	private PaletteBlockPattern connectedTextures(Function<String, ConnectedTextureBehaviour> factory) {
 		this.ctFactory = Optional.of(factory);
 		return this;

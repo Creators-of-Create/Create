@@ -1,0 +1,24 @@
+name: "Close Issues"
+on:
+    schedule:
+        - cron: '0 */12 * * *'
+    workflow_dispatch:
+
+jobs:
+    close:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+        steps:
+            - uses: actions/stale@v4
+              with:
+                  days-before-issue-stale: 21
+                  days-before-issue-close: 21
+                  stale-issue-label: "stale"
+                  exempt-issue-labels: "timeless, suggestion, critical"
+                  stale-issue-message: "This issue has been marked as stale because it has been inactive for 3 weeks. It will be closed if it remains inactive for another 3 weeks."
+                  close-issue-message: "This issue has been closed since it has been inactive for 3 weeks since it was marked as stale."
+                  days-before-pr-stale: -1
+                  days-before-pr-close: -1
+                  operations-per-run: 10000
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}

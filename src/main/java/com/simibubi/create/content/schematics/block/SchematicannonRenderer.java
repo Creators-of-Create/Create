@@ -31,11 +31,6 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
-		return true;
-	}
-
-	@Override
 	protected void renderSafe(SchematicannonTileEntity tileEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
@@ -43,8 +38,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance()
-			.canUseInstancing(tileEntity.getLevel()))
+		if (Backend.canUseInstancing(tileEntity.getLevel()))
 			return;
 
 		BlockPos pos = tileEntity.getBlockPos();
@@ -210,6 +204,11 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			}
 
 		}
+	}
+
+	@Override
+	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
+		return true;
 	}
 
 	@Override

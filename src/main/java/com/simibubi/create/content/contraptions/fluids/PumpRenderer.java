@@ -48,8 +48,8 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, state);
 	}
 
 }

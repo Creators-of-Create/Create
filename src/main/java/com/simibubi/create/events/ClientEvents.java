@@ -257,13 +257,13 @@ public class ClientEvents {
         
 		Fluid fluid = fluidstate.getType();
 
-		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
+		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
 			event.setDensity(5f);
 			event.setCanceled(true);
 			return;
 		}
 
-		if (fluid.isSame(AllFluids.HONEY.get())) {
+		if (AllFluids.HONEY.get().isSame(fluid)) {
 			event.setDensity(1.5f);
 			event.setCanceled(true);
 			return;
@@ -283,18 +283,18 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos)) 
+        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
            return;
-        
+
 		Fluid fluid = fluidstate.getType();
 
-		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
+		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
 			event.setRed(98 / 256f);
 			event.setGreen(32 / 256f);
 			event.setBlue(32 / 256f);
 		}
 
-		if (fluid.isSame(AllFluids.HONEY.get())) {
+		if (AllFluids.HONEY.get().isSame(fluid)) {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);

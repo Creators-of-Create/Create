@@ -15,8 +15,8 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
@@ -131,7 +131,7 @@ public class PotionMixingRecipeManager {
 			.collect(Collectors.toList());
 	}
 
-	public static final ISimpleReloadListener LISTENER = (resourceManager, profiler) -> {
+	public static final ResourceManagerReloadListener LISTENER = resourceManager -> {
 		ALL.clear();
 		getAllBrewingRecipes().forEach(recipe -> {
 			for (Ingredient ingredient : recipe.getIngredients()) {
