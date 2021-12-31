@@ -54,7 +54,7 @@ public class FurnaceEngineModifiers {
 		
 		/*
 		Example:
-		INSTANCE.register(Blocks.REDSTONE_LAMP.delegate, 1f, 
+		get().register(Blocks.REDSTONE_LAMP.delegate, 1f, 
 			s -> s.getBlock() instanceof RedstoneLampBlock && s.hasProperty(RedstoneLampBlock.LIT) ? 
 				(s.getValue(RedstoneLampBlock.LIT) ? EngineState.ACTIVE : EngineState.VALID) : EngineState.EMPTY);
 		*/
