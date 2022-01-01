@@ -1,7 +1,15 @@
 package com.simibubi.create.content.contraptions.solver;
 
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
+import com.simibubi.create.foundation.utility.NBTHelper;
+
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,8 +23,51 @@ import java.util.stream.Stream;
 
 public class KineticConnections {
 
-	public interface Type {
-		boolean compatible(Type other);
+	public enum Types {
+		SHAFT, LARGE_COG, SMALL_COG, SPEED_CONTROLLER_TOP
+	}
+
+	public static class Type {
+		private final Types name;
+		private final String value;
+
+		private Type(Types name, String value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		private final static Interner<Type> cachedTypes = Interners.newStrongInterner();
+
+		public static Type of(Types name, String value) {
+			return cachedTypes.intern(new Type(name, value));
+		}
+
+		public static Type of(Types name, StringRepresentable value) {
+			return of(name, value.getSerializedName());
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Type type1 = (Type) o;
+			return name == type1.name && Objects.equals(value, type1.value);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(name, value);
+		}
+
+		public CompoundTag save(CompoundTag tag) {
+			NBTHelper.writeEnum(tag, "Name", name);
+			tag.putString("Value", value);
+			return tag;
+		}
+
+		public static Type load(CompoundTag tag) {
+			return Type.of(NBTHelper.readEnum(tag, "Name", Types.class), tag.getString("Value"));
+		}
 	}
 
 	public static record Entry(Vec3i offset, Value value) {
@@ -74,7 +125,7 @@ public class KineticConnections {
 
 		if (fromValue.isStressOnly() || toValue.isStressOnly()) return Optional.empty();
 
-		if (fromValue.from.compatible(toValue.to) && fromValue.to.compatible(toValue.from)
+		if (fromValue.from.equals(toValue.to) && fromValue.to.equals(toValue.from)
 				&& (Mth.equal(fromValue.ratio, 1/toValue.ratio) || (Mth.equal(toValue.ratio, 1/fromValue.ratio))))
 			return Optional.of(fromValue.ratio);
 		return Optional.empty();
@@ -89,7 +140,7 @@ public class KineticConnections {
 
 		if (!fromValue.isStressOnly() || !toValue.isStressOnly()) return false;
 
-		return fromValue.from.compatible(toValue.to) && fromValue.to.compatible(toValue.from);
+		return fromValue.from.equals(toValue.to) && fromValue.to.equals(toValue.from);
 	}
 
 	@Override
@@ -114,6 +165,33 @@ public class KineticConnections {
 
 	public boolean hasStressOnlyConnections() {
 		return connections.values().stream().anyMatch(Value::isStressOnly);
+	}
+
+	public CompoundTag save(CompoundTag tag) {
+		ListTag connectionsTags = new ListTag();
+		for (Map.Entry<Vec3i, Value> entry : connections.entrySet()) {
+			CompoundTag entryTag = new CompoundTag();
+			entryTag.put("Off", NBTHelper.writeVec3i(entry.getKey()));
+			entryTag.put("From", entry.getValue().from().save(new CompoundTag()));
+			entryTag.put("To", entry.getValue().to().save(new CompoundTag()));
+			entryTag.putFloat("Ratio", entry.getValue().ratio());
+			connectionsTags.add(entryTag);
+		}
+		tag.put("Connections", connectionsTags);
+		return tag;
+	}
+
+	public static KineticConnections load(CompoundTag tag) {
+		Map<Vec3i, Value> connections = new HashMap<>();
+		tag.getList("Connections", Tag.TAG_COMPOUND).forEach(c -> {
+			CompoundTag comp = (CompoundTag) c;
+			Vec3i offset = NBTHelper.readVec3i(comp.getList("Off", Tag.TAG_INT));
+			Type from = Type.load(comp.getCompound("From"));
+			Type to = Type.load(comp.getCompound("To"));
+			float ratio = comp.getFloat("Ratio");
+			connections.put(offset, new Value(from, to, ratio));
+		});
+		return new KineticConnections(connections);
 	}
 
 }

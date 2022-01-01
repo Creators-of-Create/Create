@@ -4,6 +4,7 @@ import static net.minecraft.ChatFormatting.GOLD;
 import static net.minecraft.ChatFormatting.GRAY;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -78,14 +79,6 @@ public class KineticTileEntity extends SmartTileEntity
 		}
 	}
 
-	private void addToSolver() {
-		KineticSolver.getSolver(level).addNode(this);
-	}
-
-	private void removeFromSolver() {
-		KineticSolver.getSolver(level).removeNode(this);
-	}
-
 	public KineticConnections getConnections() {
 		return connections;
 	}
@@ -102,6 +95,10 @@ public class KineticTileEntity extends SmartTileEntity
 		return getDefaultStressCapacity();
 	}
 
+	public boolean isStressConstant() {
+		return false;
+	}
+
 	public float getDefaultStressImpact() {
 		return (float) BlockStressValues.getImpact(getStressConfigKey());
 	}
@@ -110,11 +107,18 @@ public class KineticTileEntity extends SmartTileEntity
 		return (float) BlockStressValues.getCapacity(getStressConfigKey());
 	}
 
+	public Optional<Float> isConnected(BlockPos to) {
+		return KineticSolver.getSolver(level).isConnected(this.getBlockPos(), to);
+	}
+
+	public boolean isStressOnlyConnected(BlockPos to) {
+		return KineticSolver.getSolver(level).isStressOnlyConnected(this.getBlockPos(), to);
+	}
 
 	@Override
 	public void initialize() {
 		if (!level.isClientSide) {
-			addToSolver();
+			KineticSolver.getSolver(level).addNode(this);
 		}
 
 		super.initialize();
@@ -125,7 +129,7 @@ public class KineticTileEntity extends SmartTileEntity
 		super.tick();
 		effects.tick();
 
-		if (!level.isClientSide && !isRemoved()) {
+		if (!level.isClientSide) {
 			KineticSolver.getSolver(level).updateNode(this);
 		}
 
@@ -143,6 +147,29 @@ public class KineticTileEntity extends SmartTileEntity
 		if (getFlickerScore() > 0)
 			flickerTally = getFlickerScore() - 1;
 	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
+		if (!level.isClientSide) {
+			KineticSolver.getSolver(level).removeNode(this);
+		}
+		super.setRemovedNotDueToChunkUnload();
+	}
+
+	@Override
+	public void onChunkUnloaded() {
+		super.onChunkUnloaded();
+		if (!level.isClientSide) {
+			preKineticsUnloaded();
+			KineticSolver solver = KineticSolver.getSolver(level);
+			solver.updateNode(this);
+			solver.unloadNode(this);
+		}
+	}
+
+	public void preKineticsUnloaded() {}
+
+
 
 	private void validateKinetics() {
 //		if (hasSource()) {
@@ -213,14 +240,6 @@ public class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-	}
-
-	@Override
-	protected void setRemovedNotDueToChunkUnload() {
-		if (!level.isClientSide) {
-			removeFromSolver();
-		}
-		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Override

@@ -29,10 +29,10 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		Block block = getBlockState().getBlock();
-		BlockEntity below = level.getBlockEntity(getBlockPos().below());
-		if (block instanceof ICogWheel cog && cog.isLargeCog()
-				&& below instanceof SpeedControllerTileEntity controller && controller.getSpeed() != 0)
+		BlockPos belowPos = getBlockPos().below();
+		if (isStressOnlyConnected(belowPos)
+				&& level.getBlockEntity(belowPos) instanceof SpeedControllerTileEntity controller
+				&& controller.getSpeed() != 0)
 			return controller.getTargetSpeed();
 		return 0;
 	}

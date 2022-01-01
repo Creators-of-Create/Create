@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
@@ -12,37 +14,88 @@ import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class KineticNode {
 
-	private final Function<BlockPos, Optional<KineticNode>> nodeAccessor;
-	private final KineticTileEntity entity;
+	private final KineticSolver solver;
+	private @Nullable KineticTileEntity entity;
 
 	private @Nullable KineticNode source;
 	private KineticNetwork network;
 	private float speedRatio = 1;
+	private float speedCur;
+	private float speedNext;
 
+	private final BlockPos pos;
 	private final KineticConnections connections;
 	private float generatedSpeed;
 	private float stressCapacity;
 	private float stressImpact;
+	private final boolean constantStress;
 
-	private float speedCur;
-	private float speedNext;
-
-	public KineticNode(KineticTileEntity entity, Function<BlockPos, Optional<KineticNode>> nodeAccessor) {
-		this.nodeAccessor = nodeAccessor;
+	public KineticNode(KineticSolver solver, KineticTileEntity entity) {
+		this.solver = solver;
 		this.entity = entity;
 
+		this.pos = entity.getBlockPos();
 		this.connections = entity.getConnections();
 		this.generatedSpeed = entity.getGeneratedSpeed();
 		this.stressImpact = entity.getStressImpact();
 		this.stressCapacity = entity.getStressCapacity();
+		this.constantStress = entity.isStressConstant();
 
 		this.network = new KineticNetwork(this);
+	}
+
+	private KineticNode(KineticSolver solver, BlockPos pos, KineticConnections connections, float generatedSpeed,
+						float stressCapacity, float stressImpact, boolean constantStress) {
+		this.solver = solver;
+
+		this.pos = pos;
+		this.connections = connections;
+		this.generatedSpeed = generatedSpeed;
+		this.stressImpact = stressImpact;
+		this.stressCapacity = stressCapacity;
+		this.constantStress = constantStress;
+
+		this.network = new KineticNetwork(this);
+	}
+
+	public CompoundTag save(CompoundTag tag) {
+		tag.put("Pos", NbtUtils.writeBlockPos(pos));
+		tag.put("Connections", connections.save(new CompoundTag()));
+		tag.putFloat("Generated", generatedSpeed);
+		tag.putFloat("Capacity", stressCapacity);
+		tag.putFloat("Impact", stressImpact);
+		if (constantStress)
+			tag.putBoolean("ConstantStress", true);
+		return tag;
+	}
+
+	public static KineticNode load(KineticSolver solver, CompoundTag tag) {
+		BlockPos pos = NbtUtils.readBlockPos(tag.getCompound("Pos"));
+		KineticConnections connections = KineticConnections.load(tag.getCompound("Connections"));
+		float generatedSpeed = tag.getFloat("Generated");
+		float stressCapacity = tag.getFloat("Capacity");
+		float stressImpact = tag.getFloat("Impact");
+		boolean constantStress = tag.getBoolean("ConstantStress");
+		return new KineticNode(solver, pos, connections, generatedSpeed, stressCapacity, stressImpact, constantStress);
+	}
+
+	public boolean isLoaded() {
+		return entity != null;
+	}
+
+	public void onLoaded(KineticTileEntity entity) {
+		this.entity = entity;
+		network.onMemberLoaded(this);
+		if (speedCur != 0) entity.setSpeed(speedCur);
+	}
+
+	public void onUnloaded() {
+		this.entity = null;
 	}
 
 	public KineticConnections getConnections() {
@@ -53,13 +106,17 @@ public class KineticNode {
 		return network;
 	}
 
+	public BlockPos getPos() {
+		return pos;
+	}
+
 	/**
 	 * @return 	a Stream containing a pair for each compatible connection with this node, where the first value is
 	 * 			the connecting node and the second value is the speed ratio of the connection
 	 */
 	public Stream<Pair<KineticNode, Float>> getActiveConnections() {
 		return connections.getDirections().stream()
-				.map(d -> nodeAccessor.apply(entity.getBlockPos().offset(d))
+				.map(d -> solver.getNode(pos.offset(d))
 						.map(n -> connections.checkConnection(n.connections, d)
 								.map(r -> Pair.of(n, r))))
 				.flatMap(Optional::stream)
@@ -72,7 +129,7 @@ public class KineticNode {
 
 	public Stream<KineticNetwork> getActiveStressOnlyConnections() {
 		return connections.getDirections().stream()
-				.map(d -> nodeAccessor.apply(entity.getBlockPos().offset(d))
+				.map(d -> solver.getNode(pos.offset(d))
 						.filter(n -> connections.checkStressOnlyConnection(n.connections, d)))
 				.flatMap(Optional::stream)
 				.map(KineticNode::getNetwork);
@@ -86,10 +143,15 @@ public class KineticNode {
 		return generatedSpeed != 0;
 	}
 
-	public void onUpdated() {
+	public boolean onUpdated() {
+		if (entity == null) return false;
+
+		boolean changed = false;
+
 		float generatedSpeedNew = entity.getGeneratedSpeed();
 		if (this.generatedSpeed != generatedSpeedNew) {
 			this.generatedSpeed = generatedSpeedNew;
+			changed = true;
 			network.onMemberGeneratedSpeedUpdated(this);
 			if (network.tryRecalculateSpeed().isContradiction()) {
 				popBlock();
@@ -99,14 +161,18 @@ public class KineticNode {
 		float stressImpactNew = entity.getStressImpact();
 		if (this.stressImpact != stressImpactNew) {
 			this.stressImpact = stressImpactNew;
+			changed = true;
 			network.onMemberStressImpactUpdated();
 		}
 
 		float stressCapacityNew = entity.getStressCapacity();
 		if (this.stressCapacity != stressCapacityNew) {
 			this.stressCapacity = stressCapacityNew;
+			changed = true;
 			network.onMemberStressCapacityUpdated();
 		}
+
+		return changed;
 	}
 
 	public boolean hasStressCapacity() {
@@ -122,11 +188,11 @@ public class KineticNode {
 	}
 
 	public float getStressCapacity() {
-		return Math.abs(stressCapacity * generatedSpeed);
+		return constantStress ? stressCapacity : stressCapacity * Math.abs(generatedSpeed);
 	}
 
 	public float getTotalStressImpact(float speedAtRoot) {
-		return Math.abs(stressImpact * getTheoreticalSpeed(speedAtRoot));
+		return constantStress ? stressImpact : stressImpact * Math.abs(getTheoreticalSpeed(speedAtRoot));
 	}
 
 	private SolveResult setNetwork(KineticNetwork network) {
@@ -233,13 +299,18 @@ public class KineticNode {
 	public void flushChangedSpeed() {
 		if (speedCur != speedNext) {
 			speedCur = speedNext;
-			entity.setSpeed(speedCur);
+			if (entity != null) {
+				entity.setSpeed(speedCur);
+			}
 		}
 	}
 
 	public void popBlock() {
-		// this should cause the node to get removed from the solver and lead to onRemoved() being called
-		entity.getLevel().destroyBlock(entity.getBlockPos(), true);
+		if (entity != null) {
+			solver.removeAndPopNow(entity);
+		} else {
+			solver.removeAndQueuePop(pos);
+		}
 	}
 
 }
