@@ -38,7 +38,6 @@ vec4 FLWVertex(inout Vertex v) {
 #elif defined(FRAGMENT_SHADER)
 #use "flywheel:core/lightutil.glsl"
 
-#define ALPHA_DISCARD 0.1
 // optimize discard usage
 #if defined(ALPHA_DISCARD)
 #if defined(GL_ARB_conservative_depth)

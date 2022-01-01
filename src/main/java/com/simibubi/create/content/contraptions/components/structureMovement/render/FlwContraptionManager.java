@@ -43,20 +43,20 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 		GlStateTracker.State restoreState = GlStateTracker.getRestoreState();
 		GlTextureUnit active = GlTextureUnit.getActive();
 
-		RenderType layer = event.getType();
+		RenderType type = event.getType();
 
-		layer.setupRenderState();
+		type.setupRenderState();
 
 		Textures.bindActiveTextures();
 
-		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.PASSTHRU, Formats.BLOCK);
+		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.PASSTHRU, Formats.BLOCK, RenderLayer.CUTOUT);
 
 		structureShader.bind();
 		structureShader.uploadViewProjection(event.viewProjection);
 		structureShader.uploadCameraPos(event.camX, event.camY, event.camZ);
 
 		for (FlwContraption flwContraption : visible) {
-			flwContraption.renderStructureLayer(layer, structureShader);
+			flwContraption.renderStructureLayer(type, structureShader);
 		}
 
 		restoreState.restore();
@@ -76,7 +76,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 		GlTextureUnit.T4.makeActive();
 		glBindTexture(GL_TEXTURE_3D, 0);
 
-		layer.clearRenderState();
+		type.clearRenderState();
 		active.makeActive();
 		restoreState.restore();
 	}
