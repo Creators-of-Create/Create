@@ -56,10 +56,10 @@ public class KineticTileEntity extends SmartTileEntity
 	public @Nullable BlockPos source = null;
 
 	protected KineticEffectHandler effects;
-	protected float speed;
+	protected float theoreticalSpeed;
 	protected float capacity;
 	protected float stress;
-	protected boolean overStressed;
+	protected boolean overstressed;
 	protected boolean wasMoved;
 
 	private int flickerTally;
@@ -224,75 +224,27 @@ public class KineticTileEntity extends SmartTileEntity
 			flickerTally = getFlickerScore() + 5;
 	}
 
-	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void onOverstressedChanged(boolean previousOverstressed) {
+		if (isOverstressed())
+			effects.triggerOverStressedEffect();
 	}
 
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
-		compound.putFloat("Speed", speed);
-
-//		if (needsSpeedUpdate())
-//			compound.putBoolean("NeedsSpeedUpdate", true);
-//
-//		if (hasSource())
-//			compound.put("Source", NbtUtils.writeBlockPos(source));
-
-//		if (hasNetwork()) {
-//			CompoundTag networkTag = new CompoundTag();
-//			//networkTag.putLong("Id", this.network);
-//			networkTag.putFloat("Stress", stress);
-//			networkTag.putFloat("Capacity", capacity);
-//			networkTag.putInt("Size", networkSize);
-//
-//			if (lastStressApplied != 0)
-//				networkTag.putFloat("AddedStress", lastStressApplied);
-//			if (lastCapacityProvided != 0)
-//				networkTag.putFloat("AddedCapacity", lastCapacityProvided);
-//
-//			compound.put("Network", networkTag);
-//		}
+		if (clientPacket) {
+			compound.putFloat("Speed", theoreticalSpeed);
+			compound.putBoolean("Overstressed", overstressed);
+		}
 
 		super.write(compound, clientPacket);
 	}
 
-//	public boolean needsSpeedUpdate() {
-//		return updateSpeed;
-//	}
-
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
-		//boolean overStressedBefore = overStressed;
-		//clearKineticInformation();
-
-		// DO NOT READ kinetic information when placed after movement
-		//if (wasMoved) {
-		//	super.read(compound, clientPacket);
-		//	return;
-		//}
-
 		if (clientPacket)
-			speed = compound.getFloat("Speed");
-
-//		if (compound.contains("Source"))
-//			source = NbtUtils.readBlockPos(compound.getCompound("Source"));
-
-//		if (compound.contains("Network")) {
-//			CompoundTag networkTag = compound.getCompound("Network");
-//			network = networkTag.getLong("Id");
-//			stress = networkTag.getFloat("Stress");
-//			capacity = networkTag.getFloat("Capacity");
-//			networkSize = networkTag.getInt("Size");
-//			lastStressApplied = networkTag.getFloat("AddedStress");
-//			lastCapacityProvided = networkTag.getFloat("AddedCapacity");
-//			overStressed = capacity < stress && StressImpact.isEnabled();
-//		}
+			updateFromSolver(compound.getFloat("Speed"), compound.getBoolean("Overstressed"));
 
 		super.read(compound, clientPacket);
-
-//		if (clientPacket && overStressedBefore != overStressed && speed != 0)
-//			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
@@ -304,20 +256,34 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float getSpeed() {
-		if (overStressed)
-			return 0;
+		if (overstressed) return 0;
 		return getTheoreticalSpeed();
 	}
 
 	public float getTheoreticalSpeed() {
-		return speed;
+		return theoreticalSpeed;
 	}
 
-	public void setSpeed(float speed) {
-		float prevSpeed = this.speed;
-		this.speed = speed;
-		onSpeedChanged(prevSpeed);
-		sendData();
+	public void updateFromSolver(float theoreticalSpeed, boolean overstressed) {
+		float prevSpeed = getSpeed();
+		boolean send = false;
+
+		if (this.theoreticalSpeed != theoreticalSpeed) {
+			this.theoreticalSpeed = theoreticalSpeed;
+			send = true;
+		}
+
+		if (this.overstressed != overstressed) {
+			this.overstressed = overstressed;
+			onOverstressedChanged(!overstressed);
+			send = true;
+		}
+
+		if (getSpeed() != prevSpeed)
+			onSpeedChanged(prevSpeed);
+
+		if (send)
+			sendData();
 	}
 
 	public boolean hasSource() {
@@ -409,16 +375,6 @@ public class KineticTileEntity extends SmartTileEntity
 			return;
 		}
 
-//		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
-//		if (state.getBlock() instanceof KineticBlock
-//			&& !((KineticBlock) state.getBlock()).areStatesKineticallyEquivalent(currentState, state)) {
-//			if (tileEntity.hasNetwork())
-//				tileEntity.getOrCreateNetwork()
-//					.remove(tileEntity);
-//			tileEntity.detachKinetics();
-//			tileEntity.removeSource();
-//		}
-
 		world.setBlock(pos, state, 3);
 	}
 
@@ -429,7 +385,7 @@ public class KineticTileEntity extends SmartTileEntity
 	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
-		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
+		if (overstressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("gui.stressometer.overstressed")
 					.withStyle(GOLD)));
@@ -487,8 +443,8 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	public void clearKineticInformation() {
-		speed = 0;
-		overStressed = false;
+		theoreticalSpeed = 0;
+		overstressed = false;
 		stress = 0;
 		capacity = 0;
 		lastStressApplied = 0;
@@ -515,8 +471,8 @@ public class KineticTileEntity extends SmartTileEntity
 		return speed * 3 / 10f;
 	}
 
-	public boolean isOverStressed() {
-		return overStressed;
+	public boolean isOverstressed() {
+		return overstressed;
 	}
 
 	// Custom Propagation

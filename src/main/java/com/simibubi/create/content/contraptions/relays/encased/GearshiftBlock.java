@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import java.util.Random;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -58,7 +57,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 	public Class<SplitShaftTileEntity> getTileEntityClass() {
 		return SplitShaftTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
 		return AllTileEntities.GEARSHIFT.get();
@@ -68,7 +67,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 		BlockEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof KineticTileEntity))
 			return;
-		RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
+		//RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
 
 		// Re-attach next tick
 		if (reAttachNextTick)
@@ -81,6 +80,6 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 		if (te == null || !(te instanceof KineticTileEntity))
 			return;
 		KineticTileEntity kte = (KineticTileEntity) te;
-		RotationPropagator.handleAdded(worldIn, pos, kte);
+		//RotationPropagator.handleAdded(worldIn, pos, kte);
 	}
 }

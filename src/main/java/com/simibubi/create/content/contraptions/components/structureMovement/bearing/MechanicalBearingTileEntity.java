@@ -212,7 +212,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			if (running) {
 				boolean canDisassemble = movementMode.get() == RotationMode.ROTATE_PLACE
 					|| (isNearInitialAngle() && movementMode.get() == RotationMode.ROTATE_PLACE_RETURNED);
-				if (speed == 0 && (canDisassemble || movedContraption == null || movedContraption.getContraption()
+				if (theoreticalSpeed == 0 && (canDisassemble || movedContraption == null || movedContraption.getContraption()
 					.getBlocks()
 					.isEmpty())) {
 					if (movedContraption != null)
@@ -222,7 +222,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 					return;
 				}
 			} else {
-				if (speed == 0 && !isWindmill())
+				if (theoreticalSpeed == 0 && !isWindmill())
 					return;
 				assemble();
 			}

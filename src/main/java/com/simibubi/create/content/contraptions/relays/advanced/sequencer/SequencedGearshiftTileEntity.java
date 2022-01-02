@@ -42,7 +42,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			return;
 		if (timer < currentInstructionDuration) {
 			timer++;
-			currentInstructionProgress += getInstruction(currentInstruction).getTickProgress(speed);
+			currentInstructionProgress += getInstruction(currentInstruction).getTickProgress(theoreticalSpeed);
 			return;
 		}
 		run(currentInstruction + 1);
@@ -53,7 +53,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		super.onSpeedChanged(previousSpeed);
 		if (isIdle())
 			return;
-		float currentSpeed = Math.abs(speed);
+		float currentSpeed = Math.abs(theoreticalSpeed);
 		if (Math.abs(previousSpeed) == currentSpeed)
 			return;
 		Instruction instruction = getInstruction(currentInstruction);

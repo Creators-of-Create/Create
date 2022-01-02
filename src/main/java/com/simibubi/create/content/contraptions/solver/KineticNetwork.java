@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.solver;
 
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
 import com.simibubi.create.foundation.utility.ResetableLazy;
@@ -93,7 +94,9 @@ public class KineticNetwork {
 		conflictingCycles.add(Pair.of(from, to));
 	}
 
-	protected boolean isStopped() { return generators.isEmpty() || overstressed; }
+	public boolean isOverstressed() { return overstressed; }
+
+	public boolean isStopped() { return generators.isEmpty() || overstressed; }
 
 	/**
 	 * Recalculates the speed at the root node of this network.
@@ -203,7 +206,6 @@ public class KineticNetwork {
 					// just became overstressed
 					cur.overstressed = true;
 					cur.onRootSpeedChanged();
-					cur.members.forEach(KineticNode::stop);
 				}
 			} else {
 				if (cur.overstressed) {
@@ -229,10 +231,7 @@ public class KineticNetwork {
 		assert(recalculateSpeedResult.isOk());
 
 		// if we're stopped, then all members' speeds will be 0, so no need to check for speeding nodes
-		if (isStopped()) {
-			members.forEach(KineticNode::stop);
-			return;
-		}
+		if (isStopped()) return;
 
 		if (rootSpeedChanged) {
 			// root speed changed, update all nodes starting from the main generator
@@ -248,6 +247,8 @@ public class KineticNetwork {
 	}
 
 	private void bfs(KineticNode root, Consumer<KineticNode> onSpeeding, boolean followSource) {
+		float max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
+
 		// update node speeds in a breadth-first order, checking for speeding nodes along the way
 		Set<KineticNode> visited = new HashSet<>();
 		List<KineticNode> frontier = new LinkedList<>();
@@ -258,7 +259,7 @@ public class KineticNetwork {
 			if (!members.contains(cur) || visited.contains(cur)) continue;
 			visited.add(cur);
 
-			if (cur.tryUpdateSpeed().isOk()) {
+			if (Math.abs(cur.getSpeed()) <= max) {
 				cur.getActiveConnections()
 						.map(Pair::getFirst)
 						.filter(n -> !followSource || n.getSource() == cur)

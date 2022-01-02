@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
@@ -15,7 +14,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -64,9 +62,10 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	@Override
 	public void onUpdate(Level level, KineticSolver solver, KineticNode node) {
-		solver.getNode(node.getPos().above())
-				.filter(n -> node.getActiveStressOnlyConnections().anyMatch(m -> m == n))
-				.ifPresent(n -> n.setController(node, KineticControllerSerial.SPEED_CONTROLLER_COG));
+		BlockPos above = node.getPos().above();
+		if (isStressOnlyConnected(above)) {
+			solver.getNode(above).get().setController(node, KineticControllerSerial.SPEED_CONTROLLER_COG);
+		}
 	}
 
 	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,

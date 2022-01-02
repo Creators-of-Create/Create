@@ -50,7 +50,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		if (!(level.getBlockState(worldPosition)
 			.getBlock() instanceof PulleyBlock))
 			return;
-		if (speed == 0)
+		if (theoreticalSpeed == 0)
 			return;
 		int maxLength = AllConfigs.SERVER.kinetics.maxRopeLength.get();
 		int i = 1;

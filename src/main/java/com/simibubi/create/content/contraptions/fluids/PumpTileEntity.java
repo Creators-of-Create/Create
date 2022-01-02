@@ -74,7 +74,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			if (!isVirtual())
 				return;
 		}
-		
+
 //		if (pressureUpdate)
 //			updatePressureChange();
 
@@ -100,8 +100,8 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		if (previousSpeed == getSpeed())
 			return;
-		if (speed != 0)
-			reversed = speed < 0;
+		if (theoreticalSpeed != 0)
+			reversed = theoreticalSpeed < 0;
 		if (level.isClientSide && !isVirtual())
 			return;
 

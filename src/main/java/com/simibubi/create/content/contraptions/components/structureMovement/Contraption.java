@@ -874,9 +874,9 @@ public abstract class Contraption {
 		}
 
 		ListTag paletteNBT = new ListTag();
-		for(int i = 0; i < palette.getSize(); ++i) 
+		for(int i = 0; i < palette.getSize(); ++i)
 			paletteNBT.add(NbtUtils.writeBlockState(palette.values.byId(i)));
-		
+
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
 
@@ -891,7 +891,7 @@ public abstract class Contraption {
 			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
 				throw new IllegalStateException("Palette Map index exceeded maximum");
 			});
-			
+
 			ListTag list = c.getList("Palette", 10);
 			palette.values.clear();
 			for (int i = 0; i < list.size(); ++i)
@@ -926,8 +926,6 @@ public abstract class Contraption {
 				if (te == null)
 					return;
 				te.setLevel(world);
-				if (te instanceof KineticTileEntity)
-					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
 
 				if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())

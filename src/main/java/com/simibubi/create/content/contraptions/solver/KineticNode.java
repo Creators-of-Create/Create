@@ -32,8 +32,6 @@ public class KineticNode {
 	private @Nullable KineticNode source;
 	private KineticNetwork network;
 	private float speedRatio = 1;
-	private float speedCur;
-	private float speedNext;
 
 	private final BlockPos pos;
 	private final KineticConnections connections;
@@ -114,8 +112,6 @@ public class KineticNode {
 	protected void onLoaded(KineticTileEntity entity) {
 		this.entity = entity;
 		network.onMemberLoaded(this);
-		if (speedCur != 0)
-			entity.setSpeed(speedCur);
 	}
 
 	protected void onUnloaded() {
@@ -344,27 +340,9 @@ public class KineticNode {
 		propagateSource();
 	}
 
-	/**
-	 * Updates the speed of this node based on its network's root speed and its own speed ratio.
-	 * @return	CONTRADICTION if the node's new speed exceeds the maximum value, and OK otherwise
-	 */
-	protected SolveResult tryUpdateSpeed() {
-		speedNext = getSpeed();
-		if (Math.abs(speedNext) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get())
-			return SolveResult.CONTRADICTION;
-		return SolveResult.OK;
-	}
-
-	protected void stop() {
-		speedNext = 0;
-	}
-
 	protected void flushChangedSpeed() {
-		if (speedCur != speedNext) {
-			speedCur = speedNext;
-			if (entity != null) {
-				entity.setSpeed(speedCur);
-			}
+		if (entity != null) {
+			entity.updateFromSolver(getTheoreticalSpeed(), network.isOverstressed());
 		}
 	}
 
