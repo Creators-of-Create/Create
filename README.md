@@ -1,5 +1,5 @@
 <h1 align="center">Important Information</h1>
-<p align="center">This repo is for Create: Refabricated, a Fabric port of Create.</p>
+<p align="center">This repo is for the Fabric port of Create.</p>
 <p align="center"><b>This project is not complete, and we do not recommend using it yet. You've been warned!</b></p>
 
 [<h3 align="center">Contributing</h3>](README/CONTRIBUTING.md)
