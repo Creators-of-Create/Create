@@ -2,11 +2,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
-import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
-
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -27,13 +23,4 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 		return false;
 	}
 
-	@Override
-	public float getGeneratedSpeed() {
-		BlockPos belowPos = getBlockPos().below();
-		if (isStressOnlyConnected(belowPos)
-				&& level.getBlockEntity(belowPos) instanceof SpeedControllerTileEntity controller
-				&& controller.getSpeed() != 0)
-			return controller.getTargetSpeed();
-		return 0;
-	}
 }

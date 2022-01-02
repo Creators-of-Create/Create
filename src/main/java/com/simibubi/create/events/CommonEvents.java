@@ -112,7 +112,7 @@ public class CommonEvents {
 		CouplingPhysics.tick(world);
 		LinkedControllerServerHandler.tick(world);
 
-		KineticSolver.getSolver(world).tick();
+		KineticSolver.getSolver(world).tick(world);
 	}
 
 	@SubscribeEvent
@@ -169,14 +169,12 @@ public class CommonEvents {
 	public static void onLoadWorld(WorldEvent.Load event) {
 		LevelAccessor world = event.getWorld();
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
-		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		LevelAccessor world = event.getWorld();
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
-		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
 	}
 

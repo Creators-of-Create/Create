@@ -57,7 +57,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			return;
 		}
 
-		updateFromNetwork(capacity, stress, getOrCreateNetwork().getSize());
+		updateFromNetwork(capacity, stress, 0);
 	}
 
 	@Override

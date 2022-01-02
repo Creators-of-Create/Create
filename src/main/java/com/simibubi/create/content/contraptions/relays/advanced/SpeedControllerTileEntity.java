@@ -7,15 +7,20 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.solver.KineticControllerSerial;
+import com.simibubi.create.content.contraptions.solver.KineticNode;
+import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -57,16 +62,15 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		return targetSpeed.getValue();
 	}
 
-	private void updateTargetRotation() {
-		if (hasNetwork())
-			getOrCreateNetwork().remove(this);
-		RotationPropagator.handleRemoved(level, worldPosition, this);
-		removeSource();
-		attachKinetics();
+	@Override
+	public void onUpdate(Level level, KineticSolver solver, KineticNode node) {
+		solver.getNode(node.getPos().above())
+				.filter(n -> node.getActiveStressOnlyConnections().anyMatch(m -> m == n))
+				.ifPresent(n -> n.setController(node, KineticControllerSerial.SPEED_CONTROLLER_COG));
 	}
 
 	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
-		boolean targetingController) {
+										 boolean targetingController) {
 		if (!(speedControllerIn instanceof SpeedControllerTileEntity))
 			return 0;
 

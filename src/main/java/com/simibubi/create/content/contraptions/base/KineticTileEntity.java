@@ -10,8 +10,6 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
-import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
@@ -19,6 +17,7 @@ import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.IKineticController;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.foundation.block.BlockStressValues;
@@ -51,7 +50,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class KineticTileEntity extends SmartTileEntity
-	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered {
+	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered, IKineticController {
 
 	public @Nullable Long network = null;
 	public @Nullable BlockPos source = null;
@@ -69,35 +68,25 @@ public class KineticTileEntity extends SmartTileEntity
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
 
-	private KineticConnections connections = AllConnections.EMPTY;
+	private final KineticConnections connections;
 
 	public KineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
+
 		effects = new KineticEffectHandler(this);
+
 		if (state.getBlock() instanceof IRotate rotate) {
 			connections = rotate.getInitialConnections(state);
+		} else {
+			connections = AllConnections.EMPTY;
 		}
 	}
 
-	public KineticConnections getConnections() {
-		return connections;
-	}
+	@Override public KineticConnections getConnections() { return connections; }
 
-	public float getGeneratedSpeed() {
-		return 0;
-	}
+	@Override public float getStressImpact() { return getDefaultStressImpact(); }
 
-	public float getStressImpact() {
-		return getDefaultStressImpact();
-	}
-
-	public float getStressCapacity() {
-		return getDefaultStressCapacity();
-	}
-
-	public boolean isStressConstant() {
-		return false;
-	}
+	@Override public float getStressCapacity() { return getDefaultStressCapacity(); }
 
 	public float getDefaultStressImpact() {
 		return (float) BlockStressValues.getImpact(getStressConfigKey());
@@ -129,9 +118,9 @@ public class KineticTileEntity extends SmartTileEntity
 		super.tick();
 		effects.tick();
 
-		if (!level.isClientSide) {
-			KineticSolver.getSolver(level).updateNode(this);
-		}
+//		if (!level.isClientSide) {
+//			KineticSolver.getSolver(level).updateNode(this);
+//		}
 
 		if (level.isClientSide) {
 			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
@@ -161,9 +150,7 @@ public class KineticTileEntity extends SmartTileEntity
 		super.onChunkUnloaded();
 		if (!level.isClientSide) {
 			preKineticsUnloaded();
-			KineticSolver solver = KineticSolver.getSolver(level);
-			solver.updateNode(this);
-			solver.unloadNode(this);
+			KineticSolver.getSolver(level).unloadNode(this);
 		}
 	}
 
@@ -312,7 +299,8 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	public boolean isSource() {
-		return getGeneratedSpeed() != 0;
+		//return getGeneratedSpeed() != 0;
+		return false;
 	}
 
 	public float getSpeed() {
@@ -376,10 +364,6 @@ public class KineticTileEntity extends SmartTileEntity
 //		KineticNetwork network = getOrCreateNetwork();
 //		network.initialized = true;
 //		network.add(this);
-	}
-
-	public KineticNetwork getOrCreateNetwork() {
-		return Create.TORQUE_PROPAGATOR.getOrCreateNetworkFor(this);
 	}
 
 	public boolean hasNetwork() {

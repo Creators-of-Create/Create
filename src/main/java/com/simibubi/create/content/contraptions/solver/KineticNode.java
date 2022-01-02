@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.solver;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
@@ -11,9 +12,11 @@ import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +24,10 @@ public class KineticNode {
 
 	private final KineticSolver solver;
 	private @Nullable KineticTileEntity entity;
+
+	private @Nullable IKineticController controller;
+	private @Nullable KineticControllerSerial controllerType;
+	private @Nullable Set<BlockPos> controlling;
 
 	private @Nullable KineticNode source;
 	private KineticNetwork network;
@@ -35,18 +42,22 @@ public class KineticNode {
 	private float stressImpact;
 	private final boolean constantStress;
 
+	protected KineticNode regen() {
+		return new KineticNode(solver, pos, entity, getController().get(), controllerType);
+	}
+
 	public KineticNode(KineticSolver solver, KineticTileEntity entity) {
-		this.solver = solver;
+		this(solver, entity.getBlockPos(), entity, entity, null);
+		this.controller = null;
+	}
+
+	private KineticNode(KineticSolver solver, BlockPos pos, @Nullable KineticTileEntity entity,
+						IKineticController controller, @Nullable KineticControllerSerial controllerType) {
+		this(solver, pos, controller.getConnections(), controller.getGeneratedSpeed(), controller.getStressCapacity(),
+				controller.getStressImpact(), controller.isStressConstant());
 		this.entity = entity;
-
-		this.pos = entity.getBlockPos();
-		this.connections = entity.getConnections();
-		this.generatedSpeed = entity.getGeneratedSpeed();
-		this.stressImpact = entity.getStressImpact();
-		this.stressCapacity = entity.getStressCapacity();
-		this.constantStress = entity.isStressConstant();
-
-		this.network = new KineticNetwork(this);
+		this.controller = controller;
+		this.controllerType = controllerType;
 	}
 
 	private KineticNode(KineticSolver solver, BlockPos pos, KineticConnections connections, float generatedSpeed,
@@ -65,17 +76,29 @@ public class KineticNode {
 
 	public CompoundTag save(CompoundTag tag) {
 		tag.put("Pos", NbtUtils.writeBlockPos(pos));
+		if (controller != null && controllerType != null) {
+			NBTHelper.writeEnum(tag, "ControllerType", controllerType);
+			tag.put("Controller", controller.save(new CompoundTag()));
+			return tag;
+		}
+
 		tag.put("Connections", connections.save(new CompoundTag()));
 		tag.putFloat("Generated", generatedSpeed);
 		tag.putFloat("Capacity", stressCapacity);
 		tag.putFloat("Impact", stressImpact);
-		if (constantStress)
+		if (constantStress) {
 			tag.putBoolean("ConstantStress", true);
+		}
 		return tag;
 	}
 
 	public static KineticNode load(KineticSolver solver, CompoundTag tag) {
 		BlockPos pos = NbtUtils.readBlockPos(tag.getCompound("Pos"));
+		if (tag.contains("Controller") && tag.contains("ControllerType")) {
+			KineticControllerSerial type = NBTHelper.readEnum(tag, "ControllerType", KineticControllerSerial.class);
+			return new KineticNode(solver, pos, null, type.load(tag.getCompound("Controller")), type);
+		}
+
 		KineticConnections connections = KineticConnections.load(tag.getCompound("Connections"));
 		float generatedSpeed = tag.getFloat("Generated");
 		float stressCapacity = tag.getFloat("Capacity");
@@ -88,14 +111,36 @@ public class KineticNode {
 		return entity != null;
 	}
 
-	public void onLoaded(KineticTileEntity entity) {
+	protected void onLoaded(KineticTileEntity entity) {
 		this.entity = entity;
 		network.onMemberLoaded(this);
-		if (speedCur != 0) entity.setSpeed(speedCur);
+		if (speedCur != 0)
+			entity.setSpeed(speedCur);
 	}
 
-	public void onUnloaded() {
+	protected void onUnloaded() {
 		this.entity = null;
+	}
+
+	public Optional<IKineticController> getController() {
+		if (controller != null) return Optional.of(controller);
+		if (entity != null) return Optional.of(entity);
+		return Optional.empty();
+	}
+
+	public boolean setController(KineticNode source, KineticControllerSerial controller) {
+		if (this.controller != null) return false;
+		this.controller = controller.init(this);
+		this.controllerType = controller;
+		if (source.controlling == null)
+			source.controlling = new HashSet<>();
+		source.controlling.add(pos);
+		return true;
+	}
+
+	protected void removeController() {
+		controller = null;
+		controllerType = null;
 	}
 
 	public KineticConnections getConnections() {
@@ -127,12 +172,15 @@ public class KineticNode {
 		return getActiveConnections().collect(Collectors.toList());
 	}
 
-	public Stream<KineticNetwork> getActiveStressOnlyConnections() {
+	public Stream<KineticNode> getActiveStressOnlyConnections() {
 		return connections.getDirections().stream()
 				.map(d -> solver.getNode(pos.offset(d))
 						.filter(n -> connections.checkStressOnlyConnection(n.connections, d)))
-				.flatMap(Optional::stream)
-				.map(KineticNode::getNetwork);
+				.flatMap(Optional::stream);
+	}
+
+	public float getGeneratedSpeed() {
+		return generatedSpeed;
 	}
 
 	public float getGeneratedSpeedAtRoot() {
@@ -143,36 +191,42 @@ public class KineticNode {
 		return generatedSpeed != 0;
 	}
 
-	public boolean onUpdated() {
-		if (entity == null) return false;
+	protected enum UpdateResult {
+		UNCHANGED, CHANGED, NEEDS_REGEN, NEEDS_POP
+	}
+	protected UpdateResult onUpdated() {
+		return getController().map(ctl -> {
+			if (!getConnections().equals(ctl.getConnections()) || constantStress != ctl.isStressConstant())
+				return UpdateResult.NEEDS_REGEN;
 
-		boolean changed = false;
+			UpdateResult result = UpdateResult.UNCHANGED;
 
-		float generatedSpeedNew = entity.getGeneratedSpeed();
-		if (this.generatedSpeed != generatedSpeedNew) {
-			this.generatedSpeed = generatedSpeedNew;
-			changed = true;
-			network.onMemberGeneratedSpeedUpdated(this);
-			if (network.tryRecalculateSpeed().isContradiction()) {
-				popBlock();
+			float generatedSpeedNew = ctl.getGeneratedSpeed();
+			if (this.generatedSpeed != generatedSpeedNew) {
+				this.generatedSpeed = generatedSpeedNew;
+				network.onMemberGeneratedSpeedUpdated(this);
+				if (network.tryRecalculateSpeed().isContradiction()) {
+					return UpdateResult.NEEDS_POP;
+				}
+				result = UpdateResult.CHANGED;
 			}
-		}
 
-		float stressImpactNew = entity.getStressImpact();
-		if (this.stressImpact != stressImpactNew) {
-			this.stressImpact = stressImpactNew;
-			changed = true;
-			network.onMemberStressImpactUpdated();
-		}
+			float stressImpactNew = ctl.getStressImpact();
+			if (this.stressImpact != stressImpactNew) {
+				this.stressImpact = stressImpactNew;
+				network.onMemberStressImpactUpdated();
+				result = UpdateResult.CHANGED;
+			}
 
-		float stressCapacityNew = entity.getStressCapacity();
-		if (this.stressCapacity != stressCapacityNew) {
-			this.stressCapacity = stressCapacityNew;
-			changed = true;
-			network.onMemberStressCapacityUpdated();
-		}
+			float stressCapacityNew = ctl.getStressCapacity();
+			if (this.stressCapacity != stressCapacityNew) {
+				this.stressCapacity = stressCapacityNew;
+				network.onMemberStressCapacityUpdated();
+				result = UpdateResult.CHANGED;
+			}
 
-		return changed;
+			return result;
+		}).orElse(UpdateResult.UNCHANGED);
 	}
 
 	public boolean hasStressCapacity() {
@@ -183,16 +237,20 @@ public class KineticNode {
 		return stressImpact != 0;
 	}
 
-	public float getTheoreticalSpeed(float speedAtRoot) {
-		return speedAtRoot * speedRatio;
+	public float getSpeed() {
+		return network.getRootSpeed() * speedRatio;
+	}
+
+	public float getTheoreticalSpeed() {
+		return network.getRootTheoreticalSpeed() * speedRatio;
 	}
 
 	public float getStressCapacity() {
 		return constantStress ? stressCapacity : stressCapacity * Math.abs(generatedSpeed);
 	}
 
-	public float getTotalStressImpact(float speedAtRoot) {
-		return constantStress ? stressImpact : stressImpact * Math.abs(getTheoreticalSpeed(speedAtRoot));
+	public float getTotalStressImpact() {
+		return constantStress ? stressImpact : stressImpact * Math.abs(getTheoreticalSpeed());
 	}
 
 	private SolveResult setNetwork(KineticNetwork network) {
@@ -202,7 +260,7 @@ public class KineticNode {
 		return network.tryRecalculateSpeed();
 	}
 
-	public @Nullable KineticNode getSource() {
+	protected @Nullable KineticNode getSource() {
 		return source;
 	}
 
@@ -212,7 +270,7 @@ public class KineticNode {
 		return setNetwork(from.network);
 	}
 
-	public void onAdded() {
+	protected void onAdded() {
 		getActiveConnections()
 				.findAny()
 				.ifPresent(e -> {
@@ -264,12 +322,18 @@ public class KineticNode {
 		}
 	}
 
-	public void onRemoved() {
+	protected void onRemoved() {
 		network.removeMember(this);
 		getActiveConnections()
 				.map(Pair::getFirst)
 				.filter(n -> n.source == this)
 				.forEach(KineticNode::rerootHere);
+		if (controlling != null) {
+			controlling.stream()
+					.map(solver::getNode)
+					.flatMap(Optional::stream)
+					.forEach(KineticNode::removeController);
+		}
 	}
 
 	private void rerootHere() {
@@ -282,11 +346,10 @@ public class KineticNode {
 
 	/**
 	 * Updates the speed of this node based on its network's root speed and its own speed ratio.
-	 * @param speedAtRoot 	Current speed at the root of this node's network
-	 * @return 				CONTRADICTION if the node's new speed exceeds the maximum value, and OK otherwise
+	 * @return	CONTRADICTION if the node's new speed exceeds the maximum value, and OK otherwise
 	 */
-	protected SolveResult tryUpdateSpeed(float speedAtRoot) {
-		speedNext = getTheoreticalSpeed(speedAtRoot);
+	protected SolveResult tryUpdateSpeed() {
+		speedNext = getSpeed();
 		if (Math.abs(speedNext) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get())
 			return SolveResult.CONTRADICTION;
 		return SolveResult.OK;
@@ -296,7 +359,7 @@ public class KineticNode {
 		speedNext = 0;
 	}
 
-	public void flushChangedSpeed() {
+	protected void flushChangedSpeed() {
 		if (speedCur != speedNext) {
 			speedCur = speedNext;
 			if (entity != null) {
@@ -305,7 +368,7 @@ public class KineticNode {
 		}
 	}
 
-	public void popBlock() {
+	protected void popBlock() {
 		if (entity != null) {
 			solver.removeAndPopNow(entity);
 		} else {

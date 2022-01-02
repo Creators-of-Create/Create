@@ -109,20 +109,14 @@ public class KineticSolver extends SavedData {
 		setDirty();
 	}
 
-	public void updateNode(KineticTileEntity entity) {
-		KineticNode node = nodes.get(entity.getBlockPos());
-		if (node == null) return;
-
-		if (!node.getConnections().equals(entity.getConnections())) {
-			// connections changed, so things could've been disconnected
-			removeNode(entity);
-			addNode(entity);
-		} else {
-			// connections are the same, so just update in case other properties changed
-			if (node.onUpdated()) {
-				setDirty();
-			}
-		}
+	private void regenNode(KineticNode node) {
+		BlockPos pos = node.getPos();
+		nodes.remove(pos);
+		node.onRemoved();
+		KineticNode newNode = node.regen();
+		nodes.put(pos, newNode);
+		newNode.onAdded();
+		setDirty();
 	}
 
 	public void unloadNode(KineticTileEntity entity) {
@@ -130,7 +124,7 @@ public class KineticSolver extends SavedData {
 		if (node != null) node.onUnloaded();
 	}
 
-	protected Optional<KineticNode> getNode(BlockPos pos) {
+	public Optional<KineticNode> getNode(BlockPos pos) {
 		return Optional.ofNullable(nodes.get(pos));
 	}
 
@@ -164,9 +158,25 @@ public class KineticSolver extends SavedData {
 		level.destroyBlock(pos, true);
 	}
 
-	public void tick() {
-		Set<KineticNetwork> networks = nodes.values().stream().map(KineticNode::getNetwork).collect(Collectors.toSet());
-		networks.forEach(KineticNetwork::untick);
+	public void tick(Level level) {
+		Set<KineticNode> popQueue = new HashSet<>();
+		Set<KineticNode> regenQueue = new HashSet<>();
+		for (KineticNode node : nodes.values()) {
+			node.getController().ifPresent(c -> c.onUpdate(level, this, node));
+			switch (node.onUpdated()) {
+				case NEEDS_POP -> popQueue.add(node);
+				case NEEDS_REGEN -> regenQueue.add(node);
+				case CHANGED -> setDirty();
+			}
+		}
+		popQueue.forEach(KineticNode::popBlock);
+		regenQueue.forEach(this::regenNode);
+
+		Set<KineticNetwork> networks = new HashSet<>();
+		for (KineticNode node : nodes.values()) {
+			networks.add(node.getNetwork());
+			node.getNetwork().untick();
+		}
 
 		List<KineticNetwork> frontier = new LinkedList<>();
 
