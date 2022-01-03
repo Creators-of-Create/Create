@@ -35,6 +35,11 @@ public class CClient extends ConfigBase {
 			Comments.ingameMenuConfigButtonOffsetX);
 	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 			Comments.ignoreFabulousWarning);
+	// Fabric
+	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILIBUCKETS, "fluidUnitType",
+			Comments.fluidUnit);
+	public final ConfigBool simplifyFluidUnit = b(true, "simplifyFluidUnit",
+			Comments.simplifyFluidUnit);
 
 	//overlay group
 	public final ConfigGroup overlay = group(1, "goggleOverlay",
@@ -51,11 +56,6 @@ public class CClient extends ConfigBase {
 			Comments.overlayBorderColorTop);
 	public final ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
 			Comments.overlayBorderColorBot);
-	// Fabric
-	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILIBUCKETS, "fluidUnitType",
-			Comments.fluidUnit);
-	public final ConfigBool simplifyFluidUnit = b(true, "simplifyFluidUnit",
-			Comments.simplifyFluidUnit);
 
 	//placement assist group
 	public final ConfigGroup placementAssist = group(1, "placementAssist",
