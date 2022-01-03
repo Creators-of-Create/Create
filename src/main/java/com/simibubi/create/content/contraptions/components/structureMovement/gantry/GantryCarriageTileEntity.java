@@ -122,11 +122,11 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		super.read(compound, clientPacket);
 	}
 
-	@Override
 	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
 		boolean connectedViaAxes, boolean connectedViaCogs) {
-		float defaultModifier =
-			super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
+		//float defaultModifier =
+			//super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
+		float defaultModifier = 1;
 
 		if (connectedViaAxes)
 			return defaultModifier;

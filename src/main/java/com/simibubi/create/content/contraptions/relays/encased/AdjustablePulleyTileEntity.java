@@ -38,7 +38,7 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 		if (!hasLevel())
 			return;
 		int power = level.getBestNeighborSignal(worldPosition);
-		if (power != signal) 
+		if (power != signal)
 			signalChanged = true;
 	}
 
@@ -60,10 +60,10 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	protected void analogSignalChanged(int newSignal) {
-		detachKinetics();
-		removeSource();
+		//detachKinetics();
+		//removeSource();
 		signal = newSignal;
-		attachKinetics();
+		//attachKinetics();
 	}
 
 	protected float getModifierForSignal(int newPower) {

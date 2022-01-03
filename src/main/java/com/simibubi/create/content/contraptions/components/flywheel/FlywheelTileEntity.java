@@ -44,9 +44,9 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		return convertToDirection(generatedSpeed, getBlockState().getValue(FlywheelBlock.HORIZONTAL_FACING));
 	}
 
-	@Override
 	public float calculateAddedStressCapacity() {
-		return lastCapacityProvided = generatedCapacity;
+		//return lastCapacityProvided = generatedCapacity;
+		return 0;
 	}
 
 	@Override

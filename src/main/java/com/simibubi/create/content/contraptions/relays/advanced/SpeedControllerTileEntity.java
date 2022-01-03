@@ -62,58 +62,10 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	@Override
 	public void onUpdate(Level level, KineticSolver solver, KineticNode node) {
-		BlockPos above = node.getPos().above();
-		if (isStressOnlyConnected(above)) {
+		BlockPos pos = node.getPos(), above = pos.above();
+		if (solver.isStressOnlyConnected(pos, above)) {
 			solver.getNode(above).get().setController(node, KineticControllerSerial.SPEED_CONTROLLER_COG);
 		}
-	}
-
-	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
-										 boolean targetingController) {
-		if (!(speedControllerIn instanceof SpeedControllerTileEntity))
-			return 0;
-
-		float speed = speedControllerIn.getTheoreticalSpeed();
-		float wheelSpeed = cogWheel.getTheoreticalSpeed();
-		float desiredOutputSpeed = getDesiredOutputSpeed(cogWheel, speedControllerIn, targetingController);
-
-		float compareSpeed = targetingController ? speed : wheelSpeed;
-		if (desiredOutputSpeed >= 0 && compareSpeed >= 0)
-			return Math.max(desiredOutputSpeed, compareSpeed);
-		if (desiredOutputSpeed < 0 && compareSpeed < 0)
-			return Math.min(desiredOutputSpeed, compareSpeed);
-
-		return desiredOutputSpeed;
-	}
-
-	public static float getDesiredOutputSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
-		boolean targetingController) {
-		SpeedControllerTileEntity speedController = (SpeedControllerTileEntity) speedControllerIn;
-		float targetSpeed = speedController.targetSpeed.getValue();
-		float speed = speedControllerIn.getTheoreticalSpeed();
-		float wheelSpeed = cogWheel.getTheoreticalSpeed();
-
-		if (targetSpeed == 0)
-			return 0;
-		if (targetingController && wheelSpeed == 0)
-			return 0;
-		if (!speedController.hasSource()) {
-			if (targetingController)
-				return targetSpeed;
-			return 0;
-		}
-
-		boolean wheelPowersController = speedController.source.equals(cogWheel.getBlockPos());
-
-		if (wheelPowersController) {
-			if (targetingController)
-				return targetSpeed;
-			return wheelSpeed;
-		}
-
-		if (targetingController)
-			return speed;
-		return targetSpeed;
 	}
 
 	public void updateBracket() {

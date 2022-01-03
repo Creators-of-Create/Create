@@ -44,11 +44,11 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 		checkAttachedCarriageBlocks();
 	}
 
-	@Override
 	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
 		boolean connectedViaAxes, boolean connectedViaCogs) {
-		float defaultModifier =
-			super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
+//		float defaultModifier =
+//			super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
+		float defaultModifier = 1;
 
 		if (connectedViaAxes)
 			return defaultModifier;
@@ -64,7 +64,6 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			stateTo.getValue(GantryCarriageBlock.FACING));
 	}
 
-	@Override
 	public boolean isCustomConnection(KineticTileEntity other, BlockState state, BlockState otherState) {
 		if (!AllBlocks.GANTRY_CARRIAGE.has(otherState))
 			return false;

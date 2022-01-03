@@ -72,11 +72,6 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		return false;
-	}
-
-	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		if (state.getValue(VERTICAL))
 			return face.getAxis()
@@ -149,7 +144,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
 		return SequencedGearshiftTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SequencedGearshiftTileEntity> getTileEntityType() {
 		return AllTileEntities.SEQUENCED_GEARSHIFT.get();
@@ -162,8 +157,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 
 	@Override
 	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
-		return state.getValue(STATE)
-			.intValue();
+		return state.getValue(STATE);
 	}
 
 }

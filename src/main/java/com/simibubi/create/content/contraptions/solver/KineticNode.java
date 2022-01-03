@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.solver;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -9,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 
@@ -24,12 +24,14 @@ public class KineticNode {
 
 	private final KineticSolver solver;
 	private @Nullable KineticTileEntity entity;
+	private boolean needsUnloading;
 
 	private @Nullable IKineticController controller;
 	private @Nullable KineticControllerSerial controllerType;
 	private @Nullable Set<BlockPos> controlling;
 
-	private @Nullable KineticNode source;
+	private @Nullable KineticNode parent;
+	private @Nullable BlockPos speedSource;
 	private KineticNetwork network;
 	private float speedRatio = 1;
 
@@ -106,7 +108,7 @@ public class KineticNode {
 	}
 
 	public boolean isLoaded() {
-		return entity != null;
+		return !(entity == null || needsUnloading);
 	}
 
 	protected void onLoaded(KineticTileEntity entity) {
@@ -115,7 +117,8 @@ public class KineticNode {
 	}
 
 	protected void onUnloaded() {
-		this.entity = null;
+		entity = null;
+		needsUnloading = true;
 	}
 
 	public Optional<IKineticController> getController() {
@@ -191,7 +194,7 @@ public class KineticNode {
 		UNCHANGED, CHANGED, NEEDS_REGEN, NEEDS_POP
 	}
 	protected UpdateResult onUpdated() {
-		return getController().map(ctl -> {
+		UpdateResult out = getController().map(ctl -> {
 			if (!getConnections().equals(ctl.getConnections()) || constantStress != ctl.isStressConstant())
 				return UpdateResult.NEEDS_REGEN;
 
@@ -223,6 +226,13 @@ public class KineticNode {
 
 			return result;
 		}).orElse(UpdateResult.UNCHANGED);
+
+		if (needsUnloading) {
+			needsUnloading = false;
+			entity = null;
+		}
+
+		return out;
 	}
 
 	public boolean hasStressCapacity() {
@@ -256,12 +266,12 @@ public class KineticNode {
 		return network.tryRecalculateSpeed();
 	}
 
-	protected @Nullable KineticNode getSource() {
-		return source;
+	protected @Nullable KineticNode getParent() {
+		return parent;
 	}
 
-	private SolveResult setSource(KineticNode from, float ratio) {
-		source = from;
+	private SolveResult setParent(KineticNode from, float ratio) {
+		parent = from;
 		speedRatio = from.speedRatio * ratio;
 		return setNetwork(from.network);
 	}
@@ -270,7 +280,7 @@ public class KineticNode {
 		getActiveConnections()
 				.findAny()
 				.ifPresent(e -> {
-					if (setSource(e.getFirst(), 1/e.getSecond()).isOk()) {
+					if (setParent(e.getFirst(), 1/e.getSecond()).isOk()) {
 						propagateSource();
 					} else {
 						popBlock();
@@ -292,7 +302,7 @@ public class KineticNode {
 				KineticNode next = pair.getFirst();
 				float ratio = pair.getSecond();
 
-				if (next == cur.source) continue;
+				if (next == cur.parent) continue;
 
 				if (next.network == network) {
 					if (!Mth.equal(next.speedRatio, cur.speedRatio * ratio)) {
@@ -307,7 +317,7 @@ public class KineticNode {
 					continue;
 				}
 
-				if (next.setSource(cur, ratio).isOk()) {
+				if (next.setParent(cur, ratio).isOk()) {
 					frontier.add(next);
 				} else {
 					// this node will run against the network or activate a conflicting cycle
@@ -322,7 +332,7 @@ public class KineticNode {
 		network.removeMember(this);
 		getActiveConnections()
 				.map(Pair::getFirst)
-				.filter(n -> n.source == this)
+				.filter(n -> n.parent == this)
 				.forEach(KineticNode::rerootHere);
 		if (controlling != null) {
 			controlling.stream()
@@ -333,16 +343,26 @@ public class KineticNode {
 	}
 
 	private void rerootHere() {
-		source = null;
+		parent = null;
 		speedRatio = 1;
 		SolveResult recalculateSpeedResult = setNetwork(new KineticNetwork(this));
 		assert(recalculateSpeedResult.isOk());
 		propagateSource();
 	}
 
-	protected void flushChangedSpeed() {
+	protected @Nullable BlockPos getSpeedSource() {
+		if (network.getRootTheoreticalSpeed() == 0) return null;
+		return speedSource;
+	}
+
+	protected void setSpeedSource(@Nullable BlockPos speedSource) {
+		this.speedSource = speedSource;
+	}
+
+	protected void flushChanges() {
 		if (entity != null) {
-			entity.updateFromSolver(getTheoreticalSpeed(), network.isOverstressed());
+			entity.updateFromSolver(getTheoreticalSpeed(), getSpeedSource(), getConnections(),
+					network.isOverstressed(), network.getTotalStressImpact(), network.getTotalStressCapacity());
 		}
 	}
 

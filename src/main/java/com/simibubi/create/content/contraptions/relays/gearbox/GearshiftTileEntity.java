@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.gearbox;
 
-import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -8,19 +11,22 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class GearshiftTileEntity extends SplitShaftTileEntity {
+public class GearshiftTileEntity extends KineticTileEntity {
 
 	public GearshiftTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	@Override
-	public float getRotationSpeedModifier(Direction face) {
-		if (hasSource()) {
-			if (face != getSourceFacing() && getBlockState().getValue(BlockStateProperties.POWERED))
-				return -1;
-		}
-		return 1;
+	public KineticConnections getConnections() {
+		BlockState state = getBlockState();
+		Direction.Axis axis = state.getValue(BlockStateProperties.AXIS);
+
+		if (!state.getValue(BlockStateProperties.POWERED)) return AllConnections.FULL_SHAFT.apply(axis);
+
+		return getSpeedSource()
+				.map(p -> AllConnections.FULL_SHAFT_REVERSER.apply(Direction.fromNormal(p.subtract(getBlockPos()))))
+				.orElse(AllConnections.FULL_SHAFT.apply(axis));
 	}
-	
+
 }

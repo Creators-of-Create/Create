@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.AllTileEntities;
 
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,12 +26,11 @@ public class ClutchBlock extends GearshiftBlock {
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos)) {
 			worldIn.setBlock(pos, state.cycle(POWERED), 2 | 16);
-			detachKinetics(worldIn, pos, previouslyPowered);
 		}
 	}
-	
+
 	@Override
-	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
+	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
 		return AllTileEntities.CLUTCH.get();
 	}
 

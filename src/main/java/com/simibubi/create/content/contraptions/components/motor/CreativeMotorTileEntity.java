@@ -42,13 +42,6 @@ public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public void initialize() {
-		super.initialize();
-		if (!hasSource() || getGeneratedSpeed() > getTheoreticalSpeed())
-			updateGeneratedRotation();
-	}
-
-	@Override
 	public float getGeneratedSpeed() {
 		if (!AllBlocks.CREATIVE_MOTOR.has(getBlockState()))
 			return 0;

@@ -22,37 +22,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		// onBlockAdded is useless for init, as sometimes the TE gets re-instantiated
-
-		// however, if a block change occurs that does not change kinetic connections,
-		// we can prevent a major re-propagation here
-
-		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-		if (tileEntity instanceof KineticTileEntity) {
-			KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
-			//kineticTileEntity.preventSpeedUpdate = 0;
-
-			if (oldState.getBlock() != state.getBlock())
-				return;
-			if (state.hasBlockEntity() != oldState.hasBlockEntity())
-				return;
-			if (!areStatesKineticallyEquivalent(oldState, state))
-				return;
-
-			//kineticTileEntity.preventSpeedUpdate = 2;
-		}
-	}
-
-	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
-	}
-
-	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		if (oldState.getBlock() != newState.getBlock())
-			return false;
-		return getRotationAxis(newState) == getRotationAxis(oldState);
 	}
 
 	@Override
@@ -82,10 +53,9 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 
 		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-		if (!(tileEntity instanceof KineticTileEntity))
+		if (!(tileEntity instanceof KineticTileEntity kte))
 			return;
 
-		KineticTileEntity kte = (KineticTileEntity) tileEntity;
 		kte.effects.queueRotationIndicators();
 	}
 

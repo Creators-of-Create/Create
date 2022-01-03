@@ -8,6 +8,7 @@ import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -15,11 +16,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 
-public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
+public class SplitShaftInstance extends KineticTileInstance<KineticTileEntity> {
 
     protected final ArrayList<RotatingData> keys;
 
-    public SplitShaftInstance(MaterialManager modelManager, SplitShaftTileEntity tile) {
+    public SplitShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
 
         keys = new ArrayList<>(2);

@@ -230,8 +230,8 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
 			BlockEntity te = worldIn.getBlockEntity(blockPos);
-			if (te instanceof KineticTileEntity)
-				((KineticTileEntity) te).detachKinetics();
+//			if (te instanceof KineticTileEntity)
+//				((KineticTileEntity) te).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
 				worldIn.setBlock(blockPos, blockState.setValue(POWERED, shouldPower), 2);
 		}
@@ -268,11 +268,11 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 			.getAxis();
 	}
 
-	@Override
-	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		return super.areStatesKineticallyEquivalent(oldState, newState)
-			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
-	}
+//	@Override
+//	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+//		return super.areStatesKineticallyEquivalent(oldState, newState)
+//			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
+//	}
 
 	@Override
 	public float getParticleTargetRadius() {

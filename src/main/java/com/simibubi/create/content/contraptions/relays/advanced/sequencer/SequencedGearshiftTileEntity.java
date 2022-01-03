@@ -2,7 +2,11 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
-import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
+import com.simibubi.create.content.contraptions.solver.KineticConnections.Entry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,8 +14,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
+public class SequencedGearshiftTileEntity extends KineticTileEntity {
 
 	Vector<Instruction> instructions;
 	int currentInstruction;
@@ -108,8 +113,6 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	protected void run(int instructionIndex) {
 		Instruction instruction = getInstruction(instructionIndex);
 		if (instruction == null || instruction.instruction == SequencerInstructions.END) {
-			if (getModifier() != 0)
-				detachKinetics();
 			currentInstruction = -1;
 			currentInstructionDuration = -1;
 			currentInstructionProgress = 0;
@@ -121,7 +124,6 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			return;
 		}
 
-		detachKinetics();
 		currentInstructionDuration = instruction.getDuration(0, getTheoreticalSpeed());
 		currentInstruction = instructionIndex;
 		currentInstructionProgress = 0;
@@ -157,10 +159,24 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	}
 
 	@Override
-	public float getRotationSpeedModifier(Direction face) {
-		if (isVirtual())
-			return 1;
-		return (!hasSource() || face == getSourceFacing()) ? 1 : getModifier();
+	public KineticConnections getConnections() {
+		Direction.Axis axis = getBlockState().getValue(BlockStateProperties.HORIZONTAL_AXIS);
+
+		if (isVirtual()) return AllConnections.FULL_SHAFT.apply(axis);
+
+		return getSpeedSource()
+				.map(p -> {
+					Direction dir = Direction.fromNormal(p.subtract(getBlockPos()));
+					float modifier = getModifier();
+					if (modifier == 0 || isRemoved()) return AllConnections.HALF_SHAFT.apply(dir);
+
+					Direction opp = dir.getOpposite();
+					String from = AllConnections.type(AllConnections.TYPE_SHAFT, opp);
+					String to = AllConnections.type(AllConnections.TYPE_SHAFT, dir);
+					return new KineticConnections(new Entry(opp.getNormal(), from, to, modifier))
+							.merge(AllConnections.HALF_SHAFT.apply(dir));
+				})
+				.orElse(AllConnections.FULL_SHAFT.apply(axis));
 	}
 
 	public int getModifier() {

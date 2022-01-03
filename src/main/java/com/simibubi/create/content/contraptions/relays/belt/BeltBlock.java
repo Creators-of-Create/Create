@@ -106,11 +106,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		p_149666_2_.add(AllItems.BELT_CONNECTOR.asStack());
 	}
 
-	@Override
-	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		return super.areStatesKineticallyEquivalent(oldState, newState)
-			&& oldState.getValue(PART) == newState.getValue(PART);
-	}
+//	@Override
+//	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+//		return super.areStatesKineticallyEquivalent(oldState, newState)
+//			&& oldState.getValue(PART) == newState.getValue(PART);
+//	}
 
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
@@ -436,7 +436,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				te.setController(currentPos);
 				te.beltLength = beltChain.size();
 				te.index = index;
-				te.attachKinetics();
+				//te.attachKinetics();
 				te.setChanged();
 				te.sendData();
 

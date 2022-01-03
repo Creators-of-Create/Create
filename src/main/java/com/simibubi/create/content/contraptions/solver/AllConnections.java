@@ -1,11 +1,7 @@
 package com.simibubi.create.content.contraptions.solver;
 
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.LazyMap;
-import com.simibubi.create.content.contraptions.solver.KineticConnections.Type;
-import com.simibubi.create.content.contraptions.solver.KineticConnections.Types;
 import com.simibubi.create.content.contraptions.solver.KineticConnections.Entry;
 
 import net.minecraft.core.Direction;
@@ -27,11 +23,26 @@ public class AllConnections {
 		return Direction.get(Direction.AxisDirection.NEGATIVE, axis);
 	}
 
+	public static String type(String name, StringRepresentable ext) {
+		return name + "." + ext;
+	}
+
+	public static final String
+		TYPE_SHAFT = "shaft",
+		TYPE_LARGE_COG = "large_cog",
+		TYPE_SMALL_COG = "small_cog",
+		TYPE_SPEED_CONTROLLER_TOP = "speed_controller_top";
+
+	private static Vec3i rhr(Vec3i vec) {
+		if (vec.getX() == 0) return new Vec3i(vec.getY(), vec.getZ(), 0);
+		if (vec.getY() == 0) return new Vec3i(vec.getZ(), vec.getX(), 0);
+		return new Vec3i(vec.getX(), vec.getY(), 0);
+	}
+
 	private static Entry largeToLarge(Vec3i diff, Axis from, Axis to) {
-		int fromDiff = from.choose(diff.getX(), diff.getY(), diff.getZ());
-		int toDiff = to.choose(diff.getX(), diff.getY(), diff.getZ());
-		float ratio = fromDiff > 0 ^ toDiff > 0 ? -1 : 1;
-		return new Entry(diff, Type.of(Types.LARGE_COG, from), Type.of(Types.LARGE_COG, to), ratio);
+		Vec3i rhr = rhr(diff);
+		float ratio = rhr.getX() == rhr.getY() ? 1 : rhr.getX();
+		return new Entry(diff, type(TYPE_LARGE_COG, from), type(TYPE_LARGE_COG, to), ratio);
 	}
 
 	private static Optional<Axis> oppAxis(Axis axis) {
@@ -47,14 +58,22 @@ public class AllConnections {
 
 	public static final LazyMap<Direction, KineticConnections>
 			HALF_SHAFT = new LazyMap<>(dir ->
-				new KineticConnections(new Entry(dir.getNormal(), Type.of(Types.SHAFT, dir.getAxis()))));
+				new KineticConnections(
+						new Entry(dir.getNormal(), type(TYPE_SHAFT, dir), type(TYPE_SHAFT, dir.getOpposite())))),
+
+			HALF_SHAFT_REVERSER = new LazyMap<>(dir ->
+					new KineticConnections(
+							new Entry(dir.getNormal(), type(TYPE_SHAFT, dir), type(TYPE_SHAFT, dir.getOpposite()), -1))),
+
+			FULL_SHAFT_REVERSER = new LazyMap<>(dir ->
+					HALF_SHAFT.apply(dir).merge(HALF_SHAFT_REVERSER.apply(dir.getOpposite())));
 
 	public static final LazyMap<Axis, KineticConnections>
 			FULL_SHAFT = new LazyMap<>(axis -> HALF_SHAFT.apply(pos(axis)).merge(HALF_SHAFT.apply(neg(axis)))),
 
 			LARGE_COG = new LazyMap<>(axis -> {
-				Type large = Type.of(Types.LARGE_COG, axis);
-				Type small = Type.of(Types.SMALL_COG, axis);
+				String large = type(TYPE_LARGE_COG, axis);
+				String small = type(TYPE_SMALL_COG, axis);
 
 				List<Entry> out = new LinkedList<>();
 				Direction cur = DirectionHelper.getPositivePerpendicular(axis);
@@ -67,25 +86,24 @@ public class AllConnections {
 				}
 
 				oppAxis(axis).ifPresent(opp -> {
-					Type sc = Type.of(Types.SPEED_CONTROLLER_TOP, opp);
+					String sc = type(TYPE_SPEED_CONTROLLER_TOP, opp);
 					out.add(new Entry(Direction.DOWN.getNormal(), large, sc).stressOnly());
 				});
 				return new KineticConnections(out);
 			}),
 
 			SMALL_COG = new LazyMap<>(axis -> {
-				Type large = Type.of(Types.LARGE_COG, axis);
-				Type small = Type.of(Types.SMALL_COG, axis);
+				String large = type(TYPE_LARGE_COG, axis);
+				String small = type(TYPE_SMALL_COG, axis);
 
 				List<Entry> out = new LinkedList<>();
 				Direction cur = DirectionHelper.getPositivePerpendicular(axis);
 				for (int i = 0; i < 4; i++) {
 					Direction next = DirectionHelper.rotateAround(cur, axis);
-					out.add(new Entry(cur.getNormal(), small, -1));
-					out.add(new Entry(cur.getNormal().relative(next), small, large, -0.5f));
+					out.add(new Entry(cur.getNormal(), small, small, i < 2 ? -1 : 1));
+					out.add(new Entry(cur.getNormal().relative(next), small, large));
 					cur = next;
 				}
-
 				return new KineticConnections(out);
 			}),
 
@@ -94,8 +112,8 @@ public class AllConnections {
 			SMALL_COG_FULL_SHAFT = new LazyMap<>(axis -> SMALL_COG.apply(axis).merge(FULL_SHAFT.apply(axis))),
 
 			SPEED_CONTROLLER = new LazyMap<>(axis -> {
-				Type sc = Type.of(Types.SPEED_CONTROLLER_TOP, axis);
-				Type large = Type.of(Types.LARGE_COG, oppAxis(axis).get());
+				String sc = type(TYPE_SPEED_CONTROLLER_TOP, axis);
+				String large = type(TYPE_LARGE_COG, oppAxis(axis).get());
 				Vec3i up = Direction.UP.getNormal();
 				return new KineticConnections(new Entry(up, sc, large).stressOnly()).merge(FULL_SHAFT.apply(axis));
 			});

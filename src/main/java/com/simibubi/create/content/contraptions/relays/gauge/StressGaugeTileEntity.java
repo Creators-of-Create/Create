@@ -23,17 +23,17 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	}
 
 	@Override
-	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
-		super.updateFromNetwork(maxStress, currentStress, networkSize);
+	public void onStressChanged(float prevNetworkImpact, float prevNetworkCapacity, boolean prevOverstressed) {
+		super.onStressChanged(prevNetworkImpact, prevNetworkCapacity, prevOverstressed);
 
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;
 		else if (isOverstressed())
 			dialTarget = 1.125f;
-		else if (maxStress == 0)
+		else if (getNetworkCapacity() == 0)
 			dialTarget = 0;
 		else
-			dialTarget = currentStress / maxStress;
+			dialTarget = getNetworkImpact() / getNetworkCapacity();
 
 		if (dialTarget > 0) {
 			if (dialTarget < .5f)
@@ -54,10 +54,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		if (getSpeed() == 0) {
 			dialTarget = 0;
 			setChanged();
-			return;
 		}
-
-		updateFromNetwork(capacity, stress, 0);
 	}
 
 	@Override
@@ -68,7 +65,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
 		double capacity = getNetworkCapacity();
-		double stressFraction = getNetworkStress() / (capacity == 0 ? 1 : capacity);
+		double stressFraction = getNetworkImpact() / (capacity == 0 ? 1 : capacity);
 
 		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.title").withStyle(ChatFormatting.GRAY)));
 
@@ -81,7 +78,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 
 			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.capacity").withStyle(ChatFormatting.GRAY)));
 
-			double remainingCapacity = capacity - getNetworkStress();
+			double remainingCapacity = capacity - getNetworkImpact();
 
 			Component su = Lang.translate("generic.unit.stress");
 			MutableComponent stressTooltip = componentSpacing.plainCopy()
@@ -99,14 +96,6 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		}
 
 		return true;
-	}
-
-	public float getNetworkStress() {
-		return stress;
-	}
-
-	public float getNetworkCapacity() {
-		return capacity;
 	}
 
 }

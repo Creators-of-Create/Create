@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.ticks.TickPriority;
 
-public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<SplitShaftTileEntity> {
+public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<KineticTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -48,38 +48,19 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos)) {
-			detachKinetics(worldIn, pos, true);
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 		}
 	}
 
 	@Override
-	public Class<SplitShaftTileEntity> getTileEntityClass() {
-		return SplitShaftTileEntity.class;
+	public Class<KineticTileEntity> getTileEntityClass() {
+		return KineticTileEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
+	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
 		return AllTileEntities.GEARSHIFT.get();
 	}
 
-	public void detachKinetics(Level worldIn, BlockPos pos, boolean reAttachNextTick) {
-		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te == null || !(te instanceof KineticTileEntity))
-			return;
-		//RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
 
-		// Re-attach next tick
-		if (reAttachNextTick)
-			worldIn.scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
-	}
-
-	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
-		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te == null || !(te instanceof KineticTileEntity))
-			return;
-		KineticTileEntity kte = (KineticTileEntity) te;
-		//RotationPropagator.handleAdded(worldIn, pos, kte);
-	}
 }

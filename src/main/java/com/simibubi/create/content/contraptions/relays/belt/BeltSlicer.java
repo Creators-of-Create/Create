@@ -80,7 +80,7 @@ public class BeltSlicer {
 				BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 				if (belt == null)
 					continue;
-				belt.detachKinetics();
+				//belt.detachKinetics();
 				belt.invalidateItemHandler();
 				belt.beltLength = 0;
 			}
@@ -169,14 +169,14 @@ public class BeltSlicer {
 					if (itemstack.isEmpty())
 						continue;
 					int count = itemstack.getCount();
-					
+
 					if (AllItems.BELT_CONNECTOR.isIn(itemstack)) {
 						if (!world.isClientSide)
 							itemstack.shrink(1);
 						beltFound = true;
 						continue;
 					}
-					
+
 					if (AllBlocks.SHAFT.isIn(itemstack)) {
 						int taken = Math.min(count, requiredShafts - amountRetrieved);
 						if (!world.isClientSide)
@@ -199,7 +199,7 @@ public class BeltSlicer {
 				BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 				if (belt == null)
 					continue;
-				belt.detachKinetics();
+				//belt.detachKinetics();
 				belt.invalidateItemHandler();
 				belt.beltLength = 0;
 			}
@@ -281,7 +281,7 @@ public class BeltSlicer {
 					BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 					if (belt == null)
 						continue;
-					belt.detachKinetics();
+					//belt.detachKinetics();
 					belt.invalidateItemHandler();
 					belt.beltLength = 0;
 					belt.color = color;
@@ -306,7 +306,7 @@ public class BeltSlicer {
 				BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 				if (belt == null)
 					continue;
-				belt.detachKinetics();
+				//belt.detachKinetics();
 				belt.invalidateItemHandler();
 				belt.beltLength = 0;
 			}

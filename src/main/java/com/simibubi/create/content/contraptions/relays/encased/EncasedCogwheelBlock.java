@@ -138,17 +138,17 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			&& state.getValue(face.getAxisDirection() == AxisDirection.POSITIVE ? TOP_SHAFT : BOTTOM_SHAFT);
 	}
 
-	@Override
-	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		if (newState.getBlock() instanceof EncasedCogwheelBlock
-			&& oldState.getBlock() instanceof EncasedCogwheelBlock) {
-			if (newState.getValue(TOP_SHAFT) != oldState.getValue(TOP_SHAFT))
-				return false;
-			if (newState.getValue(BOTTOM_SHAFT) != oldState.getValue(BOTTOM_SHAFT))
-				return false;
-		}
-		return super.areStatesKineticallyEquivalent(oldState, newState);
-	}
+//	@Override
+//	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+//		if (newState.getBlock() instanceof EncasedCogwheelBlock
+//			&& oldState.getBlock() instanceof EncasedCogwheelBlock) {
+//			if (newState.getValue(TOP_SHAFT) != oldState.getValue(TOP_SHAFT))
+//				return false;
+//			if (newState.getValue(BOTTOM_SHAFT) != oldState.getValue(BOTTOM_SHAFT))
+//				return false;
+//		}
+//		return super.areStatesKineticallyEquivalent(oldState, newState);
+//	}
 
 	@Override
 	public boolean isSmallCog() {

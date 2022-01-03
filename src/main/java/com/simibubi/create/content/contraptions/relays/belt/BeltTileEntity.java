@@ -150,11 +150,10 @@ public class BeltTileEntity extends KineticTileEntity implements LightListener {
 		toRemove.forEach(passengers::remove);
 	}
 
-	@Override
 	public float calculateStressApplied() {
-		if (!isController())
+		//if (!isController())
 			return 0;
-		return super.calculateStressApplied();
+		//return super.calculateStressApplied();
 	}
 
 	@Override
@@ -510,13 +509,11 @@ public class BeltTileEntity extends KineticTileEntity implements LightListener {
 			.build();
 	}
 
-	@Override
 	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
 		return state.hasProperty(BeltBlock.SLOPE) && (state.getValue(BeltBlock.SLOPE) == BeltSlope.UPWARD
 			|| state.getValue(BeltBlock.SLOPE) == BeltSlope.DOWNWARD);
 	}
 
-	@Override
 	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
 		boolean connectedViaAxes, boolean connectedViaCogs) {
 		if (target instanceof BeltTileEntity && !connectedViaAxes)

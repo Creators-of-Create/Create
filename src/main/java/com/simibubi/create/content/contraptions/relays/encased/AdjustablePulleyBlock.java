@@ -41,11 +41,11 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock {
 			.hasNeighborSignal(context.getClickedPos()));
 	}
 
-	@Override
-	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		return super.areStatesKineticallyEquivalent(oldState, newState)
-			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
-	}
+//	@Override
+//	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+//		return super.areStatesKineticallyEquivalent(oldState, newState)
+//			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
+//	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,

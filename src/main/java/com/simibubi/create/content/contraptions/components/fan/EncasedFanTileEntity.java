@@ -52,14 +52,14 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		super.write(compound, clientPacket);
 	}
 
-	@Override
 	public float calculateAddedStressCapacity() {
-		return lastCapacityProvided = (isGenerator ? super.calculateAddedStressCapacity() : 0);
+		//return lastCapacityProvided = (isGenerator ? super.calculateAddedStressCapacity() : 0);
+		return 0;
 	}
 
-	@Override
 	public float calculateStressApplied() {
-		return isGenerator ? 0 : super.calculateStressApplied();
+		//return isGenerator ? 0 : super.calculateStressApplied();
+		return 0;
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import com.simibubi.create.foundation.utility.ResetableLazy;
 
+import net.minecraft.core.BlockPos;
+
 import javax.annotation.Nullable;
 
 import java.util.HashSet;
@@ -26,7 +28,7 @@ public class KineticNetwork {
 
 	private boolean overstressed;
 
-	private boolean rootSpeedChanged;
+	private boolean rootTheoreticalSpeedChanged;
 	private final Set<KineticNode> potentialNewBranches = new HashSet<>();
 
 	private final ResetableLazy<Float> totalStressImpact = ResetableLazy.of(() ->
@@ -108,8 +110,7 @@ public class KineticNetwork {
 		if (isStopped()) return SolveResult.OK;
 		return result;
 	}
-
-	protected SolveResult tryRecalculateTheoreticalSpeed() {
+	private SolveResult tryRecalculateTheoreticalSpeed() {
 		SolveResult result = conflictingCycles.isEmpty() ? SolveResult.OK : SolveResult.CONTRADICTION;
 		if (!rootSpeedDirty) return result;
 
@@ -139,7 +140,7 @@ public class KineticNetwork {
 
 		if (rootTheoreticalSpeed != newSpeed * sign) {
 			rootTheoreticalSpeed = newSpeed * sign;
-			onRootSpeedChanged();
+			onRootTheoreticalSpeedChanged();
 		}
 
 		mainGenerator = newGenerator;
@@ -164,8 +165,8 @@ public class KineticNetwork {
 		return isStopped() ? 0 : rootTheoreticalSpeed;
 	}
 
-	private void onRootSpeedChanged() {
-		rootSpeedChanged = true;
+	private void onRootTheoreticalSpeedChanged() {
+		rootTheoreticalSpeedChanged = true;
 		onMemberStressImpactUpdated();
 	}
 
@@ -189,7 +190,7 @@ public class KineticNetwork {
 
 		for (KineticNetwork cur : stressConnected) {
 			cur.ticked = true;
-			cur.updateMemberSpeeds(popQueue::add);
+			cur.checkForSpeedingNodes(popQueue::add);
 			stressImpact += cur.getTotalStressImpact();
 			stressCapacity += cur.getTotalStressCapacity();
 		}
@@ -205,65 +206,70 @@ public class KineticNetwork {
 				if (!cur.overstressed) {
 					// just became overstressed
 					cur.overstressed = true;
-					cur.onRootSpeedChanged();
+					cur.onRootTheoreticalSpeedChanged();
 				}
 			} else {
 				if (cur.overstressed) {
 					// just became non-overstressed
 					cur.overstressed = false;
-					cur.onRootSpeedChanged();
+					cur.onRootTheoreticalSpeedChanged();
 					cur.bulldozeContradictingMembers(newNetworks);
-					cur.updateMemberSpeeds(pop);
+					cur.checkForSpeedingNodes(pop);
 				}
 			}
 
-			cur.members.forEach(KineticNode::flushChangedSpeed);
+			cur.members.forEach(KineticNode::flushChanges);
 		}
 	}
 
-	/**
-	 * Update the speed of every member, starting from the main generator and checking for speeding nodes along the way
-	 * @param onSpeeding	a function to call whenever a speeding node is found and should be popped
-	 */
-	private void updateMemberSpeeds(Consumer<KineticNode> onSpeeding) {
+	private void checkForSpeedingNodes(Consumer<KineticNode> onSpeeding) {
 		SolveResult recalculateSpeedResult = tryRecalculateSpeed();
 		// generators should not be turning against each other or have conflicting cycles by now
 		assert(recalculateSpeedResult.isOk());
 
-		// if we're stopped, then all members' speeds will be 0, so no need to check for speeding nodes
-		if (isStopped()) return;
-
-		if (rootSpeedChanged) {
-			// root speed changed, update all nodes starting from the main generator
-			rootSpeedChanged = false;
-			bfs(mainGenerator, onSpeeding, false);
+		if (rootTheoreticalSpeedChanged) {
+			rootTheoreticalSpeedChanged = false;
+			if (mainGenerator != null) {
+				// root speed changed, check all nodes starting from the main generator
+				bfs(mainGenerator, onSpeeding, false);
+			}
+			// (no need to check for speeding nodes if there's no mainGenerator since the network would be stopped)
 		} else if (!potentialNewBranches.isEmpty()) {
 			// new nodes added, update only the new network branches
 			potentialNewBranches.stream()
-					.filter(n -> !potentialNewBranches.contains(n.getSource()))
+					.filter(n -> !potentialNewBranches.contains(n.getParent()))
 					.forEach(n -> bfs(n, onSpeeding, true));
 		}
 		potentialNewBranches.clear();
 	}
 
-	private void bfs(KineticNode root, Consumer<KineticNode> onSpeeding, boolean followSource) {
+	private void bfs(KineticNode root, Consumer<KineticNode> onSpeeding, boolean followParent) {
 		float max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 
-		// update node speeds in a breadth-first order, checking for speeding nodes along the way
+		// update node speed sources in a breadth-first order, checking for speeding nodes along the way
 		Set<KineticNode> visited = new HashSet<>();
 		List<KineticNode> frontier = new LinkedList<>();
+		List<BlockPos> frontierSources = new LinkedList<>();
 		frontier.add(root);
+		if (followParent && root.getParent() != null) {
+			frontierSources.add(root.getParent().getPos());
+		} else {
+			frontierSources.add(root.getSpeedSource());
+		}
 
 		while (!frontier.isEmpty()) {
 			KineticNode cur = frontier.remove(0);
+			BlockPos curSource = frontierSources.remove(0);
 			if (!members.contains(cur) || visited.contains(cur)) continue;
 			visited.add(cur);
+			cur.setSpeedSource(curSource);
 
 			if (Math.abs(cur.getSpeed()) <= max) {
+				BlockPos pos = cur.getPos();
 				cur.getActiveConnections()
 						.map(Pair::getFirst)
-						.filter(n -> !followSource || n.getSource() == cur)
-						.forEach(frontier::add);
+						.filter(n -> !followParent || n.getParent() == cur)
+						.forEach(n -> { frontier.add(n); frontierSources.add(pos); });
 			} else {
 				// stop searching on this branch once a speeding node is found
 				onSpeeding.accept(cur);
