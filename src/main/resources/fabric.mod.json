@@ -3,14 +3,15 @@
   "id": "create",
   "version": "${version}",
 
-  "name": "Create: Refabricated",
-  "description": "A Fabric port of Create.",
+  "name": "Create",
+  "description": "Technology that empowers the player.",
   "authors": [
-    "Create: Refabricated Team",
+    "Create Fabric Porting Team",
     "Create Team"
   ],
   "contact": {
-    "sources": "https://github.com/Create-Fabric/Create-Refabricated"
+    "issues": "https://github.com/Fabricators-of-Create/Create/issues",
+    "sources": "https://github.com/Fabricators-of-Create/Create"
   },
 
   "license": "MIT",

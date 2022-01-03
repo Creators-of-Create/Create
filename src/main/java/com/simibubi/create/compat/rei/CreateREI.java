@@ -55,6 +55,7 @@ import com.simibubi.create.compat.rei.display.SpoutDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
@@ -251,7 +252,7 @@ public class CreateREI implements REIClientPlugin {
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
-		registry.registerFiller(AbstractCrushingRecipe.class, MillingDisplay::new);
+		registry.registerFiller(MillingRecipe.class, MillingDisplay::new);
 		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
 		registry.registerFiller(CuttingRecipe.class, SawingDisplay::new);
 		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
