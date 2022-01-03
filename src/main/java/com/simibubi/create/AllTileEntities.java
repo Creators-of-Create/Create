@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.actors.DrillRenderer;
 import com.simibubi.create.content.contraptions.components.actors.DrillTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterRenderer;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PSIInstance;
 import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceRenderer;
@@ -484,12 +485,14 @@ public class AllTileEntities {
 	public static final BlockEntityEntry<PortableItemInterfaceTileEntity> PORTABLE_STORAGE_INTERFACE =
 		Create.registrate()
 			.tileEntity("portable_storage_interface", PortableItemInterfaceTileEntity::new)
+			.instance(() -> PSIInstance::new)
 			.validBlocks(AllBlocks.PORTABLE_STORAGE_INTERFACE)
 			.renderer(() -> PortableStorageInterfaceRenderer::new)
 			.register();
 
 	public static final BlockEntityEntry<PortableFluidInterfaceTileEntity> PORTABLE_FLUID_INTERFACE = Create.registrate()
 		.tileEntity("portable_fluid_interface", PortableFluidInterfaceTileEntity::new)
+		.instance(() -> PSIInstance::new)
 		.validBlocks(AllBlocks.PORTABLE_FLUID_INTERFACE)
 		.renderer(() -> PortableStorageInterfaceRenderer::new)
 		.register();

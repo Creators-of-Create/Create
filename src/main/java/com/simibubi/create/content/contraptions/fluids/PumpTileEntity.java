@@ -74,7 +74,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			if (!isVirtual())
 				return;
 		}
-		
+
 //		if (pressureUpdate)
 //			updatePressureChange();
 

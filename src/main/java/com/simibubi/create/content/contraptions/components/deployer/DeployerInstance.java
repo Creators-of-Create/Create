@@ -34,7 +34,6 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
 
     PartialModel currentHand;
     float progress;
-    private boolean newHand = false;
 
     public DeployerInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
@@ -50,28 +49,34 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
 
         pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
-        updateHandPose();
-        relight(pos, pole);
+		currentHand = this.tile.getHandPose();
 
-        progress = getProgress(AnimationTickHolder.getPartialTicks());
+		hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
+
+		progress = getProgress(AnimationTickHolder.getPartialTicks());
         updateRotation(pole, hand, yRot, xRot, zRot);
         updatePosition();
     }
 
     @Override
     public void tick() {
-        newHand = updateHandPose();
-    }
+		PartialModel handPose = tile.getHandPose();
+
+		if (currentHand != handPose) {
+			currentHand = handPose;
+			getOrientedMaterial().getModel(currentHand, blockState)
+					.stealInstance(hand);
+		}
+	}
 
     @Override
     public void beginFrame() {
 
         float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
 
-        if (!newHand && Mth.equal(newProgress, progress)) return;
+        if (Mth.equal(newProgress, progress)) return;
 
         progress = newProgress;
-        newHand = false;
 
         updatePosition();
     }
@@ -89,24 +94,7 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
         pole.delete();
     }
 
-    private boolean updateHandPose() {
-        PartialModel handPose = tile.getHandPose();
-
-        if (currentHand == handPose) return false;
-        currentHand = handPose;
-
-        if (hand != null) hand.delete();
-
-        hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
-
-        relight(pos, hand);
-        updateRotation(pole, hand, yRot, xRot, zRot);
-        updatePosition();
-
-        return true;
-    }
-
-    private float getProgress(float partialTicks) {
+	private float getProgress(float partialTicks) {
         if (tile.state == DeployerTileEntity.State.EXPANDING)
             return 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
         if (tile.state == DeployerTileEntity.State.RETRACTING)

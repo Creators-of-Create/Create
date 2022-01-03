@@ -86,17 +86,16 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			.unCentre();
 	}
 
-	protected static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {
+	static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {
 		String _workingPos_ = PortableStorageInterfaceMovement._workingPos_;
 		if (!context.contraption.stalled || !context.data.contains(_workingPos_))
 			return null;
 
 		BlockPos pos = NbtUtils.readBlockPos(context.data.getCompound(_workingPos_));
 		BlockEntity tileEntity = context.world.getBlockEntity(pos);
-		if (!(tileEntity instanceof PortableStorageInterfaceTileEntity))
+		if (!(tileEntity instanceof PortableStorageInterfaceTileEntity psi))
 			return null;
 
-		PortableStorageInterfaceTileEntity psi = (PortableStorageInterfaceTileEntity) tileEntity;
 		if (!psi.isTransferring())
 			return null;
 		return psi;
