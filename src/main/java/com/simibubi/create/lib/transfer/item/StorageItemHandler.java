@@ -42,7 +42,7 @@ public class StorageItemHandler implements Storage<ItemVariant> {
 				ItemHandlerHelper.insertItemStacked(handler, toInsert, false);
 			}
 		});
-		return remainder.getCount();
+		return maxAmount - remainder.getCount();
 	}
 
 	@Override
