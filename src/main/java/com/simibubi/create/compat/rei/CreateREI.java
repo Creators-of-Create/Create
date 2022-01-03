@@ -228,7 +228,7 @@ public class CreateREI implements REIClientPlugin {
 				.build();
 
 	private <T extends Recipe<?>, D extends AbstractCreateDisplay<T>> CategoryBuilder register(String name,
-																							   Supplier<CreateRecipeCategory<T, D>> supplier) {
+		Supplier<CreateRecipeCategory<T, D>> supplier) {
 		return new CategoryBuilder<>(name, supplier);
 	}
 

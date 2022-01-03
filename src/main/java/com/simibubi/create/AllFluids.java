@@ -35,6 +35,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.GLASS_BOTTLE;
@@ -50,22 +51,20 @@ public class AllFluids {
 					.lang(f -> "fluid.create.potion", "Potion")
 					.onRegister(flowing -> {
 						Fluid potion = flowing.getSource();
-						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () ->
-								FluidVariantRendering.register(potion, new FluidVariantRenderHandler() {
+						// evil. why do we need this like this only here.
+						EnvExecutor.runWhenOn(EnvType.CLIENT, new Supplier<Runnable>() {
+							@Environment(EnvType.CLIENT)
+							@Override
+							public Runnable get() {
+								return new Runnable() {
+									@Environment(EnvType.CLIENT)
 									@Override
-									public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
-										return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
+									public void run() {
+										FluidVariantRendering.register(potion, new PotionFluidVariantRenderHandler());
 									}
-
-									@Override
-									public Component getName(FluidVariant fluidVariant) {
-										List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
-										for (MobEffectInstance effect : list) {
-											return new TranslatableComponent(effect.getDescriptionId());
-										}
-										return FluidVariantRenderHandler.super.getName(fluidVariant);
-									}
-								}));
+								};
+							}
+						});
 					})
 					.register();
 
@@ -79,13 +78,20 @@ public class AllFluids {
 				FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
 						new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(AllItems.BUILDERS_TEA.get()), tea, FluidConstants.BUCKET / 10));
 
-				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () ->
-						FluidVariantRendering.register(tea, new FluidVariantRenderHandler() {
+				// evil. why do we need this like this only here.
+				EnvExecutor.runWhenOn(EnvType.CLIENT, new Supplier<Runnable>() {
+					@Environment(EnvType.CLIENT)
+					@Override
+					public Runnable get() {
+						return new Runnable() {
+							@Environment(EnvType.CLIENT)
 							@Override
-							public Component getName(FluidVariant fluidVariant) {
-								return new TranslatableComponent("fluid.create.tea");
+							public void run() {
+								FluidVariantRendering.register(tea, new TeaFluidVariantRenderHandler());
 							}
-						}));
+						};
+					}
+				});
 			})
 			.register();
 
@@ -184,4 +190,28 @@ public class AllFluids {
 //
 //	}
 
+	@Environment(EnvType.CLIENT)
+	private static class PotionFluidVariantRenderHandler implements FluidVariantRenderHandler {
+		@Override
+		public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
+			return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
+		}
+
+		@Override
+		public Component getName(FluidVariant fluidVariant) {
+			List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
+			for (MobEffectInstance effect : list) {
+				return new TranslatableComponent(effect.getDescriptionId());
+			}
+			return FluidVariantRenderHandler.super.getName(fluidVariant);
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private static class TeaFluidVariantRenderHandler implements FluidVariantRenderHandler {
+		@Override
+		public Component getName(FluidVariant fluidVariant) {
+			return new TranslatableComponent("fluid.create.tea");
+		}
+	}
 }
