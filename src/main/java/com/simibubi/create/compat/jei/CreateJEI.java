@@ -369,7 +369,7 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static List<Recipe<?>> findRecipes(Predicate<Recipe<?>> predicate) {
-		return Minecraft.getInstance().level.getRecipeManager()
+		return Minecraft.getInstance().getConnection().getRecipeManager()
 			.getRecipes()
 			.stream()
 			.filter(predicate)

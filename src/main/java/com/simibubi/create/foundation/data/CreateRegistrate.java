@@ -189,7 +189,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(ConnectedTextureBehaviour behavior) {
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(Supplier<ConnectedTextureBehaviour> behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
@@ -217,7 +217,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
+	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
+		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
 	}

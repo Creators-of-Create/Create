@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.io.IOException;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;

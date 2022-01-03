@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.vertex.PosTexNormalWriterUnsafe;
-import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.mojang.blaze3d.platform.MemoryTracker;
 import com.simibubi.create.AllStitchedTextures;
 import com.simibubi.create.foundation.utility.VecHelper;

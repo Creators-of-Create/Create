@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.core.layout.CommonItems;
 import com.jozufozu.flywheel.core.layout.BufferLayout;
+import com.jozufozu.flywheel.core.layout.CommonItems;
 
 public class AllInstanceFormats {
 

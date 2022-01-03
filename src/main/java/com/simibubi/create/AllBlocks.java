@@ -294,20 +294,20 @@ public class AllBlocks {
 
 	public static final BlockEntry<EncasedShaftBlock> ANDESITE_ENCASED_SHAFT =
 		REGISTRATE.block("andesite_encased_shaft", EncasedShaftBlock::andesite)
-			.transform(BuilderTransformers.encasedShaft("andesite", AllSpriteShifts.ANDESITE_CASING))
+			.transform(BuilderTransformers.encasedShaft("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedShaftBlock> BRASS_ENCASED_SHAFT =
 		REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::brass)
-			.transform(BuilderTransformers.encasedShaft("brass", AllSpriteShifts.BRASS_CASING))
+			.transform(BuilderTransformers.encasedShaft("brass", () -> AllSpriteShifts.BRASS_CASING))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL =
 		REGISTRATE.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
-			.transform(BuilderTransformers.encasedCogwheel("andesite", AllSpriteShifts.ANDESITE_CASING))
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
+			.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
 				Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
 					AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
 			.transform(axeOrPickaxe())
@@ -315,8 +315,8 @@ public class AllBlocks {
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
 		REGISTRATE.block("brass_encased_cogwheel", p -> EncasedCogwheelBlock.brass(false, p))
-			.transform(BuilderTransformers.encasedCogwheel("brass", AllSpriteShifts.BRASS_CASING))
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
+			.transform(BuilderTransformers.encasedCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
 				Couple.create(AllSpriteShifts.BRASS_ENCASED_COGWHEEL_SIDE,
 					AllSpriteShifts.BRASS_ENCASED_COGWHEEL_OTHERSIDE))))
 			.transform(axeOrPickaxe())
@@ -324,13 +324,13 @@ public class AllBlocks {
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL =
 		REGISTRATE.block("andesite_encased_large_cogwheel", p -> EncasedCogwheelBlock.andesite(true, p))
-			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", AllSpriteShifts.ANDESITE_CASING))
+			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL =
 		REGISTRATE.block("brass_encased_large_cogwheel", p -> EncasedCogwheelBlock.brass(true, p))
-			.transform(BuilderTransformers.encasedLargeCogwheel("brass", AllSpriteShifts.BRASS_CASING))
+			.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
 			.transform(axeOrPickaxe())
 			.register();
 
@@ -339,7 +339,7 @@ public class AllBlocks {
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(BlockStressDefaults.setNoImpact())
 		.transform(axeOrPickaxe())
-		.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.ANDESITE_CASING)))
+		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(AllSpriteShifts.ANDESITE_CASING)))
 		.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.ANDESITE_CASING,
 			(s, f) -> f.getAxis() == s.getValue(GearboxBlock.AXIS))))
 		.blockstate((c, p) -> axisBlock(c, p, $ -> AssetLookup.partialBaseModel(c, p), true))
@@ -668,7 +668,7 @@ public class AllBlocks {
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.encasedPipe())
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
+			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
@@ -962,7 +962,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.linearChassis())
-			.onRegister(connectedTextures(new ChassisCTBehaviour()))
+			.onRegister(connectedTextures(ChassisCTBehaviour::new))
 			.lang("Linear Chassis")
 			.simpleItem()
 			.register();
@@ -973,7 +973,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.linearChassis())
-			.onRegister(connectedTextures(new ChassisCTBehaviour()))
+			.onRegister(connectedTextures(ChassisCTBehaviour::new))
 			.simpleItem()
 			.register();
 
@@ -1146,27 +1146,27 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<CasingBlock> ANDESITE_CASING = REGISTRATE.block("andesite_casing", CasingBlock::new)
-		.transform(BuilderTransformers.casing(AllSpriteShifts.ANDESITE_CASING))
+		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.ANDESITE_CASING))
 		.register();
 
 	public static final BlockEntry<CasingBlock> BRASS_CASING = REGISTRATE.block("brass_casing", CasingBlock::new)
-		.transform(BuilderTransformers.casing(AllSpriteShifts.BRASS_CASING))
+		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.BRASS_CASING))
 		.register();
 
 	public static final BlockEntry<CasingBlock> COPPER_CASING = REGISTRATE.block("copper_casing", CasingBlock::new)
-		.transform(BuilderTransformers.casing(AllSpriteShifts.COPPER_CASING))
+		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.COPPER_CASING))
 		.properties(p -> p.sound(SoundType.COPPER))
 		.register();
 
 	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
 		REGISTRATE.block("shadow_steel_casing", CasingBlock::deprecated)
-			.transform(BuilderTransformers.casing(AllSpriteShifts.SHADOW_STEEL_CASING))
+			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.SHADOW_STEEL_CASING))
 			.lang("Shadow Casing")
 			.register();
 
 	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
 		REGISTRATE.block("refined_radiance_casing", CasingBlock::deprecated)
-			.transform(BuilderTransformers.casing(AllSpriteShifts.REFINED_RADIANCE_CASING))
+			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.REFINED_RADIANCE_CASING))
 			.properties(p -> p.lightLevel($ -> 12))
 			.lang("Radiant Casing")
 			.register();
@@ -1178,7 +1178,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(BlockStressDefaults.setImpact(2.0))
-			.onRegister(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
+			.onRegister(CreateRegistrate.connectedTextures(CrafterCTBehaviour::new))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel())
@@ -1257,7 +1257,7 @@ public class AllBlocks {
 				.modelFile(AssetLookup.standardModel(c, p))
 				.rotationY(s.getValue(ItemVaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
 				.build()))
-		.onRegister(connectedTextures(new ItemVaultCTBehaviour()))
+		.onRegister(connectedTextures(ItemVaultCTBehaviour::new))
 		.item(ItemVaultItem::new)
 		.build()
 		.register();
@@ -1312,7 +1312,7 @@ public class AllBlocks {
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
-			.onRegister(connectedTextures(new BrassTunnelCTBehaviour()))
+			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 
 	public static final BlockEntry<ContentObserverBlock> CONTENT_OBSERVER =
