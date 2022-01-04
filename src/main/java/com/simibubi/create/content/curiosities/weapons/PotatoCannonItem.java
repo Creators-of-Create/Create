@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -62,20 +61,20 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxC
 	}
 
 //	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (enchantment == Enchantments.POWER_ARROWS)
-			return true;
-		if (enchantment == Enchantments.PUNCH_ARROWS)
-			return true;
-		if (enchantment == Enchantments.FLAMING_ARROWS)
-			return true;
-		if (enchantment == Enchantments.MOB_LOOTING)
-			return true;
-		if (enchantment == AllEnchantments.POTATO_RECOVERY.get())
-			return true;
-		return false;
+//	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+//		if (enchantment == Enchantments.POWER_ARROWS)
+//			return true;
+//		if (enchantment == Enchantments.PUNCH_ARROWS)
+//			return true;
+//		if (enchantment == Enchantments.FLAMING_ARROWS)
+//			return true;
+//		if (enchantment == Enchantments.MOB_LOOTING)
+//			return true;
+//		if (enchantment == AllEnchantments.POTATO_RECOVERY.get())
+//			return true;
+//		return false;
 		//return super.canApplyAtEnchantingTable(stack, enchantment);
-	}
+//	}
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {

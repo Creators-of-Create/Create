@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
@@ -77,7 +79,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 
 	public CompoundTag trackerUpdateTag;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public BeltLighter lighter;
 
 	public static enum CasingType {
@@ -118,7 +120,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 		if (!isController())
 			return;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			if (beltLength > 0 && lighter == null) {
 				lighter = new BeltLighter();
 			}
@@ -229,7 +231,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 			index = compound.getInt("Index");
 			beltLength = compound.getInt("Length");
 			if (prevBeltLength != beltLength) {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 					lighter = null;
 				});
 			}
@@ -536,7 +538,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	/**
 	 * Hide this behavior in an inner class to avoid loading LightListener on servers.
 	 */
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	class BeltLighter implements LightListener {
 		// client
 		public byte[] light;

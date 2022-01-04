@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.data;
 
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,11 +22,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 @ParametersAreNonnullByDefault
-public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBuilder<T>, P> extends EntityBuilder<T, P> {
+public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P> {
 
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory;
-	private NonNullPredicate<T> renderNormally;
+	private Predicate<T> renderNormally;
 
 	public static <T extends Entity, P> EntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (new CreateEntityBuilder<>(owner, parent, name, callback, factory, classification)).defaultLang();
@@ -43,7 +44,7 @@ public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBui
 		return instance(instanceFactory, be -> true);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory, NonNullPredicate<T> renderNormally) {
+	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory, Predicate<T> renderNormally) {
 		if (this.instanceFactory == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerInstance);
 		}
@@ -55,18 +56,12 @@ public class CreateEntityBuilder<T extends Entity, B extends FabricEntityTypeBui
 	}
 
 	protected void registerInstance() {
-		// onRegister
-		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
-			NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory = this.instanceFactory;
-			if (instanceFactory != null) {
-				NonNullPredicate<T> renderNormally = this.renderNormally;
-				InstancedRenderRegistry.configure(getEntry())
-					.factory(instanceFactory.get())
-					.skipRender(be -> !renderNormally.test(be))
-					.apply();
-			}
-
-		});
+		onRegister(entry ->
+				InstancedRenderRegistry.configure(entry)
+						.factory(instanceFactory.get())
+						.skipRender(be -> !renderNormally.test(be))
+						.apply()
+		);
 	}
 
 }

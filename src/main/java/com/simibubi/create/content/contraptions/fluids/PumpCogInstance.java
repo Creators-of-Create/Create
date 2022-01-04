@@ -30,10 +30,16 @@ public class PumpCogInstance extends SingleRotatingInstance implements DynamicIn
 	public void init() {
 		super.init();
 
+		// FIXME next flywheel fabric update
+		Instancer<ModelData> instancer =
 		materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState)
-				.createInstances(arrows);
+				.getModel(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
+//				.createInstances(arrows);
+
+		for (int i = 0, arrowsLength = arrows.length; i < arrowsLength; i++) {
+			arrows[i] = instancer.createInstance();
+		}
 	}
 
 	@Override

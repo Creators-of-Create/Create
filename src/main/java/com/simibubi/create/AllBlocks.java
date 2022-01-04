@@ -182,6 +182,8 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import me.alphamode.forgetags.DyeUtil;
+import me.alphamode.forgetags.Tags;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -212,7 +214,6 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
 
 public class AllBlocks {
 
@@ -730,7 +731,7 @@ public class AllBlocks {
 			.transform(pickaxeOnly())
 			.transform(BuilderTransformers.valveHandle(colour))
 			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(c.get())
-				.requires(colour.getTag())
+				.requires(DyeUtil.getDyeTag(colour))
 				.requires(AllItemTags.VALVE_HANDLES.tag)
 				.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
 				.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
@@ -1092,7 +1093,7 @@ public class AllBlocks {
 					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
 				ShapelessRecipeBuilder.shapeless(c.get())
-					.requires(colour.getTag())
+					.requires(DyeUtil.getDyeTag(colour))
 					.requires(AllItemTags.SEATS.tag)
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));

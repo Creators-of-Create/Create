@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.data;
 
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +21,7 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends BlockEnti
 
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory;
-	private NonNullPredicate<T> renderNormally;
+	private Predicate<T> renderNormally;
 
 	public static <T extends BlockEntity, P> BlockEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
 		String name, BuilderCallback callback, BlockEntityFactory<T> factory) {
@@ -40,7 +41,7 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends BlockEnti
 		return instance(instanceFactory, be -> renderNormally);
 	}
 
-	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory, NonNullPredicate<T> renderNormally) {
+	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory, Predicate<T> renderNormally) {
 		if (this.instanceFactory == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerInstance);
 		}
@@ -52,16 +53,11 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends BlockEnti
 	}
 
 	protected void registerInstance() {
-		// onRegister
-		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
-			NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory = this.instanceFactory;
-			if (instanceFactory != null) {
-				NonNullPredicate<T> renderNormally = this.renderNormally;
-				InstancedRenderRegistry.configure(getEntry())
-					.factory(instanceFactory.get())
-					.skipRender(be -> !renderNormally.test(be))
-					.apply();
-			}
-		});
+		onRegister(entry ->
+				InstancedRenderRegistry.configure(entry)
+						.factory(instanceFactory.get())
+						.skipRender(be -> !renderNormally.test(be))
+						.apply()
+		);
 	}
 }
