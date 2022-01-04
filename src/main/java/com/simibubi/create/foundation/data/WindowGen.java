@@ -65,7 +65,7 @@ public class WindowGen {
 	}
 
 	public static BlockEntry<WindowBlock> customWindowBlock(String name, Supplier<? extends ItemLike> ingredient,
-		CTSpriteShiftEntry ct, Supplier<Supplier<RenderType>> renderType) {
+		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType) {
 		NonNullFunction<String, ResourceLocation> end_texture = n -> Create.asResource(palettesDir() + name + "_end");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, ingredient, ct, renderType, end_texture, side_texture);
@@ -78,15 +78,15 @@ public class WindowGen {
 		NonNullFunction<String, ResourceLocation> end_texture =
 			$ -> new ResourceLocation("block/" + woodName + "_planks");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
-		return windowBlock(name, () -> planksBlock, AllSpriteShifts.getWoodenWindow(woodType), renderType, end_texture,
+		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType, end_texture,
 			side_texture);
 	}
 
 	public static BlockEntry<WindowBlock> windowBlock(String name, Supplier<? extends ItemLike> ingredient,
-		CTSpriteShiftEntry ct, Supplier<Supplier<RenderType>> renderType,
+		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType,
 		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture) {
 		return REGISTRATE.block(name, WindowBlock::new)
-			.onRegister(connectedTextures(new HorizontalCTBehaviour(ct)))
+			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
 			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 2)
 				.pattern(" # ")
@@ -105,7 +105,7 @@ public class WindowGen {
 			.register();
 	}
 
-	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name, ConnectedTextureBehaviour behaviour) {
+	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name, Supplier<ConnectedTextureBehaviour> behaviour) {
 		return REGISTRATE.block(name, ConnectedGlassBlock::new)
 			.onRegister(connectedTextures(behaviour))
 			.addLayer(() -> RenderType::translucent)
@@ -124,7 +124,7 @@ public class WindowGen {
 	}
 
 	public static BlockEntry<ConnectedGlassPaneBlock> framedGlassPane(String name, Supplier<? extends Block> parent,
-		CTSpriteShiftEntry ctshift) {
+		Supplier<CTSpriteShiftEntry> ctshift) {
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + "framed_glass");
 		ResourceLocation itemSideTexture = Create.asResource(palettesDir() + name);
 		ResourceLocation topTexture = Create.asResource(palettesDir() + "framed_glass_pane_top");
@@ -133,7 +133,7 @@ public class WindowGen {
 	}
 
 	public static BlockEntry<ConnectedGlassPaneBlock> customWindowPane(String name, Supplier<? extends Block> parent,
-		CTSpriteShiftEntry ctshift, Supplier<Supplier<RenderType>> renderType) {
+		Supplier<CTSpriteShiftEntry> ctshift, Supplier<Supplier<RenderType>> renderType) {
 		ResourceLocation topTexture = Create.asResource(palettesDir() + name + "_pane_top");
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + name);
 		return connectedGlassPane(name, parent, ctshift, sideTexture, sideTexture, topTexture, renderType);
@@ -150,7 +150,7 @@ public class WindowGen {
 		String name = woodName + "_window";
 		ResourceLocation topTexture = new ResourceLocation("block/" + woodName + "_planks");
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + name);
-		return connectedGlassPane(name, parent, AllSpriteShifts.getWoodenWindow(woodType), sideTexture, sideTexture,
+		return connectedGlassPane(name, parent, () -> AllSpriteShifts.getWoodenWindow(woodType), sideTexture, sideTexture,
 			topTexture, renderType);
 	}
 
@@ -163,10 +163,10 @@ public class WindowGen {
 	}
 
 	private static BlockEntry<ConnectedGlassPaneBlock> connectedGlassPane(String name, Supplier<? extends Block> parent,
-		CTSpriteShiftEntry ctshift, ResourceLocation sideTexture, ResourceLocation itemSideTexture,
+		Supplier<CTSpriteShiftEntry> ctshift, ResourceLocation sideTexture, ResourceLocation itemSideTexture,
 		ResourceLocation topTexture, Supplier<Supplier<RenderType>> renderType) {
 		NonNullConsumer<? super ConnectedGlassPaneBlock> connectedTextures =
-			connectedTextures(new GlassPaneCTBehaviour(ctshift));
+			connectedTextures(() -> new GlassPaneCTBehaviour(ctshift.get()));
 		String CGPparents = "block/connected_glass_pane/";
 		String prefix = name + "_pane_";
 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -65,7 +64,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 
-public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, FlywheelRendered, CustomRenderBoundingBoxBlockEntity {
+public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, CustomRenderBoundingBoxBlockEntity {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
@@ -818,11 +817,6 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	@Override
 	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
 	}
 
 	public enum State {

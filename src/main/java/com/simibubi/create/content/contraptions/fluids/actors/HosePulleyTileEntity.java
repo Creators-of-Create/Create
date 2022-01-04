@@ -191,9 +191,4 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 		}
 		return null;
 	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
 }

@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class EngineTileEntity extends SmartTileEntity implements FlywheelRendered, CustomRenderBoundingBoxBlockEntity {
+public class EngineTileEntity extends SmartTileEntity implements CustomRenderBoundingBoxBlockEntity {
 
 	public float appliedCapacity;
 	public float appliedSpeed;

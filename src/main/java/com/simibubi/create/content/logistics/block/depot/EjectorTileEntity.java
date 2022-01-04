@@ -576,11 +576,6 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 		return depotBehaviour.lazyItemHandler.orElse(null);
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public float getLidProgress(float pt) {
 		return lidProgress.getValue(pt);
 	}

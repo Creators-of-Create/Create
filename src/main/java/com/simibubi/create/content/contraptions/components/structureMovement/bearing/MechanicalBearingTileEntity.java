@@ -321,11 +321,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		return true;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public void setAngle(float forcedAngle) {
 		angle = forcedAngle;
 	}

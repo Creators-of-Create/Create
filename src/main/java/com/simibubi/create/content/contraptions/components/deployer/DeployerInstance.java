@@ -4,8 +4,8 @@ import static com.simibubi.create.content.contraptions.base.DirectionalAxisKinet
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.api.instance.ITickableInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.api.instance.TickableInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
@@ -20,7 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 
-public class DeployerInstance extends ShaftInstance implements IDynamicInstance, ITickableInstance {
+public class DeployerInstance extends ShaftInstance implements DynamicInstance, TickableInstance {
 
     final DeployerTileEntity tile;
     final Direction facing;
@@ -34,12 +34,11 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
     PartialModel currentHand;
     float progress;
-    private boolean newHand = false;
 
     public DeployerInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
-        this.tile = (DeployerTileEntity) super.tile;
+        this.tile = (DeployerTileEntity) super.blockEntity;
         facing = blockState.getValue(FACING);
 
         boolean rotatePole = blockState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
@@ -50,28 +49,34 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
         pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
-        updateHandPose();
-        relight(pos, pole);
+		currentHand = this.tile.getHandPose();
 
-        progress = getProgress(AnimationTickHolder.getPartialTicks());
+		hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
+
+		progress = getProgress(AnimationTickHolder.getPartialTicks());
         updateRotation(pole, hand, yRot, xRot, zRot);
         updatePosition();
     }
 
     @Override
     public void tick() {
-        newHand = updateHandPose();
-    }
+		PartialModel handPose = tile.getHandPose();
+
+		if (currentHand != handPose) {
+			currentHand = handPose;
+			getOrientedMaterial().getModel(currentHand, blockState)
+					.stealInstance(hand);
+		}
+	}
 
     @Override
     public void beginFrame() {
 
         float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
 
-        if (!newHand && Mth.equal(newProgress, progress)) return;
+        if (Mth.equal(newProgress, progress)) return;
 
         progress = newProgress;
-        newHand = false;
 
         updatePosition();
     }
@@ -89,24 +94,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         pole.delete();
     }
 
-    private boolean updateHandPose() {
-        PartialModel handPose = tile.getHandPose();
-
-        if (currentHand == handPose) return false;
-        currentHand = handPose;
-
-        if (hand != null) hand.delete();
-
-        hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
-
-        relight(pos, hand);
-        updateRotation(pole, hand, yRot, xRot, zRot);
-        updatePosition();
-
-        return true;
-    }
-
-    private float getProgress(float partialTicks) {
+	private float getProgress(float partialTicks) {
         if (tile.state == DeployerTileEntity.State.EXPANDING)
             return 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
         if (tile.state == DeployerTileEntity.State.RETRACTING)

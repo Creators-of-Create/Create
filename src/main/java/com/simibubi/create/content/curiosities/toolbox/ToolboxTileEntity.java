@@ -46,7 +46,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, FlywheelRendered, ItemTransferable {
+public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable, ItemTransferable {
 
 	public LerpedFloat lid = LerpedFloat.linear()
 		.startWithValue(0);

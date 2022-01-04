@@ -501,9 +501,4 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 		return false;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 }

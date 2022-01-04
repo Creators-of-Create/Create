@@ -49,8 +49,8 @@ public class TileEntityRenderHelper {
 		Iterator<BlockEntity> iterator = customRenderTEs.iterator();
 		while (iterator.hasNext()) {
 			BlockEntity tileEntity = iterator.next();
-			if (Backend.canUseInstancing(renderWorld) && InstancedRenderRegistry.getInstance()
-					.shouldSkipRender(tileEntity)) continue;
+			if (Backend.canUseInstancing(renderWorld) && InstancedRenderRegistry.shouldSkipRender(tileEntity))
+				continue;
 
 			BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(tileEntity);
 			if (renderer == null) {

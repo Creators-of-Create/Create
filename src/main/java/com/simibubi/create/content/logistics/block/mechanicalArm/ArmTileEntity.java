@@ -520,11 +520,6 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		return true;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {
 
 		public SelectionModeValueBox() {

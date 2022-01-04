@@ -236,9 +236,4 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	public void animateOffset(float forcedOffset) {
 		offset = forcedOffset;
 	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return false;
-	}
 }

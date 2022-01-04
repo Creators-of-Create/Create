@@ -56,7 +56,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     }
 
     private float getSpeed(Direction direction) {
-        float speed = tile.getSpeed();
+        float speed = blockEntity.getSpeed();
 
         if (speed != 0 && sourceFacing != null) {
             if (sourceFacing.getAxis() == direction.getAxis())
@@ -68,8 +68,8 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     }
 
     protected void updateSourceFacing() {
-        if (tile.hasSource()) {
-            BlockPos source = tile.source.subtract(pos);
+        if (blockEntity.hasSource()) {
+            BlockPos source = blockEntity.source.subtract(pos);
             sourceFacing = Direction.getNearest(source.getX(), source.getY(), source.getZ());
         } else {
             sourceFacing = null;

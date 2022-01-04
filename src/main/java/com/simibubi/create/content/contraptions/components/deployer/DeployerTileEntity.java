@@ -421,11 +421,6 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		return true;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public float getHandOffset(float partialTicks) {
 		if (isVirtual())
 			return animatedOffset.getValue(partialTicks);

@@ -149,9 +149,4 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	protected abstract <C extends Container> boolean matchStaticFilters(Recipe<C> recipe);
 
 	protected abstract Object getRecipeCacheKey();
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
 }

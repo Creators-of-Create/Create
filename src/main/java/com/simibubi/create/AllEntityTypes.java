@@ -40,7 +40,7 @@ public class AllEntityTypes {
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 		register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new, MobCategory.MISC, 10,
-			Integer.MAX_VALUE, false, true, SuperGlueEntity::build).instance(() -> GlueInstance::new)
+			Integer.MAX_VALUE, false, true, SuperGlueEntity::build).instance(() -> GlueInstance::new, false)
 				.register();
 
 	public static final EntityEntry<BlueprintEntity> CRAFTING_BLUEPRINT =

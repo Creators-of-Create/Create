@@ -8,8 +8,8 @@ import java.util.Map;
 import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
@@ -19,7 +19,7 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
-public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements IDynamicInstance {
+public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelTileEntity> implements DynamicInstance {
 
     private final Map<Direction, ArrayList<FlapData>> tunnelFlaps;
 
@@ -70,13 +70,13 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
 	@Override
 	public boolean shouldReset() {
-		return super.shouldReset() || tunnelFlaps.size() != tile.flaps.size();
+		return super.shouldReset() || tunnelFlaps.size() != blockEntity.flaps.size();
 	}
 
     @Override
     public void beginFrame() {
         tunnelFlaps.forEach((direction, keys) -> {
-            InterpolatedValue flapValue = tile.flaps.get(direction);
+            InterpolatedValue flapValue = blockEntity.flaps.get(direction);
             if (flapValue == null) {
                 return;
             }

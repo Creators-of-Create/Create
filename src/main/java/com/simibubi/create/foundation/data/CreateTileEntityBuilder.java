@@ -1,9 +1,12 @@
 package com.simibubi.create.foundation.data;
 
+import java.util.function.BiFunction;
+
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.instancing.tile.ITileInstanceFactory;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockEntityBuilder;
 import com.tterrag.registrate.builders.BuilderCallback;
@@ -16,7 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class CreateTileEntityBuilder<T extends BlockEntity, P> extends BlockEntityBuilder<T, P> {
 
 	@Nullable
-	private NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory;
+	private NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory;
+	private NonNullPredicate<T> renderNormally;
 
 	public static <T extends BlockEntity, P> BlockEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
 		String name, BuilderCallback callback, BlockEntityFactory<T> factory) {
@@ -28,25 +32,36 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends BlockEnti
 		super(owner, parent, name, callback, factory);
 	}
 
-	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory) {
+	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory) {
+		return instance(instanceFactory, true);
+	}
+
+	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory, boolean renderNormally) {
+		return instance(instanceFactory, be -> renderNormally);
+	}
+
+	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory, NonNullPredicate<T> renderNormally) {
 		if (this.instanceFactory == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerInstance);
 		}
 
 		this.instanceFactory = instanceFactory;
+		this.renderNormally = renderNormally;
 
 		return this;
 	}
 
 	protected void registerInstance() {
-		onRegister(blockEntityType -> InstancedRenderRegistry.getInstance().tile(blockEntityType).factory(instanceFactory.get()));
-//		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
-//			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
-//			if (instanceFactory != null) {
-//				InstancedRenderRegistry.getInstance()
-//					.tile(getEntry())
-//					.factory(instanceFactory.get());
-//			}
-//		});
+		// onRegister
+		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
+			NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory = this.instanceFactory;
+			if (instanceFactory != null) {
+				NonNullPredicate<T> renderNormally = this.renderNormally;
+				InstancedRenderRegistry.configure(getEntry())
+					.factory(instanceFactory.get())
+					.skipRender(be -> !renderNormally.test(be))
+					.apply();
+			}
+		});
 	}
 }

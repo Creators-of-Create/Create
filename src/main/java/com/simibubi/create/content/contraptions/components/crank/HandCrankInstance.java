@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
@@ -12,7 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class HandCrankInstance extends SingleRotatingInstance implements IDynamicInstance {
+public class HandCrankInstance extends SingleRotatingInstance implements DynamicInstance {
 
     private final HandCrankTileEntity tile;
     private ModelData crank;

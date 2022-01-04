@@ -2,9 +2,14 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -31,10 +36,22 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 	}
 
 	@Override
+	public boolean hasSpecialInstancedRendering() {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+		return new PSIActorInstance(materialManager, simulationWorld, context);
+	}
+
+	@Override
 	@Environment(EnvType.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, matrices, buffer);
+		if (!Backend.isOn())
+			PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 
 	@Override

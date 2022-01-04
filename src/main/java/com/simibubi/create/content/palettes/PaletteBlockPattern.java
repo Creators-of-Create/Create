@@ -8,6 +8,7 @@ import static com.simibubi.create.content.palettes.PaletteBlockPattern.PatternNa
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
@@ -132,8 +133,8 @@ public class PaletteBlockPattern {
 			.accept(c, p);
 	}
 
-	public Optional<ConnectedTextureBehaviour> createCTBehaviour(String variant) {
-		return ctFactory.map(d -> d.apply(variant));
+	public Optional<Supplier<ConnectedTextureBehaviour>> createCTBehaviour(String variant) {
+		return ctFactory.map(d -> () -> d.apply(variant));
 	}
 
 	// Builder

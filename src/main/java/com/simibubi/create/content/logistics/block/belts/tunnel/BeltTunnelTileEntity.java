@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
@@ -41,7 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRendered, ItemTransferable {
+public class BeltTunnelTileEntity extends SmartTileEntity implements ItemTransferable {
 
 	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;
@@ -173,11 +172,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRen
 	private void sendFlaps() {
 		AllPackets.channel.sendToClientsTracking(new TunnelFlapPacket(this, flapsToSend), (ServerLevel) level, getBlockPos());
 		flapsToSend.clear();
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
 	}
 
 	@Override

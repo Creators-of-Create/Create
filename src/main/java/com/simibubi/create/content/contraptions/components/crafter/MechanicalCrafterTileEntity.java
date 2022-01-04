@@ -523,11 +523,6 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 		return inventory;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public void setScriptedResult(ItemStack scriptedResult) {
 		this.scriptedResult = scriptedResult;
 	}

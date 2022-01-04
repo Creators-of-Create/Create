@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements IDynamicInstance {
+public class StickerInstance extends BlockEntityInstance<StickerTileEntity> implements DynamicInstance {
 
 	float lastOffset = Float.NaN;
 	final Direction facing;
@@ -35,7 +35,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
 	@Override
 	public void beginFrame() {
-		float offset = tile.piston.getValue(AnimationTickHolder.getPartialTicks());
+		float offset = blockEntity.piston.getValue(AnimationTickHolder.getPartialTicks());
 
 		if (fakeWorld)
 			offset = this.offset;
@@ -51,7 +51,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 	private void animateHead(float offset) {
 		head.loadIdentity()
 				.translate(getInstancePosition())
-				.nudge(tile.hashCode())
+				.nudge(blockEntity.hashCode())
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing) + 90)

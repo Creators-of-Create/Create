@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class GantryCarriageInstance extends ShaftInstance implements IDynamicInstance {
+public class GantryCarriageInstance extends ShaftInstance implements DynamicInstance {
 
 	private final ModelData gantryCogs;
 
@@ -56,7 +56,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 	}
 
 	private float getCogAngle() {
-		return GantryCarriageRenderer.getAngleForTe(tile, visualPos, rotationAxis) * rotationMult;
+		return GantryCarriageRenderer.getAngleForTe(blockEntity, visualPos, rotationAxis) * rotationMult;
 	}
 
 	private void animateCogs(float cogAngle) {

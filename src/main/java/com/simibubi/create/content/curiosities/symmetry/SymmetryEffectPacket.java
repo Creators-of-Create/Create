@@ -33,6 +33,7 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 		}
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(mirror);
 		buffer.writeInt(positions.size());
@@ -41,6 +42,7 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 		}
 	}
 
+	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.position().distanceTo(Vec3.atLowerCornerOf(mirror)) > 100)

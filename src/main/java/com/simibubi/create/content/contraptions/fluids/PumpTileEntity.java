@@ -390,9 +390,4 @@ public class PumpTileEntity extends KineticTileEntity {
 		}
 
 	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
 }

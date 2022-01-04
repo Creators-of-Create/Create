@@ -80,11 +80,6 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
-	@Override
 	@Environment(EnvType.CLIENT)
 	public void tickAudio() {
 		super.tickAudio();
