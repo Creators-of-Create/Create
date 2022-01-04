@@ -147,8 +147,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		Collection<BlockEntity> tileEntities = contraption.maybeInstancedTileEntities;
 		if (!tileEntities.isEmpty()) {
 			for (BlockEntity te : tileEntities) {
-				if (InstancedRenderRegistry.getInstance()
-						.canInstance(te.getType())) {
+				if (InstancedRenderRegistry.canInstance(te.getType())) {
 					Level world = te.getLevel();
 					te.setLevel(renderWorld);
 					instanceWorld.tileInstanceManager.add(te);

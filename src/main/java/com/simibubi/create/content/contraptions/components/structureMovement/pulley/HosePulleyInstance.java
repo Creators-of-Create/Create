@@ -39,7 +39,7 @@ public class HosePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected float getOffset() {
-		return ((HosePulleyTileEntity) tile).getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
+		return ((HosePulleyTileEntity) blockEntity).getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
 	}
 
 	protected boolean isRunning() {

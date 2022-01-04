@@ -420,11 +420,6 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		return worldPosition;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public void setAngle(float forcedAngle) {
 		hourAngle = forcedAngle;
 	}

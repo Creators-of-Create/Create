@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public abstract class GaugeInstance extends ShaftInstance implements IDynamicInstance {
+public abstract class GaugeInstance extends ShaftInstance implements DynamicInstance {
 
     protected final ArrayList<DialFace> faces;
 
@@ -59,7 +59,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
     @Override
     public void beginFrame() {
-        GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
+        GaugeTileEntity gaugeTile = (GaugeTileEntity) blockEntity;
 
         if (Mth.equal(gaugeTile.prevDialState, gaugeTile.dialState))
             return;

@@ -118,11 +118,6 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			&& stateAbove.getValue(CogWheelBlock.AXIS).isHorizontal();
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override

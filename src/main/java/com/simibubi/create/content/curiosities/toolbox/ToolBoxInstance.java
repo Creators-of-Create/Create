@@ -2,8 +2,8 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ToolBoxInstance extends TileEntityInstance<ToolboxTileEntity> implements IDynamicInstance {
+public class ToolBoxInstance extends BlockEntityInstance<ToolboxTileEntity> implements DynamicInstance {
 
 	private final Direction facing;
 	private ModelData lid;
@@ -28,7 +28,7 @@ public class ToolBoxInstance extends TileEntityInstance<ToolboxTileEntity> imple
 
 	@Override
 	public void init() {
-		BlockState blockState = tile.getBlockState();
+		BlockState blockState = blockEntity.getBlockState();
 
 		Instancer<ModelData> drawerModel = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
@@ -37,7 +37,7 @@ public class ToolBoxInstance extends TileEntityInstance<ToolboxTileEntity> imple
 		drawers = new ModelData[]{drawerModel.createInstance(), drawerModel.createInstance()};
 		lid = materialManager.defaultCutout()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.TOOLBOX_LIDS.get(tile.getColor()), blockState)
+				.getModel(AllBlockPartials.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState)
 				.createInstance();
 
 	}
@@ -56,8 +56,8 @@ public class ToolBoxInstance extends TileEntityInstance<ToolboxTileEntity> imple
 
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
-		float lidAngle = tile.lid.getValue(partialTicks);
-		float drawerOffset = tile.drawers.getValue(partialTicks);
+		float lidAngle = blockEntity.lid.getValue(partialTicks);
+		float drawerOffset = blockEntity.drawers.getValue(partialTicks);
 
 		lid.loadIdentity()
 				.translate(instancePos)

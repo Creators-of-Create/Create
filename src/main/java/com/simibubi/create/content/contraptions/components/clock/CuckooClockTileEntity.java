@@ -187,9 +187,4 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		level.playLocalSound(vec.x, vec.y, vec.z, sound, SoundSource.BLOCKS, volume, pitch, false);
 	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
 }

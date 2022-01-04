@@ -108,7 +108,7 @@ public class ContraptionRenderDispatcher {
 		ContraptionWorld contraptionWorld = c.getContraptionWorld();
 		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, contraptionWorld.getHeight(), contraptionWorld.getMinBuildHeight());
 
-		renderWorld.setTileEntities(c.presentTileEntities.values());
+		renderWorld.setBlockEntities(c.presentTileEntities.values());
 
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
 				.values())

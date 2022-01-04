@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
-public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements IDynamicInstance {
+public class FunnelInstance extends BlockEntityInstance<FunnelTileEntity> implements DynamicInstance {
 
     private final ArrayList<FlapData> flaps;
 
@@ -65,7 +65,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
     public void beginFrame() {
         if (flaps == null) return;
 
-        float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
+        float flapness = blockEntity.flap.get(AnimationTickHolder.getPartialTicks());
 
         for (FlapData flap : flaps) {
             flap.setFlapness(flapness);

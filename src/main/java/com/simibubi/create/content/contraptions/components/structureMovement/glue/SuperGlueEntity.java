@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
@@ -68,7 +67,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 
 public class SuperGlueEntity extends Entity
-	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, FlywheelRendered {
+	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;

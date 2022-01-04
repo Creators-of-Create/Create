@@ -171,9 +171,4 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
 		return te instanceof GantryShaftTileEntity && ((GantryShaftTileEntity) te).canAssembleOn();
 	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
 }

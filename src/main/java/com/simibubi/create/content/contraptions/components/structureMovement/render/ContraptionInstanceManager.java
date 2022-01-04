@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TaskEngine;
-import com.jozufozu.flywheel.backend.instancing.tile.TileInstanceManager;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstanceManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -18,7 +18,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
-public class ContraptionInstanceManager extends TileInstanceManager {
+public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 
     protected ArrayList<ActorInstance> actors = new ArrayList<>();
 

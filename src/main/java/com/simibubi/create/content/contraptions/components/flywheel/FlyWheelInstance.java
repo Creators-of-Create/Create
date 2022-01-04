@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,7 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements IDynamicInstance {
+public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements DynamicInstance {
 
 	protected final Direction facing;
 	protected final Direction connection;
@@ -90,8 +90,8 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
-		float speed = tile.visualSpeed.get(partialTicks) * 3 / 10f;
-		float angle = tile.angle + speed * partialTicks;
+		float speed = blockEntity.visualSpeed.get(partialTicks) * 3 / 10f;
+		float angle = blockEntity.angle + speed * partialTicks;
 
 		if (Math.abs(angle - lastAngle) < 0.001)
 			return;

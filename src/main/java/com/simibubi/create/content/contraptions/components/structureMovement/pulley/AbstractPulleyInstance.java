@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
@@ -22,7 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, MovingListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements DynamicInstance, MovingListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;

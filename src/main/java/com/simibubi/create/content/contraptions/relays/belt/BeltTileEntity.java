@@ -528,7 +528,6 @@ public class BeltTileEntity extends KineticTileEntity implements LightListener {
 		itemHandler.invalidate();
 	}
 
-	@Override
 	public boolean shouldRenderNormally() {
 		if (level == null)
 			return isController();

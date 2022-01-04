@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialGroup;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.ITickableInstance;
+import com.jozufozu.flywheel.api.instance.TickableInstance;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LightLayer;
 
-public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {
+public class GlueInstance extends EntityInstance<SuperGlueEntity> implements TickableInstance {
 
 	private static final ResourceLocation TEXTURE = Create.asResource("textures/entity/super_glue/slime.png");
 

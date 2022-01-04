@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import java.util.List;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
@@ -23,7 +22,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class StickerTileEntity extends SmartTileEntity implements FlywheelRendered {
+public class StickerTileEntity extends SmartTileEntity {
 
 	LerpedFloat piston;
 	boolean update;

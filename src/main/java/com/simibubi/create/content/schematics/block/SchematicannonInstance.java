@@ -2,8 +2,8 @@ package com.simibubi.create.content.schematics.block;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
+public class SchematicannonInstance extends BlockEntityInstance<SchematicannonTileEntity> implements DynamicInstance {
 
     private final ModelData connector;
     private final ModelData pipe;
@@ -30,12 +30,12 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     public void beginFrame() {
         float partialTicks = AnimationTickHolder.getPartialTicks();
 
-        double[] cannonAngles = SchematicannonRenderer.getCannonAngles(tile, pos, partialTicks);
+        double[] cannonAngles = SchematicannonRenderer.getCannonAngles(blockEntity, pos, partialTicks);
 
         double yaw = cannonAngles[0];
         double pitch = cannonAngles[1];
 
-        double recoil = SchematicannonRenderer.getRecoil(tile, partialTicks);
+        double recoil = SchematicannonRenderer.getRecoil(blockEntity, partialTicks);
 
         PoseStack ms = new PoseStack();
         TransformStack msr = TransformStack.cast(ms);

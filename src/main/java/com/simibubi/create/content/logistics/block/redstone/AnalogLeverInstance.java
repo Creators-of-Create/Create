@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Translate;
@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
+public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverTileEntity> implements DynamicInstance {
 
     protected final ModelData handle;
     protected final ModelData indicator;
@@ -42,12 +42,12 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
 
     @Override
     public void beginFrame() {
-        if (!tile.clientState.settled())
+        if (!blockEntity.clientState.settled())
             animateLever();
     }
 
     protected void animateLever() {
-		float state = tile.clientState.get(AnimationTickHolder.getPartialTicks());
+		float state = blockEntity.clientState.get(AnimationTickHolder.getPartialTicks());
 
 		indicator.setColor(Color.mixColors(0x2C0300, 0xCD0000, state / 15f));
 
