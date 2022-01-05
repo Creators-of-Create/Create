@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
@@ -21,7 +21,6 @@ import com.simibubi.create.lib.event.LivingEntityEvents;
 import com.simibubi.create.lib.extensions.EntityExtensions;
 import com.simibubi.create.lib.item.EntitySwingListenerItem;
 import com.simibubi.create.lib.item.EquipmentItem;
-import com.simibubi.create.lib.util.MixinHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,7 +36,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(LivingEntity.class)
@@ -124,16 +122,20 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 
-	@Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"))
-	public float create$setSlipperiness(Block instance) {
-		if (instance instanceof CustomFrictionBlock custom) {
-			BlockPos affecting = getBlockPosBelowThatAffectsMyMovement();
-			return custom.getFriction(level.getBlockState(affecting), level, affecting, this);
+	@ModifyVariable(
+			method = "travel",
+			slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBlockPosBelowThatAffectsMyMovement()Lnet/minecraft/core/BlockPos;")),
+			at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/Block;getFriction()F"), ordinal = 0
+	)
+	private float create$setFriction(float original) { // shut, MCDev
+		BlockPos pos = new BlockPos(getX(), getY() - 1, getZ());
+		BlockState state = level.getBlockState(pos);
+		if (state.getBlock() instanceof CustomFrictionBlock custom) {
+			return custom.getFriction(state, level, pos, this);
 		}
-		return instance.getFriction();
+		return original;
 	}
 
-	//Moved from MobMixin
 	@Inject(method = "getEquipmentSlotForItem", at = @At("HEAD"), cancellable = true)
 	private static void create$getSlotForItemStack(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
 		if (itemStack.getItem() instanceof EquipmentItem equipment) {

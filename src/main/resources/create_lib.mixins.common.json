@@ -19,7 +19,7 @@
     "EnchantmentMixin",
     "EntityCollisionContextMixin",
     "EntityMixin",
-    "ExperienceOrbEntityMixin",
+    "ExperienceOrbMixin",
     "FlyingMobMixin",
     "ItemEntityMixin",
     "ItemMixin",

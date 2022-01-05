@@ -309,7 +309,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	protected int getPackedLight(BeltTileEntity controller, float beltPos) {
 		int segment = (int) Math.floor(beltPos) * 2;
-		if (controller.lighter.light == null || segment >= controller.lighter.light.length || segment < 0)
+		if (controller.lighter == null || controller.lighter.light == null || segment >= controller.lighter.light.length || segment < 0)
 			return 0;
 
 		return LightTexture.pack(controller.lighter.light[segment], controller.lighter.light[segment + 1]);
