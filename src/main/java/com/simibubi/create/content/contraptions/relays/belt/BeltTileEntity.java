@@ -35,6 +35,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -544,13 +545,29 @@ public class BeltTileEntity extends KineticTileEntity {
 	 */
 	@OnlyIn(Dist.CLIENT)
 	class BeltLighter implements LightListener {
-		// client
-		public byte[] light;
+		private byte[] light;
 
 		public BeltLighter() {
 			initializeLight();
 			LightUpdater.get(level)
 					.addListener(this);
+		}
+
+		/**
+		 * Get the number of belt segments represented by the lighter.
+		 * @return The number of segments.
+		 */
+		public int lightSegments() {
+			return light == null ? 0 : light.length / 2;
+		}
+
+		/**
+		 * Get the light value for a given segment.
+		 * @param segment The segment to get the light value for.
+		 * @return The light value.
+		 */
+		public int getPackedLight(int segment) {
+			return light == null ? 0 : LightTexture.pack(light[segment * 2], light[segment * 2 + 1]);
 		}
 
 		@Override
