@@ -115,7 +115,6 @@ loom {
         }
     }
 }
-assemble.dependsOn runDatagen
 
 processResources {
     inputs.property "version", project.version
