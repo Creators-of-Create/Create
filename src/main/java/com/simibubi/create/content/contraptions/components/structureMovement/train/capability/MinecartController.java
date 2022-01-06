@@ -2,10 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -44,13 +42,7 @@ import net.minecraft.world.phys.Vec3;
  * Extended code for Minecarts, this allows for handling stalled carts and
  * coupled trains
  */
-public class MinecartController implements NBTSerializable, ListenerProvider {
-
-	public Set<NonNullConsumer> listeners = new HashSet<>();
-	@Override
-	public Set<NonNullConsumer> getListeners() {
-		return listeners;
-	}
+public class MinecartController implements NBTSerializable {
 
 	public static MinecartController EMPTY;
 	private boolean needsEntryRefresh;
@@ -443,4 +435,7 @@ public class MinecartController implements NBTSerializable, ListenerProvider {
 		}
 	}
 
+	public void addListener(NonNullConsumer<ListenerProvider> listener) {
+		((ListenerProvider) cart()).addListener(listener);
+	}
 }

@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.lib.util.LazyOptional;
+import com.simibubi.create.lib.util.ListenerProvider;
 import com.simibubi.create.lib.util.MinecartAndRailUtil;
 import com.simibubi.create.lib.util.NBTSerializable;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -46,7 +47,7 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 	 * This callback wrapper ensures that the listeners map in the controller
 	 * capability only ever contains one instance
 	 */
-	public static class MinecartRemovalListener implements NonNullConsumer<LazyOptional<MinecartController>> {
+	public static class MinecartRemovalListener implements NonNullConsumer<ListenerProvider> {
 
 		private Level world;
 		private AbstractMinecart cart;
@@ -67,7 +68,7 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 		}
 
 		@Override
-		public void accept(LazyOptional<MinecartController> t) {
+		public void accept(ListenerProvider t) {
 			onCartRemoved(world, cart);
 		}
 
@@ -105,7 +106,7 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 
 			cartsWithCoupling.remove(uniqueID);
 
-			MinecartController controller = (MinecartController) MinecartAndRailUtil.getController(cart);
+			MinecartController controller = MinecartAndRailUtil.getController(cart);
 			controller.addListener(new MinecartRemovalListener(world, cart));
 			carts.put(uniqueID, controller);
 

@@ -5,12 +5,15 @@ import java.util.Set;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 public interface ListenerProvider {
-	Set<NonNullConsumer> getListeners();
-	default void addListener(NonNullConsumer listener) {
+	Set<NonNullConsumer<ListenerProvider>> getListeners();
+
+	default void addListener(NonNullConsumer<ListenerProvider> listener) {
 		getListeners().add(listener);
 	}
 
 	default void invalidate() {
-		getListeners().forEach(listener -> listener.accept(this));
+		Set<NonNullConsumer<ListenerProvider>> listeners = getListeners();
+		listeners.forEach(listener -> listener.accept(this));
+		listeners.clear();
 	}
 }
