@@ -61,7 +61,6 @@
     "accessor.MinecraftServerAccessor",
     "accessor.PlayerAccessor",
     "accessor.RailStateAccessor",
-    "accessor.RedStoneWireBlockAccessor",
     "accessor.ServerGamePacketListenerImplAccessor",
     "accessor.SlotAccessor",
     "accessor.StairBlockAccessor",

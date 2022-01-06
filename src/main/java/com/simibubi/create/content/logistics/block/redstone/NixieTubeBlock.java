@@ -13,7 +13,7 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
 import com.simibubi.create.lib.util.TagUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
@@ -44,7 +44,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class NixieTubeBlock extends HorizontalDirectionalBlock
-	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement, BlockPickInteractionAware, CanConnectRedstoneBlock {
+	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement, BlockPickInteractionAware, ConnectableRedstoneBlock {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 

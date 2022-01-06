@@ -67,7 +67,7 @@ public class SuperGlueHandler {
 		if (placedAgainst == IPlacementHelper.ID)
 			return InteractionResult.PASS;
 
-		double distance = ReachEntityAttributes.getReachDistance(placer, 5);
+		double distance = ReachEntityAttributes.getReachDistance(placer, placer.isCreative() ? 5 : 4.5);
 		Vec3 start = placer.getEyePosition(1);
 		Vec3 look = placer.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);

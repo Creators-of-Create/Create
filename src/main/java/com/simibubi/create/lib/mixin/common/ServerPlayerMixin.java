@@ -46,7 +46,7 @@ public abstract class ServerPlayerMixin extends Player {
 	public void create$clientEndOfTickEvent(CallbackInfo ci) {
 		if (!getLevel().isClientSide()) {
 			if (getItemBySlot(EquipmentSlot.HEAD).is(AllItems.GOGGLES.get())) {
-				double reach = ReachEntityAttributes.getReachDistance(this, 4);
+				double reach = ReachEntityAttributes.getReachDistance(this, isCreative() ? 5 : 4.5);
 				HitResult hit = pick(reach, 0, false);
 				if (hit instanceof BlockHitResult blockHit) {
 					LazyOptional<IFluidHandler> optional = TransferUtil.getFluidHandler(level, blockHit.getBlockPos(), blockHit.getDirection());

@@ -1,10 +1,11 @@
 package com.simibubi.create.lib.util;
 
-import com.simibubi.create.lib.util.Constants.Crafting;
-
 public class ShapedRecipeUtil {
+	public static int HEIGHT = 3;
+	public static int WIDTH = 3;
+
 	public static void setCraftingSize(int width, int height) {
-		Crafting.HEIGHT = height;
-		Crafting.WIDTH = width;
+		HEIGHT = height;
+		WIDTH = width;
 	}
 }

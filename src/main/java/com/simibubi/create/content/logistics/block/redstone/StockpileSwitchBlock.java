@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
 import com.simibubi.create.lib.block.NeighborChangeListeningBlock;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
@@ -38,7 +38,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, NeighborChangeListeningBlock, CanConnectRedstoneBlock {
+public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, NeighborChangeListeningBlock, ConnectableRedstoneBlock {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 

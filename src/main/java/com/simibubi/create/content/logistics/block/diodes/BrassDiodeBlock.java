@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public class BrassDiodeBlock extends AbstractDiodeBlock implements ITE<BrassDiodeTileEntity>, CanConnectRedstoneBlock {
+public class BrassDiodeBlock extends AbstractDiodeBlock implements ITE<BrassDiodeTileEntity>, ConnectableRedstoneBlock {
 
 	public static final BooleanProperty POWERING = BooleanProperty.create("powering");
 

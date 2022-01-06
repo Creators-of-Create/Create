@@ -1,20 +1,20 @@
 package com.simibubi.create.lib.mixin.common;
 
+import com.simibubi.create.lib.util.ShapedRecipeUtil;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-
-import com.simibubi.create.lib.util.Constants;
 
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 @Mixin(ShapelessRecipe.Serializer.class)
 public abstract class ShapelessRecipe$SerializerMixin {
 	@ModifyConstant(
-			method = "fromJson",
+			method = "fromJson(Lnet/minecraft/resources/ResourceLocation;Lcom/google/gson/JsonObject;)Lnet/minecraft/world/item/crafting/ShapelessRecipe;",
 			constant = @Constant(intValue = 9)
 	)
 	private static int create$modifyMaxItemsInRecipe(int original) {
-		return Constants.Crafting.HEIGHT * Constants.Crafting.WIDTH;
+		return ShapedRecipeUtil.HEIGHT * ShapedRecipeUtil.WIDTH;
 	}
 }
