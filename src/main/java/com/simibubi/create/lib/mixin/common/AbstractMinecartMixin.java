@@ -38,9 +38,6 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 	@Shadow
 	protected abstract double getMaxSpeed();
 
-	@Shadow
-	public abstract AbstractMinecart.Type getMinecartType();
-
 	@Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V", at = @At("TAIL"))
 	public void create$abstractMinecartEntity(EntityType<?> entityType, Level world, CallbackInfo ci) {
 		create$controller = new MinecartController(MixinHelper.cast(this));

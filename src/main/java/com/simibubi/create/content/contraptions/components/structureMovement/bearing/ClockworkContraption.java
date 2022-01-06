@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -81,7 +84,7 @@ public class ClockworkContraption extends Contraption {
 		}
 		return Pair.of(hourArm, minuteArm);
 	}
-	
+
 	@Override
 	public boolean assemble(Level world, BlockPos pos) throws AssemblyException {
 		return searchMovedStructure(world, pos, facing);
@@ -125,11 +128,12 @@ public class ClockworkContraption extends Contraption {
 			return false;
 		return facing.getAxis() == this.facing.getAxis();
 	}
-	
+
 	public static enum HandType {
 		HOUR, MINUTE
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public ContraptionLighter<?> makeLighter() {
 		return new AnchoredLighter(this);

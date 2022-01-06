@@ -4,6 +4,9 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 
 import java.util.Queue;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -162,6 +165,7 @@ public class MountedContraption extends Contraption {
 		inventory = new ContraptionInvWrapper(handlerFromInv, inventory);
 	}
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	public ContraptionLighter<?> makeLighter() {
 		return new NonStationaryLighter<>(this);

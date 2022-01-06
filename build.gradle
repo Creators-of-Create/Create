@@ -65,7 +65,7 @@ dependencies {
     }
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") { exclude(group: "net.fabricmc.fabric-api") }
-    modApi(include("me.shedaniel.cloth:basic-math:0.6.0"))
+    modApi("me.shedaniel.cloth:basic-math:0.6.0")
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }

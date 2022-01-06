@@ -26,8 +26,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
 		LazyOptional<IFluidHandler> oldcap = capability;
-		//capability = LazyOptional.of(() -> new InterfaceFluidHandler(contraption.fluidInventory));
-		capability = LazyOptional.empty();
+		capability = LazyOptional.of(() -> new InterfaceFluidHandler(contraption.fluidInventory));
 		oldcap.invalidate();
 		super.startTransferringTo(contraption, distance);
 	}
