@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -14,14 +15,24 @@ import net.minecraft.world.phys.Vec3;
 
 public class ContraptionWorld extends WrappedWorld {
     final Contraption contraption;
+	private final int minY;
+	private final int height;
 
-    public ContraptionWorld(Level world, Contraption contraption) {
+	public ContraptionWorld(Level world, Contraption contraption) {
         super(world);
 
         this.contraption = contraption;
-    }
 
-    @Override
+		minY = nextMultipleOf16(contraption.bounds.minY);
+		height = nextMultipleOf16(contraption.bounds.maxY) - minY;
+	}
+
+	// https://math.stackexchange.com/questions/291468
+	private static int nextMultipleOf16(double a) {
+		return (((Math.abs((int) a) - 1) | 15) + 1) * Mth.sign(a);
+	}
+
+	@Override
     public BlockState getBlockState(BlockPos pos) {
         StructureTemplate.StructureBlockInfo blockInfo = contraption.getBlocks().get(pos);
 
@@ -51,11 +62,11 @@ public class ContraptionWorld extends WrappedWorld {
 
 	@Override
 	public int getHeight() {
-		return getMinBuildHeight() * (-2);
+		return height;
 	}
 
 	@Override
 	public int getMinBuildHeight() {
-		return - (int) contraption.bounds.getYsize();
+		return minY;
 	}
 }
