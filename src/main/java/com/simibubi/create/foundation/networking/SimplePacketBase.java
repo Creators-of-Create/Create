@@ -42,7 +42,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 		PLAY_TO_SERVER
 	}
 
-	public static record Context(Executor exec, PacketListener handler, @Nullable ServerPlayer sender, SimpleChannel.ResponseTarget responseTarget) implements Supplier<Context> {
+	public record Context(Executor exec, PacketListener handler, @Nullable ServerPlayer sender, SimpleChannel.ResponseTarget responseTarget) implements Supplier<Context> {
 		public void enqueueWork(Runnable runnable) {
 			exec().execute(runnable);
 		}

@@ -3,6 +3,8 @@ package com.simibubi.create.lib.transfer.fluid;
 import java.util.Objects;
 import java.util.Optional;
 
+import net.minecraft.world.level.material.FlowingFluid;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
@@ -71,7 +73,7 @@ public class FluidStack {
 	}
 
 	public FluidStack(Fluid type, long amount) {
-		this(FluidVariant.of(type), amount);
+		this(FluidVariant.of(type instanceof FlowingFluid flowing ? flowing.getSource() : type), amount);
 	}
 
 	public FluidStack(Fluid type, long amount, CompoundTag nbt) {
