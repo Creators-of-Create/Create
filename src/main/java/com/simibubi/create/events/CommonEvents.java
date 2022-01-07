@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
+import com.simibubi.create.lib.event.ProjectileImpactCallback;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -246,6 +249,7 @@ public class CommonEvents {
 		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
 		PlayerTickEndCallback.EVENT.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
+		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);
 	}
 
 }

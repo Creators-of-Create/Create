@@ -41,6 +41,7 @@
     "ShapelessRecipe$SerializerMixin",
     "StructureProcessorMixin",
     "StructureTemplateMixin",
+    "ProjectileMixin",
     "WalkNodeEvaluatorMixin",
     "accessor.AbstractMinecartAccessor",
     "accessor.ArrayVoxelShapeAccessor",
