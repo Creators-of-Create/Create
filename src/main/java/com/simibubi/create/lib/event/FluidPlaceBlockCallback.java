@@ -7,9 +7,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface FluidPlaceBlockCallback {
-	public static final Event<FluidPlaceBlockCallback> EVENT = EventFactory.createArrayBacked(FluidPlaceBlockCallback.class, callbacks -> (world, pos, state) -> {
+	Event<FluidPlaceBlockCallback> EVENT = EventFactory.createArrayBacked(FluidPlaceBlockCallback.class, callbacks -> (world, pos, state) -> {
 		for (FluidPlaceBlockCallback callback : callbacks) {
-			return callback.onFluidPlaceBlock(world, pos, state);
+			BlockState newState = callback.onFluidPlaceBlock(world, pos, state);
+			if (newState != null) return newState;
 		}
 
 		return null;
