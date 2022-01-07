@@ -2,6 +2,8 @@ package com.simibubi.create.lib.mixin.common;
 
 import java.util.Collection;
 
+import com.simibubi.create.lib.event.EntityReadExtraDataCallback;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -91,7 +93,7 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	public void create$beforeWriteCustomData(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
 		if (create$extraCustomData != null && !create$extraCustomData.isEmpty()) {
-			Create.LOGGER.debug("writing custom data to entity [{}]", MixinHelper.<Entity>cast(this).toString());
+			Create.LOGGER.debug("writing custom data to entity [{}]", this);
 			tag.put(EntityHelper.EXTRA_DATA_KEY, create$extraCustomData);
 		}
 	}
@@ -101,6 +103,7 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 		if (tag.contains(EntityHelper.EXTRA_DATA_KEY)) {
 			create$extraCustomData = tag.getCompound(EntityHelper.EXTRA_DATA_KEY);
 		}
+		EntityReadExtraDataCallback.EVENT.invoker().onLoad((Entity) (Object) this, create$extraCustomData);
 	}
 
 	// RUNNING EFFECTS

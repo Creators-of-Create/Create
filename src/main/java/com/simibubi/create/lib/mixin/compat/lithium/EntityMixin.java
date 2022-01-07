@@ -27,7 +27,7 @@ public abstract class EntityMixin {
 	 * @reason We stan Lithium's collision optimizations but need to ensure they aren't applied in Create's PonderWorld.
 	 */
 	@Inject(method = "collideBoundingBox", at = @At("HEAD"), cancellable = true)
-	private static void create$stopLithiumCollisionChangesInPonderWorld(@Nullable Entity entity, Vec3 movement, AABB entityBoundingBox, Level world, List<VoxelShape> shapes, CallbackInfoReturnable ci) {
+	private static void create$stopLithiumCollisionChangesInPonderWorld(@Nullable Entity entity, Vec3 movement, AABB entityBoundingBox, Level world, List<VoxelShape> shapes, CallbackInfoReturnable<Vec3> ci) {
 		if (world instanceof PonderWorld) {
 			// Vanilla copy
 			ImmutableList.Builder<VoxelShape> builder = ImmutableList.builderWithExpectedSize(shapes.size() + 1);
@@ -42,9 +42,9 @@ public abstract class EntityMixin {
 			}
 
 			builder.addAll(world.getBlockCollisions(entity, entityBoundingBox.expandTowards(movement)));
-			ci.setReturnValue(EntityAccessor.create$collideWithShapes(movement, entityBoundingBox, builder.build()));
 			// Prevent Lithium's changes from executing for PonderWorlds
-			ci.cancel();
+			ci.setReturnValue(EntityAccessor.create$collideWithShapes(movement, entityBoundingBox, builder.build()));
+
 		}
 	}
 }

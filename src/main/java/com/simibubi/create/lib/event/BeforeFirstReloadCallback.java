@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 
 @Environment(EnvType.CLIENT)
 public interface BeforeFirstReloadCallback {
-	public static final Event<BeforeFirstReloadCallback> EVENT = EventFactory.createArrayBacked(BeforeFirstReloadCallback.class, callbacks -> client -> {
+	Event<BeforeFirstReloadCallback> EVENT = EventFactory.createArrayBacked(BeforeFirstReloadCallback.class, callbacks -> client -> {
 		for (BeforeFirstReloadCallback callback : callbacks) {
 			callback.beforeFirstReload(client);
 		}

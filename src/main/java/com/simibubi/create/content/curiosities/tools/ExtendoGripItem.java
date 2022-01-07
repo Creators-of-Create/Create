@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.lib.util.EntityHelper;
 
+import dev.architectury.event.events.common.PlayerEvent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -37,6 +38,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
 
 public class ExtendoGripItem extends Item  {
 	private static DamageSource lastActiveDamageSource;
@@ -114,18 +117,18 @@ public class ExtendoGripItem extends Item  {
 
 	}
 
-//	@SubscribeEvent
-//	public static void addReachToJoiningPlayersHoldingExtendo(PlayerEvent.PlayerLoggedInEvent event) {
+	public static void addReachToJoiningPlayersHoldingExtendo(Entity entity, @Nullable CompoundTag persistentData) {
+		if (!(entity instanceof Player player) || persistentData == null) return;
 //		Player player = event.getPlayer();
 //		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
-//
-//		if (persistentData.contains(DUAL_EXTENDO_MARKER))
-//			player.getAttributes()
-//				.addTransientAttributeModifiers(doubleRangeModifier.get());
-//		else if (persistentData.contains(EXTENDO_MARKER))
-//			player.getAttributes()
-//				.addTransientAttributeModifiers(rangeModifier.get());
-//	}
+
+		if (persistentData.contains(DUAL_EXTENDO_MARKER))
+			player.getAttributes()
+				.addTransientAttributeModifiers(doubleRangeModifier.get());
+		else if (persistentData.contains(EXTENDO_MARKER))
+			player.getAttributes()
+				.addTransientAttributeModifiers(rangeModifier.get());
+	}
 
 //	@SubscribeEvent
 	@Environment(EnvType.CLIENT)
