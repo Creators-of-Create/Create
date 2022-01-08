@@ -159,13 +159,10 @@ public class AirCurrent {
 						entity.hurt(damageSourceFire, 2);
 					}
 					break;
-				case SOUL_SMOKING: //TODO maybe I should use new damage source instead of the regular smoke one?
+				case HAUNTING: 
 					if (entity instanceof LivingEntity livingEntity) {
-						livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 400));
-					}
-					if (!entity.fireImmune()) {
-						entity.setSecondsOnFire(10);
-						entity.hurt(damageSourceFire, 4);
+						livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+						livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
 					}
 					break;
 				case SPLASHING:

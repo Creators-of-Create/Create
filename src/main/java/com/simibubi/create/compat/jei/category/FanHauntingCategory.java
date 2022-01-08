@@ -1,10 +1,12 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.contraptions.components.fan.SoulSmokingRecipe;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -15,30 +17,26 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluids;
 
-import java.util.Arrays;
-import java.util.List;
+public class FanHauntingCategory extends ProcessingViaFanCategory<HauntingRecipe> {
 
-public class FanSoulSmokingCategory extends ProcessingViaFanCategory<SoulSmokingRecipe> {
-
-	public FanSoulSmokingCategory() {
+	public FanHauntingCategory() {
 		super(185, doubleItemIcon(AllItems.PROPELLER.get(), Items.SOUL_CAMPFIRE));
 	}
 
 	@Override
-	public Class<? extends SoulSmokingRecipe> getRecipeClass() {
-		return SoulSmokingRecipe.class;
+	public Class<? extends HauntingRecipe> getRecipeClass() {
+		return HauntingRecipe.class;
 	}
 
 	@Override
-	public void setIngredients(SoulSmokingRecipe recipe, IIngredients ingredients) {
+	public void setIngredients(HauntingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
 		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, SoulSmokingRecipe recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, HauntingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		int xOffsetGlobal = 8 * (3 - Math.min(3, results.size()));
@@ -64,7 +62,7 @@ public class FanSoulSmokingCategory extends ProcessingViaFanCategory<SoulSmoking
 	}
 
 	@Override
-	protected void renderWidgets(PoseStack matrixStack, SoulSmokingRecipe recipe, double mouseX, double mouseY) {
+	protected void renderWidgets(PoseStack matrixStack, HauntingRecipe recipe, double mouseX, double mouseY) {
 		int size = recipe.getRollableResultsAsItemStacks()
 			.size();
 		int xOffsetGlobal = 8 * (3 - Math.min(3, size));

@@ -6,10 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.content.contraptions.components.fan.SoulSmokingRecipe;
-import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
-import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
 
 import net.minecraft.data.DataGenerator;
@@ -17,7 +14,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluids;
 
 public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
@@ -79,21 +75,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.planks()))
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ItemTags.WOODEN_BUTTONS))
 		.addStep(CuttingRecipe::new, rb -> rb.duration(50))
-		),
-
-	NETHERRACK = create("netherrack", b->b.require(Items.BLACKSTONE)
-			.transitionTo(AllItems.INCOMPLETE_NETHERRACK.get())
-			.addOutput(new ItemStack(Blocks.NETHERRACK,2),35)
-			.addOutput(new ItemStack(Blocks.BLACKSTONE, 1), 5)
-			.addOutput(new ItemStack(Blocks.BASALT, 1), 4)
-			.addOutput(new ItemStack(Blocks.DEEPSLATE, 1), 3)
-			.addOutput(new ItemStack(Blocks.MAGMA_BLOCK, 1), 2)
-			.addOutput(new ItemStack(Blocks.OBSIDIAN, 1), 1)
-			.loops(2)
-			.addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.CINDER_FLOUR.get()))
-			.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA,50))
-			.addStep(CuttingRecipe::new, rb -> rb.duration(50))
-	)
+		)
 	;
 
 	public SequencedAssemblyRecipeGen(DataGenerator p_i48262_1_) {

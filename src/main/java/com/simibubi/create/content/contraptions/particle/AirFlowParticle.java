@@ -121,15 +121,15 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 						zd * .125f);
 		}
 
-		if (type == InWorldProcessing.Type.SOUL_SMOKING) {//TODO soul smoking special particle?
-			setColor(Color.mixColors(0x0, 0x555555, level.random.nextFloat()));
+		if (type == InWorldProcessing.Type.HAUNTING) {
+			setColor(Color.mixColors(0x0, 0x126568, level.random.nextFloat()));
 			setAlpha(1f);
 			selectSprite(level.random.nextInt(3));
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
+			if (level.random.nextFloat() < 1 / 128f)
+				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, xd * .125f, yd * .125f,
 						zd * .125f);
 			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, xd * .125f, yd * .125f,
+				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
 						zd * .125f);
 		}
 
