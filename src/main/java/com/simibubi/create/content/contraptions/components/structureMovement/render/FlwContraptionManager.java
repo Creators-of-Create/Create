@@ -9,11 +9,12 @@ import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
 import com.jozufozu.flywheel.core.Formats;
+import com.jozufozu.flywheel.core.Materials;
+import com.jozufozu.flywheel.core.compile.ProgramContext;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.Textures;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.CreateContexts;
 
 import net.minecraft.client.renderer.RenderType;
@@ -49,7 +50,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 
 		Textures.bindActiveTextures();
 
-		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.PASSTHRU, Formats.BLOCK, RenderLayer.CUTOUT);
+		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(ProgramContext.create(Materials.Names.PASSTHRU, Formats.BLOCK, event.getLayer()));
 
 		structureShader.bind();
 		structureShader.uploadViewProjection(event.viewProjection);
