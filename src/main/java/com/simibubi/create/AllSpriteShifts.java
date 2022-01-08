@@ -10,7 +10,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
@@ -21,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 
 public class AllSpriteShifts {
 
-	static final Map<WoodType, CTSpriteShiftEntry> WOODEN_WINDOWS = new IdentityHashMap<>();
+	private static final Map<WoodType, CTSpriteShiftEntry> WOODEN_WINDOWS = new IdentityHashMap<>();
 
 	public static final Map<DyeColor, SpriteShiftEntry> DYED_BELTS = new IdentityHashMap<>(),
 		DYED_OFFSET_BELTS = new IdentityHashMap<>(), DYED_DIAGONAL_BELTS = new IdentityHashMap<>();
@@ -33,22 +32,22 @@ public class AllSpriteShifts {
 		ORNATE_IRON_WINDOW = vertical("palettes/ornate_iron_window");
 
 	public static final CTSpriteShiftEntry CRAFTER_FRONT = getCT(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing"),
-		CRAFTER_SIDE = getCT(CTType.VERTICAL, "crafter_side"),
-		CRAFTER_OTHERSIDE = getCT(CTType.HORIZONTAL, "crafter_side"),
-		ANDESITE_ENCASED_COGWHEEL_SIDE = getCT(CTType.VERTICAL, "andesite_encased_cogwheel_side"),
-		ANDESITE_ENCASED_COGWHEEL_OTHERSIDE = getCT(CTType.HORIZONTAL, "andesite_encased_cogwheel_side"),
-		BRASS_ENCASED_COGWHEEL_SIDE = getCT(CTType.VERTICAL, "brass_encased_cogwheel_side"),
-		BRASS_ENCASED_COGWHEEL_OTHERSIDE = getCT(CTType.HORIZONTAL, "brass_encased_cogwheel_side");
+		CRAFTER_SIDE = vertical("crafter_side"),
+		CRAFTER_OTHERSIDE = horizontal("crafter_side"),
+		ANDESITE_ENCASED_COGWHEEL_SIDE = vertical("andesite_encased_cogwheel_side"),
+		ANDESITE_ENCASED_COGWHEEL_OTHERSIDE = horizontal("andesite_encased_cogwheel_side"),
+		BRASS_ENCASED_COGWHEEL_SIDE = vertical("brass_encased_cogwheel_side"),
+		BRASS_ENCASED_COGWHEEL_OTHERSIDE = horizontal("brass_encased_cogwheel_side");
 
 	public static final CTSpriteShiftEntry ANDESITE_CASING = omni("andesite_casing"),
 		BRASS_CASING = omni("brass_casing"), COPPER_CASING = omni("copper_casing"),
 		SHADOW_STEEL_CASING = omni("shadow_steel_casing"), REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
 		CREATIVE_CASING = getCT(CTType.CROSS, "creative_casing");
 
-	public static final CTSpriteShiftEntry CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_side"),
-		SECONDARY_CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "secondary_linear_chassis_side"),
-		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
-		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
+	public static final CTSpriteShiftEntry CHASSIS_SIDE = omni("linear_chassis_side"),
+		SECONDARY_CHASSIS_SIDE = omni("secondary_linear_chassis_side"),
+		CHASSIS = omni("linear_chassis_end"),
+		CHASSIS_STICKY = omni("linear_chassis_end_sticky");
 
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
 		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank"),
@@ -67,14 +66,6 @@ public class AllSpriteShifts {
 		populateMaps();
 	}
 
-	//
-
-	public static CTSpriteShiftEntry getWoodenWindow(WoodType woodType) {
-		return WOODEN_WINDOWS.get(woodType);
-	}
-
-	//
-
 	private static void populateMaps() {
 		WoodType[] supportedWoodTypes = new WoodType[] { WoodType.OAK, WoodType.SPRUCE, WoodType.BIRCH, WoodType.ACACIA,
 			WoodType.JUNGLE, WoodType.DARK_OAK, WoodType.CRIMSON, WoodType.WARPED };
@@ -90,24 +81,30 @@ public class AllSpriteShifts {
 		}
 	}
 
-	static Couple<CTSpriteShiftEntry> vault(String name) {
+	private static Couple<CTSpriteShiftEntry> vault(String name) {
 		final String prefixed = "vault_" + name;
 		return Couple
-			.createWithContext(b -> getCT(CTSpriteShifter.CTType.CROSS, prefixed, b ? prefixed : prefixed + "_large"));
+			.createWithContext(b -> getCT(CTType.CROSS, prefixed, b ? prefixed : prefixed + "_large"));
 	}
 
 	//
 
-	static CTSpriteShiftEntry omni(String name) {
+	private static CTSpriteShiftEntry omni(String name) {
 		return getCT(OMNIDIRECTIONAL, name);
 	}
 
-	static CTSpriteShiftEntry vertical(String name) {
+	private static CTSpriteShiftEntry horizontal(String name) {
+		return getCT(HORIZONTAL, name);
+	}
+
+	private static CTSpriteShiftEntry vertical(String name) {
 		return getCT(VERTICAL, name);
 	}
 
-	static CTSpriteShiftEntry horizontal(String name) {
-		return getCT(HORIZONTAL, name);
+	//
+
+	public static CTSpriteShiftEntry getWoodenWindow(WoodType woodType) {
+		return WOODEN_WINDOWS.get(woodType);
 	}
 
 }

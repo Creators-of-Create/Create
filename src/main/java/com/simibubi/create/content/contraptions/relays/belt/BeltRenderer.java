@@ -25,7 +25,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -55,7 +54,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	protected void renderSafe(BeltTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
+		if (!Backend.canUseInstancing(te.getLevel())) {
 
 			BlockState blockState = te.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;
@@ -308,11 +307,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	}
 
 	protected int getPackedLight(BeltTileEntity controller, float beltPos) {
-		int segment = (int) Math.floor(beltPos) * 2;
-		if (controller.light == null || segment >= controller.light.length || segment < 0)
+		int segment = (int) Math.floor(beltPos);
+		if (controller.lighter == null || segment >= controller.lighter.lightSegments() || segment < 0)
 			return 0;
 
-		return LightTexture.pack(controller.light[segment], controller.light[segment + 1]);
+		return controller.lighter.getPackedLight(segment);
 	}
 
 }

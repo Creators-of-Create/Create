@@ -17,7 +17,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
-public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> {
+public abstract class ContraptionRenderingWorld<C extends ContraptionRenderInfo> {
 	protected final Level world;
 
 	private int removalTimer;
@@ -25,7 +25,7 @@ public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> 
 	protected final Int2ObjectMap<C> renderInfos = new Int2ObjectOpenHashMap<>();
 	protected final List<C> visible = new ObjectArrayList<>();
 
-	public ContraptionRenderManager(LevelAccessor world) {
+	public ContraptionRenderingWorld(LevelAccessor world) {
 		this.world = (Level) world;
 	}
 

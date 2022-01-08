@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.press;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
@@ -11,7 +11,7 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class PressInstance extends ShaftInstance implements IDynamicInstance {
+public class PressInstance extends ShaftInstance implements DynamicInstance {
 
     private final OrientedData pressHead;
     private final MechanicalPressTileEntity press;

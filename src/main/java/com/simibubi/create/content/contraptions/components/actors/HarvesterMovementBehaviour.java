@@ -6,6 +6,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -13,7 +14,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -50,16 +50,15 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld,
+	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
 		MovementContext context) {
 		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!Backend.getInstance()
-			.canUseInstancing())
+        if (!Backend.isOn())
 			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
@@ -108,7 +107,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		world.setBlockAndUpdate(pos, cutCrop(world, pos, stateVisited));
 	}
 
-	private boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
+	public boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
 		boolean harvestPartial = AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get();
 		boolean replant = AllConfigs.SERVER.kinetics.harvesterReplants.get();
 
@@ -142,7 +141,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		return false;
 	}
 
-	private boolean isValidOther(Level world, BlockPos pos, BlockState state) {
+	public boolean isValidOther(Level world, BlockPos pos, BlockState state) {
 		if (state.getBlock() instanceof CropBlock)
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)

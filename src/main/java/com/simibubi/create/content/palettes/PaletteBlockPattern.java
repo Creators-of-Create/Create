@@ -8,6 +8,7 @@ import static com.simibubi.create.content.palettes.PaletteBlockPattern.PatternNa
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
@@ -132,8 +133,8 @@ public class PaletteBlockPattern {
 			.accept(c, p);
 	}
 
-	public Optional<ConnectedTextureBehaviour> createCTBehaviour(String variant) {
-		return ctFactory.map(d -> d.apply(variant));
+	public Optional<Supplier<ConnectedTextureBehaviour>> createCTBehaviour(String variant) {
+		return ctFactory.map(d -> () -> d.apply(variant));
 	}
 
 	// Builder
@@ -152,24 +153,6 @@ public class PaletteBlockPattern {
 		this.blockFactory = blockFactory;
 		return this;
 	}
-
-//	@SafeVarargs
-//	private final PaletteBlockPattern blockTags(Tag.Named<Block>... tags) {
-//		blockTags = tags;
-//		return this;
-//	}
-//
-//	@SafeVarargs
-//	private final PaletteBlockPattern itemTags(Tag.Named<Item>... tags) {
-//		itemTags = tags;
-//		return this;
-//	}
-//
-//	private PaletteBlockPattern addRecipes(
-//		NonNullFunction<NonNullSupplier<Block>, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> func) {
-//		this.additionalRecipes = func;
-//		return this;
-//	}
 
 	private PaletteBlockPattern connectedTextures(Function<String, ConnectedTextureBehaviour> factory) {
 		this.ctFactory = Optional.of(factory);

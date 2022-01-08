@@ -1,33 +1,33 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
-import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.core.Formats;
+import com.jozufozu.flywheel.core.layout.BufferLayout;
+import com.jozufozu.flywheel.core.layout.CommonItems;
 
 public class AllInstanceFormats {
 
-	public static VertexFormat ROTATING = kineticInstance()
-			.addAttributes(CommonAttributes.NORMAL)
+	public static BufferLayout ROTATING = kineticInstance()
+			.addItems(CommonItems.NORMAL)
 			.build();
 
-	public static VertexFormat BELT = kineticInstance()
-			.addAttributes(CommonAttributes.QUATERNION, CommonAttributes.UV, CommonAttributes.VEC4,
-					CommonAttributes.NORMALIZED_BYTE)
+	public static BufferLayout BELT = kineticInstance()
+			.addItems(CommonItems.QUATERNION, CommonItems.UV, CommonItems.VEC4,
+					CommonItems.NORMALIZED_BYTE)
 			.build();
 
-	public static VertexFormat ACTOR = VertexFormat.builder()
-			.addAttributes(CommonAttributes.VEC3, CommonAttributes.LIGHT, CommonAttributes.FLOAT,
-					CommonAttributes.NORMAL, CommonAttributes.QUATERNION, CommonAttributes.NORMAL,
-					CommonAttributes.FLOAT)
+	public static BufferLayout ACTOR = BufferLayout.builder()
+			.addItems(CommonItems.VEC3, CommonItems.LIGHT, CommonItems.FLOAT,
+					CommonItems.NORMAL, CommonItems.QUATERNION, CommonItems.NORMAL,
+					CommonItems.FLOAT)
 			.build();
 
-	public static VertexFormat FLAP = VertexFormat.builder()
-			.addAttributes(CommonAttributes.VEC3, CommonAttributes.LIGHT, CommonAttributes.VEC3, CommonAttributes.VEC3,
-					CommonAttributes.FLOAT, CommonAttributes.FLOAT, CommonAttributes.FLOAT, CommonAttributes.FLOAT)
+	public static BufferLayout FLAP = BufferLayout.builder()
+			.addItems(CommonItems.VEC3, CommonItems.LIGHT, CommonItems.VEC3, CommonItems.VEC3,
+					CommonItems.FLOAT, CommonItems.FLOAT, CommonItems.FLOAT, CommonItems.FLOAT)
 			.build();
 
-	private static VertexFormat.Builder kineticInstance() {
-		return Formats.litInstance()
-				.addAttributes(CommonAttributes.VEC3, CommonAttributes.FLOAT, CommonAttributes.FLOAT);
+	private static BufferLayout.Builder kineticInstance() {
+		return BufferLayout.builder()
+				.addItems(CommonItems.LIGHT, CommonItems.RGBA)
+				.addItems(CommonItems.VEC3, CommonItems.FLOAT, CommonItems.FLOAT);
 	}
 }

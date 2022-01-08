@@ -1,9 +1,7 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 /**

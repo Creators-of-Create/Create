@@ -30,7 +30,6 @@ import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
@@ -58,7 +57,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4a";
+	public static final String VERSION = "0.4b";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -124,8 +123,6 @@ public class Create {
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
-
-		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
 		event.enqueueWork(() -> {
 			AllTriggers.register();

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class KineticTileInstance<T extends KineticTileEntity> extends TileEntityInstance<T> {
+public abstract class KineticTileInstance<T extends KineticTileEntity> extends BlockEntityInstance<T> {
 
     protected final Direction.Axis axis;
 
@@ -38,7 +38,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         instance.setRotationAxis(axis)
                 .setRotationOffset(getRotationOffset(axis))
                 .setRotationalSpeed(speed)
-                .setColor(tile);
+                .setColor(blockEntity);
     }
 
     protected final RotatingData setup(RotatingData key) {
@@ -57,7 +57,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         key.setRotationAxis(axis)
                 .setRotationalSpeed(speed)
                 .setRotationOffset(getRotationOffset(axis))
-                .setColor(tile)
+                .setColor(blockEntity)
                 .setPosition(getInstancePosition());
 
         return key;
@@ -78,7 +78,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected float getTileSpeed() {
-        return tile.getSpeed();
+        return blockEntity.getSpeed();
     }
 
     protected BlockState shaft() {

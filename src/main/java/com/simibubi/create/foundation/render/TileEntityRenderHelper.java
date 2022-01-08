@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
@@ -13,7 +14,6 @@ import com.mojang.math.Vector4f;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -36,20 +36,20 @@ public class TileEntityRenderHelper {
 		renderTileEntities(world, null, customRenderTEs, ms, null, buffer, pt);
 	}
 
-	public static void renderTileEntities(Level world, @Nullable PlacementSimulationWorld renderWorld,
+	public static void renderTileEntities(Level world, @Nullable VirtualRenderWorld renderWorld,
 			Iterable<BlockEntity> customRenderTEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer) {
 		renderTileEntities(world, renderWorld, customRenderTEs, ms, lightTransform, buffer,
 			AnimationTickHolder.getPartialTicks());
 	}
 
-	public static void renderTileEntities(Level world, @Nullable PlacementSimulationWorld renderWorld,
+	public static void renderTileEntities(Level world, @Nullable VirtualRenderWorld renderWorld,
 			Iterable<BlockEntity> customRenderTEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer,
 			float pt) {
 		Iterator<BlockEntity> iterator = customRenderTEs.iterator();
 		while (iterator.hasNext()) {
 			BlockEntity tileEntity = iterator.next();
-			if (Backend.getInstance().canUseInstancing(renderWorld) && InstancedRenderRegistry.getInstance()
-					.shouldSkipRender(tileEntity)) continue;
+			if (Backend.canUseInstancing(renderWorld) && InstancedRenderRegistry.shouldSkipRender(tileEntity))
+				continue;
 
 			BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(tileEntity);
 			if (renderer == null) {
@@ -90,7 +90,7 @@ public class TileEntityRenderHelper {
 		}
 	}
 
-	public static int getCombinedLight(Level world, BlockPos worldPos, @Nullable PlacementSimulationWorld renderWorld,
+	public static int getCombinedLight(Level world, BlockPos worldPos, @Nullable VirtualRenderWorld renderWorld,
 			BlockPos renderWorldPos) {
 		int worldLight = LevelRenderer.getLightColor(world, worldPos);
 

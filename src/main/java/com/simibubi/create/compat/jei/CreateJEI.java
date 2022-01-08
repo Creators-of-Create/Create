@@ -341,11 +341,13 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static List<Recipe<?>> findRecipes(Predicate<Recipe<?>> predicate) {
-		return Minecraft.getInstance().level.getRecipeManager()
-				.getRecipes()
-				.stream()
-				.filter(predicate)
-				.collect(Collectors.toList());
+		return Minecraft.getInstance()
+			.getConnection()
+			.getRecipeManager()
+			.getRecipes()
+			.stream()
+			.filter(predicate)
+			.collect(Collectors.toList());
 	}
 
 	public static List<Recipe<?>> findRecipesByType(RecipeType<?> type) {

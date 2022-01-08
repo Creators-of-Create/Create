@@ -12,6 +12,6 @@ public class BackHalfShaftInstance extends HalfShaftInstance {
 
     @Override
     protected Direction getShaftDirection() {
-        return tile.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
+        return blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
     }
 }

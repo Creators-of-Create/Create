@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
@@ -40,7 +39,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRendered {
+public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;
@@ -173,11 +172,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements FlywheelRen
 		AllPackets.channel.send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
 
 		flapsToSend.clear();
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
 	}
 
 	@Override

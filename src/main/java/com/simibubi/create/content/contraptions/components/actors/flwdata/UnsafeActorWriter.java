@@ -12,7 +12,7 @@ public class UnsafeActorWriter extends UnsafeBufferWriter<ActorData> {
 	}
 
 	@Override
-	public void write(ActorData d) {
+    protected void writeInternal(ActorData d) {
 		long addr = writePointer;
 		MemoryUtil.memPutFloat(addr, d.x);
 		MemoryUtil.memPutFloat(addr + 4, d.y);
@@ -31,6 +31,5 @@ public class UnsafeActorWriter extends UnsafeBufferWriter<ActorData> {
 		MemoryUtil.memPutByte(addr + 38, d.rotationCenterY);
 		MemoryUtil.memPutByte(addr + 39, d.rotationCenterZ);
 		MemoryUtil.memPutFloat(addr + 40, d.speed);
-		advance();
 	}
 }

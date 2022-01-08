@@ -1,5 +1,7 @@
 package com.simibubi.create.content.palettes;
 
+import static com.simibubi.create.AllTags.pickaxeOnly;
+
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -30,8 +32,6 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraftforge.client.model.generators.ModelFile;
-
-import static com.simibubi.create.AllTags.pickaxeOnly;
 
 public abstract class PaletteBlockPartial<B extends Block> {
 

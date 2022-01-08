@@ -26,7 +26,7 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 	protected void renderSafe(AnalogLeverTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState leverState = te.getBlockState();
 		float state = te.clientState.get(partialTicks);

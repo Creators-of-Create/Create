@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -8,7 +7,9 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.tile.TileInstanceManager;
+import com.jozufozu.flywheel.backend.instancing.TaskEngine;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstanceManager;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -17,15 +18,15 @@ import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
-public class ContraptionInstanceManager extends TileInstanceManager {
+public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 
     protected ArrayList<ActorInstance> actors = new ArrayList<>();
 
-    private final WeakReference<RenderedContraption> contraption;
+    private final VirtualRenderWorld renderWorld;
 
-    ContraptionInstanceManager(RenderedContraption contraption, MaterialManager materialManager) {
+    ContraptionInstanceManager(MaterialManager materialManager, VirtualRenderWorld contraption) {
 		super(materialManager);
-		this.contraption = new WeakReference<>(contraption);
+		this.renderWorld = contraption;
 	}
 
     public void tick() {
@@ -33,8 +34,8 @@ public class ContraptionInstanceManager extends TileInstanceManager {
     }
 
     @Override
-	public void beginFrame(Camera info) {
-		super.beginFrame(info);
+	public void beginFrame(TaskEngine taskEngine, Camera info) {
+		super.beginFrame(taskEngine, info);
 
 		actors.forEach(ActorInstance::beginFrame);
 	}
@@ -52,7 +53,7 @@ public class ContraptionInstanceManager extends TileInstanceManager {
         MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 
         if (movementBehaviour != null && movementBehaviour.hasSpecialInstancedRendering()) {
-            ActorInstance instance = movementBehaviour.createInstance(materialManager, getContraption().renderWorld, context);
+            ActorInstance instance = movementBehaviour.createInstance(materialManager, renderWorld, context);
 
             actors.add(instance);
 
@@ -60,10 +61,6 @@ public class ContraptionInstanceManager extends TileInstanceManager {
         }
 
         return null;
-    }
-
-    public RenderedContraption getContraption() {
-        return contraption.get();
     }
 }
 

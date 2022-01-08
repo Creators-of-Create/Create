@@ -74,7 +74,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			if (!isVirtual())
 				return;
 		}
-		
+
 //		if (pressureUpdate)
 //			updatePressureChange();
 
@@ -388,10 +388,5 @@ public class PumpTileEntity extends KineticTileEntity {
 			return attachment;
 		}
 
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
 	}
 }

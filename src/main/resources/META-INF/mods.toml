@@ -5,7 +5,7 @@ license="MIT"
 
 [[mods]]
 modId="create"
-version="0.4a"
+version="0.4b"
 displayName="Create"
 #updateJSONURL=""
 displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
@@ -32,6 +32,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[1.18-0.4.0,1.18-0.4.2)"
+    versionRange="[1.18-0.5.1,1.18-0.5.2)"
     ordering="AFTER"
     side="BOTH"

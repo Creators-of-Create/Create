@@ -11,8 +11,8 @@ import net.minecraft.world.level.material.FluidState;
 
 public class RayTraceWorld implements BlockGetter {
 
-	private LevelAccessor template;
-	private BiFunction<BlockPos, BlockState, BlockState> stateGetter;
+	private final LevelAccessor template;
+	private final BiFunction<BlockPos, BlockState, BlockState> stateGetter;
 
 	public RayTraceWorld(LevelAccessor template, BiFunction<BlockPos, BlockState, BlockState> stateGetter) {
 		this.template = template;

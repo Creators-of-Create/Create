@@ -424,11 +424,6 @@ public class DeployerTileEntity extends KineticTileEntity {
 		return true;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public float getHandOffset(float partialTicks) {
 		if (isVirtual())
 			return animatedOffset.getValue(partialTicks);

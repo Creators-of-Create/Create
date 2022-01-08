@@ -128,11 +128,6 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 				.getDescriptionId());
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public int getAirLevel() {
 		return airLevel;
 	}

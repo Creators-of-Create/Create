@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -14,15 +15,24 @@ import net.minecraft.world.phys.Vec3;
 
 public class ContraptionWorld extends WrappedWorld {
     final Contraption contraption;
+	private final int minY;
+	private final int height;
 
-    public ContraptionWorld(Level world, Contraption contraption) {
+	public ContraptionWorld(Level world, Contraption contraption) {
         super(world);
 
         this.contraption = contraption;
-    }
 
+		minY = nextMultipleOf16(contraption.bounds.minY);
+		height = nextMultipleOf16(contraption.bounds.maxY) - minY;
+	}
 
-    @Override
+	// https://math.stackexchange.com/questions/291468
+	private static int nextMultipleOf16(double a) {
+		return (((Math.abs((int) a) - 1) | 15) + 1) * Mth.sign(a);
+	}
+
+	@Override
     public BlockState getBlockState(BlockPos pos) {
         StructureTemplate.StructureBlockInfo blockInfo = contraption.getBlocks().get(pos);
 
@@ -46,4 +56,17 @@ public class ContraptionWorld extends WrappedWorld {
     public void playLocalSound(double x, double y, double z, SoundEvent p_184134_7_, SoundSource p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
         world.playLocalSound(x, y, z, p_184134_7_, p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
     }
+
+	// Ensure that we provide accurate information about ContraptionWorld height to mods (such as Starlight) which
+	// expect Levels to only have blocks located in chunks within their height range.
+
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	@Override
+	public int getMinBuildHeight() {
+		return minY;
+	}
 }

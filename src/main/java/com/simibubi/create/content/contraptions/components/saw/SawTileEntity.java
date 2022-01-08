@@ -499,9 +499,4 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		return false;
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 }

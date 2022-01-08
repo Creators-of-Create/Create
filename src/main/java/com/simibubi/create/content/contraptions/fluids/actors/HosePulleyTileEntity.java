@@ -187,9 +187,4 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 			return this.capability.cast();
 		return super.getCapability(cap, side);
 	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
 }

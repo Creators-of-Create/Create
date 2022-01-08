@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.util.BufferBuilderReader;
+import com.jozufozu.flywheel.api.vertex.VertexList;
+import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
@@ -31,15 +33,14 @@ import net.minecraftforge.client.model.pipeline.LightUtil;
 
 public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
-	private final BufferBuilderReader template;
+	private final VertexList template;
 
 	// Vertex Position
-	private PoseStack transforms;
+	private final PoseStack transforms;
 
 	// Vertex Coloring
 	private boolean shouldColor;
 	private int r, g, b, a;
-	private boolean disableDiffuseDiv;
 	private boolean disableDiffuseMult;
 
 	// Vertex Texture Coords
@@ -61,24 +62,11 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
-	private final Vector4f pos = new Vector4f();
-	private final Vector3f normal = new Vector3f();
-	private final Vector4f lightPos = new Vector4f();
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		template = new BufferBuilderReader(buf);
+		template = new BlockVertexList(buf);
 		transforms = new PoseStack();
 		transforms.pushPose();
-	}
-
-	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
-		float f = sprite.getU1() - sprite.getU0();
-		return (u - sprite.getU0()) / f * 16.0F;
-	}
-
-	public static float getUnInterpolatedV(TextureAtlasSprite sprite, float v) {
-		float f = sprite.getV1() - sprite.getV0();
-		return (v - sprite.getV0()) / f * 16.0F;
 	}
 
 	public void renderInto(PoseStack input, VertexConsumer builder) {
@@ -105,19 +93,24 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			WORLD_LIGHT_CACHE.clear();
 		}
 
+		final Vector4f pos = new Vector4f();
+		final Vector3f normal = new Vector3f();
+		final Vector4f lightPos = new Vector4f();
+
 		float f = .5f;
 		int vertexCount = template.getVertexCount();
 		for (int i = 0; i < vertexCount; i++) {
 			float x = template.getX(i);
 			float y = template.getY(i);
 			float z = template.getZ(i);
-			byte r = template.getR(i);
-			byte g = template.getG(i);
-			byte b = template.getB(i);
-			byte a = template.getA(i);
-			float normalX = template.getNX(i) / 127f;
-			float normalY = template.getNY(i) / 127f;
-			float normalZ = template.getNZ(i) / 127f;
+
+			pos.set(x, y, z, 1F);
+			pos.transform(modelMat);
+			builder.vertex(pos.x(), pos.y(), pos.z());
+
+			float normalX = template.getNX(i);
+			float normalY = template.getNY(i);
+			float normalZ = template.getNZ(i);
 
 			normal.set(normalX, normalY, normalZ);
 			normal.transform(normalMat);
@@ -125,39 +118,26 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			float ny = normal.y();
 			float nz = normal.z();
 
-			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
-			float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
-
-			pos.set(x, y, z, 1F);
-			pos.transform(modelMat);
-			builder.vertex(pos.x(), pos.y(), pos.z());
-
+			byte r, g, b, a;
 			if (shouldColor) {
-				if (disableDiffuseMult) {
-					builder.color(this.r, this.g, this.b, this.a);
-				} else {
-					int colorR = transformColor(this.r, instanceDiffuse);
-					int colorG = transformColor(this.g, instanceDiffuse);
-					int colorB = transformColor(this.b, instanceDiffuse);
-					builder.color(colorR, colorG, colorB, this.a);
-				}
+				r = (byte) this.r;
+				g = (byte) this.g;
+				b = (byte) this.b;
+				a = (byte) this.a;
 			} else {
-				if (disableDiffuseDiv && disableDiffuseMult) {
-					builder.color(r, g, b, a);
-				} else {
-					float diffuseMult;
-					if (disableDiffuseDiv) {
-						diffuseMult = instanceDiffuse;
-					} else if (disableDiffuseMult) {
-						diffuseMult = 1 / staticDiffuse;
-					} else {
-						diffuseMult = instanceDiffuse / staticDiffuse;
-					}
-					int colorR = transformColor(r, diffuseMult);
-					int colorG = transformColor(g, diffuseMult);
-					int colorB = transformColor(b, diffuseMult);
-					builder.color(colorR, colorG, colorB, a);
-				}
+				r = template.getR(i);
+				g = template.getG(i);
+				b = template.getB(i);
+				a = template.getA(i);
+			}
+			if (disableDiffuseMult || OptifineHandler.usingShaders()) {
+				builder.color(r, g, b, a);
+			} else {
+				float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
+				int colorR = transformColor(r, instanceDiffuse);
+				int colorG = transformColor(g, instanceDiffuse);
+				int colorB = transformColor(b, instanceDiffuse);
+				builder.color(colorR, colorG, colorB, a);
 			}
 
 			float u = template.getU(i);
@@ -214,7 +194,6 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		g = 0;
 		b = 0;
 		a = 0;
-		disableDiffuseDiv = false;
 		disableDiffuseMult = false;
 		spriteShiftFunc = null;
 		hasOverlay = false;
@@ -228,6 +207,10 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		return this;
 	}
 
+	public boolean isEmpty() {
+		return template.isEmpty();
+	}
+
 	@Override
 	public SuperByteBuffer translate(double x, double y, double z) {
 		transforms.translate(x, y, z);
@@ -237,6 +220,24 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	@Override
 	public SuperByteBuffer multiply(Quaternion quaternion) {
 		transforms.mulPose(quaternion);
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer scale(float factorX, float factorY, float factorZ) {
+		transforms.scale(factorX, factorY, factorZ);
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer pushPose() {
+		transforms.pushPose();
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer popPose() {
+		transforms.popPose();
 		return this;
 	}
 
@@ -284,16 +285,6 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 
 	public SuperByteBuffer color(Color c) {
 		return color(c.getRGB());
-	}
-
-	/**
-	 * Prevents vertex colors from being divided by the diffuse value calculated from the raw untransformed normal vector.
-	 * Useful when passed vertex colors do not have diffuse baked in.
-	 * Disabled when custom color is used.
-	 */
-	public SuperByteBuffer disableDiffuseDiv() {
-		disableDiffuseDiv = true;
-		return this;
 	}
 
 	/**
@@ -399,16 +390,22 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		return this;
 	}
 
-	public boolean isEmpty() {
-		return template.isEmpty();
-	}
-
 	public static int transformColor(byte component, float scale) {
 		return Mth.clamp((int) (Byte.toUnsignedInt(component) * scale), 0, 255);
 	}
 
 	public static int transformColor(int component, float scale) {
 		return Mth.clamp((int) (component * scale), 0, 255);
+	}
+
+	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
+		float f = sprite.getU1() - sprite.getU0();
+		return (u - sprite.getU0()) / f * 16.0F;
+	}
+
+	public static float getUnInterpolatedV(TextureAtlasSprite sprite, float v) {
+		float f = sprite.getV1() - sprite.getV0();
+		return (v - sprite.getV0()) / f * 16.0F;
 	}
 
 	public static int maxLight(int packedLight1, int packedLight2) {
@@ -422,24 +419,6 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	private static int getLight(Level world, Vector4f lightPos) {
 		BlockPos pos = new BlockPos(lightPos.x(), lightPos.y(), lightPos.z());
 		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.asLong(), $ -> LevelRenderer.getLightColor(world, pos));
-	}
-
-	@Override
-	public SuperByteBuffer scale(float factorX, float factorY, float factorZ) {
-		transforms.scale(factorX, factorY, factorZ);
-		return this;
-	}
-
-	@Override
-	public SuperByteBuffer pushPose() {
-		transforms.pushPose();
-		return this;
-	}
-
-	@Override
-	public SuperByteBuffer popPose() {
-		transforms.popPose();
-		return this;
 	}
 
 	@FunctionalInterface

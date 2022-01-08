@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
@@ -49,7 +48,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class KineticTileEntity extends SmartTileEntity
-	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered {
+	implements IHaveGoggleInformation, IHaveHoveringInformation {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -151,6 +150,7 @@ public class KineticTileEntity extends SmartTileEntity
 		this.stress = currentStress;
 		this.networkSize = networkSize;
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
+		setChanged();
 
 		if (overStressed != this.overStressed) {
 			float prevSpeed = getSpeed();
@@ -181,6 +181,7 @@ public class KineticTileEntity extends SmartTileEntity
 		boolean directionSwap = !fromOrToZero && Math.signum(previousSpeed) != Math.signum(getSpeed());
 		if (fromOrToZero || directionSwap)
 			flickerTally = getFlickerScore() + 5;
+		setChanged();
 	}
 
 	@Override
@@ -324,6 +325,7 @@ public class KineticTileEntity extends SmartTileEntity
 			getOrCreateNetwork().remove(this);
 
 		network = networkIn;
+		setChanged();
 
 		if (networkIn == null)
 			return;
