@@ -441,12 +441,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		if (contraption == null)
 			return;
-
-		discard();
-
+		
 		StructureTransform transform = makeStructureTransform();
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
+
+		discard();
 
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
