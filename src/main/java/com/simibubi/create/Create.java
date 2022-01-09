@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineModifiers;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -46,7 +46,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4b";
+	public static final String VERSION = "0.4c";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -85,7 +85,7 @@ public class Create implements ModInitializer {
 		AllInteractionBehaviours.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
-		FurnaceEngineModifiers.register();
+		FurnaceEngineInteractions.registerDefaults();
 		BlockSpoutingBehaviour.register();
 
 		Milk.enableMilkFluid();

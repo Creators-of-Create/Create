@@ -29,13 +29,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,9 +43,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class AirCurrent {
-
-	private static final DamageSource damageSourceFire = DamageSourceHelper.create$createFireDamageSource("create.fan_fire").setScalesWithDifficulty();
-	private static final DamageSource damageSourceLava = DamageSourceHelper.create$createFireDamageSource("create.fan_lava").setScalesWithDifficulty();
 
 	public final IAirCurrentSource source;
 	public AABB bounds = new AABB(0, 0, 0, 0, 0, 0);
@@ -89,7 +82,8 @@ public class AirCurrent {
 	protected void tickAffectedEntities(Level world, Direction facing) {
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			if (!entity.isAlive() || !entity.getBoundingBox().intersects(bounds) || isPlayerCreativeFlying(entity)) {
+			if (!entity.isAlive() || !entity.getBoundingBox()
+				.intersects(bounds) || isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -105,12 +99,9 @@ public class AirCurrent {
 			Vec3 previousMotion = entity.getDeltaMovement();
 			float maxAcceleration = 5;
 
-			double xIn =
-				Mth.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration, maxAcceleration);
-			double yIn =
-				Mth.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration, maxAcceleration);
-			double zIn =
-				Mth.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
+			double xIn = Mth.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration, maxAcceleration);
+			double yIn = Mth.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration, maxAcceleration);
+			double zIn = Mth.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
 
 			entity.setDeltaMovement(previousMotion.add(new Vec3(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
@@ -123,53 +114,23 @@ public class AirCurrent {
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
 			if (entity instanceof ServerPlayer)
-				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType),
-					(Player) entity);
+				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType), (Player) entity);
 
 			if (processingType == null || processingType == Type.NONE) {
 				continue;
 			}
 
-			if (entity instanceof ItemEntity) {
-				InWorldProcessing.spawnParticlesForProcessing(world, entity.position(), processingType);
-				ItemEntity itemEntity = (ItemEntity) entity;
-				if (world.isClientSide)
+			if (entity instanceof ItemEntity itemEntity) {
+				if (world.isClientSide) {
+					processingType.spawnParticlesForProcessing(world, entity.position());
 					continue;
+				}
 				if (InWorldProcessing.canProcess(itemEntity, processingType))
 					InWorldProcessing.applyProcessing(itemEntity, processingType);
 				continue;
 			}
 
-			if (world.isClientSide)
-				continue;
-
-			switch (processingType) {
-			case BLASTING:
-				if (!entity.fireImmune()) {
-					entity.setSecondsOnFire(10);
-					entity.hurt(damageSourceLava, 4);
-				}
-				break;
-			case SMOKING:
-				if (!entity.fireImmune()) {
-					entity.setSecondsOnFire(2);
-					entity.hurt(damageSourceFire, 2);
-				}
-				break;
-			case SPLASHING:
-				if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
-					|| entity.getType() == EntityType.BLAZE) {
-					entity.hurt(DamageSource.DROWN, 2);
-				}
-				if (!entity.isOnFire())
-					break;
-				entity.clearFire();
-				world.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
-					SoundSource.NEUTRAL, 0.7F, 1.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
-				break;
-			default:
-				break;
-			}
+			processingType.affectEntity(entity, world);
 		}
 
 	}
@@ -324,10 +285,11 @@ public class AirCurrent {
 			InWorldProcessing.Type processingType = pair.getRight();
 
 			handler.handleProcessingOnAllItems((transported) -> {
-				InWorldProcessing.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported),
-					processingType);
-				if (world.isClientSide)
+				if (world.isClientSide) {
+					if (world != null)
+						processingType.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported));
 					return TransportedResult.doNothing();
+				}
 				return InWorldProcessing.applyProcessing(transported, world, processingType);
 			});
 		}

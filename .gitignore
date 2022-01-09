@@ -42,3 +42,5 @@ local.properties
 # PDT-specific
 .buildpath
 /linkie-cache/
+
+.DS_Store

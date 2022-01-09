@@ -377,8 +377,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	}
 
 	private Vec3 getWorldPositionOf(TransportedItemStack transported) {
-		Vec3 offsetVec = new Vec3(.5f, 14 / 16f, .5f);
-		return offsetVec.add(Vec3.atLowerCornerOf(tileEntity.getBlockPos()));
+		return VecHelper.getCenterOf(tileEntity.getBlockPos());
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class ContraptionRenderInfo {
 
 		AbstractContraptionEntity entity = contraption.entity;
 
-		visible = event.getClippingHelper().isVisible(entity.getBoundingBoxForCulling().inflate(2));
+		visible = event.getFrustum().isVisible(entity.getBoundingBoxForCulling().inflate(2));
 	}
 
 	public boolean isVisible() {

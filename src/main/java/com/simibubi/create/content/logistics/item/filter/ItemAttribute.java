@@ -142,6 +142,7 @@ public interface ItemAttribute {
 		EQUIPABLE(s -> s.getItem() instanceof EquipmentItem || s.getItem() instanceof ArmorItem),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
+		HAUNTABLE(InWorldProcessing::isHauntable),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
 			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
 		SMELTABLE((s, w) -> testRecipe(s, w, RecipeType.SMELTING)),

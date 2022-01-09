@@ -32,17 +32,6 @@ public class SuperGlueItem extends Item implements CustomMaxCountItem {
 		return true;
 	}
 
-//	done in item properties instead
-//	@Override
-//	public int getMaxDamage(ItemStack stack) {
-//		return 99;
-//	}
-
-	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return 1;
-	}
-
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		BlockPos blockpos = context.getClickedPos();

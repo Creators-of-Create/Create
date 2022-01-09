@@ -107,6 +107,11 @@ public class AllItems {
 					.model(AssetLookup.existingItemModel())
 					.register();
 
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_NETHERRACK =
+			REGISTRATE.item("incomplete_netherrack", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
+
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
@@ -234,6 +239,8 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
+		.properties(p -> p.stacksTo(1)
+			.durability(99))
 		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =

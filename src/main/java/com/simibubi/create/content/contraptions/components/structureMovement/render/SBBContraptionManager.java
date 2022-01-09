@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -21,7 +22,12 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 	@Override
 	public void renderLayer(RenderLayerEvent event) {
 		super.renderLayer(event);
-		visible.forEach(info -> renderContraptionLayerSBB(event, info));
+		RenderType type = event.getType();
+		VertexConsumer consumer = event.buffers.bufferSource()
+				.getBuffer(type);
+		visible.forEach(info -> renderContraptionLayerSBB(info, type, consumer));
+
+		event.buffers.bufferSource().endBatch(type);
 	}
 
 	@Override
@@ -38,9 +44,7 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 		return new ContraptionRenderInfo(c, renderWorld);
 	}
 
-	private void renderContraptionLayerSBB(RenderLayerEvent event, ContraptionRenderInfo renderInfo) {
-		RenderType layer = event.getType();
-
+	private void renderContraptionLayerSBB(ContraptionRenderInfo renderInfo, RenderType layer, VertexConsumer consumer) {
 		if (!renderInfo.isVisible()) return;
 
 		SuperByteBuffer contraptionBuffer = CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> ContraptionRenderDispatcher.buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
@@ -51,8 +55,7 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 			contraptionBuffer.transform(matrices.getModel())
 					.light(matrices.getWorld())
 					.hybridLight()
-					.renderInto(matrices.getViewProjection(), event.buffers.bufferSource()
-							.getBuffer(layer));
+					.renderInto(matrices.getViewProjection(), consumer);
 		}
 
 	}

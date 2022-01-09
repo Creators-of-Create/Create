@@ -93,7 +93,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		if (!isVisible()) return;
 
-		instanceWorld.tileInstanceManager.beginFrame(SerialTaskEngine.INSTANCE, event.getInfo());
+		instanceWorld.tileInstanceManager.beginFrame(SerialTaskEngine.INSTANCE, event.getCamera());
 
 		Vec3 cameraPos = event.getCameraPos();
 

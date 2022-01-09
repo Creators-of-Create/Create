@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.api.vertex.VertexList;
+import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
@@ -129,7 +130,7 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 				b = template.getB(i);
 				a = template.getA(i);
 			}
-			if (disableDiffuseMult) {
+			if (disableDiffuseMult || OptifineHandler.usingShaders()) {
 				builder.color(r, g, b, a);
 			} else {
 				float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
