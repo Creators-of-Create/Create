@@ -116,7 +116,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 			.get(0)
 			.getItems());
 
-		fluidStacks.init(0, true, 132, 8);
+		fluidStacks.init(0, false, 132, 8);
 		fluidStacks.set(0, withImprovedVisibility(fluidOutput));
 		itemStacks.init(0, true, 26, 7);
 		itemStacks.set(0, matchingIngredients);
