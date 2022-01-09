@@ -1,6 +1,7 @@
 <h1 align="center">Important Information</h1>
-<p align="center">This repo is for the Fabric port of Create.</p>
-<p align="center"><b>This project is not complete, and we do not recommend using it yet. You've been warned!</b></p>
+<p align="center">This is the official Fabric port of Create.</p>
+<p align="center"><b>This project is still unstable, and we do not recommend using it yet in worlds you
+care about!</b></p>
 
 [<h3 align="center">Contributing</h3>](README/CONTRIBUTING.md)
 
@@ -10,11 +11,12 @@
 
 ![Download](README/download.jpg)
 
-The Fabric port is currently incomplete and lacking in many features. Don't expect it to be finished
-soon. If you want to contribute and help with the porting, then by all means go for it! However don't expect
-to be able to play with this mod or have a compiled Jar anytime soon.
+If you want to help test Create on Fabric, you can use a recent build artifact from [our Actions page](https://github.com/Fabricators-of-Create/Create/actions).
+**These builds may or may not break your world. You use them at your own risk.** If you decide to test
+the mod, please be sure to [report any issues](https://github.com/Fabricators-of-Create/Create/issues)
+you find (if they haven't yet been reported)!
 
-While you wait for the port, you can listen to [Tchaikovsky's violin concerto in D major](https://youtu.be/cbJZeNlrYKg).
+Non-testers are invited to listen to [Tchaikovsky's violin concerto in D major](https://youtu.be/cbJZeNlrYKg) while they wait.
 <sup>Seriously, it's an awesome piece of music</sup>
 
 </p>
@@ -39,7 +41,7 @@ Check out the wiki and in-game Tool-tips for further info on how to use these fe
 [<img src="https://i.imgur.com/aWrjfKJ.jpg" width="200">](https://discord.gg/hmaD7Se "Feedback & Help")
 [<img src="https://i.imgur.com/xj8o2xC.jpg" width="200">](https://www.patreon.com/simibubi "Support Us")
 
-- Support for Minecraft 1.12: Not planned
+- Supported Minecraft versions: 1.18.1 (we do not plan to support earlier Minecraft versions)
 - Support for Forge: https://github.com/Creators-of-Create/Create
 <hr>
-<h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create">Project Page</a></h4>
+<h4 align="center">Learn more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create">Project Page</a></h4>
