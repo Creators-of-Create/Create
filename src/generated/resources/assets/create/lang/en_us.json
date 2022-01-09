@@ -1165,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "is not furnace fuel",
 	"create.item_attributes.washable": "can be Washed",
 	"create.item_attributes.washable.inverted": "cannot be Washed",
+	"create.item_attributes.hauntable": "can be Haunted",
+	"create.item_attributes.hauntable.inverted": "cannot be Haunted",
 	"create.item_attributes.crushable": "can be Crushed",
 	"create.item_attributes.crushable.inverted": "cannot be Crushed",
 	"create.item_attributes.smeltable": "can be Smelted",

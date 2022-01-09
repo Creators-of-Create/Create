@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 333",
+	"_": "Missing Localizations: 335",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1166,6 +1166,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "no es cumbustible",
 	"create.item_attributes.washable": "puede Lavarse",
 	"create.item_attributes.washable.inverted": "no puede Lavarse",
+	"create.item_attributes.hauntable": "UNLOCALIZED: can be Haunted",
+	"create.item_attributes.hauntable.inverted": "UNLOCALIZED: cannot be Haunted",
 	"create.item_attributes.crushable": "puede ser Triturado",
 	"create.item_attributes.crushable.inverted": "no puede ser Triturado",
 	"create.item_attributes.smeltable": "puede ser Derretido",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 5",
+	"_": "Missing Localizations: 7",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1166,6 +1166,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "화로 연료로 쓸 수 없음",
 	"create.item_attributes.washable": "세척될 수 있음",
 	"create.item_attributes.washable.inverted": "세척될 수 없음",
+	"create.item_attributes.hauntable": "UNLOCALIZED: can be Haunted",
+	"create.item_attributes.hauntable.inverted": "UNLOCALIZED: cannot be Haunted",
 	"create.item_attributes.crushable": "분쇄될 수 있음",
 	"create.item_attributes.crushable.inverted": "분쇄될 수 없음",
 	"create.item_attributes.smeltable": "구워질 수 있음",

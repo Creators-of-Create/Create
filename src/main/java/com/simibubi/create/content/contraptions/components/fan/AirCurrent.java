@@ -22,22 +22,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,11 +41,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class AirCurrent {
-
-	private static final DamageSource damageSourceFire = new DamageSource("create.fan_fire").setScalesWithDifficulty()
-		.setIsFire();
-	private static final DamageSource damageSourceLava = new DamageSource("create.fan_lava").setScalesWithDifficulty()
-		.setIsFire();
 
 	public final IAirCurrentSource source;
 	public AABB bounds = new AABB(0, 0, 0, 0, 0, 0);
@@ -134,93 +118,17 @@ public class AirCurrent {
 				continue;
 			}
 
-			if (entity instanceof ItemEntity) {
-				InWorldProcessing.spawnParticlesForProcessing(world, entity.position(), processingType);
-				ItemEntity itemEntity = (ItemEntity) entity;
-				if (world.isClientSide)
+			if (entity instanceof ItemEntity itemEntity) {
+				if (world.isClientSide) {
+					processingType.spawnParticlesForProcessing(world, entity.position());
 					continue;
+				}
 				if (InWorldProcessing.canProcess(itemEntity, processingType))
 					InWorldProcessing.applyProcessing(itemEntity, processingType);
 				continue;
 			}
 
-			if (entity instanceof Horse && world.isClientSide) {
-				Vec3 p = entity.getPosition(0);
-				Vec3 v = p.add(0, 0.5f, 0)
-					.add(VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1)
-						.multiply(1, 0.2f, 1)
-						.normalize()
-						.scale(1f));
-				world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
-				if (world.random.nextInt(3) == 0)
-					world.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
-						(world.random.nextFloat() - .5f) * .5f, 0.1f, (world.random.nextFloat() - .5f) * .5f);
-			}
-
-			if (world.isClientSide)
-				continue;
-
-			switch (processingType) {
-			case BLASTING:
-				if (!entity.fireImmune()) {
-					entity.setSecondsOnFire(10);
-					entity.hurt(damageSourceLava, 4);
-				}
-				break;
-			case SMOKING:
-				if (!entity.fireImmune()) {
-					entity.setSecondsOnFire(2);
-					entity.hurt(damageSourceFire, 2);
-				}
-				break;
-			case HAUNTING:
-				if (entity instanceof LivingEntity livingEntity) {
-					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
-					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
-				}
-				if (entity instanceof Horse horse) {
-					int progress = horse.getPersistentData()
-						.getInt("CreateHaunting");
-					if (progress < 100) {
-						if (progress % 10 == 0) {
-							world.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
-								1f, 1.5f * progress / 100f);
-						}
-						horse.getPersistentData()
-							.putInt("CreateHaunting", progress + 1);
-						continue;
-					}
-
-					world.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
-						SoundSource.NEUTRAL, 1.25f, 0.65f);
-
-					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(world);
-					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
-					serializeNBT.remove("UUID");
-					if (!horse.getArmor()
-						.isEmpty())
-						horse.spawnAtLocation(horse.getArmor());
-
-					skeletonHorse.deserializeNBT(serializeNBT);
-					skeletonHorse.setPos(horse.getPosition(0));
-					world.addFreshEntity(skeletonHorse);
-					horse.discard();
-				}
-				break;
-			case SPLASHING:
-				if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
-					|| entity.getType() == EntityType.BLAZE) {
-					entity.hurt(DamageSource.DROWN, 2);
-				}
-				if (!entity.isOnFire())
-					break;
-				entity.clearFire();
-				world.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL,
-					0.7F, 1.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
-				break;
-			default:
-				break;
-			}
+			processingType.affectEntity(entity, world);
 		}
 
 	}
@@ -375,10 +283,11 @@ public class AirCurrent {
 			InWorldProcessing.Type processingType = pair.getRight();
 
 			handler.handleProcessingOnAllItems((transported) -> {
-				InWorldProcessing.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported),
-					processingType);
-				if (world.isClientSide)
+				if (world.isClientSide) {
+					if (world != null)
+						processingType.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported));
 					return TransportedResult.doNothing();
+				}
 				return InWorldProcessing.applyProcessing(transported, world, processingType);
 			});
 		}

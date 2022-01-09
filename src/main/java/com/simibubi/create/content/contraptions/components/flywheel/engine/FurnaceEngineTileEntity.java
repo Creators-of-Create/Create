@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineModifiers.EngineState;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions.HeatSource;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions.InteractionHandler;
 import com.simibubi.create.foundation.block.BlockStressValues;
 
 import net.minecraft.core.BlockPos;
@@ -22,12 +23,13 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 
 	public void updateFurnace() {
 		BlockState state = level.getBlockState(EngineBlock.getBaseBlockPos(getBlockState(), worldPosition));
-		EngineState engineState = FurnaceEngineModifiers.get().getEngineState(state);
-		if (engineState.isEmpty())
+		InteractionHandler handler = FurnaceEngineInteractions.getHandler(state);
+		HeatSource heatSource = handler.getHeatSource(state);
+		if (heatSource.isEmpty())
 			return;
 
-		float modifier = FurnaceEngineModifiers.get().getModifier(state);
-		boolean active = engineState.isActive();
+		float modifier = handler.getSpeedModifier(state);
+		boolean active = heatSource.isActive();
 		float speed = active ? 16 * modifier : 0;
 		float capacity =
 			(float) (active ? BlockStressValues.getCapacity(AllBlocks.FURNACE_ENGINE.get())
