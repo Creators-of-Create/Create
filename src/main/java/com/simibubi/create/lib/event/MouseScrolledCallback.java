@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 @Environment(EnvType.CLIENT)
 public interface MouseScrolledCallback {
-	public static final Event<MouseScrolledCallback> EVENT = EventFactory.createArrayBacked(MouseScrolledCallback.class, callbacks -> delta -> {
+	Event<MouseScrolledCallback> EVENT = EventFactory.createArrayBacked(MouseScrolledCallback.class, callbacks -> delta -> {
 		for (MouseScrolledCallback callback : callbacks) {
 			if (callback.onMouseScrolled(delta)) {
 				return true;

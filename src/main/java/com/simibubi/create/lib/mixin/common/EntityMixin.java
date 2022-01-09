@@ -71,7 +71,6 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 			create$captureDrops.add(itemEntity);
 			cir.setReturnValue(itemEntity);
 		}
-
 	}
 
 	@Unique

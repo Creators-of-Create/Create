@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 @Environment(EnvType.CLIENT)
 public interface KeyInputCallback {
-	public static final Event<KeyInputCallback> EVENT = EventFactory.createArrayBacked(KeyInputCallback.class, callbacks -> (key, scancode, action, mods) -> {
+	Event<KeyInputCallback> EVENT = EventFactory.createArrayBacked(KeyInputCallback.class, callbacks -> (key, scancode, action, mods) -> {
 		for (KeyInputCallback callback : callbacks) {
 			callback.onKeyInput(key, scancode, action, mods);
 		}

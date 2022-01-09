@@ -8,7 +8,7 @@ import net.minecraft.client.player.LocalPlayer;
 
 @Environment(EnvType.CLIENT)
 public interface LeftClickAirCallback {
-	public static final Event<LeftClickAirCallback> EVENT = EventFactory.createArrayBacked(LeftClickAirCallback.class, callbacks -> (player) -> {
+	Event<LeftClickAirCallback> EVENT = EventFactory.createArrayBacked(LeftClickAirCallback.class, callbacks -> (player) -> {
 		for (LeftClickAirCallback callback : callbacks) {
 			callback.onLeftClickAir(player);
 		}

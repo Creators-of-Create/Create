@@ -8,17 +8,15 @@ import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
 public interface RenderTooltipBorderColorCallback {
-	Event<RenderTooltipBorderColorCallback> EVENT =
-			EventFactory.createArrayBacked(RenderTooltipBorderColorCallback.class,
-					callbacks -> (stack, originalBorderColorStart, originalBorderColorEnd) -> {
-						for (RenderTooltipBorderColorCallback callback : callbacks) {
-							BorderColorEntry entry = callback.onTooltipBorderColor(stack, originalBorderColorStart, originalBorderColorEnd);
-							if (entry != null) {
-								return entry;
-							}
-						}
-						return null;
-					});
+	Event<RenderTooltipBorderColorCallback> EVENT = EventFactory.createArrayBacked(RenderTooltipBorderColorCallback.class, callbacks -> (stack, originalBorderColorStart, originalBorderColorEnd) -> {
+		for (RenderTooltipBorderColorCallback callback : callbacks) {
+			BorderColorEntry entry = callback.onTooltipBorderColor(stack, originalBorderColorStart, originalBorderColorEnd);
+			if (entry != null) {
+				return entry;
+			}
+		}
+		return null;
+	});
 
 	BorderColorEntry onTooltipBorderColor(ItemStack stack, int originalBorderColorStart, int originalBorderColorEnd);
 

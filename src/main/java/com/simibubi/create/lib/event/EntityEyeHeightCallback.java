@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.entity.Entity;
 
 public interface EntityEyeHeightCallback {
-	public static final Event<EntityEyeHeightCallback> EVENT = EventFactory.createArrayBacked(EntityEyeHeightCallback.class, callbacks -> (entity) -> {
+	Event<EntityEyeHeightCallback> EVENT = EventFactory.createArrayBacked(EntityEyeHeightCallback.class, callbacks -> (entity) -> {
 		for (EntityEyeHeightCallback callback : callbacks) {
 			return callback.onEntitySize(entity);
 		}
