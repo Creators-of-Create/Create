@@ -5,9 +5,6 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -22,30 +19,45 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	BRASS_BELL = convert(AllBlocks.HAUNTED_BELL::get, () -> Ingredient.of(AllBlocks.PECULIAR_BELL.get())),
-		SOUL_SAND = convert(() -> Blocks.SOUL_SAND, () -> Ingredient.of(ItemTags.SAND)),
-		SOUL_DIRT = convert(() -> Blocks.SOUL_SOIL, () -> Ingredient.of(ItemTags.DIRT)),
-		BLACK_STONE = convert(() -> Blocks.BLACKSTONE, () -> Ingredient.of(Tags.Items.COBBLESTONE)),
-		CRIMSON_FUNGUS = convert(Items.CRIMSON_FUNGUS, Items.RED_MUSHROOM),
-		WARPED_FUNGUS = convert(Items.WARPED_FUNGUS, Items.BROWN_MUSHROOM),
-		CRIMSON_NYLIUM = convert(Blocks.CRIMSON_NYLIUM, Blocks.MYCELIUM),
-		WARPED_NYLIUM = convert(Blocks.WARPED_NYLIUM, Blocks.PODZOL);
+	BRASS_BELL = convert(() -> Ingredient.of(AllBlocks.PECULIAR_BELL.get()), AllBlocks.HAUNTED_BELL::get),
 
-	public GeneratedRecipe convert(ItemLike result, ItemLike input) {
-		return convert(() -> result, () -> Ingredient.of(input));
+		HAUNT_STONE = convert(Items.STONE, Items.INFESTED_STONE),
+		HAUNT_DEEPSLATE = convert(Items.DEEPSLATE, Items.INFESTED_DEEPSLATE),
+		HAUNT_STONE_BRICKS = convert(Items.STONE_BRICKS, Items.INFESTED_STONE_BRICKS),
+		HAUNT_MOSSY_STONE_BRICKS = convert(Items.MOSSY_STONE_BRICKS, Items.INFESTED_MOSSY_STONE_BRICKS),
+		HAUNT_CRACKED_STONE_BRICKS = convert(Items.CRACKED_STONE_BRICKS, Items.INFESTED_CRACKED_STONE_BRICKS),
+		HAUNT_CHISELED_STONE_BRICKS = convert(Items.CHISELED_STONE_BRICKS, Items.INFESTED_CHISELED_STONE_BRICKS),
+
+		SOUL_TORCH = convert(Items.TORCH, Items.SOUL_TORCH),
+		SOUL_CAMPFIRE = convert(Items.CAMPFIRE, Items.SOUL_CAMPFIRE),
+		SOUL_LANTERN = convert(Items.LANTERN, Items.SOUL_LANTERN),
+
+		POISON_POTATO = convert(Items.POTATO, Items.POISONOUS_POTATO),
+		GLOW_INK = convert(Items.INK_SAC, Items.GLOW_INK_SAC),
+		GLOW_BERRIES = convert(Items.SWEET_BERRIES, Items.GLOW_BERRIES),
+		NETHER_BRICK = convert(Items.BRICK, Items.NETHER_BRICK),
+
+		PRISMARINE = create(Create.asResource("lapis_recycling"), b -> b.require(Tags.Items.GEMS_LAPIS)
+			.output(.75f, Items.PRISMARINE_SHARD)
+			.output(.125f, Items.PRISMARINE_CRYSTALS)),
+
+		SOUL_SAND = convert(() -> Ingredient.of(ItemTags.SAND), () -> Blocks.SOUL_SAND),
+		SOUL_DIRT = convert(() -> Ingredient.of(ItemTags.DIRT), () -> Blocks.SOUL_SOIL),
+		BLACK_STONE = convert(() -> Ingredient.of(Tags.Items.COBBLESTONE), () -> Blocks.BLACKSTONE),
+		CRIMSON_FUNGUS = convert(Items.RED_MUSHROOM, Items.CRIMSON_FUNGUS),
+		WARPED_FUNGUS = convert(Items.BROWN_MUSHROOM, Items.WARPED_FUNGUS);
+
+	public GeneratedRecipe convert(ItemLike input, ItemLike result) {
+		return convert(() -> Ingredient.of(input), () -> result);
 	}
 
-	public GeneratedRecipe convert(Supplier<ItemLike> result, Supplier<Ingredient> input) {
-		ProcessingRecipeSerializer<HauntingRecipe> serializer = getSerializer();
-		GeneratedRecipe generatedRecipe = c -> new ProcessingRecipeBuilder<>(serializer.getFactory(),
-			new ResourceLocation(Create.ID, result.get()
-				.asItem()
-				.getRegistryName()
-				.getPath())).withItemIngredients(input.get())
-					.output(result.get())
-					.build(c);
-		all.add(generatedRecipe);
-		return generatedRecipe;
+	public GeneratedRecipe convert(Supplier<Ingredient> input, Supplier<ItemLike> result) {
+		return create(new ResourceLocation(Create.ID, result.get()
+			.asItem()
+			.getRegistryName()
+			.getPath()),
+			p -> p.withItemIngredients(input.get())
+				.output(result.get()));
 	}
 
 	public HauntingRecipeGen(DataGenerator p_i48262_1_) {

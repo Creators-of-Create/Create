@@ -46,9 +46,7 @@ public abstract class SyncedTileEntity extends BlockEntity {
 	@Override
 	public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet) {
 		CompoundTag tag = packet.getTag();
-		if (tag != null) {
-			readClient(tag);
-		}
+		readClient(tag == null ? new CompoundTag() : tag);
 	}
 
 	// Special handling for client update packets

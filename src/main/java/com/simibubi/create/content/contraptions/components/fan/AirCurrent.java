@@ -1,5 +1,11 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
@@ -16,6 +22,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -26,6 +34,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
@@ -41,18 +51,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public class AirCurrent {
 
 	private static final DamageSource damageSourceFire = new DamageSource("create.fan_fire").setScalesWithDifficulty()
-			.setIsFire();
+		.setIsFire();
 	private static final DamageSource damageSourceLava = new DamageSource("create.fan_lava").setScalesWithDifficulty()
-			.setIsFire();
+		.setIsFire();
 
 	public final IAirCurrentSource source;
 	public AABB bounds = new AABB(0, 0, 0, 0, 0, 0);
@@ -62,7 +66,7 @@ public class AirCurrent {
 	public float maxDistance;
 
 	protected List<Pair<TransportedItemStackHandlerBehaviour, InWorldProcessing.Type>> affectedItemHandlers =
-			new ArrayList<>();
+		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
 	static boolean isClientPlayerInAirCurrent;
@@ -79,8 +83,8 @@ public class AirCurrent {
 		if (world != null && world.isClientSide) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
 			Vec3 pos = VecHelper.getCenterOf(source.getAirCurrentPos())
-					.add(Vec3.atLowerCornerOf(facing.getNormal())
-							.scale(offset));
+				.add(Vec3.atLowerCornerOf(facing.getNormal())
+					.scale(offset));
 			if (world.random.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
@@ -90,9 +94,10 @@ public class AirCurrent {
 	}
 
 	protected void tickAffectedEntities(Level world, Direction facing) {
-		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext(); ) {
+		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			if (!entity.isAlive() || !entity.getBoundingBox().intersects(bounds) || isPlayerCreativeFlying(entity)) {
+			if (!entity.isAlive() || !entity.getBoundingBox()
+				.intersects(bounds) || isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -103,22 +108,19 @@ public class AirCurrent {
 			float sneakModifier = entity.isShiftKeyDown() ? 4096f : 512f;
 			float speed = Math.abs(source.getSpeed());
 			double entityDistance = entity.position()
-					.distanceTo(center);
+				.distanceTo(center);
 			float acceleration = (float) (speed / sneakModifier / (entityDistance / maxDistance));
 			Vec3 previousMotion = entity.getDeltaMovement();
 			float maxAcceleration = 5;
 
-			double xIn =
-					Mth.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration, maxAcceleration);
-			double yIn =
-					Mth.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration, maxAcceleration);
-			double zIn =
-					Mth.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
+			double xIn = Mth.clamp(flow.getX() * acceleration - previousMotion.x, -maxAcceleration, maxAcceleration);
+			double yIn = Mth.clamp(flow.getY() * acceleration - previousMotion.y, -maxAcceleration, maxAcceleration);
+			double zIn = Mth.clamp(flow.getZ() * acceleration - previousMotion.z, -maxAcceleration, maxAcceleration);
 
 			entity.setDeltaMovement(previousMotion.add(new Vec3(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-					() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
+				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayer)
 				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
@@ -126,8 +128,7 @@ public class AirCurrent {
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
 			if (entity instanceof ServerPlayer)
-				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType),
-						(Player) entity);
+				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType), (Player) entity);
 
 			if (processingType == null || processingType == Type.NONE) {
 				continue;
@@ -143,41 +144,82 @@ public class AirCurrent {
 				continue;
 			}
 
+			if (entity instanceof Horse && world.isClientSide) {
+				Vec3 p = entity.getPosition(0);
+				Vec3 v = p.add(0, 0.5f, 0)
+					.add(VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1)
+						.multiply(1, 0.2f, 1)
+						.normalize()
+						.scale(1f));
+				world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
+				if (world.random.nextInt(3) == 0)
+					world.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
+						(world.random.nextFloat() - .5f) * .5f, 0.1f, (world.random.nextFloat() - .5f) * .5f);
+			}
+
 			if (world.isClientSide)
 				continue;
 
 			switch (processingType) {
-				case BLASTING:
-					if (!entity.fireImmune()) {
-						entity.setSecondsOnFire(10);
-						entity.hurt(damageSourceLava, 4);
+			case BLASTING:
+				if (!entity.fireImmune()) {
+					entity.setSecondsOnFire(10);
+					entity.hurt(damageSourceLava, 4);
+				}
+				break;
+			case SMOKING:
+				if (!entity.fireImmune()) {
+					entity.setSecondsOnFire(2);
+					entity.hurt(damageSourceFire, 2);
+				}
+				break;
+			case HAUNTING:
+				if (entity instanceof LivingEntity livingEntity) {
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
+				}
+				if (entity instanceof Horse horse) {
+					int progress = horse.getPersistentData()
+						.getInt("CreateHaunting");
+					if (progress < 100) {
+						if (progress % 10 == 0) {
+							world.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
+								1f, 1.5f * progress / 100f);
+						}
+						horse.getPersistentData()
+							.putInt("CreateHaunting", progress + 1);
+						continue;
 					}
-					break;
-				case SMOKING:
-					if (!entity.fireImmune()) {
-						entity.setSecondsOnFire(2);
-						entity.hurt(damageSourceFire, 2);
-					}
-					break;
-				case HAUNTING: 
-					if (entity instanceof LivingEntity livingEntity) {
-						livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
-						livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
-					}
-					break;
-				case SPLASHING:
-					if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
-							|| entity.getType() == EntityType.BLAZE) {
-						entity.hurt(DamageSource.DROWN, 2);
-					}
-					if (!entity.isOnFire())
-						break;
-					entity.clearFire();
+
 					world.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
-							SoundSource.NEUTRAL, 0.7F, 1.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
+						SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(world);
+					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
+					serializeNBT.remove("UUID");
+					if (!horse.getArmor()
+						.isEmpty())
+						horse.spawnAtLocation(horse.getArmor());
+
+					skeletonHorse.deserializeNBT(serializeNBT);
+					skeletonHorse.setPos(horse.getPosition(0));
+					world.addFreshEntity(skeletonHorse);
+					horse.discard();
+				}
+				break;
+			case SPLASHING:
+				if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
+					|| entity.getType() == EntityType.BLAZE) {
+					entity.hurt(DamageSource.DROWN, 2);
+				}
+				if (!entity.isOnFire())
 					break;
-				default:
-					break;
+				entity.clearFire();
+				world.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL,
+					0.7F, 1.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -240,7 +282,7 @@ public class AirCurrent {
 				bounds = new AABB(start.relative(direction)).expandTowards(scale);
 			else {
 				bounds = new AABB(start.relative(direction)).contract(scale.x, scale.y, scale.z)
-						.move(scale);
+					.move(scale);
 			}
 		}
 		findAffectedHandlers();
@@ -252,16 +294,15 @@ public class AirCurrent {
 
 		// 4 Rays test for holes in the shapes blocking the flow
 		float offsetDistance = .25f;
-		Vec3[] offsets = new Vec3[]{planeVec.multiply(offsetDistance, offsetDistance, offsetDistance),
-				planeVec.multiply(-offsetDistance, -offsetDistance, offsetDistance),
-				planeVec.multiply(offsetDistance, -offsetDistance, -offsetDistance),
-				planeVec.multiply(-offsetDistance, offsetDistance, -offsetDistance),};
+		Vec3[] offsets = new Vec3[] { planeVec.multiply(offsetDistance, offsetDistance, offsetDistance),
+			planeVec.multiply(-offsetDistance, -offsetDistance, offsetDistance),
+			planeVec.multiply(offsetDistance, -offsetDistance, -offsetDistance),
+			planeVec.multiply(-offsetDistance, offsetDistance, -offsetDistance), };
 
 		float limitedDistance = 0;
 
 		// Determine the distance of the air flow
-		Outer:
-		for (int i = 1; i <= max; i++) {
+		Outer: for (int i = 1; i <= max; i++) {
 			BlockPos currentPos = start.relative(facing, i);
 			if (!world.isLoaded(currentPos))
 				break;
@@ -278,16 +319,16 @@ public class AirCurrent {
 
 			for (Vec3 offset : offsets) {
 				Vec3 rayStart = VecHelper.getCenterOf(currentPos)
-						.subtract(directionVec.scale(.5f + 1 / 32f))
-						.add(offset);
+					.subtract(directionVec.scale(.5f + 1 / 32f))
+					.add(offset);
 				Vec3 rayEnd = rayStart.add(directionVec.scale(1 + 1 / 32f));
 				BlockHitResult blockraytraceresult =
-						world.clipWithInteractionOverride(rayStart, rayEnd, currentPos, voxelshape, state);
+					world.clipWithInteractionOverride(rayStart, rayEnd, currentPos, voxelshape, state);
 				if (blockraytraceresult == null)
 					continue Outer;
 
 				double distance = i - 1 + blockraytraceresult.getLocation()
-						.distanceTo(rayStart);
+					.distanceTo(rayStart);
 				if (limitedDistance < distance)
 					limitedDistance = (float) distance;
 			}
@@ -301,7 +342,7 @@ public class AirCurrent {
 	public void findEntities() {
 		caughtEntities.clear();
 		caughtEntities = source.getAirCurrentWorld()
-				.getEntities(null, bounds);
+			.getEntities(null, bounds);
 	}
 
 	public void findAffectedHandlers() {
@@ -315,13 +356,13 @@ public class AirCurrent {
 
 			for (int offset : Iterate.zeroAndOne) {
 				BlockPos pos = start.relative(direction, i)
-						.below(offset);
+					.below(offset);
 				TransportedItemStackHandlerBehaviour behaviour =
-						TileEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
+					TileEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
 				if (behaviour != null)
 					affectedItemHandlers.add(Pair.of(behaviour, type));
 				if (direction.getAxis()
-						.isVertical())
+					.isVertical())
 					break;
 			}
 		}
@@ -335,7 +376,7 @@ public class AirCurrent {
 
 			handler.handleProcessingOnAllItems((transported) -> {
 				InWorldProcessing.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported),
-						processingType);
+					processingType);
 				if (world.isClientSide)
 					return TransportedResult.doNothing();
 				return InWorldProcessing.applyProcessing(transported, world, processingType);
@@ -370,19 +411,19 @@ public class AirCurrent {
 	@OnlyIn(Dist.CLIENT)
 	private static void enableClientPlayerSound(Entity e, float maxVolume) {
 		if (e != Minecraft.getInstance()
-				.getCameraEntity())
+			.getCameraEntity())
 			return;
 
 		isClientPlayerInAirCurrent = true;
 
 		float pitch = (float) Mth.clamp(e.getDeltaMovement()
-				.length() * .5f, .5f, 2f);
+			.length() * .5f, .5f, 2f);
 
 		if (flyingSound == null || flyingSound.isStopped()) {
 			flyingSound = new AirCurrentSound(SoundEvents.ELYTRA_FLYING, pitch);
 			Minecraft.getInstance()
-					.getSoundManager()
-					.play(flyingSound);
+				.getSoundManager()
+				.play(flyingSound);
 		}
 		flyingSound.setPitch(pitch);
 		flyingSound.fadeIn(maxVolume);

@@ -148,9 +148,11 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			return true;
 		if (state.is(BlockTags.LEAVES))
 			return true;
+		if (state.getBlock() instanceof CocoaBlock)
+			return true;
 
 		if (state.getCollisionShape(world, pos)
-			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
+			.isEmpty()) {
 			if (state.getBlock() instanceof GrowingPlantBlock)
 				return true;
 

@@ -2,12 +2,12 @@
   "type": "create:haunting",
   "ingredients": [
     {
-      "item": "minecraft:podzol"
+      "item": "minecraft:potato"
     }
   ],
   "results": [
     {
-      "item": "minecraft:warped_nylium"
+      "item": "minecraft:poisonous_potato"
     }
   ]
 }

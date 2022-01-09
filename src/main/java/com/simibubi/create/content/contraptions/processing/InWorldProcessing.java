@@ -324,6 +324,8 @@ public class InWorldProcessing {
 			world.addParticle(ParticleTypes.LARGE_SMOKE, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
 			break;
 		case SMOKING:
+			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
+			break;
 		case HAUNTING:
 			vec = vec.add(VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1)
 				.multiply(1, 0.05f, 1)

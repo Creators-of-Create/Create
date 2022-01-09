@@ -2,12 +2,12 @@
   "type": "create:haunting",
   "ingredients": [
     {
-      "item": "minecraft:mycelium"
+      "item": "minecraft:campfire"
     }
   ],
   "results": [
     {
-      "item": "minecraft:crimson_nylium"
+      "item": "minecraft:soul_campfire"
     }
   ]
 }
