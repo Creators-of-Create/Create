@@ -32,16 +32,6 @@ public class SuperGlueItem extends Item {
 	}
 
 	@Override
-	public int getMaxDamage(ItemStack stack) {
-		return 99;
-	}
-
-	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		BlockPos blockpos = context.getClickedPos();
 		Direction direction = context.getClickedFace();

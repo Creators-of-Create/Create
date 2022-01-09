@@ -226,6 +226,8 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
+		.properties(p -> p.stacksTo(1)
+			.durability(99))
 		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
