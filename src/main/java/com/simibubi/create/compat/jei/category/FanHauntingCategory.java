@@ -90,7 +90,7 @@ public class FanHauntingCategory extends ProcessingViaFanCategory<HauntingRecipe
 	}
 
 	@Override
-	public void renderAttachedBlock(PoseStack matrixStack) {
+	public void renderAttachedBlock(PoseStack matrixStack, HauntingRecipe recipe) {
 		matrixStack.pushPose();
 
 		GuiGameElement.of(Blocks.SOUL_FIRE.defaultBlockState())

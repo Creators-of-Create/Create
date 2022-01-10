@@ -85,7 +85,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 			.scale(scale)
 			.render(matrixStack);
 
-		renderAttachedBlock(matrixStack);
+		renderAttachedBlock(matrixStack, recipe);
 		matrixStack.popPose();
 	}
 
@@ -93,6 +93,6 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		matrixStack.translate(56, 33, 0);
 	}
 
-	public abstract void renderAttachedBlock(PoseStack matrixStack);
+	public abstract void renderAttachedBlock(PoseStack matrixStack, T recipe);
 
 }

@@ -78,6 +78,10 @@ public class TypeCustom extends AbstractFanProcessingType {
 
 	}
 
+	public CustomFanTypeConfig getConfig() {
+		return config;
+	}
+
 	public static class CustomRecipeWrapper extends RecipeWrapper {
 
 		public TypeCustom type = null;

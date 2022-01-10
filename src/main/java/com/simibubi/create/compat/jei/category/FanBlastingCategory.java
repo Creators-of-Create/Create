@@ -21,7 +21,7 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 	}
 
 	@Override
-	public void renderAttachedBlock(PoseStack matrixStack) {
+	public void renderAttachedBlock(PoseStack matrixStack, AbstractCookingRecipe recipe) {
 		matrixStack.pushPose();
 
 		GuiGameElement.of(Fluids.LAVA)

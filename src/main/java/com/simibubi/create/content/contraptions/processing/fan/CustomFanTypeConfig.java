@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.processing.fan;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -23,15 +26,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
-import java.util.Optional;
 
 public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfig block,
 								  EffectEntityConfig entity_effect,
@@ -99,6 +100,46 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			return false;
 		}
 
+		public BlockState getBlockForDisplay() {
+			if (blocks != null && blocks.size() > 0) {
+				return Optional.ofNullable(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blocks.get(0)))).orElse(Blocks.AIR).defaultBlockState();
+			}
+			if (block_states != null && block_states.size() > 0) {
+				String str = block_states.get(0);
+				String[] parts = str.split("\\&");
+				BlockState state = null;
+				for (String part : parts) {
+					if (state == null) {
+						Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(part));
+						if (block == null) {
+							return Blocks.AIR.defaultBlockState();
+						}
+						state = block.defaultBlockState();
+					} else {
+						String[] equation = part.split("=");
+						for (Property<?> property : state.getProperties()) {
+							if (property.getName().equals(equation[0])) {
+								state = altBlockState(state, property, equation[1]);
+							}
+						}
+					}
+				}
+				return state;
+			}
+			if (fluids != null && fluids.size() > 0) {
+				return Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluids.get(0)))).map(e -> e.defaultFluidState().createLegacyBlock()).orElse(Blocks.AIR.defaultBlockState());
+			}
+			if (tags != null && tags.size() > 0) {
+				ResourceLocation tag = new ResourceLocation(tags.get(0));
+				return Optional.ofNullable(BlockTags.getAllTags().getTag(tag))
+						.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultBlockState() : null)
+						.or(() -> Optional.ofNullable(FluidTags.getAllTags().getTag(tag))
+								.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultFluidState().createLegacyBlock() : null))
+						.orElse(Blocks.AIR.defaultBlockState());
+			}
+			return null;
+		}
+
 		private static boolean testBlockState(BlockState blockState, String str, String name) {
 			String[] parts = str.split("\\&");
 			if (parts.length < 2) {
@@ -133,6 +174,10 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				}
 			}
 			return false;
+		}
+
+		private static <T extends Comparable<T>> BlockState altBlockState(BlockState state, Property<T> property, String value) {
+			return state.setValue(property, property.getValue(value).get());
 		}
 
 	}

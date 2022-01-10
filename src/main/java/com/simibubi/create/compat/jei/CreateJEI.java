@@ -77,6 +77,9 @@ public class CreateJEI implements IModPlugin {
 	soul_smoking = register("fan_haunting", FanHauntingCategory::new).recipes(AllRecipeTypes.HAUNTING)
 			.catalystStack(ProcessingViaFanCategory.getFan("fan_haunting")).build(),
 
+	custom_fan = register("custom_fan", CustomFanCategory::new).recipes(AllRecipeTypes.CUSTOM_FAN)
+					.catalystStack(ProcessingViaFanCategory.getFan("custom_fan")).build(),
+
 	blasting = register("fan_blasting", FanBlastingCategory::new)
 			.recipesExcluding(() -> RecipeType.SMELTING, () -> RecipeType.BLASTING)
 			.recipes(() -> RecipeType.BLASTING)
