@@ -3,16 +3,12 @@ package com.simibubi.create.content.contraptions.processing.fan.custom;
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
-import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfig block,
@@ -253,56 +248,6 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			particle.setProperties(Integer.parseInt(color_1, 16), Integer.parseInt(color_2, 16), alpha, sprite_length);
 			for (MorphConfig.ParticleConfig c : particles) {
 				c.addParticle(particle);
-			}
-		}
-
-	}
-
-	public record ProcessingParticleConfig(int chance, String col, String id,
-										   ProcessingParticleConfig.OffsetConfig base_offset,
-										   ProcessingParticleConfig.OffsetConfig random_offset,
-										   ProcessingParticleConfig.OffsetConfig speed) {
-
-		public record OffsetConfig(float x, float y, float z) {
-
-			public static final Codec<ProcessingParticleConfig.OffsetConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-					Codec.FLOAT.fieldOf("x").forGetter(e -> e.x),
-					Codec.FLOAT.fieldOf("y").forGetter(e -> e.y),
-					Codec.FLOAT.fieldOf("z").forGetter(e -> e.z)
-			).apply(i, ProcessingParticleConfig.OffsetConfig::new));
-
-		}
-
-		public static final Codec<ProcessingParticleConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-				Codec.INT.fieldOf("chance").forGetter(e -> e.chance),
-				Codec.STRING.fieldOf("color").forGetter(e -> e.col),
-				Codec.STRING.fieldOf("id").forGetter(e -> e.id),
-				ProcessingParticleConfig.OffsetConfig.CODEC.optionalFieldOf("base_offset").forGetter(e -> Optional.of(e.base_offset)),
-				ProcessingParticleConfig.OffsetConfig.CODEC.optionalFieldOf("random_offset").forGetter(e -> Optional.of(e.random_offset)),
-				ProcessingParticleConfig.OffsetConfig.CODEC.optionalFieldOf("speed").forGetter(e -> Optional.of(e.speed))
-		).apply(i, (chance, col, id, base_offset, random_offset, speed) -> new ProcessingParticleConfig(chance, col, id,
-				base_offset.orElse(new ProcessingParticleConfig.OffsetConfig(0, 0, 0)),
-				random_offset.orElse(new ProcessingParticleConfig.OffsetConfig(0, 0, 0)),
-				speed.orElse(new ProcessingParticleConfig.OffsetConfig(0, 0, 0)))));
-
-		public void spawnParticlesForProcessing(Level level, Vec3 pos) {
-			if (level.random.nextInt(chance) != 0)
-				return;
-			ParticleOptions option = null;
-			if (id != null && id.length() > 0) {
-				ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(id));
-				if (type instanceof SimpleParticleType simple) {
-					option = simple;
-				} else throw new IllegalArgumentException("particle type " + id + " is not simple particle type");
-			} else if (col != null && col.length() > 0) {
-				Vector3f color = new Color(Integer.parseInt(col, 16)).asVectorF();
-				option = new DustParticleOptions(color, 1);
-			}
-			double x = pos.x + base_offset.x + (level.random.nextFloat() - .5f) * random_offset.x;
-			double y = pos.y + base_offset.y + (level.random.nextFloat() - .5f) * random_offset.y;
-			double z = pos.z + base_offset.z + (level.random.nextFloat() - .5f) * random_offset.z;
-			if (option != null) {
-				level.addParticle(option, x, y, z, speed.x, speed.y, speed.z);
 			}
 		}
 

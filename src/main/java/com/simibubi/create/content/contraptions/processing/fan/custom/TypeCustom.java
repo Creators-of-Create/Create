@@ -44,7 +44,7 @@ public class TypeCustom extends AbstractFanProcessingType {
 	@Override
 	public void spawnParticlesForProcessing(Level level, Vec3 pos) {
 		if (config.processing_particle() != null && config.processing_particle().size() > 0) {
-			for (CustomFanTypeConfig.ProcessingParticleConfig ppc : config.processing_particle())
+			for (ProcessingParticleConfig ppc : config.processing_particle())
 				ppc.spawnParticlesForProcessing(level, pos);
 		}
 	}

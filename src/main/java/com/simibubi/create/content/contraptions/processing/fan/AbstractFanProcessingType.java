@@ -10,7 +10,10 @@ import com.google.common.collect.Maps;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomTransformType;
 import com.simibubi.create.content.contraptions.processing.fan.custom.TypeCustom;
+
+import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -22,10 +25,6 @@ import net.minecraft.world.phys.Vec3;
 public abstract class AbstractFanProcessingType implements Comparable<AbstractFanProcessingType> {
 
 	public static final Map<String, AbstractFanProcessingType> MAP = Maps.newConcurrentMap();
-
-	public static void onDataReload(){
-		MAP.entrySet().removeIf(e->e.getValue() instanceof TypeCustom);
-	}
 
 	public static final AbstractFanProcessingType NONE = new AbstractFanProcessingType(3000, "NONE") {
 		@Override

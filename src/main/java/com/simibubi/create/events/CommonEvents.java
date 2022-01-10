@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanNetworkManager;
-import com.simibubi.create.content.contraptions.processing.fan.custom.TypeCustom;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandler;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
@@ -147,7 +146,8 @@ public class CommonEvents {
 		event.addListener(PotionMixingRecipeManager.LISTENER);
 		event.addListener(FluidTransferRecipes.LISTENER);
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
-		event.addListener(CustomFanNetworkManager.LISTENER);
+		event.addListener(CustomFanNetworkManager.FAN_TYPE);
+		event.addListener(CustomFanNetworkManager.TRANSFORM_TYPE);
 	}
 
 	@SubscribeEvent
