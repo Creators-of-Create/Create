@@ -309,13 +309,13 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 	}
 
 	public static final Codec<CustomFanTypeConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-			Codec.INT.fieldOf("priority").forGetter(e -> e.priority),
+			Codec.INT.optionalFieldOf("priority").forGetter(e -> Optional.of(e.priority)),
 			Codec.STRING.fieldOf("name").forGetter(e -> e.name),
 			BlockPredicateConfig.CODEC.fieldOf("block").forGetter(e -> e.block),
 			EffectEntityConfig.CODEC.optionalFieldOf("entity_effect").forGetter(e -> Optional.ofNullable(e.entity_effect)),
 			Codec.list(ProcessingParticleConfig.CODEC).optionalFieldOf("processing_particles").forGetter(e -> Optional.ofNullable(e.processing_particle)),
 			MorphConfig.CODEC.optionalFieldOf("morph").forGetter(e -> Optional.ofNullable(e.morph))
-	).apply(i, (priority, name, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority, name, block,
+	).apply(i, (priority, name, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority.orElse(0), name, block,
 			entity_effect.orElse(null), processing_particles.orElse(null), morph.orElse(null))));
 
 }

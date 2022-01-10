@@ -1,0 +1,17 @@
+{
+  "type": "create:custom_fan",
+  "block_type": "POWDER_SNOW",
+  "ingredients": [
+    {
+      "item": "minecraft:lava_bucket"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "minecraft:magma_block"
+    }
+  ]
+}

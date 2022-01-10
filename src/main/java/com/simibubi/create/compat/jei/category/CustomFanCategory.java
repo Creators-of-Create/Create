@@ -29,7 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class CustomFanCategory extends ProcessingViaFanCategory<CustomFanProcessingRecipe> {
 
 	public CustomFanCategory() {
-		super(185, doubleItemIcon(AllItems.PROPELLER.get(), Items.IRON_BARS));
+		super(185, doubleItemIcon(AllItems.PROPELLER.get(), Items.BUCKET));
 	}
 
 	@Override
