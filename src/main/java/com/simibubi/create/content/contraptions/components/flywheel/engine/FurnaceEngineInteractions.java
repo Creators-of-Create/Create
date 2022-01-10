@@ -3,43 +3,48 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 /**
  * Example:
  *
  * <pre>
  * {@code
- * FurnaceEngineInteractions.registerHandler(Blocks.REDSTONE_LAMP.delegate, FurnaceEngineInteractions.InteractionHandler.of(
- * 	s -> s.getBlock() instanceof RedstoneLampBlock && s.hasProperty(RedstoneLampBlock.LIT) ? 
+ * FurnaceEngineInteractions.registerHandler(Blocks.REDSTONE_LAMP, FurnaceEngineInteractions.InteractionHandler.of(
+ * 	s -> s.getBlock() instanceof RedstoneLampBlock && s.hasProperty(RedstoneLampBlock.LIT) ?
  * 		(s.getValue(RedstoneLampBlock.LIT) ? HeatSource.ACTIVE : HeatSource.VALID) : HeatSource.EMPTY, s -> 1.5f));
  * }
  * </pre>
  */
 public class FurnaceEngineInteractions {
 
-	private static final Map<IRegistryDelegate<Block>, InteractionHandler> HANDLERS = new HashMap<>();
+	private static final Map<Block, InteractionHandler> HANDLERS = new HashMap<>();
 	private static final InteractionHandler DEFAULT_HANDLER = new InteractionHandler() {};
 
-	public static void registerHandler(IRegistryDelegate<Block> block, InteractionHandler handler) {
+	public static void registerHandler(Block block, InteractionHandler handler) {
 		HANDLERS.put(block, handler);
 	}
 
-	public static InteractionHandler getHandler(IRegistryDelegate<Block> delegate) {
+	// fabric: some level of compat
+	public static void registerHandler(Supplier<Block> block, InteractionHandler handler) {
+		HANDLERS.put(block.get(), handler);
+	}
+
+	public static InteractionHandler getHandler(Block delegate) {
 		return HANDLERS.getOrDefault(delegate, DEFAULT_HANDLER);
 	}
 
 	public static InteractionHandler getHandler(BlockState state) {
-		return getHandler(state.getBlock().delegate);
+		return getHandler(state.getBlock());
 	}
 
 	public static void registerDefaults() {
-		registerHandler(Blocks.BLAST_FURNACE.delegate, InteractionHandler.ofCustomSpeedModifier(state -> 2f));
+		registerHandler(Blocks.BLAST_FURNACE, InteractionHandler.ofCustomSpeedModifier(state -> 2f));
 	}
 
 	public interface InteractionHandler {

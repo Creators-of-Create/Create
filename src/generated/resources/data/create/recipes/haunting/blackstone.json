@@ -2,7 +2,7 @@
   "type": "create:haunting",
   "ingredients": [
     {
-      "tag": "forge:cobblestone"
+      "tag": "c:cobblestone"
     }
   ],
   "results": [

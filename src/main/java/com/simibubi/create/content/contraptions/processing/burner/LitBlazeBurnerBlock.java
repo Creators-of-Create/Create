@@ -38,7 +38,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class LitBlazeBurnerBlock extends Block implements IWrenchable, BlockPickInteractionAware {
 
-	public static final ToolAction EXTINGUISH_FLAME_ACTION = ToolAction.get(Create.asResource("extinguish_flame").toString());
+//	public static final ToolAction EXTINGUISH_FLAME_ACTION = ToolAction.get(Create.asResource("extinguish_flame").toString());
 
 	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 
@@ -58,7 +58,7 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable, BlockPick
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (heldItem.getItem() instanceof ShovelItem || heldItem.getItem().canPerformAction(heldItem, EXTINGUISH_FLAME_ACTION)) {
+		if (heldItem.getItem() instanceof ShovelItem) {// || heldItem.getItem().canPerformAction(heldItem, EXTINGUISH_FLAME_ACTION)) {
 			world.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5f, 2);
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;

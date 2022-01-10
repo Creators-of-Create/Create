@@ -19,10 +19,14 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import com.simibubi.create.lib.util.DamageSourceHelper;
 import com.simibubi.create.lib.util.EntityHelper;
+
+import com.simibubi.create.lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -59,10 +63,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class InWorldProcessing {
 
-	private static final DamageSource FIRE_DAMAGE_SOURCE = new DamageSource("create.fan_fire").setScalesWithDifficulty()
-		.setIsFire();
-	private static final DamageSource LAVA_DAMAGE_SOURCE = new DamageSource("create.fan_lava").setScalesWithDifficulty()
-		.setIsFire();
+	private static final DamageSource FIRE_DAMAGE_SOURCE = DamageSourceHelper.create$createFireDamageSource("create.fan_fire").setScalesWithDifficulty();
+
+	private static final DamageSource LAVA_DAMAGE_SOURCE = DamageSourceHelper.create$createFireDamageSource("create.fan_lava").setScalesWithDifficulty();
 
 	private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
@@ -370,14 +373,14 @@ public class InWorldProcessing {
 					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
 				}
 				if (entity instanceof Horse horse) {
-					int progress = horse.getPersistentData()
+					int progress = EntityHelper.getExtraCustomData(horse)
 						.getInt("CreateHaunting");
 					if (progress < 100) {
 						if (progress % 10 == 0) {
 							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
 								1f, 1.5f * progress / 100f);
 						}
-						horse.getPersistentData()
+						EntityHelper.getExtraCustomData(horse)
 							.putInt("CreateHaunting", progress + 1);
 						return;
 					}
@@ -392,7 +395,7 @@ public class InWorldProcessing {
 						.isEmpty())
 						horse.spawnAtLocation(horse.getArmor());
 
-					skeletonHorse.deserializeNBT(serializeNBT);
+					NBTSerializer.deserializeNBT(skeletonHorse, serializeNBT);
 					skeletonHorse.setPos(horse.getPosition(0));
 					level.addFreshEntity(skeletonHorse);
 					horse.discard();

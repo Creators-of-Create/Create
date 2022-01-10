@@ -6,6 +6,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 
+import me.alphamode.forgetags.Tags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -13,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
 
 public class HauntingRecipeGen extends ProcessingRecipeGen {
 
@@ -52,15 +54,14 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 	}
 
 	public GeneratedRecipe convert(Supplier<Ingredient> input, Supplier<ItemLike> result) {
-		return create(new ResourceLocation(Create.ID, result.get()
-			.asItem()
-			.getRegistryName()
+		return create(new ResourceLocation(Create.ID,
+			Registry.ITEM.getKey(result.get().asItem())
 			.getPath()),
 			p -> p.withItemIngredients(input.get())
 				.output(result.get()));
 	}
 
-	public HauntingRecipeGen(DataGenerator p_i48262_1_) {
+	public HauntingRecipeGen(FabricDataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

@@ -1,75 +1,1155 @@
 {
   "variants": {
-    "bottom=false,shape=plain,top=false": {
+    "bottom=false,light_level=0,shape=plain,top=false": {
       "model": "create:block/creative_middle"
     },
-    "bottom=true,shape=plain,top=false": {
+    "bottom=true,light_level=0,shape=plain,top=false": {
       "model": "create:block/creative_bottom"
     },
-    "bottom=false,shape=window,top=false": {
+    "bottom=false,light_level=1,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=1,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=2,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=2,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=3,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=3,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=4,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=4,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=5,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=5,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=6,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=6,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=7,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=7,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=8,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=8,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=9,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=9,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=10,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=10,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=11,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=11,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=12,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=12,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=13,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=13,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=14,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=14,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=15,shape=plain,top=false": {
+      "model": "create:block/creative_middle"
+    },
+    "bottom=true,light_level=15,shape=plain,top=false": {
+      "model": "create:block/creative_bottom"
+    },
+    "bottom=false,light_level=0,shape=window,top=false": {
       "model": "create:block/creative_middle_window"
     },
-    "bottom=true,shape=window,top=false": {
+    "bottom=true,light_level=0,shape=window,top=false": {
       "model": "create:block/creative_bottom_window"
     },
-    "bottom=false,shape=window_nw,top=false": {
+    "bottom=false,light_level=1,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=1,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=2,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=2,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=3,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=3,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=4,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=4,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=5,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=5,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=6,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=6,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=7,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=7,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=8,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=8,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=9,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=9,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=10,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=10,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=11,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=11,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=12,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=12,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=13,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=13,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=14,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=14,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=15,shape=window,top=false": {
+      "model": "create:block/creative_middle_window"
+    },
+    "bottom=true,light_level=15,shape=window,top=false": {
+      "model": "create:block/creative_bottom_window"
+    },
+    "bottom=false,light_level=0,shape=window_nw,top=false": {
       "model": "create:block/creative_middle_window_nw"
     },
-    "bottom=true,shape=window_nw,top=false": {
+    "bottom=true,light_level=0,shape=window_nw,top=false": {
       "model": "create:block/creative_bottom_window_nw"
     },
-    "bottom=false,shape=window_sw,top=false": {
+    "bottom=false,light_level=1,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=1,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=2,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=2,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=3,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=3,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=4,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=4,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=5,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=5,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=6,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=6,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=7,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=7,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=8,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=8,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=9,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=9,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=10,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=10,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=11,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=11,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=12,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=12,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=13,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=13,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=14,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=14,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=15,shape=window_nw,top=false": {
+      "model": "create:block/creative_middle_window_nw"
+    },
+    "bottom=true,light_level=15,shape=window_nw,top=false": {
+      "model": "create:block/creative_bottom_window_nw"
+    },
+    "bottom=false,light_level=0,shape=window_sw,top=false": {
       "model": "create:block/creative_middle_window_sw"
     },
-    "bottom=true,shape=window_sw,top=false": {
+    "bottom=true,light_level=0,shape=window_sw,top=false": {
       "model": "create:block/creative_bottom_window_sw"
     },
-    "bottom=false,shape=window_ne,top=false": {
+    "bottom=false,light_level=1,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=1,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=2,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=2,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=3,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=3,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=4,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=4,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=5,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=5,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=6,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=6,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=7,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=7,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=8,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=8,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=9,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=9,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=10,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=10,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=11,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=11,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=12,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=12,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=13,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=13,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=14,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=14,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=15,shape=window_sw,top=false": {
+      "model": "create:block/creative_middle_window_sw"
+    },
+    "bottom=true,light_level=15,shape=window_sw,top=false": {
+      "model": "create:block/creative_bottom_window_sw"
+    },
+    "bottom=false,light_level=0,shape=window_ne,top=false": {
       "model": "create:block/creative_middle_window_ne"
     },
-    "bottom=true,shape=window_ne,top=false": {
+    "bottom=true,light_level=0,shape=window_ne,top=false": {
       "model": "create:block/creative_bottom_window_ne"
     },
-    "bottom=false,shape=window_se,top=false": {
+    "bottom=false,light_level=1,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=1,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=2,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=2,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=3,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=3,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=4,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=4,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=5,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=5,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=6,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=6,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=7,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=7,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=8,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=8,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=9,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=9,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=10,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=10,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=11,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=11,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=12,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=12,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=13,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=13,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=14,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=14,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=15,shape=window_ne,top=false": {
+      "model": "create:block/creative_middle_window_ne"
+    },
+    "bottom=true,light_level=15,shape=window_ne,top=false": {
+      "model": "create:block/creative_bottom_window_ne"
+    },
+    "bottom=false,light_level=0,shape=window_se,top=false": {
       "model": "create:block/creative_middle_window_se"
     },
-    "bottom=true,shape=window_se,top=false": {
+    "bottom=true,light_level=0,shape=window_se,top=false": {
       "model": "create:block/creative_bottom_window_se"
     },
-    "bottom=false,shape=plain,top=true": {
+    "bottom=false,light_level=1,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=1,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=2,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=2,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=3,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=3,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=4,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=4,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=5,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=5,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=6,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=6,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=7,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=7,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=8,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=8,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=9,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=9,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=10,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=10,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=11,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=11,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=12,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=12,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=13,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=13,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=14,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=14,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=15,shape=window_se,top=false": {
+      "model": "create:block/creative_middle_window_se"
+    },
+    "bottom=true,light_level=15,shape=window_se,top=false": {
+      "model": "create:block/creative_bottom_window_se"
+    },
+    "bottom=false,light_level=0,shape=plain,top=true": {
       "model": "create:block/creative_top"
     },
-    "bottom=true,shape=plain,top=true": {
+    "bottom=true,light_level=0,shape=plain,top=true": {
       "model": "create:block/creative_single"
     },
-    "bottom=false,shape=window,top=true": {
+    "bottom=false,light_level=1,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=1,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=2,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=2,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=3,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=3,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=4,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=4,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=5,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=5,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=6,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=6,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=7,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=7,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=8,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=8,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=9,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=9,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=10,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=10,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=11,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=11,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=12,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=12,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=13,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=13,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=14,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=14,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=15,shape=plain,top=true": {
+      "model": "create:block/creative_top"
+    },
+    "bottom=true,light_level=15,shape=plain,top=true": {
+      "model": "create:block/creative_single"
+    },
+    "bottom=false,light_level=0,shape=window,top=true": {
       "model": "create:block/creative_top_window"
     },
-    "bottom=true,shape=window,top=true": {
+    "bottom=true,light_level=0,shape=window,top=true": {
       "model": "create:block/creative_single_window"
     },
-    "bottom=false,shape=window_nw,top=true": {
+    "bottom=false,light_level=1,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=1,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=2,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=2,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=3,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=3,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=4,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=4,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=5,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=5,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=6,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=6,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=7,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=7,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=8,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=8,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=9,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=9,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=10,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=10,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=11,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=11,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=12,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=12,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=13,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=13,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=14,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=14,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=15,shape=window,top=true": {
+      "model": "create:block/creative_top_window"
+    },
+    "bottom=true,light_level=15,shape=window,top=true": {
+      "model": "create:block/creative_single_window"
+    },
+    "bottom=false,light_level=0,shape=window_nw,top=true": {
       "model": "create:block/creative_top_window_nw"
     },
-    "bottom=true,shape=window_nw,top=true": {
+    "bottom=true,light_level=0,shape=window_nw,top=true": {
       "model": "create:block/creative_single_window_nw"
     },
-    "bottom=false,shape=window_sw,top=true": {
+    "bottom=false,light_level=1,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=1,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=2,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=2,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=3,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=3,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=4,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=4,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=5,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=5,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=6,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=6,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=7,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=7,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=8,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=8,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=9,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=9,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=10,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=10,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=11,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=11,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=12,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=12,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=13,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=13,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=14,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=14,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=15,shape=window_nw,top=true": {
+      "model": "create:block/creative_top_window_nw"
+    },
+    "bottom=true,light_level=15,shape=window_nw,top=true": {
+      "model": "create:block/creative_single_window_nw"
+    },
+    "bottom=false,light_level=0,shape=window_sw,top=true": {
       "model": "create:block/creative_top_window_sw"
     },
-    "bottom=true,shape=window_sw,top=true": {
+    "bottom=true,light_level=0,shape=window_sw,top=true": {
       "model": "create:block/creative_single_window_sw"
     },
-    "bottom=false,shape=window_ne,top=true": {
+    "bottom=false,light_level=1,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=1,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=2,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=2,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=3,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=3,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=4,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=4,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=5,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=5,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=6,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=6,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=7,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=7,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=8,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=8,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=9,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=9,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=10,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=10,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=11,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=11,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=12,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=12,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=13,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=13,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=14,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=14,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=15,shape=window_sw,top=true": {
+      "model": "create:block/creative_top_window_sw"
+    },
+    "bottom=true,light_level=15,shape=window_sw,top=true": {
+      "model": "create:block/creative_single_window_sw"
+    },
+    "bottom=false,light_level=0,shape=window_ne,top=true": {
       "model": "create:block/creative_top_window_ne"
     },
-    "bottom=true,shape=window_ne,top=true": {
+    "bottom=true,light_level=0,shape=window_ne,top=true": {
       "model": "create:block/creative_single_window_ne"
     },
-    "bottom=false,shape=window_se,top=true": {
+    "bottom=false,light_level=1,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=1,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=2,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=2,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=3,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=3,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=4,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=4,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=5,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=5,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=6,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=6,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=7,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=7,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=8,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=8,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=9,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=9,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=10,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=10,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=11,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=11,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=12,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=12,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=13,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=13,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=14,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=14,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=15,shape=window_ne,top=true": {
+      "model": "create:block/creative_top_window_ne"
+    },
+    "bottom=true,light_level=15,shape=window_ne,top=true": {
+      "model": "create:block/creative_single_window_ne"
+    },
+    "bottom=false,light_level=0,shape=window_se,top=true": {
       "model": "create:block/creative_top_window_se"
     },
-    "bottom=true,shape=window_se,top=true": {
+    "bottom=true,light_level=0,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=1,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=1,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=2,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=2,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=3,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=3,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=4,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=4,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=5,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=5,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=6,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=6,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=7,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=7,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=8,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=8,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=9,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=9,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=10,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=10,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=11,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=11,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=12,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=12,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=13,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=13,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=14,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=14,shape=window_se,top=true": {
+      "model": "create:block/creative_single_window_se"
+    },
+    "bottom=false,light_level=15,shape=window_se,top=true": {
+      "model": "create:block/creative_top_window_se"
+    },
+    "bottom=true,light_level=15,shape=window_se,top=true": {
       "model": "create:block/creative_single_window_se"
     }
   }

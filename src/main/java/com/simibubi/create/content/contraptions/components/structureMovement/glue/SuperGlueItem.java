@@ -21,7 +21,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class SuperGlueItem extends Item implements CustomMaxCountItem {
+public class SuperGlueItem extends Item {
 
 	public SuperGlueItem(Properties properties) {
 		super(properties.durability(99));
