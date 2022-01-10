@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -24,8 +24,8 @@ public class AllTriggers {
 		add(new RegistryTrigger<>("infinite_fluid", ForgeRegistries.FLUIDS));
 	public static final StringSerializableTrigger<Block> BRACKET_APPLY_TRIGGER =
 		add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
-	public static final StringSerializableTrigger<InWorldProcessing.Type> FAN_PROCESSING =
-		add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
+	public static final StringSerializableTrigger<AbstractFanProcessingType> FAN_PROCESSING =
+		add(new SimpleSerializableTrigger<>("fan_processing", AbstractFanProcessingType::name, AbstractFanProcessingType::valueOf));
 
 	public static final SimpleTrigger ROTATION = simple("rotation"), OVERSTRESSED = simple("overstressed"),
 		SHIFTING_GEARS = simple("shifting_gears"), CONNECT_BELT = simple("connect_belt"), BONK = simple("bonk"),

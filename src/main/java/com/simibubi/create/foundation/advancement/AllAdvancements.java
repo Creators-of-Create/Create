@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -124,19 +126,19 @@ public class AllAdvancements implements DataProvider {
 				.save(t, id + ":press");
 
 		Advancement fan = advancement("fan", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).parent(press)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.NONE))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(AbstractFanProcessingType.NONE))
 			.save(t, id + ":fan");
 
 		Advancement fan_lava = advancement("fan_lava", Items.LAVA_BUCKET, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.BLASTING))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.BLASTING))
 			.save(t, id + ":fan_lava");
 
 		Advancement fan_smoke = advancement("fan_smoke", Items.CAMPFIRE, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SMOKING))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.SMOKING))
 			.save(t, id + ":fan_smoke");
 
 		Advancement fan_water = advancement("fan_water", Items.WATER_BUCKET, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SPLASHING))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.SPLASHING))
 			.save(t, id + ":fan_water");
 
 		Advancement rose_quartz =
@@ -363,7 +365,7 @@ public class AllAdvancements implements DataProvider {
 		Advancement deployer =
 			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.MILESTONE).parent(brass_casing)
 				.save(t, id + ":deployer");
-		
+
 		Advancement clockwork_component =
 			itemAdvancement("precision_mechanism", AllItems.PRECISION_MECHANISM, TaskType.NORMAL).parent(deployer)
 				.save(t, id + ":precision_mechanism");
@@ -371,7 +373,7 @@ public class AllAdvancements implements DataProvider {
 		Advancement clockwork_component_eob = deadEnd().parent(clockwork_component)
 			.addCriterion("0", itemGathered(AllItems.PRECISION_MECHANISM.get()))
 			.save(t, id + ":clockwork_component_eob");
-		
+
 		Advancement extendo_grip =
 			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).parent(clockwork_component)
 				.addCriterion("0", AllTriggers.EXTENDO.instance())

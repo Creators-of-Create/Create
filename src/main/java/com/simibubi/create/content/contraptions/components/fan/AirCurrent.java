@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing.Type;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -49,7 +49,7 @@ public class AirCurrent {
 	public boolean pushing;
 	public float maxDistance;
 
-	protected List<Pair<TransportedItemStackHandlerBehaviour, InWorldProcessing.Type>> affectedItemHandlers =
+	protected List<Pair<TransportedItemStackHandlerBehaviour, AbstractFanProcessingType>> affectedItemHandlers =
 		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
@@ -110,11 +110,11 @@ public class AirCurrent {
 				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
 
 			entityDistance -= .5f;
-			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
+			AbstractFanProcessingType processingType = getSegmentAt((float) entityDistance);
 			if (entity instanceof ServerPlayer)
 				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType), (Player) entity);
 
-			if (processingType == null || processingType == Type.NONE) {
+			if (processingType == null || processingType == AbstractFanProcessingType.NONE) {
 				continue;
 			}
 
@@ -156,7 +156,7 @@ public class AirCurrent {
 		AirCurrentSegment currentSegment = new AirCurrentSegment();
 		segments.clear();
 		currentSegment.startOffset = 0;
-		InWorldProcessing.Type type = Type.NONE;
+		AbstractFanProcessingType type = AbstractFanProcessingType.NONE;
 
 		int limit = (int) (maxDistance + .5f);
 		int searchStart = pushing ? 0 : limit;
@@ -165,8 +165,8 @@ public class AirCurrent {
 
 		for (int i = searchStart; i * searchStep <= searchEnd * searchStep; i += searchStep) {
 			BlockPos currentPos = start.relative(direction, i);
-			InWorldProcessing.Type newType = InWorldProcessing.Type.byBlock(world, currentPos);
-			if (newType != Type.NONE)
+			AbstractFanProcessingType newType = AbstractFanProcessingType.byBlock(world, currentPos);
+			if (newType != AbstractFanProcessingType.NONE)
 				type = newType;
 			if (currentSegment.type != type || currentSegment.startOffset == 0) {
 				currentSegment.endOffset = i;
@@ -258,7 +258,7 @@ public class AirCurrent {
 		BlockPos start = source.getAirCurrentPos();
 		affectedItemHandlers.clear();
 		for (int i = 0; i < maxDistance + 1; i++) {
-			Type type = getSegmentAt(i);
+			AbstractFanProcessingType type = getSegmentAt(i);
 			if (type == null)
 				continue;
 
@@ -277,10 +277,10 @@ public class AirCurrent {
 	}
 
 	public void tickAffectedHandlers() {
-		for (Pair<TransportedItemStackHandlerBehaviour, Type> pair : affectedItemHandlers) {
+		for (Pair<TransportedItemStackHandlerBehaviour, AbstractFanProcessingType> pair : affectedItemHandlers) {
 			TransportedItemStackHandlerBehaviour handler = pair.getKey();
 			Level world = handler.getWorld();
-			InWorldProcessing.Type processingType = pair.getRight();
+			AbstractFanProcessingType processingType = pair.getRight();
 
 			handler.handleProcessingOnAllItems((transported) -> {
 				if (world.isClientSide) {
@@ -297,7 +297,7 @@ public class AirCurrent {
 		return AllTags.AllBlockTags.FAN_TRANSPARENT.matches(state);
 	}
 
-	public InWorldProcessing.Type getSegmentAt(float offset) {
+	public AbstractFanProcessingType getSegmentAt(float offset) {
 		for (AirCurrentSegment airCurrentSegment : segments) {
 			if (offset > airCurrentSegment.endOffset && pushing)
 				continue;
@@ -305,11 +305,11 @@ public class AirCurrent {
 				continue;
 			return airCurrentSegment.type;
 		}
-		return InWorldProcessing.Type.NONE;
+		return AbstractFanProcessingType.NONE;
 	}
 
 	public static class AirCurrentSegment {
-		InWorldProcessing.Type type;
+		AbstractFanProcessingType type;
 		int startOffset;
 		int endOffset;
 	}

@@ -8,16 +8,17 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
-public class HauntingRecipe extends ProcessingRecipe<InWorldProcessing.HauntingWrapper> {
+public class HauntingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public HauntingRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.HAUNTING, params);
 	}
 
 	@Override
-	public boolean matches(InWorldProcessing.HauntingWrapper inv, Level worldIn) {
+	public boolean matches(RecipeWrapper inv, Level worldIn) {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0)
