@@ -50,7 +50,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 
 		Textures.bindActiveTextures();
 
-		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(ProgramContext.create(Materials.Names.PASSTHRU, Formats.BLOCK, event.getLayer()));
+		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(ProgramContext.create(Materials.Names.PASSTHRU, Formats.BLOCK, RenderLayer.getLayer(type)));
 
 		structureShader.bind();
 		structureShader.uploadViewProjection(event.viewProjection);

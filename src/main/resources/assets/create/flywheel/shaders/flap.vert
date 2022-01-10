@@ -14,10 +14,6 @@ struct Flap {
     float flapness;
 };
 
-#use "flywheel:block.frag"
-
-#if defined(VERTEX_SHADER)
-
 float toRad(float degrees) {
     return fract(degrees / 360.) * PI * 2.;
 }
@@ -48,4 +44,3 @@ void vertex(inout Vertex v, Flap flap) {
     v.normal = rotateVertexByQuat(rotateVertexByQuat(v.normal, flapRotation), orientation);
     v.light = flap.light;
 }
-#endif

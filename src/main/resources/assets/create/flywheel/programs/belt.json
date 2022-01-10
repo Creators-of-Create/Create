@@ -1,5 +1,6 @@
 {
-  "source": "create:belt.vert",
+  "vertex": "create:belt.vert",
+  "fragment": "flywheel:block.frag",
   "states": [
     {
       "when": "create:rainbow_debug",

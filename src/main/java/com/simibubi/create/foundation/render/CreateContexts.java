@@ -25,8 +25,8 @@ public class CreateContexts {
 		GameStateRegistry.register(RainbowDebugStateProvider.INSTANCE);
         FileResolution header = Resolver.INSTANCE.get(ResourceUtil.subPath(CONTRAPTION, ".glsl"));
 
-		CWORLD = Templates.INSTANCING.programCompiler(ContraptionProgram::new, header);
-		STRUCTURE = Templates.ONE_SHOT.programCompiler(ContraptionProgram::new, header);
+		CWORLD = ProgramCompiler.create(Templates.INSTANCING, ContraptionProgram::new, header);
+		STRUCTURE = ProgramCompiler.create(Templates.ONE_SHOT, ContraptionProgram::new, header);
 	}
 
 }

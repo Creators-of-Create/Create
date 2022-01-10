@@ -15,9 +15,7 @@ struct Belt {
     float scrollMult;
 };
 
-#use "flywheel:block.frag"
 
-#if defined(VERTEX_SHADER)
 void vertex(inout Vertex v, Belt instance) {
     v.pos = rotateVertexByQuat(v.pos - .5, instance.rotation) + instance.pos + .5;
 
@@ -33,4 +31,3 @@ void vertex(inout Vertex v, Belt instance) {
     v.color = instance.color;
     #endif
 }
-#endif

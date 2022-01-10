@@ -13,9 +13,6 @@ struct Actor {
     float speed;
 };
 
-#use "flywheel:block.frag"
-
-#if defined(VERTEX_SHADER)
 void vertex(inout Vertex v, Actor instance) {
     float degrees = instance.offset + uTime * instance.speed / 20.;
     //float angle = fract(degrees / 360.) * PI * 2.;
@@ -27,4 +24,3 @@ void vertex(inout Vertex v, Actor instance) {
     v.normal = rotateVertexByQuat(rotateVertexByQuat(v.normal, kineticRot), instance.rotation);
     v.light = instance.light;
 }
-#endif

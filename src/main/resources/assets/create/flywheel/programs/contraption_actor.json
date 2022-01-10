@@ -1,5 +1,6 @@
 {
-  "source": "create:contraption_actor.vert",
+  "vertex": "create:contraption_actor.vert",
+  "fragment": "flywheel:block.frag",
   "states": [
     {
       "when": "flywheel:normal_debug",

@@ -11,8 +11,6 @@ struct Rotating {
     vec3 axis;
 };
 
-#use "flywheel:block.frag"
-
 mat4 kineticRotation(float offset, float speed, vec3 axis) {
     float degrees = offset + uTime * speed * 3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
@@ -20,7 +18,6 @@ mat4 kineticRotation(float offset, float speed, vec3 axis) {
     return rotate(axis, angle);
 }
 
-#if defined(VERTEX_SHADER)
 void vertex(inout Vertex v, Rotating instance) {
     mat4 spin = kineticRotation(instance.offset, instance.speed, instance.axis);
 
@@ -34,4 +31,3 @@ void vertex(inout Vertex v, Rotating instance) {
     v.color = instance.color;
     #endif
 }
-#endif
