@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import org.apache.logging.log4j.LogManager;
 
 import com.google.gson.Gson;
@@ -25,8 +27,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class CustomFanNetworkManager {
@@ -69,7 +69,7 @@ public class CustomFanNetworkManager {
 			});
 			buffer.writeInt(list.size());
 			for (CustomFanTypeConfig config : list) {
-				Tag tag = CustomFanTypeConfig.CODEC.encode(config, NbtOps.INSTANCE, NbtOps.INSTANCE.empty())
+				Tag tag = CustomFanTypeConfig.CODEC.encodeStart(NbtOps.INSTANCE, config)
 						.getOrThrow(false, LogManager.getLogger()::error);
 				buffer.writeNbt((CompoundTag) tag);
 			}
