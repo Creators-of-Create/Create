@@ -7,8 +7,9 @@ import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.CustomFanProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.components.mixer.CompactingRecipe;
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
@@ -49,6 +50,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	SANDPAPER_POLISHING(SandPaperPolishingRecipe::new),
 	SPLASHING(SplashingRecipe::new),
 	HAUNTING(HauntingRecipe::new),
+	CUSTOM_FAN(CustomFanProcessingRecipe.Serializer::new),
 	DEPLOYING(DeployerApplicationRecipe::new),
 	FILLING(FillingRecipe::new),
 	EMPTYING(EmptyingRecipe::new),

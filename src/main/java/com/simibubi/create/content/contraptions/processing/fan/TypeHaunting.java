@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.processing.fan;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
@@ -37,10 +36,10 @@ import java.util.Optional;
 import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.RECIPE_WRAPPER;
 import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.applyRecipeOn;
 
-public class TypeHaunting extends AbstractFanProcessingType {
+public class TypeHaunting extends AbstractRecipeFanType<HauntingRecipe> {
 
 	public TypeHaunting(int priority, String name) {
-		super(priority, name);
+		super(priority, name, AllRecipeTypes.HAUNTING::find);
 	}
 
 	@Override
@@ -119,16 +118,6 @@ public class TypeHaunting extends AbstractFanProcessingType {
 				.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL).orElse(false);
 	}
 
-	@Nullable
-	@Override
-	public List<ItemStack> process(ItemStack stack, Level world) {
-		RECIPE_WRAPPER.setItem(0, stack);
-		Optional<HauntingRecipe> recipe = AllRecipeTypes.HAUNTING.find(RECIPE_WRAPPER, world);
-		if (recipe.isPresent())
-			return applyRecipeOn(stack, recipe.get());
-		return null;
-	}
-
 	@Override
 	public void morphType(AirFlowParticle particle) {
 		particle.setProperties(0x0, 0x126568, 1f, 3);
@@ -136,8 +125,4 @@ public class TypeHaunting extends AbstractFanProcessingType {
 		particle.addParticle(ParticleTypes.SMOKE, 1 / 32f, .125f);
 	}
 
-	@Override
-	public boolean canProcess(ItemStack stack, Level level) {
-		return InWorldProcessing.isHauntable(stack, level);
-	}
 }

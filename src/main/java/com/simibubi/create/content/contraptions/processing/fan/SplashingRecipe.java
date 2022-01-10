@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.components.fan;
+package com.simibubi.create.content.contraptions.processing.fan;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

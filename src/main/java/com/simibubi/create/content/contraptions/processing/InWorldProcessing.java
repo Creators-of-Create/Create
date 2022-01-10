@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.processing.fan.TypeBlasting;
+import com.simibubi.create.content.contraptions.processing.fan.TypeCustom;
 import com.simibubi.create.content.contraptions.processing.fan.TypeHaunting;
 import com.simibubi.create.content.contraptions.processing.fan.TypeSmoking;
 import com.simibubi.create.content.contraptions.processing.fan.TypeSplashing;

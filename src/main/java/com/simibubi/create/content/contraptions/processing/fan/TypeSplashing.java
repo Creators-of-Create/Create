@@ -2,9 +2,7 @@ package com.simibubi.create.content.contraptions.processing.fan;
 
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
@@ -16,22 +14,16 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
-import java.util.Optional;
+public class TypeSplashing extends AbstractRecipeFanType<SplashingRecipe> {
 
-import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.RECIPE_WRAPPER;
-import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.applyRecipeOn;
-
-public class TypeSplashing extends AbstractFanProcessingType {
 	public TypeSplashing(int priority, String name) {
-		super(priority, name);
+		super(priority, name, AllRecipeTypes.SPLASHING::find);
 	}
 
 	@Override
@@ -68,23 +60,10 @@ public class TypeSplashing extends AbstractFanProcessingType {
 	}
 
 	@Override
-	public List<ItemStack> process(ItemStack stack, Level world) {
-		RECIPE_WRAPPER.setItem(0, stack);
-		Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(RECIPE_WRAPPER, world);
-		if (recipe.isPresent())
-			return applyRecipeOn(stack, recipe.get());
-		return null;
-	}
-
-	@Override
 	public void morphType(AirFlowParticle particle) {
 		particle.setProperties(0x4499FF, 0x2277FF, 1f, 3);
 		particle.addParticle(ParticleTypes.BUBBLE, 1 / 32f, .125f);
 		particle.addParticle(ParticleTypes.BUBBLE_POP, 1 / 32f, .125f);
 	}
 
-	@Override
-	public boolean canProcess(ItemStack stack, Level level) {
-		return InWorldProcessing.isWashable(stack, level);
-	}
 }
