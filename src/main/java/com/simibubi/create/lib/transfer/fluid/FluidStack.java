@@ -3,23 +3,19 @@ package com.simibubi.create.lib.transfer.fluid;
 import java.util.Objects;
 import java.util.Optional;
 
-import net.minecraft.world.level.material.FlowingFluid;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.Util;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 
 @SuppressWarnings({"UnstableApiUsage"})
 public class FluidStack {
@@ -60,7 +56,6 @@ public class FluidStack {
 	@Nullable
 	private CompoundTag tag;
 	private long amount;
-	private String translationKey;
 
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
@@ -206,24 +201,6 @@ public class FluidStack {
 		buffer.writeVarLong(stack.getAmount());
 		buffer.writeNbt(stack.tag);
 		return buffer;
-	}
-
-	public String getTranslationKey() {
-		if (translationKey == null) {
-			if (getFluid() == Fluids.EMPTY) {
-				translationKey = "";
-			} else if (getFluid() == Fluids.WATER) {
-				translationKey = "block.minecraft.water";
-			} else if (getFluid() == Fluids.LAVA) {
-				translationKey = "block.minecraft.lava";
-			} else {
-				ResourceLocation id = Registry.FLUID.getKey(getFluid());
-				String key = Util.makeDescriptionId("block", id);
-				String translated = I18n.get(key);
-				translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
-			}
-		}
-		return translationKey;
 	}
 
 	public FluidStack copy() {

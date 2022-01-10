@@ -17,12 +17,18 @@ import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.Util;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
@@ -68,13 +74,27 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	@Override
 	@Environment(EnvType.CLIENT)
 	public Component getDescriptionForAssembly() {
-		List<FluidStack> matchingFluidStacks = fluidIngredients.get(0)
-			.getMatchingFluidStacks();
+		List<FluidStack> matchingFluidStacks = fluidIngredients.get(0).getMatchingFluidStacks();
+
 		if (matchingFluidStacks.size() == 0)
 			return new TextComponent("Invalid");
-		return Lang.translate("recipe.assembly.spout_filling_fluid",
-			new TranslatableComponent(matchingFluidStacks.get(0)
-				.getTranslationKey()).getString());
+
+		Fluid fluid = matchingFluidStacks.get(0).getFluid();
+		String translationKey;
+		if (fluid == Fluids.EMPTY) {
+			translationKey = "";
+		} else if (fluid == Fluids.WATER) {
+			translationKey = "block.minecraft.water";
+		} else if (fluid == Fluids.LAVA) {
+			translationKey = "block.minecraft.lava";
+		} else {
+			ResourceLocation id = Registry.FLUID.getKey(fluid);
+			String key = Util.makeDescriptionId("block", id);
+			String translated = I18n.get(key);
+			translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
+		}
+
+		return Lang.translate("recipe.assembly.spout_filling_fluid", new TranslatableComponent(translationKey).getString());
 	}
 
 	@Override

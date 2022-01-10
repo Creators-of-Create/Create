@@ -9,9 +9,11 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
 
 public class FluidHandlerData {
 	public static final ResourceLocation PACKET_ID = Create.asResource("fluid_handler_data");
@@ -31,10 +33,9 @@ public class FluidHandlerData {
 		FluidTankData[] tankData = new FluidTankData[handler.getTanks()];
 		for (int i = 0; i < tankData.length; i++) {
 			FluidStack stack = handler.getFluidInTank(i);
-			String translationKey = stack.getTranslationKey();
 			long amount = stack.getAmount();
 			long capacity = handler.getTankCapacity(i);
-			tankData[i] = new FluidTankData(translationKey, amount, capacity);
+			tankData[i] = new FluidTankData(amount, capacity, stack.getFluid());
 		}
 		ServerPlayNetworking.send(player, PACKET_ID, createPacket(tankData));
 	}
@@ -43,9 +44,9 @@ public class FluidHandlerData {
 		FriendlyByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(data.length);
 		for (FluidTankData tank : data) {
-			buf.writeUtf(tank.translationKey());
 			buf.writeLong(tank.amount());
 			buf.writeLong(tank.capacity());
+			buf.writeResourceLocation(Registry.FLUID.getKey(tank.fluid()));
 		}
 		return buf;
 	}
@@ -53,10 +54,10 @@ public class FluidHandlerData {
 	public static FluidHandlerData readPacket(FriendlyByteBuf buf) {
 		FluidTankData[] data = new FluidTankData[buf.readInt()];
 		for (int i = 0; i < data.length; i++) {
-			String translationKey = buf.readUtf();
 			long amount = buf.readLong();
 			long capacity = buf.readLong();
-			data[i] = new FluidTankData(translationKey, amount, capacity);
+			Fluid fluid = Registry.FLUID.get(buf.readResourceLocation());
+			data[i] = new FluidTankData(amount, capacity, fluid);
 		}
 		return new FluidHandlerData(data);
 	}
@@ -69,6 +70,5 @@ public class FluidHandlerData {
 		});
 	}
 
-	public static record FluidTankData(String translationKey, long amount, long capacity) {
-	}
+	public record FluidTankData(long amount, long capacity, Fluid fluid) {}
 }
