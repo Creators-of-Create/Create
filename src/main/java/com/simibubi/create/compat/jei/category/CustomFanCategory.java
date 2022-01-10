@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.content.contraptions.processing.fan.CustomFanProcessingRecipe;
-import com.simibubi.create.content.contraptions.processing.fan.TypeCustom;
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.custom.TypeCustom;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 

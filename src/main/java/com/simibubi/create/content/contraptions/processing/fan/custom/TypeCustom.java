@@ -1,9 +1,12 @@
-package com.simibubi.create.content.contraptions.processing.fan;
+package com.simibubi.create.content.contraptions.processing.fan.custom;
 
 import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.applyRecipeOn;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
+import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 
 import org.jetbrains.annotations.Nullable;
 

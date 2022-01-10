@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.processing.fan;
+package com.simibubi.create.content.contraptions.processing.fan.custom;
 
 import java.util.List;
 import java.util.Optional;

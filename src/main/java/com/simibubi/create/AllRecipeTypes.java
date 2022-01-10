@@ -7,7 +7,7 @@ import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.content.contraptions.processing.fan.CustomFanProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;

@@ -1,6 +1,8 @@
-package com.simibubi.create.content.contraptions.processing.fan;
+package com.simibubi.create.content.contraptions.processing.fan.custom;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +14,6 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSeria
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 @ParametersAreNonnullByDefault

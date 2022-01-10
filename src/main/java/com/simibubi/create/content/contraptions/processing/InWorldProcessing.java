@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.processing.fan.TypeBlasting;
-import com.simibubi.create.content.contraptions.processing.fan.TypeCustom;
 import com.simibubi.create.content.contraptions.processing.fan.TypeHaunting;
 import com.simibubi.create.content.contraptions.processing.fan.TypeSmoking;
 import com.simibubi.create.content.contraptions.processing.fan.TypeSplashing;
