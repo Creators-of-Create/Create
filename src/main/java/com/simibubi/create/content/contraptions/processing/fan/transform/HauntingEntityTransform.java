@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.processing.fan.transform;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllFanProcessingTypes;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -17,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 public abstract class HauntingEntityTransform<A extends LivingEntity, B extends LivingEntity> extends EntityTransformHelper<A, B> {
 
 	public HauntingEntityTransform(Class<A> cls, Predicate<A> predicate, Function<A, EntityType<B>> getter) {
-		super("CreateHaunting", e -> e == InWorldProcessing.HAUNTING, cls, predicate, getter);
+		super("CreateHaunting", e -> e == AllFanProcessingTypes.HAUNTING, cls, predicate, getter);
 	}
 
 	@Override

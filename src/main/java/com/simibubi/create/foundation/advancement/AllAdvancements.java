@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllFanProcessingTypes;
 import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 
 import org.apache.logging.log4j.LogManager;
@@ -130,15 +131,15 @@ public class AllAdvancements implements DataProvider {
 			.save(t, id + ":fan");
 
 		Advancement fan_lava = advancement("fan_lava", Items.LAVA_BUCKET, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.BLASTING))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(AllFanProcessingTypes.BLASTING))
 			.save(t, id + ":fan_lava");
 
 		Advancement fan_smoke = advancement("fan_smoke", Items.CAMPFIRE, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.SMOKING))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(AllFanProcessingTypes.SMOKING))
 			.save(t, id + ":fan_smoke");
 
 		Advancement fan_water = advancement("fan_water", Items.WATER_BUCKET, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.SPLASHING))
+			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(AllFanProcessingTypes.SPLASHING))
 			.save(t, id + ":fan_water");
 
 		Advancement rose_quartz =

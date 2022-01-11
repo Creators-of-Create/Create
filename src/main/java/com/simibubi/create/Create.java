@@ -99,6 +99,7 @@ public class Create {
 		AllConfigs.register(modLoadingContext);
 		FurnaceEngineInteractions.registerDefaults();
 		BlockSpoutingBehaviour.register();
+		AllFanProcessingTypes.register();
 
 		ForgeMod.enableMilkFluid();
 

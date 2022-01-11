@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.custom.TypeCustom;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -100,7 +101,8 @@ public class CustomFanCategory extends ProcessingViaFanCategory<CustomFanProcess
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack, CustomFanProcessingRecipe recipe) {
 		matrixStack.pushPose();
-		if (recipe.type instanceof TypeCustom custom) {
+		AbstractFanProcessingType type = AbstractFanProcessingType.valueOf(recipe.type);
+		if (type instanceof TypeCustom custom) {
 			GuiGameElement.of(Optional.ofNullable(custom.getConfig().block().getBlockForDisplay()).orElse(Blocks.AIR.defaultBlockState()))
 					.scale(24)
 					.atLocal(0, 0, 2)

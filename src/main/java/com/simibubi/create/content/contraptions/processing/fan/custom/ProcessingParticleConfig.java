@@ -57,7 +57,7 @@ public record ProcessingParticleConfig(int chance, String col, String id,
 		double vz = speed.z() + (level.random.nextFloat() - .5f) * random_speed.z() * 2;
 		if (option != null) {
 			level.addParticle(option, x, y, z, vx, vy, vz);
-		}
+		} else throw new IllegalArgumentException("particle not known for " + id);
 	}
 
 }

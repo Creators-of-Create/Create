@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.syn
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingCreationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartControllerUpdatePacket;
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanNetworkManager;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
 import com.simibubi.create.content.curiosities.symmetry.ConfigureSymmetryWandPacket;
@@ -124,6 +125,7 @@ public enum AllPackets {
 	SOUL_PULSE(SoulPulseEffectPacket.class, SoulPulseEffectPacket::new, PLAY_TO_CLIENT),
 	PERSISTENT_DATA(ISyncPersistentData.PersistentDataPacket.class, ISyncPersistentData.PersistentDataPacket::new, PLAY_TO_CLIENT),
 	SYNC_POTATO_PROJECTILE_TYPES(PotatoProjectileTypeManager.SyncPacket.class, PotatoProjectileTypeManager.SyncPacket::new, PLAY_TO_CLIENT),
+	CUSTOM_FAN_DATA(CustomFanNetworkManager.SyncPacket.class, CustomFanNetworkManager.SyncPacket::new, PLAY_TO_CLIENT),
 
 	;
 

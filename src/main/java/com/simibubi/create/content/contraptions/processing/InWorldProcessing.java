@@ -35,12 +35,6 @@ public class InWorldProcessing {
 	public static final DamageSource LAVA_DAMAGE_SOURCE = new DamageSource("create.fan_lava").setScalesWithDifficulty()
 			.setIsFire();
 
-	public static final AbstractFanProcessingType SPLASHING = new TypeSplashing(-2000, "SPLASHING");
-	public static final AbstractFanProcessingType HAUNTING = new TypeHaunting(-1000, "HAUNTING");
-	public static final AbstractFanProcessingType SMOKING = new TypeSmoking(1000, "SMOKING");
-	public static final AbstractFanProcessingType BLASTING = new TypeBlasting(2000, "BLASTING");
-	public static final HorseTransform HORSE = new HorseTransform();
-
 	public static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
 	public static boolean canProcess(ItemEntity entity, AbstractFanProcessingType type) {

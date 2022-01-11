@@ -16,11 +16,8 @@ import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -113,7 +110,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		if (source.getAirCurrent() == null)
 			return;
 		AbstractFanProcessingType type = source.getAirCurrent().getSegmentAt((float) distance);
-
+		if (type != null) type.morphType(this);
 		if (type == null) {
 			setColor(0xEEEEEE);
 			setAlpha(.25f);

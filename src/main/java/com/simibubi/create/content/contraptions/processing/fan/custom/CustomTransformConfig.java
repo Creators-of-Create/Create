@@ -63,6 +63,10 @@ public record CustomTransformConfig(String block_type, String old_type, String n
 		return ForgeRegistries.ENTITIES.getValue(new ResourceLocation(new_type));
 	}
 
+	public EntityType getOldType() {
+		return ForgeRegistries.ENTITIES.getValue(new ResourceLocation(old_type));
+	}
+
 	public Class getOldClass() {
 		return ForgeRegistries.ENTITIES.getValue(new ResourceLocation(old_type)).getBaseClass();
 	}

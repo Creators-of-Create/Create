@@ -26,7 +26,7 @@ public abstract class AbstractFanProcessingType implements Comparable<AbstractFa
 
 	public static final Map<String, AbstractFanProcessingType> MAP = Maps.newConcurrentMap();
 
-	public static final AbstractFanProcessingType NONE = new AbstractFanProcessingType(3000, "NONE") {
+	public static final AbstractFanProcessingType NONE = new AbstractFanProcessingType(-3000, "NONE") {
 		@Override
 		public void spawnParticlesForProcessing(Level level, Vec3 pos) {
 		}
