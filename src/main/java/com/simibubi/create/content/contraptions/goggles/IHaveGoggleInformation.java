@@ -11,18 +11,14 @@ import com.simibubi.create.lib.util.FluidHandlerData;
 import com.simibubi.create.lib.util.FluidHandlerData.FluidTankData;
 import com.simibubi.create.lib.util.FluidTextUtil;
 import com.simibubi.create.lib.util.FluidUnit;
+import com.simibubi.create.lib.util.FluidUtil;
 import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecraftClientUtil;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.Fluids;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen
@@ -62,22 +58,9 @@ public interface IHaveGoggleInformation {
 		boolean isEmpty = true;
 		for (int i = 0; i < tank.getTanks(); i++) {
 			FluidTankData data = tank.data[i];
-
-			String translationKey;
-			if (data.fluid() == Fluids.EMPTY) {
-				translationKey = "";
-			} else if (data.fluid() == Fluids.WATER) {
-				translationKey = "block.minecraft.water";
-			} else if (data.fluid() == Fluids.LAVA) {
-				translationKey = "block.minecraft.lava";
-			} else {
-				ResourceLocation id = Registry.FLUID.getKey(data.fluid());
-				String key = Util.makeDescriptionId("block", id);
-				String translated = I18n.get(key);
-				translationKey = translated.equals(key) ? Util.makeDescriptionId("fluid", id) : key;
-			}
-
+			String translationKey = FluidUtil.getTranslationKey(data.fluid());
 			long amount = data.amount();
+
 			if (translationKey.isEmpty() || amount == 0)
 				continue;
 
