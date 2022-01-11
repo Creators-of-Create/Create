@@ -10,7 +10,7 @@
     "tags": []
   },
   "entity_effect": {
-    "damage": 1,
+    "damage": 0,
     "is_fire": false,
     "mob_effects": [
       {
@@ -20,10 +20,11 @@
       }
     ]
   },
-  "processing_particle": [
+  "processing_particles": [
     {
       "chance": 8,
       "color": "FFFFFF",
+      "id": null,
       "base_offset": {
         "x": 0,
         "y": 0.5,
@@ -38,10 +39,12 @@
         "x": 0,
         "y": 0.125,
         "z": 0
-      }
+      },
+      "random_speed": null
     },
     {
       "chance": 8,
+      "color": null,
       "id": "snowflake",
       "base_offset": {
         "x": 0,
@@ -57,7 +60,8 @@
         "x": 0,
         "y": 0.0625,
         "z": 0
-      }
+      },
+      "random_speed": null
     }
   ],
   "morph": {

@@ -1,0 +1,39 @@
+{
+  "block_type": "POWDER_SNOW",
+  "old_type": "minecraft:skeleton",
+  "new_type": "minecraft:stray",
+  "progression": {
+    "interval": 10,
+    "id": "entity.stray.step",
+    "volume": 0.15,
+    "pitch": 1,
+    "volume_slope": 0.15,
+    "pitch_slope": 0
+  },
+  "completion": {
+    "id": "entity.stray.step",
+    "volume": 0.5,
+    "pitch": 1.5
+  },
+  "particles": [
+    {
+      "chance": 1,
+      "id": "snowflake",
+      "base_offset": {
+        "x": 0,
+        "y": 0.5,
+        "z": 0
+      },
+      "random_offset": {
+        "x": 1,
+        "y": 0.2,
+        "z": 1
+      },
+      "speed": {
+        "x": 0,
+        "y": 0.1,
+        "z": 0
+      }
+    }
+  ]
+}

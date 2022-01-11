@@ -1,0 +1,62 @@
+{
+  "block_type": "HAUNTING",
+  "old_type": "minecraft:skeleton",
+  "new_type": "minecraft:wither_skeleton",
+  "progression": {
+    "interval": 10,
+    "id": "particle.soul_escape",
+    "volume": 1,
+    "pitch": 0,
+    "volume_slope": 0,
+    "pitch_slope": 1.5
+  },
+  "completion": {
+    "id": "entity.generic.extinguish_fire",
+    "volume": 1.25,
+    "pitch": 0.65
+  },
+  "particles": [
+    {
+      "chance": 1,
+      "color": null,
+      "id": "soul_fire_flame",
+      "base_offset": {
+        "x": 0,
+        "y": 0.5,
+        "z": 0
+      },
+      "random_offset": {
+        "x": 1,
+        "y": 0.2,
+        "z": 1
+      },
+      "speed": {
+        "x": 0,
+        "y": 0.1,
+        "z": 0
+      },
+      "random_speed": null
+    },
+    {
+      "chance": 3,
+      "color": null,
+      "id": "large_smoke",
+      "base_offset": {
+        "x": 0,
+        "y": 0.5,
+        "z": 0
+      },
+      "random_offset": null,
+      "speed": {
+        "x": 0,
+        "y": 0.1,
+        "z": 0
+      },
+      "random_speed": {
+        "x": 0.25,
+        "y": 0,
+        "z": 0.25
+      }
+    }
+  ]
+}

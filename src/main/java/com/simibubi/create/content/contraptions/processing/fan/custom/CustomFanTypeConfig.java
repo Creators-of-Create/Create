@@ -261,6 +261,6 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			Codec.list(ProcessingParticleConfig.CODEC).optionalFieldOf("processing_particles").forGetter(e -> Optional.ofNullable(e.processing_particle)),
 			MorphConfig.CODEC.optionalFieldOf("morph").forGetter(e -> Optional.ofNullable(e.morph))
 	).apply(i, (priority, name, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority.orElse(0), name, block,
-			entity_effect.orElse(null), processing_particles.orElse(null), morph.orElse(null))));
+			entity_effect.orElse(null), processing_particles.get(), morph.orElse(null))));
 
 }
