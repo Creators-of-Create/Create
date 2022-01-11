@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllParticleTypes;
@@ -124,9 +126,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			.forRecipes();
 		behaviours.add(filtering);
 
-		inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 2, 1000, true)
+		inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 2, FluidConstants.BUCKET, true)
 			.whenFluidUpdates(() -> contentsChanged = true);
-		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 2, 1000, true)
+		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 2, FluidConstants.BUCKET, true)
 			.whenFluidUpdates(() -> contentsChanged = true)
 			.forbidInsertion();
 		behaviours.add(inputTank);
