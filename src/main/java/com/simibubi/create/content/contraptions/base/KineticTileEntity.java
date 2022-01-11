@@ -75,7 +75,7 @@ public class KineticTileEntity extends SmartTileEntity
 		updateInitialConnections(state);
 	}
 
-	protected void updateInitialConnections(BlockState state) {
+	public void updateInitialConnections(BlockState state) {
 		if (state.getBlock() instanceof IRotate rotate) {
 			initialConnections = rotate.buildInitialConnections(ConnectionsBuilder.builder(), state).build();
 			if (getLevel() != null && !getLevel().isClientSide) {

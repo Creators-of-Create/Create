@@ -79,10 +79,10 @@ public class Instruction {
 		return 0;
 	}
 
-	Optional<InstructionSpeedModifiers> getSpeedModifier() {
+	float getSpeedModifier() {
 		return switch (instruction) {
-			case TURN_ANGLE, TURN_DISTANCE -> Optional.of(speedModifier);
-			default -> Optional.empty();
+			case TURN_ANGLE, TURN_DISTANCE -> speedModifier.value;
+			default -> 0;
 		};
 	}
 

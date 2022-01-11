@@ -28,8 +28,8 @@ public class GearshiftTileEntity extends KineticTileEntity {
 		if (!state.getValue(BlockStateProperties.POWERED))
 			return builder.withFullShaft(dir.getAxis()).build();
 		return builder
-				.withHalfShaft(AllConnections.Shafts.SHAFT_REV, dir)
-				.withHalfShaft(AllConnections.Shafts.SHAFT, dir.getOpposite())
+				.withHalfShaft(dir, -1)
+				.withHalfShaft(dir.getOpposite(), 1)
 				.build();
 	}
 

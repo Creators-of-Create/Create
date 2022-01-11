@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -11,10 +14,12 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 
 	int signal;
 	boolean signalChanged;
+	KineticConnections connections;
 
 	public AdjustablePulleyTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		signal = 0;
+		updateConnections(state);
 		setLazyTickRate(40);
 	}
 
@@ -26,12 +31,14 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
-		signal = compound.getInt("Signal");
+		analogSignalChanged(compound.getInt("Signal"));
 		super.read(compound, clientPacket);
 	}
 
-	public float getModifier() {
-		return getModifierForSignal(signal);
+	protected float getModifier() {
+		if (signal == 0)
+			return 1;
+		return 1 + ((signal + 1) / 16f);
 	}
 
 	public void neighbourChanged() {
@@ -60,16 +67,16 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	protected void analogSignalChanged(int newSignal) {
-		//detachKinetics();
-		//removeSource();
 		signal = newSignal;
-		//attachKinetics();
+		updateConnections(getBlockState());
 	}
 
-	protected float getModifierForSignal(int newPower) {
-		if (newPower == 0)
-			return 1;
-		return 1 + ((newPower + 1) / 16f);
+	private void updateConnections(BlockState state) {
+		connections = EncasedBeltBlock.encasedBeltConnections(state, getModifier()).build();
 	}
 
+	@Override
+	public KineticConnections getConnections() {
+		return connections;
+	}
 }

@@ -1,51 +1,49 @@
 package com.simibubi.create.content.contraptions.solver;
 
+import com.simibubi.create.foundation.utility.Pair;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
 public class KineticConnections {
-	private final Set<KineticConnection> connections;
+	private final Map<KineticConnection, Float> connections;
 
-	public KineticConnections(Set<KineticConnection> connections) {
+	public KineticConnections(Map<KineticConnection, Float> connections) {
 		this.connections = connections;
 	}
 
 	public static KineticConnections empty() {
-		return new KineticConnections(Set.of());
+		return new KineticConnections(Map.of());
 	}
 
-	public Stream<KineticConnection> stream() {
-		return connections.stream();
+	public Set<Map.Entry<KineticConnection, Float>> entries() {
+		return connections.entrySet();
 	}
 
 	public boolean hasStressOnlyConnections() {
-		return connections.stream()
-				.flatMap(c -> c.getRatios().values().stream()
+		return entries().stream()
+				.flatMap(c -> c.getKey().getRatios().values().stream()
 						.flatMap(m -> m.values().stream()))
 				.anyMatch(r -> r == 0);
 	}
 
 	public float getShaftSpeedModifier(Direction face) {
-		Vec3i offset = face.getNormal();
-
 		KineticConnection shaft = KineticConnectionsRegistry
-				.getConnectionType(AllConnections.Shafts.SHAFT.type(face.getOpposite())).get();
+				.getConnectionType(AllConnections.Directional.SHAFT.type(face)).get();
 
-		return stream()
-				.flatMap(c -> Optional.ofNullable(c.getRatios().get(offset))
-						.flatMap(r -> Optional.ofNullable(r.get(shaft)))
-						.stream())
-				.findFirst()
-				.orElse(0f);
+		return Optional.ofNullable(connections.get(shaft)).orElse(0f);
 	}
 
 	@Override
@@ -63,18 +61,25 @@ public class KineticConnections {
 
 	public CompoundTag save(CompoundTag tag) {
 		ListTag connectionsTags = new ListTag();
-		for (KineticConnection connection : connections) {
-			connectionsTags.add(StringTag.valueOf(connection.name()));
+		for (Map.Entry<KineticConnection, Float> entry : connections.entrySet()) {
+			CompoundTag entryTag = new CompoundTag();
+			entryTag.putString("Name", entry.getKey().name());
+			if (entry.getValue() != 1) {
+				entryTag.putFloat("Mod", entry.getValue());
+			}
+			connectionsTags.add(entryTag);
 		}
 		tag.put("Connections", connectionsTags);
 		return tag;
 	}
 
 	public static KineticConnections load(CompoundTag tag) {
-		Set<KineticConnection> connections = new HashSet<>();
-		tag.getList("Connections", Tag.TAG_STRING).forEach(t -> {
-			KineticConnectionsRegistry.getConnectionType(t.getAsString())
-					.ifPresent(connections::add);
+		Map<KineticConnection, Float> connections = new HashMap<>();
+		tag.getList("Connections", Tag.TAG_COMPOUND).forEach(t -> {
+			CompoundTag ct = (CompoundTag) t;
+			String name = ct.getString("Name");
+			float mod = ct.contains("Mod") ? ct.getFloat("Mod") : 1;
+			KineticConnectionsRegistry.getConnectionType(name).ifPresent(c -> connections.put(c, mod));
 		});
 		return new KineticConnections(connections);
 	}

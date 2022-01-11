@@ -162,23 +162,17 @@ public class SequencedGearshiftTileEntity extends KineticTileEntity {
 		ConnectionsBuilder builder = ConnectionsBuilder.builder();
 		if (isVirtual()) return builder.withFullShaft(facing.getAxis()).build();
 
-		builder = builder.withHalfShaft(facing.getOpposite());
+		builder = builder.withHalfShaft(facing.getOpposite(), 1);
 
-		Optional<InstructionSpeedModifiers> modifier = getModifier();
-		if (modifier.isEmpty() || isRemoved()) return builder.build();
+		float modifier = getModifier();
+		if (modifier == 0 || isRemoved()) return builder.build();
 
-		AllConnections.Shafts shaft = switch(modifier.get()) {
-			case FORWARD_FAST -> AllConnections.Shafts.SHAFT_X2;
-			case FORWARD -> AllConnections.Shafts.SHAFT;
-			case BACK -> AllConnections.Shafts.SHAFT_REV;
-			case BACK_FAST -> AllConnections.Shafts.SHAFT_REV_X2;
-		};
-		return builder.withHalfShaft(shaft, facing).build();
+		return builder.withHalfShaft(facing, modifier).build();
 	}
 
-	public Optional<InstructionSpeedModifiers> getModifier() {
+	public float getModifier() {
 		if (currentInstruction >= instructions.size() || isIdle())
-			return Optional.empty();
+			return 0;
 		return instructions.get(currentInstruction).getSpeedModifier();
 	}
 

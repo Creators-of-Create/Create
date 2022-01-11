@@ -160,17 +160,21 @@ public class KineticNode {
 	 * 			the connecting node and the second value is the speed ratio of the connection
 	 */
 	private Stream<Pair<KineticNode, Float>> getAllActiveConnections() {
-		return connections.stream()
-				.flatMap(from -> from.getRatios().entrySet().stream()
+		return connections.entries().stream()
+				.flatMap(from -> from.getKey().getRatios().entrySet().stream()
 						.map(e -> {
 							Vec3i offset = e.getKey();
 							return solver.getNode(pos.offset(offset)).flatMap(node -> {
 								Map<KineticConnection, Float> ratios = e.getValue();
-								return node.getConnections().stream()
-										.map(ratios::get)
-										.filter(Objects::nonNull)
-										.findFirst()
-										.map(r -> Pair.of(node, r));
+								for (Map.Entry<KineticConnection, Float> to : node.getConnections().entries()) {
+									Float ratio = ratios.get(to.getKey());
+									if (ratio != null) {
+										float fromMod = from.getValue();
+										float toMod = to.getValue();
+										return Optional.of(Pair.of(node, ratio * fromMod / toMod));
+									}
+								}
+								return Optional.empty();
 							});
 						})
 				)

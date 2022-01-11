@@ -22,17 +22,32 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 		super(typeIn, pos, state);
 	}
 
-	@Override
-	public KineticConnections getConnections() {
-		BlockState state = getBlockState();
-		Direction facing = state.getValue(GantryShaftBlock.FACING);
+	private KineticConnections connections;
 
+	public void updateConnections(BlockState state) {
+		if (!AllBlocks.GANTRY_SHAFT.has(state)) {
+			connections = KineticConnections.empty();
+			return;
+		}
+
+		Direction facing = state.getValue(GantryShaftBlock.FACING);
 		ConnectionsBuilder builder = ConnectionsBuilder.builder().withFullShaft(facing.getAxis());
 
-		if (!AllBlocks.GANTRY_SHAFT.has(state) || !state.getValue(GantryShaftBlock.POWERED))
-			return builder.build();
+		if (state.getValue(GantryShaftBlock.POWERED))
+			builder = builder.withDirectional(AllConnections.Directional.GANTRY_RACK, facing);
 
-		return builder.withDirectional(AllConnections.Directional.GANTRY_RACK, facing).build();
+		connections = builder.build();
+	}
+
+	@Override
+	public KineticConnections getConnections() {
+		return connections;
+	}
+
+	@Override
+	public void initialize() {
+		updateConnections(getBlockState());
+		super.initialize();
 	}
 
 	public void checkAttachedCarriageBlocks() {

@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -175,12 +176,17 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 
-		if (!worldIn.isClientSide() && oldState.is(AllBlocks.GANTRY_SHAFT.get())) {
-			Part oldPart = oldState.getValue(PART), part = state.getValue(PART);
-			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
-				BlockEntity te = worldIn.getBlockEntity(pos);
-				if (te instanceof GantryShaftTileEntity)
-					((GantryShaftTileEntity) te).checkAttachedCarriageBlocks();
+		if (oldState.is(AllBlocks.GANTRY_SHAFT.get())) {
+			if (!worldIn.isClientSide()) {
+				Part oldPart = oldState.getValue(PART), part = state.getValue(PART);
+				if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
+					withTileEntityDo(worldIn, pos, GantryShaftTileEntity::checkAttachedCarriageBlocks);
+				}
+			}
+
+			boolean oldPowered = oldState.getValue(POWERED), powered = state.getValue(POWERED);
+			if (oldPowered != powered) {
+				withTileEntityDo(worldIn, pos, kte -> kte.updateConnections(state));
 			}
 		}
 	}
@@ -227,8 +233,9 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-			if (blockState.getBlock() instanceof GantryShaftBlock)
+			if (blockState.getBlock() instanceof GantryShaftBlock gsb) {
 				worldIn.setBlock(blockPos, blockState.setValue(POWERED, shouldPower), 2);
+			}
 		}
 	}
 

@@ -130,15 +130,6 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 		return Axis.Y;
 	}
 
-	public static Axis getValidGantryPinionAxis(BlockState state, Axis shaftAxis) {
-		Axis facingAxis = state.getValue(FACING)
-			.getAxis();
-		for (Axis axis : Iterate.axes)
-			if (axis != shaftAxis && axis != facingAxis)
-				return axis;
-		return Axis.Y;
-	}
-
 	@Override
 	public Class<GantryCarriageTileEntity> getTileEntityClass() {
 		return GantryCarriageTileEntity.class;

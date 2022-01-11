@@ -16,12 +16,10 @@ import java.util.Optional;
 public class AllConnections {
 
 	public static void register() {
-		Shafts.registerTypes();
 		Directional.registerTypes();
 		Axial.registerTypes();
 		DirAxial.registerTypes();
 
-		Shafts.registerRatios();
 		Directional.registerRatios();
 		Axial.registerRatios();
 		DirAxial.registerRatios();
@@ -29,48 +27,21 @@ public class AllConnections {
 
 	private static record Entry(Vec3i offset, String to, float ratio) {}
 
-	public enum Shafts {
-		SHAFT("shaft", 1),
-		SHAFT_REV("shaft_rev", -1),
-		SHAFT_X2("shaft_x2", 2),
-		SHAFT_REV_X2("shaft_rev_x2", -2);
-
-		public final String prefix;
-		public final float ratio;
-		Shafts(String prefix, float ratio) {
-			this.prefix = prefix;
-			this.ratio = ratio;
-		}
-
-		public String type(Direction dir) {
-			return prefix + "." + dir;
-		}
-
-		public static void registerTypes() {
-			for (Shafts value : values()) {
-				for (Direction dir : Direction.values()) {
-					KineticConnectionsRegistry.registerConnectionType(value.type(dir));
-				}
-			}
-		}
-
-		public static void registerRatios() {
-			for (Shafts from : values()) {
-				for (Shafts to : values()) {
-					for (Direction dir : Direction.values()) {
-						KineticConnectionsRegistry.registerConnectionRatio(
-								KineticConnectionsRegistry.getConnectionType(from.type(dir)).get(),
-								KineticConnectionsRegistry.getConnectionType(to.type(dir.getOpposite())).get(),
-								dir.getNormal(),
-								from.ratio / to.ratio
-						);
-					}
-				}
-			}
-		}
-	}
-
 	public enum Directional {
+		SHAFT("shaft") {
+			@Override
+			public List<Entry> genConnections(Direction dir) {
+				return List.of(new Entry(dir.getNormal(), SHAFT.type(dir.getOpposite()), 1));
+			}
+		},
+
+		ENCASED_BELT("encased_belt") {
+			@Override
+			public List<Entry> genConnections(Direction dir) {
+				return List.of(new Entry(dir.getNormal(), ENCASED_BELT.type(dir.getOpposite()), 1));
+			}
+		},
+
 		GANTRY_RACK("gantry_rack") {
 			@Override
 			public List<Entry> genConnections(Direction dir) { return List.of(); }

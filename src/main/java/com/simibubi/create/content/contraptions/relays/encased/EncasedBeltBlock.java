@@ -4,6 +4,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -121,8 +123,12 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<K
 		if ((part == Part.START) != positive)
 			part = Part.MIDDLE;
 
-		return stateIn.setValue(PART, part)
-			.setValue(CONNECTED_ALONG_FIRST_COORDINATE, connectionAlongFirst);
+		BlockState newState = stateIn.setValue(PART, part)
+				.setValue(CONNECTED_ALONG_FIRST_COORDINATE, connectionAlongFirst);
+
+		withTileEntityDo(worldIn, currentPos, kte -> kte.updateInitialConnections(newState));
+
+		return newState;
 	}
 
 	@Override
@@ -164,39 +170,30 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<K
 		return state.getValue(AXIS);
 	}
 
-	public static boolean areBlocksConnected(BlockState state, BlockState other, Direction facing) {
+	public static ConnectionsBuilder encasedBeltConnections(BlockState state, float mod) {
 		Part part = state.getValue(PART);
+		Axis shaftAxis = state.getValue(AXIS);
 		Axis connectionAxis = getConnectionAxis(state);
-		Axis otherConnectionAxis = getConnectionAxis(other);
 
-		if (otherConnectionAxis != connectionAxis)
-			return false;
-		if (facing.getAxis() != connectionAxis)
-			return false;
-		if (facing.getAxisDirection() == AxisDirection.POSITIVE && (part == Part.MIDDLE || part == Part.START))
-			return true;
-		if (facing.getAxisDirection() == AxisDirection.NEGATIVE && (part == Part.MIDDLE || part == Part.END))
-			return true;
+		ConnectionsBuilder builder = ConnectionsBuilder.builder().withFullShaft(shaftAxis);
 
-		return false;
+		if (part == Part.START || part == Part.MIDDLE)
+			builder.withDirectional(AllConnections.Directional.ENCASED_BELT, AllConnections.pos(connectionAxis), mod);
+		if (part == Part.MIDDLE || part == Part.END)
+			builder.withDirectional(AllConnections.Directional.ENCASED_BELT, AllConnections.neg(connectionAxis), mod);
+
+		return builder;
+	}
+
+	@Override
+	public ConnectionsBuilder buildInitialConnections(ConnectionsBuilder builder, BlockState state) {
+		return encasedBeltConnections(state, 1);
 	}
 
 	protected static Axis getConnectionAxis(BlockState state) {
 		Axis axis = state.getValue(AXIS);
-		boolean connectionAlongFirst = state.getValue(CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis connectionAxis =
-			connectionAlongFirst ? (axis == Axis.X ? Axis.Y : Axis.X) : (axis == Axis.Z ? Axis.Y : Axis.Z);
-		return connectionAxis;
-	}
-
-	public static float getRotationSpeedModifier(KineticTileEntity from, KineticTileEntity to) {
-		float fromMod = 1;
-		float toMod = 1;
-		if (from instanceof AdjustablePulleyTileEntity)
-			fromMod = ((AdjustablePulleyTileEntity) from).getModifier();
-		if (to instanceof AdjustablePulleyTileEntity)
-			toMod = ((AdjustablePulleyTileEntity) to).getModifier();
-		return fromMod / toMod;
+		boolean alongFirst = state.getValue(CONNECTED_ALONG_FIRST_COORDINATE);
+		return alongFirst ? (axis == Axis.X ? Axis.Y : Axis.X) : (axis == Axis.Z ? Axis.Y : Axis.Z);
 	}
 
 	public enum Part implements StringRepresentable {

@@ -80,11 +80,11 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 		return state.getValue(AXIS);
 	}
 
-	private static boolean isReversed(Direction from, Direction to) {
-		if (from == to) return false;
+	private static float getModifier(Direction from, Direction to) {
+		if (from == to) return 1;
 		Axis fromAxis = from.getAxis(), toAxis = to.getAxis();
-		if (fromAxis == toAxis) return true;
-		return AllConnections.perpendicularRatios(to.getNormal().subtract(from.getNormal()), fromAxis, toAxis) == -1;
+		if (fromAxis == toAxis) return -1;
+		return AllConnections.perpendicularRatios(to.getNormal().subtract(from.getNormal()), fromAxis, toAxis);
 	}
 
 	@Override
@@ -92,10 +92,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 		Axis axis = state.getValue(AXIS);
 		Direction start = DirectionHelper.getPositivePerpendicular(axis);
 		for (Direction cur : Iterate.directionsPerpendicularTo(axis)) {
-			AllConnections.Shafts shaft = isReversed(start, cur)
-					? AllConnections.Shafts.SHAFT_REV
-					: AllConnections.Shafts.SHAFT;
-			builder = builder.withHalfShaft(shaft, cur);
+			builder = builder.withHalfShaft(cur, getModifier(start, cur));
 		}
 		return builder;
 	}
