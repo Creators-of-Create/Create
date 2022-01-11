@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import com.jozufozu.flywheel.backend.IrisShaderHandler;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -62,8 +63,7 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 		float maxU = mirror ? getU0() : getU1();
 		float minV = getV0();
 		float maxV = getV1();
-		// FIXME iris compat
-		int brightness = /*OptifineHandler.usingShaders() ? LightTexture.pack(12, 15 ) :*/ getLightColor(partialTicks);
+		int brightness = IrisShaderHandler.isShaderPackInUse() ? LightTexture.pack(12, 15 ) : getLightColor(partialTicks);
 		builder.vertex(vertices[0].x(), vertices[0].y(), vertices[0].z()).uv(maxU, maxV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
 		builder.vertex(vertices[1].x(), vertices[1].y(), vertices[1].z()).uv(maxU, minV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
 		builder.vertex(vertices[2].x(), vertices[2].y(), vertices[2].z()).uv(minU, minV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
