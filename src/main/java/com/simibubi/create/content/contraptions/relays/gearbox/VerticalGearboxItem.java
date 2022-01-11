@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -29,7 +30,7 @@ public class VerticalGearboxItem extends BlockItem {
 	@Override
 	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 	}
-	
+
 	@Override
 	public String getDescriptionId() {
 		return "item.create.vertical_gearbox";
@@ -41,25 +42,26 @@ public class VerticalGearboxItem extends BlockItem {
 
 	@Override
 	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player player, ItemStack stack, BlockState state) {
-		Axis prefferedAxis = null;
+		Axis preferredAxis = null;
 		for (Direction side : Iterate.horizontalDirections) {
 			BlockState blockState = world.getBlockState(pos.relative(side));
-			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(world, pos.relative(side), blockState,
-						side.getOpposite()))
-					if (prefferedAxis != null && prefferedAxis != side.getAxis()) {
-						prefferedAxis = null;
+			if (blockState.getBlock() instanceof IRotate ir) {
+				if (ir.hasShaftTowards(blockState, side.getOpposite(), world, pos.relative(side)))
+					if (preferredAxis != null && preferredAxis != side.getAxis()) {
+						preferredAxis = null;
 						break;
 					} else {
-						prefferedAxis = side.getAxis();
+						preferredAxis = side.getAxis();
 					}
 			}
 		}
 
-		Axis axis = prefferedAxis == null ? player.getDirection()
+		Axis axis = preferredAxis == null ? player.getDirection()
 				.getClockWise()
-				.getAxis() : prefferedAxis == Axis.X ? Axis.Z : Axis.X;
-		world.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.AXIS, axis));
+				.getAxis() : preferredAxis == Axis.X ? Axis.Z : Axis.X;
+		BlockState newState = state.setValue(BlockStateProperties.AXIS, axis);
+		KineticTileEntity.switchToBlockState(world, pos, newState);
+
 		return super.updateCustomBlockEntityTag(pos, world, player, stack, state);
 	}
 

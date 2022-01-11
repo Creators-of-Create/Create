@@ -100,8 +100,8 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		if (previousSpeed == getSpeed())
 			return;
-		if (theoreticalSpeed != 0)
-			reversed = theoreticalSpeed < 0;
+		if (getTheoreticalSpeed() != 0)
+			reversed = getTheoreticalSpeed() < 0;
 		if (level.isClientSide && !isVirtual())
 			return;
 

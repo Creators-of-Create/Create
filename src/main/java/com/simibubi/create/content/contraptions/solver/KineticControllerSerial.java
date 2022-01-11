@@ -27,10 +27,14 @@ public enum KineticControllerSerial {
 			}
 
 			@Override
-			public void onUpdate(Level level, KineticSolver solver, KineticNode node) {
+			public void onKineticsTick(Level level, KineticSolver solver, KineticNode node) {
 				BlockPos below = node.getPos().below();
 				if (level.getBlockEntity(below) instanceof SpeedControllerTileEntity se) {
 					targetSpeed = se.getTargetSpeed();
+				} else if (generatedSpeed != 0) {
+					generatedSpeed = 0;
+				} else {
+					node.removeController();
 				}
 
 				Optional<KineticNode> seNode = solver.getNode(below);

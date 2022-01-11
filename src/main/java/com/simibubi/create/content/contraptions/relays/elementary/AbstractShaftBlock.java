@@ -18,7 +18,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -60,7 +59,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	// IRotate:
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(AXIS);
 	}
 
@@ -84,7 +83,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
 		BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -94,7 +93,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 		FluidState ifluidstate = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
+				ifluidstate.getType() == Fluids.WATER);
 	}
 
 	@Override

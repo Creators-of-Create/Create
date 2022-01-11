@@ -16,7 +16,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,7 +73,7 @@ public class FlywheelBlock extends HorizontalKineticBlock implements ITE<Flywhee
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == state.getValue(HORIZONTAL_FACING).getOpposite();
 	}
 

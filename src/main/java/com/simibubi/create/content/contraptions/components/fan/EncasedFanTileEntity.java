@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 @MethodsReturnNonnullByDefault
-public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements IAirCurrentSource {
+public class EncasedFanTileEntity extends KineticTileEntity implements IAirCurrentSource {
 
 	public AirCurrent airCurrent;
 	protected int airCurrentUpdateCooldown;
@@ -52,19 +52,19 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		super.write(compound, clientPacket);
 	}
 
-	public float calculateAddedStressCapacity() {
-		//return lastCapacityProvided = (isGenerator ? super.calculateAddedStressCapacity() : 0);
-		return 0;
-	}
-
-	public float calculateStressApplied() {
-		//return isGenerator ? 0 : super.calculateStressApplied();
-		return 0;
-	}
-
 	@Override
 	public float getGeneratedSpeed() {
 		return isGenerator ? AllConfigs.SERVER.kinetics.generatingFanSpeed.get() : 0;
+	}
+
+	@Override
+	public float getStressCapacity() {
+		return isGenerator ? super.getStressCapacity() : 0;
+	}
+
+	@Override
+	public float getStressImpact() {
+		return isGenerator ? 0 : super.getStressImpact();
 	}
 
 	public void queueGeneratorUpdate() {
@@ -88,7 +88,6 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		if (shouldGenerate == isGenerator)
 			return;
 		isGenerator = shouldGenerate;
-		updateGeneratedRotation();
 	}
 
 	public boolean blockBelowIsHot() {

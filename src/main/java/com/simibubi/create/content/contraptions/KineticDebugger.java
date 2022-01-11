@@ -38,16 +38,20 @@ public class KineticDebugger {
 			return;
 
 		Level world = Minecraft.getInstance().level;
-		BlockPos toOutline = te.hasSource() ? te.source : te.getBlockPos();
+		BlockPos toOutline = te.getSpeedSource().orElse(te.getBlockPos());
 		BlockState state = te.getBlockState();
 		VoxelShape shape = world.getBlockState(toOutline)
 			.getBlockSupportShape(world, toOutline);
 
-		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty())
+		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty()) {
+			int color = te.getSpeedSource().flatMap($ -> te.getNetworkID())
+					.map(id -> Color.generateFromLong(id).getRGB())
+					.orElse(0xffcc00);
 			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.bounds()
 					.move(toOutline))
 					.lineWidth(1 / 16f)
-					.colored(te.hasSource() ? Color.generateFromLong(te.network).getRGB() : 0xffcc00);
+					.colored(color);
+		}
 
 		if (state.getBlock() instanceof IRotate) {
 			Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);

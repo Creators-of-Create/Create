@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.minecraft.world.level.LevelReader;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -52,7 +54,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -113,10 +114,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 //	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face, LevelReader level, BlockPos pos) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
-		return getTileEntityOptional(world, pos).map(BeltTileEntity::hasPulley)
+
+		return getTileEntityOptional(level, pos).map(BeltTileEntity::hasPulley)
 			.orElse(false);
 	}
 

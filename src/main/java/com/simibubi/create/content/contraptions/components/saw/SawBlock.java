@@ -21,7 +21,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -97,9 +96,9 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return isHorizontal(state) ? face == state.getValue(FACING).getOpposite()
-				: super.hasShaftTowards(world, pos, state, face);
+				: super.hasShaftTowards(state, face);
 	}
 
 	@Override
@@ -116,12 +115,12 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	public Class<SawTileEntity> getTileEntityClass() {
 		return SawTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SawTileEntity> getTileEntityType() {
 		return AllTileEntities.SAW.get();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

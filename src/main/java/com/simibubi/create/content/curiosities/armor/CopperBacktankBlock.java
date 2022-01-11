@@ -29,7 +29,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -63,12 +62,12 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		builder.add(BlockStateProperties.WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
-	
+
 	@Override
 	public int getAnalogOutputSignal(BlockState p_180641_1_, Level world, BlockPos pos) {
 		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
@@ -78,7 +77,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
 		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -92,7 +91,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == Direction.UP;
 	}
 
@@ -177,7 +176,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	public Class<CopperBacktankTileEntity> getTileEntityClass() {
 		return CopperBacktankTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends CopperBacktankTileEntity> getTileEntityType() {
 		return AllTileEntities.COPPER_BACKTANK.get();

@@ -95,23 +95,20 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		BlockState blockState = reader.getBlockState(neighbourPos);
 		Block block = blockState.getBlock();
 		return block instanceof IRotate
-			&& ((IRotate) block).hasShaftTowards(reader, neighbourPos, blockState, facing.getOpposite());
+			&& ((IRotate) block).hasShaftTowards(blockState, facing.getOpposite(), reader, pos);
+	}
+
+	public static Axis getRotationAxis(Axis facing, boolean alongFirstCoordinate) {
+		return switch (facing) {
+			case X -> alongFirstCoordinate ? Axis.Y : Axis.Z;
+			case Y -> alongFirstCoordinate ? Axis.X : Axis.Z;
+			case Z -> alongFirstCoordinate ? Axis.X : Axis.Y;
+		};
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		Axis pistonAxis = state.getValue(FACING)
-			.getAxis();
-		boolean alongFirst = state.getValue(AXIS_ALONG_FIRST_COORDINATE);
-
-		if (pistonAxis == Axis.X)
-			return alongFirst ? Axis.Y : Axis.Z;
-		if (pistonAxis == Axis.Y)
-			return alongFirst ? Axis.X : Axis.Z;
-		if (pistonAxis == Axis.Z)
-			return alongFirst ? Axis.X : Axis.Y;
-
-		throw new IllegalStateException("Unknown axis??");
+		return getRotationAxis(state.getValue(FACING).getAxis(), state.getValue(AXIS_ALONG_FIRST_COORDINATE));
 	}
 
 	@Override
@@ -122,7 +119,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() == getRotationAxis(state);
 	}
 

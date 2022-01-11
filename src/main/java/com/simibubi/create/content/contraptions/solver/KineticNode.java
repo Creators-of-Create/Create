@@ -5,16 +5,18 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +30,6 @@ public class KineticNode {
 
 	private @Nullable IKineticController controller;
 	private @Nullable KineticControllerSerial controllerType;
-	private @Nullable Set<BlockPos> controlling;
 
 	private @Nullable KineticNode parent;
 	private @Nullable BlockPos speedSource;
@@ -83,12 +84,15 @@ public class KineticNode {
 		}
 
 		tag.put("Connections", connections.save(new CompoundTag()));
-		tag.putFloat("Generated", generatedSpeed);
-		tag.putFloat("Capacity", stressCapacity);
-		tag.putFloat("Impact", stressImpact);
-		if (constantStress) {
+		if (generatedSpeed != 0)
+			tag.putFloat("Generated", generatedSpeed);
+		if (stressCapacity != 0)
+			tag.putFloat("Capacity", stressCapacity);
+		if (stressImpact != 0)
+			tag.putFloat("Impact", stressImpact);
+		if (constantStress)
 			tag.putBoolean("ConstantStress", true);
-		}
+
 		return tag;
 	}
 
@@ -127,13 +131,10 @@ public class KineticNode {
 		return Optional.empty();
 	}
 
-	public boolean setController(KineticNode source, KineticControllerSerial controller) {
+	public boolean setController(KineticControllerSerial controller) {
 		if (this.controller != null) return false;
 		this.controller = controller.init(this);
 		this.controllerType = controller;
-		if (source.controlling == null)
-			source.controlling = new HashSet<>();
-		source.controlling.add(pos);
 		return true;
 	}
 
@@ -158,24 +159,38 @@ public class KineticNode {
 	 * @return 	a Stream containing a pair for each compatible connection with this node, where the first value is
 	 * 			the connecting node and the second value is the speed ratio of the connection
 	 */
-	public Stream<Pair<KineticNode, Float>> getActiveConnections() {
-		return connections.getDirections().stream()
-				.map(d -> solver.getNode(pos.offset(d))
-						.map(n -> connections.checkConnection(n.connections, d)
-								.map(r -> Pair.of(n, r))))
-				.flatMap(Optional::stream)
+	private Stream<Pair<KineticNode, Float>> getAllActiveConnections() {
+		return connections.stream()
+				.flatMap(from -> from.getRatios().entrySet().stream()
+						.map(e -> {
+							Vec3i offset = e.getKey();
+							return solver.getNode(pos.offset(offset)).flatMap(node -> {
+								Map<KineticConnection, Float> ratios = e.getValue();
+								return node.getConnections().stream()
+										.map(ratios::get)
+										.filter(Objects::nonNull)
+										.findFirst()
+										.map(r -> Pair.of(node, r));
+							});
+						})
+				)
 				.flatMap(Optional::stream);
 	}
 
-	public Iterable<Pair<KineticNode, Float>> getActiveConnectionsList() {
-		return getActiveConnections().collect(Collectors.toList());
+	public Stream<Pair<KineticNode, Float>> getActiveConnections() {
+		return getAllActiveConnections().filter(p -> p.getSecond() != 0);
 	}
 
 	public Stream<KineticNode> getActiveStressOnlyConnections() {
-		return connections.getDirections().stream()
-				.map(d -> solver.getNode(pos.offset(d))
-						.filter(n -> connections.checkStressOnlyConnection(n.connections, d)))
-				.flatMap(Optional::stream);
+		return getAllActiveConnections().filter(p -> p.getSecond() == 0).map(Pair::getFirst);
+	}
+
+	public Optional<Float> checkConnection(KineticNode to) {
+		return getActiveConnections().filter(p -> p.getFirst() == to).findAny().map(Pair::getSecond);
+	}
+
+	public boolean checkStressOnlyConnection(KineticNode to) {
+		return getActiveStressOnlyConnections().anyMatch(n -> n == to);
 	}
 
 	public float getGeneratedSpeed() {
@@ -298,7 +313,7 @@ public class KineticNode {
 
 		while (!frontier.isEmpty()) {
 			KineticNode cur = frontier.remove(0);
-			for (Pair<KineticNode, Float> pair : cur.getActiveConnectionsList()) {
+			for (Pair<KineticNode, Float> pair : cur.getActiveConnections().collect(Collectors.toList())) {
 				KineticNode next = pair.getFirst();
 				float ratio = pair.getSecond();
 
@@ -334,12 +349,6 @@ public class KineticNode {
 				.map(Pair::getFirst)
 				.filter(n -> n.parent == this)
 				.forEach(KineticNode::rerootHere);
-		if (controlling != null) {
-			controlling.stream()
-					.map(solver::getNode)
-					.flatMap(Optional::stream)
-					.forEach(KineticNode::removeController);
-		}
 	}
 
 	private void rerootHere() {
@@ -361,7 +370,7 @@ public class KineticNode {
 
 	protected void flushChanges() {
 		if (entity != null) {
-			entity.updateFromSolver(getTheoreticalSpeed(), getSpeedSource(), getConnections(),
+			entity.updateFromSolver(getTheoreticalSpeed(), getSpeedSource(), network.id,
 					network.isOverstressed(), network.getTotalStressImpact(), network.getTotalStressCapacity());
 		}
 	}

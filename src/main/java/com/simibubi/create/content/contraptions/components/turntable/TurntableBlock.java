@@ -4,8 +4,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.solver.AllConnections;
-import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -18,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -91,18 +88,13 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == Direction.DOWN;
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return Axis.Y;
-	}
-
-	@Override
-	public KineticConnections getInitialConnections(BlockState state) {
-		return AllConnections.HALF_SHAFT.apply(Direction.DOWN);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
 import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
 
 import net.minecraft.core.BlockPos;
@@ -20,13 +21,12 @@ public class ClutchTileEntity extends KineticTileEntity {
 	@Override
 	public KineticConnections getConnections() {
 		BlockState state = getBlockState();
-		Direction.Axis axis = state.getValue(BlockStateProperties.AXIS);
+		Direction dir = AllConnections.pos(state.getValue(GearshiftBlock.AXIS));
 
-		if (!state.getValue(BlockStateProperties.POWERED)) return AllConnections.FULL_SHAFT.apply(axis);
-
-		return getSpeedSource()
-				.map(p -> AllConnections.HALF_SHAFT.apply(Direction.fromNormal(p.subtract(getBlockPos()))))
-				.orElse(AllConnections.FULL_SHAFT.apply(axis));
+		ConnectionsBuilder builder = ConnectionsBuilder.builder();
+		if (!state.getValue(BlockStateProperties.POWERED))
+			return builder.withFullShaft(dir.getAxis()).build();
+		return builder.withHalfShaft(dir.getOpposite()).build();
 	}
 
 }

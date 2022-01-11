@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
+public class MechanicalBearingTileEntity extends KineticTileEntity
 	implements IBearingTileEntity, IDisplayAssemblyExceptions {
 
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
@@ -178,7 +178,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		running = true;
 		angle = 0;
 		sendData();
-		updateGeneratedRotation();
 	}
 
 	public void disassemble() {
@@ -194,7 +193,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 		movedContraption = null;
 		running = false;
-		updateGeneratedRotation();
 		assembleNextTick = false;
 		sendData();
 	}
@@ -212,9 +210,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			if (running) {
 				boolean canDisassemble = movementMode.get() == RotationMode.ROTATE_PLACE
 					|| (isNearInitialAngle() && movementMode.get() == RotationMode.ROTATE_PLACE_RETURNED);
-				if (theoreticalSpeed == 0 && (canDisassemble || movedContraption == null || movedContraption.getContraption()
-					.getBlocks()
-					.isEmpty())) {
+				if (getTheoreticalSpeed() == 0 && (canDisassemble || movedContraption == null
+						|| movedContraption.getContraption().getBlocks().isEmpty())) {
 					if (movedContraption != null)
 						movedContraption.getContraption()
 							.stop(level);
@@ -222,7 +219,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 					return;
 				}
 			} else {
-				if (theoreticalSpeed == 0 && !isWindmill())
+				if (getTheoreticalSpeed() == 0 && !isWindmill())
 					return;
 				assemble();
 			}

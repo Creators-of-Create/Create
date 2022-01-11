@@ -4,10 +4,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
 public interface IKineticController {
-	default void onUpdate(Level level, KineticSolver solver, KineticNode node) { }
+	default void onKineticsTick(Level level, KineticSolver solver, KineticNode node) { }
 
 	default KineticConnections getConnections() {
-		return AllConnections.EMPTY;
+		return KineticConnections.empty();
 	}
 
 	default float getGeneratedSpeed() {

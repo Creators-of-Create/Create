@@ -39,11 +39,7 @@ public class KineticData extends BasicData {
     }
 
     public KineticData setColor(KineticTileEntity te) {
-        if (te.hasNetwork()) {
-            setColor(Color.generateFromLong(te.network));
-        }else {
-            setColor(0xFF, 0xFF, 0xFF);
-        }
+    	setColor(te.getNetworkID().map(Color::generateFromLong).orElse(Color.WHITE));
         return this;
     }
 

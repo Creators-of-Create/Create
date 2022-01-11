@@ -34,23 +34,23 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 	}
 
 	public Direction getPreferredHorizontalFacing(BlockPlaceContext context) {
-		Direction prefferedSide = null;
+		Direction preferredSide = null;
 		for (Direction side : Iterate.horizontalDirections) {
 			BlockState blockState = context.getLevel()
 				.getBlockState(context.getClickedPos()
 					.relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos()
-					.relative(side), blockState, side.getOpposite()))
-					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
-						prefferedSide = null;
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(
+						blockState, side.getOpposite(), context.getLevel(), context.getClickedPos()))
+					if (preferredSide != null && preferredSide.getAxis() != side.getAxis()) {
+						preferredSide = null;
 						break;
 					} else {
-						prefferedSide = side;
+						preferredSide = side;
 					}
 			}
 		}
-		return prefferedSide;
+		return preferredSide;
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
-import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -63,12 +63,6 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	@Override
-	public KineticConnections getInitialConnections(BlockState state) {
-		return (isLargeCog() ? AllConnections.LARGE_COG_FULL_SHAFT : AllConnections.SMALL_COG_FULL_SHAFT)
-				.apply(state.getValue(AXIS));
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return (isLarge ? AllShapes.LARGE_GEAR : AllShapes.SMALL_GEAR).get(state.getValue(AXIS));
 	}
@@ -104,10 +98,9 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 
 			for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
 				BlockState adjacentState = world.getBlockState(pos.relative(d));
-				if (!(adjacentState.getBlock() instanceof IRotate))
+				if (!(adjacentState.getBlock() instanceof IRotate def))
 					continue;
-				IRotate def = (IRotate) adjacentState.getBlock();
-				if (!def.hasShaftTowards(world, pos.relative(d), adjacentState, d.getOpposite()))
+				if (!def.hasShaftTowards(adjacentState, d.getOpposite(), world, pos.relative(d)))
 					continue;
 				encasedState =
 					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT

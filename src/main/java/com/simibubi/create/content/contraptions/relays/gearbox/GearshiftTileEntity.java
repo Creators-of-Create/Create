@@ -2,7 +2,9 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
+import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
 
 import net.minecraft.core.BlockPos;
@@ -20,13 +22,15 @@ public class GearshiftTileEntity extends KineticTileEntity {
 	@Override
 	public KineticConnections getConnections() {
 		BlockState state = getBlockState();
-		Direction.Axis axis = state.getValue(BlockStateProperties.AXIS);
+		Direction dir = AllConnections.pos(state.getValue(GearshiftBlock.AXIS));
 
-		if (!state.getValue(BlockStateProperties.POWERED)) return AllConnections.FULL_SHAFT.apply(axis);
-
-		return getSpeedSource()
-				.map(p -> AllConnections.FULL_SHAFT_REVERSER.apply(Direction.fromNormal(p.subtract(getBlockPos()))))
-				.orElse(AllConnections.FULL_SHAFT.apply(axis));
+		ConnectionsBuilder builder = ConnectionsBuilder.builder();
+		if (!state.getValue(BlockStateProperties.POWERED))
+			return builder.withFullShaft(dir.getAxis()).build();
+		return builder
+				.withHalfShaft(AllConnections.Shafts.SHAFT_REV, dir)
+				.withHalfShaft(AllConnections.Shafts.SHAFT, dir.getOpposite())
+				.build();
 	}
 
 }

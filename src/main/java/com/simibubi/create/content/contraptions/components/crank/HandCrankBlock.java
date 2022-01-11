@@ -98,22 +98,20 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.getValue(FACING)
-			.getOpposite();
+	public boolean hasShaftTowards(BlockState state, Direction face) {
+		return face == state.getValue(FACING).getOpposite();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.getValue(FACING)
-			.getAxis();
+		return state.getValue(FACING).getAxis();
 	}
 
 	@Override
 	public Class<HandCrankTileEntity> getTileEntityClass() {
 		return HandCrankTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends HandCrankTileEntity> getTileEntityType() {
 		return AllTileEntities.HAND_CRANK.get();

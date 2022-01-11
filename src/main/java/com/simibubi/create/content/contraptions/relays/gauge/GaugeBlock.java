@@ -69,7 +69,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 		Block block = placedOnState.getBlock();
 
-		if (block instanceof IRotate && ((IRotate) block).hasShaftTowards(world, placedOnPos, placedOnState, face)) {
+		if (block instanceof IRotate ir && ir.hasShaftTowards(placedOnState, face, world, placedOnPos)) {
 			BlockState toPlace = defaultBlockState();
 			Direction horizontalFacing = context.getHorizontalDirection();
 			Direction nearestLookingDirection = context.getNearestLookingDirection();

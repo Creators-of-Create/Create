@@ -13,7 +13,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -96,7 +95,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == state.getValue(FACING)
 			.getOpposite();
 	}
@@ -110,7 +109,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	public Class<EncasedFanTileEntity> getTileEntityClass() {
 		return EncasedFanTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends EncasedFanTileEntity> getTileEntityType() {
 		return AllTileEntities.ENCASED_FAN.get();

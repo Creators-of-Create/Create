@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
-import com.simibubi.create.content.contraptions.solver.AllConnections;
-import com.simibubi.create.content.contraptions.solver.KineticConnections;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -15,6 +16,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -121,12 +123,26 @@ public interface IRotate extends IWrenchable {
 		}
 	}
 
-	boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face);
+	boolean hasShaftTowards(BlockState state, Direction face);
+
+	default boolean hasShaftTowards(BlockState state, Direction face, LevelReader level, BlockPos pos) {
+		return hasShaftTowards(state, face);
+	}
 
 	Axis getRotationAxis(BlockState state);
 
-	default KineticConnections getInitialConnections(BlockState state) {
-		return AllConnections.EMPTY;
+	default ConnectionsBuilder buildInitialConnections(ConnectionsBuilder builder, BlockState state) {
+		for (Direction face : Iterate.directions) {
+			if (hasShaftTowards(state, face))
+				builder = builder.withHalfShaft(face);
+		}
+		if (state.getBlock() instanceof ICogWheel cog) {
+			if (cog.isLargeCog())
+				builder = builder.withLargeCog(getRotationAxis(state));
+			if (cog.isSmallCog())
+				builder = builder.withSmallCog(getRotationAxis(state));
+		}
+		return builder;
 	}
 
 	default SpeedLevel getMinimumRequiredSpeedLevel() {

@@ -45,12 +45,11 @@ public class EncasedCogRenderer extends KineticTileEntityRenderer {
 
 		BlockState blockState = te.getBlockState();
 		Block block = blockState.getBlock();
-		if (!(block instanceof IRotate))
+		if (!(block instanceof IRotate def))
 			return;
-		IRotate def = (IRotate) block;
 
 		for (Direction d : Iterate.directionsInAxis(getRotationAxisOf(te))) {
-			if (!def.hasShaftTowards(te.getLevel(), te.getBlockPos(), blockState, d))
+			if (!def.hasShaftTowards(blockState, d, te.getLevel(), te.getBlockPos()))
 				continue;
 			renderRotatingBuffer(te, CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), d),
 				ms, buffer.getBuffer(RenderType.solid()), light);

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class HandCrankTileEntity extends GeneratingKineticTileEntity {
+public class HandCrankTileEntity extends KineticTileEntity {
 
 	public int inUse;
 	public boolean backwards;
@@ -25,23 +25,16 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public void turn(boolean back) {
-		boolean update = false;
-
-		if (getGeneratedSpeed() == 0 || back != backwards)
-			update = true;
-
 		inUse = 10;
-		this.backwards = back;
-		if (update && !level.isClientSide)
-			updateGeneratedRotation();
+		backwards = back;
 	}
 
 	@Override
 	public float getGeneratedSpeed() {
+		if (isRemoved()) return 0;
 		Block block = getBlockState().getBlock();
-		if (!(block instanceof HandCrankBlock))
+		if (!(block instanceof HandCrankBlock crank))
 			return 0;
-		HandCrankBlock crank = (HandCrankBlock) block;
 		int speed = (inUse == 0 ? 0 : backwards ? -1 : 1) * crank.getRotationSpeed();
 		return convertToDirection(speed, getBlockState().getValue(HandCrankBlock.FACING));
 	}
@@ -66,12 +59,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 		chasingVelocity += ((actualSpeed * 10 / 3f) - chasingVelocity) * .25f;
 		independentAngle += chasingVelocity;
 
-		if (inUse > 0) {
+		if (inUse > 0)
 			inUse--;
-
-			if (inUse == 0 && !level.isClientSide)
-				updateGeneratedRotation();
-		}
 	}
 
 	@Override

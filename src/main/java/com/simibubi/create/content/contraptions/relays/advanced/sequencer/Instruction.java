@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import java.util.Optional;
 import java.util.Vector;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -78,21 +79,11 @@ public class Instruction {
 		return 0;
 	}
 
-	int getSpeedModifier() {
-		switch (instruction) {
-
-		case TURN_ANGLE:
-		case TURN_DISTANCE:
-			return speedModifier.value;
-
-		case END:
-		case DELAY:
-		case AWAIT:
-		default:
-			break;
-
-		}
-		return 0;
+	Optional<InstructionSpeedModifiers> getSpeedModifier() {
+		return switch (instruction) {
+			case TURN_ANGLE, TURN_DISTANCE -> Optional.of(speedModifier);
+			default -> Optional.empty();
+		};
 	}
 
 	OnIsPoweredResult onRedstonePulse() {

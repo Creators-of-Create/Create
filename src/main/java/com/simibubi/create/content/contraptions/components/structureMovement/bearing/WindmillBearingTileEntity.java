@@ -18,16 +18,38 @@ import net.minecraft.world.level.block.state.BlockState;
 public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 
 	protected ScrollOptionBehaviour<RotationDirection> movementDirection;
-	protected float lastGeneratedSpeed;
+	protected float generated;
 
 	public WindmillBearingTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	@Override
-	public void updateGeneratedRotation() {
-		super.updateGeneratedRotation();
-		lastGeneratedSpeed = getGeneratedSpeed();
+	public void initialize() {
+		updateGeneratedSpeed();
+		super.initialize();
+	}
+
+	@Override
+	public void assemble() {
+		super.assemble();
+		updateGeneratedSpeed();
+	}
+
+	@Override
+	public void disassemble() {
+		super.disassemble();
+		updateGeneratedSpeed();
+	}
+
+	public void updateGeneratedSpeed() {
+		if (!running) {
+			generated = 0;
+		} else if (movedContraption != null) {
+			int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks()
+					/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
+			generated = Mth.clamp(sails, 1, 16) * getAngleSpeedDirection();
+		}
 	}
 
 	@Override
@@ -39,13 +61,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		if (!running)
-			return 0;
-		if (movedContraption == null)
-			return lastGeneratedSpeed;
-		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks()
-				/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
-		return Mth.clamp(sails, 1, 16) * getAngleSpeedDirection();
+		return generated;
 	}
 
 	@Override
@@ -60,14 +76,14 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
-		compound.putFloat("LastGenerated", lastGeneratedSpeed);
+		compound.putFloat("LastGenerated", generated);
 		super.write(compound, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		if (!wasMoved)
-			lastGeneratedSpeed = compound.getFloat("LastGenerated");
+			generated = compound.getFloat("LastGenerated");
 		super.read(compound, clientPacket);
 	}
 
@@ -86,7 +102,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		if (!running)
 			return;
 		if (!level.isClientSide)
-			updateGeneratedRotation();
+			updateGeneratedSpeed();
 	}
 
 	@Override
@@ -94,16 +110,14 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		return true;
 	}
 
-	static enum RotationDirection implements INamedIconOptions {
+	enum RotationDirection implements INamedIconOptions {
 
-		CLOCKWISE(AllIcons.I_REFRESH), COUNTER_CLOCKWISE(AllIcons.I_ROTATE_CCW),
+		CLOCKWISE(AllIcons.I_REFRESH), COUNTER_CLOCKWISE(AllIcons.I_ROTATE_CCW),;
 
-		;
+		private final String translationKey;
+		private final AllIcons icon;
 
-		private String translationKey;
-		private AllIcons icon;
-
-		private RotationDirection(AllIcons icon) {
+		RotationDirection(AllIcons icon) {
 			this.icon = icon;
 			translationKey = "generic." + Lang.asId(name());
 		}

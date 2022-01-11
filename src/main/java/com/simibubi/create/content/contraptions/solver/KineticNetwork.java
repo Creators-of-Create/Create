@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.solver;
 
+import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -17,6 +18,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class KineticNetwork {
+
+	private static long nextID = 1L;
+	public final long id;
 
 	private final Set<KineticNode> members = new HashSet<>();
 	private final Set<KineticNode> generators = new HashSet<>();
@@ -36,10 +40,14 @@ public class KineticNetwork {
 	private final ResetableLazy<Float> totalStressCapacity = ResetableLazy.of(() ->
 			(float) members.stream().mapToDouble(KineticNode::getStressCapacity).sum());
 
+	private float latestSupernetworkStressImpact;
+	private float latestSupernetworkStressCapacity;
+
 	private boolean ticked;
 	private final Set<KineticNode> stressConnectors = new HashSet<>();
 
 	protected KineticNetwork(KineticNode root) {
+		id = nextID++;
 		addMember(root);
 	}
 
@@ -150,11 +158,11 @@ public class KineticNetwork {
 	}
 
 	public float getTotalStressImpact() {
-		return totalStressImpact.get();
+		return latestSupernetworkStressImpact;
 	}
 
 	public float getTotalStressCapacity() {
-		return totalStressCapacity.get();
+		return latestSupernetworkStressCapacity;
 	}
 
 	public float getRootTheoreticalSpeed() {
@@ -191,11 +199,16 @@ public class KineticNetwork {
 		for (KineticNetwork cur : stressConnected) {
 			cur.ticked = true;
 			cur.checkForSpeedingNodes(popQueue::add);
-			stressImpact += cur.getTotalStressImpact();
-			stressCapacity += cur.getTotalStressCapacity();
+			stressImpact += cur.totalStressImpact.get();
+			stressCapacity += cur.totalStressCapacity.get();
 		}
 
-		boolean nowOverstressed = stressImpact > stressCapacity;
+		for (KineticNetwork cur : stressConnected) {
+			cur.latestSupernetworkStressImpact = stressImpact;
+			cur.latestSupernetworkStressCapacity = stressCapacity;
+		}
+
+		boolean nowOverstressed = stressImpact > stressCapacity && IRotate.StressImpact.isEnabled();
 		if (!nowOverstressed) {
 			// we should only pop speeding nodes if the network isn't actually overstressed now
 			popQueue.forEach(pop);

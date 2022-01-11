@@ -133,7 +133,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(AXIS)
 			&& state.getValue(face.getAxisDirection() == AxisDirection.POSITIVE ? TOP_SHAFT : BOTTOM_SHAFT);
 	}

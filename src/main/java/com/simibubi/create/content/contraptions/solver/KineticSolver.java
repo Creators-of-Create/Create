@@ -7,25 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.saveddata.SavedData;
 
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 public class KineticSolver extends SavedData {
@@ -162,7 +156,7 @@ public class KineticSolver extends SavedData {
 		Set<KineticNode> popQueue = new HashSet<>();
 		Set<KineticNode> regenQueue = new HashSet<>();
 		for (KineticNode node : nodes.values()) {
-			node.getController().ifPresent(c -> c.onUpdate(level, this, node));
+			node.getController().ifPresent(c -> c.onKineticsTick(level, this, node));
 			switch (node.onUpdated()) {
 				case NEEDS_POP -> popQueue.add(node);
 				case NEEDS_REGEN -> regenQueue.add(node);
@@ -187,20 +181,5 @@ public class KineticSolver extends SavedData {
 				cur.tick(frontier);
 			}
 		}
-	}
-
-	public Optional<Float> isConnected(BlockPos from, BlockPos to) {
-		return getNode(from).flatMap(fromNode ->
-				getNode(to).flatMap(toNode ->
-						fromNode.getConnections()
-								.checkConnection(toNode.getConnections(), to.subtract(from))));
-	}
-
-	public boolean isStressOnlyConnected(BlockPos from, BlockPos to) {
-		return getNode(from).flatMap(fromNode ->
-				getNode(to).map(toNode ->
-						fromNode.getConnections()
-								.checkStressOnlyConnection(toNode.getConnections(), to.subtract(from)))
-		).orElse(false);
 	}
 }

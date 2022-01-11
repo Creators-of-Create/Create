@@ -77,10 +77,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		if (!level.isClientSide && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
-				boolean canDisassemble = true;
-				if (theoreticalSpeed == 0 && (canDisassemble || hourHand == null || hourHand.getContraption()
-					.getBlocks()
-					.isEmpty())) {
+				if (getTheoreticalSpeed() == 0) {
 					if (hourHand != null)
 						hourHand.getContraption()
 							.stop(level);

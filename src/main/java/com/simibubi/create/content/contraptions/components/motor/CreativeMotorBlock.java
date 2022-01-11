@@ -3,9 +3,6 @@ package com.simibubi.create.content.contraptions.components.motor;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.solver.AllConnections;
-import com.simibubi.create.content.contraptions.solver.KineticConnections;
-import com.simibubi.create.content.contraptions.solver.KineticSolver;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
@@ -13,8 +10,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -44,7 +39,7 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 	// IRotate:
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == state.getValue(FACING);
 	}
 
@@ -52,11 +47,6 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(FACING)
 			.getAxis();
-	}
-
-	@Override
-	public KineticConnections getInitialConnections(BlockState state) {
-		return AllConnections.HALF_SHAFT.apply(state.getValue(FACING));
 	}
 
 	@Override

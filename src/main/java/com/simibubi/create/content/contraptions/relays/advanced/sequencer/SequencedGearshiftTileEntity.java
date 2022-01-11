@@ -1,20 +1,19 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import java.util.Optional;
 import java.util.Vector;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
 import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
-import com.simibubi.create.content.contraptions.solver.KineticConnections.Entry;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SequencedGearshiftTileEntity extends KineticTileEntity {
 
@@ -47,7 +46,7 @@ public class SequencedGearshiftTileEntity extends KineticTileEntity {
 			return;
 		if (timer < currentInstructionDuration) {
 			timer++;
-			currentInstructionProgress += getInstruction(currentInstruction).getTickProgress(theoreticalSpeed);
+			currentInstructionProgress += getInstruction(currentInstruction).getTickProgress(getTheoreticalSpeed());
 			return;
 		}
 		run(currentInstruction + 1);
@@ -58,7 +57,7 @@ public class SequencedGearshiftTileEntity extends KineticTileEntity {
 		super.onSpeedChanged(previousSpeed);
 		if (isIdle())
 			return;
-		float currentSpeed = Math.abs(theoreticalSpeed);
+		float currentSpeed = Math.abs(getTheoreticalSpeed());
 		if (Math.abs(previousSpeed) == currentSpeed)
 			return;
 		Instruction instruction = getInstruction(currentInstruction);
@@ -101,12 +100,8 @@ public class SequencedGearshiftTileEntity extends KineticTileEntity {
 			return;
 		poweredPreviously = true;
 
-		switch (instruction.onRedstonePulse()) {
-		case CONTINUE:
+		if (instruction.onRedstonePulse() == OnIsPoweredResult.CONTINUE) {
 			run(currentInstruction + 1);
-			break;
-		default:
-			break;
 		}
 	}
 
@@ -160,31 +155,31 @@ public class SequencedGearshiftTileEntity extends KineticTileEntity {
 
 	@Override
 	public KineticConnections getConnections() {
-		Direction.Axis axis = getBlockState().getValue(BlockStateProperties.HORIZONTAL_AXIS);
+		BlockState state = getBlockState();
+		SequencedGearshiftBlock block = (SequencedGearshiftBlock) state.getBlock();
+		Direction facing = block.getFacing(state);
 
-		if (isVirtual()) return AllConnections.FULL_SHAFT.apply(axis);
+		ConnectionsBuilder builder = ConnectionsBuilder.builder();
+		if (isVirtual()) return builder.withFullShaft(facing.getAxis()).build();
 
-		return getSpeedSource()
-				.map(p -> {
-					Direction dir = Direction.fromNormal(p.subtract(getBlockPos()));
-					float modifier = getModifier();
-					if (modifier == 0 || isRemoved()) return AllConnections.HALF_SHAFT.apply(dir);
+		builder = builder.withHalfShaft(facing.getOpposite());
 
-					Direction opp = dir.getOpposite();
-					String from = AllConnections.type(AllConnections.TYPE_SHAFT, opp);
-					String to = AllConnections.type(AllConnections.TYPE_SHAFT, dir);
-					return new KineticConnections(new Entry(opp.getNormal(), from, to, modifier))
-							.merge(AllConnections.HALF_SHAFT.apply(dir));
-				})
-				.orElse(AllConnections.FULL_SHAFT.apply(axis));
+		Optional<InstructionSpeedModifiers> modifier = getModifier();
+		if (modifier.isEmpty() || isRemoved()) return builder.build();
+
+		AllConnections.Shafts shaft = switch(modifier.get()) {
+			case FORWARD_FAST -> AllConnections.Shafts.SHAFT_X2;
+			case FORWARD -> AllConnections.Shafts.SHAFT;
+			case BACK -> AllConnections.Shafts.SHAFT_REV;
+			case BACK_FAST -> AllConnections.Shafts.SHAFT_REV_X2;
+		};
+		return builder.withHalfShaft(shaft, facing).build();
 	}
 
-	public int getModifier() {
-		if (currentInstruction >= instructions.size())
-			return 0;
-		return isIdle() ? 0
-			: instructions.get(currentInstruction)
-				.getSpeedModifier();
+	public Optional<InstructionSpeedModifiers> getModifier() {
+		if (currentInstruction >= instructions.size() || isIdle())
+			return Optional.empty();
+		return instructions.get(currentInstruction).getSpeedModifier();
 	}
 
 }

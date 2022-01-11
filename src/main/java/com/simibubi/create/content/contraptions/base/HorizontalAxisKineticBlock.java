@@ -1,15 +1,11 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.content.contraptions.solver.AllConnections;
-import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -41,21 +37,21 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 	}
 
 	public static Axis getPreferredHorizontalAxis(BlockPlaceContext context) {
-		Direction prefferedSide = null;
+		Direction preferredSide = null;
 		for (Direction side : Iterate.horizontalDirections) {
 			BlockState blockState = context.getLevel().getBlockState(context.getClickedPos().relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos().relative(side),
-						blockState, side.getOpposite()))
-					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
-						prefferedSide = null;
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(
+                        blockState, side.getOpposite(), context.getLevel(), context.getClickedPos()))
+					if (preferredSide != null && preferredSide.getAxis() != side.getAxis()) {
+						preferredSide = null;
 						break;
 					} else {
-						prefferedSide = side;
+						preferredSide = side;
 					}
 			}
 		}
-		return prefferedSide == null ? null : prefferedSide.getAxis();
+		return preferredSide == null ? null : preferredSide.getAxis();
 	}
 
 	@Override
@@ -64,12 +60,7 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 	}
 
 	@Override
-	public KineticConnections getInitialConnections(BlockState state) {
-		return AllConnections.FULL_SHAFT.apply(state.getValue(HORIZONTAL_AXIS));
-	}
-
-	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(HORIZONTAL_AXIS);
 	}
 

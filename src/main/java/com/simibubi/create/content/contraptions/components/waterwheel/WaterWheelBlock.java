@@ -146,7 +146,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	private void updateWheelSpeed(LevelAccessor world, BlockPos pos) {
-		withTileEntityDo(world, pos, WaterWheelTileEntity::updateGeneratedRotation);
+		withTileEntityDo(world, pos, WaterWheelTileEntity::updateGeneratedSpeed);
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return state.getValue(FACING)
 			.getAxis() == face.getAxis();
 	}

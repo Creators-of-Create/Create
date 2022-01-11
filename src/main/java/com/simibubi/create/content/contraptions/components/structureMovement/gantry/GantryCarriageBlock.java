@@ -5,6 +5,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -27,6 +29,15 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 
 	public GantryCarriageBlock(Properties properties) {
 		super(properties);
+	}
+
+	@Override
+	public ConnectionsBuilder buildInitialConnections(ConnectionsBuilder builder, BlockState state) {
+		return super.buildInitialConnections(builder, state).withDirAxial(
+				AllConnections.DirAxial.GANTRY_PINION,
+				state.getValue(FACING),
+				state.getValue(AXIS_ALONG_FIRST_COORDINATE)
+		);
 	}
 
 	@Override
@@ -59,7 +70,7 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 			return InteractionResult.PASS;
 		if (player.getItemInHand(handIn)
 			.isEmpty()) {
-			withTileEntityDo(worldIn, pos, te -> te.checkValidGantryShaft());
+			withTileEntityDo(worldIn, pos, GantryCarriageTileEntity::checkValidGantryShaft);
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
@@ -103,8 +114,7 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	}
 
 	public static boolean isValidGantryShaftAxis(BlockState pinionState, BlockState gantryState) {
-		return getValidGantryShaftAxis(pinionState) == gantryState.getValue(GantryShaftBlock.FACING)
-			.getAxis();
+		return getValidGantryShaftAxis(pinionState) == gantryState.getValue(GantryShaftBlock.FACING).getAxis();
 	}
 
 	public static Axis getValidGantryShaftAxis(BlockState state) {
@@ -138,5 +148,5 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	public BlockEntityType<? extends GantryCarriageTileEntity> getTileEntityType() {
 		return AllTileEntities.GANTRY_PINION.get();
 	}
-	
+
 }

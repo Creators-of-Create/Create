@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -46,8 +47,9 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	}
 
 	@Override
-	public KineticConnections getInitialConnections(BlockState state) {
-		return AllConnections.SPEED_CONTROLLER.apply(state.getValue(HORIZONTAL_AXIS));
+	public ConnectionsBuilder buildInitialConnections(ConnectionsBuilder builder, BlockState state) {
+		return super.buildInitialConnections(builder, state)
+				.withAxial(AllConnections.Axial.SPEED_CONTROLLER_TOP, state.getValue(HORIZONTAL_AXIS));
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.motor;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
+public class CreativeMotorTileEntity extends KineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
 	protected ScrollValueBehaviour generatedSpeed;
@@ -63,7 +63,7 @@ public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
 				step *= 4;
 		}
 
-		return (int) (current + (context.forward ? step : -step) == 0 ? step + 1 : step);
+		return current + (context.forward ? step : -step) == 0 ? step + 1 : step;
 	}
 
 }

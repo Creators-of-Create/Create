@@ -24,40 +24,34 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		switch (rot) {
-		case COUNTERCLOCKWISE_90:
-		case CLOCKWISE_90:
-			switch (state.getValue(AXIS)) {
-			case X:
-				return state.setValue(AXIS, Direction.Axis.Z);
-			case Z:
-				return state.setValue(AXIS, Direction.Axis.X);
-			default:
-				return state;
-			}
-		default:
-			return state;
-		}
+		return switch (rot) {
+			case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (state.getValue(AXIS)) {
+				case X -> state.setValue(AXIS, Axis.Z);
+				case Z -> state.setValue(AXIS, Axis.X);
+				default -> state;
+			};
+			default -> state;
+		};
 	}
 
 	public static Axis getPreferredAxis(BlockPlaceContext context) {
-		Axis prefferedAxis = null;
+		Axis preferredAxis = null;
 		for (Direction side : Iterate.directions) {
 			BlockState blockState = context.getLevel()
 				.getBlockState(context.getClickedPos()
 					.relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos()
-					.relative(side), blockState, side.getOpposite()))
-					if (prefferedAxis != null && prefferedAxis != side.getAxis()) {
-						prefferedAxis = null;
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(
+						blockState, side.getOpposite(), context.getLevel(), context.getClickedPos()))
+					if (preferredAxis != null && preferredAxis != side.getAxis()) {
+						preferredAxis = null;
 						break;
 					} else {
-						prefferedAxis = side.getAxis();
+						preferredAxis = side.getAxis();
 					}
 			}
 		}
-		return prefferedAxis;
+		return preferredAxis;
 	}
 
 	@Override

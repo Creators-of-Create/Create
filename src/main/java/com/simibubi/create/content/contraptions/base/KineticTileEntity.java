@@ -17,7 +17,7 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
-import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
 import com.simibubi.create.content.contraptions.solver.IKineticController;
 import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.content.contraptions.solver.KineticSolver;
@@ -35,7 +35,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -53,37 +52,41 @@ import net.minecraftforge.fml.DistExecutor;
 public class KineticTileEntity extends SmartTileEntity
 	implements IHaveGoggleInformation, IHaveHoveringInformation, FlywheelRendered, IKineticController {
 
-	public @Nullable Long network = null;
-	public @Nullable BlockPos source = null;
-
 	protected KineticEffectHandler effects;
-	protected float theoreticalSpeed;
-	protected KineticConnections clientConnections;
-	protected @Nullable BlockPos speedSource;
-	protected boolean overstressed;
-	protected float networkImpact;
-	protected float networkCapacity;
 
+	private float theoreticalSpeed;
+	private long networkID;
+	private @Nullable BlockPos speedSource;
+	private boolean overstressed;
+	private float networkImpact;
+	private float networkCapacity;
+
+	private boolean kineticsInit;
 	protected boolean wasMoved;
 	private int flickerTally;
 	private int validationCountdown;
 
-	private final KineticConnections connections;
+	private KineticConnections initialConnections;
+	private boolean initialConnectionsChanged;
 
 	public KineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
-
 		effects = new KineticEffectHandler(this);
-
-		if (state.getBlock() instanceof IRotate rotate) {
-			connections = rotate.getInitialConnections(state);
-		} else {
-			connections = AllConnections.EMPTY;
-		}
-		clientConnections = connections;
+		updateInitialConnections(state);
 	}
 
-	@Override public KineticConnections getConnections() { return connections; }
+	protected void updateInitialConnections(BlockState state) {
+		if (state.getBlock() instanceof IRotate rotate) {
+			initialConnections = rotate.buildInitialConnections(ConnectionsBuilder.builder(), state).build();
+			if (getLevel() != null && !getLevel().isClientSide) {
+				initialConnectionsChanged = true;
+			}
+		} else {
+			initialConnections = KineticConnections.empty();
+		}
+	}
+
+	@Override public KineticConnections getConnections() { return initialConnections; }
 
 	@Override public float getStressImpact() { return getDefaultStressImpact(); }
 
@@ -102,13 +105,8 @@ public class KineticTileEntity extends SmartTileEntity
 		return (float) BlockStressValues.getCapacity(getStressConfigKey());
 	}
 
-
-	public float getRotationSpeedModifier(Vec3i offset) {
-		return getClientConnections().checkConnection(offset).orElse(0f);
-	}
-
-	public float getRotationSpeedModifier(Direction face) {
-		return getRotationSpeedModifier(face.getNormal());
+	public float getShaftSpeed(Direction face) {
+		return getSpeed() * getConnections().getShaftSpeedModifier(face);
 	}
 
 
@@ -127,7 +125,7 @@ public class KineticTileEntity extends SmartTileEntity
 
 		if (level.isClientSide) {
 			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.tickAudio());
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::tickAudio);
 			return;
 		}
 
@@ -165,6 +163,11 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	public void onSpeedChanged(float previousSpeed) {
+		if (!level.isClientSide && getSpeedSource().isEmpty()) {
+			if (SpeedLevel.of(previousSpeed) != SpeedLevel.of(getSpeed()))
+				effects.queueRotationIndicators();
+		}
+
 		boolean fromOrToZero = (previousSpeed == 0) != (getSpeed() == 0);
 		boolean directionSwap = !fromOrToZero && Math.signum(previousSpeed) != Math.signum(getSpeed());
 		if (fromOrToZero || directionSwap)
@@ -179,13 +182,19 @@ public class KineticTileEntity extends SmartTileEntity
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
 		if (clientPacket) {
-			compound.putFloat("Speed", theoreticalSpeed);
-			compound.put("Connections", clientConnections.save(new CompoundTag()));
-			compound.putBoolean("Overstressed", overstressed);
-			compound.putFloat("Impact", networkImpact);
-			compound.putFloat("Capacity", networkCapacity);
-			if (speedSource != null)
-				compound.put("Source", NbtUtils.writeBlockPos(speedSource));
+			if (initialConnectionsChanged) {
+				compound.putBoolean("UpdateConnections", true);
+				initialConnectionsChanged = false;
+			}
+			compound.putFloat("Speed", getTheoreticalSpeed());
+			getNetworkID().ifPresent(id -> compound.putLong("Network", id));
+			if (isOverstressed())
+				compound.putBoolean("Overstressed", isOverstressed());
+			if (getNetworkImpact() > 0)
+				compound.putFloat("Impact", getNetworkImpact());
+			if (getNetworkCapacity() > 0)
+				compound.putFloat("Capacity", getNetworkCapacity());
+			getSpeedSource().ifPresent(source -> compound.put("Source", NbtUtils.writeBlockPos(source)));
 		}
 
 		super.write(compound, clientPacket);
@@ -194,9 +203,11 @@ public class KineticTileEntity extends SmartTileEntity
 	@Override
 	protected void read(CompoundTag tag, boolean clientPacket) {
 		if (clientPacket) {
+			if (tag.getBoolean("UpdateConnections"))
+				updateInitialConnections(getBlockState());
 			updateFromSolver(tag.getFloat("Speed"),
 					tag.contains("Source") ? NbtUtils.readBlockPos(tag.getCompound("Source")) : null,
-					KineticConnections.load(tag.getCompound("Connections")),
+					tag.getLong("Network"),
 					tag.getBoolean("Overstressed"),
 					tag.getFloat("Impact"),
 					tag.getFloat("Capacity"));
@@ -221,8 +232,8 @@ public class KineticTileEntity extends SmartTileEntity
 		return Optional.ofNullable(speedSource);
 	}
 
-	public KineticConnections getClientConnections() {
-		return clientConnections;
+	public Optional<Long> getNetworkID() {
+		return networkID == 0 ? Optional.empty() : Optional.of(networkID);
 	}
 
 	public boolean isOverstressed() {
@@ -237,50 +248,39 @@ public class KineticTileEntity extends SmartTileEntity
 		return networkCapacity;
 	}
 
-	public void updateFromSolver(float theoreticalSpeed, @Nullable BlockPos speedSource, KineticConnections connections,
+	public void updateFromSolver(float theoreticalSpeed, @Nullable BlockPos speedSource, long networkID,
 								 boolean overstressed, float networkImpact, float networkCapacity) {
 		float prevSpeed = getSpeed();
-		BlockPos prevSpeedSource = getSpeedSource().orElse(null);
-		KineticConnections prevConnections = getClientConnections();
+		BlockPos prevSpeedSource = this.speedSource;
+		long prevNetworkID = this.networkID;
 		boolean prevOverstressed = isOverstressed();
 		float prevNetworkImpact = getNetworkImpact();
 		float prevNetworkCapacity = getNetworkCapacity();
 
 		this.theoreticalSpeed = theoreticalSpeed;
 		this.speedSource = speedSource;
-		this.clientConnections = connections;
+		this.networkID = networkID;
 		this.overstressed = overstressed;
 		this.networkImpact = networkImpact;
 		this.networkCapacity = networkCapacity;
 
-		boolean send = false;
+		boolean changed = initialConnectionsChanged;
 
-		if (prevOverstressed != overstressed || prevNetworkImpact != networkImpact || prevNetworkCapacity != networkCapacity) {
+		if (!kineticsInit || prevOverstressed != overstressed || prevNetworkImpact != networkImpact
+				|| prevNetworkCapacity != networkCapacity) {
 			onStressChanged(prevNetworkImpact, prevNetworkCapacity, prevOverstressed);
-			send = true;
+			changed = true;
 		}
 
-		if (getSpeed() != prevSpeed) {
+		if (!kineticsInit || getSpeed() != prevSpeed) {
 			onSpeedChanged(prevSpeed);
-			send = true;
+			changed = true;
 		}
 
+		kineticsInit = true;
 		if (level.isClientSide) return;
-
-		if (!connections.equals(prevConnections))
-			send = true;
-		if (!Objects.equal(speedSource, prevSpeedSource))
-			send = true;
-		if (send)
+		if (changed || networkID != prevNetworkID || !Objects.equal(speedSource, prevSpeedSource))
 			sendData();
-	}
-
-	public boolean hasSource() {
-		return source != null;
-	}
-
-	public boolean hasNetwork() {
-		return network != null;
 	}
 
 	public boolean isSpeedRequirementFulfilled() {
@@ -299,8 +299,12 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	public static void switchToBlockState(Level world, BlockPos pos, BlockState state) {
-		if (!world.isClientSide)
-			world.setBlock(pos, state, 3);
+		if (!world.isClientSide) {
+			world.setBlockAndUpdate(pos, state);
+			if (world.getBlockEntity(pos) instanceof KineticTileEntity kte) {
+				kte.updateInitialConnections(state);
+			}
+		}
 	}
 
 	@Override
@@ -341,16 +345,17 @@ public class KineticTileEntity extends SmartTileEntity
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
-		float stressAtBase = getStressImpact();
 
-		if (stressAtBase != 0 && StressImpact.isEnabled()) {
+		// stress impact info
+		float impact = getStressImpact();
+		if (impact != 0 && StressImpact.isEnabled()) {
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("gui.goggles.kinetic_stats")));
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("tooltip.stressImpact")
 					.withStyle(ChatFormatting.GRAY)));
 
-			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
+			float stressTotal = impact * Math.abs(getTheoreticalSpeed());
 
 			tooltip.add(componentSpacing.plainCopy()
 				.append(new TextComponent(" " + IHaveGoggleInformation.format(stressTotal))
@@ -363,8 +368,31 @@ public class KineticTileEntity extends SmartTileEntity
 			added = true;
 		}
 
-		return added;
+		// stress capacity info
+		float capacity = getStressCapacity();
+		if (capacity != 0 && IRotate.StressImpact.isEnabled()) {
+			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.goggles.generator_stats")));
+			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("tooltip.capacityProvided").withStyle(ChatFormatting.GRAY)));
 
+			float speed = getTheoreticalSpeed();
+			if (speed != getGeneratedSpeed() && speed != 0)
+				capacity *= getGeneratedSpeed() / speed;
+
+			speed = Math.abs(speed);
+			float stressTotal = capacity * speed;
+
+			tooltip.add(
+					componentSpacing.plainCopy()
+					.append(new TextComponent(" " + IHaveGoggleInformation.format(stressTotal))
+							.append(Lang.translate("generic.unit.stress"))
+							.withStyle(ChatFormatting.AQUA))
+					.append(" ")
+					.append(Lang.translate("gui.goggles.at_current_speed").withStyle(ChatFormatting.DARK_GRAY)));
+
+			added = true;
+		}
+
+		return added;
 	}
 
 	public void clearKineticInformation() {

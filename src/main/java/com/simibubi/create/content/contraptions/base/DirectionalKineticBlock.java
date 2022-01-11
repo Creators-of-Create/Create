@@ -26,24 +26,24 @@ public abstract class DirectionalKineticBlock extends KineticBlock {
 		super.createBlockStateDefinition(builder);
 	}
 
-	public Direction getPreferredFacing(BlockPlaceContext context) {
-		Direction prefferedSide = null;
+	public static Direction getPreferredFacing(BlockPlaceContext context) {
+		Direction preferredSide = null;
 		for (Direction side : Iterate.directions) {
 			BlockState blockState = context.getLevel()
 				.getBlockState(context.getClickedPos()
 					.relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos()
-					.relative(side), blockState, side.getOpposite()))
-					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
-						prefferedSide = null;
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(
+						blockState, side.getOpposite(), context.getLevel(), context.getClickedPos()))
+					if (preferredSide != null && preferredSide.getAxis() != side.getAxis()) {
+						preferredSide = null;
 						break;
 					} else {
-						prefferedSide = side;
+						preferredSide = side;
 					}
 			}
 		}
-		return prefferedSide;
+		return preferredSide;
 	}
 
 	@Override

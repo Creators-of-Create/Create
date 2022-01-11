@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
@@ -25,15 +26,13 @@ public class SplitShaftInstance extends KineticTileInstance<KineticTileEntity> {
 
         keys = new ArrayList<>(2);
 
-        float speed = tile.getSpeed();
-
         Material<RotatingData> rotatingMaterial = getRotatingMaterial();
 
-        for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
+		for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
 			Instancer<RotatingData> half = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, dir);
 
-			float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
+			float splitSpeed = tile.getShaftSpeed(dir);
 
 			keys.add(setup(half.createInstance(), splitSpeed));
 		}
@@ -46,8 +45,8 @@ public class SplitShaftInstance extends KineticTileInstance<KineticTileEntity> {
 
         Direction[] directions = Iterate.directionsInAxis(boxAxis);
 
-        for (int i : Iterate.zeroAndOne) {
-            updateRotation(keys.get(i), tile.getSpeed() * tile.getRotationSpeedModifier(directions[i]));
+		for (int i : Iterate.zeroAndOne) {
+            updateRotation(keys.get(i), tile.getShaftSpeed(directions[i]));
         }
     }
 

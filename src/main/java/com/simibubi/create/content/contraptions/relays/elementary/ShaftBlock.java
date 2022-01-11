@@ -41,11 +41,6 @@ public class ShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public KineticConnections getInitialConnections(BlockState state) {
-		return AllConnections.FULL_SHAFT.apply(state.getValue(AXIS));
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.SIX_VOXEL_POLE.get(state.getValue(AXIS));
 	}

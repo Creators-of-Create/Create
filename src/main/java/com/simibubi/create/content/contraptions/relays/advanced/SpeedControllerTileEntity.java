@@ -61,11 +61,13 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void onUpdate(Level level, KineticSolver solver, KineticNode node) {
+	public void onKineticsTick(Level level, KineticSolver solver, KineticNode node) {
 		BlockPos pos = node.getPos(), above = pos.above();
-		if (solver.isStressOnlyConnected(pos, above)) {
-			solver.getNode(above).get().setController(node, KineticControllerSerial.SPEED_CONTROLLER_COG);
-		}
+		solver.getNode(above).ifPresent(to -> {
+			if (node.checkStressOnlyConnection(to)) {
+				to.setController(KineticControllerSerial.SPEED_CONTROLLER_COG);
+			}
+		});
 	}
 
 	public void updateBracket() {

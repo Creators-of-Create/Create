@@ -98,7 +98,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
-			buffer.color(te.hasNetwork() ? Color.generateFromLong(te.network) : Color.WHITE);
+			buffer.color(te.getNetworkID().map(Color::generateFromLong).orElse(Color.WHITE));
 		} else {
 			float overStressedEffect = te.effects.overStressedEffect;
 			if (overStressedEffect != 0)
@@ -117,7 +117,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		float offset = ICogWheel.isLargeCog(te.getBlockState()) ? 11.25f : 0;
 		double d = (((axis == Axis.X) ? 0 : pos.getX()) + ((axis == Axis.Y) ? 0 : pos.getY())
 			+ ((axis == Axis.Z) ? 0 : pos.getZ())) % 2;
-		if (d == 0) 
+		if (d == 0)
 			offset = 22.5f;
 		return offset;
 	}

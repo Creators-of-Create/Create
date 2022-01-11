@@ -55,7 +55,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(HORIZONTAL_FACING)
 			.getAxis();
 	}

@@ -6,7 +6,14 @@ import java.util.List;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+import com.simibubi.create.content.contraptions.solver.ConnectionsBuilder;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.block.ITE;
+
+import com.simibubi.create.foundation.utility.DirectionHelper;
+
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +24,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -48,7 +54,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 			return super.getDrops(state, builder);
 		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
 	}
-	
+
 	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
 			Player player) {
@@ -65,13 +71,33 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 	// IRotate:
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() != state.getValue(AXIS);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(AXIS);
+	}
+
+	private static boolean isReversed(Direction from, Direction to) {
+		if (from == to) return false;
+		Axis fromAxis = from.getAxis(), toAxis = to.getAxis();
+		if (fromAxis == toAxis) return true;
+		return AllConnections.perpendicularRatios(to.getNormal().subtract(from.getNormal()), fromAxis, toAxis) == -1;
+	}
+
+	@Override
+	public ConnectionsBuilder buildInitialConnections(ConnectionsBuilder builder, BlockState state) {
+		Axis axis = state.getValue(AXIS);
+		Direction start = DirectionHelper.getPositivePerpendicular(axis);
+		for (Direction cur : Iterate.directionsPerpendicularTo(axis)) {
+			AllConnections.Shafts shaft = isReversed(start, cur)
+					? AllConnections.Shafts.SHAFT_REV
+					: AllConnections.Shafts.SHAFT;
+			builder = builder.withHalfShaft(shaft, cur);
+		}
+		return builder;
 	}
 
 	@Override

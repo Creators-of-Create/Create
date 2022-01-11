@@ -13,7 +13,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,16 +27,16 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements ITE<Cuck
 	public static CuckooClockBlock regular(Properties properties) {
 		return new CuckooClockBlock(false, properties);
 	}
-	
+
 	public static CuckooClockBlock mysterious(Properties properties) {
 		return new CuckooClockBlock(true, properties);
 	}
-	
+
 	protected CuckooClockBlock(boolean mysterious, Properties properties) {
 		super(properties);
 		this.mysterious = mysterious;
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
@@ -49,7 +48,7 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements ITE<Cuck
 		if (!mysterious)
 			super.fillItemCategory(group, items);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
@@ -59,7 +58,7 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements ITE<Cuck
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == state.getValue(HORIZONTAL_FACING).getOpposite();
 	}
 
@@ -72,7 +71,7 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements ITE<Cuck
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(HORIZONTAL_FACING).getAxis();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

@@ -62,7 +62,7 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
 		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.speedometer.title").withStyle(ChatFormatting.GRAY)));
-		tooltip.add(componentSpacing.plainCopy().append(SpeedLevel.getFormattedSpeedText(theoreticalSpeed, isOverstressed())));
+		tooltip.add(componentSpacing.plainCopy().append(SpeedLevel.getFormattedSpeedText(getTheoreticalSpeed(), isOverstressed())));
 
 		return true;
 	}

@@ -27,15 +27,19 @@ public class Iterate {
 	}
 
 	public static Direction[] directionsInAxis(Axis axis) {
-		switch (axis) {
-		case X:
-			return new Direction[] { Direction.EAST, Direction.WEST };
-		case Y:
-			return new Direction[] { Direction.UP, Direction.DOWN };
-		default:
-		case Z:
-			return new Direction[] { Direction.SOUTH, Direction.NORTH };
-		}
+		return switch (axis) {
+			case X -> new Direction[]{Direction.EAST, Direction.WEST};
+			case Y -> new Direction[]{Direction.UP, Direction.DOWN};
+			case Z -> new Direction[]{Direction.SOUTH, Direction.NORTH};
+		};
+	}
+
+	public static Direction[] directionsPerpendicularTo(Axis axis) {
+		return switch (axis) {
+			case X -> new Direction[]{Direction.SOUTH, Direction.DOWN, Direction.NORTH, Direction.UP};
+			case Y -> new Direction[]{Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
+			case Z -> new Direction[]{Direction.EAST, Direction.UP, Direction.WEST, Direction.DOWN};
+		};
 	}
 
 	public static List<BlockPos> hereAndBelow(BlockPos pos) {

@@ -8,7 +8,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -229,9 +227,6 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-			BlockEntity te = worldIn.getBlockEntity(blockPos);
-//			if (te instanceof KineticTileEntity)
-//				((KineticTileEntity) te).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
 				worldIn.setBlock(blockPos, blockState.setValue(POWERED, shouldPower), 2);
 		}
@@ -257,22 +252,14 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.getValue(FACING)
-			.getAxis();
+	public boolean hasShaftTowards(BlockState state, Direction face) {
+		return face.getAxis() == state.getValue(FACING).getAxis();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.getValue(FACING)
-			.getAxis();
+		return state.getValue(FACING).getAxis();
 	}
-
-//	@Override
-//	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-//		return super.areStatesKineticallyEquivalent(oldState, newState)
-//			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
-//	}
 
 	@Override
 	public float getParticleTargetRadius() {

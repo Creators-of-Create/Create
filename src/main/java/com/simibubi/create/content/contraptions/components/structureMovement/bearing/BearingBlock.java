@@ -2,12 +2,10 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -18,10 +16,10 @@ public abstract class BearingBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face == state.getValue(FACING).getOpposite();
 	}
-	
+
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(FACING).getAxis();

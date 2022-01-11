@@ -12,7 +12,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
     protected final EnumMap<Direction, RotatingData> keys;
-    protected Direction sourceFacing;
 
     public GearboxInstance(MaterialManager modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
@@ -31,7 +29,6 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
         int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = world.getBrightness(LightLayer.SKY, pos);
-        updateSourceFacing();
 
         Material<RotatingData> rotatingMaterial = getRotatingMaterial();
 
@@ -56,29 +53,11 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     }
 
     private float getSpeed(Direction direction) {
-        float speed = tile.getSpeed();
-
-        if (speed != 0 && sourceFacing != null) {
-            if (sourceFacing.getAxis() == direction.getAxis())
-                speed *= sourceFacing == direction ? 1 : -1;
-            else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
-                speed *= -1;
-        }
-        return speed;
-    }
-
-    protected void updateSourceFacing() {
-        if (tile.hasSource()) {
-            BlockPos source = tile.source.subtract(pos);
-            sourceFacing = Direction.getNearest(source.getX(), source.getY(), source.getZ());
-        } else {
-            sourceFacing = null;
-        }
+        return tile.getShaftSpeed(direction);
     }
 
     @Override
     public void update() {
-        updateSourceFacing();
         for (Map.Entry<Direction, RotatingData> key : keys.entrySet()) {
             Direction direction = key.getKey();
             Direction.Axis axis = direction.getAxis();

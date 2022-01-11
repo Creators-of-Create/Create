@@ -4,7 +4,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -33,12 +32,6 @@ public interface IWrenchable {
 			return InteractionResult.PASS;
 
 		KineticTileEntity.switchToBlockState(world, context.getClickedPos(), updateAfterWrenched(rotated, context));
-
-		BlockEntity te = context.getLevel()
-			.getBlockEntity(context.getClickedPos());
-		if (te instanceof GeneratingKineticTileEntity) {
-			((GeneratingKineticTileEntity) te).reActivateSource = true;
-		}
 
 		if (world.getBlockState(context.getClickedPos()) != state)
 			playRotateSound(world, context.getClickedPos());

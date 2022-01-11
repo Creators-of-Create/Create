@@ -44,7 +44,7 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return state.getValue(HORIZONTAL_FACING)
 			.getClockWise() == face;
 	}
@@ -98,7 +98,7 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	public Class<HosePulleyTileEntity> getTileEntityClass() {
 		return HosePulleyTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends HosePulleyTileEntity> getTileEntityType() {
 		return AllTileEntities.HOSE_PULLEY.get();

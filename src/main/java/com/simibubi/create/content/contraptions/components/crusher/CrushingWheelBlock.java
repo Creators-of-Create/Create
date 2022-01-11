@@ -171,7 +171,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(AXIS);
 	}
 
@@ -189,7 +189,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	public Class<CrushingWheelTileEntity> getTileEntityClass() {
 		return CrushingWheelTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends CrushingWheelTileEntity> getTileEntityType() {
 		return AllTileEntities.CRUSHING_WHEEL.get();

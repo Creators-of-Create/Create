@@ -46,7 +46,7 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return false;
 	}
 

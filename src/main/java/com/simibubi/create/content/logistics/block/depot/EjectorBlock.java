@@ -139,7 +139,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(BlockState state, Direction face) {
 		return getRotationAxis(state) == face.getAxis();
 	}
 

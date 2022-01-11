@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -15,9 +15,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
+public class WaterWheelTileEntity extends KineticTileEntity {
 
 	private Map<Direction, Float> flows;
+	private float generated;
 
 	public WaterWheelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -25,6 +26,12 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		for (Direction d : Iterate.directions)
 			setFlow(d, 0);
 		setLazyTickRate(20);
+	}
+
+	@Override
+	public void initialize() {
+		updateGeneratedSpeed();
+		super.initialize();
 	}
 
 	@Override
@@ -59,12 +66,15 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		float speed = 0;
+		return generated;
+	}
+
+	public void updateGeneratedSpeed() {
+		generated = 0;
 		for (Float f : flows.values())
-			speed += f;
-		if (speed != 0)
-			speed += AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get() * Math.signum(speed);
-		return speed;
+			generated += f;
+		if (generated != 0)
+			generated += AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get() * Math.signum(generated);
 	}
 
 	@Override

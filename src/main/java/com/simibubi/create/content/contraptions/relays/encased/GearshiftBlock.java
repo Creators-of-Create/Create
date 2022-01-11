@@ -1,25 +1,26 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import java.util.Random;
-
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.ticks.TickPriority;
+import net.minecraft.world.level.material.PushReaction;
 
-public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<KineticTileEntity> {
+import javax.annotation.Nullable;
+
+public class GearshiftBlock extends RotatedPillarKineticBlock implements ITE<KineticTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -36,8 +37,8 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Kin
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(POWERED,
-				context.getLevel().hasNeighborSignal(context.getClickedPos()));
+		return super.getStateForPlacement(context)
+				.setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
@@ -62,5 +63,23 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Kin
 		return AllTileEntities.GEARSHIFT.get();
 	}
 
+	@Override
+	public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
+		return false;
+	}
 
+	@Override
+	public PushReaction getPistonPushReaction(@Nullable BlockState state) {
+		return PushReaction.NORMAL;
+	}
+
+	@Override
+	public boolean hasShaftTowards(BlockState state, Direction face) {
+		return face.getAxis() == state.getValue(AXIS);
+	}
+
+	@Override
+	public Direction.Axis getRotationAxis(BlockState state) {
+		return state.getValue(AXIS);
+	}
 }

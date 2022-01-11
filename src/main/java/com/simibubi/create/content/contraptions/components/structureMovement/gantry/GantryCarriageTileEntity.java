@@ -122,25 +122,6 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		super.read(compound, clientPacket);
 	}
 
-	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
-		boolean connectedViaAxes, boolean connectedViaCogs) {
-		//float defaultModifier =
-			//super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
-		float defaultModifier = 1;
-
-		if (connectedViaAxes)
-			return defaultModifier;
-		if (!AllBlocks.GANTRY_SHAFT.has(stateTo))
-			return defaultModifier;
-		if (!stateTo.getValue(GantryShaftBlock.POWERED))
-			return defaultModifier;
-
-		Direction direction = Direction.getNearest(diff.getX(), diff.getY(), diff.getZ());
-		if (stateFrom.getValue(GantryCarriageBlock.FACING) != direction.getOpposite())
-			return defaultModifier;
-		return getGantryPinionModifier(stateTo.getValue(GantryShaftBlock.FACING), stateFrom.getValue(GantryCarriageBlock.FACING));
-	}
-
 	public static float getGantryPinionModifier(Direction shaft, Direction pinionDirection) {
 		Axis shaftAxis = shaft.getAxis();
 		float directionModifier = shaft.getAxisDirection()

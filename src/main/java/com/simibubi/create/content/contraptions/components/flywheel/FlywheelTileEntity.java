@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class FlywheelTileEntity extends GeneratingKineticTileEntity {
+public class FlywheelTileEntity extends KineticTileEntity {
 
 	private float generatedCapacity;
 	private float generatedSpeed;
@@ -25,7 +25,6 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 
 	public void setRotation(float speed, float capacity) {
 		if (generatedSpeed != speed || generatedCapacity != capacity) {
-
 			if (speed == 0) {
 				if (stoppingCooldown == 0)
 					stoppingCooldown = 40;
@@ -35,18 +34,13 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 			stoppingCooldown = 0;
 			generatedSpeed = speed;
 			generatedCapacity = capacity;
-			updateGeneratedRotation();
 		}
 	}
 
 	@Override
 	public float getGeneratedSpeed() {
+		if (isRemoved()) return 0;
 		return convertToDirection(generatedSpeed, getBlockState().getValue(FlywheelBlock.HORIZONTAL_FACING));
-	}
-
-	public float calculateAddedStressCapacity() {
-		//return lastCapacityProvided = generatedCapacity;
-		return 0;
 	}
 
 	@Override
@@ -78,20 +72,13 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		super.tick();
 
 		if (level.isClientSide) {
-			float targetSpeed = isVirtual() ? theoreticalSpeed : getGeneratedSpeed();
+			float targetSpeed = isVirtual() ? getTheoreticalSpeed() : getGeneratedSpeed();
 			visualSpeed.target(targetSpeed);
 			visualSpeed.tick();
 			angle += visualSpeed.value * 3 / 10f;
 			angle %= 360;
 			return;
 		}
-
-		/*
-		 * After getting moved by pistons the generatedSpeed attribute reads 16 but the
-		 * actual speed stays at 0, if it happens update rotation
-		 */
-		if (getGeneratedSpeed() != 0 && getSpeed() == 0)
-			updateGeneratedRotation();
 
 		if (stoppingCooldown == 0)
 			return;
@@ -100,7 +87,6 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		if (stoppingCooldown == 0) {
 			generatedCapacity = 0;
 			generatedSpeed = 0;
-			updateGeneratedRotation();
 		}
 	}
 }

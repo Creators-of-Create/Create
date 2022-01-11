@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.content.contraptions.solver.AllConnections;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,6 +85,7 @@ public class Create {
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
 		AllSoundEvents.prepare();
+		AllConnections.register();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();

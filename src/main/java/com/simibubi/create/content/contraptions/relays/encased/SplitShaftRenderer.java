@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.solver.KineticConnections;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -41,12 +42,8 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 				continue;
 
 			float offset = getRotationOffsetForPosition(te, pos, axis);
-			float angle = (time * te.getSpeed() * 3f / 10) % 360;
-			float modifier = 1;
+			float angle = (time * te.getShaftSpeed(direction) * 3f / 10) % 360;
 
-			modifier = te.getRotationSpeedModifier(direction);
-
-			angle *= modifier;
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
