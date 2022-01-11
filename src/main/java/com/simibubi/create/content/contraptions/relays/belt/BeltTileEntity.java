@@ -234,7 +234,9 @@ public class BeltTileEntity extends KineticTileEntity {
 			beltLength = compound.getInt("Length");
 			if (prevBeltLength != beltLength) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					lighter = null;
+					if (lighter != null) {
+						lighter.initializeLight();
+					}
 				});
 			}
 		}
@@ -593,11 +595,6 @@ public class BeltTileEntity extends KineticTileEntity {
 			GridAlignedBB beltVolume = getVolume();
 
 			if (beltVolume.intersects(changed)) {
-				if (light == null) {
-					initializeLight();
-					return;
-				}
-
 				if (type == LightLayer.BLOCK)
 					updateBlockLight();
 
