@@ -343,7 +343,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			// FIXME VIRTUAL RENDERING
 			Minecraft.getInstance()
 				.getBlockRenderer()
-				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random);
+				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random());
 			ms.popPose();
 		}
 

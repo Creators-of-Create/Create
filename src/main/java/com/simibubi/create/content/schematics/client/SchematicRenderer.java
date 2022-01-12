@@ -74,6 +74,7 @@ public class SchematicRenderer {
 			if (!usedBlockRenderLayers.contains(layer))
 				continue;
 			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
+			superByteBuffer.disableDiffuseMult();
 			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
 		}
 		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffer);

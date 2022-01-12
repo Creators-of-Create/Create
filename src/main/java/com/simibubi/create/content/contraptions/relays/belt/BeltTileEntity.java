@@ -235,7 +235,9 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 			beltLength = compound.getInt("Length");
 			if (prevBeltLength != beltLength) {
 				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
-					lighter = null;
+					if (lighter != null) {
+						lighter.initializeLight();
+					}
 				});
 			}
 		}
@@ -591,11 +593,6 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 			GridAlignedBB beltVolume = getVolume();
 
 			if (beltVolume.intersects(changed)) {
-				if (light == null) {
-					initializeLight();
-					return;
-				}
-
 				if (type == LightLayer.BLOCK)
 					updateBlockLight();
 
