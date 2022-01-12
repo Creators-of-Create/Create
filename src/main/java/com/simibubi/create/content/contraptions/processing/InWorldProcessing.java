@@ -5,14 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
-import com.simibubi.create.content.contraptions.processing.fan.TypeBlasting;
-import com.simibubi.create.content.contraptions.processing.fan.TypeHaunting;
-import com.simibubi.create.content.contraptions.processing.fan.TypeSmoking;
-import com.simibubi.create.content.contraptions.processing.fan.TypeSplashing;
-import com.simibubi.create.content.contraptions.processing.fan.transform.HorseTransform;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -135,7 +130,9 @@ public class InWorldProcessing {
 			createData.put("Processing", new CompoundTag());
 		CompoundTag processing = createData.getCompound("Processing");
 
-		if (!processing.contains("Type") || AbstractFanProcessingType.valueOf(processing.getString("Type")) != type) {
+		boolean type_changed = !processing.contains("Type") || AbstractFanProcessingType.valueOf(processing.getString("Type")) != type;
+
+		if (type_changed || processing.getInt("Time") < 0) {
 			processing.putString("Type", type.name());
 			int timeModifierForStackSize = ((entity.getItem()
 					.getCount() - 1) / 16) + 1;
