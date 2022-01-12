@@ -1,8 +1,12 @@
 package com.simibubi.create.foundation.gui.element;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -16,6 +20,8 @@ import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.render.FixedColorTintingBakedModel;
+import com.simibubi.create.lib.render.FixedLightBakedModel;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -188,11 +194,16 @@ public class GuiGameElement {
 			int color = Minecraft.getInstance()
 				.getBlockColors()
 				.getColor(blockState, null, null, 0);
-			Color rgb = new Color(color == -1 ? this.color : color);
-			// FIXME VIRTUAL RENDERING
+//			Color rgb = new Color(color == -1 ? this.color : color);
+//			blockRenderer.getModelRenderer()
+//				.renderModel(ms.last(), vb, blockState, blockModel, rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
+//					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+			BakedModel model = blockModel;
+			model = DefaultLayerFilteringBakedModel.wrap(model);
+			model = FixedLightBakedModel.wrap(model, LightTexture.FULL_BRIGHT);
+			model = FixedColorTintingBakedModel.wrap(model, color == -1 ? this.color : color);
 			blockRenderer.getModelRenderer()
-				.renderModel(ms.last(), vb, blockState, blockModel, rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
-					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, blockState, BlockPos.ZERO, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 			buffer.endBatch();
 		}
 
@@ -211,9 +222,9 @@ public class GuiGameElement {
 			RenderType renderType, VertexConsumer vb, PoseStack ms) {
 			if (blockState.getBlock() instanceof FireBlock) {
 				Lighting.setupForFlatItems();
-				// FIXME VIRTUAL RENDERING
-				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-				buffer.endBatch();
+//				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+//				buffer.endBatch();
+				super.renderModel(blockRenderer, buffer, renderType, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(blockState, false)), ms);
 				Lighting.setupFor3DItems();
 				return;
 			}

@@ -33,6 +33,7 @@
     "accessor.AbstractSelectionList$EntryAccessor",
     "accessor.AbstractSelectionListAccessor",
     "accessor.AbstractWidgetAccessor",
+    "accessor.BlockRenderDispatcherAccessor",
     "accessor.ClientPacketListenerAccessor",
     "accessor.FontAccessor",
     "accessor.GameRendererAccessor",

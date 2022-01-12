@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 @Environment(EnvType.CLIENT)
 @Mixin(value = ItemRenderer.class, priority = 10000)
 public abstract class ItemRendererMixin {
+	// FIXME CANVAS COMPAT
 	@ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
 	private BakedModel create$handleModel(BakedModel model, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean leftHand, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model1) {
 		if (model instanceof TransformTypeDependentItemBakedModel handler) {

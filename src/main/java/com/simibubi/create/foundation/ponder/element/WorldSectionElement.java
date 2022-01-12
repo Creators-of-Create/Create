@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -32,6 +34,8 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -340,10 +344,18 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.pose(),
 				overlayMS.last()
 					.normal());
-			// FIXME VIRTUAL RENDERING
-			Minecraft.getInstance()
-				.getBlockRenderer()
-				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random());
+//			Minecraft.getInstance()
+//				.getBlockRenderer()
+//				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random());
+			BlockState state = world.getBlockState(pos);
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+				BakedModel model = dispatcher.getBlockModel(state);
+				model = CullingBakedModel.wrap(model);
+				model = DefaultLayerFilteringBakedModel.wrap(model);
+				dispatcher.getModelRenderer()
+					.tesselateBlock(world, dispatcher.getBlockModel(state), state, pos, ms, builder, true, new Random(), state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+			}
 			ms.popPose();
 		}
 

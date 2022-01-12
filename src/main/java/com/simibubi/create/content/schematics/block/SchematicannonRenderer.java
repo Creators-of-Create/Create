@@ -3,6 +3,8 @@ package com.simibubi.create.content.schematics.block;
 import java.util.Random;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -12,16 +14,23 @@ import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.lib.mixin.client.accessor.BlockRenderDispatcherAccessor;
+import com.simibubi.create.lib.render.FixedLightBakedModel;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -168,10 +177,22 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			if (launched instanceof ForBlockState) {
 				float scale = .3f;
 				ms.scale(scale, scale, scale);
-				// FIXME VIRTUAL RENDERING
-				Minecraft.getInstance()
-					.getBlockRenderer()
-					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay);
+//				Minecraft.getInstance()
+//					.getBlockRenderer()
+//					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay);
+				BlockState state = ((ForBlockState) launched).state;
+				BlockRenderDispatcher dispatcher = Minecraft.getInstance()
+					.getBlockRenderer();
+				switch (state.getRenderShape()) {
+				case MODEL -> {
+					BakedModel model = dispatcher.getBlockModel(state);
+					model = FixedLightBakedModel.wrap(model, light);
+					model = DefaultLayerFilteringBakedModel.wrap(model);
+					dispatcher.getModelRenderer()
+						.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, ms, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)), false, new Random(), 42L, overlay);
+				}
+				case ENTITYBLOCK_ANIMATED -> ((BlockRenderDispatcherAccessor) dispatcher).getBlockEntityRenderer().renderByItem(new ItemStack(state.getBlock()), ItemTransforms.TransformType.NONE, ms, buffer, light, overlay);
+				}
 			}
 
 			// Render the item

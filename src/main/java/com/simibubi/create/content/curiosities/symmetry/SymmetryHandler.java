@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.symmetry;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -118,7 +119,7 @@ public class SymmetryHandler {
 				.get();
 			VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
-			// FIXME VIRTUAL RENDERING
+			model = DefaultLayerFilteringBakedModel.wrap(model);
 			mc.getBlockRenderer()
 				.getModelRenderer()
 				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,

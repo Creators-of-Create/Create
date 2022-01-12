@@ -36,7 +36,7 @@ public class TranslucentBakedModel extends ForwardingBakedModel {
 			int alpha = (int) (alphaSupplier.get() * 255) << 24;
 			for (int vertex = 0; vertex < 4; vertex++) {
 				int color = quad.spriteColor(vertex, 0);
-				quad.spriteColor(vertex, 0, color | alpha);
+				quad.spriteColor(vertex, 0, color & 0xFFFFFF | alpha);
 			}
 			return true;
 		});

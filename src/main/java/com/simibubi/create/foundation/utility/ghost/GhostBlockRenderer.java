@@ -1,9 +1,14 @@
 package com.simibubi.create.foundation.utility.ghost;
 
+import java.util.Random;
+
+import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.lib.render.FixedLightBakedModel;
 import com.simibubi.create.lib.render.TranslucentBakedModel;
 
 import net.minecraft.client.Minecraft;
@@ -48,9 +53,12 @@ public abstract class GhostBlockRenderer {
 			BlockPos pos = params.pos;
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			// FIXME VIRTUAL RENDERING
+//			dispatcher.getModelRenderer()
+//				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+			model = DefaultLayerFilteringBakedModel.wrap(model);
+			model = FixedLightBakedModel.wrap(model, LightTexture.FULL_BRIGHT);
 			dispatcher.getModelRenderer()
-				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();
 		}
@@ -84,10 +92,13 @@ public abstract class GhostBlockRenderer {
 
 			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 			model = TranslucentBakedModel.wrap(model, () -> params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha());
-			// FIXME VIRTUAL RENDERING
+//			dispatcher.getModelRenderer()
+//				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f,
+//					LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY);
+			model = DefaultLayerFilteringBakedModel.wrap(model);
+			model = FixedLightBakedModel.wrap(model, LevelRenderer.getLightColor(mc.level, pos));
 			dispatcher.getModelRenderer()
-				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f,
-					LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 
 			// buffer.draw();
 			// clean

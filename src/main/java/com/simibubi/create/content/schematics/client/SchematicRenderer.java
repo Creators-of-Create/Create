@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
+import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -19,11 +21,12 @@ import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SchematicRenderer {
@@ -101,8 +104,8 @@ public class SchematicRenderer {
 				BlockState state = blockAccess.getBlockState(pos);
 
 				for (RenderType blockRenderLayer : RenderType.chunkBufferLayers()) {
-					if (ItemBlockRenderTypes.getChunkRenderType(state) != blockRenderLayer)
-						continue;
+//					if (ItemBlockRenderTypes.getChunkRenderType(state) != blockRenderLayer)
+//						continue;
 //					ForgeHooksClient.setRenderType(blockRenderLayer);
 					if (!buffers.containsKey(blockRenderLayer))
 						buffers.put(blockRenderLayer, new BufferBuilder(512));
@@ -111,12 +114,18 @@ public class SchematicRenderer {
 					if (startedBufferBuilders.add(blockRenderLayer))
 						bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 
-					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
+//					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
 
-					// FIXME VIRTUAL RENDERING
-					if (blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true,
-						random)) {
-						usedBlockRenderLayers.add(blockRenderLayer);
+//					if (blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true,
+//						random)) {
+					if (state.getRenderShape() == RenderShape.MODEL) {
+						BakedModel model = blockRendererDispatcher.getBlockModel(state);
+						model = CullingBakedModel.wrap(model);
+						model = LayerFilteringBakedModel.wrap(model, blockRenderLayer);
+						if (blockRendererDispatcher.getModelRenderer()
+							.tesselateBlock(blockAccess, model, state, pos, ms, bufferBuilder, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY)) {
+							usedBlockRenderLayers.add(blockRenderLayer);
+						}
 					}
 					blockstates.add(state);
 				}
