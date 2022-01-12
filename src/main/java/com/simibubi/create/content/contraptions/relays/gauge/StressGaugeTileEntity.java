@@ -77,13 +77,18 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		//	tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
 		//			+ Lang.translate("gui.stressometer.no_rotation")));
 		else {
-			tooltip.add(componentSpacing.plainCopy().append(StressImpact.getFormattedStressText(stressFraction)));
+			double remainingCapacity = capacity - getNetworkStress();
+			Component su = Lang.translate("generic.unit.stress");
+
+			tooltip.add(componentSpacing.plainCopy()
+					.append(StressImpact.getFormattedStressText(stressFraction))
+					.append(new TextComponent("/ ").withStyle(ChatFormatting.GRAY))
+					.append(new TextComponent(IHaveGoggleInformation.format(getNetworkStress()))
+							.append(su.plainCopy())
+							.withStyle(StressImpact.of(stressFraction).getRelativeColor())));
 
 			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.capacity").withStyle(ChatFormatting.GRAY)));
 
-			double remainingCapacity = capacity - getNetworkStress();
-
-			Component su = Lang.translate("generic.unit.stress");
 			MutableComponent stressTooltip = componentSpacing.plainCopy()
 					.append(new TextComponent(" " + IHaveGoggleInformation.format(remainingCapacity))
 							.append(su.plainCopy())
