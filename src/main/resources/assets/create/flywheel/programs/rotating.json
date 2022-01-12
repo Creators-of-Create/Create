@@ -1,14 +1,4 @@
 {
   "vertex": "create:rotating.vert",
-  "fragment": "flywheel:block.frag",
-  "states": [
-    {
-      "when": "create:rainbow_debug",
-      "define": "DEBUG_RAINBOW"
-    },
-    {
-      "when": "flywheel:normal_debug",
-      "define": "DEBUG_NORMAL"
-    }
-  ]
+  "fragment": "flywheel:block.frag"
 }

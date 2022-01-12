@@ -1,10 +1,4 @@
 {
   "vertex": "create:flap.vert",
-  "fragment": "flywheel:block.frag",
-  "states": [
-    {
-      "when": "flywheel:normal_debug",
-      "define": "DEBUG_NORMAL"
-    }
-  ]
+  "fragment": "flywheel:block.frag"
 }
