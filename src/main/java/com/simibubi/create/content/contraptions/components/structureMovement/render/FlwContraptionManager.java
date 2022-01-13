@@ -5,8 +5,8 @@ import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderLayer;
+import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
-import com.jozufozu.flywheel.backend.gl.GlVertexArray;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.Textures;
@@ -38,6 +38,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 
 		if (visible.isEmpty()) return;
 
+		GlStateTracker.State restoreState = GlStateTracker.getRestoreState();
 		GlTextureUnit active = GlTextureUnit.getActive();
 
 		RenderType layer = event.getType();
@@ -56,7 +57,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 			flwContraption.renderStructureLayer(layer, structureShader);
 		}
 
-		GlVertexArray.unbind();
+		restoreState.restore();
 
         if (Backend.isOn()) {
 			RenderLayer renderLayer = event.getLayer();
