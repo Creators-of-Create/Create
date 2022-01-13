@@ -10,8 +10,6 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
-import com.simibubi.create.lib.util.FluidHandlerData.FluidTankData;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -37,10 +35,9 @@ public class FluidTileDataHandler {
 			FluidTankData[] tankData = new FluidTankData[handler.getTanks()];
 			for (int i = 0; i < tankData.length; i++) {
 				FluidStack stack = handler.getFluidInTank(i);
-				String translationKey = stack.getTranslationKey();
 				long amount = stack.getAmount();
 				long capacity = handler.getTankCapacity(i);
-				tankData[i] = new FluidTankData(translationKey, amount, capacity, stack.getFluid());
+				tankData[i] = new FluidTankData(amount, capacity, stack.getFluid());
 			}
 			ServerPlayNetworking.send(player, PACKET_ID, createPacket(tankData, (BlockEntity) transferable));
 			return true;
@@ -51,7 +48,6 @@ public class FluidTileDataHandler {
 		FriendlyByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(data.length);
 		for (FluidTankData tank : data) {
-			buf.writeUtf(tank.translationKey());
 			buf.writeLong(tank.amount());
 			buf.writeLong(tank.capacity());
 			buf.writeResourceLocation(Registry.FLUID.getKey(tank.fluid()));
@@ -63,11 +59,10 @@ public class FluidTileDataHandler {
 	public static FluidTankData[] readPacket(FriendlyByteBuf buf) {
 		FluidTankData[] data = new FluidTankData[buf.readInt()];
 		for (int i = 0; i < data.length; i++) {
-			String translationKey = buf.readUtf();
 			long amount = buf.readLong();
 			long capacity = buf.readLong();
 			Fluid fluid = Registry.FLUID.get(buf.readResourceLocation());
-			data[i] = new FluidTankData(translationKey, amount, capacity, fluid);
+			data[i] = new FluidTankData(amount, capacity, fluid);
 		}
 		return data;
 	}
@@ -123,6 +118,5 @@ public class FluidTileDataHandler {
 		});
 	}
 
-	public static record FluidTankData(String translationKey, long amount, long capacity, Fluid fluid) {
-	}
+	public record FluidTankData(long amount, long capacity, Fluid fluid) {}
 }

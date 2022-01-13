@@ -11,6 +11,7 @@ import com.simibubi.create.lib.util.FluidHandlerData;
 import com.simibubi.create.lib.util.FluidHandlerData.FluidTankData;
 import com.simibubi.create.lib.util.FluidTextUtil;
 import com.simibubi.create.lib.util.FluidUnit;
+import com.simibubi.create.lib.util.FluidUtil;
 import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.MinecraftClientUtil;
 
@@ -57,8 +58,9 @@ public interface IHaveGoggleInformation {
 		boolean isEmpty = true;
 		for (int i = 0; i < tank.getTanks(); i++) {
 			FluidTankData data = tank.data[i];
-			String translationKey = data.translationKey();
+			String translationKey = FluidUtil.getTranslationKey(data.fluid());
 			long amount = data.amount();
+
 			if (translationKey.isEmpty() || amount == 0)
 				continue;
 
