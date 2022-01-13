@@ -69,7 +69,7 @@ public class FilteringHandler {
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return InteractionResult.PASS;
 
-		//if (!world.isClientSide()) {
+		if (!world.isClientSide()) {
 			if (!player.isCreative()) {
 				if (toApply.getItem() instanceof FilterItem)
 					player.getItemInHand(hand)
@@ -82,7 +82,7 @@ public class FilteringHandler {
 				toApply.setCount(1);
 			behaviour.setFilter(toApply);
 
-		//} else {
+		} else {
 			ItemStack filter = behaviour.getFilter();
 			String feedback = "apply_click_again";
 			if (toApply.getItem() instanceof FilterItem || !behaviour.isCountVisible())
@@ -95,7 +95,7 @@ public class FilteringHandler {
 			Component formattedText = new TranslatableComponent(translationKey);
 			player.displayClientMessage(Lang.createTranslationTextComponent("logistics.filter." + feedback, formattedText)
 				.withStyle(ChatFormatting.WHITE), true);
-		//}
+		}
 
 //		event.setCanceled(true);
 //		event.setCancellationResult(InteractionResult.SUCCESS);
