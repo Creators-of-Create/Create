@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.backend.GameStateRegistry;
-import com.jozufozu.flywheel.backend.source.FileResolution;
-import com.jozufozu.flywheel.backend.source.Resolver;
+import com.jozufozu.flywheel.core.GameStateRegistry;
 import com.jozufozu.flywheel.core.Templates;
 import com.jozufozu.flywheel.core.compile.ProgramCompiler;
+import com.jozufozu.flywheel.core.source.FileResolution;
+import com.jozufozu.flywheel.core.source.Resolver;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.util.ResourceUtil;
 import com.simibubi.create.Create;
