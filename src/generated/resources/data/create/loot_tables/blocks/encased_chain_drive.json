@@ -10,7 +10,7 @@
           "name": "create:encased_chain_drive"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

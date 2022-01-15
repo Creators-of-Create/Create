@@ -10,7 +10,7 @@
           "name": "create:dark_oak_window"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:match_tool",
           "predicate": {

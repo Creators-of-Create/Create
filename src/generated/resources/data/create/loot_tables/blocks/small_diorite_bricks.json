@@ -10,7 +10,7 @@
           "name": "create:small_diorite_bricks"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

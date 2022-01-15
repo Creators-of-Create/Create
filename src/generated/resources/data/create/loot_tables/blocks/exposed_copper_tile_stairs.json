@@ -10,7 +10,7 @@
           "name": "create:exposed_copper_tile_stairs"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -10,7 +10,7 @@
           "name": "create:cut_veridium_wall"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

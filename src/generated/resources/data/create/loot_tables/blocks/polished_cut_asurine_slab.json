@@ -10,7 +10,7 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "fabric:load_conditions": [
+              "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
                   "block": "create:polished_cut_asurine_slab",

@@ -10,7 +10,7 @@
           "name": "create:cut_dripstone_bricks"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

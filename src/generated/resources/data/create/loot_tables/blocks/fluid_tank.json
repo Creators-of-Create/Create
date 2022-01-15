@@ -10,7 +10,7 @@
           "name": "create:fluid_tank"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

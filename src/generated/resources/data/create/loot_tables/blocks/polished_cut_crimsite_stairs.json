@@ -10,7 +10,7 @@
           "name": "create:polished_cut_crimsite_stairs"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

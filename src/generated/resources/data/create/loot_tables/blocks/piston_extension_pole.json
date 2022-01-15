@@ -10,7 +10,7 @@
           "name": "create:piston_extension_pole"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

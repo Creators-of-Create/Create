@@ -10,7 +10,7 @@
           "name": "create:basin"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

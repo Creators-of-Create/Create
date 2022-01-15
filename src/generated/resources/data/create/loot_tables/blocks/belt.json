@@ -10,7 +10,7 @@
           "name": "create:belt_connector"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

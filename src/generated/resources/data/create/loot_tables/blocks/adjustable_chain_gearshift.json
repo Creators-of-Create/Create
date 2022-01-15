@@ -10,7 +10,7 @@
           "name": "create:adjustable_chain_gearshift"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

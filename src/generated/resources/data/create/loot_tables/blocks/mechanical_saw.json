@@ -10,7 +10,7 @@
           "name": "create:mechanical_saw"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

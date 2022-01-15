@@ -10,7 +10,7 @@
           "name": "create:smart_chute"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

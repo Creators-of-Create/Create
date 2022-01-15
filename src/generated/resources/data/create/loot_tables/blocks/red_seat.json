@@ -10,7 +10,7 @@
           "name": "create:red_seat"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

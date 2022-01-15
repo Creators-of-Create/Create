@@ -10,7 +10,7 @@
           "name": "create:scorchia"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -10,7 +10,7 @@
           "name": "create:analog_lever"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

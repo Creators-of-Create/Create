@@ -10,7 +10,7 @@
           "name": "create:vertical_framed_glass_pane"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:match_tool",
           "predicate": {

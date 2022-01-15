@@ -10,7 +10,7 @@
           "name": "create:small_tuff_brick_stairs"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

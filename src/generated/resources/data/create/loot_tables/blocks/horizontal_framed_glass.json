@@ -10,7 +10,7 @@
           "name": "create:horizontal_framed_glass"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:match_tool",
           "predicate": {

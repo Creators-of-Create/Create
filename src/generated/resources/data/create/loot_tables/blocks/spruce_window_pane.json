@@ -10,7 +10,7 @@
           "name": "create:spruce_window_pane"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:match_tool",
           "predicate": {

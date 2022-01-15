@@ -10,7 +10,7 @@
           "name": "create:large_cogwheel"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

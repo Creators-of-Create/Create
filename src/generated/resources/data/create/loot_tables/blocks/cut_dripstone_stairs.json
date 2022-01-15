@@ -10,7 +10,7 @@
           "name": "create:cut_dripstone_stairs"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

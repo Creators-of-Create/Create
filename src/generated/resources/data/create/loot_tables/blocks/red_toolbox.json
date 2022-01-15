@@ -38,7 +38,7 @@
           "name": "create:red_toolbox"
         }
       ],
-      "fabric:load_conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
