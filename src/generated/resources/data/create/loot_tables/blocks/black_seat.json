@@ -10,7 +10,7 @@
           "name": "create:black_seat"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

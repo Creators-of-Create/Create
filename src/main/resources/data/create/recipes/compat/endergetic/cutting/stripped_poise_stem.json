@@ -1,0 +1,23 @@
+{
+"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "endergetic"
+      ]
+		}
+	],
+    "type": "create:cutting",
+    "ingredients": [
+    	{
+    		"item": "endergetic:stripped_poise_stem"
+    	}
+    ],
+	"results": [
+		{
+			"item": "endergetic:poise_planks",
+			"count": 6
+		}
+	],
+	"processingTime": 50
+}

@@ -43,7 +43,7 @@
 
   "depends": {
     "fabricloader": ">=0.12.12",
-    "fabric": ">=0.45.0",
+    "fabric": ">=0.46.0",
     "minecraft": ">=1.18.1",
     "registrate-fabric": "*",
     "flywheel": "*"

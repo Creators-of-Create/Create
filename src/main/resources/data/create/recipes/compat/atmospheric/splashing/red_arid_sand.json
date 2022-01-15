@@ -1,0 +1,28 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "atmospheric"
+      ]
+		}
+	],
+    "type": "create:splashing",
+    "ingredients": [
+    	{
+    		"item": "atmospheric:red_arid_sand"
+    	}
+    ],
+	"results": [
+		{
+			"item": "minecraft:gold_nugget",
+			"count": 4,
+			"chance": 0.125
+		},
+		{
+			"item": "atmospheric:aloe_kernels",
+			"count": 1,
+			"chance": 0.05
+		}
+	]
+}

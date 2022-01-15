@@ -1,0 +1,29 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "biomesoplenty"
+      ]
+		}
+	],
+	"type": "create:milling",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "biomesoplenty:lavender"
+    	}
+    ],
+	"results": [
+		{
+			"item": "minecraft:purple_dye",
+			"count": 2
+		},
+		{
+			"item": "minecraft:green_dye",
+			"count": 1,
+			"chance": 0.05
+		}
+	],
+	"processingTime": 50
+}

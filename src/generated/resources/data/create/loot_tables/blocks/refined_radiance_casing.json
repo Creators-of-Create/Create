@@ -10,7 +10,7 @@
           "name": "create:refined_radiance_casing"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

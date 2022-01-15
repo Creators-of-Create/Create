@@ -1,0 +1,25 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "alexsmobs"
+      ]
+    }
+  ],
+  "type": "create:emptying",
+  "ingredients": [
+    {
+      "item": "alexsmobs:lava_bottle"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "fluid": "minecraft:lava",
+      "amount": 27000
+    }
+  ]
+}

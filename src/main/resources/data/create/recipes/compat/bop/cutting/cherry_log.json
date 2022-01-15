@@ -1,0 +1,23 @@
+{
+	"fabric:load_conditions": [
+	    {
+		  "condition": "fabric:all_mods_loaded",
+      "values": [
+        "biomesoplenty"
+      ]
+		}
+	],
+    "type": "create:cutting",
+    "ingredients": [
+    	{
+    		"item": "biomesoplenty:cherry_log"
+    	}
+    ],
+	"results": [
+		{
+			"item": "biomesoplenty:stripped_cherry_log",
+			"count": 1
+		}
+	],
+	"processingTime": 50
+}

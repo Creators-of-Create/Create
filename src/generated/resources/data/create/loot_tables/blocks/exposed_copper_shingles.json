@@ -10,7 +10,7 @@
           "name": "create:exposed_copper_shingles"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -10,7 +10,7 @@
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
+              "fabric:load_conditions": [
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {

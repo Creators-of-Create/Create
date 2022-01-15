@@ -10,7 +10,7 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "conditions": [
+              "fabric:load_conditions": [
                 {
                   "condition": "minecraft:block_state_property",
                   "block": "create:polished_cut_limestone_slab",

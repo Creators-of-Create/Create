@@ -10,7 +10,7 @@
           "name": "create:tiled_glass"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

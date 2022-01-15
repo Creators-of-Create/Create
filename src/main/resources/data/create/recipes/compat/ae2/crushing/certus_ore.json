@@ -1,0 +1,33 @@
+{
+	"fabric:load_conditions": [
+		{
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "appliedenergistics2"
+      ]
+		}
+	],
+    "type": "create:crushing",
+    "ingredients": [
+    	{
+    		"item": "appliedenergistics2:quartz_ore"
+    	}
+    ],
+	"results": [
+		{
+			"item": "appliedenergistics2:certus_quartz_crystal",
+			"count": 2
+		},
+		{
+			"item": "appliedenergistics2:certus_quartz_dust",
+			"count": 1,
+			"chance": 0.25
+		},
+		{
+			"item": "minecraft:cobblestone",
+			"count": 1,
+			"chance": 0.125
+		}
+	],
+	"processingTime": 300
+}

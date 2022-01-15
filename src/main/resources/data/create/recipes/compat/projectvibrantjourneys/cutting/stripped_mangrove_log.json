@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "projectvibrantjourneys"
+      ]
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:stripped_mangrove_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:mangrove_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50
+}

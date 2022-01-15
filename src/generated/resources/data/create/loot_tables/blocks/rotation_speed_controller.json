@@ -10,7 +10,7 @@
           "name": "create:rotation_speed_controller"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

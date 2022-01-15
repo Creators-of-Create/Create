@@ -1,0 +1,28 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "upgrade_aquatic"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "upgrade_aquatic:white_searocket"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:white_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:green_dye",
+      "count": 1,
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50
+}

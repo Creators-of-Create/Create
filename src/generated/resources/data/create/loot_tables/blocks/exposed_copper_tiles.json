@@ -10,7 +10,7 @@
           "name": "create:exposed_copper_tiles"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

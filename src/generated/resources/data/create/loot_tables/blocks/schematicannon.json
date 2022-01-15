@@ -23,7 +23,7 @@
           "name": "create:schematicannon"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

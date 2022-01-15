@@ -1,0 +1,23 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "appliedenergistics2"
+      ]
+		}
+	],
+	"type": "create:milling",
+    "ingredients": [
+    	{
+    		"item": "appliedenergistics2:sky_stone_block"
+    	}
+    ],
+	"results": [
+		{
+			"item": "appliedenergistics2:sky_dust",
+			"count": 1
+		}
+	],
+	"processingTime": 300
+}

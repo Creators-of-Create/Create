@@ -10,7 +10,7 @@
           "name": "create:mechanical_crafter"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

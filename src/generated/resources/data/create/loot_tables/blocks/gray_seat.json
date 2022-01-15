@@ -10,7 +10,7 @@
           "name": "create:gray_seat"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

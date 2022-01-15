@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
+          "fabric:load_conditions": [
             {
               "condition": "minecraft:survives_explosion"
             },
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "conditions": [
+          "fabric:load_conditions": [
             {
               "condition": "minecraft:survives_explosion"
             },
@@ -39,7 +39,7 @@
         },
         {
           "type": "minecraft:item",
-          "conditions": [
+          "fabric:load_conditions": [
             {
               "condition": "minecraft:survives_explosion"
             },
@@ -55,7 +55,7 @@
         },
         {
           "type": "minecraft:item",
-          "conditions": [
+          "fabric:load_conditions": [
             {
               "condition": "minecraft:survives_explosion"
             },
@@ -71,7 +71,7 @@
         },
         {
           "type": "minecraft:item",
-          "conditions": [
+          "fabric:load_conditions": [
             {
               "condition": "minecraft:survives_explosion"
             },

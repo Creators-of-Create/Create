@@ -10,7 +10,7 @@
           "name": "create:andesite_tunnel"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

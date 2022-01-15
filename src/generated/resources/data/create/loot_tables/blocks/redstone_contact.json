@@ -10,7 +10,7 @@
           "name": "create:redstone_contact"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

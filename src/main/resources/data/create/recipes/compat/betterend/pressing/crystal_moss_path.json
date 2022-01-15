@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "betterend"
+      ]
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "betterend:crystal_moss"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "betterend:crystal_moss_path"
+    }
+  ]
+}

@@ -10,7 +10,7 @@
           "name": "create:gearbox"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

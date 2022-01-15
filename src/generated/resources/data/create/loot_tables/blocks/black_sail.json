@@ -10,7 +10,7 @@
           "name": "create:white_sail"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

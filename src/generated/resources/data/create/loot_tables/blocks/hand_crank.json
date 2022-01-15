@@ -10,7 +10,7 @@
           "name": "create:hand_crank"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -10,7 +10,7 @@
           "name": "create:furnace_engine"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -10,7 +10,7 @@
           "name": "create:pulse_repeater"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -1,0 +1,23 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "rys"
+      ]
+		}
+	],
+	"type": "create:splashing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "rys:tough_dirt"
+    	}
+    ],
+	"results": [
+		{
+			"item": "rys:smooth_dirt",
+			"count": 1
+		}
+	]
+}

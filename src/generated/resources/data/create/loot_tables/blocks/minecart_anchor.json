@@ -10,7 +10,7 @@
           "name": "minecraft:air"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

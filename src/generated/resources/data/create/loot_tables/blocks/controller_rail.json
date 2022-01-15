@@ -10,7 +10,7 @@
           "name": "create:controller_rail"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

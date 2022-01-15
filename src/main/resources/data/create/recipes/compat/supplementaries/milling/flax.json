@@ -1,0 +1,31 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "supplementaries"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "supplementaries:flax"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "minecraft:string",
+      "count": 2,
+      "chance": 0.25
+    },
+    {
+      "item": "supplementaries:flax_seeds",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 150
+}

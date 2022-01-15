@@ -10,7 +10,7 @@
           "name": "create:mysterious_cuckoo_clock"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

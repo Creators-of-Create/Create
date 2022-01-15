@@ -10,7 +10,7 @@
           "name": "create:diorite_pillar"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

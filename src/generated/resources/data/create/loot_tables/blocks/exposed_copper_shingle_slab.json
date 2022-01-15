@@ -10,7 +10,7 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "conditions": [
+              "fabric:load_conditions": [
                 {
                   "condition": "minecraft:block_state_property",
                   "block": "create:exposed_copper_shingle_slab",

@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "environmental"
+      ]
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:podzol"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "environmental:podzol_path"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+	"fabric:load_conditions": [
+		{
+		  "condition": "fabric:all_mods_loaded",
+      "values": [
+        "druidcraft"
+      ]
+		}
+	],
+    "type": "create:crushing",
+    "ingredients": [
+    	{
+    		"item": "druidcraft:fiery_glass_ore"
+    	}
+    ],
+	"results": [
+		{
+			"item": "druidcraft:fiery_glass",
+			"count": 8
+		},
+		{
+			"item": "druidcraft:fiery_glass",
+			"count": 6,
+			"chance": 0.25
+		},
+		{
+			"item": "minecraft:cobblestone",
+			"count": 1,
+			"chance": 0.125
+		}
+	],
+	"processingTime": 300
+}

@@ -1,0 +1,34 @@
+{
+	"fabric:load_conditions": [
+	    {
+		  "condition": "fabric:all_mods_loaded",
+        "values": [
+          "silentgems"
+        ]
+		}
+	],
+    "type": "create:crushing",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "silentgems:onyx_ore"
+    	}
+    ],
+	"results": [
+		{
+			"item": "silentgems:onyx",
+			"count": 2
+		},
+		{
+			"item": "silentgems:onyx",
+			"count": 1,
+			"chance": 0.25
+		},
+		{
+			"item": "minecraft:cobblestone",
+			"count": 1,
+			"chance": 0.12
+		}
+	],
+	"processingTime": 350
+}

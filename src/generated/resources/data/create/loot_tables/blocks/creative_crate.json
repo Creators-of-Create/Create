@@ -10,7 +10,7 @@
           "name": "create:creative_crate"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

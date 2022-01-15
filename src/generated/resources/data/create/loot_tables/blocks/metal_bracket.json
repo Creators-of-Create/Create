@@ -10,7 +10,7 @@
           "name": "create:metal_bracket"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

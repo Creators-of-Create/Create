@@ -10,7 +10,7 @@
           "name": "create:sticky_mechanical_piston"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

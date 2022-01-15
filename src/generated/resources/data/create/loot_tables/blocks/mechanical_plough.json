@@ -10,7 +10,7 @@
           "name": "create:mechanical_plough"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

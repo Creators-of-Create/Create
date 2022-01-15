@@ -10,7 +10,7 @@
           "name": "create:redstone_link"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

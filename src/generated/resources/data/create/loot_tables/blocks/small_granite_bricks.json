@@ -10,7 +10,7 @@
           "name": "create:small_granite_bricks"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

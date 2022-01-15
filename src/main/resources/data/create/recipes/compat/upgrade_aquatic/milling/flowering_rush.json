@@ -1,0 +1,28 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "upgrade_aquatic"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "upgrade_aquatic:flowering_rush"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:pink_dye",
+      "count": 3
+    },
+    {
+      "item": "minecraft:pink_dye",
+      "count": 2,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 50
+}

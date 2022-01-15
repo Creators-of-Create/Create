@@ -10,7 +10,7 @@
           "name": "create:encased_fan"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

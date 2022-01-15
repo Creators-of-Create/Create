@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "atmospheric"
+      ]
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "atmospheric:stripped_grimwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "atmospheric:grimwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50
+}

@@ -10,7 +10,7 @@
           "name": "create:smart_fluid_pipe"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -10,7 +10,7 @@
           "name": "create:hose_pulley"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -24,7 +24,7 @@ import net.minecraft.world.level.ItemLike;
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 	protected static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
-//	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
+	protected static final long BUCKET = FluidConstants.BUCKET;
 	protected static final long BOTTLE = FluidConstants.BOTTLE;
 
 	public static void registerAll(FabricDataGenerator gen) {

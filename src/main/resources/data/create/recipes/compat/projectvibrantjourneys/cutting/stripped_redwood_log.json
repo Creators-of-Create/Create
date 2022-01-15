@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "projectvibrantjourneys"
+      ]
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:stripped_redwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:redwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50
+}

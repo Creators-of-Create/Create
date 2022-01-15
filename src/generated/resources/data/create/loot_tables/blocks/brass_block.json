@@ -10,7 +10,7 @@
           "name": "create:brass_block"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

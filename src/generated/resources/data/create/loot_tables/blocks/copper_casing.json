@@ -10,7 +10,7 @@
           "name": "create:copper_casing"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

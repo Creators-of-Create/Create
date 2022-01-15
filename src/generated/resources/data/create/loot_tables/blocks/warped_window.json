@@ -10,7 +10,7 @@
           "name": "create:warped_window"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:match_tool",
           "predicate": {

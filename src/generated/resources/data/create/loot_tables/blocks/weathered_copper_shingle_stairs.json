@@ -10,7 +10,7 @@
           "name": "create:weathered_copper_shingle_stairs"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

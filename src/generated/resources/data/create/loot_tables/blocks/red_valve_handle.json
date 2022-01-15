@@ -10,7 +10,7 @@
           "name": "create:red_valve_handle"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

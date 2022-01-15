@@ -10,7 +10,7 @@
           "name": "create:schematic_table"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

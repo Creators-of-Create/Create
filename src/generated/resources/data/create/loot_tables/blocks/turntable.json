@@ -10,7 +10,7 @@
           "name": "create:turntable"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

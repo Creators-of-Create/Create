@@ -10,7 +10,7 @@
           "name": "create:layered_asurine"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

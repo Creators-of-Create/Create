@@ -10,7 +10,7 @@
           "name": "create:raw_zinc_block"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

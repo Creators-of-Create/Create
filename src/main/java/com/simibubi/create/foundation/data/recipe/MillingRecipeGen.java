@@ -3,11 +3,12 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.lib.condition.NotCondition;
-import com.simibubi.create.lib.condition.TagEmptyCondition;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.fabricmc.fabric.api.tag.TagFactory;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -191,7 +192,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
-			.withCondition(new NotCondition(new TagEmptyCondition("forge", "ores/" + name)))
+			.withCondition(DefaultResourceConditions.not(DefaultResourceConditions.itemTagsPopulated(TagFactory.ITEM.create(new ResourceLocation("c", name + "_ores")))))
 			.require(AllTags.forgeItemTag("ores/" + name))
 			.output(crushed.get()));
 	}

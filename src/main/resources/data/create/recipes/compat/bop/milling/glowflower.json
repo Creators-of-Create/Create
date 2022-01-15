@@ -1,0 +1,29 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "biomesoplenty"
+      ]
+		}
+	],
+	"type": "create:milling",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "biomesoplenty:glowflower"
+    	}
+    ],
+	"results": [
+		{
+			"item": "minecraft:cyan_dye",
+			"count": 2
+		},
+		{
+			"item": "minecraft:white_dye",
+			"count": 1,
+			"chance": 0.1
+		}
+	],
+	"processingTime": 50
+}

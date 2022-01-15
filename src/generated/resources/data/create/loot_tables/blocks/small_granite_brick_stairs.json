@@ -10,7 +10,7 @@
           "name": "create:small_granite_brick_stairs"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

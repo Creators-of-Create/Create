@@ -10,7 +10,7 @@
           "name": "create:sail_frame"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

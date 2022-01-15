@@ -1,0 +1,23 @@
+{
+	"fabric:load_conditions": [
+	    {
+		  "condition": "fabric:all_mods_loaded",
+      "values": [
+        "biomesoplenty"
+      ]
+		}
+	],
+    "type": "create:cutting",
+    "ingredients": [
+    	{
+    		"item": "biomesoplenty:stripped_magic_log"
+    	}
+    ],
+	"results": [
+		{
+			"item": "biomesoplenty:magic_planks",
+			"count": 6
+		}
+	],
+	"processingTime": 50
+}

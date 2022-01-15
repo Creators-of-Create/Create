@@ -10,7 +10,7 @@
           "name": "create:small_crimsite_brick_wall"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

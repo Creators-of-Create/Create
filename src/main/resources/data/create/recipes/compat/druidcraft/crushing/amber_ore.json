@@ -1,0 +1,33 @@
+{
+	"fabric:load_conditions": [
+		{
+		  "condition": "fabric:all_mods_loaded",
+      "values": [
+        "druidcraft"
+      ]
+		}
+	],
+    "type": "create:crushing",
+    "ingredients": [
+    	{
+    		"item": "druidcraft:amber_ore"
+    	}
+    ],
+	"results": [
+		{
+			"item": "druidcraft:amber",
+			"count": 2
+		},
+		{
+			"item": "druidcraft:amber",
+			"count": 1,
+			"chance": 0.5
+		},
+		{
+			"item": "minecraft:cobblestone",
+			"count": 1,
+			"chance": 0.125
+		}
+	],
+	"processingTime": 300
+}

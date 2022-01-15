@@ -10,7 +10,7 @@
           "name": "create:cut_limestone_wall"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

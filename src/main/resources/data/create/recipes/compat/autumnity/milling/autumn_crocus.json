@@ -1,0 +1,33 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "autumnity"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "autumnity:autumn_crocus"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:magenta_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:pink_dye",
+      "count": 2,
+      "chance": 0.1
+    },
+    {
+      "item": "minecraft:purple_dye",
+      "count": 1,
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50
+}

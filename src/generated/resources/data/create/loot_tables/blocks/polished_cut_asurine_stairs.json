@@ -10,7 +10,7 @@
           "name": "create:polished_cut_asurine_stairs"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

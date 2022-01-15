@@ -10,7 +10,7 @@
           "name": "create:powered_toggle_latch"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

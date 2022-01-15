@@ -10,7 +10,7 @@
           "name": "create:flywheel"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

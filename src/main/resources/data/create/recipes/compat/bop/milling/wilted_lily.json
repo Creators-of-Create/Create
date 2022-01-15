@@ -1,0 +1,24 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "biomesoplenty"
+      ]
+		}
+	],
+	"type": "create:milling",
+    "group": "minecraft:misc",
+    "ingredients": [
+    	{
+    		"item": "biomesoplenty:wilted_lily"
+    	}
+    ],
+	"results": [
+		{
+			"item": "minecraft:gray_dye",
+			"count": 2
+		}
+	],
+	"processingTime": 50
+}

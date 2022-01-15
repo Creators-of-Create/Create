@@ -10,7 +10,7 @@
           "name": "create:weighted_ejector"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

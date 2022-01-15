@@ -10,7 +10,7 @@
           "name": "create:empty_blaze_burner"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

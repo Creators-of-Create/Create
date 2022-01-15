@@ -10,7 +10,7 @@
           "name": "create:birch_window_pane"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:match_tool",
           "predicate": {

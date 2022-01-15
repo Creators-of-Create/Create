@@ -10,7 +10,7 @@
           "name": "create:clockwork_bearing"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

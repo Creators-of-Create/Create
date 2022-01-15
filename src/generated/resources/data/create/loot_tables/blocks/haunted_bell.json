@@ -10,7 +10,7 @@
           "name": "create:haunted_bell"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

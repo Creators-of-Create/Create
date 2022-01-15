@@ -1,0 +1,23 @@
+{
+"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "swampexpansion"
+      ]
+		}
+	],
+    "type": "create:cutting",
+    "ingredients": [
+    	{
+    		"item": "swampexpansion:stripped_willow_log"
+    	}
+    ],
+	"results": [
+		{
+			"item": "swampexpansion:willow_planks",
+			"count": 6
+		}
+	],
+	"processingTime": 50
+}

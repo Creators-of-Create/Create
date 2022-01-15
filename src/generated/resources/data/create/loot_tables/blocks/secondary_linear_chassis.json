@@ -10,7 +10,7 @@
           "name": "create:secondary_linear_chassis"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

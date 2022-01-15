@@ -10,7 +10,7 @@
           "name": "create:portable_fluid_interface"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

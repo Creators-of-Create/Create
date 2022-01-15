@@ -1,0 +1,28 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "environmental"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "environmental:yellow_hibiscus"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:yellow_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:yellow_dye",
+      "count": 1,
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50
+}

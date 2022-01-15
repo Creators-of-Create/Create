@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "botania"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/black"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:black_dye",
+      "count": 1
+    }
+  ],
+  "processingTime": 50
+}

@@ -1,0 +1,21 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "supplementaries"
+      ]
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "supplementaries:blackboard"
+    }
+  ],
+  "results": [
+    {
+      "item": "supplementaries:blackboard"
+    }
+  ]
+}

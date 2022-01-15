@@ -10,11 +10,12 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
-import com.simibubi.create.lib.condition.ModLoadedCondition;
-import com.simibubi.create.lib.condition.NotCondition;
-import com.simibubi.create.lib.data.ICondition;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
+import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +31,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	protected ProcessingRecipeFactory<T> factory;
 	protected ProcessingRecipeParams params;
-	protected List<ICondition> recipeConditions;
+	protected List<ConditionJsonProvider> recipeConditions;
 
 	public ProcessingRecipeBuilder(ProcessingRecipeFactory<T> factory, ResourceLocation recipeId) {
 		params = new ProcessingRecipeParams(recipeId);
@@ -176,14 +177,14 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	//
 
 	public ProcessingRecipeBuilder<T> whenModLoaded(String modid) {
-		return withCondition(new ModLoadedCondition(modid));
+		return withCondition(DefaultResourceConditions.allModsLoaded(modid));
 	}
 
 	public ProcessingRecipeBuilder<T> whenModMissing(String modid) {
-		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
+		return withCondition(DefaultResourceConditions.not(DefaultResourceConditions.allModsLoaded(modid)));
 	}
 
-	public ProcessingRecipeBuilder<T> withCondition(ICondition condition) {
+	public ProcessingRecipeBuilder<T> withCondition(ConditionJsonProvider condition) {
 		recipeConditions.add(condition);
 		return this;
 	}
@@ -220,13 +221,13 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	public static class DataGenResult<S extends ProcessingRecipe<?>> implements FinishedRecipe {
 
-		private List<ICondition> recipeConditions;
+		private List<ConditionJsonProvider> recipeConditions;
 		private ProcessingRecipeSerializer<S> serializer;
 		private ResourceLocation id;
 		private S recipe;
 
 		@SuppressWarnings("unchecked")
-		public DataGenResult(S recipe, List<ICondition> recipeConditions) {
+		public DataGenResult(S recipe, List<ConditionJsonProvider> recipeConditions) {
 			this.recipe = recipe;
 			this.recipeConditions = recipeConditions;
 			IRecipeTypeInfo recipeType = this.recipe.getTypeInfo();
@@ -247,8 +248,8 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 				return;
 
 			JsonArray conds = new JsonArray();
-			//recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
-			json.add("conditions", conds);
+			recipeConditions.forEach(c -> conds.add(c.toJson())); // FabricDataGenHelper.addConditions(json, recipeConditions.toArray());?
+			json.add(ResourceConditions.CONDITIONS_KEY, conds);
 		}
 
 		@Override

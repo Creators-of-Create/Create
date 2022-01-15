@@ -10,7 +10,7 @@
           "name": "create:cut_crimsite_bricks"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

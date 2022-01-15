@@ -10,7 +10,7 @@
           "name": "create:brass_tunnel"
         }
       ],
-      "conditions": [
+      "fabric:load_conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

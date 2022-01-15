@@ -1,0 +1,28 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "bloomful"
+      ]
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "bloomful:blue_delphinium"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:blue_dye",
+      "count": 3
+    },
+    {
+      "item": "minecraft:blue_dye",
+      "count": 2,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 50
+}
