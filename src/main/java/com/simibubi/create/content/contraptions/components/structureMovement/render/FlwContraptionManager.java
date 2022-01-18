@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderLayer;
 import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
-import com.jozufozu.flywheel.backend.gl.GlVertexArray;
+import com.jozufozu.flywheel.config.FlwEngine;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.compile.ProgramContext;
@@ -17,7 +17,6 @@ import com.jozufozu.flywheel.util.Textures;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.CreateContexts;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.LevelAccessor;
 
 public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContraption> {
@@ -44,32 +43,13 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 		GlStateTracker.State restoreState = GlStateTracker.getRestoreState();
 		GlTextureUnit active = GlTextureUnit.getActive();
 
-		RenderType type = event.getType();
-
-		type.setupRenderState();
-
-		Textures.bindActiveTextures();
-
-		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(ProgramContext.create(Materials.Names.PASSTHRU, Formats.BLOCK, RenderLayer.getLayer(type)));
-
-		structureShader.bind();
-		structureShader.uploadViewProjection(event.viewProjection);
-		structureShader.uploadCameraPos(event.camX, event.camY, event.camZ);
-
-		for (FlwContraption flwContraption : visible) {
-			flwContraption.renderStructureLayer(type, structureShader);
+		if (Backend.getEngine() != FlwEngine.BATCHING) {
+			renderStructures(event);
 		}
 
-		restoreState.restore();
-		layer.setupRenderState();
-
-        if (Backend.isOn()) {
-			RenderLayer renderLayer = event.getLayer();
-			if (renderLayer != null) {
-
-				for (FlwContraption renderer : visible) {
-					renderer.renderInstanceLayer(event);
-				}
+		if (event.getLayer() != null) {
+			for (FlwContraption renderer : visible) {
+				renderer.renderInstanceLayer(event);
 			}
 		}
 
@@ -77,9 +57,25 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 		GlTextureUnit.T4.makeActive();
 		glBindTexture(GL_TEXTURE_3D, 0);
 
-		type.clearRenderState();
+		event.type.clearRenderState();
 		active.makeActive();
 		restoreState.restore();
+	}
+
+	private void renderStructures(RenderLayerEvent event) {
+
+		event.type.setupRenderState();
+		Textures.bindActiveTextures();
+
+		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(ProgramContext.create(Materials.Names.PASSTHRU, Formats.BLOCK, RenderLayer.getLayer(event.type)));
+
+		structureShader.bind();
+		structureShader.uploadViewProjection(event.viewProjection);
+		structureShader.uploadCameraPos(event.camX, event.camY, event.camZ);
+
+		for (FlwContraption flwContraption : visible) {
+			flwContraption.renderStructureLayer(event.type, structureShader);
+		}
 	}
 
 	@Override
