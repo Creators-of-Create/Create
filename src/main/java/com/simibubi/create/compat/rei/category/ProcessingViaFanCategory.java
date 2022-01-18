@@ -1,6 +1,5 @@
 package com.simibubi.create.compat.rei.category;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -11,20 +10,17 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
-import com.simibubi.create.compat.rei.display.AbstractCreateDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
-import me.shedaniel.rei.api.client.gui.widgets.Widgets;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
-public abstract class ProcessingViaFanCategory<T extends Recipe<?>, D extends AbstractCreateDisplay<T>> extends CreateRecipeCategory<T, D> {
+public abstract class ProcessingViaFanCategory<T extends Recipe<?>, D extends CreateDisplay<T>> extends CreateRecipeCategory<T, D> {
 
 	public ProcessingViaFanCategory(Renderer icon) {
 		this(177, icon);

@@ -10,6 +10,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHa
 import com.simibubi.create.lib.event.EntityReadExtraDataCallback;
 import com.simibubi.create.lib.event.ProjectileImpactCallback;
 
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
+import net.minecraft.server.packs.PackType;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;

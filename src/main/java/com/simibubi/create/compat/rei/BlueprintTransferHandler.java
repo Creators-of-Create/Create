@@ -1,39 +1,33 @@
 package com.simibubi.create.compat.rei;
 
-//import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
-//import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
-//import com.simibubi.create.foundation.networking.AllPackets;
-//
-//import mezz.jei.api.gui.IRecipeLayout;
-//import mezz.jei.api.recipe.transfer.IRecipeTransferError;
-//import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-//import net.minecraft.world.entity.player.Player;
-//import net.minecraft.world.item.crafting.Recipe;
-//
-//@SuppressWarnings("rawtypes")
-//public class BlueprintTransferHandler implements IRecipeTransferHandler<BlueprintContainer, Recipe> {
-//
-//	@Override
-//	public Class<BlueprintContainer> getContainerClass() {
-//		return BlueprintContainer.class;
-//	}
-//
-//	@Override
-//	public Class<Recipe> getRecipeClass() {
-//		return Recipe.class;
-//	}
-//
-//	@Override
-//	public IRecipeTransferError transferRecipe(BlueprintContainer container, Recipe recipe,
-//		IRecipeLayout recipeLayout, Player player, boolean maxTransfer, boolean doTransfer) {
-//		if (!(recipe instanceof Recipe))
-//			return null;
-//		if (!doTransfer)
-//			return null;
-//		Recipe<?> iRecipe = (Recipe<?>) recipe;
-//		// Continued server-side in BlueprintItem.assignCompleteRecipe()
-//		AllPackets.channel.sendToServer(new BlueprintAssignCompleteRecipePacket(iRecipe.getId()));
-//		return null;
-//	}
-//
-//}
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
+import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
+import com.simibubi.create.foundation.networking.AllPackets;
+
+import me.shedaniel.rei.api.common.transfer.info.MenuInfo;
+import me.shedaniel.rei.api.common.transfer.info.MenuSerializationContext;
+import me.shedaniel.rei.api.common.transfer.info.simple.RecipeBookGridMenuInfo;
+import me.shedaniel.rei.api.common.transfer.info.simple.SimpleMenuInfoProvider;
+import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
+import net.minecraft.world.item.crafting.Recipe;
+
+@SuppressWarnings("rawtypes")
+public class BlueprintTransferHandler implements SimpleMenuInfoProvider<BlueprintContainer, DefaultCraftingDisplay> {
+
+	@Override
+	public @Nullable MenuInfo<BlueprintContainer, DefaultCraftingDisplay> create(DefaultCraftingDisplay display) {
+		return new RecipeBookGridMenuInfo(display);
+	}
+
+	@Override
+	public Optional<MenuInfo<BlueprintContainer, DefaultCraftingDisplay>> provideClient(DefaultCraftingDisplay display, MenuSerializationContext<BlueprintContainer, ?, DefaultCraftingDisplay> context, BlueprintContainer menu) {
+		Recipe<?> iRecipe = (Recipe<?>) display.getOptionalRecipe().get();
+		// Continued server-side in BlueprintItem.assignCompleteRecipe()
+		AllPackets.channel.sendToServer(new BlueprintAssignCompleteRecipePacket(iRecipe.getId()));
+		return SimpleMenuInfoProvider.super.provideClient(display, context, menu);
+	}
+}

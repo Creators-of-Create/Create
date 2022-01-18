@@ -11,11 +11,11 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.crafting.Recipe;
 
-public abstract class AbstractCreateDisplay<R extends Recipe<?>> implements Display {
+public class CreateDisplay<R extends Recipe<?>> implements Display {
 	protected final R recipe;
-	private final CategoryIdentifier<AbstractCreateDisplay<R>> uid;
+	private final CategoryIdentifier<CreateDisplay<R>> uid;
 
-	public AbstractCreateDisplay(R recipe, String id) {
+	public CreateDisplay(R recipe, String id) {
 		this.recipe = recipe;
 		this.uid = CategoryIdentifier.of(Create.asResource(id));
 	}

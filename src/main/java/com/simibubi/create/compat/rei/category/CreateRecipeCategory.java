@@ -10,21 +10,17 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.DoubleItemIcon;
 import com.simibubi.create.compat.rei.EmptyBackground;
 import com.simibubi.create.compat.rei.FluidStackEntryRenderer;
-import com.simibubi.create.compat.rei.display.AbstractCreateDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
-import com.simibubi.create.lib.util.FluidTextUtil;
-
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Slot;
-import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
@@ -34,20 +30,14 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 
 import me.shedaniel.rei.api.common.util.EntryStacks;
 
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.minecraft.ChatFormatting;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends AbstractCreateDisplay<R>> implements DisplayCategory<D> {
+public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends CreateDisplay<R>> implements DisplayCategory<D> {
 
 	public final List<Supplier<List<? extends Recipe<?>>>> recipes = new ArrayList<>();
 	public final List<Supplier<ItemStack>> recipeCatalysts = new ArrayList<>();
@@ -120,27 +110,35 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Abstra
 		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
 	}
 
-	public static void addStochasticTooltip(List<EntryStack<ItemStack>> itemStacks, List<ProcessingOutput> results) {
+	public static void addStochasticTooltip(List<Widget> itemStacks, List<ProcessingOutput> results) {
 		addStochasticTooltip(itemStacks, results, 1);
 	}
 
-	public static void addStochasticTooltip(List<EntryStack<ItemStack>> itemStacks, List<ProcessingOutput> results,
+	public static void addStochasticTooltip(List<Widget> itemStacks, List<ProcessingOutput> results,
 											int startIndex) {
-//		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-//			if (input)
-//				return;
-//			if (slotIndex < startIndex)
-//				return;
-//			ProcessingOutput output = results.get(slotIndex - startIndex);
-//			float chance = output.getChance();
-//			if (chance != 1)
-//				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-//					.withStyle(ChatFormatting.GOLD));
-//		});
+		itemStacks.stream().filter(widget -> widget instanceof Slot).forEach(widget -> {
+			Slot slot = (Slot) widget;
+
+			ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
+//				if (slotIndex < startIndex)
+//					return;
+				ProcessingOutput output = results.get(/*slotIndex - startIndex*/0);
+				float chance = output.getChance();
+				if (chance != 1)
+					tooltip.add(Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+							.withStyle(ChatFormatting.GOLD));
+				return tooltip;
+			});
+		});
 	}
 
+	@Deprecated // in favor of basicSlot(int, int)
 	public static Slot basicSlot(Point point) {
 		return Widgets.createSlot(point).disableBackground();
+	}
+
+	public static Slot basicSlot(int x, int y) {
+		return Widgets.createSlot(point(x, y)).disableBackground();
 	}
 
 	@SuppressWarnings("all")

@@ -1,9 +1,8 @@
 package com.simibubi.create.compat.rei.display;
 
 import com.simibubi.create.compat.rei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
-import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 
-public class BlockCuttingDisplay extends AbstractCreateDisplay<CondensedBlockCuttingRecipe> {
+public class BlockCuttingDisplay extends CreateDisplay<CondensedBlockCuttingRecipe> {
 	private BlockCuttingDisplay(CondensedBlockCuttingRecipe recipe, String id) {
 		super(recipe, id);
 	}

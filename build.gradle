@@ -70,7 +70,7 @@ dependencies {
     modApi("me.shedaniel.cloth:basic-math:0.6.0")
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
-    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
+    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
     modImplementation("maven.modrinth:lazydfu:0.1.2")
 

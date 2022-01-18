@@ -192,8 +192,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe, BasinDispla
 				.size();
 		int outputIndex = 0;
 
-//		if (!itemOutputs.isEmpty())
-//			addStochasticTooltip(itemStacks, recipe.getRollableResults(), i);
+		if (!itemOutputs.isEmpty())
+			addStochasticTooltip(widgets, recipe.getRollableResults(), i);
 
 		for (; outputIndex < outSize; outputIndex++) {
 			int xPosition = 141 - (outSize % 2 != 0 && outputIndex == outSize - 1 ? 0 : outputIndex % 2 == 0 ? 10 : -9);

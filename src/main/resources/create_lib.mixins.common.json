@@ -32,6 +32,7 @@
     "Matrix4fMixin",
     "MobMixin",
     "PlayerMixin",
+    "ProjectileMixin",
     "RailStateMixin",
     "RedStoneWireBlockMixin",
     "ServerPlayerGameModeMixin",
@@ -41,7 +42,6 @@
     "ShapelessRecipe$SerializerMixin",
     "StructureProcessorMixin",
     "StructureTemplateMixin",
-    "ProjectileMixin",
     "WalkNodeEvaluatorMixin",
     "accessor.AbstractMinecartAccessor",
     "accessor.ArrayVoxelShapeAccessor",
@@ -57,6 +57,7 @@
     "accessor.EntityAccessor",
     "accessor.HashMapPaletteAccessor",
     "accessor.IngredientAccessor",
+    "accessor.ItemValueAccessor",
     "accessor.LiquidBlockAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftServerAccessor",
@@ -66,6 +67,7 @@
     "accessor.SlotAccessor",
     "accessor.StairBlockAccessor",
     "accessor.StructureTemplateAccessor",
+    "accessor.TagValueAccessor",
     "accessor.Vector3fAccessor"
   ],
   "injectors": {
