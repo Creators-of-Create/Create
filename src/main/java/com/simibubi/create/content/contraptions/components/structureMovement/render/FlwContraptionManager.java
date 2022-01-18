@@ -58,6 +58,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 		}
 
 		restoreState.restore();
+		layer.setupRenderState();
 
         if (Backend.isOn()) {
 			RenderLayer renderLayer = event.getLayer();
@@ -75,6 +76,7 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 
 		layer.clearRenderState();
 		active.makeActive();
+		restoreState.restore();
 	}
 
 	@Override
