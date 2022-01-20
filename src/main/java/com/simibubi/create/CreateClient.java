@@ -24,7 +24,6 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
@@ -69,7 +68,6 @@ public class CreateClient implements ClientModInitializer {
 //		modEventBus.addListener(CreateClient::clientInit);
 //		modEventBus.addListener(AllParticleTypes::registerFactories);
 		FlywheelEvents.GATHER_CONTEXT.register(CreateContexts::flwInit);
-		FlywheelEvents.GATHER_CONTEXT.register(AllMaterialSpecs::flwInit);
 		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
 
 		MODEL_SWAPPER.registerListeners();
@@ -88,7 +86,7 @@ public class CreateClient implements ClientModInitializer {
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
-		
+
 		AllKeys.register();
 		// AllFluids.assignRenderLayers();
 		AllBlockPartials.init();

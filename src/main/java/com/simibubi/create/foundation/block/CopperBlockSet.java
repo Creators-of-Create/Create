@@ -56,18 +56,28 @@ public class CopperBlockSet {
 		new Variant<?>[] { BlockVariant.INSTANCE, SlabVariant.INSTANCE, StairVariant.INSTANCE };
 
 	protected final String name;
+	protected final String generalDirectory; // Leave empty for root folder
 	protected final Variant<?>[] variants;
 	protected final Map<Variant<?>, BlockEntry<?>[]> entries = new HashMap<>();
 	protected final NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe;
 	protected final String endTextureName;
 
 	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants) {
-		this(registrate, name, endTextureName, variants, NonNullBiConsumer.noop());
+		this(registrate, name, endTextureName, variants, NonNullBiConsumer.noop(), "copper/");
+	}
+
+	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants, String generalDirectory) {
+		this(registrate, name, endTextureName, variants, NonNullBiConsumer.noop(), generalDirectory);
+	}
+
+	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants, NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe) {
+		this(registrate, name, endTextureName, variants, mainBlockRecipe, "copper/");
 	}
 
 	public CopperBlockSet(AbstractRegistrate<?> registrate, String name, String endTextureName, Variant<?>[] variants,
-		NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe) {
+		NonNullBiConsumer<DataGenContext<Block, ?>, RegistrateRecipeProvider> mainBlockRecipe, String generalDirectory) {
 		this.name = name;
+		this.generalDirectory = generalDirectory;
 		this.endTextureName = endTextureName;
 		this.variants = variants;
 		this.mainBlockRecipe = mainBlockRecipe;
@@ -130,7 +140,7 @@ public class CopperBlockSet {
 					.requires(Items.HONEYCOMB)
 					.unlockedBy("has_unwaxed", RegistrateRecipeProvider.has(unwaxed))
 					.save(prov, new ResourceLocation(ctx.getId()
-						.getNamespace(), "crafting/copper/" + ctx.getName() + "_from_honeycomb"));
+						.getNamespace(), "crafting/" + generalDirectory + ctx.getName() + "_from_honeycomb"));
 			});
 		}
 
@@ -218,7 +228,7 @@ public class CopperBlockSet {
 			Block block = ctx.get();
 			String path = Registry.BLOCK.getKey(block)
 				.getPath();
-			String baseLoc = ModelProvider.BLOCK_FOLDER + "/copper/" + getWeatherStatePrefix(state);
+			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
 			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
 			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
 			prov.simpleBlock(block, prov.models()
@@ -263,7 +273,7 @@ public class CopperBlockSet {
 			ResourceLocation fullModel =
 				prov.modLoc(ModelProvider.BLOCK_FOLDER + "/" + getWeatherStatePrefix(state) + blocks.getName());
 
-			String baseLoc = ModelProvider.BLOCK_FOLDER + "/copper/" + getWeatherStatePrefix(state);
+			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
 			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
 			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
 
@@ -319,7 +329,7 @@ public class CopperBlockSet {
 		@Override
 		public void generateBlockState(DataGenContext<Block, StairBlock> ctx, RegistrateBlockstateProvider prov,
 			CopperBlockSet blocks, WeatherState state, boolean waxed) {
-			String baseLoc = ModelProvider.BLOCK_FOLDER + "/copper/" + getWeatherStatePrefix(state);
+			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
 			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
 			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
 			prov.stairsBlock(ctx.get(), texture, endTexture, endTexture);
