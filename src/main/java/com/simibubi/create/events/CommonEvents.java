@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
+import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 import com.simibubi.create.lib.event.EntityReadExtraDataCallback;
 import com.simibubi.create.lib.event.ProjectileImpactCallback;
 
@@ -254,6 +255,7 @@ public class CommonEvents {
 		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);
 		EntityReadExtraDataCallback.EVENT.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
 		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 	}
 
 }
