@@ -1,4 +1,5 @@
 //file:noinspection GroovyAssignabilityCheck
+//file:noinspection GroovyAccessibility
 plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
@@ -91,6 +92,18 @@ dependencies {
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
 }
 
+task buildOrPublish {
+    group = "build"
+    String mavenUser = System.getenv().MAVEN_USER
+    if (mavenUser != null && !mavenUser.isEmpty()) {
+        dependsOn(tasks.getByName("publish"))
+        println "prepared for publish"
+    } else {
+        dependsOn(tasks.getByName("build"))
+        println "prepared for build"
+    }
+}
+
 loom {
     accessWidenerPath = file("src/main/resources/create.accesswidener")
     sourceSets {
@@ -101,9 +114,7 @@ loom {
             }
         }
     }
-}
 
-loom {
     runs {
         datagen {
             client()
@@ -144,7 +155,6 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -153,5 +163,13 @@ publishing {
     }
 
     repositories {
+        maven {
+            url = "https://maven.devos.community/${System.getenv().PUBLISH_SUFFIX}/"
+            credentials {
+                username = System.getenv().MAVEN_USER
+                password = System.getenv().MAVEN_PASS
+            }
+            authentication { basic(BasicAuthentication) }
+        }
     }
 }
