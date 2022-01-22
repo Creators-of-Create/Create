@@ -363,7 +363,6 @@ public class ClientEvents {
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
 		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
-		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);
 		UseBlockCallback.EVENT.register(EjectorTargetHandler::rightClickingBlocksSelectsThem);
 		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
