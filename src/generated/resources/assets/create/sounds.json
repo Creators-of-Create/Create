@@ -359,6 +359,23 @@
     ],
     "subtitle": "create.subtitle.slime_added"
   },
+  "spout_fill": {
+    "sounds": [
+      {
+        "name": "minecraft:block.honey_block.slide",
+        "type": "event"
+      }
+    ]
+  },
+  "spout_splash": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.cod.flop",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.spout_splash"
+  },
   "worldshaper_place": {
     "sounds": [
       {

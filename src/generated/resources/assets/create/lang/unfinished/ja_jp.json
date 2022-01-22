@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 5",
+	"_": "Missing Localizations: 6",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1336,6 +1336,7 @@
 
 	"create.subtitle.contraption_disassemble": "からくりが止まる",
 	"create.subtitle.peculiar_bell_use": "風変わりな鐘が鳴る",
+	"create.subtitle.spout_splash": "UNLOCALIZED: Spout splashes",
 	"create.subtitle.mixing": "混ぜる音",
 	"create.subtitle.mechanical_press_activation_belt": "メカニカルプレスがボンと鳴る",
 	"create.subtitle.fwoomp": "ポテトランチャーがバキューンと鳴る",

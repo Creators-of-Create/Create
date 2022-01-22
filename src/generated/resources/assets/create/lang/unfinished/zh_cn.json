@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 5",
+	"_": "Missing Localizations: 6",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1336,6 +1336,7 @@
 
 	"create.subtitle.contraption_disassemble": "结构：停止移动",
 	"create.subtitle.peculiar_bell_use": "奇异钟：鸣响",
+	"create.subtitle.spout_splash": "UNLOCALIZED: Spout splashes",
 	"create.subtitle.mixing": "搅拌器：搅拌声",
 	"create.subtitle.mechanical_press_activation_belt": "辊压机：撞击传送带",
 	"create.subtitle.fwoomp": "土豆加农炮：发射",

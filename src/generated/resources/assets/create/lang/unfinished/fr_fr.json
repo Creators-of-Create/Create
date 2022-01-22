@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1586",
+	"_": "Missing Localizations: 1587",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1336,6 +1336,7 @@
 
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
 	"create.subtitle.peculiar_bell_use": "UNLOCALIZED: Peculiar Bell tolls",
+	"create.subtitle.spout_splash": "UNLOCALIZED: Spout splashes",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",

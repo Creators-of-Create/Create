@@ -229,6 +229,16 @@ public class AllSoundEvents {
 
 		HAUNTED_BELL_USE = create("haunted_bell_use").subtitle("Haunted Bell tolls")
 			.category(SoundSource.BLOCKS)
+			.build(),
+
+		SPOUT_FILL = create("spout_fill").noSubtitle()
+			.playExisting(SoundEvents.HONEY_BLOCK_SLIDE, 0.75f, 1.35f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		SPOUT_SPLASH = create("spout_splash").subtitle("Spout splashes")
+			.playExisting(SoundEvents.COD_FLOP, 0.5f, 1f)
+			.category(SoundSource.BLOCKS)
 			.build();
 
 	private static SoundEntryBuilder create(String name) {

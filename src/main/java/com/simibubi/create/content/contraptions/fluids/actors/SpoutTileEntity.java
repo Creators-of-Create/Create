@@ -6,6 +6,7 @@ import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProce
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
@@ -129,6 +130,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		tank.getPrimaryHandler()
 			.setFluid(fluid);
+		AllSoundEvents.SPOUT_SPLASH.playOnServer(level, worldPosition.below());
 		sendSplash = true;
 		notifyUpdate();
 		return HOLD;
@@ -194,12 +196,15 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 					tank.getPrimaryHandler()
 						.setFluid(FluidHelper.copyStackWithAmount(currentFluidInTank,
 							currentFluidInTank.getAmount() - fillBlock));
+					AllSoundEvents.SPOUT_SPLASH.playOnServer(level, worldPosition.below());
 					sendSplash = true;
 					notifyUpdate();
 				}
 			}
 		}
 
+		if (processingTicks == FILLING_TIME - 5)
+			AllSoundEvents.SPOUT_FILL.playOnServer(level, worldPosition.below());
 		if (processingTicks >= 8 && level.isClientSide)
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());

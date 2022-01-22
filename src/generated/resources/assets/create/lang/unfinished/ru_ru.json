@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 379",
+	"_": "Missing Localizations: 380",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1336,6 +1336,7 @@
 
 	"create.subtitle.contraption_disassemble": "Штуковина останавливается",
 	"create.subtitle.peculiar_bell_use": "Особенный колокол звонит",
+	"create.subtitle.spout_splash": "UNLOCALIZED: Spout splashes",
 	"create.subtitle.mixing": "Шум смешивания",
 	"create.subtitle.mechanical_press_activation_belt": "Механический пресс делает «бонк»",
 	"create.subtitle.fwoomp": "Картофельная пушка делает «Свомп»",

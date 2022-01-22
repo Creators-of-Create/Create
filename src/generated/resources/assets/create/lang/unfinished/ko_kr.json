@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 7",
+	"_": "Missing Localizations: 8",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1336,6 +1336,7 @@
 
 	"create.subtitle.contraption_disassemble": "구조물이 멈춤",
 	"create.subtitle.peculiar_bell_use": "황동 종이 울림",
+	"create.subtitle.spout_splash": "UNLOCALIZED: Spout splashes",
 	"create.subtitle.mixing": "섞는 소리",
 	"create.subtitle.mechanical_press_activation_belt": "압착기가 작동함",
 	"create.subtitle.fwoomp": "감자포를 쏨",

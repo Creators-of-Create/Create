@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 393",
+	"_": "Missing Localizations: 394",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1336,6 +1336,7 @@
 
 	"create.subtitle.contraption_disassemble": "結構停止",
 	"create.subtitle.peculiar_bell_use": "黃銅鐘聲",
+	"create.subtitle.spout_splash": "UNLOCALIZED: Spout splashes",
 	"create.subtitle.mixing": "攪拌機噪音",
 	"create.subtitle.mechanical_press_activation_belt": "液壓機工作",
 	"create.subtitle.fwoomp": "馬鈴薯大砲發射",
