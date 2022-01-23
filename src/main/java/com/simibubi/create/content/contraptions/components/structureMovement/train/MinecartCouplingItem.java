@@ -28,6 +28,8 @@ public class MinecartCouplingItem extends Item {
 	}
 
 	public static InteractionResult handleInteractionWithMinecart(Player player, Level world, InteractionHand hand, Entity interacted, @Nullable EntityHitResult hitResult) {
+		if (player.isSpectator()) // forge checks this, fabric does not
+			return InteractionResult.PASS;
 		if (!(interacted instanceof AbstractMinecart))
 			return InteractionResult.PASS;
 		AbstractMinecart minecart = (AbstractMinecart) interacted;

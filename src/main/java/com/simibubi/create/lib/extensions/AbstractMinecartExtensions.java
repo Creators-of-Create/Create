@@ -1,9 +1,9 @@
 package com.simibubi.create.lib.extensions;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 
 public interface AbstractMinecartExtensions {
 	void create$moveMinecartOnRail(BlockPos pos);
@@ -17,4 +17,6 @@ public interface AbstractMinecartExtensions {
 	}
 
 	MinecartController create$getController();
+
+	void setCapabilityController(CapabilityMinecartController capability);
 }

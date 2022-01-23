@@ -127,10 +127,13 @@ public class CommonEvents {
 	}
 
 	public static void onWorldTick(Level world) {
-		ContraptionHandler.tick(world);
-		CapabilityMinecartController.tick(world);
-		CouplingPhysics.tick(world);
-		LinkedControllerServerHandler.tick(world);
+		// on forge, this is only called on ServerLevels
+		if (!world.isClientSide()) {
+			ContraptionHandler.tick(world);
+			CapabilityMinecartController.tick(world);
+			CouplingPhysics.tick(world);
+			LinkedControllerServerHandler.tick(world);
+		}
 	}
 
 	public static void onUpdateLivingEntity(LivingEntity entityLiving) {
@@ -185,6 +188,7 @@ public class CommonEvents {
 		WorldAttached.invalidateWorld(world);
 	}
 
+	// handled by AbstractMinecartMixin
 	public static void attachCapabilities(AbstractMinecart cart) {
 		CapabilityMinecartController.attach(cart);
 	}

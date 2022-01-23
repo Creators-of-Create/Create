@@ -434,8 +434,4 @@ public class MinecartController implements NBTSerializable {
 			return stallData;
 		}
 	}
-
-	public void addListener(NonNullConsumer<ListenerProvider> listener) {
-		((ListenerProvider) cart()).addListener(listener);
-	}
 }

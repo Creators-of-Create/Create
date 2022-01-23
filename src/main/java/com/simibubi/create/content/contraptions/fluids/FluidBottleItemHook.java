@@ -30,6 +30,9 @@ public class FluidBottleItemHook extends Item {
 		if (!(itemStack.getItem() instanceof BottleItem))
 			return InteractionResult.PASS;
 
+		if (player.isSpectator()) // forge checks this, fabric does not
+			return InteractionResult.PASS;
+
 //		Level world = event.getWorld();
 //		Player player = event.getPlayer();
 		HitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);

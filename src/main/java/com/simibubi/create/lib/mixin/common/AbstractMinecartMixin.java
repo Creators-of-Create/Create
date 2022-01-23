@@ -1,8 +1,8 @@
 package com.simibubi.create.lib.mixin.common;
 
-import com.simibubi.create.lib.util.ListenerProvider;
+import com.simibubi.create.lib.util.NBTSerializable;
 
-import com.tterrag.registrate.util.nullness.NonNullConsumer;
+import net.minecraft.nbt.CompoundTag;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,15 +27,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Mixin(AbstractMinecart.class)
-public abstract class AbstractMinecartMixin extends Entity implements AbstractMinecartExtensions, ListenerProvider {
+public abstract class AbstractMinecartMixin extends Entity implements AbstractMinecartExtensions, NBTSerializable {
 
-	public MinecartController create$controller = null;
+	public CapabilityMinecartController create$controllerCap = null;
 	public boolean create$canUseRail = true;
-	private final Set<NonNullConsumer<ListenerProvider>> listeners = new HashSet<>(2);
 
 	private AbstractMinecartMixin(EntityType<?> entityType, Level world) {
 		super(entityType, world);
@@ -46,7 +42,6 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 
 	@Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V", at = @At("TAIL"))
 	public void create$abstractMinecartEntity(EntityType<?> entityType, Level world, CallbackInfo ci) {
-		create$controller = new MinecartController(MixinHelper.cast(this));
 		CapabilityMinecartController.attach(MixinHelper.cast(this));
 	}
 
@@ -55,6 +50,16 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 		if (blockState.getBlock() instanceof MinecartPassHandlerBlock handler) {
 			handler.onMinecartPass(blockState, level, blockPos, MixinHelper.cast(this));
 		}
+	}
+
+	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+	private void create$addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+		compound.put("Controller", create$controllerCap.create$serializeNBT());
+	}
+
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+	private void create$readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+		create$controllerCap.create$deserializeNBT(compound.getCompound("Controller"));
 	}
 
 	@Override
@@ -83,11 +88,18 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 
 	@Override
 	public MinecartController create$getController() {
-		return create$controller;
+		return create$controllerCap.handler;
 	}
 
 	@Override
-	public Set<NonNullConsumer<ListenerProvider>> getListeners() {
-		return listeners;
+	public void setCapabilityController(CapabilityMinecartController capability) {
+		create$controllerCap = capability;
+	}
+
+	@Override
+	public void remove(RemovalReason reason) {
+		super.remove(reason);
+		CapabilityMinecartController.onCartRemoved(getLevel(), (AbstractMinecart) (Object) this);
+		create$controllerCap.cap.invalidate();
 	}
 }
