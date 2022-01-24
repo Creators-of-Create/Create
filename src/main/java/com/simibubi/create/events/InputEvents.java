@@ -1,6 +1,7 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
@@ -66,6 +67,7 @@ public class InputEvents {
 		MouseScrolledCallback.EVENT.register(InputEvents::onMouseScrolled);
 		MouseButtonCallback.EVENT.register(InputEvents::onMouseInput);
 		MouseButtonCallback.EVENT.register(InputEvents::onClickInput);
+		MouseButtonCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 	}
 
 }

@@ -83,6 +83,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -371,7 +372,6 @@ public class ClientEvents {
 		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
-		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer));

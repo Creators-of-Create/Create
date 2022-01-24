@@ -1,5 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.simibubi.create.lib.mixin.client.accessor.KeyMappingAccessor;
+
+import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.EntityHitResult;
+
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
@@ -25,6 +32,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ContraptionHandlerClient {
 
@@ -53,8 +62,16 @@ public class ContraptionHandlerClient {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(int button, int action, int mods) {
 		Minecraft mc = Minecraft.getInstance();
+
+		if (action != 1)
+			return InteractionResult.PASS;
+		int useKey = ((KeyMappingAccessor) mc.options.keyUse).create$getKey().getValue();
+		if (button != useKey)
+			return InteractionResult.PASS;
+
+		LocalPlayer player = mc.player;
 		if (player == null)
 			return InteractionResult.PASS;
 		if (player.isPassenger())
@@ -105,6 +122,7 @@ public class ContraptionHandlerClient {
 			Direction face = rayTraceResult.getDirection();
 			BlockPos pos = rayTraceResult.getBlockPos();
 
+			InteractionHand hand = player.getUsedItemHand();
 			if (!contraptionEntity.handlePlayerInteraction(player, pos, face, hand))
 				return InteractionResult.PASS;
 			AllPackets.channel.sendToServer(new ContraptionInteractionPacket(contraptionEntity, hand, pos, face));

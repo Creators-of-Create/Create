@@ -10,7 +10,7 @@ public interface StartRidingCallback {
 		InteractionResult result = InteractionResult.PASS;
 		for (StartRidingCallback callback : callbacks) {
 			result = callback.onStartRiding(mounted, mounting);
-			if (result == InteractionResult.FAIL) {
+			if (result != InteractionResult.PASS) {
 				return result;
 			}
 		}
