@@ -65,7 +65,7 @@ public class ContraptionHandlerClient {
 	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(int button, int action, int mods) {
 		Minecraft mc = Minecraft.getInstance();
 
-		if (action != 1)
+		if (action != 1) // 1 -> press
 			return InteractionResult.PASS;
 		int useKey = ((KeyMappingAccessor) mc.options.keyUse).create$getKey().getValue();
 		if (button != useKey)

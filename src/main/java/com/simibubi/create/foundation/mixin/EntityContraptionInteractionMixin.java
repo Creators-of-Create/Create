@@ -109,10 +109,13 @@ public abstract class EntityContraptionInteractionMixin {
 		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
+			boolean particles = blockstate.getRenderShape() != RenderShape.INVISIBLE;
 			if (blockstate.getBlock() instanceof CustomRunningEffectsBlock custom &&
-					!custom.addRunningEffects(blockstate, self.level, blockpos, self) &&
-					blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+					custom.addRunningEffects(blockstate, self.level, blockpos, self)) {
+				particles = false;
+			}
 
+			if (particles) {
 				Vec3 vec3d = self.getDeltaMovement();
 				self.level.addParticle(((BlockParticleOptionExtensions) new BlockParticleOption(ParticleTypes.BLOCK, blockstate)).create$setPos(pos),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,
