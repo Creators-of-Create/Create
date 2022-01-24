@@ -14,6 +14,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HauntedBellTileEntity extends AbstractBellTileEntity {
 
@@ -28,6 +30,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public PartialModel getBellModel() {
 		return AllBlockPartials.HAUNTED_BELL;
 	}

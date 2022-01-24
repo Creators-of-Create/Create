@@ -16,6 +16,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ClockworkContraption extends Contraption {
 
@@ -81,7 +83,7 @@ public class ClockworkContraption extends Contraption {
 		}
 		return Pair.of(hourArm, minuteArm);
 	}
-	
+
 	@Override
 	public boolean assemble(Level world, BlockPos pos) throws AssemblyException {
 		return searchMovedStructure(world, pos, facing);
@@ -125,12 +127,13 @@ public class ClockworkContraption extends Contraption {
 			return false;
 		return facing.getAxis() == this.facing.getAxis();
 	}
-	
+
 	public static enum HandType {
 		HOUR, MINUTE
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new AnchoredLighter(this);
 	}

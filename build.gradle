@@ -73,12 +73,6 @@ minecraft {
                 create {
                     source sourceSets.main
                 }
-
-                if (inWorkspace) {
-                    flywheel {
-                        source project(":Flywheel").sourceSets.main
-                    }
-                }
             }
         }
 

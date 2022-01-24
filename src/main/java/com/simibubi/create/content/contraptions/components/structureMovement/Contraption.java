@@ -1247,6 +1247,7 @@ public abstract class Contraption {
 
 	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
+		// TODO: move lighters to registry
 		return new EmptyLighter(this);
 	}
 

@@ -18,14 +18,14 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="forge"
     mandatory=true
-    versionRange="[38.0.46,)"
+    versionRange="[39.0.46,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.create]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18,1.19)"
+    versionRange="[1.18.1,1.19)"
     ordering="NONE"
     side="BOTH"
 
@@ -34,4 +34,4 @@ Technology that empowers the player.'''
     mandatory=true
     versionRange="[1.18-0.6.0,1.18-0.6.1)"
     ordering="AFTER"
-    side="BOTH"
+    side="CLIENT"
