@@ -29,6 +29,14 @@ public enum Mods {
 		return new ResourceLocation(id, reversedPrefix ? "nugget_" + type : type + "_nugget");
 	}
 	
+	public ResourceLocation oreOf(String type) {
+		return new ResourceLocation(id, reversedPrefix ? "ore_" + type : type + "_ore");
+	}
+
+	public ResourceLocation deepslateOreOf(String type) {
+		return new ResourceLocation(id, reversedPrefix ? "deepslate_ore_" + type : "deepslate_" + type + "_ore");
+	}
+	
 	public String getId() {
 		return id;
 	}

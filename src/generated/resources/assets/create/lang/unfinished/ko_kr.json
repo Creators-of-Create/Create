@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 7",
+	"_": "Missing Localizations: 6",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -602,7 +602,6 @@
 	"item.create.honeyed_apple": "꿀 바른 사과",
 	"item.create.incomplete_cogwheel": "미완성된 톱니바퀴",
 	"item.create.incomplete_large_cogwheel": "미완성된 큰 톱니바퀴",
-	"item.create.incomplete_netherrack": "UNLOCALIZED: Incomplete Netherrack",
 	"item.create.incomplete_precision_mechanism": "미완성된 정밀 기계장치",
 	"item.create.iron_sheet": "철 판",
 	"item.create.linked_controller": "레드스톤 링크 조작기",

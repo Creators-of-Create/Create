@@ -94,11 +94,6 @@ public class AllItems {
 			.model(AssetLookup.existingItemModel())
 			.register();
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_NETHERRACK =
-			REGISTRATE.item("incomplete_netherrack", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
-					.register();
-
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
