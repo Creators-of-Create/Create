@@ -1525,7 +1525,7 @@ public class AllBlocks {
 					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc"))
+		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/stone"))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -1541,7 +1541,7 @@ public class AllBlocks {
 					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc"))
+		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/deepslate"))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -1550,9 +1550,12 @@ public class AllBlocks {
 		.initialProperties(() -> Blocks.RAW_GOLD_BLOCK)
 		.properties(p -> p.requiresCorrectToolForDrops())
 		.transform(pickaxeOnly())
+		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.lang("Block of Raw Zinc")
-		.simpleItem()
+		.transform(tagBlockAndItem("storage_blocks/raw_zinc"))
+		.tag(Tags.Items.STORAGE_BLOCKS)
+		.build()
 		.register();
 
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))

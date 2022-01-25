@@ -204,7 +204,8 @@ public abstract class LaunchedItem {
 
 		@Override
 		void place(Level world) {
-			world.addFreshEntity(entity);
+			if (entity != null)
+				world.addFreshEntity(entity);
 		}
 
 	}
