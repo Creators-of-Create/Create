@@ -117,9 +117,9 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		if (invTE == null)
 			return;
 		Class<T> capability = capability();
-		targetCapability = (LazyOptional<T>) TransferUtil.getHandler(invTE, targetBlockFace.getFace(), capability); // fabric: parity issue. Since Fabric
-																													// simply doesn't have a concept of non-sided,
-																													// we can't support it.
+		targetCapability = bypassSided
+				? (LazyOptional<T>) TransferUtil.getHandler(invTE, null, capability)
+				: (LazyOptional<T>) TransferUtil.getHandler(invTE, targetBlockFace.getFace(), capability);																										// we can't support it.
 		if (targetCapability.isPresent())
 			targetCapability.addListener(this::onHandlerInvalidated);
 	}
