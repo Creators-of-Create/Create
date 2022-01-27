@@ -96,7 +96,7 @@ public class TransferUtil {
 
 	// Helpers
 
-	public static LazyOptional<?> getHandler(BlockEntity be, Direction direction, Class<?> handler) {
+	public static LazyOptional<?> getHandler(BlockEntity be, @Nullable Direction direction, Class<?> handler) {
 		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
 		if (handler == IItemHandler.class) {
 			return getItemHandler(be, direction);
