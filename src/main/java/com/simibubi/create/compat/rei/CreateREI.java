@@ -95,7 +95,7 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.ItemLike;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class CreateREI implements REIClientPlugin {
 
 	private static final ResourceLocation ID = Create.asResource("rei_plugin");
