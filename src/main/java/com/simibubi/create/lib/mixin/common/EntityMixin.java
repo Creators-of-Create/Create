@@ -19,7 +19,6 @@ import com.simibubi.create.lib.event.EntityEyeHeightCallback;
 import com.simibubi.create.lib.event.StartRidingCallback;
 import com.simibubi.create.lib.extensions.EntityExtensions;
 import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.ListenerProvider;
 import com.simibubi.create.lib.util.MixinHelper;
 import com.simibubi.create.lib.util.NBTSerializable;
 
@@ -124,13 +123,6 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 		}
 	}
 
-	@Inject(method = "discard", at = @At("HEAD"))
-	public void create$discard(CallbackInfo ci) {
-		if (this instanceof ListenerProvider) {
-			((ListenerProvider) this).invalidate();
-		}
-	}
-
 	@Inject(
 			method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z",
 			at = @At(
@@ -140,8 +132,8 @@ public abstract class EntityMixin implements EntityExtensions, NBTSerializable {
 			),
 			cancellable = true
 	)
-	public void create$startRiding(Entity entity, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-		if (StartRidingCallback.EVENT.invoker().onStartRiding(MixinHelper.cast(this), entity) == InteractionResult.FAIL) {
+	public void create$startRiding(Entity mounted, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+		if (StartRidingCallback.EVENT.invoker().onStartRiding(mounted, (Entity) (Object) this) == InteractionResult.FAIL) {
 			cir.setReturnValue(false);
 		}
 	}

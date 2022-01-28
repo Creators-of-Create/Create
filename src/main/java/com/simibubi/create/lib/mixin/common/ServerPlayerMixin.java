@@ -49,7 +49,7 @@ public abstract class ServerPlayerMixin extends Player {
 				double reach = ReachEntityAttributes.getReachDistance(this, isCreative() ? 5 : 4.5);
 				HitResult hit = pick(reach, 0, false);
 				if (hit instanceof BlockHitResult blockHit) {
-					LazyOptional<IFluidHandler> optional = TransferUtil.getFluidHandler(level, blockHit.getBlockPos(), blockHit.getDirection());
+					LazyOptional<IFluidHandler> optional = TransferUtil.getFluidHandler(level, blockHit.getBlockPos());
 					if (optional.isPresent()) {
 						IFluidHandler handler = optional.orElse(null);
 						if (!create$checkSameAndUpdate(handler)) {

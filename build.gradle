@@ -1,4 +1,5 @@
 //file:noinspection GroovyAssignabilityCheck
+//file:noinspection GroovyAccessibility
 plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
@@ -79,7 +80,7 @@ dependencies {
 
 //    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
 
-    modImplementation(include("me.alphamode:ForgeTags:1.3"))
+    modImplementation(include("me.alphamode:ForgeTags:1.5"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
     implementation(include('com.electronwill.night-config:core:3.6.0'))
     implementation(include('com.electronwill.night-config:toml:3.6.0'))
@@ -89,6 +90,18 @@ dependencies {
     modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
     modImplementation(include("io.github.tropheusj:milk-lib:0.1.6"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
+}
+
+task buildOrPublish {
+    group = "build"
+    String mavenUser = System.getenv().MAVEN_USER
+    if (mavenUser != null && !mavenUser.isEmpty()) {
+        dependsOn(tasks.getByName("publish"))
+        println "prepared for publish"
+    } else {
+        dependsOn(tasks.getByName("build"))
+        println "prepared for build"
+    }
 }
 
 loom {
@@ -101,9 +114,7 @@ loom {
             }
         }
     }
-}
 
-loom {
     runs {
         datagen {
             client()
@@ -144,7 +155,6 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -153,5 +163,13 @@ publishing {
     }
 
     repositories {
+        maven {
+            url = "https://maven.devos.community/${System.getenv().PUBLISH_SUFFIX}/"
+            credentials {
+                username = System.getenv().MAVEN_USER
+                password = System.getenv().MAVEN_PASS
+            }
+            authentication { basic(BasicAuthentication) }
+        }
     }
 }

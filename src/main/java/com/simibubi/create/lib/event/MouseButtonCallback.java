@@ -8,6 +8,12 @@ import net.minecraft.world.InteractionResult;
 
 @Environment(EnvType.CLIENT)
 public interface MouseButtonCallback {
+	/**
+	 * action:
+	 * 1 -> press
+	 * 0 -> release
+	 * 2 -> repeat
+	 */
 	Event<MouseButtonCallback> EVENT = EventFactory.createArrayBacked(MouseButtonCallback.class, callbacks -> (button, action, mods) -> {
 		for (MouseButtonCallback callback : callbacks) {
 			InteractionResult result = callback.onMouseButton(button, action, mods);

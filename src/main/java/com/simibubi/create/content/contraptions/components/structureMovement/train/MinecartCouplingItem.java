@@ -28,6 +28,8 @@ public class MinecartCouplingItem extends Item {
 	}
 
 	public static InteractionResult handleInteractionWithMinecart(Player player, Level world, InteractionHand hand, Entity interacted, @Nullable EntityHitResult hitResult) {
+		if (player.isSpectator()) // forge checks this, fabric does not
+			return InteractionResult.PASS;
 		if (!(interacted instanceof AbstractMinecart))
 			return InteractionResult.PASS;
 		AbstractMinecart minecart = (AbstractMinecart) interacted;
@@ -55,7 +57,10 @@ public class MinecartCouplingItem extends Item {
 	protected static boolean onCouplingInteractOnMinecart(Level world,
 		AbstractMinecart minecart, Player player, MinecartController controller) {
 		if (controller.isFullyCoupled()) {
-			if (!world.isClientSide)
+			if (world.isClientSide) // fabric: on forge this only runs on server, here we only run
+				// on client to avoid an incorrect message due to differences in timing across loaders.
+				// on forge, the process is client -> server -> packet -> couple
+				// on fabric, the process is client -> packet -> couple -> server
 				CouplingHandler.status(player, "two_couplings_max");
 			return true;
 		}

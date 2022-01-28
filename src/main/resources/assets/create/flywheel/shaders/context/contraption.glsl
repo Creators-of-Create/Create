@@ -1,4 +1,5 @@
 #use "flywheel:context/fog.glsl"
+#use "flywheel:core/diffuse.glsl"
 
 uniform sampler3D uLightVolume;
 
@@ -13,32 +14,30 @@ uniform float uTime;
 uniform mat4 uViewProjection;
 uniform vec3 uCameraPos;
 
-void FLWFinalizeNormal(inout vec3 normal) {
-    mat3 m;
-    m[0] = uModel[0].xyz;
-    m[1] = uModel[1].xyz;
-    m[2] = uModel[2].xyz;
-    normal = m * normal;
-}
-
 #if defined(VERTEX_SHADER)
 
 out vec3 BoxCoord;
 
-void FLWFinalizeWorldPos(inout vec4 worldPos) {
-    worldPos = uModel * worldPos;
+vec4 FLWVertex(inout Vertex v) {
+    vec4 worldPos = uModel * vec4(v.pos, 1.);
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
 
     FragDistance = max(length(worldPos.xz), abs(worldPos.y)); // cylindrical fog
 
-    gl_Position = uViewProjection * worldPos;
+    mat3 m;
+    m[0] = uModel[0].xyz;
+    m[1] = uModel[1].xyz;
+    m[2] = uModel[2].xyz;
+    v.normal = m * v.normal;
+
+    v.pos = worldPos.xyz;
+    return uViewProjection * worldPos;
 }
 
 #elif defined(FRAGMENT_SHADER)
 #use "flywheel:core/lightutil.glsl"
 
-#define ALPHA_DISCARD 0.1
 // optimize discard usage
 #if defined(ALPHA_DISCARD)
 #if defined(GL_ARB_conservative_depth)

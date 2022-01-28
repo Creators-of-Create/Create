@@ -175,7 +175,7 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 
 	@Override
 	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
-		ItemStack pickBlock = new ItemStack(view.getBlockState(pos).getBlock().asItem());
+		ItemStack pickBlock = new ItemStack(this);
 		if (pickBlock.isEmpty())
 			return AllBlocks.SAIL.get()
 					.getPickedStack(state, view, pos, player, result);

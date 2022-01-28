@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public class BlockBehaviour$BlockStateBaseMixin {
+public abstract class BlockBehaviour$BlockStateBaseMixin {
 	@Inject(at = @At("HEAD"), method = "use", cancellable = true)
 	private void create$use(Level level, Player player, InteractionHand hand, BlockHitResult result, CallbackInfoReturnable<InteractionResult> cir) {
 		Item held = player.getItemInHand(hand).getItem();

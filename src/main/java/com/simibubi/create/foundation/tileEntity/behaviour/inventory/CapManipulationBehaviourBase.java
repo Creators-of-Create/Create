@@ -10,7 +10,6 @@ import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -103,6 +102,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		return amount;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void findNewCapability() {
 		Level world = getWorld();
 		BlockFace targetBlockFace = target.getTarget(world, tileEntity.getBlockPos(), tileEntity.getBlockState())
@@ -117,8 +117,9 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		if (invTE == null)
 			return;
 		Class<T> capability = capability();
-		targetCapability =
-			bypassSided ? (LazyOptional<T>) TransferUtil.getHandler(invTE, Direction.UP, capability) : (LazyOptional<T>) TransferUtil.getHandler(invTE, targetBlockFace.getFace(), capability);
+		targetCapability = bypassSided
+				? (LazyOptional<T>) TransferUtil.getHandler(invTE, null, capability)
+				: (LazyOptional<T>) TransferUtil.getHandler(invTE, targetBlockFace.getFace(), capability);																										// we can't support it.
 		if (targetCapability.isPresent())
 			targetCapability.addListener(this::onHandlerInvalidated);
 	}

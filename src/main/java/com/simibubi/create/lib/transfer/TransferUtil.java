@@ -1,8 +1,14 @@
 package com.simibubi.create.lib.transfer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
+
+import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -35,54 +41,102 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 @SuppressWarnings({"UnstableApiUsage"})
 public class TransferUtil {
 	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be) {
-		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
-		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(null));
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, Direction.UP);
-		return simplifyItem(itemStorage).cast();
-	}
-
-	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be, Direction side) {
-		if (Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
-		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(side));
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
-		return simplifyItem(itemStorage).cast();
+		return getItemHandler(be, null);
 	}
 
 	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos) {
-		if (level.isClientSide) return LazyOptional.empty();
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, Direction.UP);
-		return simplifyItem(itemStorage).cast();
+		return getItemHandler(level, pos, null);
 	}
 
-	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos, Direction direction) {
-		if(level.isClientSide) return LazyOptional.empty();
-		Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(level, pos, direction);
-		return simplifyItem(itemStorage).cast();
+	public static LazyOptional<IItemHandler> getItemHandler(Level level, BlockPos pos, @Nullable Direction direction) {
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be == null) return LazyOptional.empty();
+		return getItemHandler(be, direction);
+	}
+
+	public static LazyOptional<IItemHandler> getItemHandler(BlockEntity be, @Nullable Direction side) {
+		// Create handling
+		if (be instanceof ItemTransferable transferable) return LazyOptional.ofObject(transferable.getItemHandler(side));
+		// client handling
+		if (Objects.requireNonNull(be.getLevel()).isClientSide()) {
+			return LazyOptional.empty();
+		}
+		// external handling
+		List<Storage<ItemVariant>> itemStorages = new ArrayList<>();
+		Level l = be.getLevel();
+		BlockPos pos = be.getBlockPos();
+		BlockState state = be.getBlockState();
+
+		for (Direction direction : getDirections(side)) {
+			Storage<ItemVariant> itemStorage = ItemStorage.SIDED.find(l, pos, state, be, direction);
+
+			if (itemStorage != null) {
+				if (itemStorages.size() == 0) {
+					itemStorages.add(itemStorage);
+					continue;
+				}
+
+				for (Storage<ItemVariant> storage : itemStorages) {
+					if (!storage.equals(itemStorage)) {
+						itemStorages.add(itemStorage);
+						break;
+					}
+				}
+			}
+		}
+
+		if (itemStorages.isEmpty()) return LazyOptional.empty();
+		if (itemStorages.size() == 1) return simplifyItem(itemStorages.get(0)).cast();
+		return simplifyItem(new CombinedStorage<>(itemStorages)).cast();
 	}
 
 	// Fluids
+
+	public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos) {
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be == null) return LazyOptional.empty();
+		return getFluidHandler(be);
+	}
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be) {
 		return getFluidHandler(be, null);
 	}
 
 	public static LazyOptional<IFluidHandler> getFluidHandler(BlockEntity be, @Nullable Direction side) {
+		// Create handling
 		if (be instanceof FluidTransferable transferable) return LazyOptional.ofObject(transferable.getFluidHandler(side));
-		if (be.getLevel().isClientSide()) {
+		// client handling
+		if (Objects.requireNonNull(be.getLevel()).isClientSide()) {
 			IFluidHandler cached = FluidTileDataHandler.getCachedHandler(be);
-			if(cached == null) return LazyOptional.empty();
 			return LazyOptional.ofObject(cached);
 		}
-		Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side == null ? Direction.UP : side);
-		return simplifyFluid(fluidStorage).cast();
-	}
+		// external handling
+		List<Storage<FluidVariant>> fluidStorages = new ArrayList<>();
+		Level l = be.getLevel();
+		BlockPos pos = be.getBlockPos();
+		BlockState state = be.getBlockState();
 
-	public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, Direction side) {
-		BlockEntity be = level.getBlockEntity(pos);
-		if (be != null) {
-			return getFluidHandler(be, side);
+		for (Direction direction : getDirections(side)) {
+			Storage<FluidVariant> fluidStorage = FluidStorage.SIDED.find(l, pos, state, be, direction);
+
+			if (fluidStorage != null) {
+				if (fluidStorages.size() == 0) {
+					fluidStorages.add(fluidStorage);
+					continue;
+				}
+
+				for (Storage<FluidVariant> storage : fluidStorages) {
+					if (!storage.equals(fluidStorage)) {
+						fluidStorages.add(fluidStorage);
+						break;
+					}
+				}
+			}
 		}
-		return LazyOptional.empty();
+
+		if (fluidStorages.isEmpty()) return LazyOptional.empty();
+		if (fluidStorages.size() == 1) return simplifyFluid(fluidStorages.get(0)).cast();
+		return simplifyFluid(new CombinedStorage<>(fluidStorages)).cast();
 	}
 
 	// Fluid-containing items
@@ -96,8 +150,7 @@ public class TransferUtil {
 
 	// Helpers
 
-	public static LazyOptional<?> getHandler(BlockEntity be, Direction direction, Class<?> handler) {
-		if(Objects.requireNonNull(be.getLevel()).isClientSide) return LazyOptional.empty();
+	public static LazyOptional<?> getHandler(BlockEntity be, @Nullable Direction direction, Class<?> handler) {
 		if (handler == IItemHandler.class) {
 			return getItemHandler(be, direction);
 		} else if (handler == IFluidHandler.class) {
@@ -133,6 +186,11 @@ public class TransferUtil {
 			return handler == null ? null : new StorageItemHandler(handler);
 		}
 		return null;
+	}
+
+	private static Direction[] getDirections(@Nullable Direction direction) {
+		if (direction == null) return Direction.values();
+		return new Direction[] {direction};
 	}
 
 	public static void registerFluidStorage(BlockEntityType<?> type) {

@@ -191,8 +191,11 @@ public class MinecartContraptionItem extends Item {
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {}
 
-	public static InteractionResult wrenchCanBeUsedToPickUpMinecartContraptions(Player player, Level world, InteractionHand hand, Entity entity, @org.jetbrains.annotations.Nullable EntityHitResult hitResult) {
+	public static InteractionResult wrenchCanBeUsedToPickUpMinecartContraptions(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
 		if (player == null || entity == null)
+			return InteractionResult.PASS;
+
+		if (player.isSpectator()) // forge checks this, fabric does not
 			return InteractionResult.PASS;
 
 		ItemStack wrench = player.getItemInHand(hand);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.instancing.Engine;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.backend.instancing.SerialTaskEngine;
@@ -51,11 +52,13 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		instanceWorld = new ContraptionInstanceWorld(this);
 
+		var restoreState = GlStateTracker.getRestoreState();
 		buildLayers();
 		if (Backend.isOn()) {
 			buildInstancedTiles();
 			buildActors();
 		}
+		restoreState.restore();
 	}
 
 	public ContraptionLighter<?> getLighter() {
@@ -180,7 +183,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		private final ContraptionInstanceManager tileInstanceManager;
 
 		public ContraptionInstanceWorld(FlwContraption parent) {
-			switch (Backend.getInstance().getEngine()) {
+			switch (Backend.getEngine()) {
 			case INSTANCING -> {
 				InstancingEngine<ContraptionProgram> engine = InstancingEngine.builder(CreateContexts.CWORLD)
 						.setGroupFactory(ContraptionGroup.forContraption(parent))

@@ -446,7 +446,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 		if (contraption == null)
 			return;
-		
+
 		StructureTransform transform = makeStructureTransform();
 		AllPackets.channel.sendToClientsTracking(
 			new ContraptionDisassemblyPacket(this.getId(), transform), this);
@@ -555,7 +555,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
-			String srg = "f_146795_"; // removalReason
+//			String srg = "f_146795_"; // removalReason
 			((EntityAccessor)entity).create$setRemovalReason(RemovalReason.UNLOADED_TO_CHUNK);
 //			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
 

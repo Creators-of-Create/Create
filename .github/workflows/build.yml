@@ -7,6 +7,10 @@ jobs:
       matrix:
         java: [ 17 ]
     runs-on: ubuntu-latest
+    env:
+        PUBLISH_SUFFIX: snapshots
+        MAVEN_USER: ${{ secrets.MAVEN_USER }}
+        MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
@@ -20,7 +24,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: build
-        run: ./gradlew build
+        run: ./gradlew buildOrPublish
 
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
