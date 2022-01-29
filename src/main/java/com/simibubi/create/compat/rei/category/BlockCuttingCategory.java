@@ -27,7 +27,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	private AnimatedSaw saw = new AnimatedSaw();
 
 	public BlockCuttingCategory(Item symbol) {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW, () -> symbol), emptyBackground(177, 70)); // Items.STONE_BRICK_STAIRS
+		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW, () -> symbol), emptyBackground(177, 75)); // Items.STONE_BRICK_STAIRS
 	}
 
 //	@Override
@@ -71,7 +71,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 			ingredients.add(basicSlot(point(origin.x + 78 + xOffset, origin.y + 48 + yOffset))
 					.markOutput()
-					.entries(EntryIngredients.of(results.get(outputIndex).get(outputIndex + 1))));
+					.entries(EntryIngredients.ofItemStacks(results.get(outputIndex))));
 		}
 	}
 
