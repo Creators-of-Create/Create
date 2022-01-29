@@ -39,7 +39,7 @@ import net.minecraft.world.level.ItemLike;
 
 public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends CreateDisplay<R>> implements DisplayCategory<D> {
 
-	public final List<Supplier<List<? extends Recipe<?>>>> recipes = new ArrayList<>();
+	public final List<Supplier<List<Recipe<?>>>> recipes = new ArrayList<>();
 	public final List<Supplier<ItemStack>> recipeCatalysts = new ArrayList<>();
 
 	protected CategoryIdentifier uid;

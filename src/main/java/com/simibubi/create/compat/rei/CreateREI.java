@@ -1,7 +1,9 @@
 package com.simibubi.create.compat.rei;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -67,6 +69,7 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
@@ -78,12 +81,14 @@ import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
+import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -145,9 +150,9 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-			.recipes(r -> ((BasinRecipe)r).getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && ((BasinRecipe)r).getIngredients()
-				.size() > 1 && !MechanicalPressTileEntity.canCompress((BasinRecipe)r),
-				r -> BasinRecipe.convertShapeless((BasinRecipe)r))
+			.recipes(r -> ((Recipe<?>)r).getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && ((Recipe<?>)r).getIngredients()
+				.size() > 1 && !MechanicalPressTileEntity.canCompress((Recipe<?>) r),
+				r -> BasinRecipe.convertShapeless((Recipe<?>)r))
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
 			.enableWhen(c -> ((CRecipes)c).allowShapelessInMixer)
@@ -214,7 +219,7 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	draining = register("draining", ItemDrainCategory::new)
-			/*.recipeList(() -> ItemDrainCategory.getRecipes(ingredientManager))*/
+			.recipeList(() -> ItemDrainCategory.getRecipes())
 			.recipes(AllRecipeTypes.EMPTYING)
 			.catalyst(AllBlocks.ITEM_DRAIN::get)
 			.build(),
@@ -258,29 +263,48 @@ public class CreateREI implements REIClientPlugin {
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
-		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
 		registry.registerFiller(MillingRecipe.class, MillingDisplay::new);
+		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
 		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
-		registry.registerFiller(CuttingRecipe.class, SawingDisplay::new);
-		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
-		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::regular);
-		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::shaped);
+
+		registry.registerFiller(SplashingRecipe.class, FanWashingDisplay::new);
 		registry.registerFiller(SmokingRecipe.class, FanSmokingDisplay::new);
 		registry.registerFiller(HauntingRecipe.class, FanHauntingCategory::display);
+
 		registry.registerFiller(AbstractCookingRecipe.class, FanBlastingDisplay::new);
-		registry.registerFiller(SplashingRecipe.class, FanWashingDisplay::new);
-		registry.registerFiller(DeployerApplicationRecipe.class, DeployingDisplay::new);
-		registry.registerFiller(SequencedAssemblyRecipe.class, SequencedAssemblyDisplay::new);
-		registry.registerFiller(ConversionRecipe.class, MysteriousItemConversionDisplay::new);
-		registry.registerFiller(EmptyingRecipe.class, ItemDrainDisplay::new);
 		registry.registerFiller(BasinRecipe.class, MixingDisplay::new);
+		registry.registerFiller(SequencedAssemblyRecipe.class, SequencedAssemblyDisplay::new);
+
 		registry.registerFiller(BasinRecipe.class, MixingDisplay::shapeless);
 		registry.registerFiller(BasinRecipe.class, MixingDisplay::autoBrewing);
-		registry.registerFiller(BasinRecipe.class, PackingDisplay::new);
-		registry.registerFiller(BasinRecipe.class, AutomaticPackingDisplay::new);
-		registry.registerFiller(SandPaperPolishingRecipe.class, PolishingDisplay::new);
+		registry.registerFiller(CuttingRecipe.class, SawingDisplay::new);
+
 		registry.registerFiller(CondensedBlockCuttingRecipe.class, BlockCuttingDisplay::new);
 		registry.registerFiller(CondensedBlockCuttingRecipe.class, BlockCuttingDisplay::woodCutting);
+		registry.registerFiller(BasinRecipe.class, PackingDisplay::new);
+
+		registry.registerFiller(BasinRecipe.class, AutomaticPackingDisplay::new);
+		registry.registerFiller(SandPaperPolishingRecipe.class, PolishingDisplay::new);
+		registry.registerFiller(DeployerApplicationRecipe.class, DeployingDisplay::new);
+
+		registry.registerFiller(ConversionRecipe.class, MysteriousItemConversionDisplay::new);
+		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
+		registry.registerFiller(EmptyingRecipe.class, ItemDrainDisplay::new);
+
+		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::shaped);
+		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::regular);
+
+		allCategories.forEach(c -> c.recipes.forEach(s -> {
+			Supplier<List<Recipe<?>>> recipes = (Supplier<List<Recipe<?>>>) s;
+			for (Object recipe : recipes.get()) {
+				Collection<Display> displays = registry.tryFillDisplay(recipe);
+				for (Display display : displays) {
+					if (Objects.equals(display.getCategoryIdentifier(), c.getCategoryIdentifier())) {
+						registry.add(display, recipe);
+					}
+				}
+			}
+		}));
 	}
 
 	//	@Override
