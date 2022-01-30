@@ -61,14 +61,14 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	public void addWidgets(CreateDisplay<SandPaperPolishingRecipe> display, List<Widget> ingredients, Point origin) {
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
 
-		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 29))
+		ingredients.add(basicSlot(origin.x + 27, origin.y + 29)
 				.markInput()
 				.entries(display.getInputEntries().get(0)));
-		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 29))
+		ingredients.add(basicSlot(origin.x + 132, origin.y + 29)
 				.markOutput()
 				.entries(EntryIngredients.of(results.get(0).getStack())));
 
-//		addStochasticTooltip(itemStacks, results);
+		addStochasticTooltip(ingredients, results);
 	}
 
 	@Override

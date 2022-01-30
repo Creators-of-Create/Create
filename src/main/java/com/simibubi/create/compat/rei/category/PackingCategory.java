@@ -44,31 +44,6 @@ public class PackingCategory extends BasinCategory {
 		this.type = type;
 	}
 
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, BasinRecipe recipe, IIngredients ingredients) {
-//		if (type == PackingType.COMPACTING) {
-//			super.setRecipe(recipeLayout, recipe, ingredients);
-//			return;
-//		}
-//
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		int i = 0;
-//
-//		NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
-//		int size = ingredients2.size();
-//		int rows = size == 4 ? 2 : 3;
-//		while (i < size) {
-//			Ingredient ingredient = ingredients2.get(i);
-//			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
-//			itemStacks.set(i, Arrays.asList(ingredient.getItems()));
-//			i++;
-//		}
-//
-//		itemStacks.init(i, false, 141, 50);
-//		itemStacks.set(i, recipe.getResultItem());
-//	}
-
-
 	@Override
 	public void addWidgets(CreateDisplay<BasinRecipe> display, List<Widget> ingredients, Point origin) {
 		BasinRecipe recipe = display.getRecipe();

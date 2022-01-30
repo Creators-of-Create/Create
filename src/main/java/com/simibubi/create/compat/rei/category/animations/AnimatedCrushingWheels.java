@@ -43,14 +43,4 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		return Lists.newArrayList();
 	}
 
-//	@Override
-//	public int getZ() {
-//		return 0;
-//	}
-//
-//	@Override
-//	public void setZ(int i) {
-//
-//	}
-
 }

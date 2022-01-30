@@ -51,74 +51,6 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		super(itemIcon(AllItems.PRECISION_MECHANISM.get()), new EmptyBackground(180, 120));
 	}
 
-//	@Override
-//	public Class<? extends SequencedAssemblyRecipe> getRecipeClass() {
-//		return SequencedAssemblyRecipe.class;
-//	}
-//
-//	@Override
-//	public void setIngredients(SequencedAssemblyRecipe recipe, IIngredients ingredients) {
-//		List<Ingredient> assemblyIngredients = getAllItemIngredients(recipe);
-//		List<FluidIngredient> assemblyFluidIngredients = getAllFluidIngredients(recipe);
-//		ingredients.setInputIngredients(assemblyIngredients);
-//		if (!assemblyFluidIngredients.isEmpty())
-//			ingredients.setInputLists(VanillaTypes.FLUID, assemblyFluidIngredients.stream()
-//				.map(FluidIngredient::getMatchingFluidStacks)
-//				.collect(Collectors.toList()));
-//		ingredients.setOutputs(VanillaTypes.ITEM,
-//			ImmutableList.of(recipe.getResultItem(), recipe.getTransitionalItem()));
-//	}
-//
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, SequencedAssemblyRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
-//		int xOffset = recipe.getOutputChance() == 1 ? 0 : -7;
-//
-//		itemStacks.init(0, true, 26 + xOffset, 90);
-//		itemStacks.set(0, Arrays.asList(recipe.getIngredient()
-//			.getItems()));
-//
-//		ItemStack result = recipe.getResultItem();
-//		itemStacks.init(1, false, 131 + xOffset, 90);
-//		itemStacks.set(1, result);
-//
-//		int width = 0;
-//		int margin = 3;
-//		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence())
-//			width += getSubCategory(sequencedRecipe).getWidth() + margin;
-//		width -= margin;
-//		int x = width / -2 + getDisplayWidth(null) / 2;
-//		int index = 2;
-//		int fluidIndex = 0;
-//		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence()) {
-//			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
-//			index += subCategory.addItemIngredients(sequencedRecipe, itemStacks, x, index);
-//			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, fluidStacks, x, fluidIndex);
-//			x += subCategory.getWidth() + margin;
-//		}
-//
-//		 // In case machines should be displayed as ingredients
-//
-//		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-//		int catalystX = -2;
-//		int catalystY = 14;
-//		for (; index < inputs.size(); index++) {
-//			itemStacks.init(index, true, catalystX, catalystY);
-//			itemStacks.set(index, inputs.get(index));
-//			catalystY += 19;
-//		}
-//
-//		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-//			if (slotIndex != 1)
-//				return;
-//			float chance = recipe.getOutputChance();
-//			if (chance != 1)
-//				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-//					.withStyle(ChatFormatting.GOLD));
-//		});
-//	}
-
 	@Override
 	public void addWidgets(CreateDisplay<SequencedAssemblyRecipe> display, List<Widget> ingredients, Point origin, Rectangle bounds) {
 		int xOffset = display.getRecipe().getOutputChance() == 1 ? 0 : -7;
@@ -171,15 +103,6 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 //					.entries(slot.getEntries()));
 //			catalystY += 19;
 //		}
-
-//		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-//			if (slotIndex != 1)
-//				return;
-//			float chance = recipe.getOutputChance();
-//			if (chance != 1)
-//				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-//						.withStyle(ChatFormatting.GOLD));
-//		});
 
 		ingredients.add(new WidgetWithBounds() {
 			@Override

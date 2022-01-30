@@ -30,17 +30,6 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 		super(185, doubleItemIcon(AllItems.PROPELLER, () -> Items.WATER_BUCKET));
 	}
 
-//	@Override
-//	public Class<? extends SplashingRecipe> getRecipeClass() {
-//		return SplashingRecipe.class;
-//	}
-//
-//	@Override
-//	public void setIngredients(SplashingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
-//	}
-
 	@Override
 	public void addWidgets(CreateDisplay<SplashingRecipe> display, List<Widget> ingredients, Point origin) {
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();

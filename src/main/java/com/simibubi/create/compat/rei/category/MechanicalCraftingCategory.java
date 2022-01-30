@@ -13,12 +13,27 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
+import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
+import me.shedaniel.rei.api.client.util.ClientEntryStacks;
+import me.shedaniel.rei.api.common.entry.EntryStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+
+import org.jetbrains.annotations.Nullable;
 
 public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
 
@@ -27,38 +42,6 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	public MechanicalCraftingCategory() {
 		super(itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 109));
 	}
-
-//	@Override
-//	public void setIngredients(CraftingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-//	}
-
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, CraftingRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
-//
-//		itemStacks.init(0, false, 133, 80);
-//		itemStacks.set(0, recipe.getResultItem());
-//
-//		int x = getXPadding(recipe);
-//		int y = getYPadding(recipe);
-//		float scale = getScale(recipe);
-//		int size = recipeIngredients.size();
-//		IIngredientRenderer<ItemStack> renderer = new CrafterIngredientRenderer(recipe);
-//
-//		for (int i = 0; i < size; i++) {
-//			float f = 19 * scale;
-//			int slotSize = (int) (16 * scale);
-//			int xPosition = (int) (x + 1 + (i % getWidth(recipe)) * f);
-//			int yPosition = (int) (y + 1 + (i / getWidth(recipe)) * f);
-//			itemStacks.init(i + 1, true, renderer, xPosition, yPosition, slotSize, slotSize, 0, 0);
-//			itemStacks.set(i + 1, Arrays.asList(recipeIngredients.get(i)
-//				.getItems()));
-//		}
-//
-//	}
 
 	static int maxSize = 100;
 
@@ -92,6 +75,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		CraftingRecipe recipe = display.getRecipe();
 		float scale = getScale(recipe);
 		Point offset = new Point(origin.getX() + getXPadding(recipe), origin.getY() + getYPadding(recipe));
+		CrafterIngredientRenderer renderer = new CrafterIngredientRenderer(recipe);
 
 		for (int row = 0; row < getHeight(recipe); row++)
 			for (int col = 0; col < getWidth(recipe); col++)
@@ -101,7 +85,9 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 					Matrix4f matrix4f = Matrix4f.createScaleMatrix(scale, scale, scale);
 					matrix4f.multiplyWithTranslation(offset.getX() + col * 19 * scale, offset.getY() + row * 19 * scale, 0);
 					widgets.add(Widgets.withTranslate(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, 0, 0), matrix4f));
-					widgets.add(Widgets.createSlot(new Point((offset.getX() + col * 19 * scale) + 1, (offset.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(row * getWidth(recipe) + col)));
+					Slot input = Widgets.createSlot(new Point((offset.getX() + col * 19 * scale) + 1, (offset.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(row * getWidth(recipe) + col));
+					ClientEntryStacks.setRenderer(input.getCurrentEntry(), renderer);
+					widgets.add(input);
 				}
 
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 133, origin.getY() + 80));
@@ -132,8 +118,6 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		return widgets;
 	}
 
-
-	// todo: idk if I should use this instead
 	@Override
 	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		matrixStack.pushPose();
@@ -172,56 +156,53 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		matrixStack.popPose();
 	}
 
-//	@Override
-//	public Class<? extends CraftingRecipe> getRecipeClass() {
-//		return CraftingRecipe.class;
-//	}
+	private static final class CrafterIngredientRenderer implements EntryRenderer<ItemStack> {
 
-//	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
-//
-//		private final CraftingRecipe recipe;
-//
-//		public CrafterIngredientRenderer(CraftingRecipe recipe) {
-//			this.recipe = recipe;
-//		}
-//
-//		@Override
-//		public void render(PoseStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
-//			matrixStack.pushPose();
-//			float scale = getScale(recipe);
-//			matrixStack.scale(scale, scale, scale);
-//
-//			if (ingredient != null) {
-//				PoseStack modelViewStack = RenderSystem.getModelViewStack();
-//				modelViewStack.pushPose();
-//				modelViewStack.mulPoseMatrix(matrixStack.last()
-//					.pose());
-//				RenderSystem.enableDepthTest();
-//				Minecraft minecraft = Minecraft.getInstance();
-//				Font font = getFontRenderer(minecraft, ingredient);
-//				ItemRenderer itemRenderer = minecraft.getItemRenderer();
-//				itemRenderer.renderAndDecorateFakeItem(ingredient, xPosition, yPosition);
-//				itemRenderer.renderGuiItemDecorations(font, ingredient, xPosition, yPosition, null);
-//				RenderSystem.disableBlend();
-//				modelViewStack.popPose();
-//			}
-//
-//			matrixStack.popPose();
-//		}
-//
-//		@Override
-//		public List<Component> getTooltip(ItemStack ingredient, TooltipFlag tooltipFlag) {
-//			Minecraft minecraft = Minecraft.getInstance();
-//			Player player = minecraft.player;
-//			try {
-//				return ingredient.getTooltipLines(player, tooltipFlag);
-//			} catch (RuntimeException | LinkageError e) {
-//				List<Component> list = new ArrayList<>();
-//				TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
-//				list.add(crash.withStyle(ChatFormatting.RED));
-//				return list;
-//			}
-//		}
-//	}
+		private final CraftingRecipe recipe;
+
+		public CrafterIngredientRenderer(CraftingRecipe recipe) {
+			this.recipe = recipe;
+		}
+
+		@Override
+		public void render(EntryStack<ItemStack> entry, PoseStack matrixStack, Rectangle bounds, int mouseX, int mouseY, float delta) {
+			ItemStack ingredient = entry.getValue();
+			matrixStack.pushPose();
+			float scale = getScale(recipe);
+			matrixStack.scale(scale, scale, scale);
+
+			if (ingredient != null) {
+				PoseStack modelViewStack = RenderSystem.getModelViewStack();
+				modelViewStack.pushPose();
+				modelViewStack.mulPoseMatrix(matrixStack.last()
+						.pose());
+				RenderSystem.enableDepthTest();
+				Minecraft minecraft = Minecraft.getInstance();
+				Font font = minecraft.font;
+				ItemRenderer itemRenderer = minecraft.getItemRenderer();
+				itemRenderer.renderAndDecorateFakeItem(ingredient, bounds.x, bounds.y);
+				itemRenderer.renderGuiItemDecorations(font, ingredient, bounds.x, bounds.y, null);
+				RenderSystem.disableBlend();
+				modelViewStack.popPose();
+			}
+
+			matrixStack.popPose();
+		}
+
+		@Override
+		public @Nullable Tooltip getTooltip(EntryStack<ItemStack> entry, Point mouse) {
+			ItemStack ingredient = entry.getValue();
+			Minecraft minecraft = Minecraft.getInstance();
+			Player player = minecraft.player;
+			try {
+				return Tooltip.create(ingredient.getTooltipLines(player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
+			} catch (RuntimeException | LinkageError e) {
+				List<Component> list = new ArrayList<>();
+				TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
+				list.add(crash.withStyle(ChatFormatting.RED));
+				return Tooltip.create(list);
+			}
+		}
+	}
 
 }

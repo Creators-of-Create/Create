@@ -6,13 +6,16 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.DoubleItemIcon;
 import com.simibubi.create.compat.rei.EmptyBackground;
 import com.simibubi.create.compat.rei.FluidStackEntryRenderer;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -33,6 +36,7 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.ChatFormatting;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -164,17 +168,17 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 		return dev.architectury.fluid.FluidStack.create(stack.getFluid(), stack.getAmount(), stack.getTag());
 	}
 
-//	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
-//		List<FluidStack> outputs) {
-//		addFluidTooltip(fluidStacks, inputs, outputs, -1);
-//	}
-//
-//	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
-//		List<FluidStack> outputs, int index) {
-//		List<Integer> amounts = new ArrayList<>();
-//		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
-//		outputs.forEach(f -> amounts.add(f.getAmount()));
-//
+	public static void addFluidTooltip(List<Widget> fluidStacks, List<FluidIngredient> inputs,
+		List<FluidStack> outputs) {
+		addFluidTooltip(fluidStacks, inputs, outputs, -1);
+	}
+
+	public static void addFluidTooltip(List<Widget> fluidStacks, List<FluidIngredient> inputs,
+		List<FluidStack> outputs, int index) {
+		List<Long> amounts = new ArrayList<>();
+		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
+		outputs.forEach(f -> amounts.add(f.getAmount()));
+
 //		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
 //			if (index != -1 && slotIndex != index)
 //				return;
@@ -204,7 +208,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 //				siblings.add(text);
 //			}
 //		});
-//	}
+	}
 
 	public static Point point(int x, int y) {
 		return new Point(x, y);

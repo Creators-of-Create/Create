@@ -30,34 +30,6 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW, () -> symbol), emptyBackground(177, 75)); // Items.STONE_BRICK_STAIRS
 	}
 
-//	@Override
-//	public Class<? extends CondensedBlockCuttingRecipe> getRecipeClass() {
-//		return CondensedBlockCuttingRecipe.class;
-//	}
-//
-//	@Override
-//	public void setIngredients(CondensedBlockCuttingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getOutputs());
-//	}
-//
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, CondensedBlockCuttingRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		itemStacks.init(0, true, 4, 4);
-//		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getItems()));
-//
-//		List<List<ItemStack>> results = recipe.getCondensedOutputs();
-//		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-//			int xOffset = (outputIndex % 5) * 19;
-//			int yOffset = (outputIndex / 5) * -19;
-//
-//			itemStacks.init(outputIndex + 1, false, 77 + xOffset, 47 + yOffset);
-//			itemStacks.set(outputIndex + 1, results.get(outputIndex));
-//		}
-//	}
-
-
 	@Override
 	public void addWidgets(CreateDisplay<CondensedBlockCuttingRecipe> display, List<Widget> ingredients, Point origin) {
 		ingredients.add(basicSlot(point(origin.x + 5, origin.y + 5))

@@ -27,37 +27,6 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL, AllItems.CRUSHED_GOLD), emptyBackground(177, 110));
 	}
 
-	//	@Override
-//	public Class<? extends AbstractCrushingRecipe> getRecipeClass() {
-//		return AbstractCrushingRecipe.class;
-//	}
-
-//	@Override
-//	public void setIngredients(AbstractCrushingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
-//	}
-
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, AbstractCrushingRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		itemStacks.init(0, true, 50, 2);
-//		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
-//			.get(0)
-//			.getItems()));
-//
-//		List<ProcessingOutput> results = recipe.getRollableResults();
-//		int size = results.size();
-//		int offset = -size * 19 / 2;
-//		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
-//			itemStacks.init(outputIndex + 1, false, getDisplayWidth(null) / 2 + offset + 19 * outputIndex, 78);
-//			itemStacks.set(outputIndex + 1, results.get(outputIndex)
-//				.getStack());
-//		}
-//
-//		addStochasticTooltip(itemStacks, results);
-//	}
-
 	@Override
 	public List<Widget> setupDisplay(CreateDisplay<AbstractCrushingRecipe> display, Rectangle bounds) {
 		Point origin = new Point(bounds.getX(), bounds.getY() + 4);

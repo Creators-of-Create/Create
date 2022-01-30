@@ -14,11 +14,6 @@ public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> 
 		super(doubleItemIcon(AllItems.PROPELLER, () -> Items.CAMPFIRE));
 	}
 
-//	@Override
-//	public Class<? extends SmokingRecipe> getRecipeClass() {
-//		return SmokingRecipe.class;
-//	}
-
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack) {
 		GuiGameElement.of(Blocks.FIRE.defaultBlockState())

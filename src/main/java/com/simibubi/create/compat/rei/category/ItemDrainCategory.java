@@ -98,43 +98,6 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		return recipes;
 	}
 
-//	@Override
-//	public Class<? extends EmptyingRecipe> getRecipeClass() {
-//		return EmptyingRecipe.class;
-//	}
-//
-//	@Override
-//	public void setIngredients(EmptyingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//
-//		if (!recipe.getRollableResults()
-//			.isEmpty())
-//			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-//		if (!recipe.getFluidResults()
-//			.isEmpty())
-//			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
-//	}
-//
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, EmptyingRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
-//		FluidStack fluidOutput = recipe.getResultingFluid();
-//		List<ItemStack> matchingIngredients = Arrays.asList(recipe.getIngredients()
-//			.get(0)
-//			.getItems());
-//
-//		fluidStacks.init(0, true, 132, 8);
-//		fluidStacks.set(0, withImprovedVisibility(fluidOutput));
-//		itemStacks.init(0, true, 26, 7);
-//		itemStacks.set(0, matchingIngredients);
-//		itemStacks.init(1, false, 131, 26);
-//		itemStacks.set(1, recipe.getResultItem());
-//
-//		addFluidTooltip(fluidStacks, Collections.emptyList(), ImmutableList.of(fluidOutput));
-//	}
-
-
 	@Override
 	public void addWidgets(CreateDisplay<EmptyingRecipe> display, List<Widget> ingredients, Point origin) {
 		FluidStack fluidOutput = display.getRecipe().getResultingFluid();
