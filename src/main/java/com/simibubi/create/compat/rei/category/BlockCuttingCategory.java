@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSaw;
-import com.simibubi.create.compat.rei.display.BlockCuttingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -22,7 +22,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
-public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCuttingRecipe, BlockCuttingDisplay> {
+public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCuttingRecipe> {
 
 	private AnimatedSaw saw = new AnimatedSaw();
 
@@ -59,7 +59,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 
 	@Override
-	public void addWidgets(BlockCuttingDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<CondensedBlockCuttingRecipe> display, List<Widget> ingredients, Point origin) {
 		ingredients.add(basicSlot(point(origin.x + 5, origin.y + 5))
 				.markInput()
 				.entries(display.getInputEntries().get(0)));

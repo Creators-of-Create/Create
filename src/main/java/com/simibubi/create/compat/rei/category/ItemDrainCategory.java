@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.category.animations.AnimatedItemDrain;
-import com.simibubi.create.compat.rei.display.ItemDrainDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
@@ -22,7 +22,6 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.type.EntryType;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
@@ -39,7 +38,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
 
-public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, ItemDrainDisplay> {
+public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
 	AnimatedItemDrain drain;
 
@@ -137,7 +136,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe, Item
 
 
 	@Override
-	public void addWidgets(ItemDrainDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<EmptyingRecipe> display, List<Widget> ingredients, Point origin) {
 		FluidStack fluidOutput = display.getRecipe().getResultingFluid();
 		List<ItemStack> matchingIngredients = Arrays.asList(display.getRecipe().getIngredients()
 				.get(0)

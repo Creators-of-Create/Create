@@ -3,7 +3,7 @@ package com.simibubi.create.compat.rei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedDeployer;
-import com.simibubi.create.compat.rei.display.DeployingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
@@ -13,7 +13,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 
 import java.util.List;
 
-public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe, DeployingDisplay> {
+public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
 	AnimatedDeployer deployer;
 
@@ -63,7 +63,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 
 
 	@Override
-	public void addWidgets(DeployingDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<DeployerApplicationRecipe> display, List<Widget> ingredients, Point origin) {
 		DeployerApplicationRecipe recipe = display.getRecipe();
 		ingredients.add(basicSlot(new Point(origin.getX() + 27, origin.getY() + 51))
 				.markInput()

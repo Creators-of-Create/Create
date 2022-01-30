@@ -9,7 +9,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedMillstone;
-import com.simibubi.create.compat.rei.display.MillingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -29,7 +29,7 @@ import net.minecraft.network.chat.Component;
 //import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 //import mezz.jei.api.ingredients.IIngredients;
 
-public class MillingCategory extends CreateRecipeCategory<MillingRecipe, MillingDisplay> {
+public class MillingCategory extends CreateRecipeCategory<MillingRecipe> {
 
 //	private AnimatedMillstone millstone = new AnimatedMillstone();
 
@@ -94,7 +94,7 @@ public class MillingCategory extends CreateRecipeCategory<MillingRecipe, Milling
 //	}
 
 	@Override
-	public List<Widget> setupDisplay(MillingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CreateDisplay<MillingRecipe> display, Rectangle bounds) {
 		Point origin = new Point(bounds.getX(), bounds.getY() + 4);
 		List<Widget> widgets = new ArrayList<>();
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();

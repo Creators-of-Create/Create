@@ -3,7 +3,7 @@ package com.simibubi.create.compat.rei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
-import com.simibubi.create.compat.rei.display.FanWashingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -14,8 +14,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
-public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe, FanWashingDisplay> {
+public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 
 	public FanWashingCategory() {
 		super(185, doubleItemIcon(AllItems.PROPELLER, () -> Items.WATER_BUCKET));
@@ -44,7 +42,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 //	}
 
 	@Override
-	public void addWidgets(FanWashingDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<SplashingRecipe> display, List<Widget> ingredients, Point origin) {
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
 		int xOffsetGlobal = 8 * (3 - Math.min(3, results.size()));
 		ingredients.add(basicSlot(new Point(origin.getX() + xOffsetGlobal + 13, origin.getY() + 48))

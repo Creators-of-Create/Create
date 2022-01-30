@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
@@ -20,7 +21,6 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.rei.EmptyBackground;
-import com.simibubi.create.compat.rei.display.BasinDisplay;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -34,7 +34,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
-public class BasinCategory extends CreateRecipeCategory<BasinRecipe, BasinDisplay> {
+public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 	private boolean needsHeating;
 
@@ -151,7 +151,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe, BasinDispla
 
 
 	@Override
-	public void addWidgets(BasinDisplay display, List<Widget> widgets, Point origin) {
+	public void addWidgets(CreateDisplay<BasinRecipe> display, List<Widget> widgets, Point origin) {
 		BasinRecipe recipe = display.getRecipe();
 		NonNullList<FluidIngredient> fluidIngredients = recipe.getFluidIngredients();
 		List<Pair<Ingredient, MutableInt>> ingredients = ItemHelper.condenseIngredients(recipe.getIngredients());

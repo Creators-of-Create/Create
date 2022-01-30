@@ -9,7 +9,7 @@ import java.util.List;
 //import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSaw;
-import com.simibubi.create.compat.rei.display.SawingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 //import mezz.jei.api.constants.VanillaTypes;
 //import mezz.jei.api.gui.IRecipeLayout;
@@ -29,7 +29,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 
-public class SawingCategory extends CreateRecipeCategory<CuttingRecipe, SawingDisplay> {
+public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 
 	public SawingCategory() {
 		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW, () -> Items.OAK_LOG), emptyBackground(177, 70 + 10));
@@ -79,7 +79,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe, SawingDi
 //	}
 
 	@Override
-	public List<Widget> setupDisplay(SawingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CreateDisplay<CuttingRecipe> display, Rectangle bounds) {
 		Point origin = new Point(bounds.getX(), bounds.getY() + 4);
 		List<Widget> widgets = new ArrayList<>();
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();

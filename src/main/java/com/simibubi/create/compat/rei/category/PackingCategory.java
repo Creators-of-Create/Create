@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
-import com.simibubi.create.compat.rei.display.BasinDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -13,7 +13,6 @@ import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
-import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.core.NonNullList;
@@ -71,7 +70,7 @@ public class PackingCategory extends BasinCategory {
 
 
 	@Override
-	public void addWidgets(BasinDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<BasinRecipe> display, List<Widget> ingredients, Point origin) {
 		BasinRecipe recipe = display.getRecipe();
 		if (type == PackingType.COMPACTING) {
 			super.addWidgets(display, ingredients, origin);

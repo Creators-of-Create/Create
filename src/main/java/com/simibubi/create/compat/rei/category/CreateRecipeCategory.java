@@ -37,7 +37,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends CreateDisplay<R>> implements DisplayCategory<D> {
+public abstract class CreateRecipeCategory<R extends Recipe<?>> implements DisplayCategory<CreateDisplay<R>> {
 
 	public final List<Supplier<List<Recipe<?>>>> recipes = new ArrayList<>();
 	public final List<Supplier<ItemStack>> recipeCatalysts = new ArrayList<>();
@@ -74,7 +74,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Create
 	}
 
 	@Override
-	public int getDisplayWidth(D display) {
+	public int getDisplayWidth(CreateDisplay<R> display) {
 		return width;
 	}
 
@@ -210,12 +210,16 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Create
 		return new Point(x, y);
 	}
 
-	public void addWidgets(D display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<R> display, List<Widget> ingredients, Point origin) {
+
+	}
+
+	public void addWidgets(CreateDisplay<R> display, List<Widget> ingredients, Point origin, Rectangle bounds) {
 
 	}
 
 	@Override
-	public List<Widget> setupDisplay(D display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CreateDisplay<R> display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 		widgets.add(Widgets.createDrawableWidget((helper, poseStack, mouseX, mouseY, partialTick) -> {
@@ -225,6 +229,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>, D extends Create
 			poseStack.popPose();
 		}));
 		addWidgets(display, widgets, new Point(bounds.getX(), bounds.getY() + 4));
+		addWidgets(display, widgets, new Point(bounds.getX(), bounds.getY() + 4), bounds);
 		return widgets;
 	}
 

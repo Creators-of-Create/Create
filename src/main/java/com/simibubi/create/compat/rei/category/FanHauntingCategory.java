@@ -18,7 +18,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-public class FanHauntingCategory extends ProcessingViaFanCategory<HauntingRecipe, CreateDisplay<HauntingRecipe>> {
+public class FanHauntingCategory extends ProcessingViaFanCategory<HauntingRecipe> {
 
 	public FanHauntingCategory() {
 		super(185, doubleItemIcon(AllItems.PROPELLER, () -> Items.SOUL_CAMPFIRE));

@@ -62,6 +62,7 @@
     "accessor.LivingEntityAccessor",
     "accessor.MinecraftServerAccessor",
     "accessor.PlayerAccessor",
+    "accessor.PotionBrewingAccessor",
     "accessor.RailStateAccessor",
     "accessor.ServerGamePacketListenerImplAccessor",
     "accessor.SlotAccessor",

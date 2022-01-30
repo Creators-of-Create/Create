@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedCrafter;
-import com.simibubi.create.compat.rei.display.MechanicalCraftingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import me.shedaniel.math.Point;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
-public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe, MechanicalCraftingDisplay> {
+public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
 
 	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
@@ -85,7 +85,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	@Override
-	public List<Widget> setupDisplay(MechanicalCraftingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CreateDisplay<CraftingRecipe> display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 		Point origin = new Point(bounds.getX(), bounds.getY() + 4);

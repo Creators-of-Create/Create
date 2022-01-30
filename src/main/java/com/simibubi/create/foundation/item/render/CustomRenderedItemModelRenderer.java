@@ -14,6 +14,9 @@ public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedIt
 	@Override
 	@SuppressWarnings("unchecked")
 	public void render(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+		if(!(Minecraft.getInstance()
+				.getItemRenderer()
+				.getModel(stack, null, null, 0) instanceof CustomRenderedItemModel)) return; // insure we are only casting CustomRenderedItemModel incase another mod's messes with models
 		M mainModel = (M) Minecraft.getInstance()
 			.getItemRenderer()
 			.getModel(stack, null, null, 0);

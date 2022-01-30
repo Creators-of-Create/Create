@@ -6,7 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedCrushingWheels;
-import com.simibubi.create.compat.rei.display.CrushingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -21,7 +21,7 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe, CrushingDisplay> {
+public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe> {
 
 	public CrushingCategory() {
 		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL, AllItems.CRUSHED_GOLD), emptyBackground(177, 110));
@@ -59,7 +59,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 //	}
 
 	@Override
-	public List<Widget> setupDisplay(CrushingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CreateDisplay<AbstractCrushingRecipe> display, Rectangle bounds) {
 		Point origin = new Point(bounds.getX(), bounds.getY() + 4);
 		List<Widget> widgets = new ArrayList<>();
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();

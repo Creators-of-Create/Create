@@ -7,16 +7,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.ConversionRecipe;
-import com.simibubi.create.compat.rei.display.MysteriousItemConversionDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
-public class MysteriousItemConversionCategory extends CreateRecipeCategory<ConversionRecipe, MysteriousItemConversionDisplay> {
+public class MysteriousItemConversionCategory extends CreateRecipeCategory<ConversionRecipe> {
 
 	public static List<ConversionRecipe> getRecipes() {
 		List<ConversionRecipe> recipes = new ArrayList<>();
@@ -54,7 +53,7 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 
 
 	@Override
-	public void addWidgets(MysteriousItemConversionDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<ConversionRecipe> display, List<Widget> ingredients, Point origin) {
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
 		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 17))
 				.markInput()

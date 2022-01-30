@@ -6,7 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
-import com.simibubi.create.compat.rei.display.PressingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -21,7 +21,7 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public class PressingCategory extends CreateRecipeCategory<PressingRecipe, PressingDisplay> {
+public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
 	public PressingCategory() {
 		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS, AllItems.IRON_SHEET), emptyBackground(177, 80));
@@ -76,7 +76,7 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe, Press
 //
 
 	@Override
-	public List<Widget> setupDisplay(PressingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CreateDisplay<PressingRecipe> display, Rectangle bounds) {
 			Point origin = new Point(bounds.getX(), bounds.getY() + 4);
 			List<Widget> widgets = new ArrayList<>();
 			List<ProcessingOutput> results = display.getRecipe().getRollableResults();

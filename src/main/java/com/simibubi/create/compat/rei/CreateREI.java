@@ -37,40 +37,11 @@ import com.simibubi.create.compat.rei.category.SawingCategory;
 import com.simibubi.create.compat.rei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.rei.category.SpoutCategory;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
-import com.simibubi.create.compat.rei.display.AutomaticPackingDisplay;
-import com.simibubi.create.compat.rei.display.BlockCuttingDisplay;
-import com.simibubi.create.compat.rei.display.CrushingDisplay;
-import com.simibubi.create.compat.rei.display.DeployingDisplay;
-import com.simibubi.create.compat.rei.display.FanBlastingDisplay;
-import com.simibubi.create.compat.rei.display.FanSmokingDisplay;
-import com.simibubi.create.compat.rei.display.FanWashingDisplay;
-import com.simibubi.create.compat.rei.display.ItemDrainDisplay;
-import com.simibubi.create.compat.rei.display.MechanicalCraftingDisplay;
-import com.simibubi.create.compat.rei.display.MillingDisplay;
-import com.simibubi.create.compat.rei.display.MixingDisplay;
-import com.simibubi.create.compat.rei.display.MysteriousItemConversionDisplay;
-import com.simibubi.create.compat.rei.display.PackingDisplay;
-import com.simibubi.create.compat.rei.display.PolishingDisplay;
-import com.simibubi.create.compat.rei.display.PressingDisplay;
-import com.simibubi.create.compat.rei.display.SawingDisplay;
-import com.simibubi.create.compat.rei.display.SequencedAssemblyDisplay;
-import com.simibubi.create.compat.rei.display.SpoutDisplay;
-import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
-import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
-import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
-import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
-import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -84,20 +55,18 @@ import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.ItemLike;
 
 @SuppressWarnings("all")
@@ -107,7 +76,7 @@ public class CreateREI implements REIClientPlugin {
 
 //	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory> allCategories = new ArrayList<>();
-	private final CreateRecipeCategory<?, ?>
+	private final CreateRecipeCategory<?>
 
 		milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
 		.catalyst(AllBlocks.MILLSTONE::get)
@@ -214,7 +183,7 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	spoutFilling = register("spout_filling", SpoutCategory::new).recipes(AllRecipeTypes.FILLING)
-			/*.recipeList(() -> SpoutCategory.getRecipes(ingredientManager))*/
+			.recipeList(() -> SpoutCategory.getRecipes())
 			.catalyst(AllBlocks.SPOUT::get)
 			.build(),
 
@@ -239,8 +208,8 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 				.build();
 
-	private <T extends Recipe<?>, D extends CreateDisplay<T>> CategoryBuilder register(String name,
-																					   Supplier<CreateRecipeCategory<T, D>> supplier) {
+	private <T extends Recipe<?>> CategoryBuilder register(String name,
+																					   Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<>(name, supplier);
 	}
 
@@ -248,11 +217,6 @@ public class CreateREI implements REIClientPlugin {
 	public String getPluginProviderName() {
 		return ID.toString();
 	}
-
-//	@Override
-//	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-//		registration.addRecipeTransferHandler(new BlueprintTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
-//	}
 
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
@@ -263,55 +227,24 @@ public class CreateREI implements REIClientPlugin {
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
-		registry.registerFiller(MillingRecipe.class, MillingDisplay::new);
-		registry.registerFiller(AbstractCrushingRecipe.class, CrushingDisplay::new);
-		registry.registerFiller(PressingRecipe.class, PressingDisplay::new);
-
-		registry.registerFiller(SplashingRecipe.class, FanWashingDisplay::new);
-		registry.registerFiller(SmokingRecipe.class, FanSmokingDisplay::new);
-		registry.registerFiller(HauntingRecipe.class, FanHauntingCategory::display);
-
-		registry.registerFiller(AbstractCookingRecipe.class, FanBlastingDisplay::new);
-		registry.registerFiller(BasinRecipe.class, MixingDisplay::new);
-		registry.registerFiller(SequencedAssemblyRecipe.class, SequencedAssemblyDisplay::new);
-
-		registry.registerFiller(BasinRecipe.class, MixingDisplay::shapeless);
-		registry.registerFiller(BasinRecipe.class, MixingDisplay::autoBrewing);
-		registry.registerFiller(CuttingRecipe.class, SawingDisplay::new);
-
-		registry.registerFiller(CondensedBlockCuttingRecipe.class, BlockCuttingDisplay::new);
-		registry.registerFiller(CondensedBlockCuttingRecipe.class, BlockCuttingDisplay::woodCutting);
-		registry.registerFiller(BasinRecipe.class, PackingDisplay::new);
-
-		registry.registerFiller(BasinRecipe.class, AutomaticPackingDisplay::new);
-		registry.registerFiller(SandPaperPolishingRecipe.class, PolishingDisplay::new);
-		registry.registerFiller(DeployerApplicationRecipe.class, DeployingDisplay::new);
-
-		registry.registerFiller(ConversionRecipe.class, MysteriousItemConversionDisplay::new);
-		registry.registerFiller(FillingRecipe.class, SpoutDisplay::new);
-		registry.registerFiller(EmptyingRecipe.class, ItemDrainDisplay::new);
-
-		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::shaped);
-		registry.registerFiller(CraftingRecipe.class, MechanicalCraftingDisplay::regular);
-
 		allCategories.forEach(c -> c.recipes.forEach(s -> {
 			Supplier<List<Recipe<?>>> recipes = (Supplier<List<Recipe<?>>>) s;
-			for (Object recipe : recipes.get()) {
-				Collection<Display> displays = registry.tryFillDisplay(recipe);
-				for (Display display : displays) {
-					if (Objects.equals(display.getCategoryIdentifier(), c.getCategoryIdentifier())) {
-						registry.add(display, recipe);
-					}
-				}
+			for (Recipe recipe : recipes.get()) {
+				registry.add(new CreateDisplay<>(recipe, c.getCategoryIdentifier().getPath()), recipe);
 			}
 		}));
-	}
 
-	//	@Override
-//	public void registerRecipes(IRecipeRegistration registration) {
-//		ingredientManager = registration.getIngredientManager();
-//		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
-//	}
+		List<CraftingRecipe> recipes = ToolboxColoringRecipeMaker.createRecipes()
+				.collect(Collectors.toList());
+		for (Object recipe : recipes) {
+			Collection<Display> displays = registry.tryFillDisplay(recipe);
+			for (Display display : displays) {
+				if (Objects.equals(display.getCategoryIdentifier(), BuiltinPlugin.CRAFTING)) {
+					registry.add(display, recipe);
+				}
+			}
+		}
+	}
 
 //	@SuppressWarnings({ "unchecked", "rawtypes" })
 //	@Override
@@ -329,44 +262,43 @@ public class CreateREI implements REIClientPlugin {
 		zones.register(AbstractSimiContainerScreen.class, new SlotMover());
 	}
 
-	private class CategoryBuilder<T extends Recipe<?>, D extends CreateDisplay<T>> {
-		private CreateRecipeCategory<T, D> category;
-		private CreateDisplay<T> display;
+	private class CategoryBuilder<T extends Recipe<?>> {
+		private CreateRecipeCategory<T> category;
 		private List<Consumer<List<Recipe<?>>>> recipeListConsumers = new ArrayList<>();
 		private Predicate<CRecipes> pred;
 
-		public CategoryBuilder(String name, Supplier<CreateRecipeCategory<T, D>> category) {
+		public CategoryBuilder(String name, Supplier<CreateRecipeCategory<T>> category) {
 			this.category = category.get();
 			this.category.setCategoryId(name);
 			pred = Predicates.alwaysTrue();
 		}
 
-		public CategoryBuilder<T, D> recipes(IRecipeTypeInfo recipeTypeEntry) {
+		public CategoryBuilder<T> recipes(IRecipeTypeInfo recipeTypeEntry) {
 			return recipes(recipeTypeEntry::getType);
 		}
 
-		public CategoryBuilder<T, D> recipes(Supplier<RecipeType<? extends T>> recipeType) {
+		public CategoryBuilder<T> recipes(Supplier<RecipeType<? extends T>> recipeType) {
 			return recipes(r -> r.getType() == recipeType.get());
 		}
 
-		public CategoryBuilder<T, D> recipes(ResourceLocation serializer) {
+		public CategoryBuilder<T> recipes(ResourceLocation serializer) {
 			return recipes(r -> Registry.RECIPE_SERIALIZER.getKey(r.getSerializer())
 				.equals(serializer));
 		}
 
-		public CategoryBuilder<T, D> recipes(Predicate<Recipe<?>> pred) {
+		public CategoryBuilder<T> recipes(Predicate<Recipe<?>> pred) {
 			return recipeList(() -> findRecipes(pred));
 		}
 
-		public CategoryBuilder<T, D> recipes(Predicate<Recipe<?>> pred, Function<Recipe<?>, T> converter) {
+		public CategoryBuilder<T> recipes(Predicate<Recipe<?>> pred, Function<Recipe<?>, T> converter) {
 			return recipeList(() -> findRecipes(pred), converter);
 		}
 
-		public CategoryBuilder<T, D> recipeList(Supplier<List<? extends Recipe<?>>> list) {
+		public CategoryBuilder<T> recipeList(Supplier<List<? extends Recipe<?>>> list) {
 			return recipeList(list, null);
 		}
 
-		public CategoryBuilder<T, D> recipeList(Supplier<List<? extends Recipe<?>>> list,
+		public CategoryBuilder<T> recipeList(Supplier<List<? extends Recipe<?>>> list,
 			Function<Recipe<?>, T> converter) {
 			recipeListConsumers.add(recipes -> {
 				List<? extends Recipe<?>> toAdd = list.get();
@@ -379,7 +311,7 @@ public class CreateREI implements REIClientPlugin {
 			return this;
 		}
 
-		public CategoryBuilder<T, D> recipesExcluding(Supplier<RecipeType<? extends T>> recipeType,
+		public CategoryBuilder<T> recipesExcluding(Supplier<RecipeType<? extends T>> recipeType,
 			Supplier<RecipeType<? extends T>> excluded) {
 			recipeListConsumers.add(recipes -> {
 				recipes.addAll(findRecipesByTypeExcluding(recipeType.get(), excluded.get()));
@@ -387,35 +319,35 @@ public class CreateREI implements REIClientPlugin {
 			return this;
 		}
 
-		public CategoryBuilder<T, D> removeRecipes(Supplier<RecipeType<? extends T>> recipeType) {
+		public CategoryBuilder<T> removeRecipes(Supplier<RecipeType<? extends T>> recipeType) {
 			recipeListConsumers.add(recipes -> {
 				removeRecipesByType(recipes, recipeType.get());
 			});
 			return this;
 		}
 
-		public CategoryBuilder<T, D> catalyst(Supplier<ItemLike> supplier) {
+		public CategoryBuilder<T> catalyst(Supplier<ItemLike> supplier) {
 			return catalystStack(() -> new ItemStack(supplier.get()
 				.asItem()));
 		}
 
-		public CategoryBuilder<T, D> catalystStack(Supplier<ItemStack> supplier) {
+		public CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
 			category.recipeCatalysts.add(supplier);
 			return this;
 		}
 
-		public CategoryBuilder<T, D> enableWhen(Function<CRecipes, ConfigBool> configValue) {
+		public CategoryBuilder<T> enableWhen(Function<CRecipes, ConfigBool> configValue) {
 			pred = c -> configValue.apply(c)
 				.get();
 			return this;
 		}
 
-		public CategoryBuilder<T, D> enableWhenBool(Function<CRecipes, Boolean> configValue) {
+		public CategoryBuilder<T> enableWhenBool(Function<CRecipes, Boolean> configValue) {
 			pred = configValue::apply;
 			return this;
 		}
 
-		public CreateRecipeCategory<T, D> build() {
+		public CreateRecipeCategory<T> build() {
 			if (pred.test(AllConfigs.SERVER.recipes))
 				category.recipes.add(() -> {
 					List<Recipe<?>> recipes = new ArrayList<>();

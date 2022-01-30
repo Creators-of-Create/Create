@@ -20,7 +20,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
-public abstract class ProcessingViaFanCategory<T extends Recipe<?>, D extends CreateDisplay<T>> extends CreateRecipeCategory<T, D> {
+public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends CreateRecipeCategory<T> {
 
 	public ProcessingViaFanCategory(Renderer icon) {
 		this(177, icon);
@@ -36,12 +36,12 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>, D extends Cr
 	}
 
 	@Override
-	public void addWidgets(D display, List<Widget> ingredients, Point origin) {
-		ingredients.add(basicSlot(new Point(origin.x + 21, origin.y + 48))
+	public void addWidgets(CreateDisplay<T> display, List<Widget> ingredients, Point origin) {
+		ingredients.add(basicSlot(origin.x + 21, origin.y + 48)
 				.markInput()
 				.entries(display.getInputEntries().get(0)));
 
-		ingredients.add(basicSlot(new Point(origin.x + 140, origin.y + 48))
+		ingredients.add(basicSlot(origin.x + 140, origin.y + 48)
 				.markOutput()
 				.entries(display.getOutputEntries().get(0)));
 	}

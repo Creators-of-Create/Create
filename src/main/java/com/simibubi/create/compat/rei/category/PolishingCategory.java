@@ -2,7 +2,7 @@ package com.simibubi.create.compat.rei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.compat.rei.display.PolishingDisplay;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -11,7 +11,6 @@ import com.simibubi.create.lib.util.NBTSerializer;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
 import java.util.List;
@@ -21,7 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
-public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe, PolishingDisplay> {
+public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe> {
 
 	private ItemStack renderedSandpaper;
 
@@ -59,7 +58,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 
 	@Override
-	public void addWidgets(PolishingDisplay display, List<Widget> ingredients, Point origin) {
+	public void addWidgets(CreateDisplay<SandPaperPolishingRecipe> display, List<Widget> ingredients, Point origin) {
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
 
 		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 29))
