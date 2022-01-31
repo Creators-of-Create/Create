@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity.InterfaceItemHandler;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -25,9 +27,10 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
-		LazyOptional<IFluidHandler> oldcap = capability;
-		capability = LazyOptional.of(() -> new InterfaceFluidHandler(contraption.fluidInventory));
-		oldcap.invalidate();
+//		LazyOptional<IFluidHandler> oldcap = capability;
+		InterfaceFluidHandler handler = ((InterfaceFluidHandler) capability.orElse(null));
+		handler.setWrapped(contraption.fluidInventory);
+//		oldcap.invalidate();
 		super.startTransferringTo(contraption, distance);
 	}
 
@@ -38,9 +41,10 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 	@Override
 	protected void stopTransferring() {
-		LazyOptional<IFluidHandler> oldcap = capability;
-		capability = createEmptyHandler();
-		oldcap.invalidate();
+//		LazyOptional<IFluidHandler> oldcap = capability;
+		InterfaceFluidHandler handler = ((InterfaceFluidHandler) capability.orElse(null));
+		handler.setWrapped(new FluidTank(0));
+//		oldcap.invalidate();
 		super.stopTransferring();
 	}
 
@@ -116,6 +120,9 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 			onContentTransferred();
 		}
 
+		private void setWrapped(IFluidHandler wrapped) {
+			this.wrapped = wrapped;
+		}
 	}
 
 }

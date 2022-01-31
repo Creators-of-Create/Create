@@ -28,17 +28,19 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
-		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		capability = LazyOptional.of(() -> new InterfaceItemHandler(contraption.inventory));
-		oldCap.invalidate();
+//		LazyOptional<IItemHandlerModifiable> oldCap = capability;
+		InterfaceItemHandler handler = ((InterfaceItemHandler) capability.orElse(null));
+		handler.setWrapped(contraption.inventory);
+//		oldCap.invalidate();
 		super.startTransferringTo(contraption, distance);
 	}
 
 	@Override
 	protected void stopTransferring() {
-		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		capability = createEmptyHandler();
-		oldCap.invalidate();
+//		LazyOptional<IItemHandlerModifiable> oldCap = capability;
+		InterfaceItemHandler handler = ((InterfaceItemHandler) capability.orElse(null));
+		handler.setWrapped(new ItemStackHandler(0));
+//		oldCap.invalidate();
 		super.stopTransferring();
 	}
 
@@ -83,6 +85,9 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 			return insertItem;
 		}
 
+		private void setWrapped(IItemHandlerModifiable wrapped) {
+			this.wrapped = wrapped;
+		}
 	}
 
 }

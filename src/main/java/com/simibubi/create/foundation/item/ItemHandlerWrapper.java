@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemHandlerWrapper implements IItemHandlerModifiable {
 
-	private IItemHandlerModifiable wrapped;
+	protected IItemHandlerModifiable wrapped;
 
 	public ItemHandlerWrapper(IItemHandlerModifiable wrapped) {
 		this.wrapped = wrapped;
