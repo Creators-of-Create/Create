@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.lib.mixin.common.accessor.BucketItemAccessor;
 import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
@@ -31,12 +32,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
@@ -64,6 +71,19 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 						.withItemIngredients(potion)
 						.withFluidOutputs(fluidFromPotionItem)
 						.withSingleItemOutput(new ItemStack(Items.GLASS_BOTTLE))
+						.build());
+					return;
+				}
+				if (stack.getItem() instanceof BucketItem bucketItem && !(bucketItem instanceof MobBucketItem)) {
+					Fluid bucketFluid = ((BucketItemAccessor)bucketItem).create$getContent();
+					if (bucketFluid.isSame(Fluids.EMPTY))
+						return;
+					FluidStack fluidFromBucketItem = new FluidStack(FluidVariant.of(bucketFluid), FluidConstants.BUCKET);
+					Ingredient bucket = Ingredient.of(stack);
+					recipes.add(new ProcessingRecipeBuilder<>(EmptyingRecipe::new, Create.asResource("buckets"))
+						.withItemIngredients(bucket)
+						.withFluidOutputs(fluidFromBucketItem)
+						.withSingleItemOutput(new ItemStack(Items.BUCKET))
 						.build());
 					return;
 				}
