@@ -76,7 +76,6 @@ public class FluidStorageHandler implements IFluidHandler {
 		if (stack.isEmpty())
 			return FluidStack.EMPTY;
 		try (Transaction t = Transaction.openOuter()) {
-			int index = 0;
 			long extracted = storage.extract(stack.getType(), stack.getAmount(), t);
 			if (!sim) {
 				t.commit();

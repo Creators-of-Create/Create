@@ -124,6 +124,7 @@ public class FluidTank implements IFluidHandler {
 
 	@Override
 	public FluidStack drain(FluidStack stack, boolean sim) {
+		if (stack.isEmpty() || !stack.isFluidEqual(fluid)) return FluidStack.EMPTY;
 		return drain(stack.getAmount(), sim);
 	}
 
