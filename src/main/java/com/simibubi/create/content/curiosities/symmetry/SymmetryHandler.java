@@ -71,6 +71,9 @@ public class SymmetryHandler {
 			.isClientSide())
 			return;
 
+		if (player.isSpectator())
+			return;
+
 //		Player player = event.getPlayer();
 		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {

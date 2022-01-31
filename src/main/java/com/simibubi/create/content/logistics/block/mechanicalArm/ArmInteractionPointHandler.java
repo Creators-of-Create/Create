@@ -77,6 +77,8 @@ public class ArmInteractionPointHandler {
 			return InteractionResult.PASS;
 		if (!world.isClientSide)
 			return InteractionResult.PASS;
+		if (player.isSpectator())
+			return InteractionResult.PASS;
 //		BlockPos pos = event.getPos();
 		if (remove(pos) != null) {
 //			event.setCanceled(true);
