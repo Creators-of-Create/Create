@@ -3,7 +3,6 @@ package com.simibubi.create.compat.rei.category;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -31,6 +30,7 @@ import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -45,67 +45,65 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		setCategoryId("spout_filling");
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	public static List<FillingRecipe> getRecipes() {
 		List<FillingRecipe> recipes = new ArrayList<>();
 
 		EntryRegistry.getInstance().getEntryStacks()
 				.filter(stack -> Objects.equals(stack.getType(), VanillaEntryTypes.ITEM))
 				.<EntryStack<ItemStack>>map(EntryStack::cast)
-				.collect(Collectors.toList())
-			.stream()
-			.forEach(entryStack -> {
-				ItemStack stack = entryStack.getValue();
-				if (stack.getItem() instanceof PotionItem) {
-					FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-					Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
-					recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
-						.withItemIngredients(bottle)
-						.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
-						.withSingleItemOutput(stack)
-						.build());
-					return;
-				}
+				.toList()
+				.forEach(entryStack -> {
+					ItemStack stack = entryStack.getValue();
+					if (stack.getItem() instanceof PotionItem) {
+						FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
+						Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
+						recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
+								.withItemIngredients(bottle)
+								.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
+								.withSingleItemOutput(stack)
+								.build());
+						return;
+					}
 
-				LazyOptional<IFluidHandlerItem> capability =
-					TransferUtil.getFluidHandlerItem(stack);
-				if (!capability.isPresent())
-					return;
+					LazyOptional<IFluidHandlerItem> capability =
+							TransferUtil.getFluidHandlerItem(stack);
+					if (!capability.isPresent())
+						return;
 
-				EntryRegistry.getInstance().getEntryStacks()
-						.filter(stack1 -> Objects.equals(stack1.getType(), VanillaEntryTypes.FLUID))
-						.<EntryStack<dev.architectury.fluid.FluidStack>>map(EntryStack::cast)
-						.collect(Collectors.toList())
-					.stream()
-					.forEach(entryStack1 -> {
-						dev.architectury.fluid.FluidStack forgienFluidStack = entryStack1.getValue();
-						FluidStack fluidStack = new FluidStack(forgienFluidStack.getFluid(), forgienFluidStack.getAmount(), forgienFluidStack.getTag());
-						ItemStack copy = stack.copy();
-						TransferUtil.getFluidHandlerItem(copy)
-							.ifPresent(fhi -> {
-								if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
-									return;
-								FluidStack fluidCopy = fluidStack.copy();
-								fluidCopy.setAmount(1000);
-								fhi.fill(fluidCopy, false);
-								ItemStack container = fhi.getContainer();
-								if (container.sameItem(copy))
-									return;
-								if (container.isEmpty())
-									return;
+					EntryRegistry.getInstance().getEntryStacks()
+							.filter(stack1 -> Objects.equals(stack1.getType(), VanillaEntryTypes.FLUID))
+							.<EntryStack<dev.architectury.fluid.FluidStack>>map(EntryStack::cast)
+							.toList()
+							.forEach(entryStack1 -> {
+								FluidStack fluidStack = new FluidStack(entryStack1.getValue());
+								ItemStack copy = stack.copy();
+								TransferUtil.getFluidHandlerItem(copy)
+										.ifPresent(fhi -> {
+											if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
+												return;
+											FluidStack fluidCopy = fluidStack.copy();
+											fluidCopy.setAmount(FluidConstants.BUCKET);
+											fhi.fill(fluidCopy, false);
+											ItemStack container = fhi.getContainer();
+											if (container.sameItem(copy))
+												return;
+											if (container.isEmpty())
+												return;
 
-								Ingredient bucket = Ingredient.of(stack);
-								ResourceLocation itemName = Registry.ITEM.getKey(stack.getItem());
-								ResourceLocation fluidName = Registry.FLUID.getKey(fluidCopy.getFluid());
-								recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new,
-									Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
-										+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
-											.withItemIngredients(bucket)
-											.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
-											.withSingleItemOutput(container)
-											.build());
+											Ingredient bucket = Ingredient.of(stack);
+											ResourceLocation itemName = Registry.ITEM.getKey(stack.getItem());
+											ResourceLocation fluidName = Registry.FLUID.getKey(fluidCopy.getFluid());
+											recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new,
+													Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
+															+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
+													.withItemIngredients(bucket)
+													.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
+													.withSingleItemOutput(container)
+													.build());
+										});
 							});
-					});
-			});
+				});
 
 		return recipes;
 	}

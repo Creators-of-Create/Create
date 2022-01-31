@@ -60,6 +60,7 @@ public class FluidStack {
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
 		this.amount = amount;
+		this.tag = type.copyNbt();
 	}
 
 	public FluidStack(FluidVariant type, long amount, @Nullable CompoundTag tag) {
@@ -67,17 +68,25 @@ public class FluidStack {
 		this.tag = tag;
 	}
 
+	/**
+	 * Avoid this constructor when possible, may result in NBT loss
+	 */
 	public FluidStack(Fluid type, long amount) {
 		this(FluidVariant.of(type instanceof FlowingFluid flowing ? flowing.getSource() : type), amount);
 	}
 
-	public FluidStack(Fluid type, long amount, CompoundTag nbt) {
-		this(type, amount);
+	public FluidStack(Fluid type, long amount, @Nullable CompoundTag nbt) {
+		this(FluidVariant.of(type instanceof FlowingFluid flowing ? flowing.getSource() : type, nbt), amount);
 		this.tag = nbt;
 	}
 
 	public FluidStack(FluidStack copy, long amount) {
 		this(copy.getType(), amount);
+		if (copy.hasTag()) tag = copy.getTag().copy();
+	}
+
+	public FluidStack(dev.architectury.fluid.FluidStack stack) {
+		this(FluidVariant.of(stack.getFluid(), stack.getTag()), stack.getAmount(), stack.getTag());
 	}
 
 	public FluidStack setAmount(long amount) {
