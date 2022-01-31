@@ -68,7 +68,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 				stacks.add(stack);
 			}
 
-			widgets.add(basicSlot(point(origin.x + 17 + xOffset + (i % 3) * 19, origin.y + 51 - (i / 3) * 19 + yOffset)).markInput().entries(EntryIngredients.of(stacks.get(0))));
+			widgets.add(basicSlot(point(origin.x + 17 + xOffset + (i % 3) * 19, origin.y + 51 - (i / 3) * 19 + yOffset)).markInput().entries(EntryIngredients.ofItemStacks(stacks)));
 		}
 
 		int j;
