@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import com.simibubi.create.Create;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
@@ -46,7 +48,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 	private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
 	public static final GameProfile DEPLOYER_PROFILE =
 		new GameProfile(UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
-	public static final FakePlayerBuilder BUILDER = new FakePlayerBuilder(new ResourceLocation("create", "deployer"));
+	public static final FakePlayerBuilder BUILDER = new FakePlayerBuilder(Create.asResource("deployer"));
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
 

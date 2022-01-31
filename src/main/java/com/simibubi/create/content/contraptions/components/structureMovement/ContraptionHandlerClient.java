@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.lib.mixin.client.accessor.KeyMappingAccessor;
 
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
@@ -65,6 +66,9 @@ public class ContraptionHandlerClient {
 	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(int button, int action, int mods) {
 		Minecraft mc = Minecraft.getInstance();
 
+		if (Minecraft.getInstance().screen != null) // this is the only input event that doesn't check this?
+			return InteractionResult.PASS;
+
 		if (action != 1) // 1 -> press
 			return InteractionResult.PASS;
 		int useKey = ((KeyMappingAccessor) mc.options.keyUse).create$getKey().getValue();
@@ -84,7 +88,7 @@ public class ContraptionHandlerClient {
 //			return InteractionResult.PASS;
 		Vec3 origin = RaycastHelper.getTraceOrigin(player);
 
-		double reach = mc.gameMode.getPickRange();
+		double reach = ReachEntityAttributes.getReachDistance(player, mc.gameMode.getPickRange());
 		if (mc.hitResult != null && mc.hitResult.getLocation() != null)
 			reach = Math.min(mc.hitResult.getLocation()
 				.distanceTo(origin), reach);
