@@ -74,9 +74,9 @@ public class AllFluids {
 			.onRegisterAfter(Item.class, flowing -> {
 				Fluid tea = flowing.getSource();
 				FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
-						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(tea), FluidConstants.BUCKET / 10));
+						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(tea), FluidConstants.BOTTLE));
 				FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
-						new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(AllItems.BUILDERS_TEA.get()), tea, FluidConstants.BUCKET / 10));
+						new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(AllItems.BUILDERS_TEA.get()), tea, FluidConstants.BOTTLE));
 
 				// evil. why do we need this like this only here.
 				EnvExecutor.runWhenOn(EnvType.CLIENT, new Supplier<Runnable>() {

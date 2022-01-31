@@ -6,14 +6,14 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
+import com.simibubi.create.foundation.block.ItemUseOverrides;
+import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 import com.simibubi.create.lib.event.EntityReadExtraDataCallback;
 import com.simibubi.create.lib.event.ProjectileImpactCallback;
 
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-
-import net.minecraft.server.packs.PackType;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +41,6 @@ import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
-import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -264,6 +263,9 @@ public class CommonEvents {
 		EntityReadExtraDataCallback.EVENT.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
 		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
+		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
+		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 	}
 
 }

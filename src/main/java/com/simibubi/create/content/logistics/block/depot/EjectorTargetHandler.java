@@ -68,6 +68,8 @@ public class EjectorTargetHandler {
 			return InteractionResult.PASS;
 		if (!world.isClientSide)
 			return InteractionResult.PASS;
+		if (player.isSpectator())
+			return InteractionResult.PASS;
 		if (!player
 			.isShiftKeyDown())
 			return InteractionResult.PASS;

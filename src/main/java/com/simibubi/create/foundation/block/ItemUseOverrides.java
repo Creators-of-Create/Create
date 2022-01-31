@@ -29,6 +29,9 @@ public class ItemUseOverrides {
 		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
 
+		if (player.isSpectator())
+			return InteractionResult.PASS;
+
 		BlockPos pos = traceResult.getBlockPos();
 
 		BlockState state = world
