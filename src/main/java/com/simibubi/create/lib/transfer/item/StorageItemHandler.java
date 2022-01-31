@@ -6,19 +6,20 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.Iterators;
-
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 /**
  * Wraps an IItemHandler in a Storage, for use outside Create
  */
-@SuppressWarnings({"UnstableApiUsage"})
+@SuppressWarnings({"UnstableApiUsage", "ClassCanBeRecord"})
 public class StorageItemHandler implements Storage<ItemVariant> {
+	@Nonnull
 	protected final IItemHandler handler;
 
 	public StorageItemHandler(@Nullable IItemHandler handler) {
@@ -29,6 +30,7 @@ public class StorageItemHandler implements Storage<ItemVariant> {
 		}
 	}
 
+	@Nonnull
 	public IItemHandler getHandler() {
 		return handler;
 	}
@@ -64,7 +66,7 @@ public class StorageItemHandler implements Storage<ItemVariant> {
 		for (int i = 0; i < slots; i++) {
 			views.add(new SlotStorageView(i, handler));
 		}
-		return Iterators.forArray((StorageView<ItemVariant>[]) views.toArray());
+		return views.iterator();
 	}
 
 	@Override
