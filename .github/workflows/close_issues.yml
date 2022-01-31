@@ -1,8 +1,5 @@
 name: "Close Issues"
-on:
-    schedule:
-        - cron: '0 */12 * * *'
-    workflow_dispatch:
+on: [ workflow_dispatch]
 
 jobs:
     close:
