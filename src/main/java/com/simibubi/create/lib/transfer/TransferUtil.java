@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
@@ -181,6 +182,7 @@ public class TransferUtil {
 
 	@Nullable
 	public static Storage<ItemVariant> getItemStorageForBE(BlockEntity be, Direction side) {
+		if (be instanceof ChuteTileEntity && side == Direction.DOWN) return null; // special case for #114
 		if (be instanceof ItemTransferable transferable) {
 			IItemHandler handler = transferable.getItemHandler(side);
 			return handler == null ? null : new StorageItemHandler(handler);
