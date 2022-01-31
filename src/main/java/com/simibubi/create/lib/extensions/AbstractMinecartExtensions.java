@@ -18,5 +18,5 @@ public interface AbstractMinecartExtensions {
 
 	MinecartController create$getController();
 
-	void setCapabilityController(CapabilityMinecartController capability);
+	void create$setCapabilityController(CapabilityMinecartController capability);
 }

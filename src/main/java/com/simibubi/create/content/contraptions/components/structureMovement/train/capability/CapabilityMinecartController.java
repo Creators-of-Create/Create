@@ -204,7 +204,7 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 	public static void attach(AbstractMinecart entity) {
 		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecart) entity);
 //		ResourceLocation id = Create.asResource("minecart_controller");
-		((AbstractMinecartExtensions) entity).setCapabilityController(capability);
+		((AbstractMinecartExtensions) entity).create$setCapabilityController(capability);
 //		((AbstractMinecartExtensions) entity).addListener((cart) -> { // fabric: handled via AbstractMinecartMixin
 //			if (capability.cap.isPresent())
 //				capability.cap.invalidate();

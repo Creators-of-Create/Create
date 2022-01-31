@@ -304,7 +304,6 @@ public class MinecartController implements NBTSerializable {
 			.ifPresent(sd -> compoundNBT.put(internal ? "InternalStallData" : "StallData", sd.serialize())));
 		couplings.forEachWithContext((opt, main) -> opt
 			.ifPresent(cd -> compoundNBT.put(main ? "MainCoupling" : "ConnectedCoupling", cd.serialize())));
-
 		return compoundNBT;
 	}
 

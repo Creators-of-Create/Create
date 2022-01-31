@@ -1,8 +1,12 @@
 package com.simibubi.create.lib.mixin.common;
 
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 import com.simibubi.create.lib.util.NBTSerializable;
 
 import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 @Mixin(AbstractMinecart.class)
-public abstract class AbstractMinecartMixin extends Entity implements AbstractMinecartExtensions, NBTSerializable {
+public abstract class AbstractMinecartMixin extends Entity implements AbstractMinecartExtensions, ExtraSpawnDataEntity, NBTSerializable {
 
 	public CapabilityMinecartController create$controllerCap = null;
 	public boolean create$canUseRail = true;
@@ -92,7 +96,7 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 	}
 
 	@Override
-	public void setCapabilityController(CapabilityMinecartController capability) {
+	public void create$setCapabilityController(CapabilityMinecartController capability) {
 		create$controllerCap = capability;
 	}
 
@@ -101,5 +105,15 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 		super.remove(reason);
 		CapabilityMinecartController.onCartRemoved(getLevel(), (AbstractMinecart) (Object) this);
 		create$controllerCap.cap.invalidate();
+	}
+
+	@Override
+	public void readSpawnData(FriendlyByteBuf buf) {
+		create$controllerCap.create$deserializeNBT(buf.readNbt());
+	}
+
+	@Override
+	public void writeSpawnData(FriendlyByteBuf buf) {
+		buf.writeNbt(create$controllerCap.create$serializeNBT());
 	}
 }
