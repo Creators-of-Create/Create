@@ -74,19 +74,6 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 						.build());
 					return;
 				}
-				if (stack.getItem() instanceof BucketItem bucketItem && !(bucketItem instanceof MobBucketItem)) {
-					Fluid bucketFluid = ((BucketItemAccessor)bucketItem).create$getContent();
-					if (bucketFluid.isSame(Fluids.EMPTY))
-						return;
-					FluidStack fluidFromBucketItem = new FluidStack(FluidVariant.of(bucketFluid), FluidConstants.BUCKET);
-					Ingredient bucket = Ingredient.of(stack);
-					recipes.add(new ProcessingRecipeBuilder<>(EmptyingRecipe::new, Create.asResource("buckets"))
-						.withItemIngredients(bucket)
-						.withFluidOutputs(fluidFromBucketItem)
-						.withSingleItemOutput(new ItemStack(Items.BUCKET))
-						.build());
-					return;
-				}
 
 				LazyOptional<IFluidHandlerItem> capability =
 					TransferUtil.getFluidHandlerItem(stack);
@@ -96,7 +83,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				ItemStack copy = stack.copy();
 				capability = TransferUtil.getFluidHandlerItem(copy);
 				IFluidHandlerItem handler = capability.orElse(null);
-				FluidStack extracted = handler.drain(1000, false);
+				FluidStack extracted = handler.drain(FluidConstants.BUCKET, false);
 				ItemStack result = handler.getContainer();
 				if (extracted.isEmpty())
 					return;
