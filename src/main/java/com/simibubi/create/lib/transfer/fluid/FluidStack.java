@@ -85,10 +85,6 @@ public class FluidStack {
 		if (copy.hasTag()) tag = copy.getTag().copy();
 	}
 
-	public FluidStack(dev.architectury.fluid.FluidStack stack) {
-		this(FluidVariant.of(stack.getFluid(), stack.getTag()), stack.getAmount(), stack.getTag());
-	}
-
 	public FluidStack setAmount(long amount) {
 		this.amount = amount;
 		return this;

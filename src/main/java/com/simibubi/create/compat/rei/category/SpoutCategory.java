@@ -76,7 +76,8 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 							.<EntryStack<dev.architectury.fluid.FluidStack>>map(EntryStack::cast)
 							.toList()
 							.forEach(entryStack1 -> {
-								FluidStack fluidStack = new FluidStack(entryStack1.getValue());
+								dev.architectury.fluid.FluidStack archStack = entryStack1.getValue();
+								FluidStack fluidStack = new FluidStack(archStack.getFluid(), archStack.getAmount(), archStack.getTag());
 								ItemStack copy = stack.copy();
 								TransferUtil.getFluidHandlerItem(copy)
 										.ifPresent(fhi -> {
