@@ -1,0 +1,12 @@
+{
+	"loader": "forge:obj",
+	"flip-v": true,
+	"model": "create:models/block/track/bogey/kryppers_axle.obj",
+	"textures": {
+		"dark_iron": "create:block/bogey/dark_iron",
+		"wheels": "create:block/bogey/wheels",
+		"bogey": "create:block/bogey/bogey",
+		"shaft": "create:block/axis",
+		"shaft_end": "create:block/axis_top"
+	}
+}

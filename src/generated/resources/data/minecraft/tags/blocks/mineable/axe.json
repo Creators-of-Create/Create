@@ -96,6 +96,7 @@
     "create:flywheel",
     "create:rotation_speed_controller",
     "create:mechanical_arm",
+    "create:track_station",
     "create:content_observer",
     "create:stockpile_switch",
     "create:creative_crate",

@@ -167,6 +167,12 @@ import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileE
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
+import com.simibubi.create.content.logistics.trains.IBogeyTileEntityRenderer;
+import com.simibubi.create.content.logistics.trains.management.StationRenderer;
+import com.simibubi.create.content.logistics.trains.management.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
+import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
@@ -720,6 +726,24 @@ public class AllTileEntities {
 		.instance(() -> ToolBoxInstance::new, false)
 		.validBlocks(AllBlocks.TOOLBOXES.toArray())
 		.renderer(() -> ToolboxRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<TrackTileEntity> TRACK = Create.registrate()
+		.tileEntity("track", TrackTileEntity::new)
+		.renderer(() -> TrackRenderer::new)
+		.validBlocks(AllBlocks.TRACK)
+		.register();
+	
+	public static final BlockEntityEntry<StandardBogeyTileEntity> BOGEY = Create.registrate()
+		.tileEntity("bogey", StandardBogeyTileEntity::new)
+		.renderer(() -> IBogeyTileEntityRenderer::new)
+		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
+		.register();
+	
+	public static final BlockEntityEntry<StationTileEntity> TRACK_STATION = Create.registrate()
+		.tileEntity("track_station", StationTileEntity::new)
+		.renderer(() -> StationRenderer::new)
+		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
 
 	public static void register() {}

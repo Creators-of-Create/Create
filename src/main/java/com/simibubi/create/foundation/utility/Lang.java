@@ -27,7 +27,7 @@ public class Lang {
 	public static List<Component> translatedOptions(String prefix, String... keys) {
 		List<Component> result = new ArrayList<>(keys.length);
 		for (String key : keys)
-			result.add(translate(prefix + "." + key));
+			result.add(translate((prefix != null ? prefix + "." : "") + key));
 
 		return result;
 	}

@@ -104,6 +104,8 @@
     "create:furnace_engine",
     "create:rotation_speed_controller",
     "create:mechanical_arm",
+    "create:track",
+    "create:track_station",
     "create:item_vault",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",

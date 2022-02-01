@@ -58,6 +58,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
@@ -161,6 +163,13 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
+import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.management.StationBlock;
+import com.simibubi.create.content.logistics.trains.management.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockStateGenerator;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
@@ -304,14 +313,14 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.register();
 
-	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL =
-		REGISTRATE.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
-			.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
-			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
-				Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
-					AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
-			.transform(axeOrPickaxe())
-			.register();
+	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL = REGISTRATE
+		.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
+		.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
+			Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
+				AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
+		.transform(axeOrPickaxe())
+		.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
 		REGISTRATE.block("brass_encased_cogwheel", p -> EncasedCogwheelBlock.brass(false, p))
@@ -1244,6 +1253,53 @@ public class AllBlocks {
 				.build()))
 		.transform(BlockStressDefaults.setImpact(2.0))
 		.item(ArmItem::new)
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackBlock::new)
+		.initialProperties(() -> Blocks.RAIL)
+		.addLayer(() -> RenderType::cutoutMipped)
+		.transform(pickaxeOnly())
+		.blockstate(new TrackBlockStateGenerator()::generate)
+		.item(TrackBlockItem::new)
+		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
+		.build()
+		.register();
+
+	public static final BlockEntry<StationBlock> TRACK_STATION = REGISTRATE.block("track_station", StationBlock::new)
+		.initialProperties(SharedProperties::wooden)
+		.transform(axeOrPickaxe())
+		.blockstate((c, p) -> p.horizontalBlock(c.get(),
+			s -> s.getValue(StationBlock.ASSEMBLING) ? AssetLookup.partialBaseModel(c, p, "assembling")
+				: AssetLookup.partialBaseModel(c, p)))
+		.item(TrackTargetingBlockItem::new)
+		.transform(customItemModel("_", "block"))
+		.register();
+
+	public static final BlockEntry<StandardBogeyBlock> SMALL_BOGEY =
+		REGISTRATE.block("small_bogey", p -> new StandardBogeyBlock(p, false))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.noOcclusion())
+			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
+				.getExistingFile(p.modLoc("block/track/bogey/top"))))
+			.onRegister(b -> IBogeyBlock.register(b.getRegistryName()))
+			.register();
+
+	public static final BlockEntry<StandardBogeyBlock> LARGE_BOGEY =
+		REGISTRATE.block("large_bogey", p -> new StandardBogeyBlock(p, true))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.noOcclusion())
+			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
+				.getExistingFile(p.modLoc("block/track/bogey/top"))))
+			.onRegister(b -> IBogeyBlock.register(b.getRegistryName()))
+			.register();
+
+	public static final BlockEntry<ControlsBlock> CONTROLS = REGISTRATE.block("controls", ControlsBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> p.horizontalBlock(c.get(),
+			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
+		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))
+		.item()
 		.transform(customItemModel())
 		.register();
 

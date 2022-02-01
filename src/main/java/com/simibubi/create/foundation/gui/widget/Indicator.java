@@ -20,6 +20,8 @@ public class Indicator extends AbstractSimiWidget {
 
 	@Override
 	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks ) {
+		if (!visible)
+			return;
 		AllGuiTextures toDraw;
 		switch (state) {
 			case ON: toDraw = AllGuiTextures.INDICATOR_WHITE; break;

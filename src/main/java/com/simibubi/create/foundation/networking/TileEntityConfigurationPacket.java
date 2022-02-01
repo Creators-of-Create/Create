@@ -40,8 +40,9 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 				if (player == null)
 					return;
 				Level world = player.level;
-
 				if (world == null || !world.isLoaded(pos))
+					return;
+				if (!pos.closerThan(player.blockPosition(), 20))
 					return;
 				BlockEntity tileEntity = world.getBlockEntity(pos);
 				if (tileEntity instanceof SyncedTileEntity) {

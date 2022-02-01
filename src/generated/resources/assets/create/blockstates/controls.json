@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,open=false": {
+      "model": "create:block/controls/block_closed"
+    },
+    "facing=south,open=false": {
+      "model": "create:block/controls/block_closed",
+      "y": 180
+    },
+    "facing=west,open=false": {
+      "model": "create:block/controls/block_closed",
+      "y": 270
+    },
+    "facing=east,open=false": {
+      "model": "create:block/controls/block_closed",
+      "y": 90
+    },
+    "facing=north,open=true": {
+      "model": "create:block/controls/block_open"
+    },
+    "facing=south,open=true": {
+      "model": "create:block/controls/block_open",
+      "y": 180
+    },
+    "facing=west,open=true": {
+      "model": "create:block/controls/block_open",
+      "y": 270
+    },
+    "facing=east,open=true": {
+      "model": "create:block/controls/block_open",
+      "y": 90
+    }
+  }
+}

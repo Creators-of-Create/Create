@@ -32,6 +32,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivit
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
+import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
 import net.minecraft.core.BlockPos;
@@ -340,6 +341,9 @@ public class BlockMovementChecks {
 			return direction == state.getValue(StickerBlock.FACING)
 					&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());
 		}
+		if (block instanceof IBogeyBlock bogey)
+			return bogey.getStickySurfaces(world, pos, state)
+				.contains(direction);
 		return false;
 	}
 

@@ -20,6 +20,9 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 	protected boolean wasHovered = false;
 	protected List<Component> toolTip = new LinkedList<>();
 	protected BiConsumer<Integer, Integer> onClick = (_$, _$$) -> {};
+	
+	public int lockedTooltipX = -1;
+	public int lockedTooltipY = -1;
 
 	protected AbstractSimiWidget(int x, int y) {
 		this(x, y, 16, 16);

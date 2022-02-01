@@ -65,7 +65,7 @@ public class InputEvents {
 				event.setCanceled(true);
 			return;
 		}
-
+		
 		if (event.isUseItem())
 			LinkedControllerClientHandler.deactivateInLectern();
 	}

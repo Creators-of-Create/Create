@@ -32,6 +32,9 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
+import com.simibubi.create.content.logistics.trains.management.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -69,6 +72,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -114,6 +118,7 @@ public class ClientEvents {
 		CreateClient.ZAPPER_RENDER_HANDLER.tick();
 		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
+		CreateClient.RAILWAYS.clientTick();
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -143,11 +148,22 @@ public class ClientEvents {
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
+		TrackTargetingBlockItem.clientTick();
+		TrackPlacement.clientTick();
+	}
+
+	@SubscribeEvent
+	public static void onRenderSelection(DrawSelectionEvent event) {
 	}
 
 	@SubscribeEvent
 	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
 		CreateClient.checkGraphicsFanciness();
+	}
+	
+	@SubscribeEvent
+	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+		CreateClient.RAILWAYS.cleanUp();
 	}
 
 	@SubscribeEvent
@@ -180,7 +196,9 @@ public class ClientEvents {
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
+		TrackTargetingBlockItem.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
+		CarriageCouplingRenderer.renderAll(ms, buffer);
 		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
 		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
@@ -252,9 +270,9 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos)) 
-           return;
-        
+		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+			return;
+
 		Fluid fluid = fluidstate.getType();
 
 		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
@@ -319,7 +337,8 @@ public class ClientEvents {
 
 		@SubscribeEvent
 		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
-			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+			EntityRenderDispatcher dispatcher = Minecraft.getInstance()
+				.getEntityRenderDispatcher();
 			CopperBacktankArmorLayer.registerOnAll(dispatcher);
 		}
 
@@ -329,7 +348,8 @@ public class ClientEvents {
 				.getModContainerById(Create.ID)
 				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
 			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+				() -> new ConfigGuiHandler.ConfigGuiFactory(
+					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 		}
 
 	}

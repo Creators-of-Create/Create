@@ -1,0 +1,9 @@
+{
+	"loader": "forge:obj",
+	"flip-v": true,
+	"model": "create:models/block/track/neg_diag.obj",
+	"textures": {
+		"0": "create:block/track",
+		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+	}
+}

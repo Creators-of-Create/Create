@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -125,8 +126,10 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : renderables) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
+				int ttx = simiWidget.lockedTooltipX;
+				int tty = simiWidget.lockedTooltipY;
 				if (!tooltip.isEmpty())
-					renderComponentTooltip(ms, tooltip, mouseX, mouseY);
+					renderComponentTooltip(ms, tooltip, ttx == -1 ? mouseX : ttx, tty == -1 ? mouseY : tty);
 			}
 		}
 	}
@@ -152,6 +155,15 @@ public abstract class AbstractSimiScreen extends Screen {
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public GuiEventListener getFocused() {
+		GuiEventListener focused = super.getFocused();
+		if (focused instanceof AbstractWidget && !((AbstractWidget) focused).isFocused())
+			focused = null;
+		setFocused(focused);
+		return focused;
 	}
 
 }

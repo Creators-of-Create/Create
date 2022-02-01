@@ -14,6 +14,8 @@ import com.simibubi.create.content.curiosities.tools.BlueprintEntity;
 import com.simibubi.create.content.curiosities.tools.BlueprintRenderer;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileEntity;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderer;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntityRenderer;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -37,6 +39,9 @@ public class AllEntityTypes {
 			20, 40, false);
 	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
 		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false);
+	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
+		contraption("carriage_contraption", CarriageContraptionEntity::new,
+			() -> CarriageContraptionEntityRenderer::new, 5, 100, true);
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 		register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new, MobCategory.MISC, 10,
@@ -44,8 +49,8 @@ public class AllEntityTypes {
 				.register();
 
 	public static final EntityEntry<BlueprintEntity> CRAFTING_BLUEPRINT =
-		register("crafting_blueprint", BlueprintEntity::new, () -> BlueprintRenderer::new, MobCategory.MISC,
-			10, Integer.MAX_VALUE, false, true, BlueprintEntity::build).register();
+		register("crafting_blueprint", BlueprintEntity::new, () -> BlueprintRenderer::new, MobCategory.MISC, 10,
+			Integer.MAX_VALUE, false, true, BlueprintEntity::build).register();
 
 	public static final EntityEntry<PotatoProjectileEntity> POTATO_PROJECTILE =
 		register("potato_projectile", PotatoProjectileEntity::new, () -> PotatoProjectileRenderer::new,
@@ -57,16 +62,16 @@ public class AllEntityTypes {
 	//
 
 	private static <T extends Entity> EntityEntry<T> contraption(String name, EntityFactory<T> factory,
-			NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
-			int range, int updateFrequency, boolean sendVelocity) {
+		NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer, int range,
+		int updateFrequency, boolean sendVelocity) {
 		return register(name, factory, renderer, MobCategory.MISC, range, updateFrequency, sendVelocity, true,
 			AbstractContraptionEntity::build).register();
 	}
 
 	private static <T extends Entity> CreateEntityBuilder<T, ?> register(String name, EntityFactory<T> factory,
-			NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
-			MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
-			NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
+		NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
+		MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
+		NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
 		return (CreateEntityBuilder<T, ?>) Create.registrate()
 			.entity(id, factory, group)

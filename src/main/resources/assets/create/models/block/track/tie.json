@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/track",
+		"particle": "create:block/track"
+	},
+	"elements": [
+		{
+			"name": "cube6",
+			"from": [-13.95, -3.05, 2],
+			"to": [29.95, 1.05, 6],
+			"faces": {
+				"north": {"uv": [0, 0.625, 4.75, 1.125], "texture": "#0"},
+				"east": {"uv": [4.875, 0.625, 5.375, 1.125], "texture": "#0"},
+				"south": {"uv": [0, 0.625, 4.75, 1.125], "texture": "#0"},
+				"west": {"uv": [4.875, 0.625, 5.375, 1.125], "texture": "#0"},
+				"up": {"uv": [0, 0, 4.75, 0.5], "texture": "#0"},
+				"down": {"uv": [0, 1.25, 4.75, 1.75], "texture": "#0"}
+			}
+		}
+	]
+}

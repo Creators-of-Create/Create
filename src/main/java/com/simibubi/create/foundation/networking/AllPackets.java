@@ -43,6 +43,10 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
+import com.simibubi.create.content.logistics.trains.TrackGraphSync.RailGraphSyncPacket;
+import com.simibubi.create.content.logistics.trains.management.StationEditPacket;
+import com.simibubi.create.content.logistics.trains.management.TrainEditPacket;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEditPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
@@ -102,6 +106,9 @@ public enum AllPackets {
 	CONFIGURE_WORLDSHAPER(ConfigureWorldshaperPacket.class, ConfigureWorldshaperPacket::new, PLAY_TO_SERVER),
 	TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket::new, PLAY_TO_SERVER),
 	TOOLBOX_DISPOSE_ALL(ToolboxDisposeAllPacket.class, ToolboxDisposeAllPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SCHEDULE(ScheduleEditPacket.class, ScheduleEditPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_STATION(StationEditPacket.class, StationEditPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_TRAIN(TrainEditPacket.class, TrainEditPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
@@ -124,6 +131,7 @@ public enum AllPackets {
 	SOUL_PULSE(SoulPulseEffectPacket.class, SoulPulseEffectPacket::new, PLAY_TO_CLIENT),
 	PERSISTENT_DATA(ISyncPersistentData.PersistentDataPacket.class, ISyncPersistentData.PersistentDataPacket::new, PLAY_TO_CLIENT),
 	SYNC_POTATO_PROJECTILE_TYPES(PotatoProjectileTypeManager.SyncPacket.class, PotatoProjectileTypeManager.SyncPacket::new, PLAY_TO_CLIENT),
+	SYNC_RAIL_GRAPH(RailGraphSyncPacket.class, RailGraphSyncPacket::new, PLAY_TO_CLIENT),
 
 	;
 

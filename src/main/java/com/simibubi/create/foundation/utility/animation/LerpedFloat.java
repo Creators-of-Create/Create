@@ -79,7 +79,7 @@ public class LerpedFloat {
 	}
 
 	public float getValue(float partialTicks) {
-		return Mth.lerp(partialTicks, previousValue, value);
+		return interpolater.interpolate(partialTicks, previousValue, value);
 	}
 
 	public boolean settled() {

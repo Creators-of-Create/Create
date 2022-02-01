@@ -92,6 +92,7 @@ public class AllIcons implements ScreenElement {
 		I_TUNNEL_RANDOMIZE = next(),
 		I_TUNNEL_SYNCHRONIZE = next(),
 		I_TOOLBOX = next(),
+		I_VIEW_SCHEDULE = next(),
 
 		I_TOOL_MOVE_XZ = newRow(),
 		I_TOOL_MOVE_Y = next(),

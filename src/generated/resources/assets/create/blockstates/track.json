@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "shape=none,turn=false": {
+      "model": "minecraft:block/air"
+    },
+    "shape=zo,turn=false": {
+      "model": "create:block/track/z_ortho"
+    },
+    "shape=xo,turn=false": {
+      "model": "create:block/track/x_ortho"
+    },
+    "shape=pd,turn=false": {
+      "model": "create:block/track/pos_diag"
+    },
+    "shape=nd,turn=false": {
+      "model": "create:block/track/neg_diag"
+    },
+    "shape=an,turn=false": {
+      "model": "create:block/track/ascending",
+      "y": 180
+    },
+    "shape=as,turn=false": {
+      "model": "create:block/track/ascending"
+    },
+    "shape=ae,turn=false": {
+      "model": "create:block/track/ascending",
+      "y": 270
+    },
+    "shape=aw,turn=false": {
+      "model": "create:block/track/ascending",
+      "y": 90
+    },
+    "shape=none,turn=true": {
+      "model": "minecraft:block/air"
+    },
+    "shape=zo,turn=true": {
+      "model": "create:block/track/z_ortho"
+    },
+    "shape=xo,turn=true": {
+      "model": "create:block/track/x_ortho"
+    },
+    "shape=pd,turn=true": {
+      "model": "create:block/track/pos_diag"
+    },
+    "shape=nd,turn=true": {
+      "model": "create:block/track/neg_diag"
+    },
+    "shape=an,turn=true": {
+      "model": "create:block/track/ascending",
+      "y": 180
+    },
+    "shape=as,turn=true": {
+      "model": "create:block/track/ascending"
+    },
+    "shape=ae,turn=true": {
+      "model": "create:block/track/ascending",
+      "y": 270
+    },
+    "shape=aw,turn=true": {
+      "model": "create:block/track/ascending",
+      "y": 90
+    }
+  }
+}

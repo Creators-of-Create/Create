@@ -13,6 +13,7 @@ import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManag
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
+import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -41,6 +42,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -76,6 +78,7 @@ public class CommonEvents {
 	public static void playerLoggedIn(PlayerLoggedInEvent event) {
 		Player player = event.getPlayer();
 		ToolboxHandler.playerLogin(player);
+		Create.RAILWAYS.playerLogin(player);
 	}
 
 	@SubscribeEvent
@@ -110,6 +113,7 @@ public class CommonEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 		LinkedControllerServerHandler.tick(world);
+		Create.RAILWAYS.tick(world);
 	}
 
 	@SubscribeEvent
@@ -140,6 +144,11 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
+	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
+		CarriageEntityHandler.onEntityEnterSection(event);
+	}
+	
+	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotionMixingRecipeManager.LISTENER);
@@ -167,6 +176,7 @@ public class CommonEvents {
 		LevelAccessor world = event.getWorld();
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
+		Create.RAILWAYS.levelLoaded(world);
 	}
 
 	@SubscribeEvent
@@ -175,6 +185,7 @@ public class CommonEvents {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
 		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
+		Create.RAILWAYS.levelUnloaded(world);
 	}
 
 	@SubscribeEvent

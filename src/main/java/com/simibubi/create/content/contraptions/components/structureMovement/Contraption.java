@@ -41,6 +41,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
@@ -56,6 +57,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
+import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
@@ -345,6 +347,12 @@ public abstract class Contraption {
 				frontier.add(attached);
 		}
 
+		// Bogeys tend to have sticky sides
+		if (state.getBlock() instanceof IBogeyBlock bogey)
+			for (Direction d : bogey.getStickySurfaces(world, pos, state))
+				if (!visited.contains(pos.relative(d)))
+					frontier.add(pos.relative(d));
+
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			moveBearing(pos, frontier, visited, state);
@@ -603,6 +611,8 @@ public abstract class Contraption {
 		BlockState blockstate = world.getBlockState(pos);
 		if (AllBlocks.REDSTONE_CONTACT.has(blockstate))
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
+		if (AllBlocks.CONTROLS.has(blockstate))
+			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
 			blockstate = blockstate.setValue(ButtonBlock.POWERED, false);
 			world.scheduleTick(pos, blockstate.getBlock(), -1);

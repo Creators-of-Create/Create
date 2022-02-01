@@ -13,14 +13,14 @@ import net.minecraft.network.chat.TextComponent;
 public class SelectionScrollInput extends ScrollInput {
 
 	private final MutableComponent scrollToSelect = Lang.translate("gui.scrollInput.scrollToSelect");
-	protected List<Component> options;
+	protected List<? extends Component> options;
 
 	public SelectionScrollInput(int xIn, int yIn, int widthIn, int heightIn) {
 		super(xIn, yIn, widthIn, heightIn);
 		options = new ArrayList<>();
 	}
 
-	public ScrollInput forOptions(List<Component> options) {
+	public ScrollInput forOptions(List<? extends Component> options) {
 		this.options = options;
 		this.max = options.size();
 		updateTooltip();

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "assembling=false,facing=north": {
+      "model": "create:block/track_station/block"
+    },
+    "assembling=true,facing=north": {
+      "model": "create:block/track_station/block_assembling"
+    },
+    "assembling=false,facing=south": {
+      "model": "create:block/track_station/block",
+      "y": 180
+    },
+    "assembling=true,facing=south": {
+      "model": "create:block/track_station/block_assembling",
+      "y": 180
+    },
+    "assembling=false,facing=west": {
+      "model": "create:block/track_station/block",
+      "y": 270
+    },
+    "assembling=true,facing=west": {
+      "model": "create:block/track_station/block_assembling",
+      "y": 270
+    },
+    "assembling=false,facing=east": {
+      "model": "create:block/track_station/block",
+      "y": 90
+    },
+    "assembling=true,facing=east": {
+      "model": "create:block/track_station/block_assembling",
+      "y": 90
+    }
+  }
+}

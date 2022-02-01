@@ -1,0 +1,38 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/track",
+		"particle": "create:block/track"
+	},
+	"elements": [
+		{
+			"name": "cube2",
+			"from": [-1.6, 0.5, 0],
+			"to": [1.6, 4.5, 8],
+			"faces": {
+				"north": {"uv": [6.5, 7.375, 6.75, 7.875], "texture": "#0"},
+				"east": {"uv": [0.375, 7.375, 1.375, 7.875], "texture": "#0"},
+				"south": {"uv": [6.5, 7.375, 6.75, 7.875], "texture": "#0"},
+				"west": {"uv": [0.375, 7.375, 1.375, 7.875], "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube4",
+			"from": [-2.25, 4.5, 0],
+			"to": [2.25, 4.5, 8],
+			"faces": {
+				"up": {"uv": [3.25, 2.125, 3.75, 3.125], "texture": "#0"},
+				"down": {"uv": [3.25, 2.125, 3.75, 3.125], "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube5",
+			"from": [-2.25, 0.5, 0],
+			"to": [2.25, 0.5, 8],
+			"faces": {
+				"up": {"uv": [3.25, 2.125, 3.75, 3.125], "texture": "#0"},
+				"down": {"uv": [3.25, 2.125, 3.75, 3.125], "texture": "#0"}
+			}
+		}
+	]
+}

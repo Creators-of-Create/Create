@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
@@ -71,6 +72,7 @@ public class Create {
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
+	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
 	public static final Random RANDOM = new Random();
 
@@ -115,8 +117,7 @@ public class Create {
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

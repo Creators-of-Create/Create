@@ -6,11 +6,13 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -103,8 +105,10 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	@Override
 	protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
-		// no-op to prevent screen- and inventory-title from being rendered at incorrect location
-		// could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper values instead
+		// no-op to prevent screen- and inventory-title from being rendered at incorrect
+		// location
+		// could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper
+		// values instead
 	}
 
 	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -112,8 +116,10 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 		for (Widget widget : renderables) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
+				int ttx = simiWidget.lockedTooltipX;
+				int tty = simiWidget.lockedTooltipY;
 				if (!tooltip.isEmpty())
-					renderComponentTooltip(matrixStack, tooltip, mouseX, mouseY);
+					renderComponentTooltip(matrixStack, tooltip, ttx == -1 ? mouseX : ttx, tty == -1 ? mouseY : tty);
 			}
 		}
 	}
@@ -127,10 +133,28 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 		font.draw(ms, playerInventoryTitle, x + 8, y + 6, 0x404040);
 	}
 
+	@Override
+	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
+		if (getFocused() != null && this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey))
+			return false;
+		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+	}
+	
+	@Override
+	public GuiEventListener getFocused() {
+		GuiEventListener focused = super.getFocused();
+		if (focused instanceof AbstractWidget && !((AbstractWidget) focused).isFocused())
+			focused = null;
+		setFocused(focused);
+		return focused;
+	}
+
 	/**
 	 * Used for moving JEI out of the way of extra things like block renders.
 	 *
-	 * @return the space that the GUI takes up outside the normal rectangle defined by {@link ContainerScreen}.
+	 * @return the space that the GUI takes up outside the normal rectangle defined
+	 *         by {@link ContainerScreen}.
 	 */
 	public List<Rect2i> getExtraAreas() {
 		return Collections.emptyList();
@@ -144,7 +168,8 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	@Deprecated
 	protected void debugExtraAreas(PoseStack matrixStack) {
 		for (Rect2i area : getExtraAreas()) {
-			fill(matrixStack, area.getX() + area.getWidth(), area.getY() + area.getHeight(), area.getX(), area.getY(), 0xD3D3D3D3);
+			fill(matrixStack, area.getX() + area.getWidth(), area.getY() + area.getHeight(), area.getX(), area.getY(),
+				0xD3D3D3D3);
 		}
 	}
 

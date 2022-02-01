@@ -17,8 +17,7 @@ public class AllBlockPartials {
 
 	public static final PartialModel
 
-		SCHEMATICANNON_CONNECTOR = block("schematicannon/connector"),
-		SCHEMATICANNON_PIPE = block("schematicannon/pipe"),
+	SCHEMATICANNON_CONNECTOR = block("schematicannon/connector"), SCHEMATICANNON_PIPE = block("schematicannon/pipe"),
 
 		SHAFTLESS_COGWHEEL = block("cogwheel_shaftless"), SHAFTLESS_LARGE_COGWHEEL = block("large_cogwheel_shaftless"),
 		COGWHEEL_SHAFT = block("cogwheel_shaft"), SHAFT_HALF = block("shaft_half"),
@@ -31,7 +30,8 @@ public class AllBlockPartials {
 
 		ENCASED_FAN_INNER = block("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
 		MECHANICAL_PRESS_HEAD = block("mechanical_press/head"), MECHANICAL_MIXER_POLE = block("mechanical_mixer/pole"),
-		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"), MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
+		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"),
+		MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
 		MECHANICAL_CRAFTER_ARROW = block("mechanical_crafter/arrow"),
 		MECHANICAL_CRAFTER_BELT_FRAME = block("mechanical_crafter/belt"),
 		MECHANICAL_CRAFTER_BELT = block("mechanical_crafter/belt_animated"),
@@ -45,7 +45,8 @@ public class AllBlockPartials {
 		GAUGE_HEAD_STRESS = block("gauge/stressometer/head"), BEARING_TOP = block("bearing/top"),
 		BEARING_TOP_WOODEN = block("bearing/top_wooden"), DRILL_HEAD = block("mechanical_drill/head"),
 		HARVESTER_BLADE = block("mechanical_harvester/blade"), DEPLOYER_POLE = block("deployer/pole"),
-		DEPLOYER_HAND_POINTING = block("deployer/hand_pointing"), DEPLOYER_HAND_PUNCHING = block("deployer/hand_punching"),
+		DEPLOYER_HAND_POINTING = block("deployer/hand_pointing"),
+		DEPLOYER_HAND_PUNCHING = block("deployer/hand_punching"),
 		DEPLOYER_HAND_HOLDING = block("deployer/hand_holding"), ANALOG_LEVER_HANDLE = block("analog_lever/handle"),
 		ANALOG_LEVER_INDICATOR = block("analog_lever/indicator"), FUNNEL_FLAP = block("funnel/flap"),
 		BELT_FUNNEL_FLAP = block("belt_funnel/flap"), BELT_TUNNEL_FLAP = block("belt_tunnel/flap"),
@@ -109,20 +110,43 @@ public class AllBlockPartials {
 
 		COPPER_BACKTANK_SHAFT = block("copper_backtank/block_shaft_input"),
 		COPPER_BACKTANK_COGS = block("copper_backtank/block_cogs"),
+		
+		TRACK_SEGMENT_LEFT = block("track/segment_left"),
+		TRACK_SEGMENT_RIGHT = block("track/segment_right"),
+		TRACK_TIE = block("track/tie"),
+		
+		TRACK_STATION_OVERLAY = block("track/station_overlay"),
+		TRACK_STATION_OVERLAY_DIAGONAL = block("track/station_overlay_diagonal"),
+		TRACK_STATION_OVERLAY_ASCENDING = block("track/station_overlay_ascending"),
+		TRACK_ASSEMBLY_OVERLAY = block("track/assembly_overlay"),
+		
+		BOGEY_FRAME = block("track/bogey/bogey_frame"),
+		SMALL_BOGEY_WHEELS = block("track/bogey/bogey_wheel"),
+		BOGEY_PIN = block("track/bogey/bogey_drive_wheel_pin"),
+		BOGEY_PISTON = block("track/bogey/bogey_drive_piston"),
+		BOGEY_DRIVE = block("track/bogey/bogey_drive"),
+		LARGE_BOGEY_WHEELS = block("track/bogey/bogey_drive_wheel"),
+		
+		TRAIN_COUPLING_HEAD = block("track/bogey/coupling_head"),
+		TRAIN_COUPLING_CABLE = block("track/bogey/coupling_cable"),
+		
+		TRAIN_CONTROLS_COVER = block("controls/train/cover"),
+		TRAIN_CONTROLS_LEVER = block("controls/train/lever"),
 
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),
 		CRAFTING_BLUEPRINT_3x3 = entity("crafting_blueprint_large"),
-
-		COUPLING_ATTACHMENT = entity("minecart_coupling/attachment"),
-		COUPLING_RING = entity("minecart_coupling/ring"),
+		
+		COUPLING_ATTACHMENT = entity("minecart_coupling/attachment"), COUPLING_RING = entity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = entity("minecart_coupling/connector")
 
 	;
 
 	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
 		new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.class);
-	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES = new EnumMap<>(BlazeBurnerBlock.HeatLevel.class);
+
+	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES =
+		new EnumMap<>(BlazeBurnerBlock.HeatLevel.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 
 	static {
