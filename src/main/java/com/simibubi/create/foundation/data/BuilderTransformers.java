@@ -27,6 +27,8 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
+import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
@@ -63,6 +65,14 @@ public class BuilderTransformers {
 			.build();
 	}
 
+	public static <B extends StandardBogeyBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> bogey() {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.noOcclusion())
+			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
+				.getExistingFile(p.modLoc("block/track/bogey/top"))))
+			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
+	}
+	
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
 		String casing, Supplier<CTSpriteShiftEntry> casingShift) {
 		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get(), false);

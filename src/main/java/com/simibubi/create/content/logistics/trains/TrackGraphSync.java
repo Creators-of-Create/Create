@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -26,6 +27,20 @@ import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.PacketDistributor;
 
 public class TrackGraphSync {
+
+	List<RailGraphSyncPacket> queuedPackets = new ArrayList<>();
+
+	public void serverTick() {
+		finish();
+		if (queuedPackets.isEmpty())
+			return;
+		for (RailGraphSyncPacket packet : queuedPackets) {
+			if (packet.delete || Create.RAILWAYS.trackNetworks.containsKey(packet.graphId)) {
+				AllPackets.channel.send(PacketDistributor.ALL.noArg(), packet);
+			}
+		}
+		queuedPackets.clear();
+	}
 
 	//
 
@@ -64,8 +79,6 @@ public class TrackGraphSync {
 
 	//
 
-	private RailGraphSyncPacket currentPacket;
-
 	public void sendFullGraphTo(TrackGraph graph, ServerPlayer player) {
 		// TODO ensure packet size limit
 
@@ -82,11 +95,13 @@ public class TrackGraphSync {
 		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
+	private RailGraphSyncPacket currentPacket;
+
 	private void flushPacket(@Nullable UUID graphId) {
 		if (currentPacket != null) {
 			if (currentPacket.graphId.equals(graphId))
 				return;
-			AllPackets.channel.send(PacketDistributor.ALL.noArg(), currentPacket);
+			queuedPackets.add(currentPacket);
 			currentPacket = null;
 		}
 
@@ -191,7 +206,7 @@ public class TrackGraphSync {
 					for (int nodeId : removedNodes) {
 						TrackNode node = railGraph.getNode(nodeId);
 						if (node != null)
-							railGraph.removeNode(node.getLocation());
+							railGraph.removeNode(null, node.getLocation());
 					}
 
 					for (Entry<Integer, Pair<TrackNodeLocation, Vec3>> entry : addedNodes.entrySet())

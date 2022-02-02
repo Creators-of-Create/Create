@@ -33,6 +33,8 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.management.StationBlock;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
 import net.minecraft.core.BlockPos;
@@ -228,6 +230,10 @@ public class BlockMovementChecks {
 			return true;
 		if (state.getBlock() instanceof GrindstoneBlock)
 			return true;
+		if (state.getBlock() instanceof ITrackBlock)
+			return false;
+		if (state.getBlock() instanceof StationBlock)
+			return false;
 		return state.getPistonPushReaction() != PushReaction.BLOCK;
 	}
 

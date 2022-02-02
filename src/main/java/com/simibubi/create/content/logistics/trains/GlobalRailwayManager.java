@@ -122,6 +122,8 @@ public class GlobalRailwayManager {
 
 		for (Train train : trains.values())
 			train.tick(level);
+		
+		
 	}
 
 	public void clientTick() {

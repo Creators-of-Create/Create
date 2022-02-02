@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -171,11 +172,16 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	}
 
 	@Override
+	public PushReaction getPistonPushReaction(BlockState pState) {
+		return PushReaction.BLOCK;
+	}
+	
+	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this && pState.setValue(HAS_TURN, true) == pOldState.setValue(HAS_TURN, true))
 			return;
 		LevelTickAccess<Block> blockTicks = pLevel.getBlockTicks();
-		if (!blockTicks.hasScheduledTick(pPos, this))
+		if (!blockTicks.hasScheduledTick(pPos, this)) 
 			pLevel.scheduleTick(pPos, this, 1);
 	}
 

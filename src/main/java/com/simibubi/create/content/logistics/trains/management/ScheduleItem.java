@@ -4,7 +4,9 @@ import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -75,8 +77,16 @@ public class ScheduleItem extends Item implements MenuProvider {
 			return InteractionResult.SUCCESS;
 		CarriageContraptionEntity entity = (CarriageContraptionEntity) rootVehicle;
 		Contraption contraption = entity.getContraption();
-		if (contraption instanceof CarriageContraption cc) 
-			cc.getCarriage().train.runtime.setSchedule(schedule, false);
+		if (contraption instanceof CarriageContraption cc) {
+			Train train = cc.getCarriage().train;
+			if (train == null)
+				return InteractionResult.SUCCESS;
+			if (train.heldForAssembly) {
+				pPlayer.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
+				return InteractionResult.SUCCESS;
+			}
+			train.runtime.setSchedule(schedule, false);
+		}
 		return InteractionResult.SUCCESS;
 	}
 

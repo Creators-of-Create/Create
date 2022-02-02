@@ -108,7 +108,9 @@ public class Navigation {
 
 	public void setDestination(GlobalStation destination) {
 		findPathTo(destination);
-		if (path.isEmpty())
+		if (distanceToDestination == 0)
+			return;
+		if (this.destination == destination)
 			return;
 		train.leave();
 		this.destination = destination;

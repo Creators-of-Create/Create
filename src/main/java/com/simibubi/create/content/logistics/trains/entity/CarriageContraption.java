@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
@@ -41,10 +42,12 @@ public class CarriageContraption extends Contraption {
 	public boolean assemble(Level world, BlockPos pos) throws AssemblyException {
 		if (!searchMovedStructure(world, pos, null))
 			return false;
-		if (blocks.size() == 0)
+		if (blocks.size() <= 1)
 			return false;
-		if (bogeys > 2 || bogeys == 0)
-			throw AssemblyException.invalidBogeyCount();
+		if (bogeys == 0)
+			return false;
+		if (bogeys > 2)
+			throw new AssemblyException(Lang.translate("train_assembly.too_many_bogeys", bogeys));
 		return true;
 	}
 

@@ -163,7 +163,6 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.management.StationBlock;
 import com.simibubi.create.content.logistics.trains.management.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
@@ -1261,6 +1260,7 @@ public class AllBlocks {
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate(new TrackBlockStateGenerator()::generate)
+		.lang("Train Track")
 		.item(TrackBlockItem::new)
 		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
 		.build()
@@ -1272,26 +1272,19 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
 			s -> s.getValue(StationBlock.ASSEMBLING) ? AssetLookup.partialBaseModel(c, p, "assembling")
 				: AssetLookup.partialBaseModel(c, p)))
+		.lang("Train Station")
 		.item(TrackTargetingBlockItem::new)
 		.transform(customItemModel("_", "block"))
 		.register();
 
 	public static final BlockEntry<StandardBogeyBlock> SMALL_BOGEY =
 		REGISTRATE.block("small_bogey", p -> new StandardBogeyBlock(p, false))
-			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.noOcclusion())
-			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
-				.getExistingFile(p.modLoc("block/track/bogey/top"))))
-			.onRegister(b -> IBogeyBlock.register(b.getRegistryName()))
+			.transform(BuilderTransformers.bogey())
 			.register();
 
 	public static final BlockEntry<StandardBogeyBlock> LARGE_BOGEY =
 		REGISTRATE.block("large_bogey", p -> new StandardBogeyBlock(p, true))
-			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.noOcclusion())
-			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
-				.getExistingFile(p.modLoc("block/track/bogey/top"))))
-			.onRegister(b -> IBogeyBlock.register(b.getRegistryName()))
+			.transform(BuilderTransformers.bogey())
 			.register();
 
 	public static final BlockEntry<ControlsBlock> CONTROLS = REGISTRATE.block("controls", ControlsBlock::new)

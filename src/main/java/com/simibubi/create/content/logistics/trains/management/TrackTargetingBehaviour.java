@@ -38,7 +38,7 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 
 	private BlockPos targetTrack;
 	private AxisDirection targetDirection;
-
+	
 	public TrackTargetingBehaviour(SmartTileEntity te) {
 		super(te);
 		targetDirection = AxisDirection.POSITIVE;
@@ -99,8 +99,8 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 			return null;
 
 		Vec3 axis = track.getTrackAxis(level, pos, trackBlockState)
-			.normalize()
 			.scale(getTargetDirection().getStep());
+		double length = axis.length();
 
 		List<Pair<BlockPos, DiscoveredLocation>> ends =
 			TrackPropagator.getEnds(level, pos, trackBlockState, null, true);
@@ -142,7 +142,7 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 					frontNode = node;
 				if (backwards) {
 					backNode = node;
-					position = i + .5;
+					position = (i + .5) * length;
 				}
 				break;
 			}

@@ -74,10 +74,6 @@ public class AssemblyException extends Exception {
 		return new AssemblyException("noPistonPoles");
 	}
 	
-	public static AssemblyException invalidBogeyCount() {
-		return new AssemblyException("invalidBogeyCount");
-	}
-
 	public static AssemblyException notEnoughSails(int sails) {
 		return new AssemblyException("not_enough_sails", sails, AllConfigs.SERVER.kinetics.minimumWindmillSails.get());
 	}

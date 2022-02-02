@@ -5,15 +5,19 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Debug;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class GlobalStation {
 
@@ -25,12 +29,10 @@ public class GlobalStation {
 
 	public WeakReference<Train> nearestTrain;
 
-	public GlobalStation(UUID id, Couple<TrackNode> nodes, double position, BlockPos stationPos) {
+	public GlobalStation(UUID id, BlockPos stationPos) {
 		this.id = id;
 		this.stationPos = stationPos;
-		this.position = position;
 		name = "Track Station";
-		edgeLocation = nodes.map(TrackNode::getLocation);
 		nearestTrain = new WeakReference<Train>(null);
 	}
 
@@ -42,6 +44,22 @@ public class GlobalStation {
 		nearestTrain = new WeakReference<Train>(null);
 		edgeLocation = Couple.deserializeEach(nbt.getList("Edge", Tag.TAG_COMPOUND),
 			tag -> TrackNodeLocation.fromPackedPos(NbtUtils.readBlockPos(tag)));
+	}
+
+	public void migrate(LevelAccessor level) {
+		BlockEntity blockEntity = level.getBlockEntity(stationPos);
+		if (blockEntity instanceof StationTileEntity station) {
+			Debug.debugChat("Migrating Station " + name);
+			station.migrate(this);
+			return;
+		}
+		Create.LOGGER
+			.warn("Couldn't migrate Station: " + name + " to changed Graph because associated Tile wasn't loaded.");
+	}
+
+	public void setLocation(Couple<TrackNode> nodes, double position) {
+		this.edgeLocation = nodes.map(TrackNode::getLocation);
+		this.position = position;
 	}
 
 	public void reserveFor(Train train) {
@@ -59,7 +77,7 @@ public class GlobalStation {
 	public void trainDeparted(Train train) {
 		cancelReservation(train);
 	}
-	
+
 	@Nullable
 	public Train getPresentTrain() {
 		Train nearestTrain = this.nearestTrain.get();

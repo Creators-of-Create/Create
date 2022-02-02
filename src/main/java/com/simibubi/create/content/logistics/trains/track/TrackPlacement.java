@@ -10,6 +10,7 @@ import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -22,7 +23,6 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -57,7 +57,7 @@ public class TrackPlacement {
 		BlockPos pos2;
 
 		public PlacementInfo withMessage(String message) {
-			this.message = message;
+			this.message = "track." + message;
 			return this;
 		}
 
@@ -112,12 +112,12 @@ public class TrackPlacement {
 		}
 
 		if (pos1.equals(pos2))
-			return info.withMessage("Place track or select a second point");
+			return info.withMessage("second_point");
 		if (pos1.distSqr(pos2) > 32 * 32)
-			return info.withMessage("Too far away")
+			return info.withMessage("too_far")
 				.tooJumbly();
 		if (!state1.hasProperty(TrackBlock.HAS_TURN))
-			return info.withMessage("Original block removed");
+			return info.withMessage("original_missing");
 
 		if (axis1.dot(end2.subtract(end1)) < 0) {
 			axis1 = axis1.scale(-1);
@@ -166,6 +166,8 @@ public class TrackPlacement {
 
 		// S curve or Straight
 
+		double dist = 0;
+
 		if (parallel) {
 			double[] sTest = VecHelper.intersect(end1, end2, normedAxis1, cross2, Axis.Y);
 			double t = Math.abs(sTest[0]);
@@ -174,22 +176,22 @@ public class TrackPlacement {
 			skipCurve = Mth.equal(u, 0);
 
 			if (!skipCurve && sTest[0] < 0)
-				return info.withMessage("cannot connect perpendicularly")
+				return info.withMessage("perpendicular")
 					.tooJumbly();
 
 			if (skipCurve) {
-				double dist = VecHelper.getCenterOf(pos1)
+				dist = VecHelper.getCenterOf(pos1)
 					.distanceTo(VecHelper.getCenterOf(pos2));
 				info.end1Extent = (int) Math.round((dist + 1) / axis1.length());
 
 			} else {
 				if (!Mth.equal(ascend, 0))
-					return info.withMessage("Cannot ascend and s-curve");
+					return info.withMessage("ascending_s_curve");
 
 				double targetT = u <= 1 ? 3 : u * 2;
 
 				if (t < targetT)
-					return info.withMessage("Turn too sharp");
+					return info.withMessage("too_sharp");
 
 				// This is for standardising s curve sizes
 				if (t > targetT) {
@@ -204,13 +206,13 @@ public class TrackPlacement {
 
 		if (slope) {
 			if (!skipCurve)
-				return info.withMessage("Cannot enter or leave slope on a turn");
+				return info.withMessage("slope_turn");
 			if (Mth.equal(normal1.dot(normal2), 0))
-				return info.withMessage("Cannot connect opposing slopes");
+				return info.withMessage("opposing_slopes");
 			if ((axis1.y < 0 || axis2.y > 0) && ascend > 0)
-				return info.withMessage("Cannot leave this slope while ascending");
+				return info.withMessage("leave_slope_ascending");
 			if ((axis1.y > 0 || axis2.y < 0) && ascend < 0)
-				return info.withMessage("Cannot leave this slope while descending");
+				return info.withMessage("leave_slope_descending");
 
 			skipCurve = false;
 			info.end1Extent = 0;
@@ -228,10 +230,10 @@ public class TrackPlacement {
 
 			double turnSize = Math.min(dist1, dist2);
 			if (intersect[0] < 0)
-				return info.withMessage("Turn too sharp")
+				return info.withMessage("too_sharp")
 					.tooJumbly();
 			if (turnSize < 2)
-				return info.withMessage("Turn too sharp");
+				return info.withMessage("too_sharp");
 
 			// This is for standardising curve sizes
 			if (turnSize > 2) {
@@ -245,16 +247,18 @@ public class TrackPlacement {
 
 		if (skipCurve && !Mth.equal(ascend, 0)) {
 			int hDistance = info.end1Extent;
-			info.end1Extent = 0;
-			if (hDistance < absAscend * 3)
-				return info.withMessage("Too steep");
-			if (hDistance > absAscend * 4) {
-				int correction = (int) (hDistance - absAscend * 4);
-				info.end1Extent = correction / 2 + (correction % 2);
-				info.end2Extent = correction / 2;
-			}
+			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
+				info.end1Extent = 0;
+				if (hDistance < absAscend * 3)
+					return info.withMessage("too_steep");
+				if (hDistance > absAscend * 4) {
+					int correction = (int) (hDistance - absAscend * 4);
+					info.end1Extent = correction / 2 + (correction % 2);
+					info.end2Extent = correction / 2;
+				}
 
-			skipCurve = false;
+				skipCurve = false;
+			}
 		}
 
 		// Turn
@@ -262,36 +266,41 @@ public class TrackPlacement {
 		if (!parallel) {
 			float absAngle = Math.abs(AngleHelper.deg(angle));
 			if (absAngle < 60 || absAngle > 300)
-				return info.withMessage("90 degrees max")
+				return info.withMessage("turn_90")
 					.tooJumbly();
 
 			intersect = VecHelper.intersect(end1, end2, normedAxis1, normedAxis2, Axis.Y);
-			double dist1 = Math.abs(intersect[0] / axis1.length());
-			double dist2 = Math.abs(intersect[1] / axis2.length());
+			double dist1 = Math.abs(intersect[0]);
+			double dist2 = Math.abs(intersect[1]);
+			float ex1 = 0;
+			float ex2 = 0;
 
 			if (dist1 > dist2)
-				info.end1Extent = (int) Math.round(dist1 - dist2);
+				ex1 = (float) ((dist1 - dist2) / axis1.length());
 			if (dist2 > dist1)
-				info.end2Extent = (int) Math.round(dist2 - dist1);
+				ex2 = (float) ((dist2 - dist1) / axis2.length());
 
 			double turnSize = Math.min(dist1, dist2);
-			boolean ninety = absAngle % 90 < 1;
+			boolean ninety = (absAngle + .25f) % 90 < 1;
 
 			if (intersect[0] < 0 || intersect[1] < 0)
-				return info.withMessage("Turn too sharp")
+				return info.withMessage("too_sharp")
 					.tooJumbly();
 
-			if (turnSize < (ninety ? 7 : 2))
-				return info.withMessage("Turn too sharp");
-			if (absAscend > (ninety ? 3 : 2))
-				return info.withMessage("Too steep");
+			int minTurnSize = ninety ? 7 : 3;
+			int maxAscend = ninety ? 3 : 2;
+
+			if (turnSize < minTurnSize)
+				return info.withMessage("too_sharp");
+			if (absAscend > maxAscend)
+				return info.withMessage("too_steep");
 
 			// This is for standardising curve sizes
-			if (turnSize > (ninety ? 5 : 2)) {
-				info.end1Extent += turnSize - (ninety ? 7 : 2);
-				info.end2Extent += turnSize - (ninety ? 7 : 2);
-				turnSize = (ninety ? 7 : 2);
-			}
+			ex1 += (turnSize - minTurnSize) / axis1.length();
+			ex2 += (turnSize - minTurnSize) / axis2.length();
+			info.end1Extent = Math.round(ex1);
+			info.end2Extent = Math.round(ex2);
+			turnSize = minTurnSize;
 		}
 
 		Vec3 offset1 = axis1.scale(info.end1Extent);
@@ -324,9 +333,9 @@ public class TrackPlacement {
 					level.setBlock(offsetPos, state, 3);
 			}
 		}
-		
-		info.pos1 = pos1; 
-		info.pos2 = pos2; 
+
+		info.pos1 = pos1;
+		info.pos2 = pos2;
 		info.axis1 = axis1;
 		info.axis2 = axis2;
 
@@ -390,9 +399,11 @@ public class TrackPlacement {
 
 		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack);
 		if (info.valid)
-			player.displayClientMessage(new TextComponent("Valid Connection").withStyle(ChatFormatting.GREEN), true);
+			player.displayClientMessage(Lang.translate("track.valid_connection")
+				.withStyle(ChatFormatting.GREEN), true);
 		else if (info.message != null)
-			player.displayClientMessage(new TextComponent(info.message).withStyle(ChatFormatting.RED), true);
+			player.displayClientMessage(Lang.translate(info.message)
+				.withStyle(ChatFormatting.RED), true);
 
 		animation.chase(info.valid ? 1 : 0, 0.25, Chaser.EXP);
 		animation.tickChaser();

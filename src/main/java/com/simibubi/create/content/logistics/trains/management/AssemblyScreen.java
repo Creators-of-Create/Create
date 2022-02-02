@@ -28,10 +28,12 @@ public class AssemblyScreen extends AbstractStationScreen {
 
 	private List<ResourceLocation> iconTypes;
 	private ScrollInput iconTypeScroll;
+	private boolean assemblyCompleted;
 
 	public AssemblyScreen(StationTileEntity te, GlobalStation station) {
 		super(te, station);
 		background = AllGuiTextures.STATION_ASSEMBLING;
+		assemblyCompleted = false;
 	}
 
 	@Override
@@ -81,6 +83,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		completeAssembly.active = false;
 		completeAssembly.setToolTip(new TextComponent("Complete Assembly"));
 		completeAssembly.withCallback(() -> {
+			assemblyCompleted = true;
 			AllPackets.channel.sendToServer(StationEditPacket.configure(te.getBlockPos(), false, station.name));
 			minecraft.setScreen(new StationScreen(te, station));
 		});
@@ -178,7 +181,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 			return;
 		}
 
-		AssemblyException lastAssemblyException = te.getLastAssemblyException();
+		AssemblyException lastAssemblyException = te.lastException;
 		if (lastAssemblyException != null) {
 			TextComponent text = new TextComponent("Assembly Failed");
 			font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x775B5B);
@@ -213,7 +216,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		if (train != null) {
 			ResourceLocation iconId = iconTypes.get(iconTypeScroll.getState());
 			train.icon = TrainIconType.byId(iconId);
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", iconId));
+			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", !assemblyCompleted, iconId));
 		}
 	}
 

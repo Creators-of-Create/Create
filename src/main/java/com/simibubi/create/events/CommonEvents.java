@@ -67,6 +67,7 @@ public class CommonEvents {
 		Create.SCHEMATIC_RECEIVER.tick();
 		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick();
+		Create.RAILWAYS.sync.serverTick();
 	}
 
 	@SubscribeEvent

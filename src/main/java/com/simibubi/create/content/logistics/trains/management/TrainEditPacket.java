@@ -18,10 +18,12 @@ public class TrainEditPacket extends SimplePacketBase {
 	private String name;
 	private UUID id;
 	private ResourceLocation iconType;
+	private boolean heldForAssembly;
 
-	public TrainEditPacket(UUID id, String name, ResourceLocation iconType) {
+	public TrainEditPacket(UUID id, String name, boolean heldForAssembly, ResourceLocation iconType) {
 		this.name = name;
 		this.id = id;
+		this.heldForAssembly = heldForAssembly;
 		this.iconType = iconType;
 	}
 
@@ -29,6 +31,7 @@ public class TrainEditPacket extends SimplePacketBase {
 		id = buffer.readUUID();
 		name = buffer.readUtf(256);
 		iconType = buffer.readResourceLocation();
+		heldForAssembly = buffer.readBoolean();
 	}
 
 	@Override
@@ -36,6 +39,7 @@ public class TrainEditPacket extends SimplePacketBase {
 		buffer.writeUUID(id);
 		buffer.writeUtf(name);
 		buffer.writeResourceLocation(iconType);
+		buffer.writeBoolean(heldForAssembly);
 	}
 
 	@Override
@@ -45,9 +49,10 @@ public class TrainEditPacket extends SimplePacketBase {
 				Train train = Create.RAILWAYS.trains.get(id);
 				if (train == null)
 					return;
-				if (!name.isBlank()) 
+				if (!name.isBlank())
 					train.name = new TextComponent(name);
 				train.icon = TrainIconType.byId(iconType);
+				train.heldForAssembly = heldForAssembly;
 			});
 		context.get()
 			.setPacketHandled(true);

@@ -35,6 +35,7 @@ public class Train {
 	public TrainIconType icon;
 	public Component name;
 
+	public boolean heldForAssembly;
 	public boolean doubleEnded;
 	public List<Carriage> carriages;
 	public List<Integer> carriageSpacing;
@@ -58,6 +59,7 @@ public class Train {
 		doubleEnded = carriages.size() > 1 && carriages.get(carriages.size() - 1).contraption.hasControls();
 		navigation = new Navigation(this, graph);
 		runtime = new ScheduleRuntime(this);
+		heldForAssembly = true;
 	}
 
 	public void tick(Level level) {
@@ -103,7 +105,10 @@ public class Train {
 		}
 
 		if (navigation.destination != null) {
+			boolean recalculate = navigation.distanceToDestination > 20;
 			navigation.distanceToDestination -= distance;
+			if (recalculate && navigation.distanceToDestination <= 20) 
+				navigation.setDestination(navigation.destination);
 		}
 	}
 

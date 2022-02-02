@@ -63,7 +63,7 @@ public class TrackPropagator {
 			if (foundGraph != null) {
 				TrackNode removedNode = foundGraph.locateNode(removedLocation);
 				if (removedNode != null) {
-					foundGraph.removeNode(removedLocation);
+					foundGraph.removeNode(reader, removedLocation);
 					sync.nodeRemoved(foundGraph, removedNode);
 				}
 			}
@@ -86,7 +86,6 @@ public class TrackPropagator {
 		for (TrackGraph railGraph : toUpdate)
 			manager.updateSplitGraph(railGraph);
 
-		sync.finish();
 		manager.markTracksDirty();
 	}
 
@@ -110,7 +109,7 @@ public class TrackPropagator {
 			TrackGraph graph = manager.getGraph(reader, entry.currentNode);
 			if (graph != null) {
 				TrackNode node = graph.locateNode(entry.currentNode);
-				graph.removeNode(entry.currentNode);
+				graph.removeNode(reader, entry.currentNode);
 				sync.nodeRemoved(graph, node);
 				connectedGraphs.add(graph);
 				continue;
@@ -225,7 +224,6 @@ public class TrackPropagator {
 			continueSearchWithParent(frontier, entry, parentNode, ends);
 		}
 
-		sync.finish();
 		manager.markTracksDirty();
 		return graph;
 	}

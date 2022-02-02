@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -26,7 +25,9 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.TrackTargetingBehaviour.GraphLocation;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
@@ -36,7 +37,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,19 +45,28 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class StationTileEntity extends SmartTileEntity implements IDisplayAssemblyExceptions {
+public class StationTileEntity extends SmartTileEntity {
 
 	UUID id;
 
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
+	protected CompoundTag toMigrate;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		setLazyTickRate(20);
 		id = UUID.randomUUID();
 		lastException = null;
+		toMigrate = null;
 		failedCarriageIndex = -1;
+	}
+	
+	public void migrate(GlobalStation globalStation) {
+		if (toMigrate != null)
+			return;
+		toMigrate = globalStation.write();
+		setChanged();
 	}
 
 	@Override
@@ -77,19 +86,33 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 	}
 
 	public GlobalStation getOrCreateGlobalStation() {
-		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) {
+		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) { // TODO thread breach
 			GlobalStation station = trackGraph.getStation(id);
 			if (station == null)
 				continue;
 			return station;
 		}
+		
+		if (level.isClientSide)
+			return null;
 
-		GraphLocation loc = getTarget().determineGraphLocation();
+		TrackTargetingBehaviour target = getTarget();
+		if (!target.hasValidTrack())
+			return null;
+		GraphLocation loc = target.determineGraphLocation();
 		if (loc == null)
 			return null;
 
-		GlobalStation globalStation = new GlobalStation(id, loc.edge, loc.position, worldPosition);
+		GlobalStation globalStation =
+			toMigrate != null ? new GlobalStation(toMigrate) : new GlobalStation(id, worldPosition);
+		globalStation.setLocation(loc.edge, loc.position);
 		loc.graph.addStation(globalStation);
+		
+		if (toMigrate != null)
+			Debug.debugChat("Migrated Station " + globalStation.name);
+		toMigrate = null;
+		setChanged();
+		
 		return globalStation;
 	}
 
@@ -99,6 +122,8 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 		lastException = AssemblyException.read(tag);
 		failedCarriageIndex = tag.getInt("FailedCarriageIndex");
 		super.read(tag, clientPacket);
+		if (tag.contains("ToMigrate"))
+			toMigrate = tag.getCompound("ToMigrate");
 	}
 
 	@Override
@@ -107,6 +132,8 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 		AssemblyException.write(tag, lastException);
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
 		super.write(tag, clientPacket);
+		if (!clientPacket && toMigrate != null)
+			tag.put("ToMigrate", toMigrate);
 	}
 
 	// Train Assembly
@@ -123,6 +150,8 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 	public void lazyTick() {
 		if (isAssembling() && !level.isClientSide)
 			refreshAssemblyInfo();
+		if (!level.isClientSide)
+			getOrCreateGlobalStation();
 		super.lazyTick();
 	}
 
@@ -131,6 +160,12 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 		if (isAssembling() && level.isClientSide)
 			refreshAssemblyInfo();
 		super.tick();
+
+		if (level.isClientSide)
+			return;
+		if (toMigrate == null)
+			return;
+		getOrCreateGlobalStation();
 	}
 
 	public void trackClicked(Player player, ITrackBlock track, BlockState state, BlockPos pos) {
@@ -281,7 +316,7 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 		refreshAssemblyInfo();
 
 		if (bogeyLocations[0] != 0) {
-			exception(new AssemblyException(new TextComponent("Frontmost Bogey must be at Station Marker")), -1);
+			exception(new AssemblyException(Lang.translate("train_assembly.frontmost_bogey_at_station")), -1);
 			return;
 		}
 
@@ -379,7 +414,7 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 		}
 
 		if (points.size() == 0) {
-			exception(new AssemblyException(new TextComponent("No Bogeys Found")), -1);
+			exception(new AssemblyException(Lang.translate("train_assembly.no_bogeys")), -1);
 			return;
 		}
 
@@ -398,7 +433,8 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 				boolean success = contraption.assemble(level,
 					bogeyPosOffset.relative(assemblyDirection, bogeyLocations[bogeyIndex] + 1));
 				if (!success) {
-					exception(new AssemblyException(new TextComponent("Nothing attached to Bogey " + bogeyIndex)), -1);
+					exception(new AssemblyException(Lang.translate("train_assembly.nothing_attached", bogeyIndex + 1)),
+						-1);
 					return;
 				}
 			} catch (AssemblyException e) {
@@ -416,7 +452,7 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 			if (secondBogeyPos != null) {
 				if (bogeyIndex == bogeyCount - 1 || !secondBogeyPos
 					.equals(bogeyPosOffset.relative(assemblyDirection, bogeyLocations[bogeyIndex + 1] + 1))) {
-					exception(new AssemblyException(new TextComponent("Bogeys are not connected in order")),
+					exception(new AssemblyException(Lang.translate("train_assembly.not_connected_in_order")),
 						contraptions.size() + 1);
 					return;
 				}
@@ -427,8 +463,7 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 				bogeyIndex++;
 
 			} else if (!typeOfFirstBogey.allowsSingleBogeyCarriage()) {
-				exception(
-					new AssemblyException(new TextComponent("This bogey type cannot support a carriage on its own")),
+				exception(new AssemblyException(Lang.translate("train_assembly.single_bogey_carriage")),
 					contraptions.size() + 1);
 				return;
 			}
@@ -485,11 +520,6 @@ public class StationTileEntity extends SmartTileEntity implements IDisplayAssemb
 		if (renderBounds == null)
 			renderBounds = new AABB(worldPosition, getTarget().getGlobalPosition());
 		return renderBounds;
-	}
-
-	@Override
-	public AssemblyException getLastAssemblyException() {
-		return lastException;
 	}
 
 }

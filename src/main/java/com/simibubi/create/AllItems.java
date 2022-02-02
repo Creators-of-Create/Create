@@ -329,6 +329,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<ScheduleItem> SCHEDULE = REGISTRATE.item("schedule", ScheduleItem::new)
+		.lang("Train Schedule")
 		.register();
 
 	// Schematics

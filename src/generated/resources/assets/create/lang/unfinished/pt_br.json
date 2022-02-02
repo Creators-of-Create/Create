@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1621",
+	"_": "Missing Localizations: 1647",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -484,8 +484,8 @@
 	"block.create.stressometer": "Estressómetro",
 	"block.create.tiled_glass": "Vidro Entalhado",
 	"block.create.tiled_glass_pane": "Vidraça Entalhada",
-	"block.create.track": "UNLOCALIZED: Track",
-	"block.create.track_station": "UNLOCALIZED: Track Station",
+	"block.create.track": "UNLOCALIZED: Train Track",
+	"block.create.track_station": "UNLOCALIZED: Train Station",
 	"block.create.tuff_pillar": "UNLOCALIZED: Tuff Pillar",
 	"block.create.turntable": "Mesa giratória",
 	"block.create.veridium": "UNLOCALIZED: Veridium",
@@ -623,7 +623,7 @@
 	"item.create.refined_radiance": "Luz Refinada",
 	"item.create.rose_quartz": "Quartzo Rosa",
 	"item.create.sand_paper": "Lixa",
-	"item.create.schedule": "UNLOCALIZED: Schedule",
+	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Esquema",
 	"item.create.schematic_and_quill": "Esquema e pena",
 	"item.create.shadow_steel": "Aço sombrio",
@@ -1374,6 +1374,35 @@
 	"create.schedule.loop": "UNLOCALIZED: Loop Forever",
 	"create.schedule.loop1": "UNLOCALIZED: Schedule starts over",
 	"create.schedule.loop2": "UNLOCALIZED: when completed",
+	"create.schedule.train_still_assembling": "UNLOCALIZED: Confirm Train Assembly in the Station UI first",
+
+	"create.track.selection_cleared": "UNLOCALIZED: Selection Cleared",
+	"create.track.valid_connection": "UNLOCALIZED: Can Connect ✔",
+	"create.track.second_point": "UNLOCALIZED: Place track or select a second point",
+	"create.track.too_far": "UNLOCALIZED: Too far away",
+	"create.track.original_missing": "UNLOCALIZED: Original block removed, Sneak-click to reset",
+	"create.track.perpendicular": "UNLOCALIZED: Cannot connect perpendicularly",
+	"create.track.ascending_s_curve": "UNLOCALIZED: Cannot create sloped S-Bends",
+	"create.track.too_sharp": "UNLOCALIZED: Turn too sharp",
+	"create.track.too_steep": "UNLOCALIZED: Slope too steep",
+	"create.track.slope_turn": "UNLOCALIZED: Cannot enter or leave slope on a turn",
+	"create.track.opposing_slopes": "UNLOCALIZED: Cannot connect opposing slopes",
+	"create.track.leave_slope_ascending": "UNLOCALIZED: Cannot leave this slope while ascending",
+	"create.track.leave_slope_descending": "UNLOCALIZED: Cannot leave this slope while descending",
+	"create.track.turn_90": "UNLOCALIZED: Can only turn up to 90 Degrees",
+
+	"create.train_assembly.too_many_bogeys": "UNLOCALIZED: Too many Bogeys attached: %1$s",
+	"create.train_assembly.frontmost_bogey_at_station": "UNLOCALIZED: Frontmost Bogey must be at Station Marker",
+	"create.train_assembly.no_bogeys": "UNLOCALIZED: No Bogeys Found",
+	"create.train_assembly.not_connected_in_order": "UNLOCALIZED: Bogeys are not connected in order",
+	"create.train_assembly.single_bogey_carriage": "UNLOCALIZED: This Bogey type cannot support a carriage on its own",
+	"create.train_assembly.nothing_attached": "UNLOCALIZED: No structure attached to Bogey %1$s",
+
+	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
+	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",
+	"create.track_target.clear": "UNLOCALIZED: Cleared track selection",
+	"create.track_target.missing": "UNLOCALIZED: Right-click the targeted train track first",
+	"create.track_target.too_far": "UNLOCALIZED: Targeted track is too far from here",
 
 	"create.train.unnamed": "UNLOCALIZED: Unnamed Train",
 

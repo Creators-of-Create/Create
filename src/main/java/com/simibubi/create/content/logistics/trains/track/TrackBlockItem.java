@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -67,7 +66,7 @@ public class TrackBlockItem extends BlockItem {
 		PlacementInfo info = TrackPlacement.tryConnect(level, pos, state, lookAngle, stack);
 
 		if (info.message != null && !level.isClientSide)
-			player.displayClientMessage(new TextComponent(info.message), true);
+			player.displayClientMessage(Lang.translate(info.message), true);
 		if (!info.valid)
 			return InteractionResult.FAIL;
 

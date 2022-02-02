@@ -6,7 +6,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -102,6 +104,16 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 		VertexConsumer vb = buffers.getBuffer(RenderType.solid());
 		BlockState air = Blocks.AIR.defaultBlockState();
 
+		for (int i : Iterate.zeroAndOne)
+			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Axis.Z))
+				.translate(-.5f, .25f, i * -1)
+				.centre()
+				.rotateZ(wheelAngle)
+				.unCentre()
+				.light(light)
+				.renderInto(ms, vb);
+
 		if (!large) {
 			CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
 				.light(light)
@@ -118,6 +130,16 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 			}
 			return;
 		}
+
+		for (int i : Iterate.zeroAndOne)
+			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Axis.X))
+				.translate(-.5f, .25f, .5f + i * -2)
+				.centre()
+				.rotateX(wheelAngle)
+				.unCentre()
+				.light(light)
+				.renderInto(ms, vb);
 
 		CachedBufferer.partial(AllBlockPartials.BOGEY_DRIVE, air)
 			.light(light)
