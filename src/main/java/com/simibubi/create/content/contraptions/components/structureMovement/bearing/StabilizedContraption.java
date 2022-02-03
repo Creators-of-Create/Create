@@ -12,6 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StabilizedContraption extends Contraption {
 
@@ -68,6 +70,7 @@ public class StabilizedContraption extends Contraption {
 
 	@Environment(EnvType.CLIENT)
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new NonStationaryLighter<>(this);
 	}

@@ -167,6 +167,7 @@ public class MountedContraption extends Contraption {
 
 	@Environment(EnvType.CLIENT)
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new NonStationaryLighter<>(this);
 	}

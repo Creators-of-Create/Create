@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "create:raw_zinc_block",
     "create:zinc_block",
     "create:brass_block"
   ]

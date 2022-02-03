@@ -1247,6 +1247,7 @@ public abstract class Contraption {
 
 	@Environment(EnvType.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
+		// TODO: move lighters to registry
 		return new EmptyLighter(this);
 	}
 

@@ -478,8 +478,10 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 	}
 
 	public static boolean isSawable(BlockState stateToBreak) {
+		if (stateToBreak.is(BlockTags.SAPLINGS))
+			return false;
 		if (stateToBreak.is(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(stateToBreak)
-			|| stateToBreak.is(BlockTags.LEAVES))
+			|| (stateToBreak.is(BlockTags.LEAVES)))
 			return true;
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooBlock)

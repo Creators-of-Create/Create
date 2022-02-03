@@ -378,6 +378,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		sendData();
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public PartialModel getHandPose() {
 		return mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING
 			: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
@@ -421,6 +422,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		return true;
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public float getHandOffset(float partialTicks) {
 		if (isVirtual())
 			return animatedOffset.getValue(partialTicks);

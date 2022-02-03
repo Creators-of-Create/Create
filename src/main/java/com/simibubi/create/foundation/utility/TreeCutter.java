@@ -35,6 +35,8 @@ import net.minecraft.world.level.block.KelpPlantBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 
 public class TreeCutter {
 	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
@@ -142,15 +144,27 @@ public class TreeCutter {
 			if (isGenericLeaf)
 				leaves.add(currentPos);
 
-			int distance = !isLeaf ? 0 : blockState.getValue(LeavesBlock.DISTANCE);
+			IntegerProperty distanceProperty = LeavesBlock.DISTANCE;
+			for (Property<?> property : blockState.getValues()
+				.keySet())
+				if (property instanceof IntegerProperty ip && property.getName()
+					.equals("distance"))
+					distanceProperty = ip;
+			
+			int distance = !isLeaf ? 0 : blockState.getValue(distanceProperty);
 			for (Direction direction : Iterate.directions) {
 				BlockPos offset = currentPos.relative(direction);
 				if (visited.contains(offset))
 					continue;
 				BlockState state = reader.getBlockState(offset);
 				BlockPos subtract = offset.subtract(pos);
+				
+				for (Property<?> property : state.getValues().keySet()) 
+					if (property instanceof IntegerProperty ip && property.getName().equals("distance"))
+						distanceProperty = ip;
+				
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
-				if (isLeaf(state) && state.getValue(LeavesBlock.DISTANCE) > distance
+				if (isLeaf(state) && state.getValue(distanceProperty) > distance
 					|| isNonDecayingLeaf(state) && horizontalDistance < 4)
 					frontier.add(offset);
 			}
@@ -233,7 +247,10 @@ public class TreeCutter {
 	}
 
 	private static boolean isLeaf(BlockState state) {
-		return state.hasProperty(LeavesBlock.DISTANCE);
+		for (Property<?> property : state.getValues().keySet()) 
+			if (property instanceof IntegerProperty && property.getName().equals("distance"))
+				return true;
+		return false;
 	}
 
 	public static class Tree extends AbstractBlockBreakQueue {

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 379",
+	"_": "Missing Localizations: 378",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -602,7 +602,6 @@
 	"item.create.honeyed_apple": "Яблоко в меду",
 	"item.create.incomplete_cogwheel": "Незаконченная шестерня",
 	"item.create.incomplete_large_cogwheel": "Незаконченная большая шестерня",
-	"item.create.incomplete_netherrack": "UNLOCALIZED: Incomplete Netherrack",
 	"item.create.incomplete_precision_mechanism": "Незаконченный механизм точности",
 	"item.create.iron_sheet": "Железный лист",
 	"item.create.linked_controller": "Контроллер связей",

@@ -107,11 +107,6 @@ public class AllItems {
 					.model(AssetLookup.existingItemModel())
 					.register();
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_NETHERRACK =
-			REGISTRATE.item("incomplete_netherrack", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
-					.register();
-
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
@@ -160,7 +155,8 @@ public class AllItems {
 		.lang("Builder's Tea")
 		.register();
 
-	public static final ItemEntry<Item> RAW_ZINC = ingredient("raw_zinc");
+	public static final ItemEntry<Item> RAW_ZINC =
+		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), forgeItemTag("raw_materials"));
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),

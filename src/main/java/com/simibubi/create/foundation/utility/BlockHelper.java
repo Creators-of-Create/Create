@@ -66,8 +66,9 @@ public class BlockHelper {
 			return blockState.setValue(BlockStateProperties.HATCH, 0);
 		if (blockState.hasProperty(BlockStateProperties.STAGE))
 			return blockState.setValue(BlockStateProperties.STAGE, 0);
-		if (blockState.hasProperty(BlockStateProperties.LEVEL_CAULDRON))
-			return blockState.setValue(BlockStateProperties.LEVEL_CAULDRON, 0);
+		if (blockState.is(BlockTags.CAULDRONS))
+			return Blocks.CAULDRON.delegate.get()
+				.defaultBlockState();
 		if (blockState.hasProperty(BlockStateProperties.LEVEL_COMPOSTER))
 			return blockState.setValue(BlockStateProperties.LEVEL_COMPOSTER, 0);
 		if (blockState.hasProperty(BlockStateProperties.EXTENDED))

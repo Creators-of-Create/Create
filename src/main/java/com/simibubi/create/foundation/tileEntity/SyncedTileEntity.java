@@ -24,13 +24,6 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 	}
 
 	@Override
-	public CompoundTag create$save(CompoundTag tag) {
-		BlockEntityExtensions.super.create$save(tag);
-		saveAdditional(tag);
-		return tag;
-	}
-
-	@Override
 	public CompoundTag getUpdateTag() {
 		return writeClient(new CompoundTag());
 	}
@@ -58,7 +51,8 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 
 	// Special handling for client update packets
 	public CompoundTag writeClient(CompoundTag tag) {
-		return create$save(tag);
+		saveAdditional(tag);
+		return tag;
 	}
 
 	public void sendData() {

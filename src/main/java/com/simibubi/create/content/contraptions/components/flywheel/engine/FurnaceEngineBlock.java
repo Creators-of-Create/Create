@@ -34,6 +34,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public PartialModel getFrameModel() {
 		return AllBlockPartials.FURNACE_GENERATOR_FRAME;
 	}
