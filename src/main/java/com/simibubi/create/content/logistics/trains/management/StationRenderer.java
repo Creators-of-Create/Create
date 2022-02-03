@@ -99,7 +99,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 
 	@Override
 	public int getViewDistance() {
-		return 96;
+		return 96 * 2;
 	}
 
 }

@@ -21,7 +21,7 @@ public class StationPoweredCondition extends ScheduleWaitCondition {
 	
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		GlobalStation currentStation = train.currentStation;
+		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
 		BlockPos stationPos = currentStation.stationPos;

@@ -13,7 +13,7 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
-import com.simibubi.create.content.logistics.trains.entity.MovingPoint.ITrackSelector;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
@@ -24,18 +24,14 @@ import net.minecraft.world.phys.Vec3;
 
 public class Navigation {
 
-	TrackGraph graph;
 	Train train;
-
 	public GlobalStation destination;
 	public double distanceToDestination;
-
-	List<TrackEdge> path;
+	List<TrackEdge> currentPath;
 
 	public Navigation(Train train, TrackGraph graph) {
 		this.train = train;
-		this.graph = graph;
-		path = new ArrayList<>();
+		currentPath = new ArrayList<>();
 	}
 
 	public void tick(Level level) {
@@ -47,7 +43,7 @@ public class Navigation {
 		if (distanceToDestination < 1 / 32f) {
 			distanceToDestination = 0;
 			train.speed = 0;
-			path.clear();
+			currentPath.clear();
 			train.arriveAt(destination);
 			destination = null;
 			return;
@@ -83,13 +79,13 @@ public class Navigation {
 		return destination != null;
 	}
 
-	public ITrackSelector control(MovingPoint mp) {
-		return list -> {
-			if (!path.isEmpty()) {
-				TrackEdge target = path.get(0);
+	public ITrackSelector control(TravellingPoint mp) {
+		return (graph, list) -> {
+			if (!currentPath.isEmpty()) {
+				TrackEdge target = currentPath.get(0);
 				for (Entry<TrackNode, TrackEdge> entry : list) {
 					if (entry.getValue() == target) {
-						path.remove(0);
+						currentPath.remove(0);
 						return entry;
 					}
 				}
@@ -100,30 +96,50 @@ public class Navigation {
 
 	public void cancelNavigation() {
 		distanceToDestination = 0;
-		path.clear();
+		currentPath.clear();
 		if (destination == null)
 			return;
 		destination.cancelReservation(train);
+		destination = null;
+		train.runtime.transitInterrupted();
 	}
 
-	public void setDestination(GlobalStation destination) {
-		findPathTo(destination);
-		if (distanceToDestination == 0)
-			return;
+	public double startNavigation(GlobalStation destination, boolean simulate) {
+		Pair<Double, List<TrackEdge>> pathTo = findPathTo(destination);
+
+		if (simulate)
+			return pathTo.getFirst();
+
+		distanceToDestination = pathTo.getFirst();
+		currentPath = pathTo.getSecond();
+		if (distanceToDestination == -1) {
+			distanceToDestination = 0;
+			if (this.destination != null)
+				cancelNavigation();
+			return -1;
+		}
+
 		if (this.destination == destination)
-			return;
+			return 0;
+
 		train.leave();
 		this.destination = destination;
+		return distanceToDestination;
 	}
 
-	private void findPathTo(GlobalStation destination) {
-		path.clear();
-		this.distanceToDestination = 0;
+	private Pair<Double, List<TrackEdge>> findPathTo(GlobalStation destination) {
+		TrackGraph graph = train.graph;
+		List<TrackEdge> path = new ArrayList<>();
+		double distanceToDestination = 0;
+
+		if (graph == null)
+			return Pair.of(-1d, path);
+
 		Couple<TrackNodeLocation> target = destination.edgeLocation;
 		PriorityQueue<Pair<Double, Pair<Couple<TrackNode>, TrackEdge>>> frontier =
 			new PriorityQueue<>((p1, p2) -> Double.compare(p1.getFirst(), p2.getFirst()));
 
-		MovingPoint leadingPoint = train.carriages.get(0)
+		TravellingPoint leadingPoint = train.carriages.get(0)
 			.getLeadingPoint();
 		Set<TrackEdge> visited = new HashSet<>();
 		Map<TrackEdge, Pair<Boolean, TrackEdge>> reachedVia = new IdentityHashMap<>();
@@ -167,7 +183,7 @@ public class Navigation {
 				else
 					distanceToDestination += train.getTotalLength() + 2;
 				distanceToDestination -= position;
-				return;
+				return Pair.of(distanceToDestination, path);
 			}
 
 			for (Entry<TrackNode, TrackEdge> entry : graph.getConnectionsFrom(node2)
@@ -194,6 +210,8 @@ public class Navigation {
 					Pair.of(Couple.create(node2, newNode), newEdge)));
 			}
 		}
+
+		return Pair.of(-1d, path);
 	}
 
 }

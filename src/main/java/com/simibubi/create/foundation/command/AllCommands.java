@@ -26,6 +26,7 @@ public class AllCommands {
 				.then(new ToggleDebugCommand().register())
 				.then(FabulousWarningCommand.register())
 				.then(OverlayConfigCommand.register())
+				.then(DumpRailwaysCommand.register())
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(CouplingCommand.register())

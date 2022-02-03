@@ -38,7 +38,7 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 
 	private BlockPos targetTrack;
 	private AxisDirection targetDirection;
-	
+
 	public TrackTargetingBehaviour(SmartTileEntity te) {
 		super(te);
 		targetDirection = AxisDirection.POSITIVE;
@@ -82,12 +82,6 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 
 	public AxisDirection getTargetDirection() {
 		return targetDirection;
-	}
-
-	static class GraphLocation {
-		public TrackGraph graph;
-		public Couple<TrackNode> edge;
-		public double position;
 	}
 
 	public GraphLocation determineGraphLocation() {
@@ -152,7 +146,7 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 			return null;
 
 		GraphLocation graphLocation = new GraphLocation();
-		graphLocation.edge = Couple.create(backNode, frontNode);
+		graphLocation.edge = Couple.create(backNode.getLocation(), frontNode.getLocation());
 		graphLocation.position = position;
 		graphLocation.graph = graph;
 		return graphLocation;

@@ -9,8 +9,10 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
-import com.simibubi.create.content.logistics.trains.entity.MovingPoint.ITrackSelector;
+import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -31,6 +33,7 @@ public class Carriage {
 	public CarriageContraption contraption;
 	public int bogeySpacing;
 	public int id;
+	public boolean blocked;
 
 	WeakReference<CarriageContraptionEntity> entity;
 	Couple<CarriageBogey> bogeys;
@@ -40,6 +43,10 @@ public class Carriage {
 		this.bogeys = Couple.create(bogey1, bogey2);
 		this.entity = new WeakReference<>(null);
 		this.id = netIdGenerator.incrementAndGet();
+		
+		bogey1.carriage = this;
+		if (bogey2 != null)
+			bogey2.carriage = this;
 	}
 
 	public void setTrain(Train train) {
@@ -51,11 +58,13 @@ public class Carriage {
 		contraption.setCarriage(this);
 	}
 
-	public double travel(Level level, double distance, @Nullable Function<MovingPoint, ITrackSelector> control) {
+	public double travel(Level level, TrackGraph graph, double distance,
+		@Nullable Function<TravellingPoint, ITrackSelector> control) {
 		Vec3 leadingAnchor = leadingBogey().anchorPosition;
 		Vec3 trailingAnchor = trailingBogey().anchorPosition;
 		boolean onTwoBogeys = isOnTwoBogeys();
 		double stress = onTwoBogeys ? bogeySpacing - leadingAnchor.distanceTo(trailingAnchor) : 0;
+		blocked = false;
 
 		// positive stress: points should move apart
 		// negative stress: points should move closer
@@ -65,7 +74,7 @@ public class Carriage {
 		double leadingPointModifier = 0.5d;
 		double trailingPointModifier = -0.5d;
 
-		MutableObject<MovingPoint> previous = new MutableObject<>();
+		MutableObject<TravellingPoint> previous = new MutableObject<>();
 		MutableDouble distanceMoved = new MutableDouble(distance);
 
 		bogeys.forEachWithContext((bogey, firstBogey) -> {
@@ -76,15 +85,16 @@ public class Carriage {
 			double bogeyStress = bogey.getStress();
 
 			bogey.points.forEachWithContext((point, first) -> {
-				MovingPoint prevPoint = previous.getValue();
+				TravellingPoint prevPoint = previous.getValue();
 				ITrackSelector trackSelector =
 					prevPoint == null ? control == null ? point.random() : control.apply(point)
 						: point.follow(prevPoint);
 
 				double correction = bogeyStress * (first ? leadingPointModifier : trailingPointModifier);
 				double toMove = distanceMoved.getValue();
-				double moved = point.travel(toMove, trackSelector);
-				point.travel(correction + bogeyCorrection, trackSelector);
+				double moved = point.travel(graph, toMove, trackSelector);
+				point.travel(graph, correction + bogeyCorrection, trackSelector);
+				blocked |= point.blocked;
 
 				distanceMoved.setValue(moved);
 				previous.setValue(point);
@@ -158,11 +168,11 @@ public class Carriage {
 		entity.discard();
 	}
 
-	public MovingPoint getLeadingPoint() {
+	public TravellingPoint getLeadingPoint() {
 		return leadingBogey().leading();
 	}
 
-	public MovingPoint getTrailingPoint() {
+	public TravellingPoint getTrailingPoint() {
 		return trailingBogey().trailing();
 	}
 
@@ -180,8 +190,9 @@ public class Carriage {
 
 	public static class CarriageBogey {
 
+		Carriage carriage;
 		IBogeyBlock type;
-		Couple<MovingPoint> points;
+		Couple<TravellingPoint> points;
 		Vec3 anchorPosition;
 
 		LerpedFloat wheelAngle;
@@ -190,14 +201,17 @@ public class Carriage {
 
 		public Vec3 leadingCouplingAnchor;
 		public Vec3 trailingCouplingAnchor;
-
-		public CarriageBogey(IBogeyBlock type, MovingPoint point, MovingPoint point2) {
+		
+		int derailAngle;
+		
+		public CarriageBogey(IBogeyBlock type, TravellingPoint point, TravellingPoint point2) {
 			this.type = type;
 			points = Couple.create(point, point2);
 			wheelAngle = LerpedFloat.angular();
 			yaw = LerpedFloat.angular();
 			pitch = LerpedFloat.angular();
 			updateAnchorPosition();
+			derailAngle = Create.RANDOM.nextInt(90) - 45;
 		}
 
 		public void updateAngles(double distanceMoved) {
@@ -209,16 +223,20 @@ public class Carriage {
 			double diffZ = positionVec.z - coupledVec.z;
 			float yRot = AngleHelper.deg(Mth.atan2(diffZ, diffX)) + 90;
 			float xRot = AngleHelper.deg(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)));
+			
+			if (carriage.train.derailed)
+				yRot += derailAngle;
+			
 			wheelAngle.setValue((wheelAngle.getValue() - angleDiff) % 360);
 			pitch.setValue(xRot);
 			yaw.setValue(-yRot);
 		}
 
-		public MovingPoint leading() {
+		public TravellingPoint leading() {
 			return points.getFirst();
 		}
 
-		public MovingPoint trailing() {
+		public TravellingPoint trailing() {
 			return points.getSecond();
 		}
 
@@ -239,16 +257,6 @@ public class Carriage {
 			float partialTicks, boolean leading) {
 			Vec3 thisOffset = type.getConnectorAnchorOffset();
 			thisOffset = thisOffset.multiply(1, 1, leading ? -1 : 1);
-
-//			msr.rotateY(viewYRot + 90)
-//			.rotateX(-viewXRot)
-//			.rotateY(180)
-//			.translate(0, 0, first ? 0 : -bogeySpacing)
-//			.rotateY(-180)
-//			.rotateX(viewXRot)
-//			.rotateY(-viewYRot - 90)
-//			.rotateY(bogey.yaw.getValue(partialTicks))
-//			.rotateX(bogey.pitch.getValue(partialTicks))
 
 			thisOffset = VecHelper.rotate(thisOffset, pitch.getValue(partialTicks), Axis.X);
 			thisOffset = VecHelper.rotate(thisOffset, yaw.getValue(partialTicks), Axis.Y);

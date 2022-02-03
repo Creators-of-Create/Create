@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -66,7 +67,7 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 	}
 
 	@Override
-	protected void applySettings(StationTileEntity te) {
+	protected void applySettings(ServerPlayer player, StationTileEntity te) {
 		Level level = te.getLevel();
 		BlockPos blockPos = te.getBlockPos();
 		BlockState blockState = level.getBlockState(blockPos);
@@ -85,7 +86,7 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			if (!isAssemblyMode)
 				return;
 			if (tryAssemble)
-				te.assemble();
+				te.assemble(player.getUUID());
 			else {
 				if (disassembleAndEnterMode(te))
 					te.refreshAssemblyInfo();
@@ -122,5 +123,8 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 		}
 		return te.tryEnterAssemblyMode();
 	}
+
+	@Override
+	protected void applySettings(StationTileEntity te) {}
 
 }

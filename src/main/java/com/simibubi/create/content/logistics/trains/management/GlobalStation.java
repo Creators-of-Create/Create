@@ -5,12 +5,9 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Debug;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -49,21 +46,18 @@ public class GlobalStation {
 	public void migrate(LevelAccessor level) {
 		BlockEntity blockEntity = level.getBlockEntity(stationPos);
 		if (blockEntity instanceof StationTileEntity station) {
-			Debug.debugChat("Migrating Station " + name);
 			station.migrate(this);
 			return;
 		}
-		Create.LOGGER
-			.warn("Couldn't migrate Station: " + name + " to changed Graph because associated Tile wasn't loaded.");
 	}
 
-	public void setLocation(Couple<TrackNode> nodes, double position) {
-		this.edgeLocation = nodes.map(TrackNode::getLocation);
+	public void setLocation(Couple<TrackNodeLocation> nodes, double position) {
+		this.edgeLocation = nodes;
 		this.position = position;
 	}
 
 	public void reserveFor(Train train) {
-		Train nearestTrain = this.nearestTrain.get();
+		Train nearestTrain = getNearestTrain();
 		if (nearestTrain == null
 			|| nearestTrain.navigation.distanceToDestination > train.navigation.distanceToDestination)
 			this.nearestTrain = new WeakReference<>(train);
@@ -80,24 +74,29 @@ public class GlobalStation {
 
 	@Nullable
 	public Train getPresentTrain() {
-		Train nearestTrain = this.nearestTrain.get();
-		if (nearestTrain == null || nearestTrain.currentStation != this)
+		Train nearestTrain = getNearestTrain();
+		if (nearestTrain == null || nearestTrain.getCurrentStation() != this)
 			return null;
 		return nearestTrain;
 	}
 
 	@Nullable
 	public Train getImminentTrain() {
-		Train nearestTrain = this.nearestTrain.get();
+		Train nearestTrain = getNearestTrain();
 		if (nearestTrain == null)
 			return nearestTrain;
-		if (nearestTrain.currentStation == this)
+		if (nearestTrain.getCurrentStation() == this)
 			return nearestTrain;
 		if (!nearestTrain.navigation.isActive())
 			return null;
 		if (nearestTrain.navigation.distanceToDestination > 30)
 			return null;
 		return nearestTrain;
+	}
+
+	@Nullable
+	public Train getNearestTrain() {
+		return this.nearestTrain.get();
 	}
 
 	public CompoundTag write() {

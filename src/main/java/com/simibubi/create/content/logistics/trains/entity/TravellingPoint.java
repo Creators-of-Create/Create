@@ -6,21 +6,22 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 
 import net.minecraft.world.phys.Vec3;
 
-public class MovingPoint {
+public class TravellingPoint {
 
-	TrackGraph graph;
 	TrackNode node1, node2;
 	TrackEdge edge;
 	double position;
+	boolean blocked;
 
 	public static enum SteerDirection {
 		NONE(0), LEFT(-1), RIGHT(1);
@@ -33,11 +34,10 @@ public class MovingPoint {
 	}
 
 	public static interface ITrackSelector
-		extends Function<List<Entry<TrackNode, TrackEdge>>, Entry<TrackNode, TrackEdge>> {
+		extends BiFunction<TrackGraph, List<Entry<TrackNode, TrackEdge>>, Entry<TrackNode, TrackEdge>> {
 	};
 
-	public MovingPoint(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge, double position) {
-		this.graph = graph;
+	public TravellingPoint(TrackNode node1, TrackNode node2, TrackEdge edge, double position) {
 		this.node1 = node1;
 		this.node2 = node2;
 		this.edge = edge;
@@ -45,11 +45,11 @@ public class MovingPoint {
 	}
 
 	public ITrackSelector random() {
-		return validTargets -> validTargets.get(Create.RANDOM.nextInt(validTargets.size()));
+		return (graph, validTargets) -> validTargets.get(Create.RANDOM.nextInt(validTargets.size()));
 	}
 
-	public ITrackSelector follow(MovingPoint other) {
-		return validTargets -> {
+	public ITrackSelector follow(TravellingPoint other) {
+		return (graph, validTargets) -> {
 			TrackNode target = other.node1;
 
 			for (Entry<TrackNode, TrackEdge> entry : validTargets)
@@ -99,7 +99,7 @@ public class MovingPoint {
 	}
 
 	public ITrackSelector steer(SteerDirection direction, Vec3 upNormal) {
-		return validTargets -> {
+		return (graph, validTargets) -> {
 			double closest = Double.MAX_VALUE;
 			Entry<TrackNode, TrackEdge> best = null;
 
@@ -126,13 +126,13 @@ public class MovingPoint {
 		};
 	}
 
-	public double travel(double distance, ITrackSelector trackSelector) {
+	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector) {
+		blocked = false;
 		double edgeLength = edge.getLength(node1, node2);
 		if (distance == 0)
 			return 0;
 
 		double traveled = distance;
-		
 		double currentT = position / edgeLength;
 		double incrementT = edge.incrementT(node1, node2, currentT, distance);
 		position = incrementT * edgeLength;
@@ -159,11 +159,12 @@ public class MovingPoint {
 			if (validTargets.isEmpty()) {
 				traveled -= position - edgeLength;
 				position = edgeLength;
+				blocked = true;
 				break;
 			}
 
 			Entry<TrackNode, TrackEdge> entry =
-				validTargets.size() == 1 ? validTargets.get(0) : trackSelector.apply(validTargets);
+				validTargets.size() == 1 ? validTargets.get(0) : trackSelector.apply(graph, validTargets);
 
 			node1 = node2;
 			node2 = entry.getKey();
@@ -175,7 +176,7 @@ public class MovingPoint {
 		return traveled;
 	}
 
-	public void reverse() {
+	public void reverse(TrackGraph graph) {
 		TrackNode n = node1;
 		node1 = node2;
 		node2 = n;
@@ -189,6 +190,16 @@ public class MovingPoint {
 		return edge.getPosition(node1, node2, t)
 			.add(edge.getNormal(node1, node2, t)
 				.scale(1));
+	}
+
+	public void migrateTo(List<GraphLocation> locations) {
+		GraphLocation location = locations.remove(0);
+		TrackGraph graph = location.graph;
+		node1 = graph.locateNode(location.edge.getFirst());
+		node2 = graph.locateNode(location.edge.getSecond());
+		position = location.position;
+		edge = graph.getConnectionsFrom(node1)
+			.get(node2);
 	}
 
 }

@@ -167,12 +167,12 @@ public class StationScreen extends AbstractStationScreen {
 			return;
 		}
 
-		if (train.navigation.destination != station && train.currentStation != station) {
+		if (train.navigation.destination != station && train.getCurrentStation() != station) {
 			leavingAnimation = 80;
 			return;
 		}
 
-		disassembleTrainButton.active = train.currentStation == station; // TODO te.canAssemble
+		disassembleTrainButton.active = train.getCurrentStation() == station; // TODO te.canAssemble
 		openScheduleButton.active = train.runtime.schedule != null;
 
 		float f = (float) (train.navigation.distanceToDestination / 30f);

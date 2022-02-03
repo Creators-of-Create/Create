@@ -168,7 +168,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 
 	@Override
 	public int getViewDistance() {
-		return 96;
+		return 96 * 2;
 	}
 
 }

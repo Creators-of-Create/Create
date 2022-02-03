@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.trains.management.schedule;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -76,6 +78,7 @@ public class FilteredDestination extends ScheduleDestination {
 		editBox.setBordered(false);
 		editBox.setTextColor(0xFFFFFF);
 		editBox.setValue(nameFilter);
+		editBox.setFilter(s -> StringUtils.countMatches(s, '*') <= 3);
 		editBox.changeFocus(false);
 		editBox.mouseClicked(0, 0, 0);
 		editorSubWidgets

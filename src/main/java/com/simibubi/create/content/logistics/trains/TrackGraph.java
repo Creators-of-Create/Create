@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
+import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -40,8 +40,8 @@ public class TrackGraph {
 
 	public static final AtomicInteger netIdGenerator = new AtomicInteger();
 
-	UUID id;
-	Color color;
+	public UUID id;
+	public Color color;
 
 	Map<TrackNodeLocation, TrackNode> nodes;
 	Map<Integer, TrackNode> nodesById;
@@ -58,33 +58,37 @@ public class TrackGraph {
 		nodes = new HashMap<>();
 		nodesById = new HashMap<>();
 		connectionsByNode = new IdentityHashMap<>();
-		color = Color.rainbowColor(new Random().nextInt());
+		color = Color.rainbowColor(new Random(graphID.getLeastSignificantBits()).nextInt());
 		stations = new HashMap<>();
 	}
 
 	//
-	
+
 	@Nullable
 	public GlobalStation getStation(UUID id) {
 		return stations.get(id);
 	}
-	
+
 	public Collection<GlobalStation> getStations() {
 		return stations.values();
 	}
-	
+
 	public void removeStation(UUID id) {
 		stations.remove(id);
 		markDirty();
 	}
-	
+
 	public void addStation(GlobalStation station) {
 		stations.put(station.id, station);
 		markDirty();
 	}
-	
+
 	//
-	
+
+	public Set<TrackNodeLocation> getNodes() {
+		return nodes.keySet();
+	}
+
 	public TrackNode locateNode(Vec3 position) {
 		return locateNode(new TrackNodeLocation(position));
 	}
@@ -120,17 +124,32 @@ public class TrackGraph {
 		TrackNode removed = nodes.remove(location);
 		if (removed == null)
 			return false;
-		
+
 		if (level != null) {
-			for (Iterator<UUID> iterator = stations.keySet().iterator(); iterator.hasNext();) {
+			for (Iterator<UUID> iterator = stations.keySet()
+				.iterator(); iterator.hasNext();) {
 				UUID uuid = iterator.next();
 				GlobalStation globalStation = stations.get(uuid);
 				Couple<TrackNodeLocation> loc = globalStation.edgeLocation;
-				if (loc.getFirst().equals(location) || loc.getSecond().equals(location)) {
+				if (loc.getFirst()
+					.equals(location)
+					|| loc.getSecond()
+						.equals(location)) {
 					globalStation.migrate(level);
 					iterator.remove();
 				}
 			}
+		}
+
+		Map<UUID, Train> trains = Create.RAILWAYS.trains;
+		for (Iterator<UUID> iterator = trains.keySet()
+			.iterator(); iterator.hasNext();) {
+			UUID uuid = iterator.next();
+			Train train = trains.get(uuid);
+			if (train.graph != this)
+				continue;
+			if (train.isTravellingOn(removed))
+				train.detachFromTracks();
 		}
 
 		nodesById.remove(removed.netId);
@@ -153,7 +172,7 @@ public class TrackGraph {
 		toOther.nodes.putAll(nodes);
 		toOther.nodesById.putAll(nodesById);
 		toOther.connectionsByNode.putAll(connectionsByNode);
-		for (GlobalStation globalStation : stations.values()) 
+		for (GlobalStation globalStation : stations.values())
 			toOther.addStation(globalStation);
 
 		nodesById.forEach((id, node) -> Create.RAILWAYS.sync.nodeAdded(toOther, node));
@@ -165,6 +184,16 @@ public class TrackGraph {
 		nodes.clear();
 		nodesById.clear();
 		connectionsByNode.clear();
+
+		Map<UUID, Train> trains = Create.RAILWAYS.trains;
+		for (Iterator<UUID> iterator = trains.keySet()
+			.iterator(); iterator.hasNext();) {
+			UUID uuid = iterator.next();
+			Train train = trains.get(uuid);
+			if (train.graph != this)
+				continue;
+			train.graph = toOther;
+		}
 	}
 
 	public Set<TrackGraph> findDisconnectedGraphs(@Nullable Map<Integer, UUID> preAssignedIds) {
@@ -214,17 +243,32 @@ public class TrackGraph {
 		if (!connections.isEmpty()) {
 			target.connectionsByNode.put(node, connections);
 			for (TrackNode entry : connections.keySet()) {
-				for (Iterator<UUID> iterator = stations.keySet().iterator(); iterator.hasNext();) {
+				for (Iterator<UUID> iterator = stations.keySet()
+					.iterator(); iterator.hasNext();) {
 					UUID uuid = iterator.next();
 					GlobalStation globalStation = stations.get(uuid);
 					Couple<TrackNodeLocation> loc = globalStation.edgeLocation;
-					if (loc.getFirst().equals(location1) && loc.getSecond().equals(entry.getLocation())) {
-						Debug.debugChat("Station " + globalStation.name + " migrated directly due to graph split");
+					if (loc.getFirst()
+						.equals(location1)
+						&& loc.getSecond()
+							.equals(entry.getLocation())) {
 						target.addStation(globalStation);
 						iterator.remove();
 					}
 				}
 			}
+		}
+
+		Map<UUID, Train> trains = Create.RAILWAYS.trains;
+		for (Iterator<UUID> iterator = trains.keySet()
+			.iterator(); iterator.hasNext();) {
+			UUID uuid = iterator.next();
+			Train train = trains.get(uuid);
+			if (train.graph != this)
+				continue;
+			if (!train.isTravellingOn(node))
+				continue;
+			train.graph = target;
 		}
 
 		nodes.remove(location1);

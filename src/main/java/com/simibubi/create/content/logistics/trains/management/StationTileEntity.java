@@ -20,12 +20,10 @@ import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.CarriageBogey;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
-import com.simibubi.create.content.logistics.trains.entity.MovingPoint;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.TrackTargetingBehaviour.GraphLocation;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -61,7 +59,7 @@ public class StationTileEntity extends SmartTileEntity {
 		toMigrate = null;
 		failedCarriageIndex = -1;
 	}
-	
+
 	public void migrate(GlobalStation globalStation) {
 		if (toMigrate != null)
 			return;
@@ -92,7 +90,7 @@ public class StationTileEntity extends SmartTileEntity {
 				continue;
 			return station;
 		}
-		
+
 		if (level.isClientSide)
 			return null;
 
@@ -107,12 +105,9 @@ public class StationTileEntity extends SmartTileEntity {
 			toMigrate != null ? new GlobalStation(toMigrate) : new GlobalStation(id, worldPosition);
 		globalStation.setLocation(loc.edge, loc.position);
 		loc.graph.addStation(globalStation);
-		
-		if (toMigrate != null)
-			Debug.debugChat("Migrated Station " + globalStation.name);
 		toMigrate = null;
 		setChanged();
-		
+
 		return globalStation;
 	}
 
@@ -124,6 +119,7 @@ public class StationTileEntity extends SmartTileEntity {
 		super.read(tag, clientPacket);
 		if (tag.contains("ToMigrate"))
 			toMigrate = tag.getCompound("ToMigrate");
+		renderBounds = null;
 	}
 
 	@Override
@@ -312,7 +308,7 @@ public class StationTileEntity extends SmartTileEntity {
 		super.setRemovedNotDueToChunkUnload();
 	}
 
-	public void assemble() {
+	public void assemble(UUID playerUUID) {
 		refreshAssemblyInfo();
 
 		if (bogeyLocations[0] != 0) {
@@ -349,7 +345,7 @@ public class StationTileEntity extends SmartTileEntity {
 			pointOffsets.add(Double.valueOf(loc + .5 + bogeySize / 2));
 		}
 
-		List<MovingPoint> points = new ArrayList<>();
+		List<TravellingPoint> points = new ArrayList<>();
 		Vec3 directionVec = Vec3.atLowerCornerOf(assemblyDirection.getNormal());
 		TrackGraph graph = null;
 		TrackNode secondNode = null;
@@ -402,7 +398,7 @@ public class StationTileEntity extends SmartTileEntity {
 					return;
 				}
 
-				points.add(new MovingPoint(graph, node, secondNode, edge, positionOnEdge));
+				points.add(new TravellingPoint(node, secondNode, edge, positionOnEdge));
 			}
 
 			secondNode = node;
@@ -483,9 +479,9 @@ public class StationTileEntity extends SmartTileEntity {
 			.forEach(Carriage::discardEntity);
 		Create.RAILWAYS.carriageById.clear();
 
-		Train train = new Train(UUID.randomUUID(), graph, carriages, spacing);
+		Train train = new Train(UUID.randomUUID(), playerUUID, graph, carriages, spacing);
 		GlobalStation station = getOrCreateGlobalStation();
-		train.currentStation = station;
+		train.setCurrentStation(station);
 		station.reserveFor(train);
 
 		Create.RAILWAYS.trains.put(train.id, train);
@@ -518,7 +514,7 @@ public class StationTileEntity extends SmartTileEntity {
 		if (isAssembling())
 			return INFINITE_EXTENT_AABB;
 		if (renderBounds == null)
-			renderBounds = new AABB(worldPosition, getTarget().getGlobalPosition());
+			renderBounds = new AABB(worldPosition, getTarget().getGlobalPosition()).inflate(2);
 		return renderBounds;
 	}
 

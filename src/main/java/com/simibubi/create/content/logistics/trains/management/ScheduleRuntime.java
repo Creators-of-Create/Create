@@ -15,17 +15,17 @@ import net.minecraft.world.level.Level;
 
 public class ScheduleRuntime {
 
-	enum State {
+	public enum State {
 		PRE_TRANSIT, IN_TRANSIT, POST_TRANSIT
 	}
 
 	Train train;
 	Schedule schedule;
 
-	boolean paused;
 	boolean isAutoSchedule;
-	int currentEntry;
-	State state;
+	public boolean paused;
+	public int currentEntry;
+	public State state;
 
 	static final int INTERVAL = 40;
 	int cooldown;
@@ -49,6 +49,13 @@ public class ScheduleRuntime {
 			conditionProgress.add(0);
 			conditionContext.add(new CompoundTag());
 		}
+	}
+
+	public void transitInterrupted() {
+		if (schedule == null || state != State.IN_TRANSIT)
+			return;
+		state = State.PRE_TRANSIT;
+		cooldown = 0;
 	}
 
 	public void tick(Level level) {
@@ -76,17 +83,18 @@ public class ScheduleRuntime {
 
 		GlobalStation nextStation = findNextStation();
 		if (nextStation == null) {
+			train.status.failedNavigation();
 			cooldown = INTERVAL;
 			return;
 		}
-		if (nextStation == train.currentStation) {
+		train.status.successfulNavigation();
+		if (nextStation == train.getCurrentStation()) {
 			state = State.IN_TRANSIT;
 			destinationReached();
 			return;
 		}
-
-		train.navigation.setDestination(nextStation);
-		state = State.IN_TRANSIT;
+		if (train.navigation.startNavigation(nextStation, false) != -1)
+			state = State.IN_TRANSIT;
 	}
 
 	public void tickConditions(Level level) {
@@ -113,12 +121,25 @@ public class ScheduleRuntime {
 	public GlobalStation findNextStation() {
 		ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleDestination destination = entry.destination;
+
 		if (destination instanceof FilteredDestination filtered) {
+			String regex = filtered.nameFilter.replace("*", ".*");
+			GlobalStation best = null;
+			double bestCost = Double.MAX_VALUE;
 			for (GlobalStation globalStation : train.graph.getStations()) {
-				if (globalStation.name.equals(filtered.nameFilter))
-					return globalStation;
+				if (!globalStation.name.matches(regex))
+					continue;
+				double cost = train.navigation.startNavigation(globalStation, true);
+				if (cost < 0)
+					continue;
+				if (cost > bestCost)
+					continue;
+				best = globalStation;
+				bestCost = cost;
 			}
+			return best;
 		}
+
 		return null;
 	}
 
