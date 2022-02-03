@@ -59,6 +59,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.alphamode.forgetags.Tags;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -156,7 +157,7 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<Item> RAW_ZINC =
-		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), forgeItemTag("raw_materials"));
+		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), TagFactory.ITEM.create(new ResourceLocation("c", "raw_materials")));
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
@@ -389,7 +390,7 @@ public class AllItems {
 	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(String metalName) {
 		return REGISTRATE
 			.item("crushed_" + metalName + "_ore",
-				props -> new TagDependentIngredientItem(props, new ResourceLocation("forge", "ores/" + metalName)))
+				props -> new TagDependentIngredientItem(props, new ResourceLocation("c", "ores/" + metalName)))
 			.tag(CRUSHED_ORES.tag)
 			.register();
 	}

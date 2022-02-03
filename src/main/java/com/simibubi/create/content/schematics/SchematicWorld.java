@@ -13,6 +13,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -36,7 +37,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor {
 
@@ -138,7 +138,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public Biome getBiome(BlockPos pos) {
-		return ForgeRegistries.BIOMES.getValue(Biomes.FOREST.location());
+		return BuiltinRegistries.BIOME.get(Biomes.FOREST.location());
 	}
 
 	@Override

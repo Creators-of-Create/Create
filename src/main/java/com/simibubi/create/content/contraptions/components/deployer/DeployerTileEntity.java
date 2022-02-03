@@ -32,6 +32,8 @@ import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.NBTSerializer;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -378,7 +380,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		sendData();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public PartialModel getHandPose() {
 		return mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING
 			: heldItem.isEmpty() ? AllBlockPartials.DEPLOYER_HAND_POINTING : AllBlockPartials.DEPLOYER_HAND_HOLDING;
@@ -422,7 +424,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public float getHandOffset(float partialTicks) {
 		if (isVirtual())
 			return animatedOffset.getValue(partialTicks);

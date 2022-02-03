@@ -3,11 +3,11 @@ package com.simibubi.create.content.curiosities.bell;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PeculiarBellTileEntity extends AbstractBellTileEntity {
 
@@ -16,7 +16,7 @@ public class PeculiarBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public PartialModel getBellModel() {
 		return AllBlockPartials.PECULIAR_BELL;
 	}

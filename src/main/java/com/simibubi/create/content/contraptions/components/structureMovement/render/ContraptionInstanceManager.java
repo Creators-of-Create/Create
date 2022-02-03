@@ -40,10 +40,10 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 		actors.forEach(ActorInstance::beginFrame);
 	}
 
-    @Override
-	protected boolean shouldFrameUpdate(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
-		return true;
-	}
+//    @Override
+//	protected boolean shouldFrameUpdate(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
+//		return true;
+//	}
 
     @Nullable
     public ActorInstance createActor(Pair<StructureBlockInfo, MovementContext> actor) {

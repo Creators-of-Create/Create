@@ -67,7 +67,7 @@ public class BlockHelper {
 		if (blockState.hasProperty(BlockStateProperties.STAGE))
 			return blockState.setValue(BlockStateProperties.STAGE, 0);
 		if (blockState.is(BlockTags.CAULDRONS))
-			return Blocks.CAULDRON.delegate.get()
+			return Blocks.CAULDRON
 				.defaultBlockState();
 		if (blockState.hasProperty(BlockStateProperties.LEVEL_COMPOSTER))
 			return blockState.setValue(BlockStateProperties.LEVEL_COMPOSTER, 0);
