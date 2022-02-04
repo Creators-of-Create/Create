@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1647",
+	"_": "Missing Localizations: 1656",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1322,6 +1322,8 @@
 	"create.hint.empty_bearing": "UNLOCALIZED: _Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
 	"create.hint.full_deployer.title": "UNLOCALIZED: Deployer Item Overflow",
 	"create.hint.full_deployer": "UNLOCALIZED: It appears this _Deployer_ contains _excess_ _items_ that need to be _extracted._ Use a _hopper,_ _funnel_ or other means to free it from its overflow.",
+	"create.hint.derailed_train.title": "UNLOCALIZED: Derailed Train",
+	"create.hint.derailed_train": "UNLOCALIZED: It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
 	"create.gui.schedule.lmb_edit": "UNLOCALIZED: Left-Click to Edit",
 	"create.gui.schedule.rmb_remove": "UNLOCALIZED: Right-Click to Remove",
@@ -1405,6 +1407,13 @@
 	"create.track_target.too_far": "UNLOCALIZED: Targeted track is too far from here",
 
 	"create.train.unnamed": "UNLOCALIZED: Unnamed Train",
+	"create.train.cannot_relocate_moving": "UNLOCALIZED: Cannot relocate a moving Train",
+	"create.train.relocate": "UNLOCALIZED: Click a Track to Relocate %1$s to. Sneak-Click to abort",
+	"create.train.relocate.abort": "UNLOCALIZED: Relocation aborted",
+	"create.train.relocate.success": "UNLOCALIZED: Relocation successful",
+	"create.train.relocate.valid": "UNLOCALIZED: Can be relocated here, Click to Confirm",
+	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to this Track",
+	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
 
 	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
 	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",

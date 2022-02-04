@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.trains.management;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
@@ -14,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -59,6 +61,10 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
 		if (AllItems.WRENCH.isIn(itemInHand))
 			return InteractionResult.PASS;
+		if (itemInHand.getItem() == Items.SPONGE) {
+			Create.RAILWAYS.trains.clear();
+			Create.RAILWAYS.carriageById.clear();
+		}
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));
 		return InteractionResult.SUCCESS;

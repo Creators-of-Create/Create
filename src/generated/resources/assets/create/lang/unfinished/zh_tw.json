@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 482",
+	"_": "Missing Localizations: 491",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1322,6 +1322,8 @@
 	"create.hint.empty_bearing": "_空手右鍵_軸承來_添加_你新建造的結構。",
 	"create.hint.full_deployer.title": "機械手物品溢出",
 	"create.hint.full_deployer": "_機械手_包含_過剩的物品_需要被_取出._使用漏斗_或其他方法將溢出解決。",
+	"create.hint.derailed_train.title": "UNLOCALIZED: Derailed Train",
+	"create.hint.derailed_train": "UNLOCALIZED: It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
 	"create.gui.schedule.lmb_edit": "UNLOCALIZED: Left-Click to Edit",
 	"create.gui.schedule.rmb_remove": "UNLOCALIZED: Right-Click to Remove",
@@ -1405,6 +1407,13 @@
 	"create.track_target.too_far": "UNLOCALIZED: Targeted track is too far from here",
 
 	"create.train.unnamed": "UNLOCALIZED: Unnamed Train",
+	"create.train.cannot_relocate_moving": "UNLOCALIZED: Cannot relocate a moving Train",
+	"create.train.relocate": "UNLOCALIZED: Click a Track to Relocate %1$s to. Sneak-Click to abort",
+	"create.train.relocate.abort": "UNLOCALIZED: Relocation aborted",
+	"create.train.relocate.success": "UNLOCALIZED: Relocation successful",
+	"create.train.relocate.valid": "UNLOCALIZED: Can be relocated here, Click to Confirm",
+	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to this Track",
+	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
 
 	"create.gui.config.overlay1": "嗨 :)",
 	"create.gui.config.overlay2": "這是一個實例層",

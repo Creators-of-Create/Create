@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 96",
+	"_": "Missing Localizations: 105",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1322,6 +1322,8 @@
 	"create.hint.empty_bearing": "_맨 손_으로 베어링을 _우클릭_하여 구조물을 _부착_하세요.",
 	"create.hint.full_deployer.title": "기계 손 아이템 과적",
 	"create.hint.full_deployer": "이 _기계 손_은 _배출_할 아이템을 가지고 있습니다. 호퍼 , 퍼널 등을 이용해 아이템을 빼내세요.",
+	"create.hint.derailed_train.title": "UNLOCALIZED: Derailed Train",
+	"create.hint.derailed_train": "UNLOCALIZED: It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
 	"create.gui.schedule.lmb_edit": "UNLOCALIZED: Left-Click to Edit",
 	"create.gui.schedule.rmb_remove": "UNLOCALIZED: Right-Click to Remove",
@@ -1405,6 +1407,13 @@
 	"create.track_target.too_far": "UNLOCALIZED: Targeted track is too far from here",
 
 	"create.train.unnamed": "UNLOCALIZED: Unnamed Train",
+	"create.train.cannot_relocate_moving": "UNLOCALIZED: Cannot relocate a moving Train",
+	"create.train.relocate": "UNLOCALIZED: Click a Track to Relocate %1$s to. Sneak-Click to abort",
+	"create.train.relocate.abort": "UNLOCALIZED: Relocation aborted",
+	"create.train.relocate.success": "UNLOCALIZED: Relocation successful",
+	"create.train.relocate.valid": "UNLOCALIZED: Can be relocated here, Click to Confirm",
+	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to this Track",
+	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
 
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "This is a sample overlay",

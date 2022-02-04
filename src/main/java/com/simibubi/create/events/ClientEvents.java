@@ -33,6 +33,7 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
+import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -150,6 +151,7 @@ public class ClientEvents {
 		ToolboxHandlerClient.clientTick();
 		TrackTargetingBlockItem.clientTick();
 		TrackPlacement.clientTick();
+		TrainRelocator.clientTick();
 	}
 
 	@SubscribeEvent

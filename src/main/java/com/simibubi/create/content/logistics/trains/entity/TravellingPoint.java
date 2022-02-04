@@ -172,7 +172,7 @@ public class TravellingPoint {
 			position -= edgeLength;
 			edgeLength = edge.getLength(node1, node2);
 		}
-
+		
 		return traveled;
 	}
 

@@ -13,7 +13,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-class TrainMigration {
+public class TrainMigration {
+
 	Couple<TrackNodeLocation> locations;
 	double positionOnOldEdge;
 	boolean curve;

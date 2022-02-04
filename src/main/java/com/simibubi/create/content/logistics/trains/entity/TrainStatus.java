@@ -50,6 +50,10 @@ public class TrainStatus {
 		displayInformation("A Carriage has reached the end of its Track.", false);
 		track = true;
 	}
+	
+	public void crash() {
+		displayInformation("Collision with other Train", false);
+	}
 
 	public void successfulMigration() {
 		if (!track)

@@ -63,6 +63,8 @@ public class ScheduleRuntime {
 			return;
 		if (paused)
 			return;
+		if (train.derailed)
+			return;
 		if (train.navigation.destination != null)
 			return;
 		if (currentEntry >= schedule.entries.size()) {
@@ -129,7 +131,8 @@ public class ScheduleRuntime {
 			for (GlobalStation globalStation : train.graph.getStations()) {
 				if (!globalStation.name.matches(regex))
 					continue;
-				double cost = train.navigation.startNavigation(globalStation, true);
+				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);
+				double cost = matchesCurrent ? 0 : train.navigation.startNavigation(globalStation, true);
 				if (cost < 0)
 					continue;
 				if (cost > bestCost)

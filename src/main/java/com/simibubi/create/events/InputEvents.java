@@ -3,6 +3,7 @@ package com.simibubi.create.events;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 
@@ -38,8 +39,8 @@ public class InputEvents {
 		double delta = event.getScrollDelta();
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
-				|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
-				|| ScrollValueHandler.onScroll(delta);
+			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
+			|| ScrollValueHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 
@@ -59,15 +60,18 @@ public class InputEvents {
 	public static void onClickInput(ClickInputEvent event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
-		
+
 		if (event.getKeyMapping() == Minecraft.getInstance().options.keyPickItem) {
 			if (ToolboxHandlerClient.onPickItem())
 				event.setCanceled(true);
 			return;
 		}
-		
-		if (event.isUseItem())
-			LinkedControllerClientHandler.deactivateInLectern();
+
+		if (!event.isUseItem())
+			return;
+
+		LinkedControllerClientHandler.deactivateInLectern();
+		TrainRelocator.onClicked(event);
 	}
 
 }

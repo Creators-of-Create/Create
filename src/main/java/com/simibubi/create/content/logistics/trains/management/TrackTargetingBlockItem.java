@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.management;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -17,6 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class TrackTargetingBlockItem extends BlockItem {
 
@@ -43,12 +45,12 @@ public class TrackTargetingBlockItem extends BlockItem {
 			return InteractionResult.SUCCESS;
 		}
 
-		if (state.getBlock() instanceof ITrackBlock track) {
+		if (state.getBlock()instanceof ITrackBlock track) {
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
 			CompoundTag stackTag = stack.getOrCreateTag();
-			boolean front = player.getLookAngle()
-				.dot(track.getTrackAxis(level, pos, state)) < 0;
+			Vec3 lookAngle = player.getLookAngle();
+			boolean front = TrackGraphHelper.getTrackDirectionByLookVec(lookAngle, level, pos, state, track);
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
 			stackTag.putBoolean("SelectedDirection", front);
 			player.displayClientMessage(Lang.translate("track_target.set"), true);
@@ -69,7 +71,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		BlockPos selectedPos = NbtUtils.readBlockPos(tag.getCompound("SelectedPos"));
 		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.getMaterial()
 			.isReplaceable() ? 0 : 1);
-		
+
 		if (!selectedPos.closerThan(placedPos, 16)) {
 			player.displayClientMessage(Lang.translate("track_target.too_far")
 				.withStyle(ChatFormatting.RED), true);

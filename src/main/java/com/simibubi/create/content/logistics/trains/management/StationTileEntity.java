@@ -204,9 +204,6 @@ public class StationTileEntity extends SmartTileEntity {
 			axisFound = true;
 		}
 
-		Create.RAILWAYS.trains.clear();
-		Create.RAILWAYS.carriageById.clear();
-
 		return true;
 	}
 
@@ -474,10 +471,6 @@ public class StationTileEntity extends SmartTileEntity {
 			contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
 			contraption.expandBoundsAroundAxis(Axis.Y);
 		}
-
-		Create.RAILWAYS.carriageById.values()
-			.forEach(Carriage::discardEntity);
-		Create.RAILWAYS.carriageById.clear();
 
 		Train train = new Train(UUID.randomUUID(), playerUUID, graph, carriages, spacing);
 		GlobalStation station = getOrCreateGlobalStation();

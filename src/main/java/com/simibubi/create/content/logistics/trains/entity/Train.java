@@ -25,13 +25,17 @@ import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -91,7 +95,7 @@ public class Train {
 
 	public void tick(Level level) {
 		status.tick(level);
-		
+
 		if (graph == null) {
 			if (!migratingPoints.isEmpty())
 				reattachToTracks(level);
@@ -104,6 +108,12 @@ public class Train {
 		if (navigation.destination == null && speed > 0) {
 			speed -= acceleration;
 			if (speed <= 0)
+				speed = 0;
+		}
+
+		if (derailed) {
+			speed /= 3f;
+			if (Mth.equal(speed, 0))
 				speed = 0;
 		}
 
@@ -143,8 +153,10 @@ public class Train {
 			double actualDistance = carriage.travel(level, graph, distance + leadingStress + trailingStress, control);
 			blocked |= carriage.blocked;
 
-			if (i == 0)
+			if (i == 0) {
 				distance = actualDistance;
+				collideWithOtherTrains(level, carriage);
+			}
 			previous = carriage.getTrailingPoint();
 		}
 
@@ -162,6 +174,86 @@ public class Train {
 			if (recalculate && navigation.distanceToDestination % 100 <= 20)
 				navigation.startNavigation(navigation.destination, false);
 		}
+	}
+
+	private void collideWithOtherTrains(Level level, Carriage carriage) {
+		if (derailed)
+			return;
+		Collision: for (Train train : Create.RAILWAYS.trains.values()) {
+			if (train == this)
+				continue;
+			Vec3 start = carriage.getLeadingPoint()
+				.getPosition();
+			Vec3 end = carriage.getTrailingPoint()
+				.getPosition();
+			Vec3 diff = end.subtract(start);
+			Vec3 lastPoint = null;
+
+			for (Carriage otherCarriage : train.carriages) {
+				for (boolean betweenBits : Iterate.trueAndFalse) {
+					if (betweenBits && lastPoint == null)
+						continue;
+
+					Vec3 start2 = otherCarriage.getLeadingPoint()
+						.getPosition();
+					Vec3 end2 = otherCarriage.getTrailingPoint()
+						.getPosition();
+					if (betweenBits) {
+						end2 = start2;
+						start2 = lastPoint;
+					}
+
+					lastPoint = end2;
+
+					if ((end.y < end2.y - 3 || end2.y < end.y - 3)
+						&& (start.y < start2.y - 3 || start2.y < start.y - 3))
+						continue;
+
+					Vec3 diff2 = end2.subtract(start2);
+					Vec3 normedDiff = diff.normalize();
+					Vec3 normedDiff2 = diff2.normalize();
+					double[] intersect = VecHelper.intersect(start, start2, normedDiff, normedDiff2, Axis.Y);
+					if (intersect == null) {
+						Vec3 intersectSphere = VecHelper.intersectSphere(start2, normedDiff2, start, .125f);
+						if (intersectSphere == null)
+							continue;
+						if (!Mth.equal(normedDiff2.dot(intersectSphere.subtract(start2)
+							.normalize()), 1))
+							continue;
+						intersect = new double[2];
+						intersect[0] = intersectSphere.distanceTo(start) - .125;
+						intersect[1] = intersectSphere.distanceTo(start2) - .125;
+					}
+					if (intersect[0] > diff.length())
+						continue;
+					if (intersect[1] > diff2.length())
+						continue;
+					if (intersect[0] < 0)
+						continue;
+					if (intersect[1] < 0)
+						continue;
+
+					double combinedSpeed = speed + train.speed;
+					if (combinedSpeed > .2f) {
+						Vec3 v = start.add(normedDiff.scale(intersect[0]));
+						level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5),
+							BlockInteraction.NONE);
+					}
+					crash();
+					train.crash();
+					break Collision;
+				}
+			}
+		}
+	}
+
+	public void crash() {
+		navigation.cancelNavigation();
+		if (derailed)
+			return;
+		speed = -Mth.clamp(speed, -.5, .5);
+		derailed = true;
+		status.crash();
 	}
 
 	public boolean disassemble(Direction assemblyDirection, BlockPos pos) {
@@ -219,7 +311,7 @@ public class Train {
 
 	}
 
-	private void forEachTravellingPoint(Consumer<TravellingPoint> callback) {
+	public void forEachTravellingPoint(Consumer<TravellingPoint> callback) {
 		for (Carriage c : carriages) {
 			c.leadingBogey().points.forEach(callback::accept);
 			if (c.isOnTwoBogeys())
