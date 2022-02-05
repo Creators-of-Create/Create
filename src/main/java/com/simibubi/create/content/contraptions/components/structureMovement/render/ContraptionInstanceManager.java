@@ -40,10 +40,10 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 		actors.forEach(ActorInstance::beginFrame);
 	}
 
-//	@Override
-//	protected void updateInstance(DynamicInstance dyn, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
-//		dyn.beginFrame();
-//	}
+	@Override
+	protected void updateInstance(DynamicInstance dyn, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
+		dyn.beginFrame();
+	}
 
 	@Nullable
 	public ActorInstance createActor(Pair<StructureBlockInfo, MovementContext> actor) {
