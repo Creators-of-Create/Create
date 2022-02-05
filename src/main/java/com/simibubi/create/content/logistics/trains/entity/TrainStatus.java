@@ -36,6 +36,10 @@ public class TrainStatus {
 		displayInformation("Navigation succeeded", true);
 		navigation = false;
 	}
+	
+	public void manualControls() {
+		displayInformation("Schedule paused for manual controls", true);
+	}
 
 	public void failedMigration() {
 		if (track)

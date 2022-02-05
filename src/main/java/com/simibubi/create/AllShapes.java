@@ -123,7 +123,7 @@ public class AllShapes {
 
 		STATION = shape(0, 0, 0, 16, 5, 16).add(2, 4, 0, 14, 16, 4)
 			.forHorizontal(NORTH),
-		CONTROLS = shape(0, 0, 4, 16, 8, 16).add(0, 0, 6, 16, 14, 16)
+		CONTROLS = shape(0, 0, 4, 16, 4, 16).add(0, 0, 6, 16, 14, 16)
 			.forHorizontal(NORTH)
 
 	;

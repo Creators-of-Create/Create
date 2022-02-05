@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -112,7 +113,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 			return list;
 		list.add(Lang
 			.createTranslationTextComponent("linked_controller.frequency_slot_" + ((slot % 2) + 1),
-				LinkedControllerClientHandler.getControls()
+				ControlsUtil.getControls()
 					.get(slot / 2)
 					.getTranslatedKeyMessage()
 					.getString())

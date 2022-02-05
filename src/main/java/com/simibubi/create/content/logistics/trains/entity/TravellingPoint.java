@@ -13,6 +13,7 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.world.phys.Vec3;
 
@@ -34,7 +35,7 @@ public class TravellingPoint {
 	}
 
 	public static interface ITrackSelector
-		extends BiFunction<TrackGraph, List<Entry<TrackNode, TrackEdge>>, Entry<TrackNode, TrackEdge>> {
+		extends BiFunction<TrackGraph, Pair<Boolean, List<Entry<TrackNode, TrackEdge>>>, Entry<TrackNode, TrackEdge>> {
 	};
 
 	public TravellingPoint(TrackNode node1, TrackNode node2, TrackEdge edge, double position) {
@@ -45,15 +46,20 @@ public class TravellingPoint {
 	}
 
 	public ITrackSelector random() {
-		return (graph, validTargets) -> validTargets.get(Create.RANDOM.nextInt(validTargets.size()));
+		return (graph, pair) -> pair.getSecond()
+			.get(Create.RANDOM.nextInt(pair.getSecond()
+				.size()));
 	}
 
 	public ITrackSelector follow(TravellingPoint other) {
-		return (graph, validTargets) -> {
-			TrackNode target = other.node1;
+		return (graph, pair) -> {
+			List<Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
+			boolean forward = pair.getFirst();
+			TrackNode target = forward ? other.node1 : other.node2;
+			TrackNode secondary = forward ? other.node2 : other.node1;
 
 			for (Entry<TrackNode, TrackEdge> entry : validTargets)
-				if (entry.getKey() == target || entry.getKey() == other.node2)
+				if (entry.getKey() == target || entry.getKey() == secondary)
 					return entry;
 
 			Vector<List<Entry<TrackNode, TrackEdge>>> frontiers = new Vector<>(validTargets.size());
@@ -99,7 +105,9 @@ public class TravellingPoint {
 	}
 
 	public ITrackSelector steer(SteerDirection direction, Vec3 upNormal) {
-		return (graph, validTargets) -> {
+		return (graph, pair) -> {
+			List<Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
+			boolean forward = pair.getFirst();
 			double closest = Double.MAX_VALUE;
 			Entry<TrackNode, TrackEdge> best = null;
 
@@ -108,7 +116,7 @@ public class TravellingPoint {
 				Vec3 entryTrajectory = entry.getValue()
 					.getDirection(node2, entry.getKey(), true);
 				Vec3 normal = trajectory.cross(upNormal);
-				double dot = normal.dot(entryTrajectory);
+				double dot = normal.dot(entryTrajectory) * (forward ? 1 : -1);
 				double diff = Math.abs(direction.targetDot - dot);
 				if (diff > closest)
 					continue;
@@ -136,43 +144,86 @@ public class TravellingPoint {
 		double currentT = position / edgeLength;
 		double incrementT = edge.incrementT(node1, node2, currentT, distance);
 		position = incrementT * edgeLength;
-
 		List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
-		while (position > edgeLength) {
-			validTargets.clear();
 
-			for (Entry<TrackNode, TrackEdge> entry : graph.getConnectionsFrom(node2)
-				.entrySet()) {
-				TrackNode newNode = entry.getKey();
-				if (newNode == node1)
-					continue;
+		if (distance > 0) {
+			// Moving forward
+			while (position > edgeLength) {
+				validTargets.clear();
 
-				TrackEdge newEdge = entry.getValue();
-				Vec3 currentDirection = edge.getDirection(node1, node2, false);
-				Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
-				if (currentDirection.dot(newDirection) < 0)
-					continue;
+				for (Entry<TrackNode, TrackEdge> entry : graph.getConnectionsFrom(node2)
+					.entrySet()) {
+					TrackNode newNode = entry.getKey();
+					if (newNode == node1)
+						continue;
 
-				validTargets.add(entry);
+					TrackEdge newEdge = entry.getValue();
+					Vec3 currentDirection = edge.getDirection(node1, node2, false);
+					Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
+					if (currentDirection.dot(newDirection) < 0)
+						continue;
+
+					validTargets.add(entry);
+				}
+
+				if (validTargets.isEmpty()) {
+					traveled -= position - edgeLength;
+					position = edgeLength;
+					blocked = true;
+					break;
+				}
+
+				Entry<TrackNode, TrackEdge> entry = validTargets.size() == 1 ? validTargets.get(0)
+					: trackSelector.apply(graph, Pair.of(true, validTargets));
+
+				node1 = node2;
+				node2 = entry.getKey();
+				edge = entry.getValue();
+				position -= edgeLength;
+				edgeLength = edge.getLength(node1, node2);
 			}
 
-			if (validTargets.isEmpty()) {
-				traveled -= position - edgeLength;
-				position = edgeLength;
-				blocked = true;
-				break;
+		} else {
+			// Moving backwards
+			while (position < 0) {
+				validTargets.clear();
+
+				for (Entry<TrackNode, TrackEdge> entry : graph.getConnectionsFrom(node1)
+					.entrySet()) {
+					TrackNode newNode = entry.getKey();
+					if (newNode == node2)
+						continue;
+
+					TrackEdge newEdge = graph.getConnectionsFrom(newNode)
+						.get(node1);
+					Vec3 currentDirection = edge.getDirection(node1, node2, true);
+					Vec3 newDirection = newEdge.getDirection(newNode, node1, false);
+					if (currentDirection.dot(newDirection) < 0)
+						continue;
+
+					validTargets.add(entry);
+				}
+
+				if (validTargets.isEmpty()) {
+					traveled -= position;
+					position = 0;
+					blocked = true;
+					break;
+				}
+
+				Entry<TrackNode, TrackEdge> entry = validTargets.size() == 1 ? validTargets.get(0)
+					: trackSelector.apply(graph, Pair.of(false, validTargets));
+
+				node2 = node1;
+				node1 = entry.getKey();
+				edge = graph.getConnectionsFrom(node1)
+					.get(node2);
+				edgeLength = edge.getLength(node1, node2);
+				position += edgeLength;
 			}
 
-			Entry<TrackNode, TrackEdge> entry =
-				validTargets.size() == 1 ? validTargets.get(0) : trackSelector.apply(graph, validTargets);
-
-			node1 = node2;
-			node2 = entry.getKey();
-			edge = entry.getValue();
-			position -= edgeLength;
-			edgeLength = edge.getLength(node1, node2);
 		}
-		
+
 		return traveled;
 	}
 

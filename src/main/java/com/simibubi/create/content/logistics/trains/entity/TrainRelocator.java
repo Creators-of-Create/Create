@@ -188,7 +188,7 @@ public class TrainRelocator {
 		});
 
 		train.status.successfulMigration();
-		train.leave();
+		train.leaveStation();
 		return true;
 	}
 
@@ -293,8 +293,7 @@ public class TrainRelocator {
 	private static Train getTrainFromEntity(CarriageContraptionEntity carriageContraptionEntity) {
 		if (carriageContraptionEntity == null)
 			return null;
-		int id = ((CarriageContraption) carriageContraptionEntity.getContraption()).temporaryCarriageIdHolder;
-		Carriage carriage = Create.RAILWAYS.carriageById.get(id); // TODO: thread breach
+		Carriage carriage = carriageContraptionEntity.getCarriage();
 		if (carriage == null)
 			return null;
 		return carriage.train;

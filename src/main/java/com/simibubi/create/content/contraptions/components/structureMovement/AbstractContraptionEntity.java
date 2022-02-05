@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -161,6 +163,20 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				.size();
 	}
 
+	public Component getContraptionName() {
+		return getName();
+	}
+
+	public boolean startControlling(BlockPos controlsLocalPos) {
+		return false;
+	}
+
+	public boolean control(BlockPos controlsLocalPos, Collection<Integer> heldControls, Player player) {
+		return true;
+	}
+
+	public void stopControlling(BlockPos controlsLocalPos) {}
+
 	public boolean handlePlayerInteraction(Player player, BlockPos localPos, Direction side,
 		InteractionHand interactionHand) {
 		int indexOfSeat = contraption.getSeats()
@@ -168,7 +184,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (indexOfSeat == -1)
 			return contraption.interactors.containsKey(localPos) && contraption.interactors.get(localPos)
 				.handlePlayerInteraction(player, interactionHand, localPos, this);
-
+		if (player.isPassenger())
+			return false;
+		
 		// Eject potential existing passenger
 		Entity toDismount = null;
 		for (Entry<UUID, Integer> entry : contraption.getSeatMapping()
@@ -223,7 +241,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		}
 
-		collidingEntities.entrySet().removeIf(e -> e.getValue().incrementAndGet() > 3);
+		collidingEntities.entrySet()
+			.removeIf(e -> e.getValue()
+				.incrementAndGet() > 3);
 
 		xo = getX();
 		yo = getY();
@@ -441,7 +461,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		if (contraption == null)
 			return;
-		
+
 		StructureTransform transform = makeStructureTransform();
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));

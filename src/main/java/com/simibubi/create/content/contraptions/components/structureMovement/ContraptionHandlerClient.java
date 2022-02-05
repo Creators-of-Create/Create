@@ -13,8 +13,8 @@ import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.RaycastHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -74,8 +74,6 @@ public class ContraptionHandlerClient {
 
 		if (player == null)
 			return;
-		if (player.isPassenger())
-			return;
 		if (mc.level == null)
 			return;
 		if (!event.isUseItem())
@@ -84,7 +82,7 @@ public class ContraptionHandlerClient {
 		Couple<Vec3> rayInputs = getRayInputs(player);
 		Vec3 origin = rayInputs.getFirst();
 		Vec3 target = rayInputs.getSecond();
-		AABB aabb = new AABB(origin, target);
+		AABB aabb = new AABB(origin, target).inflate(4);
 		List<AbstractContraptionEntity> intersectingContraptions =
 			mc.level.getEntitiesOfClass(AbstractContraptionEntity.class, aabb);
 

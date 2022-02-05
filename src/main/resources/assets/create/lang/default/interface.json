@@ -627,6 +627,8 @@
 	"create.train_assembly.not_connected_in_order": "Bogeys are not connected in order",
 	"create.train_assembly.single_bogey_carriage": "This Bogey type cannot support a carriage on its own",
 	"create.train_assembly.nothing_attached": "No structure attached to Bogey %1$s",
+	"create.train_assembly.no_controls": "At least one forward-facing controls block needs to be mounted on the train",
+	"create.train_assembly.sideways_controls": "A mounted controls block is facing sideways",
 
 	"create.track_target.set": "Targeted track selected",
 	"create.track_target.success": "Successfully bound to targeted track",
@@ -642,6 +644,10 @@
 	"create.train.relocate.valid": "Can relocate to here, Click to Confirm",
 	"create.train.relocate.invalid": "Cannot relocate Train to this Track",
 	"create.train.relocate.too_far": "Cannot relocate Train this far away",
+
+	"create.contraption.controls.start_controlling": "Now controlling: %1$s",
+	"create.contraption.controls.stop_controlling": "Stopped controlling contraption",
+	"create.contraption.controls.approach_station": "Hold %1$s to approach %2$s",
 
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "This is a sample overlay",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 433",
+	"_": "Missing Localizations: 438",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1399,6 +1399,8 @@
 	"create.train_assembly.not_connected_in_order": "UNLOCALIZED: Bogeys are not connected in order",
 	"create.train_assembly.single_bogey_carriage": "UNLOCALIZED: This Bogey type cannot support a carriage on its own",
 	"create.train_assembly.nothing_attached": "UNLOCALIZED: No structure attached to Bogey %1$s",
+	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
+	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",
@@ -1411,9 +1413,13 @@
 	"create.train.relocate": "UNLOCALIZED: Click a Track to Relocate %1$s to. Sneak-Click to abort",
 	"create.train.relocate.abort": "UNLOCALIZED: Relocation aborted",
 	"create.train.relocate.success": "UNLOCALIZED: Relocation successful",
-	"create.train.relocate.valid": "UNLOCALIZED: Can be relocated here, Click to Confirm",
+	"create.train.relocate.valid": "UNLOCALIZED: Can relocate to here, Click to Confirm",
 	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to this Track",
 	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
+
+	"create.contraption.controls.start_controlling": "UNLOCALIZED: Now controlling: %1$s",
+	"create.contraption.controls.stop_controlling": "UNLOCALIZED: Stopped controlling contraption",
+	"create.contraption.controls.approach_station": "UNLOCALIZED: Hold %1$s to approach %2$s",
 
 	"create.gui.config.overlay1": "Hola :)",
 	"create.gui.config.overlay2": "Esta es una muestra de la superposición",

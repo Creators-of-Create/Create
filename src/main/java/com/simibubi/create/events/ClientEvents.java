@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -105,6 +106,7 @@ public class ClientEvents {
 		Level world = Minecraft.getInstance().level;
 		if (event.phase == Phase.START) {
 			LinkedControllerClientHandler.tick();
+			ControlsHandler.tick();
 			AirCurrent.tickClientPlayerSounds();
 			return;
 		}

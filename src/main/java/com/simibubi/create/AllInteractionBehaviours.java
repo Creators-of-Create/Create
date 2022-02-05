@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -49,6 +50,7 @@ public class AllInteractionBehaviours {
 	static void register() {
 		addInteractionBehaviour(Blocks.LEVER.getRegistryName(), LeverMovingInteraction::new);
 		addInteractionBehaviour(AllBlocks.DEPLOYER.getId(), DeployerMovingInteraction::new);
+		addInteractionBehaviour(AllBlocks.CONTROLS.getId(), ControlsInteractionBehaviour::new);
 
 		// TODO: Scan registry for instanceof (-> modded door support)
 		

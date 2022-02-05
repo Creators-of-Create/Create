@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -24,7 +25,10 @@ public class CarriageContraption extends Contraption {
 
 	private Direction assemblyDirection;
 
-	private boolean controls;
+	private boolean forwardControls;
+	private boolean backwardControls;
+	private boolean sidewaysControls;
+
 	private int bogeys;
 	private BlockPos secondBogeyPos;
 
@@ -48,6 +52,8 @@ public class CarriageContraption extends Contraption {
 			return false;
 		if (bogeys > 2)
 			throw new AssemblyException(Lang.translate("train_assembly.too_many_bogeys", bogeys));
+		if (sidewaysControls)
+			throw new AssemblyException(Lang.translate("train_assembly.sideways_controls"));
 		return true;
 	}
 
@@ -67,8 +73,15 @@ public class CarriageContraption extends Contraption {
 			return Pair.of(new StructureBlockInfo(pos, blockState, null), null);
 		}
 
-		if (AllBlocks.CONTROLS.has(blockState))
-			controls = true;
+		if (AllBlocks.CONTROLS.has(blockState)) {
+			Direction facing = blockState.getValue(ControlsBlock.FACING);
+			if (facing.getAxis() != assemblyDirection.getAxis())
+				sidewaysControls = true;
+			else if (facing == assemblyDirection)
+				forwardControls = true;
+			else
+				backwardControls = true;
+		}
 
 		return super.capture(world, pos);
 	}
@@ -79,7 +92,8 @@ public class CarriageContraption extends Contraption {
 		NBTHelper.writeEnum(tag, "AssemblyDirection", getAssemblyDirection());
 		if (spawnPacket)
 			tag.putInt("CarriageId", carriage.id);
-		tag.putBoolean("Controls", hasControls());
+		tag.putBoolean("FrontControls", forwardControls);
+		tag.putBoolean("BackControls", backwardControls);
 		return tag;
 	}
 
@@ -88,7 +102,8 @@ public class CarriageContraption extends Contraption {
 		assemblyDirection = NBTHelper.readEnum(nbt, "AssemblyDirection", Direction.class);
 		if (spawnData)
 			temporaryCarriageIdHolder = nbt.getInt("CarriageId");
-		controls = nbt.getBoolean("Controls");
+		forwardControls = nbt.getBoolean("FrontControls");
+		backwardControls = nbt.getBoolean("BackControls");
 		super.readNBT(world, nbt, spawnData);
 	}
 
@@ -120,8 +135,12 @@ public class CarriageContraption extends Contraption {
 		return carriage;
 	}
 
-	public boolean hasControls() {
-		return controls;
+	public boolean hasForwardControls() {
+		return forwardControls;
+	}
+
+	public boolean hasBackwardControls() {
+		return backwardControls;
 	}
 
 	public BlockPos getSecondBogeyPos() {

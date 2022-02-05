@@ -21,6 +21,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
@@ -56,6 +57,9 @@ public class Train {
 	public Component name;
 	public TrainStatus status;
 
+	public SteerDirection manualSteer;
+	public boolean manualTick;
+
 	public UUID currentStation;
 
 	public boolean heldForAssembly;
@@ -85,12 +89,14 @@ public class Train {
 			Create.RAILWAYS.carriageById.put(c.id, c);
 		});
 
-		doubleEnded = carriages.size() > 1 && carriages.get(carriages.size() - 1).contraption.hasControls();
+		doubleEnded = carriages.stream()
+			.anyMatch(c -> c.contraption.hasBackwardControls());
 		navigation = new Navigation(this, graph);
 		runtime = new ScheduleRuntime(this);
 		heldForAssembly = true;
 		migratingPoints = new ArrayList<>();
 		currentStation = null;
+		manualSteer = SteerDirection.NONE;
 	}
 
 	public void tick(Level level) {
@@ -105,11 +111,13 @@ public class Train {
 		runtime.tick(level);
 		navigation.tick(level);
 
-		if (navigation.destination == null && speed > 0) {
-			speed -= acceleration;
-			if (speed <= 0)
-				speed = 0;
+		if (!manualTick && navigation.destination == null && speed != 0) {
+			if (speed > 0)
+				speed = Math.max(speed - acceleration, 0);
+			else
+				speed = Math.min(speed + acceleration, 0);
 		}
+		manualTick = false;
 
 		if (derailed) {
 			speed /= 3f;
@@ -145,12 +153,20 @@ public class Train {
 		for (int i = 0; i < carriages.size(); i++) {
 			double leadingStress = i == 0 ? 0 : stress[i - 1] * leadingModifier;
 			double trailingStress = i == stress.length ? 0 : stress[i] * trailingModifier;
-
 			Carriage carriage = carriages.get(i);
-			TravellingPoint toFollow = previous;
-			Function<TravellingPoint, ITrackSelector> control =
-				previous == null ? navigation::control : mp -> mp.follow(toFollow);
-			double actualDistance = carriage.travel(level, graph, distance + leadingStress + trailingStress, control);
+
+			TravellingPoint toFollowForward = previous;
+			TravellingPoint toFollowBackward = i == carriages.size() - 1 ? null
+				: carriages.get(i + 1)
+					.getLeadingPoint();
+
+			Function<TravellingPoint, ITrackSelector> forwardControl =
+				toFollowForward == null ? navigation::control : mp -> mp.follow(toFollowForward);
+			Function<TravellingPoint, ITrackSelector> backwardControl =
+				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
+
+			double actualDistance = carriage.travel(level, graph, distance + leadingStress + trailingStress,
+				forwardControl, backwardControl);
 			blocked |= carriage.blocked;
 
 			if (i == 0) {
@@ -165,7 +181,7 @@ public class Train {
 			navigation.cancelNavigation();
 			runtime.tick(level);
 			status.endOfTrack();
-		} else if (speed > 0)
+		} else if (speed != 0)
 			status.trackOK();
 
 		if (navigation.destination != null) {
@@ -376,7 +392,7 @@ public class Train {
 		return length;
 	}
 
-	public void leave() {
+	public void leaveStation() {
 		GlobalStation currentStation = getCurrentStation();
 		if (currentStation == null)
 			return;
@@ -409,6 +425,17 @@ public class Train {
 		} catch (IllegalArgumentException illegalargumentexception) {
 			return null;
 		}
+	}
+
+	public void approachTargetSpeed(float accelerationMod) {
+		if (Mth.equal(targetSpeed, speed))
+			return;
+		if (manualTick)
+			leaveStation();
+		if (speed < targetSpeed)
+			speed = Math.min(speed + Train.acceleration * accelerationMod, targetSpeed);
+		else if (speed > targetSpeed)
+			speed = Math.max(speed - Train.acceleration * accelerationMod, targetSpeed);
 	}
 
 }

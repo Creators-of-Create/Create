@@ -43,7 +43,7 @@ public class Carriage {
 		this.bogeys = Couple.create(bogey1, bogey2);
 		this.entity = new WeakReference<>(null);
 		this.id = netIdGenerator.incrementAndGet();
-		
+
 		bogey1.carriage = this;
 		if (bogey2 != null)
 			bogey2.carriage = this;
@@ -59,7 +59,8 @@ public class Carriage {
 	}
 
 	public double travel(Level level, TrackGraph graph, double distance,
-		@Nullable Function<TravellingPoint, ITrackSelector> control) {
+		Function<TravellingPoint, ITrackSelector> forwardControl,
+		Function<TravellingPoint, ITrackSelector> backwardControl) {
 		Vec3 leadingAnchor = leadingBogey().anchorPosition;
 		Vec3 trailingAnchor = trailingBogey().anchorPosition;
 		boolean onTwoBogeys = isOnTwoBogeys();
@@ -86,14 +87,20 @@ public class Carriage {
 
 			bogey.points.forEachWithContext((point, first) -> {
 				TravellingPoint prevPoint = previous.getValue();
-				ITrackSelector trackSelector =
-					prevPoint == null ? control == null ? point.random() : control.apply(point)
-						: point.follow(prevPoint);
+				TravellingPoint nextPoint = first ? bogey.points.getSecond()
+					: firstBogey && onTwoBogeys ? bogeys.getSecond().points.getFirst() : null;
 
 				double correction = bogeyStress * (first ? leadingPointModifier : trailingPointModifier);
 				double toMove = distanceMoved.getValue();
-				double moved = point.travel(graph, toMove, trackSelector);
-				point.travel(graph, correction + bogeyCorrection, trackSelector);
+
+				ITrackSelector frontTrackSelector =
+					prevPoint == null ? forwardControl.apply(point) : point.follow(prevPoint);
+				ITrackSelector backTrackSelector =
+					nextPoint == null ? backwardControl.apply(point) : point.follow(nextPoint);
+
+				double moved = point.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector);
+				point.travel(graph, correction + bogeyCorrection,
+					correction + bogeyCorrection > 0 ? frontTrackSelector : backTrackSelector);
 				blocked |= point.blocked;
 
 				distanceMoved.setValue(moved);
@@ -201,9 +208,9 @@ public class Carriage {
 
 		public Vec3 leadingCouplingAnchor;
 		public Vec3 trailingCouplingAnchor;
-		
+
 		int derailAngle;
-		
+
 		public CarriageBogey(IBogeyBlock type, TravellingPoint point, TravellingPoint point2) {
 			this.type = type;
 			points = Couple.create(point, point2);
@@ -223,11 +230,11 @@ public class Carriage {
 			double diffZ = positionVec.z - coupledVec.z;
 			float yRot = AngleHelper.deg(Mth.atan2(diffZ, diffX)) + 90;
 			float xRot = AngleHelper.deg(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)));
-			
+
 			if (carriage.train.derailed)
 				yRot += derailAngle;
-			
-			wheelAngle.setValue((wheelAngle.getValue() - angleDiff) % 360);
+
+			wheelAngle.setValue((wheelAngle.getValue() - angleDiff * Math.signum(carriage.train.speed)) % 360);
 			pitch.setValue(xRot);
 			yaw.setValue(-yRot);
 		}

@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -29,8 +28,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		MultiBufferSource buffers, int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
-		int id = ((CarriageContraption) entity.getContraption()).temporaryCarriageIdHolder;
-		Carriage carriage = Create.RAILWAYS.carriageById.get(id);
+		Carriage carriage = entity.getCarriage();
 		if (carriage == null)
 			return;
 

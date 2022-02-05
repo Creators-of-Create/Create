@@ -414,6 +414,7 @@ public class StationTileEntity extends SmartTileEntity {
 		List<CarriageContraption> contraptions = new ArrayList<>();
 		List<Carriage> carriages = new ArrayList<>();
 		List<Integer> spacing = new ArrayList<>();
+		boolean atLeastOneForwardControls = false;
 
 		for (int bogeyIndex = 0; bogeyIndex < bogeyCount; bogeyIndex++) {
 			int pointIndex = bogeyIndex * 2;
@@ -425,6 +426,7 @@ public class StationTileEntity extends SmartTileEntity {
 			try {
 				boolean success = contraption.assemble(level,
 					bogeyPosOffset.relative(assemblyDirection, bogeyLocations[bogeyIndex] + 1));
+				atLeastOneForwardControls |= contraption.hasForwardControls();
 				if (!success) {
 					exception(new AssemblyException(Lang.translate("train_assembly.nothing_attached", bogeyIndex + 1)),
 						-1);
@@ -465,6 +467,11 @@ public class StationTileEntity extends SmartTileEntity {
 			Carriage carriage = new Carriage(firstBogey, secondBogey, bogeySpacing);
 			carriage.setContraption(contraption);
 			carriages.add(carriage);
+		}
+
+		if (!atLeastOneForwardControls) {
+			exception(new AssemblyException(Lang.translate("train_assembly.no_controls")), -1);
+			return;
 		}
 
 		for (CarriageContraption contraption : contraptions) {
