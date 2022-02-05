@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.jozufozu.flywheel.repack.joml.Math;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -91,18 +90,18 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 					Vec3 diff = railMiddle.subtract(prevMiddle);
 					Vec3 angles = getModelAngles(normal, diff);
 
-					new MatrixTransformStack(ms).translate(prevMiddle)
+					SuperByteBuffer sbb =
+						CachedBufferer.partial(AllBlockPartials.TRACK_TIE, Blocks.AIR.defaultBlockState());
+
+					sbb.translate(prevMiddle)
 						.rotateYRadians(angles.y)
 						.rotateXRadians(angles.x)
 						.rotateZRadians(angles.z)
 						.translate(-1 / 2f, -2 / 16f - 1 / 1024f, 0);
 
-					SuperByteBuffer sbb =
-						CachedBufferer.partial(AllBlockPartials.TRACK_TIE, Blocks.AIR.defaultBlockState());
 					sbb.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,
 						new BlockPos(railMiddle).offset(tePosition)));
 					sbb.renderInto(ms, vb);
-
 				}
 				ms.popPose();
 
@@ -115,16 +114,17 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 					Vec3 diff = railI.subtract(prevI);
 					Vec3 angles = getModelAngles(normal, diff);
 
-					new MatrixTransformStack(ms).translate(prevI)
+					SuperByteBuffer sbb = CachedBufferer.partial(
+						first ? AllBlockPartials.TRACK_SEGMENT_LEFT : AllBlockPartials.TRACK_SEGMENT_RIGHT,
+						Blocks.AIR.defaultBlockState());
+
+					sbb.translate(prevI)
 						.rotateYRadians(angles.y)
 						.rotateXRadians(angles.x)
 						.rotateZRadians(angles.z)
 						.translate(0, -2 / 16f + 1 / 1024f, 0)
 						.scale(1, 1, (float) diff.length() * 2.1f);
 
-					SuperByteBuffer sbb = CachedBufferer.partial(
-						first ? AllBlockPartials.TRACK_SEGMENT_LEFT : AllBlockPartials.TRACK_SEGMENT_RIGHT,
-						Blocks.AIR.defaultBlockState());
 					sbb.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,
 						new BlockPos(prevI).offset(tePosition)));
 					sbb.renderInto(ms, vb);

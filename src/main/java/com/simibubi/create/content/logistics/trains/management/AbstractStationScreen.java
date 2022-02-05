@@ -37,7 +37,6 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	@Override
 	protected void init() {
 		setWindowSize(background.width, background.height);
-		setWindowOffset(-20, 0);
 		super.init();
 		clearWidgets();
 
@@ -78,7 +77,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		TransformStack.cast(ms)
 			.pushPose()
-			.translate(x + 200, y + background.height + 20, 100)
+			.translate(x + background.width + 4, y + background.height + 4, 100)
 			.scale(40)
 			.rotateX(-22)
 			.rotateY(63);

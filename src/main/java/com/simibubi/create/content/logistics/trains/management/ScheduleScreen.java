@@ -99,7 +99,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	@Override
 	protected void init() {
 		AllGuiTextures bg = AllGuiTextures.SCHEDULE;
-		setWindowSize(bg.width, bg.height + 22);
+		setWindowSize(bg.width, bg.height);
 		super.init();
 		clearWidgets();
 
@@ -126,7 +126,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		addRenderableWidget(cyclicButton);
 
 		stopEditing();
-		extraAreas = ImmutableList.of(new Rect2i(leftPos + 255, topPos + 182, 45, 45));
+		extraAreas = ImmutableList.of(new Rect2i(leftPos + bg.width, topPos + bg.height - 56, 48, 48));
 		horizontalScrolls.clear();
 		for (int i = 0; i < schedule.entries.size(); i++)
 			horizontalScrolls.add(LerpedFloat.linear()
@@ -858,7 +858,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
-			.GuiRenderBuilder>at(leftPos + 251, topPos + 187, -200)
+			.GuiRenderBuilder>at(leftPos + AllGuiTextures.SCHEDULE.width, topPos + AllGuiTextures.SCHEDULE.height - 56, -200)
 			.scale(3)
 			.render(matrixStack);
 		action(matrixStack, mouseX, mouseY, -1);
