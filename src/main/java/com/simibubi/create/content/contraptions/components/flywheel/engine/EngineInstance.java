@@ -19,11 +19,10 @@ public class EngineInstance extends BlockEntityInstance<EngineTileEntity> {
 
         Block block = blockState
                 .getBlock();
-        if (!(block instanceof EngineBlock))
+        if (!(block instanceof EngineBlock engineBlock))
             return;
 
-        EngineBlock engineBlock = (EngineBlock) block;
-        PartialModel frame = engineBlock.getFrameModel();
+		PartialModel frame = engineBlock.getFrameModel();
 
         Direction facing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
@@ -33,7 +32,7 @@ public class EngineInstance extends BlockEntityInstance<EngineTileEntity> {
 
         this.frame.loadIdentity()
 				.translate(getInstancePosition())
-				.nudge(tile.hashCode())
+				.nudge(pos.hashCode())
 				.centre()
 				.rotate(Direction.UP, angle)
 				.unCentre()

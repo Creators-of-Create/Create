@@ -138,7 +138,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public Biome getBiome(BlockPos pos) {
-		return BuiltinRegistries.BIOME.get(Biomes.FOREST.location());
+		return BuiltinRegistries.BIOME.get(Biomes.PLAINS.location());
 	}
 
 	@Override

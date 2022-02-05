@@ -57,9 +57,8 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 
 //	public static void usingFurnaceEngineOnFurnacePreventsGUI(RightClickBlock event) {
 //		ItemStack item = event.getItemStack();
-//		if (!(item.getItem() instanceof BlockItem))
+//		if (!(item.getItem() instanceof BlockItem blockItem))
 //			return;
-//		BlockItem blockItem = (BlockItem) item.getItem();
 //		if (blockItem.getBlock() != AllBlocks.FURNACE_ENGINE.get())
 //			return;
 //		BlockState state = event.getWorld().getBlockState(event.getPos());
