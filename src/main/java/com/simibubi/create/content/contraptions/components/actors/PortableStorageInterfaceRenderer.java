@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,6 +35,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 	@Override
 	protected void renderSafe(PortableStorageInterfaceTileEntity te, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
+		if (Backend.isOn()) return;
+
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
