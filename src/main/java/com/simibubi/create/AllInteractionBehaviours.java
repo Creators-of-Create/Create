@@ -6,12 +6,11 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +28,11 @@ public class AllInteractionBehaviours {
 
 	public static void addInteractionBehaviour(Block block, Supplier<MovingInteractionBehaviour> behaviour) {
 		addInteractionBehaviour(block.getRegistryName(), behaviour);
+	}
+
+	public static <B extends Block> NonNullConsumer<? super B> addInteractionBehaviour(
+		MovingInteractionBehaviour movementBehaviour) {
+		return b -> addInteractionBehaviour(b.getRegistryName(), () -> movementBehaviour);
 	}
 
 	@Nullable
@@ -49,11 +53,9 @@ public class AllInteractionBehaviours {
 
 	static void register() {
 		addInteractionBehaviour(Blocks.LEVER.getRegistryName(), LeverMovingInteraction::new);
-		addInteractionBehaviour(AllBlocks.DEPLOYER.getId(), DeployerMovingInteraction::new);
-		addInteractionBehaviour(AllBlocks.CONTROLS.getId(), ControlsInteractionBehaviour::new);
 
 		// TODO: Scan registry for instanceof (-> modded door support)
-		
+
 		for (Block trapdoor : ImmutableList.of(Blocks.ACACIA_TRAPDOOR, Blocks.OAK_TRAPDOOR, Blocks.DARK_OAK_TRAPDOOR,
 			Blocks.SPRUCE_TRAPDOOR, Blocks.JUNGLE_TRAPDOOR, Blocks.BIRCH_TRAPDOOR, Blocks.WARPED_TRAPDOOR,
 			Blocks.CRIMSON_TRAPDOOR)) {

@@ -348,7 +348,7 @@ public abstract class Contraption {
 		}
 
 		// Bogeys tend to have sticky sides
-		if (state.getBlock() instanceof IBogeyBlock bogey)
+		if (state.getBlock()instanceof IBogeyBlock bogey)
 			for (Direction d : bogey.getStickySurfaces(world, pos, state))
 				if (!visited.contains(pos.relative(d)))
 					frontier.add(pos.relative(d));
@@ -882,7 +882,7 @@ public abstract class Contraption {
 		}
 
 		ListTag paletteNBT = new ListTag();
-		for(int i = 0; i < palette.getSize(); ++i)
+		for (int i = 0; i < palette.getSize(); ++i)
 			paletteNBT.add(NbtUtils.writeBlockState(palette.values.byId(i)));
 
 		compound.put("Palette", paletteNBT);
@@ -1139,6 +1139,8 @@ public abstract class Contraption {
 			if (getSeatMapping().isEmpty())
 				continue;
 			Integer seatIndex = getSeatMapping().get(seatedEntity.getUUID());
+			if (seatIndex == null)
+				continue;
 			BlockPos seatPos = getSeats().get(seatIndex);
 			seatPos = transform.apply(seatPos);
 			if (!(world.getBlockState(seatPos)

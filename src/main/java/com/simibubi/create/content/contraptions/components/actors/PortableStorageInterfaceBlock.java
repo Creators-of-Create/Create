@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -46,8 +47,11 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(FACING, context.getNearestLookingDirection()
-			.getOpposite());
+		Direction direction = context.getNearestLookingDirection();
+		if (context.getPlayer() != null && context.getPlayer()
+			.isSteppingCarefully())
+			direction = direction.getOpposite();
+		return defaultBlockState().setValue(FACING, direction.getOpposite());
 	}
 
 	@Override

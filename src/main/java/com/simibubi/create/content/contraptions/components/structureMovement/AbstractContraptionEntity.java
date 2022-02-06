@@ -17,6 +17,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
@@ -186,7 +187,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				.handlePlayerInteraction(player, interactionHand, localPos, this);
 		if (player.isPassenger())
 			return false;
-		
+
 		// Eject potential existing passenger
 		Entity toDismount = null;
 		for (Entry<UUID, Integer> entry : contraption.getSeatMapping()
@@ -212,7 +213,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		if (level.isClientSide)
 			return true;
-		addSittingPassenger(player, indexOfSeat);
+		addSittingPassenger(SeatBlock.getLeashed(level, player)
+			.or(player), indexOfSeat);
 		return true;
 	}
 
@@ -466,11 +468,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
 
-		discard();
-
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
-
+		
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
 				continue;
@@ -482,6 +482,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			entity.setPos(transformed.getX(), transformed.getY(), transformed.getZ());
 			((AbstractContraptionEntity) entity).disassemble();
 		}
+		
+		discard();
 
 		ejectPassengers();
 		moveCollidedEntitiesOnDisassembly(transform);

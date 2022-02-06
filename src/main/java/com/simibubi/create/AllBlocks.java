@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllInteractionBehaviours.addInteractionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
 import static com.simibubi.create.AllTags.axeOnly;
 import static com.simibubi.create.AllTags.axeOrPickaxe;
@@ -26,6 +27,7 @@ import com.simibubi.create.content.contraptions.components.actors.PortableStorag
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
+import com.simibubi.create.content.contraptions.components.actors.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
@@ -36,6 +38,7 @@ import com.simibubi.create.content.contraptions.components.crusher.CrushingWheel
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerMovingInteraction;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
@@ -59,6 +62,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
@@ -1036,6 +1040,7 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.onRegister(addMovementBehaviour(new DeployerMovementBehaviour()))
+		.onRegister(addInteractionBehaviour(new DeployerMovingInteraction()))
 		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
@@ -1083,10 +1088,12 @@ public class AllBlocks {
 	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
 		String colourName = colour.getSerializedName();
 		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
+		SeatInteractionBehaviour interactionBehaviour = new SeatInteractionBehaviour();
 		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, colour == DyeColor.RED))
 			.initialProperties(SharedProperties::wooden)
 			.transform(axeOnly())
 			.onRegister(addMovementBehaviour(movementBehaviour))
+			.onRegister(addInteractionBehaviour(interactionBehaviour))
 			.blockstate((c, p) -> {
 				p.simpleBlock(c.get(), p.models()
 					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
@@ -1292,6 +1299,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
 			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
 		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))
+		.onRegister(addInteractionBehaviour(new ControlsInteractionBehaviour()))
 		.item()
 		.transform(customItemModel())
 		.register();

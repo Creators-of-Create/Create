@@ -92,8 +92,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		if (!clientPacket)
 			return;
 		if (running) {
-			clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
-			angle = angleBefore;
+			if (movedContraption == null || !movedContraption.isStalled()) {
+				clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
+				angle = angleBefore;
+			}
 		} else
 			movedContraption = null;
 	}

@@ -52,7 +52,7 @@ public class AllMovementBehaviours {
 		MovementBehaviour movementBehaviour) {
 		return b -> addMovementBehaviour(b.getRegistryName(), movementBehaviour);
 	}
-
+	
 	static void register() {
 		addMovementBehaviour(Blocks.BELL, new BellMovementBehaviour());
 		addMovementBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());

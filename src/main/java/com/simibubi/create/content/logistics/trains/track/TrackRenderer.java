@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.jozufozu.flywheel.repack.joml.Math;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -40,6 +41,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			return;
 
 		ms.pushPose();
+		new MatrixTransformStack(ms).nudge((int) bc.tePositions.getFirst()
+			.asLong());
 
 		BlockPos tePosition = bc.tePositions.getFirst();
 		Vec3 end1 = bc.starts.getFirst()
@@ -122,7 +125,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						.rotateYRadians(angles.y)
 						.rotateXRadians(angles.x)
 						.rotateZRadians(angles.z)
-						.translate(0, -2 / 16f + 1 / 1024f, 0)
+						.translate(0, -2 / 16f + (i % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
 						.scale(1, 1, (float) diff.length() * 2.1f);
 
 					sbb.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,

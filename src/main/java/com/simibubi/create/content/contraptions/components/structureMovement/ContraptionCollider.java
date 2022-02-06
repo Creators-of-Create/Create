@@ -235,6 +235,11 @@ public class ContraptionCollider {
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()
 						.get(pos).state;
+					
+					MovingInteractionBehaviour movingInteractionBehaviour = contraption.interactors.get(pos);
+					if (movingInteractionBehaviour != null)
+						movingInteractionBehaviour.handleEntityCollision(entity, pos, contraptionEntity);
+					
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
 					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
 				}

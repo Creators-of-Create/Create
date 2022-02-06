@@ -16,7 +16,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTileEntity {
 
 	protected LazyOptional<IItemHandlerModifiable> capability;
-
+	
 	public PortableItemInterfaceTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		capability = createEmptyHandler();

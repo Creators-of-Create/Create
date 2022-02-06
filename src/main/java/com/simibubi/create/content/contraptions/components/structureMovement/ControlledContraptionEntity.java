@@ -216,7 +216,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected void handleStallInformation(float x, float y, float z, float angle) {
 		setPosRaw(x, y, z);
-		this.angle = angle;
+		this.angle = this.prevAngle = angle;
 	}
 
 	@Override

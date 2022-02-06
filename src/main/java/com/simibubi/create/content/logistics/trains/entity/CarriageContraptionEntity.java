@@ -2,9 +2,12 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.Collection;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import com.google.common.base.Strings;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
@@ -201,6 +204,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 
 		tickActors();
+		contraption.stalled = false;
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
+			MovementContext context = pair.right;
+			context.stall = false;
+		}
 
 		if (!level.isClientSide)
 			return;
