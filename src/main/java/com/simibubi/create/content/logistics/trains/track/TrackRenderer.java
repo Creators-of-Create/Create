@@ -1,7 +1,8 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.repack.joml.Math;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -31,6 +32,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 	@Override
 	protected void renderSafe(TrackTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
+		if (Backend.isOn()) return;
+
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		te.connections.forEach(map -> map.values()
 			.forEach(bc -> renderBezierTurn(bc, ms, vb)));
@@ -41,49 +44,19 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			return;
 
 		ms.pushPose();
-		new MatrixTransformStack(ms).nudge((int) bc.tePositions.getFirst()
-			.asLong());
-
 		BlockPos tePosition = bc.tePositions.getFirst();
-		Vec3 end1 = bc.starts.getFirst()
-			.subtract(Vec3.atLowerCornerOf(tePosition))
-			.add(0, 3 / 16f, 0);
-		Vec3 end2 = bc.starts.getSecond()
-			.subtract(Vec3.atLowerCornerOf(tePosition))
-			.add(0, 3 / 16f, 0);
-		Vec3 axis1 = bc.axes.getFirst();
-		Vec3 axis2 = bc.axes.getSecond();
 
-		double handleLength = bc.getHandleLength();
+		TransformStack.cast(ms)
+				.nudge((int) tePosition.asLong());
 
-		Vec3 finish1 = axis1.scale(handleLength)
-			.add(end1);
-		Vec3 finish2 = axis2.scale(handleLength)
-			.add(end2);
-
-		Vec3 faceNormal1 = bc.normals.getFirst();
-		Vec3 faceNormal2 = bc.normals.getSecond();
 		Vec3 previous1 = null;
 		Vec3 previous2 = null;
 
-		int segCount = bc.getSegmentCount();
-		float[] lut = bc.getStepLUT();
-
-		for (int i = 0; i <= segCount; i++) {
-			float t = i == segCount ? 1 : i * lut[i] / segCount;
-
-			Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
-			Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
-				.normalize();
-			Vec3 faceNormal =
-				faceNormal1.equals(faceNormal2) ? faceNormal1 : VecHelper.slerp(t, faceNormal1, faceNormal2);
-			Vec3 normal = faceNormal.cross(derivative)
-				.normalize();
-			Vec3 rail1 = result.add(normal.scale(.97f));
-			Vec3 rail2 = result.subtract(normal.scale(.97f));
+		for (BezierConnection.Segment segment : bc) {
+			Vec3 rail1 = segment.position.add(segment.normal.scale(.97f));
+			Vec3 rail2 = segment.position.subtract(segment.normal.scale(.97f));
 
 			if (previous1 != null) {
-				ms.pushPose();
 				{
 					// Tie
 					Vec3 railMiddle = rail1.add(rail2)
@@ -91,7 +64,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 					Vec3 prevMiddle = previous1.add(previous2)
 						.scale(.5);
 					Vec3 diff = railMiddle.subtract(prevMiddle);
-					Vec3 angles = getModelAngles(normal, diff);
+					Vec3 angles = getModelAngles(segment.normal, diff);
 
 					SuperByteBuffer sbb =
 						CachedBufferer.partial(AllBlockPartials.TRACK_TIE, Blocks.AIR.defaultBlockState());
@@ -106,16 +79,13 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						new BlockPos(railMiddle).offset(tePosition)));
 					sbb.renderInto(ms, vb);
 				}
-				ms.popPose();
 
 				// Rails
 				for (boolean first : Iterate.trueAndFalse) {
-					ms.pushPose();
-
 					Vec3 railI = first ? rail1 : rail2;
 					Vec3 prevI = first ? previous1 : previous2;
 					Vec3 diff = railI.subtract(prevI);
-					Vec3 angles = getModelAngles(normal, diff);
+					Vec3 angles = getModelAngles(segment.normal, diff);
 
 					SuperByteBuffer sbb = CachedBufferer.partial(
 						first ? AllBlockPartials.TRACK_SEGMENT_LEFT : AllBlockPartials.TRACK_SEGMENT_RIGHT,
@@ -125,14 +95,12 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						.rotateYRadians(angles.y)
 						.rotateXRadians(angles.x)
 						.rotateZRadians(angles.z)
-						.translate(0, -2 / 16f + (i % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
+						.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
 						.scale(1, 1, (float) diff.length() * 2.1f);
 
 					sbb.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,
 						new BlockPos(prevI).offset(tePosition)));
 					sbb.renderInto(ms, vb);
-
-					ms.popPose();
 				}
 			}
 

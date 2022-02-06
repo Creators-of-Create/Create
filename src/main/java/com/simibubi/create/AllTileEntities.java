@@ -171,6 +171,7 @@ import com.simibubi.create.content.logistics.trains.IBogeyTileEntityRenderer;
 import com.simibubi.create.content.logistics.trains.management.StationRenderer;
 import com.simibubi.create.content.logistics.trains.management.StationTileEntity;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.TrackInstance;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
@@ -730,16 +731,17 @@ public class AllTileEntities {
 
 	public static final BlockEntityEntry<TrackTileEntity> TRACK = Create.registrate()
 		.tileEntity("track", TrackTileEntity::new)
+		.instance(() -> TrackInstance::new)
 		.renderer(() -> TrackRenderer::new)
 		.validBlocks(AllBlocks.TRACK)
 		.register();
-	
+
 	public static final BlockEntityEntry<StandardBogeyTileEntity> BOGEY = Create.registrate()
 		.tileEntity("bogey", StandardBogeyTileEntity::new)
 		.renderer(() -> IBogeyTileEntityRenderer::new)
 		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
 		.register();
-	
+
 	public static final BlockEntityEntry<StationTileEntity> TRACK_STATION = Create.registrate()
 		.tileEntity("track_station", StationTileEntity::new)
 		.renderer(() -> StationRenderer::new)

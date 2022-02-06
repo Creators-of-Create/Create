@@ -3,10 +3,8 @@ package com.simibubi.create.foundation.render;
 import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
-import com.jozufozu.flywheel.util.transform.Rotate;
-import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.Translate;
+import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -31,7 +29,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 
-public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
+public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
 	private final VertexList template;
 
@@ -238,6 +236,22 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	@Override
 	public SuperByteBuffer popPose() {
 		transforms.popPose();
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer mulPose(Matrix4f pose) {
+		transforms.last()
+				.pose()
+				.multiply(pose);
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer mulNormal(Matrix3f normal) {
+		transforms.last()
+				.normal()
+				.mul(normal);
 		return this;
 	}
 

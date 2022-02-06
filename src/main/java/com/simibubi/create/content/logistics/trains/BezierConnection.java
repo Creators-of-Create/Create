@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.trains;
 
+import java.util.Iterator;
+
 import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -13,7 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class BezierConnection {
+public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	public Couple<BlockPos> tePositions;
 	public Couple<Boolean> trackEnds;
@@ -124,6 +126,10 @@ public class BezierConnection {
 	public double getHandleLength() {
 		resolve();
 		return handleLength;
+	}
+
+	public float getSegmentT(int index) {
+		return index == segments ? 1 : index * stepLUT[index] / segments;
 	}
 
 	public double incrementT(double currentT, double distance) {
@@ -248,6 +254,75 @@ public class BezierConnection {
 		handleLength = radius * factor;
 		if (Mth.equal(handleLength, 0))
 			handleLength = 1;
+	}
+
+	@Override
+	public Iterator<Segment> iterator() {
+		resolve();
+		var offset = Vec3.atLowerCornerOf(tePositions.getFirst())
+				.scale(-1)
+				.add(0, 3 / 16f, 0);
+		return new Bezierator(this, offset);
+	}
+
+	public static class Segment {
+		public int index;
+		public Vec3 position;
+		public Vec3 derivative;
+		public Vec3 faceNormal;
+		public Vec3 normal;
+	}
+
+	private static class Bezierator implements Iterator<Segment> {
+
+		private final BezierConnection bc;
+		private final Segment segment;
+		private final Vec3 end1;
+		private final Vec3 end2;
+		private final Vec3 finish1;
+		private final Vec3 finish2;
+		private final Vec3 faceNormal1;
+		private final Vec3 faceNormal2;
+
+		private Bezierator(BezierConnection bc, Vec3 offset) {
+			bc.resolve();
+			this.bc = bc;
+
+			end1 = bc.starts.getFirst()
+					.add(offset);
+			end2 = bc.starts.getSecond()
+					.add(offset);
+
+			finish1 = bc.axes.getFirst()
+					.scale(bc.handleLength)
+					.add(end1);
+			finish2 = bc.axes.getSecond()
+					.scale(bc.handleLength)
+					.add(end2);
+
+			faceNormal1 = bc.normals.getFirst();
+			faceNormal2 = bc.normals.getSecond();
+			segment = new Segment();
+			segment.index = -1; // will get incremented to 0 in #next()
+		}
+
+		@Override
+		public boolean hasNext() {
+			return segment.index + 1 <= bc.segments;
+		}
+
+		@Override
+		public Segment next() {
+			segment.index++;
+			float t = this.bc.getSegmentT(segment.index);
+			segment.position = VecHelper.bezier(end1, end2, finish1, finish2, t);
+			segment.derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
+					.normalize();
+			segment.faceNormal = faceNormal1.equals(faceNormal2) ? faceNormal1 : VecHelper.slerp(t, faceNormal1, faceNormal2);
+			segment.normal = segment.faceNormal.cross(segment.derivative)
+					.normalize();
+			return segment;
+		}
 	}
 
 }

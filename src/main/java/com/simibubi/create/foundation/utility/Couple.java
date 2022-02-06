@@ -6,9 +6,9 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +16,7 @@ import net.minecraft.nbt.ListTag;
 
 public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 
-	private static Couple<Boolean> TRUE_AND_FALSE = Couple.create(true, false);
+	private static final Couple<Boolean> TRUE_AND_FALSE = Couple.create(true, false);
 
 	protected Couple(T first, T second) {
 		super(first, second);
@@ -33,7 +33,7 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 	public static <T> Couple<T> createWithContext(Function<Boolean, T> factory) {
 		return new Couple<>(factory.apply(true), factory.apply(false));
 	}
-	
+
 	public T get(boolean first) {
 		return first ? getFirst() : getSecond();
 	}

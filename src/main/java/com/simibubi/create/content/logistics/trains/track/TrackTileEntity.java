@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class TrackTileEntity extends SmartTileEntity {
 
@@ -29,7 +32,7 @@ public class TrackTileEntity extends SmartTileEntity {
 	public Couple<Map<BlockPos, BezierConnection>> getConnections() {
 		return connections;
 	}
-	
+
 	public void addConnection(boolean front, BezierConnection connection) {
 		connections.get(front)
 			.put(connection.getKey(), connection);
@@ -94,6 +97,8 @@ public class TrackTileEntity extends SmartTileEntity {
 				BezierConnection connection = new BezierConnection((CompoundTag) t);
 				map.put(connection.getKey(), connection);
 			}));
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	@Override
