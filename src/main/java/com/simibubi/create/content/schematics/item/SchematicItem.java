@@ -56,7 +56,7 @@ public class SchematicItem extends Item {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public SchematicItem(Properties properties) {
-		super(properties.stacksTo(1));
+		super(properties);
 	}
 
 	public static ItemStack create(String schematic, String owner) {

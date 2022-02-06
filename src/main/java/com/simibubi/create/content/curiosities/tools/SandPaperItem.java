@@ -44,7 +44,7 @@ import net.minecraft.world.phys.Vec3;
 public class SandPaperItem extends Item implements CustomUseEffectsItem, CustomItemEnchantabilityItem {
 
 	public SandPaperItem(Properties properties) {
-		super(properties.durability(8));
+		super(properties.defaultDurability(8));
 	}
 
 	@Override

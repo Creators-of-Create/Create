@@ -196,10 +196,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return entry -> onClient(() -> () -> ClientMethods.registerCasingConnectivity(entry, consumer));
 	}
 
-	public static <T extends Block> NonNullConsumer<? super T> blockVertexColors(IBlockVertexColor colorFunc) {
-		return entry -> onClient(() -> () -> ClientMethods.registerBlockVertexColor(entry, colorFunc));
-	}
-
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		return entry -> onClient(() -> () -> ClientMethods.registerBlockModel(entry, func));
@@ -237,13 +233,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		consumer.accept(entry, CreateClient.CASING_CONNECTIVITY);
 	}
 
-	@Environment(EnvType.CLIENT)
-	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
-		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(() -> entry/*.delegate*/, model -> new ColoredVertexModel(model, colorFunc));
-	}
-
-	@Environment(EnvType.CLIENT)
+		@Environment(EnvType.CLIENT)
 	private static void registerBlockModel(Block entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()

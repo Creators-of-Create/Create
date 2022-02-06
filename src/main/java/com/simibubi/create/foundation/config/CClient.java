@@ -20,8 +20,6 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat filterItemRenderDistance = f(10f, 1, "filterItemRenderDistance", Comments.filterItemRenderDistance);
 	public final ConfigBool rainbowDebug = b(true, "enableRainbowDebug",
 			Comments.rainbowDebug);
-	public final ConfigBool experimentalRendering = b(true, "experimentalRendering",
-			Comments.experimentalRendering);
 	public final ConfigInt maxContraptionLightVolume = i(16384, 0, Integer.MAX_VALUE, "maximumContraptionLightVolume",
 			Comments.maxContraptionLightVolume);
 	// no group
@@ -101,7 +99,6 @@ public class CClient extends ConfigBase {
 				"Maximum Distance to the player at which items in Blocks' filter slots will be displayed"
 		};
 		static String rainbowDebug = "Show colourful debug information while the F3-Menu is open.";
-		static String experimentalRendering = "Use modern OpenGL features to drastically increase performance.";
 		static String maxContraptionLightVolume = "The maximum amount of blocks for which to try and calculate dynamic contraption lighting. Decrease if large contraption cause too much lag";
 		static String[] mainMenuConfigButtonRow = new String[]{
 				"Choose the menu row that the Create config button appears on in the main menu",
