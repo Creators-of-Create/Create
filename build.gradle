@@ -27,10 +27,10 @@ boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equal
 // The project is named Flywheel-Forge, but sub-projects are named by folder.
 boolean inWorkspace = findProject(':Flywheel') != null
 
-ext.buildnumber = 0
-project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
+ext.buildNumber = System.getenv('BUILD_NUMBER')
+if (buildNumber == null) buildNumber = 'custom'
 
-version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals('custom') ? "+${buildnumber}" : '')
+version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildNumber.equals('custom') ? "+${buildNumber}" : '')
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
