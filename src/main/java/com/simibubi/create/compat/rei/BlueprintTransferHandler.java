@@ -1,33 +1,32 @@
 package com.simibubi.create.compat.rei;
 
-import java.util.Optional;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
-import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
+import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
+
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import me.shedaniel.rei.api.common.transfer.info.MenuInfo;
-import me.shedaniel.rei.api.common.transfer.info.MenuSerializationContext;
-import me.shedaniel.rei.api.common.transfer.info.simple.RecipeBookGridMenuInfo;
-import me.shedaniel.rei.api.common.transfer.info.simple.SimpleMenuInfoProvider;
-import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
-import net.minecraft.world.item.crafting.Recipe;
+import me.shedaniel.rei.api.client.registry.transfer.TransferHandler;
+import me.shedaniel.rei.api.common.display.Display;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-@SuppressWarnings("rawtypes")
-public class BlueprintTransferHandler implements SimpleMenuInfoProvider<BlueprintContainer, DefaultCraftingDisplay> {
-
+@Environment(EnvType.CLIENT)
+public class BlueprintTransferHandler implements TransferHandler {
 	@Override
-	public @Nullable MenuInfo<BlueprintContainer, DefaultCraftingDisplay> create(DefaultCraftingDisplay display) {
-		return new RecipeBookGridMenuInfo(display);
-	}
+	public Result handle(Context context) {
+		if (context.getContainerScreen() instanceof BlueprintScreen blueprint) {
+			Display d = context.getDisplay();
+			if (d.getDisplayLocation().isPresent()) {
+				if (d.getCategoryIdentifier().toString().equals("minecraft:plugins/crafting")) {
+					if (context.isActuallyCrafting()) {
+						AllPackets.channel.sendToServer(new BlueprintAssignCompleteRecipePacket(d.getDisplayLocation().get()));
+						context.getMinecraft().setScreen(blueprint);
+					}
+					return Result.createSuccessful();
+				}
+			}
 
-	@Override
-	public Optional<MenuInfo<BlueprintContainer, DefaultCraftingDisplay>> provideClient(DefaultCraftingDisplay display, MenuSerializationContext<BlueprintContainer, ?, DefaultCraftingDisplay> context, BlueprintContainer menu) {
-		Recipe<?> iRecipe = (Recipe<?>) display.getOptionalRecipe().get();
-		// Continued server-side in BlueprintItem.assignCompleteRecipe()
-		AllPackets.channel.sendToServer(new BlueprintAssignCompleteRecipePacket(iRecipe.getId()));
-		return SimpleMenuInfoProvider.super.provideClient(display, context, menu);
+		}
+		return Result.createNotApplicable();
 	}
 }

@@ -29,8 +29,7 @@
       "com.simibubi.create.lib.data.DataInit"
     ],
     "rei": [
-      "com.simibubi.create.compat.rei.CreateREI",
-      "com.simibubi.create.compat.rei.CreateREICommon"
+      "com.simibubi.create.compat.rei.CreateREI"
     ]
   },
 

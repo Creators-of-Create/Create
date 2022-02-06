@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
@@ -42,22 +43,30 @@ import com.simibubi.create.content.contraptions.components.press.MechanicalPress
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import me.shedaniel.rei.api.client.gui.drag.DraggableStack;
+import me.shedaniel.rei.api.client.gui.drag.DraggableStackVisitor;
+import me.shedaniel.rei.api.client.gui.drag.DraggedAcceptorResult;
+import me.shedaniel.rei.api.client.gui.drag.DraggingContext;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
+import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
+import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -68,6 +77,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
+
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("all")
 public class CreateREI implements REIClientPlugin {
@@ -203,13 +214,12 @@ public class CreateREI implements REIClientPlugin {
 			.enableWhen(c -> ((CRecipes)c).allowRegularCraftingInCrafter)
 			.build(),
 
-	mechanicalCrafting =
-			register("mechanical_crafting", MechanicalCraftingCategory::new).recipes(AllRecipeTypes.MECHANICAL_CRAFTING)
-				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-				.build();
+	mechanicalCrafting = register("mechanical_crafting", MechanicalCraftingCategory::new)
+			.recipes(AllRecipeTypes.MECHANICAL_CRAFTING)
+			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
+			.build();
 
-	private <T extends Recipe<?>> CategoryBuilder register(String name,
-																					   Supplier<CreateRecipeCategory<T>> supplier) {
+	private <T extends Recipe<?>> CategoryBuilder register(String name, Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<>(name, supplier);
 	}
 
@@ -246,20 +256,19 @@ public class CreateREI implements REIClientPlugin {
 		}
 	}
 
-//	@SuppressWarnings({ "unchecked", "rawtypes" })
-//	@Override
-//	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-//		registration.addGenericGuiContainerHandler(AbstractSimiContainerScreen.class, new SlotMover());
-//
-//		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
-//		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
-//		registration.addGhostIngredientHandler(LinkedControllerScreen.class, new GhostIngredientHandler());
-//	}
-
-
 	@Override
 	public void registerExclusionZones(ExclusionZones zones) {
 		zones.register(AbstractSimiContainerScreen.class, new SlotMover());
+	}
+
+	@Override
+	public void registerScreens(ScreenRegistry registry) {
+		registry.registerDraggableStackVisitor(new GhostIngredientHandler());
+	}
+
+	@Override
+	public void registerTransferHandlers(TransferHandlerRegistry registry) {
+		registry.register(new BlueprintTransferHandler());
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {
@@ -348,7 +357,7 @@ public class CreateREI implements REIClientPlugin {
 		}
 
 		public CreateRecipeCategory<T> build() {
-			if (pred.test(AllConfigs.SERVER.recipes))
+			if (pred.test(AllConfigs.SERVER.recipes)) // comment this line to fix crashing in dev
 				category.recipes.add(() -> {
 					List<Recipe<?>> recipes = new ArrayList<>();
 					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)

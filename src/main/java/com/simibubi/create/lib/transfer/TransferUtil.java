@@ -182,7 +182,6 @@ public class TransferUtil {
 
 	@Nullable
 	public static Storage<ItemVariant> getItemStorageForBE(BlockEntity be, Direction side) {
-		if (be instanceof ChuteTileEntity && side == Direction.DOWN) return null; // special case for #114
 		if (be instanceof ItemTransferable transferable) {
 			IItemHandler handler = transferable.getItemHandler(side);
 			return handler == null ? null : new StorageItemHandler(handler);
