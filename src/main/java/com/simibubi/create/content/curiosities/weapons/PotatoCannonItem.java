@@ -46,7 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxCountItem, EntitySwingListenerItem, ItemExtensions {
+public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwingListenerItem, ItemExtensions {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
