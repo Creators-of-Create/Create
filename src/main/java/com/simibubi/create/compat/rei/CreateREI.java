@@ -80,13 +80,12 @@ import net.minecraft.world.level.ItemLike;
 
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("all")
+@SuppressWarnings("unused")
 public class CreateREI implements REIClientPlugin {
 
 	private static final ResourceLocation ID = Create.asResource("rei_plugin");
 
-//	public IIngredientManager ingredientManager;
-	private final List<CreateRecipeCategory> allCategories = new ArrayList<>();
+	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private final CreateRecipeCategory<?>
 
 		milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
@@ -111,7 +110,8 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	soul_smoking = register("fan_haunting", FanHauntingCategory::new).recipes(AllRecipeTypes.HAUNTING)
-			.catalystStack(ProcessingViaFanCategory.getFan("fan_haunting")).build(),
+			.catalystStack(ProcessingViaFanCategory.getFan("fan_haunting"))
+			.build(),
 
 	blasting = register("fan_blasting", FanBlastingCategory::new)
 			.recipesExcluding(() -> RecipeType.SMELTING, () -> RecipeType.BLASTING)
@@ -130,12 +130,12 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-			.recipes(r -> ((Recipe<?>)r).getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && ((Recipe<?>)r).getIngredients()
+			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
 				.size() > 1 && !MechanicalPressTileEntity.canCompress((Recipe<?>) r),
-				r -> BasinRecipe.convertShapeless((Recipe<?>)r))
+					BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
-			.enableWhen(c -> ((CRecipes)c).allowShapelessInMixer)
+			.enableWhen(c -> c.allowShapelessInMixer)
 			.build(),
 
 	brewing = register("automatic_brewing", MixingCategory::autoBrewing)
@@ -151,14 +151,14 @@ public class CreateREI implements REIClientPlugin {
 	blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
 			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(RecipeType.STONECUTTING)))
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
-			.enableWhen(c -> ((CRecipes)c).allowStonecuttingOnSaw)
+			.enableWhen(c -> c.allowStonecuttingOnSaw)
 			.build(),
 
 	woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
 			.recipeList(() -> CondensedBlockCuttingRecipe
 				.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.get())))
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
-			.enableWhenBool(c -> ((CRecipes)c).allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
+			.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
 				.isModLoaded("druidcraft"))
 			.build(),
 
@@ -169,10 +169,10 @@ public class CreateREI implements REIClientPlugin {
 
 	autoSquare = register("automatic_packing", PackingCategory::autoSquare)
 			.recipes(re -> (re instanceof CraftingRecipe r) && MechanicalPressTileEntity.canCompress(r),
-					(r) -> BasinRecipe.convertShapeless((Recipe<?>) r))
+					BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.catalyst(AllBlocks.BASIN::get)
-			.enableWhen(c -> ((CRecipes)c).allowShapedSquareInPress)
+			.enableWhen(c -> c.allowShapedSquareInPress)
 			.build(),
 
 	polishing = register("sandpaper_polishing", PolishingCategory::new).recipes(AllRecipeTypes.SANDPAPER_POLISHING)
@@ -194,24 +194,24 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	spoutFilling = register("spout_filling", SpoutCategory::new).recipes(AllRecipeTypes.FILLING)
-			.recipeList(() -> SpoutCategory.getRecipes())
+			.recipeList(SpoutCategory::getRecipes)
 			.catalyst(AllBlocks.SPOUT::get)
 			.build(),
 
 	draining = register("draining", ItemDrainCategory::new)
-			.recipeList(() -> ItemDrainCategory.getRecipes())
+			.recipeList(ItemDrainCategory::getRecipes)
 			.recipes(AllRecipeTypes.EMPTYING)
 			.catalyst(AllBlocks.ITEM_DRAIN::get)
 			.build(),
 
 	autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
-			.recipes(r -> ((Recipe<?>)r).getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && ((Recipe<?>)r).getIngredients()
+			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
 				.size() == 1)
 			.recipes(
-				r -> (((Recipe<?>)r).getType() == RecipeType.CRAFTING && ((Recipe<?>)r).getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType())
+				r -> (r.getType() == RecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType())
 					&& (r instanceof ShapedRecipe))
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-			.enableWhen(c -> ((CRecipes)c).allowRegularCraftingInCrafter)
+			.enableWhen(c -> c.allowRegularCraftingInCrafter)
 			.build(),
 
 	mechanicalCrafting = register("mechanical_crafting", MechanicalCraftingCategory::new)
@@ -219,7 +219,7 @@ public class CreateREI implements REIClientPlugin {
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 			.build();
 
-	private <T extends Recipe<?>> CategoryBuilder register(String name, Supplier<CreateRecipeCategory<T>> supplier) {
+	private <T extends Recipe<?>> CategoryBuilder<T> register(String name, Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<>(name, supplier);
 	}
 
@@ -238,14 +238,12 @@ public class CreateREI implements REIClientPlugin {
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		allCategories.forEach(c -> c.recipes.forEach(s -> {
-			Supplier<List<Recipe<?>>> recipes = (Supplier<List<Recipe<?>>>) s;
-			for (Recipe recipe : recipes.get()) {
+			for (Recipe<?> recipe : s.get()) {
 				registry.add(new CreateDisplay<>(recipe, c.getCategoryIdentifier().getPath()), recipe);
 			}
 		}));
 
-		List<CraftingRecipe> recipes = ToolboxColoringRecipeMaker.createRecipes()
-				.collect(Collectors.toList());
+		List<CraftingRecipe> recipes = ToolboxColoringRecipeMaker.createRecipes().toList();
 		for (Object recipe : recipes) {
 			Collection<Display> displays = registry.tryFillDisplay(recipe);
 			for (Display display : displays) {
@@ -263,7 +261,7 @@ public class CreateREI implements REIClientPlugin {
 
 	@Override
 	public void registerScreens(ScreenRegistry registry) {
-		registry.registerDraggableStackVisitor(new GhostIngredientHandler());
+		registry.registerDraggableStackVisitor(new GhostIngredientHandler<>());
 	}
 
 	@Override
@@ -357,11 +355,12 @@ public class CreateREI implements REIClientPlugin {
 		}
 
 		public CreateRecipeCategory<T> build() {
-			if (pred.test(AllConfigs.SERVER.recipes)) // comment this line to fix crashing in dev
 				category.recipes.add(() -> {
 					List<Recipe<?>> recipes = new ArrayList<>();
-					for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
-						consumer.accept(recipes);
+					if (pred.test(AllConfigs.SERVER.recipes)) {
+						for (Consumer<List<Recipe<?>>> consumer : recipeListConsumers)
+							consumer.accept(recipes);
+					}
 					return recipes;
 				});
 			allCategories.add(category);
