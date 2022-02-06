@@ -43,7 +43,7 @@
   "accessWidener": "create.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.12.12",
+    "fabricloader": ">=0.13.1",
     "fabric": ">=0.46.0",
     "minecraft": ">=1.18.1",
     "registrate-fabric": "*",

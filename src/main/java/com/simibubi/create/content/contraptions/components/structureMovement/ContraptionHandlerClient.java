@@ -63,16 +63,10 @@ public class ContraptionHandlerClient {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(int button, int action, int mods) {
+	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(InteractionHand hand) {
 		Minecraft mc = Minecraft.getInstance();
 
 		if (Minecraft.getInstance().screen != null) // this is the only input event that doesn't check this?
-			return InteractionResult.PASS;
-
-		if (action != 1) // 1 -> press
-			return InteractionResult.PASS;
-		int useKey = ((KeyMappingAccessor) mc.options.keyUse).create$getKey().getValue();
-		if (button != useKey)
 			return InteractionResult.PASS;
 
 		LocalPlayer player = mc.player;
@@ -126,7 +120,7 @@ public class ContraptionHandlerClient {
 			Direction face = rayTraceResult.getDirection();
 			BlockPos pos = rayTraceResult.getBlockPos();
 
-			InteractionHand hand = player.getUsedItemHand();
+//			InteractionHand hand = player.getUsedItemHand();
 			if (!contraptionEntity.handlePlayerInteraction(player, pos, face, hand))
 				return InteractionResult.PASS;
 			AllPackets.channel.sendToServer(new ContraptionInteractionPacket(contraptionEntity, hand, pos, face));

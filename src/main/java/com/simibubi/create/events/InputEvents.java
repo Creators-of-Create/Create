@@ -67,7 +67,6 @@ public class InputEvents {
 		MouseScrolledCallback.EVENT.register(InputEvents::onMouseScrolled);
 		MouseButtonCallback.EVENT.register(InputEvents::onMouseInput);
 		MouseButtonCallback.EVENT.register(InputEvents::onClickInput);
-		MouseButtonCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 	}
 
 }

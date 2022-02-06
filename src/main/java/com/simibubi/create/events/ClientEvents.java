@@ -15,7 +15,6 @@ import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
@@ -37,7 +36,6 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
-import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -48,11 +46,8 @@ import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
@@ -63,7 +58,8 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import com.simibubi.create.lib.event.ClientWorldEvents;
 import com.simibubi.create.lib.event.FogEvents;
 import com.simibubi.create.lib.event.FogEvents.ColorData;
-import com.simibubi.create.lib.event.LeftClickAirCallback;
+import com.simibubi.create.lib.event.AttackAirCallback;
+import com.simibubi.create.lib.event.OnStartUseItemCallback;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
 import com.simibubi.create.lib.event.PlayerTickEndCallback;
@@ -81,9 +77,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -349,7 +343,7 @@ public class ClientEvents {
 		WorldRenderEvents.END.register(ClientEvents::onRenderWorld);
 		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
-		LeftClickAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
+		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
 		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
 		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
 
@@ -371,6 +365,7 @@ public class ClientEvents {
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
+		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer));
 
 		// Flywheel Events
