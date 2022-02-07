@@ -306,18 +306,19 @@ public class AllItems {
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> p.stacksTo(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonItemRenderer::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.properties(p -> p.rarity(Rarity.UNCOMMON))
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripItemRenderer::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
+			.properties(p -> p.stacksTo(1).rarity(Rarity.UNCOMMON))
 			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandItemRenderer::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();

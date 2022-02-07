@@ -10,14 +10,11 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-archivesBaseName = project.archives_base_name
+ext.buildNumber = System.getenv('GITHUB_RUN_NUMBER')
 
-boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false')
-ext.buildnumber = 0
-project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
-
-version = "mc${project.minecraft_version}_v${project.mod_version}" + (dev && !buildnumber.equals('custom') ? "+${buildnumber}" : '')
+version = "mc${project.minecraft_version}_v${project.mod_version}" + (buildNumber != null ? "+${buildNumber}" : '')
 group = project.maven_group
+archivesBaseName = project.archives_base_name
 
 repositories {
     mavenCentral()
@@ -132,15 +129,15 @@ loom {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
+    it.options.encoding = 'UTF-8'
 
     it.options.release = 17
 }
@@ -150,8 +147,8 @@ java {
 }
 
 jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+    from('LICENSE') {
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 

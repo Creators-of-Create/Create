@@ -232,7 +232,6 @@ public class CommonEvents {
 		ServerWorldEvents.UNLOAD.register((server, world) -> CommonEvents.onUnloadWorld(world));
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
 		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		CommonEvents.onBiomeLoad();

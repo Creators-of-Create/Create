@@ -237,8 +237,10 @@ public interface ItemAttribute {
 		@Override
 		public boolean appliesTo(ItemStack stack) {
 			for (Map.Entry<ResourceLocation, Tag<Item>> entry : ItemTags.getAllTags().getAllTags().entrySet()) {
-				if (entry.getValue().contains(stack.getItem())) {
-					return true;
+				if (entry.getKey().equals(tagName)) {
+					if (entry.getValue().contains(stack.getItem())) {
+						return true;
+					}
 				}
 			}
 			return false;

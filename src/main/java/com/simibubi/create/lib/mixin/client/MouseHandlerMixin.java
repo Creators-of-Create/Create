@@ -28,8 +28,7 @@ public abstract class MouseHandlerMixin {
 							shift = Shift.AFTER
 					)
 			),
-			at = @At(value = "RETURN"
-			)
+			at = @At(value = "RETURN")
 	)
 	private void create$onHandleMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
 		MouseButtonCallback.EVENT.invoker().onMouseButton(button, action, mods);

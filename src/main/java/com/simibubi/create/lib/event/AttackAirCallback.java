@@ -7,9 +7,9 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.player.LocalPlayer;
 
 @Environment(EnvType.CLIENT)
-public interface LeftClickAirCallback {
-	Event<LeftClickAirCallback> EVENT = EventFactory.createArrayBacked(LeftClickAirCallback.class, callbacks -> (player) -> {
-		for (LeftClickAirCallback callback : callbacks) {
+public interface AttackAirCallback {
+	Event<AttackAirCallback> EVENT = EventFactory.createArrayBacked(AttackAirCallback.class, callbacks -> (player) -> {
+		for (AttackAirCallback callback : callbacks) {
 			callback.onLeftClickAir(player);
 		}
 	});

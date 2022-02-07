@@ -35,6 +35,7 @@
     "ProjectileMixin",
     "RailStateMixin",
     "RedStoneWireBlockMixin",
+    "ServerEntityMixin",
     "ServerPlayerGameModeMixin",
     "ServerPlayerMixin",
     "ServerResourcesMixin",

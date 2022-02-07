@@ -29,8 +29,7 @@
       "com.simibubi.create.lib.data.DataInit"
     ],
     "rei": [
-      "com.simibubi.create.compat.rei.CreateREI",
-      "com.simibubi.create.compat.rei.CreateREICommon"
+      "com.simibubi.create.compat.rei.CreateREI"
     ]
   },
 
@@ -43,7 +42,7 @@
   "accessWidener": "create.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.12.12",
+    "fabricloader": ">=0.13.1",
     "fabric": ">=0.46.0",
     "minecraft": ">=1.18.1",
     "registrate-fabric": "*",

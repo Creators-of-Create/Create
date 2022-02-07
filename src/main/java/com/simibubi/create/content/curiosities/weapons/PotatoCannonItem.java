@@ -46,13 +46,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxCountItem, EntitySwingListenerItem, ItemExtensions {
+public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwingListenerItem, ItemExtensions {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
 	public PotatoCannonItem(Properties properties) {
-		super(properties.durability(MAX_DAMAGE));
+		super(properties.defaultDurability(MAX_DAMAGE));
 	}
 
 	@Override
@@ -82,11 +82,6 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxC
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		return BackTankUtil.isBarVisible(stack, maxUses());
 	}
@@ -105,20 +100,9 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxC
 		return AllConfigs.SERVER.curiosities.maxPotatoCannonShots.get();
 	}
 
-	@Override
-	public boolean canBeDepleted() {
-		return true;
-	}
-
 	public boolean isCannon(ItemStack stack) {
 		return stack.getItem() instanceof PotatoCannonItem;
 	}
-
-//	done in item properties instead
-//	@Override
-//	public int getMaxDamage(ItemStack stack) {
-//		return MAX_DAMAGE;
-//	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
@@ -274,11 +258,6 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomMaxC
 	public Predicate<ItemStack> getAllSupportedProjectiles() {
 		return stack -> PotatoProjectileTypeManager.getTypeForStack(stack)
 			.isPresent();
-	}
-
-	@Override
-	public int getEnchantmentValue() {
-		return 1;
 	}
 
 	@Override

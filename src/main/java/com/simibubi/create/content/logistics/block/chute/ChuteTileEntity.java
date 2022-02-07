@@ -729,6 +729,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Nullable
 	@Override
 	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		if (direction == Direction.DOWN) return null; // special case for #114
 		return lazyHandler.orElse(null);
 	}
 

@@ -11,11 +11,11 @@ import net.minecraft.world.level.LevelAccessor;
 public class AnimationTickHolder {
 
 	private static int ticks;
-	private static int paused_ticks;
+	private static int pausedTicks;
 
 	public static void reset() {
 		ticks = 0;
-		paused_ticks = 0;
+		pausedTicks = 0;
 	}
 
 	public static void tick() {
@@ -23,7 +23,7 @@ public class AnimationTickHolder {
 			.isPaused()) {
 			ticks = (ticks + 1) % 1_728_000; // wrap around every 24 hours so we maintain enough floating point precision
 		} else {
-			paused_ticks = (paused_ticks + 1) % 1_728_000;
+			pausedTicks = (pausedTicks + 1) % 1_728_000;
 		}
 	}
 
@@ -32,7 +32,7 @@ public class AnimationTickHolder {
 	}
 
 	public static int getTicks(boolean includePaused) {
-		return includePaused ? ticks + paused_ticks : ticks;
+		return includePaused ? ticks + pausedTicks : ticks;
 	}
 
 	public static float getRenderTime() {

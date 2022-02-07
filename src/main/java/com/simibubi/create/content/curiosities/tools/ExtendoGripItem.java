@@ -32,7 +32,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -42,8 +41,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class ExtendoGripItem extends Item  {
-	private static DamageSource lastActiveDamageSource;
-
 	public static final int MAX_DAMAGE = 200;
 
 	public static final AttributeModifier singleRangeAttributeModifier =
@@ -53,20 +50,19 @@ public class ExtendoGripItem extends Item  {
 		new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
 			AttributeModifier.Operation.ADDITION);
 
-	static Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
+	private static final Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
 		// Holding an ExtendoGrip
 		ImmutableMultimap.of(ReachEntityAttributes.REACH, singleRangeAttributeModifier)
 	);
-
-	static Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
+	private static final Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
 		// Holding two ExtendoGrips o.O
 		ImmutableMultimap.of(ReachEntityAttributes.REACH, doubleRangeAttributeModifier)
 	);
 
+	private static DamageSource lastActiveDamageSource;
+
 	public ExtendoGripItem(Properties properties) {
-		super(properties
-			.durability(MAX_DAMAGE)
-			.rarity(Rarity.UNCOMMON));
+		super(properties.defaultDurability(MAX_DAMAGE));
 	}
 
 	public static final String EXTENDO_MARKER = "createExtendo";
@@ -173,7 +169,7 @@ public class ExtendoGripItem extends Item  {
 //	public static void consumeDurabilityOnBlockBreak(BreakEvent event) {
 //		findAndDamageExtendoGrip(event.getPlayer());
 //	}
-
+//
 //	@SubscribeEvent(priority = EventPriority.LOWEST)
 //	public static void consumeDurabilityOnPlace(EntityPlaceEvent event) {
 //		Entity entity = event.getEntity();
@@ -183,7 +179,7 @@ public class ExtendoGripItem extends Item  {
 
 //	@SubscribeEvent(priority = EventPriority.LOWEST)
 //	public static void consumeDurabilityOnPlace(PlayerInteractEvent event) {
-////		findAndDamageExtendoGrip(event.getPlayer());
+//		findAndDamageExtendoGrip(event.getPlayer());
 //	}
 
 	private static void findAndDamageExtendoGrip(Player player) {
@@ -222,17 +218,6 @@ public class ExtendoGripItem extends Item  {
 	private static int maxUses() {
 		return AllConfigs.SERVER.curiosities.maxExtendoGripActions.get();
 	}
-
-	@Override
-	public boolean canBeDepleted() {
-		return true;
-	}
-
-//	done in item properties instead
-//	@Override
-//	public int getMaxDamage(ItemStack stack) {
-//		return MAX_DAMAGE;
-//	}
 
 	public static float bufferLivingAttackEvent(DamageSource source, float amount) {
 		// Workaround for removed patch to get the attacking entity.
