@@ -48,6 +48,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import me.shedaniel.rei.api.client.gui.drag.DraggableStack;
@@ -57,6 +58,7 @@ import me.shedaniel.rei.api.client.gui.drag.DraggingContext;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
+import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
@@ -267,6 +269,19 @@ public class CreateREI implements REIClientPlugin {
 	@Override
 	public void registerTransferHandlers(TransferHandlerRegistry registry) {
 		registry.register(new BlueprintTransferHandler());
+	}
+
+	@Override
+	public void registerEntries(EntryRegistry registry) {
+		registry.removeEntryIf(entryStack -> {
+			if(entryStack.getType() == VanillaEntryTypes.ITEM) {
+				ItemStack itemStack = entryStack.castValue();
+				if(itemStack.getItem() instanceof TagDependentIngredientItem tagItem) {
+					return tagItem.shouldHide();
+				}
+			}
+			return false;
+		});
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {
