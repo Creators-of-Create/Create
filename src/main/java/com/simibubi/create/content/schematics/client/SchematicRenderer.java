@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Set;
 
 import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
+import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
 import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -20,6 +21,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -120,11 +122,19 @@ public class SchematicRenderer {
 //						random)) {
 					if (state.getRenderShape() == RenderShape.MODEL) {
 						BakedModel model = blockRendererDispatcher.getBlockModel(state);
-						model = CullingBakedModel.wrap(model);
-						model = LayerFilteringBakedModel.wrap(model, blockRenderLayer);
-						if (blockRendererDispatcher.getModelRenderer()
-							.tesselateBlock(blockAccess, model, state, pos, ms, bufferBuilder, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY)) {
-							usedBlockRenderLayers.add(blockRenderLayer);
+						if (((FabricBakedModel) model).isVanillaAdapter()) {
+							if (!FabricModelUtil.doesLayerMatch(state, blockRenderLayer)) {
+								model = null;
+							}
+						} else {
+							model = CullingBakedModel.wrap(model);
+							model = LayerFilteringBakedModel.wrap(model, blockRenderLayer);
+						}
+						if (model != null) {
+							if (blockRendererDispatcher.getModelRenderer()
+								.tesselateBlock(blockAccess, model, state, pos, ms, bufferBuilder, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY)) {
+								usedBlockRenderLayers.add(blockRenderLayer);
+							}
 						}
 					}
 					blockstates.add(state);

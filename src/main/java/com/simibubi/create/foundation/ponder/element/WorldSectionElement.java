@@ -29,6 +29,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -351,10 +352,12 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 				BakedModel model = dispatcher.getBlockModel(state);
-				model = CullingBakedModel.wrap(model);
-				model = DefaultLayerFilteringBakedModel.wrap(model);
+				if (!((FabricBakedModel) model).isVanillaAdapter()) {
+					model = CullingBakedModel.wrap(model);
+					model = DefaultLayerFilteringBakedModel.wrap(model);
+				}
 				dispatcher.getModelRenderer()
-					.tesselateBlock(world, dispatcher.getBlockModel(state), state, pos, ms, builder, true, new Random(), state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+					.tesselateBlock(world, model, state, pos, ms, builder, true, new Random(), state.getSeed(pos), OverlayTexture.NO_OVERLAY);
 			}
 			ms.popPose();
 		}
