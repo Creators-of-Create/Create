@@ -41,6 +41,7 @@ import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
@@ -51,6 +52,7 @@ import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import dev.architectury.fluid.FluidStack;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStack;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStackVisitor;
 import me.shedaniel.rei.api.client.gui.drag.DraggedAcceptorResult;
@@ -279,6 +281,9 @@ public class CreateREI implements REIClientPlugin {
 				if(itemStack.getItem() instanceof TagDependentIngredientItem tagItem) {
 					return tagItem.shouldHide();
 				}
+			} else if(entryStack.getType() == VanillaEntryTypes.FLUID) {
+				FluidStack fluidStack = entryStack.castValue();
+				return fluidStack.getFluid() instanceof VirtualFluid;
 			}
 			return false;
 		});
