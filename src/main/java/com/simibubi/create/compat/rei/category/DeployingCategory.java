@@ -23,7 +23,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	AnimatedDeployer deployer;
 
 	public DeployingCategory() {
-		super(itemIcon(AllBlocks.DEPLOYER.get()), emptyBackground(177, 80));
+		super(itemIcon(AllBlocks.DEPLOYER), emptyBackground(177, 80));
 		deployer = new AnimatedDeployer();
 	}
 

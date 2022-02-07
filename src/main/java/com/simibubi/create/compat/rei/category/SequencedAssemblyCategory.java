@@ -48,7 +48,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	Map<ResourceLocation, SequencedAssemblySubCategory> subCategories = new HashMap<>();
 
 	public SequencedAssemblyCategory() {
-		super(itemIcon(AllItems.PRECISION_MECHANISM.get()), new EmptyBackground(180, 120));
+		super(itemIcon(AllItems.PRECISION_MECHANISM), new EmptyBackground(180, 120));
 	}
 
 	@Override

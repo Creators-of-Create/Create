@@ -27,7 +27,7 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	}
 
 	public MysteriousItemConversionCategory() {
-		super(itemIcon(AllItems.CHROMATIC_COMPOUND.get()), emptyBackground(177, 50));
+		super(itemIcon(AllItems.CHROMATIC_COMPOUND), emptyBackground(177, 50));
 	}
 
 	@Override

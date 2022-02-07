@@ -25,7 +25,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	private ItemStack renderedSandpaper;
 
 	public PolishingCategory() {
-		super(itemIcon(AllItems.SAND_PAPER.get()), emptyBackground(177, 55));
+		super(itemIcon(AllItems.SAND_PAPER), emptyBackground(177, 55));
 		renderedSandpaper = AllItems.SAND_PAPER.asStack();
 	}
 

@@ -8,6 +8,7 @@ import static com.simibubi.create.foundation.data.recipe.Mods.MW;
 import static com.simibubi.create.foundation.data.recipe.Mods.SM;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -31,6 +32,8 @@ import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -1157,14 +1160,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		private String suffix;
 		private Supplier<? extends ItemLike> result;
 		private ResourceLocation compatDatagenOutput;
-//		List<ICondition> recipeConditions;
+		List<ConditionJsonProvider> recipeConditions;
 
 		private Supplier<ItemPredicate> unlockedBy;
 		private int amount;
 
 		private GeneratedRecipeBuilder(String path) {
 			this.path = path;
-//			this.recipeConditions = new ArrayList<>();
+			this.recipeConditions = new ArrayList<>();
 			this.suffix = "";
 			this.amount = 1;
 		}
@@ -1198,18 +1201,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return this;
 		}
 
-//		GeneratedRecipeBuilder whenModLoaded(String modid) {
-//			return withCondition(new ModLoadedCondition(modid));
-//		}
+		GeneratedRecipeBuilder whenModLoaded(String modid) {
+			return withCondition(DefaultResourceConditions.allModsLoaded(modid));
+		}
 
-//		GeneratedRecipeBuilder whenModMissing(String modid) {
-//			return withCondition(new NotCondition(new ModLoadedCondition(modid)));
-//		}
+		GeneratedRecipeBuilder whenModMissing(String modid) {
+			return withCondition(DefaultResourceConditions.not(DefaultResourceConditions.allModsLoaded(modid)));
+		}
 
-//		GeneratedRecipeBuilder withCondition(ICondition condition) {
-//			recipeConditions.add(condition);
-//			return this;
-//		}
+		GeneratedRecipeBuilder withCondition(ConditionJsonProvider condition) {
+			recipeConditions.add(condition);
+			return this;
+		}
 
 		GeneratedRecipeBuilder withSuffix(String suffix) {
 			this.suffix = suffix;
@@ -1324,7 +1327,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
 					b.save(result -> {
 						consumer.accept(
-							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput/*, recipeConditions*/)
+							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)
 								: result);
 					}, createSimpleLocation(Registry.RECIPE_SERIALIZER.getKey(serializer)
 						.getPath()));
@@ -1346,13 +1349,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		private FinishedRecipe wrapped;
 		private ResourceLocation outputOverride;
-//		private List<ICondition> conditions;
+		private List<ConditionJsonProvider> conditions;
 
-		public ModdedCookingRecipeResult(FinishedRecipe wrapped, ResourceLocation outputOverride/*,
-			List<ICondition> conditions*/) {
+		public ModdedCookingRecipeResult(FinishedRecipe wrapped, ResourceLocation outputOverride,
+			List<ConditionJsonProvider> conditions) {
 			this.wrapped = wrapped;
 			this.outputOverride = outputOverride;
-//			this.conditions = conditions;
+			this.conditions = conditions;
 		}
 
 		@Override
@@ -1381,7 +1384,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			object.addProperty("result", outputOverride.toString());
 
 			JsonArray conds = new JsonArray();
-//			conditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+			ConditionJsonProvider.write(object, conditions.toArray(new ConditionJsonProvider[0]));
 			object.add("conditions", conds);
 		}
 

@@ -7,12 +7,12 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.jozufozu.flywheel.core.instancing.ConditionalInstance.ICondition;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
-import com.simibubi.create.lib.data.ICondition;
 
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;

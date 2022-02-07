@@ -40,7 +40,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
 	public MechanicalCraftingCategory() {
-		super(itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 109));
+		super(itemIcon(AllBlocks.MECHANICAL_CRAFTER), emptyBackground(177, 109));
 	}
 
 	static int maxSize = 100;
