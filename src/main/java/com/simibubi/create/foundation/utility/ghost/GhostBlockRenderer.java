@@ -91,12 +91,12 @@ public abstract class GhostBlockRenderer {
 			ms.translate(-.5, -.5, -.5);
 
 			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
-			model = TranslucentBakedModel.wrap(model, () -> params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha());
 //			dispatcher.getModelRenderer()
 //				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f,
 //					LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY);
 			model = DefaultLayerFilteringBakedModel.wrap(model);
 			model = FixedLightBakedModel.wrap(model, LevelRenderer.getLightColor(mc.level, pos));
+			model = TranslucentBakedModel.wrap(model, () -> params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha());
 			dispatcher.getModelRenderer()
 				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 

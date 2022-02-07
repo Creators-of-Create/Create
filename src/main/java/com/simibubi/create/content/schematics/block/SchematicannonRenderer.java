@@ -186,8 +186,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				switch (state.getRenderShape()) {
 				case MODEL -> {
 					BakedModel model = dispatcher.getBlockModel(state);
-					model = FixedLightBakedModel.wrap(model, light);
 					model = DefaultLayerFilteringBakedModel.wrap(model);
+					model = FixedLightBakedModel.wrap(model, light);
 					dispatcher.getModelRenderer()
 						.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, ms, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)), false, new Random(), 42L, overlay);
 				}
