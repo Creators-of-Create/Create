@@ -55,10 +55,10 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+import com.simibubi.create.lib.event.AttackAirCallback;
 import com.simibubi.create.lib.event.ClientWorldEvents;
 import com.simibubi.create.lib.event.FogEvents;
 import com.simibubi.create.lib.event.FogEvents.ColorData;
-import com.simibubi.create.lib.event.AttackAirCallback;
 import com.simibubi.create.lib.event.OnStartUseItemCallback;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
@@ -366,7 +366,7 @@ public class ClientEvents {
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer));
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
 
 		// Flywheel Events
 

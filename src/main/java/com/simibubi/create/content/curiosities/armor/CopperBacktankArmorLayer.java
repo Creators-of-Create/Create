@@ -12,8 +12,8 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.LivingRendererHelper;
 
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -92,14 +92,14 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 //	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void registerOn(EntityRenderer<?> entityRenderer) {
+	public static void registerOn(EntityRenderer<?> entityRenderer, RegistrationHelper helper) {
 		if (!(entityRenderer instanceof LivingEntityRenderer))
 			return;
 		LivingEntityRenderer<?, ?> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
 		if (!(livingRenderer.getModel() instanceof HumanoidModel))
 			return;
 		CopperBacktankArmorLayer<?, ?> layer = new CopperBacktankArmorLayer<>(livingRenderer);
-		LivingRendererHelper.addRenderer(livingRenderer, layer);
+		helper.register(layer);
 	}
 
 	public static void renderRemainingAirOverlay(PoseStack poseStack, float partialTicks, Window window) {
