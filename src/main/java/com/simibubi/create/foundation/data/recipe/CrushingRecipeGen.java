@@ -13,6 +13,7 @@ import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
@@ -214,7 +215,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		return create("raw_" + name + (amount == 1 ? "_ore" : "_block"), b -> {
 			String prefix = amount == 1 ? "raw_ores/" : "raw_blocks/";
 			return b.duration(400)
-//				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
+				.withCondition(DefaultResourceConditions.not(DefaultResourceConditions.itemTagsPopulated(AllTags.forgeItemTag(prefix + name))))
 				.require(AllTags.forgeItemTag(prefix + name))
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
