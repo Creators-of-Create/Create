@@ -55,10 +55,10 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+import com.simibubi.create.lib.event.AttackAirCallback;
 import com.simibubi.create.lib.event.ClientWorldEvents;
 import com.simibubi.create.lib.event.FogEvents;
 import com.simibubi.create.lib.event.FogEvents.ColorData;
-import com.simibubi.create.lib.event.AttackAirCallback;
 import com.simibubi.create.lib.event.OnStartUseItemCallback;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
 import com.simibubi.create.lib.event.ParticleManagerRegistrationCallback;
@@ -340,7 +340,7 @@ public class ClientEvents {
 		ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
 		ClientWorldEvents.LOAD.register(ClientEvents::onLoadWorld);
 		ClientWorldEvents.UNLOAD.register(ClientEvents::onUnloadWorld);
-		WorldRenderEvents.END.register(ClientEvents::onRenderWorld);
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(ClientEvents::onRenderWorld);
 		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
@@ -360,13 +360,13 @@ public class ClientEvents {
 		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
 		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
-		WorldRenderEvents.END.register(SymmetryHandler::render);
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
 		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((__, renderer, ___, ____) -> CopperBacktankArmorLayer.registerOn(renderer));
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
 
 		// Flywheel Events
 

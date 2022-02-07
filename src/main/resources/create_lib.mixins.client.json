@@ -40,7 +40,6 @@
     "accessor.ItemInHandRendererAccessor",
     "accessor.ItemRendererAccessor",
     "accessor.KeyMappingAccessor",
-    "accessor.LivingEntityRendererAccessor",
     "accessor.MinecraftAccessor",
     "accessor.ParticleAccessor",
     "accessor.ParticleEngineAccessor",

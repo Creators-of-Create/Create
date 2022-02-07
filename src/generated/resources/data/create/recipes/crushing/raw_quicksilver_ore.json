@@ -17,13 +17,10 @@
   "processingTime": 400,
   "fabric:load_conditions": [
     {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "fabric:item_tags_populated",
-        "values": [
-          "c:quicksilver_raw_ores"
-        ]
-      }
+      "condition": "fabric:item_tags_populated",
+      "values": [
+        "c:quicksilver_raw_ores"
+      ]
     }
   ]
 }

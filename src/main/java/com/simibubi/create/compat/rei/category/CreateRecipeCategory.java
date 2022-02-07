@@ -110,8 +110,8 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 		return new DoubleItemIcon(() -> new ItemStack(item1.get()), () -> new ItemStack(item2.get()));
 	}
 
-	public static Renderer itemIcon(ItemLike item) {
-		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
+	public static Renderer itemIcon(Supplier<? extends ItemLike> item) {
+		return new DoubleItemIcon(() -> new ItemStack(item.get()), () -> ItemStack.EMPTY);
 	}
 
 	public static void addStochasticTooltip(List<Widget> itemStacks, List<ProcessingOutput> results) {

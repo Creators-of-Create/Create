@@ -215,7 +215,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		return create("raw_" + name + (amount == 1 ? "_ore" : "_block"), b -> {
 			String prefix = amount == 1 ? "raw_ores/" : "raw_blocks/";
 			return b.duration(400)
-				.withCondition(DefaultResourceConditions.not(DefaultResourceConditions.itemTagsPopulated(AllTags.forgeItemTag(prefix + name))))
+				.withCondition(DefaultResourceConditions.itemTagsPopulated(AllTags.forgeItemTag(prefix + name)))
 				.require(AllTags.forgeItemTag(prefix + name))
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
