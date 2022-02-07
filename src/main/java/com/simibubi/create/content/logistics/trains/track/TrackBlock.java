@@ -64,8 +64,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		NONE("", Vec3.ZERO),
 		ZO("z_ortho", new Vec3(0, 0, 1)),
 		XO("x_ortho", new Vec3(1, 0, 0)),
-		PD("pos_diag", new Vec3(1, 0, 1)),
-		ND("neg_diag", new Vec3(-1, 0, 1)),
+		PD("diag", new Vec3(1, 0, 1)),
+		ND("diag", 90, new Vec3(-1, 0, 1), new Vec3(0, 1, 0)),
 		AN("ascending", 180, new Vec3(0, 1, -1), new Vec3(0, 1, 1)),
 		AS("ascending", 0, new Vec3(0, 1, 1), new Vec3(0, 1, -1)),
 		AE("ascending", 270, new Vec3(1, 1, 0), new Vec3(-1, 1, 0)),
@@ -175,13 +175,13 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public PushReaction getPistonPushReaction(BlockState pState) {
 		return PushReaction.BLOCK;
 	}
-	
+
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this && pState.setValue(HAS_TURN, true) == pOldState.setValue(HAS_TURN, true))
 			return;
 		LevelTickAccess<Block> blockTicks = pLevel.getBlockTicks();
-		if (!blockTicks.hasScheduledTick(pPos, this)) 
+		if (!blockTicks.hasScheduledTick(pPos, this))
 			pLevel.scheduleTick(pPos, this, 1);
 	}
 
@@ -226,7 +226,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 				if (!entry.getValue()
 					.isInside(pos))
 					continue;
-				if (world.getBlockEntity(entry.getKey()) instanceof StationTileEntity station)
+				if (world.getBlockEntity(entry.getKey())instanceof StationTileEntity station)
 					station.trackClicked(player, this, state, pos);
 			}
 			return InteractionResult.SUCCESS;

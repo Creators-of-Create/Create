@@ -10,10 +10,11 @@
       "model": "create:block/track/x_ortho"
     },
     "shape=pd,turn=false": {
-      "model": "create:block/track/pos_diag"
+      "model": "create:block/track/diag"
     },
     "shape=nd,turn=false": {
-      "model": "create:block/track/neg_diag"
+      "model": "create:block/track/diag",
+      "y": 90
     },
     "shape=an,turn=false": {
       "model": "create:block/track/ascending",
@@ -40,10 +41,11 @@
       "model": "create:block/track/x_ortho"
     },
     "shape=pd,turn=true": {
-      "model": "create:block/track/pos_diag"
+      "model": "create:block/track/diag"
     },
     "shape=nd,turn=true": {
-      "model": "create:block/track/neg_diag"
+      "model": "create:block/track/diag",
+      "y": 90
     },
     "shape=an,turn=true": {
       "model": "create:block/track/ascending",

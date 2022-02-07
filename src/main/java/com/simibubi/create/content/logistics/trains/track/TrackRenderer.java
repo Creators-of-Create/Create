@@ -53,8 +53,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		Vec3 previous2 = null;
 
 		for (BezierConnection.Segment segment : bc) {
-			Vec3 rail1 = segment.position.add(segment.normal.scale(.97f));
-			Vec3 rail2 = segment.position.subtract(segment.normal.scale(.97f));
+			Vec3 rail1 = segment.position.add(segment.normal.scale(.965f));
+			Vec3 rail2 = segment.position.subtract(segment.normal.scale(.965f));
 
 			if (previous1 != null) {
 				{

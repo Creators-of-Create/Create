@@ -116,8 +116,8 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 			Vec3 rightPrevious = null;
 
 			for (BezierConnection.Segment segment : bc) {
-				Vec3 left = segment.position.add(segment.normal.scale(.97f));
-				Vec3 right = segment.position.subtract(segment.normal.scale(.97f));
+				Vec3 left = segment.position.add(segment.normal.scale(.965f));
+				Vec3 right = segment.position.subtract(segment.normal.scale(.965f));
 
 				if (leftPrevious != null) {
 					var modelIndex = segment.index - 1;
@@ -153,7 +153,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 							.rotateYRadians(angles.y)
 							.rotateXRadians(angles.x)
 							.rotateZRadians(angles.z)
-							.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
+							.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 512f, 0)
 							.scale(1, 1, (float) diff.length() * 2.1f);
 						(first ? leftLightPos : rightLightPos)[modelIndex] = new BlockPos(prevI).offset(tePosition);
 					}

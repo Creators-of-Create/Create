@@ -1,22 +1,44 @@
 {
 	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
 	"textures": {
-		"0": "create:block/track",
-		"particle": "create:block/track"
+		"1": "create:block/standard_track",
+		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
 	},
 	"elements": [
 		{
-			"name": "cube6",
+			"name": "cube1",
 			"from": [-13.95, -3.05, 2],
-			"to": [29.95, 1.05, 6],
+			"to": [8, 1.05, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [0, 0.625, 4.75, 1.125], "texture": "#0"},
-				"east": {"uv": [4.875, 0.625, 5.375, 1.125], "texture": "#0"},
-				"south": {"uv": [0, 0.625, 4.75, 1.125], "texture": "#0"},
-				"west": {"uv": [4.875, 0.625, 5.375, 1.125], "texture": "#0"},
-				"up": {"uv": [0, 0, 4.75, 0.5], "texture": "#0"},
-				"down": {"uv": [0, 1.25, 4.75, 1.75], "texture": "#0"}
+				"north": {"uv": [0, 2, 11, 4], "texture": "#1"},
+				"south": {"uv": [11, 2, 0, 4], "texture": "#1"},
+				"west": {"uv": [11, 0, 13, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 11, 2], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 4, 11, 6], "rotation": 180, "texture": "#1"}
 			}
+		},
+		{
+			"name": "cube3",
+			"from": [8, -3.05, 2],
+			"to": [29.95, 1.05, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [11, 2, 0, 4], "texture": "#1"},
+				"east": {"uv": [11, 0, 13, 2], "texture": "#1"},
+				"south": {"uv": [0, 2, 11, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 11, 2], "texture": "#1"},
+				"down": {"uv": [0, 4, 11, 6], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1]
 		}
 	]
 }

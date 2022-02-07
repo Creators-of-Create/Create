@@ -3,7 +3,7 @@
 	"flip-v": true,
 	"model": "create:models/block/track/ascending.obj",
 	"textures": {
-		"0": "create:block/track",
+		"0": "create:block/standard_track",
 		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
 	}
 }
