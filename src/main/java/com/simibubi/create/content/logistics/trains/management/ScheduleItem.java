@@ -1,13 +1,17 @@
 package com.simibubi.create.content.logistics.trains.management;
 
 import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -60,14 +64,9 @@ public class ScheduleItem extends Item implements MenuProvider {
 		InteractionHand pUsedHand) {
 		InteractionResult pass = InteractionResult.PASS;
 
-		if (!pStack.hasTag())
+		Schedule schedule = getSchedule(pStack);
+		if (schedule == null)
 			return pass;
-		if (!pStack.getTag()
-			.contains("Schedule"))
-			return pass;
-
-		Schedule schedule = Schedule.fromTag(pStack.getTagElement("Schedule"));
-
 		if (pInteractionTarget == null)
 			return pass;
 		Entity rootVehicle = pInteractionTarget.getRootVehicle();
@@ -75,19 +74,49 @@ public class ScheduleItem extends Item implements MenuProvider {
 			return pass;
 		if (pPlayer.level.isClientSide)
 			return InteractionResult.SUCCESS;
+
 		CarriageContraptionEntity entity = (CarriageContraptionEntity) rootVehicle;
 		Contraption contraption = entity.getContraption();
 		if (contraption instanceof CarriageContraption cc) {
+
 			Train train = cc.getCarriage().train;
 			if (train == null)
 				return InteractionResult.SUCCESS;
 			if (train.heldForAssembly) {
 				pPlayer.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
+				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
 				return InteractionResult.SUCCESS;
 			}
+
+			Integer seatIndex = contraption.getSeatMapping()
+				.get(pInteractionTarget.getUUID());
+			if (seatIndex == null)
+				return InteractionResult.SUCCESS;
+			BlockPos seatPos = contraption.getSeats()
+				.get(seatIndex);
+			Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
+			if (directions == null) {
+				pPlayer.displayClientMessage(Lang.translate("schedule.non_controlling_seat"), true);
+				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+				return InteractionResult.SUCCESS;
+			}
+
 			train.runtime.setSchedule(schedule, false);
+			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+			pPlayer.displayClientMessage(Lang.translate("schedule.applied_to_train")
+				.withStyle(ChatFormatting.GREEN), true);
+
 		}
 		return InteractionResult.SUCCESS;
+	}
+
+	public static Schedule getSchedule(ItemStack pStack) {
+		if (!pStack.hasTag())
+			return null;
+		if (!pStack.getTag()
+			.contains("Schedule"))
+			return null;
+		return Schedule.fromTag(pStack.getTagElement("Schedule"));
 	}
 
 	@Override

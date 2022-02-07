@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -24,6 +25,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -62,13 +64,39 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		return contraptionName;
 	}
 
+	public Couple<Boolean> checkConductors() {
+		Couple<Boolean> sides = Couple.create(false, false);
+
+		if (!(contraption instanceof CarriageContraption cc))
+			return sides;
+		sides.setFirst(cc.blazeBurnerConductors.getFirst());
+		sides.setSecond(cc.blazeBurnerConductors.getSecond());
+
+		for (Entity entity : getPassengers()) {
+			BlockPos seatOf = cc.getSeatOf(entity.getUUID());
+			if (seatOf == null)
+				continue;
+			Couple<Boolean> validSides = cc.conductorSeats.get(seatOf);
+			if (validSides == null)
+				continue;
+			sides.setFirst(sides.getFirst() || validSides.getFirst());
+			sides.setSecond(sides.getSecond() || validSides.getSecond());
+		}
+
+		return sides;
+	}
+
 	@Override
-	public boolean startControlling(BlockPos controlsLocalPos) {
+	public boolean startControlling(BlockPos controlsLocalPos, Player player) {
 		Carriage carriage = getCarriage();
 		if (carriage == null)
 			return false;
 		if (carriage.train.derailed)
 			return false;
+		if (carriage.train.heldForAssembly) {
+			player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
+			return false;
+		}
 
 		Train train = carriage.train;
 		if (train.runtime.getSchedule() != null && !train.runtime.paused)
@@ -110,9 +138,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (inverted) {
 			targetSpeed *= -1;
-//			targetSteer *= -1;
+			targetSteer *= -1;
 		}
 
+		boolean slow = inverted ^ targetSpeed < 0;
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
@@ -127,7 +156,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				.append(new TextComponent(currentStation.name).withStyle(ChatFormatting.WHITE)), true);
 		}
 
-		if (currentStation == null && targetSpeed >= 0) {
+		if (currentStation == null) {
 			Navigation nav = carriage.train.navigation;
 			if (nav.destination != null) {
 				if (!spaceDown)
@@ -148,7 +177,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				}
 			}
 
-			GlobalStation lookAhead = nav.findNearestApproachable();
+			double directedSpeed = targetSpeed != 0 ? targetSpeed : carriage.train.speed;
+			GlobalStation lookAhead = nav.findNearestApproachable(
+				!carriage.train.doubleEnded || (directedSpeed != 0 ? directedSpeed > 0 : !inverted));
+
 			if (lookAhead != null) {
 				if (spaceDown) {
 					nav.startNavigation(lookAhead, false);
@@ -166,7 +198,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.train.manualSteer =
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
 		carriage.train.targetSpeed = Train.topSpeed * targetSpeed;
-		if (inverted ^ targetSpeed < 0)
+		if (slow)
 			carriage.train.targetSpeed /= 8;
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
 		carriage.train.manualTick = true;

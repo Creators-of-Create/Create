@@ -107,7 +107,6 @@ public class TravellingPoint {
 	public ITrackSelector steer(SteerDirection direction, Vec3 upNormal) {
 		return (graph, pair) -> {
 			List<Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
-			boolean forward = pair.getFirst();
 			double closest = Double.MAX_VALUE;
 			Entry<TrackNode, TrackEdge> best = null;
 
@@ -116,7 +115,7 @@ public class TravellingPoint {
 				Vec3 entryTrajectory = entry.getValue()
 					.getDirection(node2, entry.getKey(), true);
 				Vec3 normal = trajectory.cross(upNormal);
-				double dot = normal.dot(entryTrajectory) * (forward ? 1 : -1);
+				double dot = normal.dot(entryTrajectory);
 				double diff = Math.abs(direction.targetDot - dot);
 				if (diff > closest)
 					continue;

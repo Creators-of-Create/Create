@@ -218,7 +218,7 @@ public class StationScreen extends AbstractStationScreen {
 				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
 				continue;
 			}
-			Carriage carriage = carriages.get(i);
+			Carriage carriage = carriages.get(train.currentlyBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}
 

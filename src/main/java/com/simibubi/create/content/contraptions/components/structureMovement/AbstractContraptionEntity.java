@@ -99,6 +99,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public void addSittingPassenger(Entity passenger, int seatIndex) {
+		for (Entity entity : getPassengers()) {
+			BlockPos seatOf = contraption.getSeatOf(entity.getUUID());
+			if (seatOf != null && seatOf.equals(contraption.getSeats()
+				.get(seatIndex))) {
+				if (entity instanceof Player)
+					return;
+				entity.stopRiding();
+			}
+		}
 		passenger.startRiding(this, true);
 		if (level.isClientSide)
 			return;
@@ -168,7 +177,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return getName();
 	}
 
-	public boolean startControlling(BlockPos controlsLocalPos) {
+	public boolean startControlling(BlockPos controlsLocalPos, Player player) {
 		return false;
 	}
 
@@ -470,7 +479,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
-		
+
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
 				continue;
@@ -482,7 +491,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			entity.setPos(transformed.getX(), transformed.getY(), transformed.getZ());
 			((AbstractContraptionEntity) entity).disassemble();
 		}
-		
+
 		discard();
 
 		ejectPassengers();

@@ -152,6 +152,7 @@ public class ScheduleRuntime {
 		currentEntry = 0;
 		paused = false;
 		isAutoSchedule = auto;
+		train.status.newSchedule();
 	}
 
 	public Schedule getSchedule() {

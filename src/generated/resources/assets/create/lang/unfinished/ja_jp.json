@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 108",
+	"_": "Missing Localizations: 110",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1377,6 +1377,8 @@
 	"create.schedule.loop1": "UNLOCALIZED: Schedule starts over",
 	"create.schedule.loop2": "UNLOCALIZED: when completed",
 	"create.schedule.train_still_assembling": "UNLOCALIZED: Confirm Train Assembly in the Station UI first",
+	"create.schedule.applied_to_train": "UNLOCALIZED: Train is now following this Schedule",
+	"create.schedule.non_controlling_seat": "UNLOCALIZED: Conductor needs to sit in front of a Controls block",
 
 	"create.track.selection_cleared": "UNLOCALIZED: Selection Cleared",
 	"create.track.valid_connection": "UNLOCALIZED: Can Connect ✔",

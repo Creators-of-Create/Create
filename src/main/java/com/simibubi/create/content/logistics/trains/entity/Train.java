@@ -61,6 +61,7 @@ public class Train {
 	public boolean manualTick;
 
 	public UUID currentStation;
+	public boolean currentlyBackwards;
 
 	public boolean heldForAssembly;
 	public boolean doubleEnded;
@@ -108,22 +109,13 @@ public class Train {
 			return;
 		}
 
+		updateConductors();
 		runtime.tick(level);
 		navigation.tick(level);
 
-		if (!manualTick && navigation.destination == null && speed != 0) {
-			if (speed > 0)
-				speed = Math.max(speed - acceleration, 0);
-			else
-				speed = Math.min(speed + acceleration, 0);
-		}
-		manualTick = false;
-
-		if (derailed) {
-			speed /= 3f;
-			if (Mth.equal(speed, 0))
-				speed = 0;
-		}
+		tickPassiveSlowdown();
+		if (derailed)
+			tickDerailedSlowdown();
 
 		double distance = speed;
 		Carriage previousCarriage = null;
@@ -144,18 +136,24 @@ public class Train {
 		// negative stress: carriages should move closer
 
 		boolean approachingStation = navigation.distanceToDestination < 5;
-		double leadingModifier = approachingStation ? -0.75d : -0.5d;
+		double leadingModifier = approachingStation ? 0.75d : 0.5d;
 		double trailingModifier = approachingStation ? 0d : 0.125d;
 
-		TravellingPoint previous = null;
 		boolean blocked = false;
+		boolean iterateFromBack = speed < 0;
 
-		for (int i = 0; i < carriages.size(); i++) {
-			double leadingStress = i == 0 ? 0 : stress[i - 1] * leadingModifier;
-			double trailingStress = i == stress.length ? 0 : stress[i] * trailingModifier;
+		for (int index = 0; index < carriages.size(); index++) {
+			int i = iterateFromBack ? carriages.size() - 1 - index : index;
+			double leadingStress = i == 0 ? 0 : stress[i - 1] * -(iterateFromBack ? trailingModifier : leadingModifier);
+			double trailingStress =
+				i == stress.length ? 0 : stress[i] * (iterateFromBack ? leadingModifier : trailingModifier);
+
 			Carriage carriage = carriages.get(i);
 
-			TravellingPoint toFollowForward = previous;
+			TravellingPoint toFollowForward = i == 0 ? null
+				: carriages.get(i - 1)
+					.getTrailingPoint();
+
 			TravellingPoint toFollowBackward = i == carriages.size() - 1 ? null
 				: carriages.get(i + 1)
 					.getLeadingPoint();
@@ -165,15 +163,15 @@ public class Train {
 			Function<TravellingPoint, ITrackSelector> backwardControl =
 				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
 
-			double actualDistance = carriage.travel(level, graph, distance + leadingStress + trailingStress,
-				forwardControl, backwardControl);
+			double totalStress = leadingStress + trailingStress;
+			double actualDistance =
+				carriage.travel(level, graph, distance + totalStress, forwardControl, backwardControl);
 			blocked |= carriage.blocked;
 
-			if (i == 0) {
+			if (index == 0) {
 				distance = actualDistance;
 				collideWithOtherTrains(level, carriage);
 			}
-			previous = carriage.getTrailingPoint();
 		}
 
 		if (blocked) {
@@ -184,12 +182,53 @@ public class Train {
 		} else if (speed != 0)
 			status.trackOK();
 
+		updateNavigationTarget(distance);
+	}
+
+	private void updateNavigationTarget(double distance) {
 		if (navigation.destination != null) {
 			boolean recalculate = navigation.distanceToDestination % 100 > 20;
-			navigation.distanceToDestination -= distance;
-			if (recalculate && navigation.distanceToDestination % 100 <= 20)
+			boolean imminentRecalculate = navigation.distanceToDestination > 5;
+			navigation.distanceToDestination -= Math.abs(distance);
+			if (recalculate && navigation.distanceToDestination % 100 <= 20
+				|| imminentRecalculate && navigation.distanceToDestination <= 5)
 				navigation.startNavigation(navigation.destination, false);
 		}
+	}
+
+	private void tickDerailedSlowdown() {
+		speed /= 3f;
+		if (Mth.equal(speed, 0))
+			speed = 0;
+	}
+
+	private void tickPassiveSlowdown() {
+		if (!manualTick && navigation.destination == null && speed != 0) {
+			if (speed > 0)
+				speed = Math.max(speed - acceleration, 0);
+			else
+				speed = Math.min(speed + acceleration, 0);
+		}
+		manualTick = false;
+	}
+
+	private void updateConductors() {
+		for (Carriage carriage : carriages)
+			carriage.updateConductors();
+	}
+
+	public boolean hasForwardConductor() {
+		for (Carriage carriage : carriages)
+			if (carriage.hasForwardConductor)
+				return true;
+		return false;
+	}
+
+	public boolean hasBackwardConductor() {
+		for (Carriage carriage : carriages)
+			if (carriage.hasBackwardConductor)
+				return true;
+		return false;
 	}
 
 	private void collideWithOtherTrains(Level level, Carriage carriage) {
@@ -198,10 +237,8 @@ public class Train {
 		Collision: for (Train train : Create.RAILWAYS.trains.values()) {
 			if (train == this)
 				continue;
-			Vec3 start = carriage.getLeadingPoint()
-				.getPosition();
-			Vec3 end = carriage.getTrailingPoint()
-				.getPosition();
+			Vec3 start = (speed < 0 ? carriage.getTrailingPoint() : carriage.getLeadingPoint()).getPosition();
+			Vec3 end = (speed < 0 ? carriage.getLeadingPoint() : carriage.getTrailingPoint()).getPosition();
 			Vec3 diff = end.subtract(start);
 			Vec3 lastPoint = null;
 
@@ -249,7 +286,7 @@ public class Train {
 					if (intersect[1] < 0)
 						continue;
 
-					double combinedSpeed = speed + train.speed;
+					double combinedSpeed = Math.abs(speed) + Math.abs(train.speed);
 					if (combinedSpeed > .2f) {
 						Vec3 v = start.add(normedDiff.scale(intersect[0]));
 						level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5),
@@ -284,21 +321,24 @@ public class Train {
 		}
 
 		int offset = 1;
+		boolean backwards = currentlyBackwards;
 		for (int i = 0; i < carriages.size(); i++) {
 
-			Carriage carriage = carriages.get(i);
+			Carriage carriage = carriages.get(backwards ? carriages.size() - i - 1 : i);
 			CarriageContraptionEntity entity = carriage.entity.get();
 			if (entity == null)
 				return false;
 
-			entity.setPos(Vec3.atLowerCornerOf(pos.relative(assemblyDirection, offset)));
+			entity.setPos(Vec3
+				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
 			entity.disassemble();
 			Create.RAILWAYS.carriageById.remove(carriage.id);
 			CreateClient.RAILWAYS.carriageById.remove(carriage.id);
 
 			offset += carriage.bogeySpacing;
+
 			if (i < carriageSpacing.size())
-				offset += carriageSpacing.get(i);
+				offset += carriageSpacing.get(carriageSpacing.size() - i - 1);
 		}
 
 		GlobalStation currentStation = getCurrentStation();
@@ -385,7 +425,13 @@ public class Train {
 	public int getTotalLength() {
 		int length = 0;
 		for (int i = 0; i < carriages.size(); i++) {
-			length += carriages.get(i).bogeySpacing;
+			Carriage carriage = carriages.get(i);
+			if (i == 0)
+				length += carriage.leadingBogey().type.getWheelPointSpacing() / 2;
+			if (i == carriages.size() - 1)
+				length += carriage.trailingBogey().type.getWheelPointSpacing() / 2;
+
+			length += carriage.bogeySpacing;
 			if (i < carriageSpacing.size())
 				length += carriageSpacing.get(i);
 		}

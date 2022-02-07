@@ -7,7 +7,6 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
-import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
@@ -15,6 +14,7 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
@@ -34,6 +34,9 @@ public class Carriage {
 	public int bogeySpacing;
 	public int id;
 	public boolean blocked;
+
+	public boolean hasForwardConductor;
+	public boolean hasBackwardConductor;
 
 	WeakReference<CarriageContraptionEntity> entity;
 	Couple<CarriageBogey> bogeys;
@@ -67,30 +70,27 @@ public class Carriage {
 		double stress = onTwoBogeys ? bogeySpacing - leadingAnchor.distanceTo(trailingAnchor) : 0;
 		blocked = false;
 
-		// positive stress: points should move apart
-		// negative stress: points should move closer
-
-		double leadingBogeyModifier = 0.5d;
-		double trailingBogeyModifier = -0.5d;
-		double leadingPointModifier = 0.5d;
-		double trailingPointModifier = -0.5d;
-
-		MutableObject<TravellingPoint> previous = new MutableObject<>();
 		MutableDouble distanceMoved = new MutableDouble(distance);
+		boolean iterateFromBack = distance < 0;
 
-		bogeys.forEachWithContext((bogey, firstBogey) -> {
+		for (boolean firstBogey : Iterate.trueAndFalse) {
 			if (!firstBogey && !onTwoBogeys)
-				return;
+				continue;
 
-			double bogeyCorrection = stress * (firstBogey ? leadingBogeyModifier : trailingBogeyModifier);
+			boolean actuallyFirstBogey = !onTwoBogeys || (firstBogey ^ iterateFromBack);
+			CarriageBogey bogey = bogeys.get(actuallyFirstBogey);
+			double bogeyCorrection = stress * (actuallyFirstBogey ? 0.5d : -0.5d);
 			double bogeyStress = bogey.getStress();
 
-			bogey.points.forEachWithContext((point, first) -> {
-				TravellingPoint prevPoint = previous.getValue();
-				TravellingPoint nextPoint = first ? bogey.points.getSecond()
-					: firstBogey && onTwoBogeys ? bogeys.getSecond().points.getFirst() : null;
+			for (boolean firstWheel : Iterate.trueAndFalse) {
+				boolean actuallyFirstWheel = firstWheel ^ iterateFromBack;
+				TravellingPoint point = bogey.points.get(actuallyFirstWheel);
+				TravellingPoint prevPoint = !actuallyFirstWheel ? bogey.points.getFirst()
+					: !actuallyFirstBogey && onTwoBogeys ? bogeys.getFirst().points.getSecond() : null;
+				TravellingPoint nextPoint = actuallyFirstWheel ? bogey.points.getSecond()
+					: actuallyFirstBogey && onTwoBogeys ? bogeys.getSecond().points.getFirst() : null;
 
-				double correction = bogeyStress * (first ? leadingPointModifier : trailingPointModifier);
+				double correction = bogeyStress * (actuallyFirstWheel ? 0.5d : -0.5d);
 				double toMove = distanceMoved.getValue();
 
 				ITrackSelector frontTrackSelector =
@@ -99,19 +99,27 @@ public class Carriage {
 					nextPoint == null ? backwardControl.apply(point) : point.follow(nextPoint);
 
 				double moved = point.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector);
-				point.travel(graph, correction + bogeyCorrection,
-					correction + bogeyCorrection > 0 ? frontTrackSelector : backTrackSelector);
+				double stressCorrection = correction + bogeyCorrection;
+				point.travel(graph, stressCorrection, stressCorrection > 0 ? frontTrackSelector : backTrackSelector);
 				blocked |= point.blocked;
 
 				distanceMoved.setValue(moved);
-				previous.setValue(point);
-			});
+			}
 
 			bogey.updateAnchorPosition();
-		});
+		}
 
 		tickEntity(level);
 		return distanceMoved.getValue();
+	}
+
+	public void updateConductors() {
+		CarriageContraptionEntity entity = this.entity.get();
+		if (entity == null || !entity.isAlive())
+			return;
+		Couple<Boolean> sides = entity.checkConductors();
+		hasForwardConductor = sides.getFirst();
+		hasBackwardConductor = sides.getSecond();
 	}
 
 	public void createEntity(Level level) {

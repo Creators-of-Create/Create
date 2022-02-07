@@ -1376,6 +1376,8 @@
 	"create.schedule.loop1": "Schedule starts over",
 	"create.schedule.loop2": "when completed",
 	"create.schedule.train_still_assembling": "Confirm Train Assembly in the Station UI first",
+	"create.schedule.applied_to_train": "Train is now following this Schedule",
+	"create.schedule.non_controlling_seat": "Conductor needs to sit in front of a Controls block",
 
 	"create.track.selection_cleared": "Selection Cleared",
 	"create.track.valid_connection": "Can Connect ✔",

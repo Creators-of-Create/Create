@@ -16,6 +16,7 @@ public class TrainStatus {
 
 	boolean navigation;
 	boolean track;
+	boolean conductor;
 
 	List<Component> queued = new ArrayList<>();
 
@@ -35,6 +36,27 @@ public class TrainStatus {
 			return;
 		displayInformation("Navigation succeeded", true);
 		navigation = false;
+	}
+	
+	public void foundConductor() {
+		if (!conductor)
+			return;
+		displayInformation("A new driver has been found", true);
+		conductor = false;
+	}
+	
+	public void missingConductor() {
+		if (conductor)
+			return;
+		displayInformation("Driver has gone missing", false);
+		conductor = true;
+	}
+	
+	public void missingBackwardsConductor() { // missingCorrectConductor
+		if (conductor)
+			return;
+		displayInformation("Path requires driver on the other controls block", false);
+		conductor = true;
 	}
 	
 	public void manualControls() {
@@ -88,6 +110,11 @@ public class TrainStatus {
 	public void displayInformation(String key, boolean itsAGoodThing, Object... args) {
 		queued.add(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
 			.append(new TextComponent(key).withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4))));
+	}
+
+	public void newSchedule() {
+		navigation = false;
+		conductor = false;
 	}
 
 }

@@ -98,6 +98,7 @@ import com.simibubi.create.content.contraptions.processing.BasinGenerator;
 import com.simibubi.create.content.contraptions.processing.BasinMovementBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerInteractionBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
@@ -568,6 +569,7 @@ public class AllBlocks {
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(addInteractionBehaviour(new BlazeBurnerInteractionBehaviour()))
 			.item(BlazeBurnerBlockItem::withBlaze)
 			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block_with_blaze"))
 			.build()

@@ -13,7 +13,7 @@ public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
 		if (player.level.isClientSide)
-			ControlsHandler.controllerClicked(contraptionEntity, localPos);
+			ControlsHandler.controllerClicked(contraptionEntity, localPos, player);
 		return true;
 	}
 

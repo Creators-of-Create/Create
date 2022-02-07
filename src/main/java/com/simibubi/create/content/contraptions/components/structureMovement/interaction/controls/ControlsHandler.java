@@ -17,6 +17,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 
 public class ControlsHandler {
 
@@ -28,14 +29,14 @@ public class ControlsHandler {
 	static WeakReference<AbstractContraptionEntity> entityRef = new WeakReference<>(null);
 	static BlockPos controlsPos;
 
-	public static void controllerClicked(AbstractContraptionEntity entity, BlockPos controllerLocalPos) {
+	public static void controllerClicked(AbstractContraptionEntity entity, BlockPos controllerLocalPos, Player player) {
 		AbstractContraptionEntity prevEntity = entityRef.get();
 		if (prevEntity != null) {
 			stopControlling();
 			if (prevEntity == entity)
 				return;
 		}
-		if (!entity.startControlling(controllerLocalPos))
+		if (!entity.startControlling(controllerLocalPos, player))
 			return;
 		entityRef = new WeakReference<AbstractContraptionEntity>(entity);
 		controlsPos = controllerLocalPos;
