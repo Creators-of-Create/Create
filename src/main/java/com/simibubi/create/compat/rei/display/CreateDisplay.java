@@ -14,10 +14,14 @@ import net.minecraft.world.item.crafting.Recipe;
 public class CreateDisplay<R extends Recipe<?>> implements Display {
 	protected final R recipe;
 	private final CategoryIdentifier<CreateDisplay<R>> uid;
+	private final List<EntryIngredient> input;
+	private final List<EntryIngredient> output;
 
 	public CreateDisplay(R recipe, String id) {
 		this.recipe = recipe;
 		this.uid = CategoryIdentifier.of(Create.asResource(id));
+		this.input = EntryIngredients.ofIngredients(recipe.getIngredients());
+		this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
 	}
 
 	public R getRecipe() {
@@ -26,12 +30,12 @@ public class CreateDisplay<R extends Recipe<?>> implements Display {
 
 	@Override
 	public List<EntryIngredient> getInputEntries() {
-		return EntryIngredients.ofIngredients(recipe.getIngredients());
+		return input;
 	}
 
 	@Override
 	public List<EntryIngredient> getOutputEntries() {
-		return Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+		return output;
 	}
 
 	@Override

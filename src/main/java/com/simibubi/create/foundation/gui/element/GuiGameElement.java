@@ -201,7 +201,12 @@ public class GuiGameElement {
 			BakedModel model = blockModel;
 			model = DefaultLayerFilteringBakedModel.wrap(model);
 			model = FixedLightBakedModel.wrap(model, LightTexture.FULL_BRIGHT);
-			model = FixedColorTintingBakedModel.wrap(model, color == -1 ? this.color : color);
+			if (color == -1) {
+				color = this.color;
+			}
+			if (color != -1) {
+				model = FixedColorTintingBakedModel.wrap(model, color);
+			}
 			blockRenderer.getModelRenderer()
 				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, blockState, BlockPos.ZERO, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 			buffer.endBatch();

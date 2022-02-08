@@ -340,7 +340,7 @@ public class ClientEvents {
 		ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
 		ClientWorldEvents.LOAD.register(ClientEvents::onLoadWorld);
 		ClientWorldEvents.UNLOAD.register(ClientEvents::onUnloadWorld);
-		WorldRenderEvents.END.register(ClientEvents::onRenderWorld);
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(ClientEvents::onRenderWorld);
 		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
@@ -360,7 +360,7 @@ public class ClientEvents {
 		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
 		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
-		WorldRenderEvents.END.register(SymmetryHandler::render);
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
 		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
