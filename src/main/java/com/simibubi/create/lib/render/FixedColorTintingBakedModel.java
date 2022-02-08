@@ -3,7 +3,6 @@ package com.simibubi.create.lib.render;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
@@ -18,16 +17,18 @@ public class FixedColorTintingBakedModel extends ForwardingBakedModel {
 	protected int color;
 
 	public static BakedModel wrap(BakedModel model, int color) {
-		if (!((FabricBakedModel) model).isVanillaAdapter()) {
-			FixedColorTintingBakedModel wrapper = THREAD_LOCAL.get();
-			wrapper.wrapped = model;
-			wrapper.color = color;
-			return wrapper;
-		}
-		return model;
+		FixedColorTintingBakedModel wrapper = THREAD_LOCAL.get();
+		wrapper.wrapped = model;
+		wrapper.color = color;
+		return wrapper;
 	}
 
 	protected FixedColorTintingBakedModel() {
+	}
+
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
 	}
 
 	@Override

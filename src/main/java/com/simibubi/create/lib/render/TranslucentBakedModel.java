@@ -32,8 +32,8 @@ public class TranslucentBakedModel extends ForwardingBakedModel {
 
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		int alpha = (int) (alphaSupplier.get() * 255) << 24;
 		context.pushTransform(quad -> {
-			int alpha = (int) (alphaSupplier.get() * 255) << 24;
 			for (int vertex = 0; vertex < 4; vertex++) {
 				int color = quad.spriteColor(vertex, 0);
 				quad.spriteColor(vertex, 0, color & 0xFFFFFF | alpha);
