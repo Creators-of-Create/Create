@@ -3,7 +3,11 @@ package com.simibubi.create.content.logistics.trains;
 import java.util.Iterator;
 
 import com.jozufozu.flywheel.repack.joml.Math;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.mojang.math.Matrix4f;
+import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -14,6 +18,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
@@ -264,17 +270,19 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	public Iterator<Segment> iterator() {
 		resolve();
 		var offset = Vec3.atLowerCornerOf(tePositions.getFirst())
-				.scale(-1)
-				.add(0, 3 / 16f, 0);
+			.scale(-1)
+			.add(0, 3 / 16f, 0);
 		return new Bezierator(this, offset);
 	}
 
 	public static class Segment {
+
 		public int index;
 		public Vec3 position;
 		public Vec3 derivative;
 		public Vec3 faceNormal;
 		public Vec3 normal;
+
 	}
 
 	private static class Bezierator implements Iterator<Segment> {
@@ -293,16 +301,16 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			this.bc = bc;
 
 			end1 = bc.starts.getFirst()
-					.add(offset);
+				.add(offset);
 			end2 = bc.starts.getSecond()
-					.add(offset);
+				.add(offset);
 
 			finish1 = bc.axes.getFirst()
-					.scale(bc.handleLength)
-					.add(end1);
+				.scale(bc.handleLength)
+				.add(end1);
 			finish2 = bc.axes.getSecond()
-					.scale(bc.handleLength)
-					.add(end2);
+				.scale(bc.handleLength)
+				.add(end2);
 
 			faceNormal1 = bc.normals.getFirst();
 			faceNormal2 = bc.normals.getSecond();
@@ -321,12 +329,203 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			float t = this.bc.getSegmentT(segment.index);
 			segment.position = VecHelper.bezier(end1, end2, finish1, finish2, t);
 			segment.derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
-					.normalize();
-			segment.faceNormal = faceNormal1.equals(faceNormal2) ? faceNormal1 : VecHelper.slerp(t, faceNormal1, faceNormal2);
+				.normalize();
+			segment.faceNormal =
+				faceNormal1.equals(faceNormal2) ? faceNormal1 : VecHelper.slerp(t, faceNormal1, faceNormal2);
 			segment.normal = segment.faceNormal.cross(segment.derivative)
-					.normalize();
+				.normalize();
 			return segment;
 		}
+	}
+
+	private SegmentAngles[] bakedSegments;
+	private GirderAngles[] bakedGirders;
+
+	@OnlyIn(Dist.CLIENT)
+	public static class SegmentAngles {
+
+		public Matrix4f tieTransform;
+		public Couple<Matrix4f> railTransforms;
+		public BlockPos lightPosition;
+
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static class GirderAngles {
+
+		public Couple<Matrix4f> beams;
+		public Couple<Couple<Matrix4f>> beamCaps;
+		public BlockPos lightPosition;
+
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public SegmentAngles[] getBakedSegments() {
+		if (bakedSegments != null)
+			return bakedSegments;
+
+		int segmentCount = getSegmentCount();
+		bakedSegments = new SegmentAngles[segmentCount + 1];
+		Couple<Vec3> previousOffsets = null;
+
+		for (BezierConnection.Segment segment : this) {
+			int i = segment.index;
+			boolean end = i == 0 || i == segmentCount;
+
+			SegmentAngles angles = bakedSegments[i] = new SegmentAngles();
+			Couple<Vec3> railOffsets = Couple.create(segment.position.add(segment.normal.scale(.965f)),
+				segment.position.subtract(segment.normal.scale(.965f)));
+			Vec3 railMiddle = railOffsets.getFirst()
+				.add(railOffsets.getSecond())
+				.scale(.5);
+
+			if (previousOffsets == null) {
+				previousOffsets = railOffsets;
+				continue;
+			}
+
+			// Tie
+			Vec3 prevMiddle = previousOffsets.getFirst()
+				.add(previousOffsets.getSecond())
+				.scale(.5);
+			Vec3 tieAngles = TrackRenderer.getModelAngles(segment.normal, railMiddle.subtract(prevMiddle));
+			angles.lightPosition = new BlockPos(railMiddle);
+
+			MatrixTransformStack mts = new MatrixTransformStack();
+			mts.translate(prevMiddle)
+				.rotateYRadians(tieAngles.y)
+				.rotateXRadians(tieAngles.x)
+				.rotateZRadians(tieAngles.z)
+				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
+			angles.tieTransform = mts.unwrap()
+				.last()
+				.pose();
+			angles.railTransforms = Couple.create(null, null);
+
+			// Rails
+			float scale = end ? 2.2f : 2.1f;
+			for (boolean first : Iterate.trueAndFalse) {
+				Vec3 railI = railOffsets.get(first);
+				Vec3 prevI = previousOffsets.get(first);
+				Vec3 diff = railI.subtract(prevI);
+				Vec3 anglesI = TrackRenderer.getModelAngles(segment.normal, diff);
+
+				mts = new MatrixTransformStack();
+				mts.translate(prevI)
+					.rotateYRadians(anglesI.y)
+					.rotateXRadians(anglesI.x)
+					.rotateZRadians(anglesI.z)
+					.translate(0, -2 / 16f + (i % 2 == 0 ? 1 : -1) / 2048f - 1 / 256f, -1 / 32f)
+					.scale(1, 1, (float) diff.length() * scale);
+				angles.railTransforms.set(first, mts.unwrap()
+					.last()
+					.pose());
+			}
+
+			previousOffsets = railOffsets;
+		}
+
+		return bakedSegments;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public GirderAngles[] getBakedGirders() {
+		if (bakedGirders != null)
+			return bakedGirders;
+
+		int segmentCount = getSegmentCount();
+		bakedGirders = new GirderAngles[segmentCount + 1];
+		Couple<Couple<Vec3>> previousOffsets = null;
+
+		for (BezierConnection.Segment segment : this) {
+			int i = segment.index;
+			boolean end = i == 0 || i == segmentCount;
+			GirderAngles angles = bakedGirders[i] = new GirderAngles();
+
+			Vec3 leftGirder = segment.position.add(segment.normal.scale(.965f));
+			Vec3 rightGirder = segment.position.subtract(segment.normal.scale(.965f));
+			Vec3 upNormal = segment.derivative.normalize()
+				.cross(segment.normal);
+			Vec3 firstGirderOffset = upNormal.scale(-8 / 16f);
+			Vec3 secondGirderOffset = upNormal.scale(-10 / 16f);
+			Vec3 leftTop = segment.position.add(segment.normal.scale(1))
+				.add(firstGirderOffset);
+			Vec3 rightTop = segment.position.subtract(segment.normal.scale(1))
+				.add(firstGirderOffset);
+			Vec3 leftBottom = leftTop.add(secondGirderOffset);
+			Vec3 rightBottom = rightTop.add(secondGirderOffset);
+
+			angles.lightPosition = new BlockPos(leftGirder.add(rightGirder)
+				.scale(.5));
+
+			Couple<Couple<Vec3>> offsets =
+				Couple.create(Couple.create(leftTop, rightTop), Couple.create(leftBottom, rightBottom));
+
+			if (previousOffsets == null) {
+				previousOffsets = offsets;
+				continue;
+			}
+
+			angles.beams = Couple.create(null, null);
+			angles.beamCaps = Couple.create(Couple.create(null, null), Couple.create(null, null));
+			float scale = end ? 2.3f : 2.2f;
+
+			for (boolean first : Iterate.trueAndFalse) {
+
+				// Middle
+				Vec3 currentBeam = offsets.getFirst()
+					.get(first)
+					.add(offsets.getSecond()
+						.get(first))
+					.scale(.5);
+				Vec3 previousBeam = previousOffsets.getFirst()
+					.get(first)
+					.add(previousOffsets.getSecond()
+						.get(first))
+					.scale(.5);
+				Vec3 beamDiff = currentBeam.subtract(previousBeam);
+				Vec3 beamAngles = TrackRenderer.getModelAngles(segment.normal, beamDiff);
+
+				MatrixTransformStack mts = new MatrixTransformStack();
+				mts.translate(previousBeam)
+					.rotateYRadians(beamAngles.y)
+					.rotateXRadians(beamAngles.x)
+					.rotateZRadians(beamAngles.z)
+					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
+					.scale(1, 1, (float) beamDiff.length() * scale);
+				angles.beams.set(first, mts.unwrap()
+					.last()
+					.pose());
+
+				// Caps
+				for (boolean top : Iterate.trueAndFalse) {
+					Vec3 current = offsets.get(top)
+						.get(first);
+					Vec3 previous = previousOffsets.get(top)
+						.get(first);
+					Vec3 diff = current.subtract(previous);
+					Vec3 capAngles = TrackRenderer.getModelAngles(segment.normal, diff);
+
+					mts = new MatrixTransformStack();
+					mts.translate(previous)
+						.rotateYRadians(capAngles.y)
+						.rotateXRadians(capAngles.x)
+						.rotateZRadians(capAngles.z)
+						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
+						.rotateZ(top ? 0 : 0)
+						.scale(1, 1, (float) diff.length() * scale);
+					angles.beamCaps.get(top)
+						.set(first, mts.unwrap()
+							.last()
+							.pose());
+				}
+			}
+
+			previousOffsets = offsets;
+
+		}
+
+		return bakedGirders;
 	}
 
 }

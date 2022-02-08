@@ -19,15 +19,17 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
+import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
+import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 
 public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 
-	private List<BezierInstance> instances;
+	private List<BezierTrackInstance> instances;
 
 	public TrackInstance(MaterialManager materialManager, TrackTileEntity track) {
 		super(materialManager, track);
@@ -37,47 +39,52 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 
 	@Override
 	public void update() {
-		if (blockEntity.connections.stream().allMatch(Map::isEmpty)) {
+		if (blockEntity.connections.stream()
+			.allMatch(Map::isEmpty)) {
 			return;
 		}
 
 		instances = blockEntity.connections.stream()
-				.flatMap(FlwUtil::mapValues)
-				.map(this::createInstance)
-				.filter(Objects::nonNull)
-				.toList();
-		LightUpdater.get(world).addListener(this);
+			.flatMap(FlwUtil::mapValues)
+			.map(this::createInstance)
+			.filter(Objects::nonNull)
+			.toList();
+		LightUpdater.get(world)
+			.addListener(this);
 	}
 
 	@Override
 	public ImmutableBox getVolume() {
 		List<BlockPos> out = new ArrayList<>();
 		out.addAll(blockEntity.connections.getFirst()
-				.keySet());
+			.keySet());
 		out.addAll(blockEntity.connections.getSecond()
-				.keySet());
+			.keySet());
 		return GridAlignedBB.containingAll(out);
 	}
 
 	@Override
 	public void updateLight() {
-		if (instances == null) return;
-		instances.forEach(BezierInstance::updateLight);
+		if (instances == null)
+			return;
+		instances.forEach(BezierTrackInstance::updateLight);
 	}
 
 	@Nullable
-	private BezierInstance createInstance(BezierConnection bc) {
-		if (!bc.isPrimary()) return null;
-		return new BezierInstance(bc);
+	private BezierTrackInstance createInstance(BezierConnection bc) {
+		if (!bc.isPrimary())
+			return null;
+		return new BezierTrackInstance(bc);
 	}
 
 	@Override
 	public void remove() {
-		if (instances == null) return;
-		instances.forEach(BezierInstance::delete);
+		if (instances == null)
+			return;
+		instances.forEach(BezierTrackInstance::delete);
 	}
 
-	private class BezierInstance {
+	private class BezierTrackInstance {
 
 		private final ModelData[] ties;
 		private final ModelData[] left;
@@ -86,17 +93,20 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 		private final BlockPos[] leftLightPos;
 		private final BlockPos[] rightLightPos;
 
-		private BezierInstance(BezierConnection bc) {
+		private @Nullable GirderInstance girder;
+
+		private BezierTrackInstance(BezierConnection bc) {
 			BlockPos tePosition = bc.tePositions.getFirst();
+			girder = bc.hasGirder ? new GirderInstance(bc) : null;
 
 			PoseStack pose = new PoseStack();
 			TransformStack.cast(pose)
-					.translate(getInstancePosition())
-					.nudge((int) bc.tePositions.getFirst()
-							.asLong());
+				.translate(getInstancePosition())
+				.nudge((int) bc.tePositions.getFirst()
+					.asLong());
 
 			var mat = materialManager.cutout(RenderType.cutoutMipped())
-					.material(Materials.TRANSFORMED);
+				.material(Materials.TRANSFORMED);
 
 			int segCount = bc.getSegmentCount();
 			ties = new ModelData[segCount];
@@ -107,82 +117,120 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 			rightLightPos = new BlockPos[segCount];
 
 			mat.getModel(AllBlockPartials.TRACK_TIE)
-					.createInstances(ties);
+				.createInstances(ties);
 			mat.getModel(AllBlockPartials.TRACK_SEGMENT_LEFT)
-					.createInstances(left);
+				.createInstances(left);
 			mat.getModel(AllBlockPartials.TRACK_SEGMENT_RIGHT)
-					.createInstances(right);
+				.createInstances(right);
 
-			Vec3 leftPrevious = null;
-			Vec3 rightPrevious = null;
+			SegmentAngles[] segments = bc.getBakedSegments();
+			for (int i = 1; i < segments.length; i++) {
+				SegmentAngles segment = segments[i];
+				var modelIndex = i - 1;
 
-			for (BezierConnection.Segment segment : bc) {
-				Vec3 left = segment.position.add(segment.normal.scale(.965f));
-				Vec3 right = segment.position.subtract(segment.normal.scale(.965f));
+				ties[modelIndex].setTransform(pose)
+					.mulPose(segment.tieTransform);
+				tiesLightPos[modelIndex] = segment.lightPosition.offset(tePosition);
 
-				if (leftPrevious != null) {
-					var modelIndex = segment.index - 1;
-					{
-						// Tie
-						Vec3 railMiddle = left.add(right)
-								.scale(.5);
-						Vec3 prevMiddle = leftPrevious.add(rightPrevious)
-								.scale(.5);
-
-						var tie = ties[modelIndex].setTransform(pose);
-						Vec3 diff = railMiddle.subtract(prevMiddle);
-						Vec3 angles = TrackRenderer.getModelAngles(segment.normal, diff);
-
-						tie.translate(prevMiddle)
-							.rotateYRadians(angles.y)
-							.rotateXRadians(angles.x)
-							.rotateZRadians(angles.z)
-							.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
-						tiesLightPos[modelIndex] = new BlockPos(railMiddle).offset(tePosition);
-					}
-
-					// Rails
-					for (boolean first : Iterate.trueAndFalse) {
-						Vec3 railI = first ? left : right;
-						Vec3 prevI = first ? leftPrevious : rightPrevious;
-
-						var rail = (first ? this.left : this.right)[modelIndex].setTransform(pose);
-						Vec3 diff = railI.subtract(prevI);
-						Vec3 angles = TrackRenderer.getModelAngles(segment.normal, diff);
-
-						rail.translate(prevI)
-							.rotateYRadians(angles.y)
-							.rotateXRadians(angles.x)
-							.rotateZRadians(angles.z)
-							.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 256f, 0)
-							.scale(1, 1, (float) diff.length() * 2.1f);
-						(first ? leftLightPos : rightLightPos)[modelIndex] = new BlockPos(prevI).offset(tePosition);
-					}
+				for (boolean first : Iterate.trueAndFalse) {
+					(first ? this.left : this.right)[modelIndex].setTransform(pose)
+						.mulPose(segment.railTransforms.get(first));
+					(first ? leftLightPos : rightLightPos)[modelIndex] = segment.lightPosition.offset(tePosition);
 				}
-
-				leftPrevious = left;
-				rightPrevious = right;
 			}
 
 			updateLight();
 		}
 
 		void delete() {
-			for (ModelData d : ties) d.delete();
-			for (ModelData d : left) d.delete();
-			for (ModelData d : right) d.delete();
+			for (ModelData d : ties)
+				d.delete();
+			for (ModelData d : left)
+				d.delete();
+			for (ModelData d : right)
+				d.delete();
+			if (girder != null)
+				girder.delete();
 		}
 
 		void updateLight() {
-			for (int i = 0; i < ties.length; i++) {
+			for (int i = 0; i < ties.length; i++)
 				ties[i].updateLight(world, tiesLightPos[i]);
-			}
-			for (int i = 0; i < left.length; i++) {
+			for (int i = 0; i < left.length; i++)
 				left[i].updateLight(world, leftLightPos[i]);
-			}
-			for (int i = 0; i < right.length; i++) {
+			for (int i = 0; i < right.length; i++)
 				right[i].updateLight(world, rightLightPos[i]);
-			}
+			if (girder != null)
+				girder.updateLight();
 		}
+
+		private class GirderInstance {
+
+			private final Couple<ModelData[]> beams;
+			private final Couple<Couple<ModelData[]>> beamCaps;
+			private final BlockPos[] lightPos;
+
+			private GirderInstance(BezierConnection bc) {
+				BlockPos tePosition = bc.tePositions.getFirst();
+				PoseStack pose = new PoseStack();
+				TransformStack.cast(pose)
+					.translate(getInstancePosition())
+					.nudge((int) bc.tePositions.getFirst()
+						.asLong());
+
+				var mat = materialManager.cutout(RenderType.cutoutMipped())
+					.material(Materials.TRANSFORMED);
+
+				int segCount = bc.getSegmentCount();
+				beams = Couple.create(() -> new ModelData[segCount]);
+				beamCaps = Couple.create(() -> Couple.create(() -> new ModelData[segCount]));
+				lightPos = new BlockPos[segCount];
+				beams.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT_2)::createInstances);
+				beamCaps.forEach(c -> c.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT)::createInstances));
+
+				GirderAngles[] bakedGirders = bc.getBakedGirders();
+				for (int i = 1; i < bakedGirders.length; i++) {
+					GirderAngles segment = bakedGirders[i];
+					var modelIndex = i - 1;
+					lightPos[modelIndex] = segment.lightPosition.offset(tePosition);
+
+					for (boolean first : Iterate.trueAndFalse) {
+						beams.get(first)[modelIndex].setTransform(pose)
+							.mulPose(segment.beams.get(first));
+						for (boolean top : Iterate.trueAndFalse)
+							beamCaps.get(top)
+								.get(first)[modelIndex].setTransform(pose)
+									.mulPose(segment.beamCaps.get(top)
+										.get(first));
+					}
+				}
+
+				updateLight();
+			}
+
+			void delete() {
+				beams.forEach(arr -> {
+					for (ModelData d : arr)
+						d.delete();
+				});
+				beamCaps.forEach(c -> c.forEach(arr -> {
+					for (ModelData d : arr)
+						d.delete();
+				}));
+			}
+
+			void updateLight() {
+				beams.forEach(arr -> {
+					for (int i = 0; i < arr.length; i++)
+						arr[i].updateLight(world, lightPos[i]);
+				});
+				beamCaps.forEach(c -> c.forEach(arr -> {
+					for (int i = 0; i < arr.length; i++)
+						arr[i].updateLight(world, lightPos[i]);
+				}));
+			}
+
+		}
+
 	}
 }
