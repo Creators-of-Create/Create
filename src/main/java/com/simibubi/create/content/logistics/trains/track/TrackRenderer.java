@@ -35,7 +35,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		if (Backend.isOn())
 			return;
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
 		te.connections.forEach(map -> map.values()
 			.forEach(bc -> renderBezierTurn(bc, ms, vb)));
 	}
@@ -82,9 +82,10 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						.rotateYRadians(angles.y)
 						.rotateXRadians(angles.x)
 						.rotateZRadians(angles.z)
-						.translate(-1 / 2f, -2 / 16f - 1 / 1024f, 0);
+						.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 
-					sbb.light(centralLight);
+					sbb.disableDiffuseMult()
+						.light(centralLight);
 					sbb.renderInto(ms, vb);
 				}
 
@@ -103,11 +104,12 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						.rotateYRadians(angles.y)
 						.rotateXRadians(angles.x)
 						.rotateZRadians(angles.z)
-						.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
+						.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 256f, 0)
 						.scale(1, 1, (float) diff.length() * 2.1f);
 
-					sbb.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,
-						new BlockPos(prevI).offset(tePosition)));
+					sbb.disableDiffuseMult()
+						.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,
+							new BlockPos(prevI).offset(tePosition)));
 					sbb.renderInto(ms, vb);
 				}
 			}
@@ -163,10 +165,11 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 							.rotateXRadians(angles.x)
 							.rotateZRadians(angles.z)
 							.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
-							.rotateZ(top ? 0 : 180)
+							.rotateZ(top ? 0 : 0)
 							.scale(1, 1, (float) diff.length() * l);
 
-						sbb2.light(centralLight);
+						sbb2.disableDiffuseMult()
+							.light(centralLight);
 						sbb2.renderInto(ms, vb);
 					}
 
@@ -178,8 +181,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						Vec3 diff = railI.subtract(prevI);
 						Vec3 angles = getModelAngles(normal, diff);
 
-						SuperByteBuffer sbb2 = CachedBufferer.partial(AllBlockPartials.GIRDER_SEGMENT_2,
-							Blocks.AIR.defaultBlockState());
+						SuperByteBuffer sbb2 =
+							CachedBufferer.partial(AllBlockPartials.GIRDER_SEGMENT_2, Blocks.AIR.defaultBlockState());
 
 						sbb2.translate(prevI)
 							.rotateYRadians(angles.y)
@@ -188,7 +191,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 							.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
 							.scale(1, 1, (float) diff.length() * l);
 
-						sbb2.light(centralLight);
+						sbb2.disableDiffuseMult()
+							.light(centralLight);
 						sbb2.renderInto(ms, vb);
 					}
 				}

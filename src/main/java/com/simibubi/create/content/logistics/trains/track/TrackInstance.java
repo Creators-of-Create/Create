@@ -21,6 +21,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
@@ -94,7 +95,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 					.nudge((int) bc.tePositions.getFirst()
 							.asLong());
 
-			var mat = materialManager.defaultSolid()
+			var mat = materialManager.cutout(RenderType.cutoutMipped())
 					.material(Materials.TRANSFORMED);
 
 			int segCount = bc.getSegmentCount();
@@ -136,7 +137,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 							.rotateYRadians(angles.y)
 							.rotateXRadians(angles.x)
 							.rotateZRadians(angles.z)
-							.translate(-1 / 2f, -2 / 16f - 1 / 1024f, 0);
+							.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 						tiesLightPos[modelIndex] = new BlockPos(railMiddle).offset(tePosition);
 					}
 
@@ -153,7 +154,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 							.rotateYRadians(angles.y)
 							.rotateXRadians(angles.x)
 							.rotateZRadians(angles.z)
-							.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 512f, 0)
+							.translate(0, -2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 256f, 0)
 							.scale(1, 1, (float) diff.length() * 2.1f);
 						(first ? leftLightPos : rightLightPos)[modelIndex] = new BlockPos(prevI).offset(tePosition);
 					}

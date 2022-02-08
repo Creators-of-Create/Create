@@ -101,7 +101,7 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 
 		ms.translate(0, -1.5, 0);
 
-		VertexConsumer vb = buffers.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
 		BlockState air = Blocks.AIR.defaultBlockState();
 
 		for (int i : Iterate.zeroAndOne)
