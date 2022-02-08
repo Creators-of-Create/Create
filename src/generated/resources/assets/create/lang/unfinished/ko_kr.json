@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 112",
+	"_": "Missing Localizations: 113",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -295,6 +295,7 @@
 	"block.create.mechanical_pump": "펌프",
 	"block.create.mechanical_saw": "톱",
 	"block.create.metal_bracket": "금속 지지대",
+	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
 	"block.create.millstone": "맷돌",
 	"block.create.minecart_anchor": "광산 수레 정박기",
 	"block.create.mysterious_cuckoo_clock": "뻐꾸기 시계?",

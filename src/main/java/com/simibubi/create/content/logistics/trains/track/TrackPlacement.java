@@ -71,8 +71,8 @@ public class TrackPlacement {
 	static BlockPos hoveringPos;
 	static ItemStack lastItem;
 
-	public static PlacementInfo tryConnect(Level level, BlockPos pos2, BlockState state2, Vec3 lookVec,
-		ItemStack stack) {
+	public static PlacementInfo tryConnect(Level level, BlockPos pos2, BlockState state2, Vec3 lookVec, ItemStack stack,
+		boolean girder) {
 
 		if (cached != null && pos2.equals(hoveringPos) && stack.equals(lastItem))
 			return cached;
@@ -161,7 +161,7 @@ public class TrackPlacement {
 			BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
 			info.curve = new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), Couple.create(front1, front2), true);
+				Couple.create(normal1, normal2), Couple.create(front1, front2), true, girder);
 		}
 
 		// S curve or Straight
@@ -249,10 +249,11 @@ public class TrackPlacement {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
 				info.end1Extent = 0;
-				if (hDistance < absAscend * 3)
+				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6);
+				if (hDistance < minHDistance)
 					return info.withMessage("too_steep");
-				if (hDistance > absAscend * 4) {
-					int correction = (int) (hDistance - absAscend * 4);
+				if (hDistance > minHDistance) {
+					int correction = (int) (hDistance - minHDistance);
 					info.end1Extent = correction / 2 + (correction % 2);
 					info.end2Extent = correction / 2;
 				}
@@ -311,7 +312,7 @@ public class TrackPlacement {
 		info.curve = skipCurve ? null
 			: new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), Couple.create(front1, front2), true);
+				Couple.create(normal1, normal2), Couple.create(front1, front2), true, girder);
 
 		info.valid = true;
 
@@ -397,7 +398,7 @@ public class TrackPlacement {
 		if (!(hitState.getBlock() instanceof TrackBlock))
 			return;
 
-		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack);
+		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack, false);
 		if (info.valid)
 			player.displayClientMessage(Lang.translate("track.valid_connection")
 				.withStyle(ChatFormatting.GREEN), true);

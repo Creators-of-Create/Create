@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1663",
+	"_": "Missing Localizations: 1664",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -295,6 +295,7 @@
 	"block.create.mechanical_pump": "Bomba Mecânica",
 	"block.create.mechanical_saw": "Serra Mecânica",
 	"block.create.metal_bracket": "Suporte de metal",
+	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
 	"block.create.millstone": "Pedra de Moer",
 	"block.create.minecart_anchor": "Ancóra de carrinho de Mina",
 	"block.create.mysterious_cuckoo_clock": "Relógio cuckoo",

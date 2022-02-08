@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 498",
+	"_": "Missing Localizations: 499",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -295,6 +295,7 @@
 	"block.create.mechanical_pump": "機械幫浦",
 	"block.create.mechanical_saw": "機械切割機",
 	"block.create.metal_bracket": "金屬支架",
+	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
 	"block.create.millstone": "石磨",
 	"block.create.minecart_anchor": "礦車錨",
 	"block.create.mysterious_cuckoo_clock": "神秘布穀鳥鐘",

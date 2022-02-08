@@ -28,10 +28,9 @@ public class AllShapes {
 		CASING_13PX = shape(0, 0, 0, 16, 13, 16).forDirectional(),
 		CASING_12PX = shape(0, 0, 0, 16, 12, 16).forDirectional(),
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
-		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
-		TRACK = shape(0, 0, 0, 16, 4, 16).forDirectional(),
+		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(), TRACK = shape(0, 0, 0, 16, 4, 16).forDirectional(),
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
-		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(),
+		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(), TEN_VOXEL_POLE = shape(3, 0, 3, 13, 16, 13).forAxis(),
 		FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14)
 			.forHorizontal(Direction.SOUTH),
 		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 14, 16).forDirectional(),
@@ -121,6 +120,8 @@ public class AllShapes {
 		BELL_CEILING = shape(0, 5, 5, 16, 16, 11).add(3, 1, 3, 13, 13, 13)
 			.forHorizontal(SOUTH),
 
+		GIRDER_BEAM = shape(4, 2, 0, 12, 14, 16).forHorizontalAxis(),
+
 		STATION = shape(0, 0, 0, 16, 5, 16).add(2, 4, 0, 14, 16, 4)
 			.forHorizontal(NORTH),
 		CONTROLS = shape(0, 0, 4, 16, 4, 16).add(0, 0, 6, 16, 14, 16)
@@ -156,6 +157,9 @@ public class AllShapes {
 				.build(),
 		BASIN_COLLISION_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
 			.add(2, 0, 2, 14, 2, 14)
+			.build(),
+		GIRDER_CROSS = shape(TEN_VOXEL_POLE.get(Axis.Y)).add(GIRDER_BEAM.get(Axis.X))
+			.add(GIRDER_BEAM.get(Axis.Z))
 			.build(),
 		BACKTANK = shape(3, 0, 3, 13, 12, 13).add(SIX_VOXEL_POLE.get(Axis.Y))
 			.build(),

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 484",
+	"_": "Missing Localizations: 485",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -295,6 +295,7 @@
 	"block.create.mechanical_pump": "Механическая помпа",
 	"block.create.mechanical_saw": "Механическая пила",
 	"block.create.metal_bracket": "Металлическая скоба",
+	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
 	"block.create.millstone": "Жернов",
 	"block.create.minecart_anchor": "Вагонеточный якорь",
 	"block.create.mysterious_cuckoo_clock": "Часы с кукушкой",

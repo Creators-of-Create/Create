@@ -23,6 +23,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	public Couple<Vec3> axes;
 	public Couple<Vec3> normals;
 	public boolean primary;
+	public boolean hasGirder;
 
 	// runtime
 
@@ -37,19 +38,20 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	private double handleLength;
 
 	public BezierConnection(Couple<BlockPos> positions, Couple<Vec3> starts, Couple<Vec3> axes, Couple<Vec3> normals,
-		Couple<Boolean> targets, boolean primary) {
+		Couple<Boolean> targets, boolean primary, boolean girder) {
 		tePositions = positions;
 		this.starts = starts;
 		this.axes = axes;
 		this.normals = normals;
 		this.trackEnds = targets;
 		this.primary = primary;
+		this.hasGirder = girder;
 		resolved = false;
 	}
 
 	public BezierConnection secondary() {
 		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), trackEnds.swap(),
-			false);
+			false, hasGirder);
 	}
 
 	public BezierConnection(CompoundTag compound) {
@@ -58,11 +60,12 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			Couple.deserializeEach(compound.getList("Axes", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
 			Couple.deserializeEach(compound.getList("Normals", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
 			Couple.create(compound.getBoolean("TrackEnd1"), compound.getBoolean("TrackEnd2")),
-			compound.getBoolean("Primary"));
+			compound.getBoolean("Primary"), compound.getBoolean("Girder"));
 	}
 
 	public CompoundTag write() {
 		CompoundTag compound = new CompoundTag();
+		compound.putBoolean("Girder", hasGirder);
 		compound.putBoolean("Primary", primary);
 		compound.putBoolean("TrackEnd1", trackEnds.getFirst());
 		compound.putBoolean("TrackEnd2", trackEnds.getSecond());
@@ -76,7 +79,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	public BezierConnection(FriendlyByteBuf buffer) {
 		this(Couple.create(buffer::readBlockPos), Couple.create(() -> VecHelper.read(buffer)),
 			Couple.create(() -> VecHelper.read(buffer)), Couple.create(() -> VecHelper.read(buffer)),
-			Couple.create(buffer::readBoolean), buffer.readBoolean());
+			Couple.create(buffer::readBoolean), buffer.readBoolean(), buffer.readBoolean());
 	}
 
 	public void write(FriendlyByteBuf buffer) {
@@ -86,6 +89,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		normals.forEach(v -> VecHelper.write(v, buffer));
 		trackEnds.forEach(buffer::writeBoolean);
 		buffer.writeBoolean(primary);
+		buffer.writeBoolean(hasGirder);
 	}
 
 	public BlockPos getKey() {

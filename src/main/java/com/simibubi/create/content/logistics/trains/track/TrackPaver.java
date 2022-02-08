@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -17,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.Vec3;
@@ -33,14 +35,17 @@ public class TrackPaver {
 		Vec3 mainNormal = direction.cross(new Vec3(0, 1, 0));
 		Vec3 normalizedNormal = mainNormal.normalize();
 		Vec3 normalizedDirection = direction.normalize();
+		boolean wallLike = isWallLike(defaultBlockState);
 
 		float diagFiller = 0.45f;
 		for (int i = 0; i < extent; i++) {
 			Vec3 offset = direction.scale(i);
 			Vec3 mainPos = start.add(offset.x, offset.y, offset.z);
-			toPlaceOn.add(new BlockPos(mainPos));
 			toPlaceOn.add(new BlockPos(mainPos.add(mainNormal)));
 			toPlaceOn.add(new BlockPos(mainPos.subtract(mainNormal)));
+			if (wallLike)
+				continue;
+			toPlaceOn.add(new BlockPos(mainPos));
 			if (i < extent - 1)
 				for (int x : Iterate.positiveAndNegative)
 					toPlaceOn.add(new BlockPos(mainPos.add(normalizedNormal.scale(x * diagFiller))
@@ -53,6 +58,10 @@ public class TrackPaver {
 
 		final BlockState state = defaultBlockState;
 		toPlaceOn.forEach(p -> placeBlockIfFree(level, p, state));
+	}
+
+	private static boolean isWallLike(BlockState defaultBlockState) {
+		return defaultBlockState.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(defaultBlockState);
 	}
 
 	private static void placeBlockIfFree(Level level, BlockPos pos, BlockState state) {
@@ -68,6 +77,8 @@ public class TrackPaver {
 		boolean slab = defaultBlockState.hasProperty(SlabBlock.TYPE);
 		if (slab)
 			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
+		if (isWallLike(defaultBlockState))
+			return;
 
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
 		BlockPos tePosition = bc.tePositions.getFirst();

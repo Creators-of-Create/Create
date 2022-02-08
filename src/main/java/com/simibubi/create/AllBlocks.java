@@ -127,6 +127,8 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
+import com.simibubi.create.content.curiosities.girder.GirderBlock;
+import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -663,6 +665,14 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.item(BracketBlockItem::new)
 		.transform(BracketGenerator.itemModel("metal"))
+		.register();
+
+	public static final BlockEntry<GirderBlock> METAL_GIRDER = REGISTRATE.block("metal_girder", GirderBlock::new)
+		.blockstate(GirderBlockStateGenerator::blockState)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
+		.item()
+		.transform(customItemModel())
 		.register();
 
 	// Fluids

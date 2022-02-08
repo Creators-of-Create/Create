@@ -32,7 +32,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 	@Override
 	protected void renderSafe(TrackTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		if (Backend.isOn()) return;
+		if (Backend.isOn())
+			return;
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		te.connections.forEach(map -> map.values()
@@ -47,7 +48,10 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		BlockPos tePosition = bc.tePositions.getFirst();
 
 		TransformStack.cast(ms)
-				.nudge((int) tePosition.asLong());
+			.nudge((int) tePosition.asLong());
+
+		if (bc.hasGirder)
+			renderGirder(bc, ms, vb, tePosition);
 
 		Vec3 previous1 = null;
 		Vec3 previous2 = null;
@@ -57,6 +61,8 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			Vec3 rail2 = segment.position.subtract(segment.normal.scale(.965f));
 
 			if (previous1 != null) {
+				int centralLight = 0;
+
 				{
 					// Tie
 					Vec3 railMiddle = rail1.add(rail2)
@@ -65,6 +71,9 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						.scale(.5);
 					Vec3 diff = railMiddle.subtract(prevMiddle);
 					Vec3 angles = getModelAngles(segment.normal, diff);
+
+					centralLight = LevelRenderer.getLightColor(Minecraft.getInstance().level,
+						new BlockPos(railMiddle).offset(tePosition));
 
 					SuperByteBuffer sbb =
 						CachedBufferer.partial(AllBlockPartials.TRACK_TIE, Blocks.AIR.defaultBlockState());
@@ -75,8 +84,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 						.rotateZRadians(angles.z)
 						.translate(-1 / 2f, -2 / 16f - 1 / 1024f, 0);
 
-					sbb.light(LevelRenderer.getLightColor(Minecraft.getInstance().level,
-						new BlockPos(railMiddle).offset(tePosition)));
+					sbb.light(centralLight);
 					sbb.renderInto(ms, vb);
 				}
 
@@ -109,6 +117,88 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		}
 
 		ms.popPose();
+	}
+
+	private static void renderGirder(BezierConnection bc, PoseStack ms, VertexConsumer vb, BlockPos tePosition) {
+		Vec3 previousG11 = null;
+		Vec3 previousG21 = null;
+		Vec3 previousG12 = null;
+		Vec3 previousG22 = null;
+
+		for (BezierConnection.Segment segment : bc) {
+			Vec3 rail1 = segment.position.add(segment.normal.scale(.965f));
+			Vec3 rail2 = segment.position.subtract(segment.normal.scale(.965f));
+
+			Vec3 upNormal = segment.derivative.normalize()
+				.cross(segment.normal);
+			Vec3 firstGirderOffset = upNormal.scale(-8 / 16f);
+			Vec3 secondGirderOffset = upNormal.scale(-10 / 16f);
+			Vec3 g11 = segment.position.add(segment.normal.scale(1))
+				.add(firstGirderOffset);
+			Vec3 g12 = segment.position.subtract(segment.normal.scale(1))
+				.add(firstGirderOffset);
+			Vec3 g21 = g11.add(secondGirderOffset);
+			Vec3 g22 = g12.add(secondGirderOffset);
+
+			if (previousG11 != null) {
+				Vec3 railMiddle = rail1.add(rail2)
+					.scale(.5);
+				int centralLight = LevelRenderer.getLightColor(Minecraft.getInstance().level,
+					new BlockPos(railMiddle).offset(tePosition));
+				Vec3 normal = segment.normal;
+				float l = 2.2f;
+
+				for (boolean first : Iterate.trueAndFalse) {
+					for (boolean top : Iterate.trueAndFalse) {
+						Vec3 railI = top ? first ? g11 : g12 : first ? g21 : g22;
+						Vec3 prevI = top ? first ? previousG11 : previousG12 : first ? previousG21 : previousG22;
+						Vec3 diff = railI.subtract(prevI);
+						Vec3 angles = getModelAngles(normal, diff);
+
+						SuperByteBuffer sbb2 =
+							CachedBufferer.partial(AllBlockPartials.GIRDER_SEGMENT, Blocks.AIR.defaultBlockState());
+
+						sbb2.translate(prevI)
+							.rotateYRadians(angles.y)
+							.rotateXRadians(angles.x)
+							.rotateZRadians(angles.z)
+							.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
+							.rotateZ(top ? 0 : 180)
+							.scale(1, 1, (float) diff.length() * l);
+
+						sbb2.light(centralLight);
+						sbb2.renderInto(ms, vb);
+					}
+
+					{
+						Vec3 railI = (first ? g11 : g12).add(first ? g21 : g22)
+							.scale(.5);
+						Vec3 prevI = (first ? previousG11 : previousG12).add(first ? previousG21 : previousG22)
+							.scale(.5);
+						Vec3 diff = railI.subtract(prevI);
+						Vec3 angles = getModelAngles(normal, diff);
+
+						SuperByteBuffer sbb2 = CachedBufferer.partial(AllBlockPartials.GIRDER_SEGMENT_2,
+							Blocks.AIR.defaultBlockState());
+
+						sbb2.translate(prevI)
+							.rotateYRadians(angles.y)
+							.rotateXRadians(angles.x)
+							.rotateZRadians(angles.z)
+							.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, 0)
+							.scale(1, 1, (float) diff.length() * l);
+
+						sbb2.light(centralLight);
+						sbb2.renderInto(ms, vb);
+					}
+				}
+			}
+
+			previousG11 = g11;
+			previousG12 = g12;
+			previousG21 = g21;
+			previousG22 = g22;
+		}
 	}
 
 	public static Vec3 getModelAngles(Vec3 normal, Vec3 diff) {

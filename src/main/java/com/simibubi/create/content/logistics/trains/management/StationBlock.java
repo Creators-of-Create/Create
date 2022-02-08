@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -100,6 +101,11 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 	@Override
 	public BlockEntityType<? extends StationTileEntity> getTileEntityType() {
 		return AllTileEntities.TRACK_STATION.get();
+	}
+
+	@Override
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+		return false;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -63,7 +64,9 @@ public class TrackBlockItem extends BlockItem {
 				return InteractionResult.FAIL;
 		}
 
-		PlacementInfo info = TrackPlacement.tryConnect(level, pos, state, lookAngle, stack);
+		ItemStack offhandItem = player.getOffhandItem();
+		PlacementInfo info =
+			TrackPlacement.tryConnect(level, pos, state, lookAngle, stack, AllBlocks.METAL_GIRDER.isIn(offhandItem));
 
 		if (info.message != null && !level.isClientSide)
 			player.displayClientMessage(Lang.translate(info.message), true);
@@ -75,7 +78,6 @@ public class TrackBlockItem extends BlockItem {
 		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		ItemStack offhandItem = player.getOffhandItem();
 		if (offhandItem.getItem()instanceof BlockItem blockItem) {
 			Block block = blockItem.getBlock();
 			if (block == null)

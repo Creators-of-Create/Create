@@ -41,6 +41,7 @@
     "create:stressometer",
     "create:wooden_bracket",
     "create:metal_bracket",
+    "create:metal_girder",
     "create:fluid_pipe",
     "create:encased_fluid_pipe",
     "create:glass_fluid_pipe",
