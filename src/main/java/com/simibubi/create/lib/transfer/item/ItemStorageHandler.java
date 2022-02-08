@@ -72,7 +72,7 @@ public class ItemStorageHandler implements IItemHandlerModifiable {
 			for (StorageView<ItemVariant> view : storage.iterable(t)) {
 				if (index == slot) {
 					ItemVariant variant = view.getResource();
-					long extracted = view.isResourceBlank() ? 0 : storage.extract(variant, amount, t);
+					long extracted = view.isResourceBlank() ? 0 : view.extract(variant, amount, t);
 					if (extracted != 0) {
 						finalVal = variant.toStack((int) extracted);
 					}

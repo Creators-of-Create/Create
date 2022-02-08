@@ -130,7 +130,7 @@ public class Create implements ModInitializer {
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) { // datagen
 		gen.addProvider(new AllAdvancements(gen));
-//		gen.addProvider(new LangMerger(gen));
+		gen.addProvider(new LangMerger(gen));
 		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new StandardRecipeGen(gen));
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
