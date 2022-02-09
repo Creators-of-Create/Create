@@ -17,10 +17,10 @@ import javax.annotation.Nonnull;
 /**
  * Wraps an IItemHandler in a Storage, for use outside Create
  */
-@SuppressWarnings({"UnstableApiUsage", "ClassCanBeRecord"})
+@SuppressWarnings("UnstableApiUsage")
 public class StorageItemHandler implements Storage<ItemVariant> {
 	@Nonnull
-	protected final IItemHandler handler;
+	protected IItemHandler handler;
 
 	public StorageItemHandler(@Nullable IItemHandler handler) {
 		if (handler == null) {
@@ -60,16 +60,6 @@ public class StorageItemHandler implements Storage<ItemVariant> {
 	}
 
 	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		int slots = handler.getSlots();
-		List<StorageView<ItemVariant>> views = new ArrayList<>();
-		for (int i = 0; i < slots; i++) {
-			views.add(new SlotStorageView(i, handler));
-		}
-		return views.iterator();
-	}
-
-	@Override
 	public Iterable<StorageView<ItemVariant>> iterable(TransactionContext transaction) {
 		int slots = handler.getSlots();
 		List<StorageView<ItemVariant>> views = new ArrayList<>();
@@ -80,7 +70,13 @@ public class StorageItemHandler implements Storage<ItemVariant> {
 	}
 
 	@Override
-	public @Nullable StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
+	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+		return iterable(transaction).iterator();
+	}
+
+	@Override
+	@Nullable
+	public StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
 		for (StorageView<ItemVariant> view : iterable(transaction)) {
 			if (view.getResource().equals(resource)) {
 				return view;
@@ -100,13 +96,17 @@ public class StorageItemHandler implements Storage<ItemVariant> {
 
 		@Override
 		public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+			long actual = 0;
 			ItemStack extracted = owner.extractItem(slotIndex, (int) maxAmount, true);
-			transaction.addOuterCloseCallback(result -> {
-				if (result.wasCommitted()) {
-					owner.extractItem(slotIndex, (int) maxAmount, false);
-				}
-			});
-			return extracted.getCount();
+			if (extracted.is(resource.getItem())) {
+				actual = extracted.getCount();
+				transaction.addOuterCloseCallback(result -> {
+					if (result.wasCommitted()) {
+						owner.extractItem(slotIndex, (int) maxAmount, false);
+					}
+				});
+			}
+			return actual;
 		}
 
 		@Override

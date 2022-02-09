@@ -7,6 +7,8 @@ import java.util.Objects;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
+import com.simibubi.create.lib.transfer.item.CustomStorageHandler;
+
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 
 import net.minecraft.world.level.block.state.BlockState;
@@ -184,6 +186,7 @@ public class TransferUtil {
 	public static Storage<ItemVariant> getItemStorageForBE(BlockEntity be, Direction side) {
 		if (be instanceof ItemTransferable transferable) {
 			IItemHandler handler = transferable.getItemHandler(side);
+			if (handler instanceof CustomStorageHandler custom) return custom.getStorage();
 			return handler == null ? null : new StorageItemHandler(handler);
 		}
 		return null;
