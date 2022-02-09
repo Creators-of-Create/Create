@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
@@ -224,6 +225,7 @@ public class PonderScene {
 	}
 
 	public void renderScene(SuperRenderTypeBuffer buffer, PoseStack ms, float pt) {
+		OptifineHandler.pushForceDiffuse();
 		ms.pushPose();
 		Minecraft mc = Minecraft.getInstance();
 		Entity prevRVE = mc.cameraEntity;
@@ -242,6 +244,7 @@ public class PonderScene {
 		outliner.renderOutlines(ms, buffer, pt);
 
 		ms.popPose();
+		OptifineHandler.popForceDiffuse();
 	}
 
 	public void renderOverlay(PonderUI screen, PoseStack ms, float partialTicks) {

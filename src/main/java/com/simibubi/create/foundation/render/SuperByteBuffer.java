@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.render;
 import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
+import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
@@ -29,7 +30,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.model.pipeline.LightUtil;
 
 public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
@@ -42,13 +42,14 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	private boolean shouldColor;
 	private int r, g, b, a;
 	private boolean disableDiffuseMult;
+	private DiffuseLightCalculator diffuseCalculator;
 
 	// Vertex Texture Coords
 	private SpriteShiftFunc spriteShiftFunc;
 
 	// Vertex Overlay Color
 	private boolean hasOverlay;
-	private int overlay = OverlayTexture.NO_OVERLAY;;
+	private int overlay = OverlayTexture.NO_OVERLAY;
 
 	// Vertex Lighting
 	private boolean useWorldLight;
@@ -97,8 +98,13 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		final Vector3f normal = new Vector3f();
 		final Vector4f lightPos = new Vector4f();
 
-		float f = .5f;
-		int vertexCount = template.getVertexCount();
+		final boolean disableDiffuseMult = this.disableDiffuseMult || !OptifineHandler.shouldApplyDiffuse();
+		DiffuseLightCalculator diffuseCalculator = this.diffuseCalculator;
+		if (diffuseCalculator == null) {
+			diffuseCalculator = DiffuseLightCalculator.forCurrentLevel();
+		}
+
+		final int vertexCount = template.getVertexCount();
 		for (int i = 0; i < vertexCount; i++) {
 			float x = template.getX(i);
 			float y = template.getY(i);
@@ -130,10 +136,10 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 				b = template.getB(i);
 				a = template.getA(i);
 			}
-			if (disableDiffuseMult || OptifineHandler.usingShaders()) {
+			if (disableDiffuseMult) {
 				builder.color(r, g, b, a);
 			} else {
-				float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
+				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz);
 				int colorR = transformColor(r, instanceDiffuse);
 				int colorG = transformColor(g, instanceDiffuse);
 				int colorB = transformColor(b, instanceDiffuse);
@@ -154,7 +160,7 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 
 			int light;
 			if (useWorldLight) {
-				lightPos.set(((x - f) * 15 / 16f) + f, (y - f) * 15 / 16f + f, (z - f) * 15 / 16f + f, 1F);
+				lightPos.set(((x - .5f) * 15 / 16f) + .5f, (y - .5f) * 15 / 16f + .5f, (z - .5f) * 15 / 16f + .5f, 1f);
 				lightPos.transform(localTransforms);
 				if (lightTransform != null) {
 					lightPos.transform(lightTransform);
@@ -195,6 +201,7 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		b = 0;
 		a = 0;
 		disableDiffuseMult = false;
+		diffuseCalculator = null;
 		spriteShiftFunc = null;
 		hasOverlay = false;
 		overlay = OverlayTexture.NO_OVERLAY;
@@ -293,6 +300,11 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	 */
 	public SuperByteBuffer disableDiffuseMult() {
 		disableDiffuseMult = true;
+		return this;
+	}
+
+	public SuperByteBuffer diffuseCalculator(DiffuseLightCalculator diffuseCalculator) {
+		this.diffuseCalculator = diffuseCalculator;
 		return this;
 	}
 

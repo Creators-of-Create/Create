@@ -108,6 +108,7 @@ public class CreateClient {
 	public static void invalidateRenderers() {
 		BUFFER_CACHE.invalidate();
 
+		SCHEMATIC_HANDLER.updateRenderers();
 		ContraptionRenderDispatcher.reset();
 	}
 

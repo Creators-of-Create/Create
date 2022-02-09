@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -64,7 +65,7 @@ public class SchematicRenderer {
 		if (mc.level == null || mc.player == null || !changed)
 			return;
 
-		redraw(mc);
+		redraw();
 		changed = false;
 	}
 
@@ -76,18 +77,17 @@ public class SchematicRenderer {
 			if (!usedBlockRenderLayers.contains(layer))
 				continue;
 			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
-			superByteBuffer.disableDiffuseMult();
 			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
 		}
 		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffer);
 	}
 
-	protected void redraw(Minecraft minecraft) {
+	protected void redraw() {
 		usedBlockRenderLayers.clear();
 		startedBufferBuilders.clear();
 
 		final SchematicWorld blockAccess = schematic;
-		final BlockRenderDispatcher blockRendererDispatcher = minecraft.getBlockRenderer();
+		final BlockRenderDispatcher blockRendererDispatcher = ModelUtil.VANILLA_RENDERER;
 
 		List<BlockState> blockstates = new LinkedList<>();
 		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
