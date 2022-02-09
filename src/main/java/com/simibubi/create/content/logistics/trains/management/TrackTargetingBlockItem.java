@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.trains.management;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
-import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.InteractionResult;
@@ -46,11 +46,17 @@ public class TrackTargetingBlockItem extends BlockItem {
 		}
 
 		if (state.getBlock()instanceof ITrackBlock track) {
+			if (track.getTrackAxes(level, pos, state).size() > 1) {
+				player.displayClientMessage(Lang.translate("track_target.no_junctions")
+					.withStyle(ChatFormatting.RED), true);
+				return InteractionResult.FAIL;
+			}
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
 			CompoundTag stackTag = stack.getOrCreateTag();
 			Vec3 lookAngle = player.getLookAngle();
-			boolean front = TrackGraphHelper.getTrackDirectionByLookVec(lookAngle, level, pos, state, track);
+			boolean front = track.getNearestTrackAxis(level, pos, state, lookAngle)
+				.getSecond() == AxisDirection.POSITIVE;
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
 			stackTag.putBoolean("SelectedDirection", front);
 			player.displayClientMessage(Lang.translate("track_target.set"), true);

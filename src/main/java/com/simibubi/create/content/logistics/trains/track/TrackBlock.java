@@ -1,8 +1,10 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -65,14 +67,21 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		ZO("z_ortho", new Vec3(0, 0, 1)),
 		XO("x_ortho", new Vec3(1, 0, 0)),
 		PD("diag", new Vec3(1, 0, 1)),
-		ND("diag", 90, new Vec3(-1, 0, 1), new Vec3(0, 1, 0)),
+		ND("diag_2", new Vec3(-1, 0, 1)),
 		AN("ascending", 180, new Vec3(0, 1, -1), new Vec3(0, 1, 1)),
 		AS("ascending", 0, new Vec3(0, 1, 1), new Vec3(0, 1, -1)),
 		AE("ascending", 270, new Vec3(1, 1, 0), new Vec3(-1, 1, 0)),
-		AW("ascending", 90, new Vec3(-1, 1, 0), new Vec3(1, 1, 0));
+		AW("ascending", 90, new Vec3(-1, 1, 0), new Vec3(1, 1, 0)),
+
+		CR_O("cross_ortho", new Vec3(0, 0, 1), new Vec3(1, 0, 0)),
+		CR_D("cross_diag", new Vec3(1, 0, 1), new Vec3(-1, 0, 1)),
+		CR_PDX("cross_d1_xo", new Vec3(1, 0, 0), new Vec3(1, 0, 1)),
+		CR_PDZ("cross_d1_zo", new Vec3(0, 0, 1), new Vec3(1, 0, 1)),
+		CR_NDX("cross_d2_xo", new Vec3(1, 0, 0), new Vec3(-1, 0, 1)),
+		CR_NDZ("cross_d2_zo", new Vec3(0, 0, 1), new Vec3(-1, 0, 1));
 
 		private String model;
-		private Vec3 axis;
+		private List<Vec3> axes;
 		private int modelRotation;
 		private Vec3 normal;
 
@@ -80,11 +89,18 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			this(model, 0, axis, new Vec3(0, 1, 0));
 		}
 
+		private TrackShape(String model, Vec3 axis, Vec3 secondAxis) {
+			this.model = model;
+			this.modelRotation = 0;
+			this.normal = new Vec3(0, 1, 0);
+			this.axes = ImmutableList.of(axis, secondAxis);
+		}
+
 		private TrackShape(String model, int modelRotation, Vec3 axis, Vec3 normal) {
 			this.model = model;
 			this.modelRotation = modelRotation;
 			this.normal = normal.normalize();
-			this.axis = axis;
+			this.axes = ImmutableList.of(axis);
 		}
 
 		@Override
@@ -96,8 +112,12 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			return model;
 		}
 
-		public Vec3 getAxis() {
-			return axis;
+		public List<Vec3> getAxes() {
+			return axes;
+		}
+
+		public boolean isJunction() {
+			return axes.size() > 1;
 		}
 
 		public Vec3 getNormal() {
@@ -139,12 +159,13 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		TrackShape best = TrackShape.ZO;
 		double bestValue = Float.MAX_VALUE;
 		for (TrackShape shape : TrackShape.values()) {
-			double distance = Math.min(shape.getAxis()
-				.distanceToSqr(lookAngle),
-				shape.getAxis()
-					.normalize()
-					.scale(-1)
-					.distanceToSqr(lookAngle));
+			if (shape.isJunction())
+				continue;
+			Vec3 axis = shape.getAxes()
+				.get(0);
+			double distance = Math.min(axis.distanceToSqr(lookAngle), axis.normalize()
+				.scale(-1)
+				.distanceToSqr(lookAngle));
 			if (distance > bestValue)
 				continue;
 			bestValue = distance;
@@ -152,12 +173,12 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		}
 
 		Level level = ctx.getLevel();
-		if (best.getAxis()
-			.lengthSqr() == 1)
+		Vec3 bestAxis = best.getAxes()
+			.get(0);
+		if (bestAxis.lengthSqr() == 1)
 			for (boolean neg : Iterate.trueAndFalse) {
 				BlockPos offset = ctx.getClickedPos()
-					.offset(new BlockPos(best.getAxis()
-						.scale(neg ? -1 : 1)));
+					.offset(new BlockPos(bestAxis.scale(neg ? -1 : 1)));
 
 				if (level.getBlockState(offset)
 					.isFaceSturdy(level, offset, Direction.UP)) {
@@ -265,9 +286,9 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	}
 
 	@Override
-	public Vec3 getTrackAxis(BlockGetter world, BlockPos pos, BlockState state) {
+	public List<Vec3> getTrackAxes(BlockGetter world, BlockPos pos, BlockState state) {
 		return state.getValue(SHAPE)
-			.getAxis();
+			.getAxes();
 	}
 
 	@Override
@@ -276,6 +297,37 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		return VecHelper.getCenterOf(pos)
 			.add(0, (vertical ? 0 : -.5f), 0)
 			.add(axis.scale(.5));
+	}
+	
+	@Override
+	public BlockState overlay(BlockGetter world, BlockPos pos, BlockState existing, BlockState placed) {
+		if (placed.getBlock() != this)
+			return existing;
+		
+		TrackShape existingShape = existing.getValue(SHAPE);
+		TrackShape placedShape = placed.getValue(SHAPE);
+		TrackShape combinedShape = null;
+		
+		for (boolean flip : Iterate.trueAndFalse) {
+			TrackShape s1 = flip ? existingShape : placedShape;
+			TrackShape s2 = flip ? placedShape : existingShape;
+			if (s1 == TrackShape.XO && s2 == TrackShape.ZO)
+				combinedShape = TrackShape.CR_O;
+			if (s1 == TrackShape.PD && s2 == TrackShape.ND)
+				combinedShape = TrackShape.CR_D;
+			if (s1 == TrackShape.XO && s2 == TrackShape.PD)
+				combinedShape = TrackShape.CR_PDX;
+			if (s1 == TrackShape.ZO && s2 == TrackShape.PD)
+				combinedShape = TrackShape.CR_PDZ;
+			if (s1 == TrackShape.XO && s2 == TrackShape.ND)
+				combinedShape = TrackShape.CR_NDX;
+			if (s1 == TrackShape.ZO && s2 == TrackShape.ND)
+				combinedShape = TrackShape.CR_NDZ;
+		}
+		
+		if (combinedShape != null)
+			existing = existing.setValue(SHAPE, combinedShape);
+		return existing;
 	}
 
 	@Override
@@ -314,7 +366,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public PartialModel prepareStationOverlay(BlockGetter world, BlockPos pos, BlockState state,
 		AxisDirection direction, PoseStack ms) {
 		Vec3 axis = state.getValue(SHAPE)
-			.getAxis();
+			.getAxes()
+			.get(0);
 		Vec3 directionVec = axis.scale(direction.getStep())
 			.normalize();
 		Vec3 normal = getUpNormal(world, pos, state);

@@ -245,8 +245,8 @@ public class TrackPropagator {
 			// PrevPos correction after a turn
 			if (entry.currentNode.connectedViaTurn()) {
 				boolean slope = false;
-				if (currentState.getBlock() instanceof ITrackBlock track)
-					slope = track.getTrackAxis(reader, entry.currentPos, currentState).y != 0;
+				if (currentState.getBlock()instanceof ITrackBlock track)
+					slope = track.isSlope(reader, entry.currentPos, currentState);
 				BlockPos offset = new BlockPos(VecHelper.getCenterOf(entry.currentPos)
 					.subtract(entry.currentNode.getLocation()
 						.add(0, slope ? 0 : .5f, 0))
@@ -322,10 +322,10 @@ public class TrackPropagator {
 
 		TrackShape shape = state.getValue(TrackBlock.SHAPE);
 		if (shape != TrackShape.NONE)
-			addToSet(fromEnd, list, (d, b) -> shape.getAxis()
-				.scale(b ? d : -d)
-				.add(center)
-				.add(0, shape.getAxis().y == 0 ? -.5 : 0, 0), b -> shape.getNormal(), null);
+			shape.getAxes()
+				.forEach(axis -> addToSet(fromEnd, list, (d, b) -> axis.scale(b ? d : -d)
+					.add(center)
+					.add(0, axis.y == 0 ? -.5 : 0, 0), b -> shape.getNormal(), null));
 
 		return list;
 	}

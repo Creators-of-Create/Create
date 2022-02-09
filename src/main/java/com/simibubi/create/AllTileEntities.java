@@ -221,7 +221,8 @@ public class AllTileEntities {
 	public static final BlockEntityEntry<KineticTileEntity> ENCASED_SHAFT = Create.registrate()
 		.tileEntity("encased_shaft", KineticTileEntity::new)
 		.instance(() -> ShaftInstance::new, false)
-		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE)
+		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE,
+			AllBlocks.METAL_GIRDER_ENCASED_SHAFT)
 		.renderer(() -> ShaftRenderer::new)
 		.register();
 

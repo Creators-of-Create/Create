@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
@@ -11,6 +9,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -20,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -83,11 +83,11 @@ public class TrackPlacement {
 		cached = info;
 
 		ITrackBlock track = (ITrackBlock) state2.getBlock();
-		Vec3 axis2 = track.getTrackAxis(level, pos2, state2);
+		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(level, pos2, state2, lookVec);
+		Vec3 axis2 = nearestTrackAxis.getFirst();
+		boolean front2 = nearestTrackAxis.getSecond() == AxisDirection.POSITIVE;
 		Vec3 normal2 = track.getUpNormal(level, pos2, state2)
 			.normalize();
-		boolean front2 = lookVec.dot(axis2.multiply(1, 0, 1)
-			.normalize()) < 0;
 		axis2 = axis2.scale(front2 ? -1 : 1);
 		Vec3 normedAxis2 = axis2.normalize();
 		Vec3 end2 = track.getCurveStart(level, pos2, state2, axis2);
@@ -329,9 +329,17 @@ public class TrackPlacement {
 				Vec3 offset = axis.scale(i);
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
-				if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.getMaterial()
-					.isReplaceable())
-					level.setBlock(offsetPos, state, 3);
+				BlockState toPlace = state;
+				
+				boolean canPlace = stateAtPos.getMaterial()
+					.isReplaceable();
+				if (stateAtPos.getBlock()instanceof ITrackBlock trackAtPos) {
+					toPlace = trackAtPos.overlay(level, offsetPos, stateAtPos, toPlace);
+					canPlace = true;
+				}
+
+				if (canPlace)
+					level.setBlock(offsetPos, toPlace, 3);
 			}
 		}
 

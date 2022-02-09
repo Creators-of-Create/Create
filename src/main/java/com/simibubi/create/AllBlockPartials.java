@@ -149,6 +149,8 @@ public class AllBlockPartials {
 
 	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES =
 		new EnumMap<>(BlazeBurnerBlock.HeatLevel.class);
+	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS =
+		new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 
 	static {
@@ -169,6 +171,8 @@ public class AllBlockPartials {
 		}
 		for (DyeColor color : DyeColor.values())
 			TOOLBOX_LIDS.put(color, block("toolbox/lid/" + Lang.asId(color.name())));
+		for (Direction d : Iterate.horizontalDirections)
+			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
 	}
 
 	private static PartialModel block(String path) {

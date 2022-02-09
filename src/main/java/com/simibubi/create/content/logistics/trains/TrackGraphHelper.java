@@ -16,33 +16,33 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrackGraphHelper {
 
-	public static GraphLocation getGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection) {
+	public static GraphLocation getGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
+		Vec3 targetAxis) {
 		BlockState trackBlockState = level.getBlockState(pos);
 		if (!(trackBlockState.getBlock()instanceof ITrackBlock track))
 			return null;
-	
-		Vec3 axis = track.getTrackAxis(level, pos, trackBlockState)
-			.scale(targetDirection.getStep());
+
+		Vec3 axis = targetAxis.scale(targetDirection.getStep());
 		double length = axis.length();
-	
+
 		List<Pair<BlockPos, DiscoveredLocation>> ends =
 			TrackPropagator.getEnds(level, pos, trackBlockState, null, true);
-	
+
 		TrackGraph graph = null;
 		TrackNode frontNode = null;
 		TrackNode backNode = null;
 		double position = 0;
-	
+
 		for (Pair<BlockPos, DiscoveredLocation> pair : ends) {
 			DiscoveredLocation current = pair.getSecond();
 			BlockPos currentPos = pair.getFirst();
 			Vec3 offset = Vec3.atLowerCornerOf(currentPos.subtract(pos));
 			boolean forward = offset.distanceToSqr(axis.scale(-1)) < 1 / 4096f;
 			boolean backwards = offset.distanceToSqr(axis) < 1 / 4096f;
-	
+
 			if (!forward && !backwards)
 				continue;
-	
+
 			for (int i = 0; i < 32; i++) {
 				DiscoveredLocation loc = current;
 				List<Pair<BlockPos, DiscoveredLocation>> list =
@@ -53,7 +53,7 @@ public class TrackGraphHelper {
 					current = list.get(0)
 						.getSecond();
 				}
-	
+
 				if (graph == null)
 					graph = Create.RAILWAYS.getGraph(level, loc);
 				if (graph == null)
@@ -70,20 +70,15 @@ public class TrackGraphHelper {
 				break;
 			}
 		}
-	
+
 		if (frontNode == null || backNode == null)
 			return null;
-	
+
 		GraphLocation graphLocation = new GraphLocation();
 		graphLocation.edge = Couple.create(backNode.getLocation(), frontNode.getLocation());
 		graphLocation.position = position;
 		graphLocation.graph = graph;
 		return graphLocation;
-	}
-
-	public static boolean getTrackDirectionByLookVec(Vec3 lookAngle, Level level, BlockPos pos, BlockState state,
-		ITrackBlock track) {
-		return lookAngle.dot(track.getTrackAxis(level, pos, state)) < 0;
 	}
 
 }

@@ -5,9 +5,11 @@ import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.InteractionResult;
@@ -110,12 +112,12 @@ public class TrackBlockItem extends BlockItem {
 			return false;
 
 		ITrackBlock track = (ITrackBlock) block;
-		Vec3 axis = track.getTrackAxis(world, pos, blockState);
+		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(world, pos, blockState, lookVec);
+		Vec3 axis = nearestTrackAxis.getFirst();
+		boolean front = nearestTrackAxis.getSecond() == AxisDirection.POSITIVE;
 		Vec3 normal = track.getUpNormal(world, pos, blockState)
 			.normalize();
 
-		boolean front = lookVec.dot(axis.multiply(1, 0, 1)
-			.normalize()) < 0;
 		axis = axis.scale(front ? -1 : 1);
 		Vec3 end = track.getCurveStart(world, pos, blockState, axis);
 

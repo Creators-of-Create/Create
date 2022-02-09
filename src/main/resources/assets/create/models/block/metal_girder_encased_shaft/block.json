@@ -1,0 +1,72 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/girder",
+		"particle": "create:block/chute_block"
+	},
+	"elements": [
+		{
+			"from": [0, 4, 6],
+			"to": [16, 12, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 5, 8, 9], "texture": "#0"},
+				"east": {"uv": [8, 1, 12, 3], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [0, 5, 8, 9], "texture": "#0"},
+				"west": {"uv": [8, 1, 12, 3], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 2, 4],
+			"to": [16, 4, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 8, 5], "rotation": 180, "texture": "#0"},
+				"east": {"uv": [12, 2, 16, 3], "texture": "#0"},
+				"south": {"uv": [0, 4, 8, 5], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [12, 2, 16, 3], "texture": "#0"},
+				"up": {"uv": [8, 0, 16, 4], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 12, 4],
+			"to": [16, 14, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 8, 5], "texture": "#0"},
+				"east": {"uv": [12, 1, 16, 2], "texture": "#0"},
+				"south": {"uv": [0, 4, 8, 5], "texture": "#0"},
+				"west": {"uv": [12, 1, 16, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 8, 4], "texture": "#0"},
+				"down": {"uv": [8, 0, 16, 4], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [12, 4, 16, 8], "texture": "#0"},
+				"east": {"uv": [8, 4, 12, 8], "texture": "#0"},
+				"south": {"uv": [12, 4, 16, 8], "texture": "#0"},
+				"west": {"uv": [8, 4, 12, 8], "texture": "#0"},
+				"up": {"uv": [8, 4, 12, 8], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [8, 4, 12, 8], "rotation": 270, "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Beam X",
+			"origin": [8, 13, 8],
+			"color": 0,
+			"children": [0, 1, 2]
+		},
+		{
+			"name": "Bearing",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [3]
+		}
+	]
+}

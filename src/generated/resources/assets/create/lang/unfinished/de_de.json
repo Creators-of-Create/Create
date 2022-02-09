@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1430",
+	"_": "Missing Localizations: 1432",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -296,6 +296,7 @@
 	"block.create.mechanical_saw": "Mechanische Säge",
 	"block.create.metal_bracket": "Metallhalterung",
 	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
+	"block.create.metal_girder_encased_shaft": "UNLOCALIZED: Metal Girder Encased Shaft",
 	"block.create.millstone": "Mahlstein",
 	"block.create.minecart_anchor": "Lorenanker",
 	"block.create.mysterious_cuckoo_clock": "Kuckucksuhr",
@@ -1410,6 +1411,7 @@
 	"create.track_target.clear": "UNLOCALIZED: Cleared track selection",
 	"create.track_target.missing": "UNLOCALIZED: Right-click the targeted train track first",
 	"create.track_target.too_far": "UNLOCALIZED: Targeted track is too far from here",
+	"create.track_target.no_junctions": "UNLOCALIZED: Targeted track cannot be an intersection",
 
 	"create.train.unnamed": "UNLOCALIZED: Unnamed Train",
 	"create.train.cannot_relocate_moving": "UNLOCALIZED: Cannot relocate a moving Train",

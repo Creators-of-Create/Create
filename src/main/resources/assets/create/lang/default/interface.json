@@ -637,6 +637,7 @@
 	"create.track_target.clear": "Cleared track selection",
 	"create.track_target.missing": "Right-click the targeted train track first",
 	"create.track_target.too_far": "Targeted track is too far from here",
+	"create.track_target.no_junctions": "Targeted track cannot be an intersection",
 
 	"create.train.unnamed": "Unnamed Train",
 	"create.train.cannot_relocate_moving": "Cannot relocate a moving Train",

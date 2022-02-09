@@ -193,7 +193,8 @@ public class StationTileEntity extends SmartTileEntity {
 		BlockPos targetPosition = target.getGlobalPosition();
 		BlockState trackState = target.getTrackBlockState();
 		ITrackBlock track = target.getTrack();
-		Vec3 trackAxis = track.getTrackAxis(level, targetPosition, trackState);
+		Vec3 trackAxis = track.getTrackAxes(level, targetPosition, trackState)
+			.get(0);
 
 		boolean axisFound = false;
 		for (Axis axis : Iterate.axes) {
@@ -290,7 +291,8 @@ public class StationTileEntity extends SmartTileEntity {
 		BlockState trackState = target.getTrackBlockState();
 		ITrackBlock track = target.getTrack();
 		AxisDirection axisDirection = target.getTargetDirection();
-		Vec3 axis = track.getTrackAxis(level, targetPosition, trackState)
+		Vec3 axis = track.getTrackAxes(level, targetPosition, trackState)
+			.get(0)
 			.normalize()
 			.scale(axisDirection.getStep());
 		return assemblyDirection = Direction.getNearest(axis.x, axis.y, axis.z);

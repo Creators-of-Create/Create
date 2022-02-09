@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,7 +76,12 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 	}
 
 	public GraphLocation determineGraphLocation() {
-		return TrackGraphHelper.getGraphLocationAt(getWorld(), getGlobalPosition(), getTargetDirection());
+		Level level = getWorld();
+		BlockPos pos = getGlobalPosition();
+		BlockState state = getTrackBlockState();
+		return TrackGraphHelper.getGraphLocationAt(level, pos, getTargetDirection(),
+			getTrack().getTrackAxes(level, pos, state)
+				.get(0));
 	}
 
 	@OnlyIn(Dist.CLIENT)

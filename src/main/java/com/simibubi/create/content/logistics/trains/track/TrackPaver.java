@@ -9,11 +9,14 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -29,13 +32,20 @@ public class TrackPaver {
 		BlockState defaultBlockState = block.defaultBlockState();
 		if (defaultBlockState.hasProperty(SlabBlock.TYPE))
 			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
+		boolean wallLike = isWallLike(defaultBlockState);
+		
+		if (defaultBlockState.getBlock() instanceof GirderBlock)
+			for (Direction d : Iterate.horizontalDirections)
+				if (Vec3.atLowerCornerOf(d.getNormal())
+					.equals(direction))
+					defaultBlockState =
+						defaultBlockState.setValue(d.getAxis() == Axis.X ? GirderBlock.X : GirderBlock.Z, true);
 
 		Set<BlockPos> toPlaceOn = new HashSet<>();
 		Vec3 start = VecHelper.getCenterOf(startPos);
 		Vec3 mainNormal = direction.cross(new Vec3(0, 1, 0));
 		Vec3 normalizedNormal = mainNormal.normalize();
 		Vec3 normalizedDirection = direction.normalize();
-		boolean wallLike = isWallLike(defaultBlockState);
 
 		float diagFiller = 0.45f;
 		for (int i = 0; i < extent; i++) {

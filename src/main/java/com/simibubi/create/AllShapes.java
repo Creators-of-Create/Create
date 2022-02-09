@@ -121,6 +121,8 @@ public class AllShapes {
 			.forHorizontal(SOUTH),
 
 		GIRDER_BEAM = shape(4, 2, 0, 12, 14, 16).forHorizontalAxis(),
+		GIRDER_BEAM_SHAFT = shape(GIRDER_BEAM.get(Axis.X)).add(SIX_VOXEL_POLE.get(Axis.Z))
+			.forHorizontalAxis(),
 
 		STATION = shape(0, 0, 0, 16, 5, 16).add(2, 4, 0, 14, 16, 4)
 			.forHorizontal(NORTH),

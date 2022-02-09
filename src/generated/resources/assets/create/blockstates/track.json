@@ -13,8 +13,7 @@
       "model": "create:block/track/diag"
     },
     "shape=nd,turn=false": {
-      "model": "create:block/track/diag",
-      "y": 90
+      "model": "create:block/track/diag_2"
     },
     "shape=an,turn=false": {
       "model": "create:block/track/ascending",
@@ -31,6 +30,24 @@
       "model": "create:block/track/ascending",
       "y": 90
     },
+    "shape=cr_o,turn=false": {
+      "model": "create:block/track/cross_ortho"
+    },
+    "shape=cr_d,turn=false": {
+      "model": "create:block/track/cross_diag"
+    },
+    "shape=cr_pdx,turn=false": {
+      "model": "create:block/track/cross_d1_xo"
+    },
+    "shape=cr_pdz,turn=false": {
+      "model": "create:block/track/cross_d1_zo"
+    },
+    "shape=cr_ndx,turn=false": {
+      "model": "create:block/track/cross_d2_xo"
+    },
+    "shape=cr_ndz,turn=false": {
+      "model": "create:block/track/cross_d2_zo"
+    },
     "shape=none,turn=true": {
       "model": "minecraft:block/air"
     },
@@ -44,8 +61,7 @@
       "model": "create:block/track/diag"
     },
     "shape=nd,turn=true": {
-      "model": "create:block/track/diag",
-      "y": 90
+      "model": "create:block/track/diag_2"
     },
     "shape=an,turn=true": {
       "model": "create:block/track/ascending",
@@ -61,6 +77,24 @@
     "shape=aw,turn=true": {
       "model": "create:block/track/ascending",
       "y": 90
+    },
+    "shape=cr_o,turn=true": {
+      "model": "create:block/track/cross_ortho"
+    },
+    "shape=cr_d,turn=true": {
+      "model": "create:block/track/cross_diag"
+    },
+    "shape=cr_pdx,turn=true": {
+      "model": "create:block/track/cross_d1_xo"
+    },
+    "shape=cr_pdz,turn=true": {
+      "model": "create:block/track/cross_d1_zo"
+    },
+    "shape=cr_ndx,turn=true": {
+      "model": "create:block/track/cross_d2_xo"
+    },
+    "shape=cr_ndz,turn=true": {
+      "model": "create:block/track/cross_d2_zo"
     }
   }
 }

@@ -108,9 +108,10 @@ public class TrainRelocator {
 		BlockState blockState = level.getBlockState(pos);
 		if (!(blockState.getBlock()instanceof ITrackBlock track))
 			return false;
-		boolean front = TrackGraphHelper.getTrackDirectionByLookVec(lookAngle, level, pos, blockState, track);
+
+		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(level, pos, blockState, lookAngle);
 		GraphLocation graphLocation =
-			TrackGraphHelper.getGraphLocationAt(level, pos, front ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
+			TrackGraphHelper.getGraphLocationAt(level, pos, nearestTrackAxis.getSecond(), nearestTrackAxis.getFirst());
 
 		if (graphLocation == null)
 			return false;

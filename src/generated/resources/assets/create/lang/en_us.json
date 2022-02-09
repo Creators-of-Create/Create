@@ -295,6 +295,7 @@
 	"block.create.mechanical_saw": "Mechanical Saw",
 	"block.create.metal_bracket": "Metal Bracket",
 	"block.create.metal_girder": "Metal Girder",
+	"block.create.metal_girder_encased_shaft": "Metal Girder Encased Shaft",
 	"block.create.millstone": "Millstone",
 	"block.create.minecart_anchor": "Minecart Anchor",
 	"block.create.mysterious_cuckoo_clock": "Cuckoo Clock",
@@ -1409,6 +1410,7 @@
 	"create.track_target.clear": "Cleared track selection",
 	"create.track_target.missing": "Right-click the targeted train track first",
 	"create.track_target.too_far": "Targeted track is too far from here",
+	"create.track_target.no_junctions": "Targeted track cannot be an intersection",
 
 	"create.train.unnamed": "Unnamed Train",
 	"create.train.cannot_relocate_moving": "Cannot relocate a moving Train",

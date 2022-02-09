@@ -127,8 +127,10 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
+import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
+import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -671,9 +673,22 @@ public class AllBlocks {
 		.blockstate(GirderBlockStateGenerator::blockState)
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
+		.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();
+
+	public static final BlockEntry<GirderEncasedShaftBlock> METAL_GIRDER_ENCASED_SHAFT =
+		REGISTRATE.block("metal_girder_encased_shaft", GirderEncasedShaftBlock::new)
+			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.transform(pickaxeOnly())
+			.loot((p, b) -> p.add(b, RegistrateBlockLootTables.createSingleItemTable(METAL_GIRDER.get())
+				.withPool(RegistrateBlockLootTables.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(SHAFT.get()))))))
+			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
+			.register();
 
 	// Fluids
 

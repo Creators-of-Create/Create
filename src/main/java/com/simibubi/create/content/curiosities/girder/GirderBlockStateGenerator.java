@@ -5,10 +5,43 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 
 public class GirderBlockStateGenerator {
+
+	public static void blockStateWithShaft(DataGenContext<Block, GirderEncasedShaftBlock> c,
+		RegistrateBlockstateProvider p) {
+		MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
+
+		builder.part()
+			.modelFile(AssetLookup.partialBaseModel(c, p))
+			.rotationY(0)
+			.addModel()
+			.condition(GirderEncasedShaftBlock.HORIZONTAL_AXIS, Axis.Z)
+			.end();
+
+		builder.part()
+			.modelFile(AssetLookup.partialBaseModel(c, p))
+			.rotationY(90)
+			.addModel()
+			.condition(GirderEncasedShaftBlock.HORIZONTAL_AXIS, Axis.X)
+			.end();
+
+		builder.part()
+			.modelFile(AssetLookup.partialBaseModel(c, p, "top"))
+			.addModel()
+			.condition(GirderEncasedShaftBlock.TOP, true)
+			.end();
+
+		builder.part()
+			.modelFile(AssetLookup.partialBaseModel(c, p, "bottom"))
+			.addModel()
+			.condition(GirderEncasedShaftBlock.BOTTOM, true)
+			.end();
+
+	}
 
 	public static void blockState(DataGenContext<Block, GirderBlock> c, RegistrateBlockstateProvider p) {
 		MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());

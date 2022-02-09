@@ -42,6 +42,7 @@
     "create:wooden_bracket",
     "create:metal_bracket",
     "create:metal_girder",
+    "create:metal_girder_encased_shaft",
     "create:fluid_pipe",
     "create:encased_fluid_pipe",
     "create:glass_fluid_pipe",
