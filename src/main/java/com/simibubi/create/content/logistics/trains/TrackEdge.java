@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
@@ -60,11 +61,11 @@ public class TrackEdge {
 	}
 
 	public CompoundTag write() {
-		return isTurn() ? turn.write() : new CompoundTag();
+		return isTurn() ? turn.write(BlockPos.ZERO) : new CompoundTag();
 	}
 
 	public static TrackEdge read(CompoundTag tag) {
-		return new TrackEdge(tag.contains("Positions") ? new BezierConnection(tag) : null);
+		return new TrackEdge(tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
 	}
 
 }

@@ -1,7 +1,8 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT;
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_2;
+import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_BOTTOM;
+import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_MIDDLE;
+import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_TOP;
 import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_LEFT;
 import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_RIGHT;
 import static com.simibubi.create.AllBlockPartials.TRACK_TIE;
@@ -10,6 +11,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.repack.joml.Math;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
@@ -29,6 +31,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -40,22 +43,21 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 	@Override
 	protected void renderSafe(TrackTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		if (Backend.isOn())
+		Level level = te.getLevel();
+		if (Backend.canUseInstancing(level))
 			return;
-
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-		te.connections.forEach(map -> map.values()
-			.forEach(bc -> renderBezierTurn(bc, ms, vb)));
+		te.connections.values()
+			.forEach(bc -> renderBezierTurn(level, bc, ms, vb));
 	}
 
-	public static void renderBezierTurn(BezierConnection bc, PoseStack ms, VertexConsumer vb) {
+	public static void renderBezierTurn(Level level, BezierConnection bc, PoseStack ms, VertexConsumer vb) {
 		if (!bc.isPrimary())
 			return;
 
 		ms.pushPose();
 		BlockPos tePosition = bc.tePositions.getFirst();
 		BlockState air = Blocks.AIR.defaultBlockState();
-		ClientLevel level = Minecraft.getInstance().level;
 		SegmentAngles[] segments = bc.getBakedSegments();
 
 		TransformStack.cast(ms)
@@ -68,17 +70,19 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
 
 			CachedBufferer.partial(TRACK_TIE, air)
-				.mulPose(segment.tieTransform)
-				.disableDiffuseMult()
+				.mulPose(segment.tieTransform.pose())
+				.mulNormal(segment.tieTransform.normal())
 				.light(light)
 				.renderInto(ms, vb);
 
-			for (boolean first : Iterate.trueAndFalse)
+			for (boolean first : Iterate.trueAndFalse) {
+				Pose transform = segment.railTransforms.get(first);
 				CachedBufferer.partial(first ? TRACK_SEGMENT_LEFT : TRACK_SEGMENT_RIGHT, air)
-					.mulPose(segment.railTransforms.get(first))
-					.disableDiffuseMult()
+					.mulPose(transform.pose())
+					.mulNormal(transform.normal())
 					.light(light)
 					.renderInto(ms, vb);
+			}
 		}
 
 		ms.popPose();
@@ -97,19 +101,22 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
 
 			for (boolean first : Iterate.trueAndFalse) {
-				CachedBufferer.partial(GIRDER_SEGMENT_2, air)
-					.mulPose(segment.beams.get(first))
-					.disableDiffuseMult()
+				Pose beamTransform = segment.beams.get(first);
+				CachedBufferer.partial(GIRDER_SEGMENT_MIDDLE, air)
+					.mulPose(beamTransform.pose())
+					.mulNormal(beamTransform.normal())
 					.light(light)
 					.renderInto(ms, vb);
 
-				for (boolean top : Iterate.trueAndFalse)
-					CachedBufferer.partial(GIRDER_SEGMENT, air)
-						.mulPose(segment.beamCaps.get(top)
-							.get(first))
-						.disableDiffuseMult()
+				for (boolean top : Iterate.trueAndFalse) {
+					Pose beamCapTransform = segment.beamCaps.get(top)
+						.get(first);
+					CachedBufferer.partial(top ? GIRDER_SEGMENT_TOP : GIRDER_SEGMENT_BOTTOM, air)
+						.mulPose(beamCapTransform.pose())
+						.mulNormal(beamCapTransform.normal())
 						.light(light)
 						.renderInto(ms, vb);
+				}
 			}
 		}
 	}

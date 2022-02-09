@@ -326,7 +326,7 @@ public class StationTileEntity extends SmartTileEntity {
 
 		DiscoveredLocation location = null;
 		List<Pair<BlockPos, DiscoveredLocation>> ends =
-			TrackPropagator.getEnds(level, trackPosition, trackState, null, true);
+			TrackPropagator.getEnds(level, trackPosition, trackState, true, null, null);
 		for (Pair<BlockPos, DiscoveredLocation> pair : ends)
 			if (trackPosition.relative(assemblyDirection)
 				.equals(pair.getFirst()))

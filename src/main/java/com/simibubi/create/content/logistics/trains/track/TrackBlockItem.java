@@ -113,20 +113,17 @@ public class TrackBlockItem extends BlockItem {
 
 		ITrackBlock track = (ITrackBlock) block;
 		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(world, pos, blockState, lookVec);
-		Vec3 axis = nearestTrackAxis.getFirst();
-		boolean front = nearestTrackAxis.getSecond() == AxisDirection.POSITIVE;
+		Vec3 axis = nearestTrackAxis.getFirst()
+			.scale(nearestTrackAxis.getSecond() == AxisDirection.POSITIVE ? -1 : 1);
+		Vec3 end = track.getCurveStart(world, pos, blockState, axis);
 		Vec3 normal = track.getUpNormal(world, pos, blockState)
 			.normalize();
-
-		axis = axis.scale(front ? -1 : 1);
-		Vec3 end = track.getCurveStart(world, pos, blockState, axis);
 
 		CompoundTag compoundTag = heldItem.getOrCreateTagElement("ConnectingFrom");
 		compoundTag.put("Pos", NbtUtils.writeBlockPos(pos));
 		compoundTag.put("Axis", VecHelper.writeNBT(axis));
 		compoundTag.put("Normal", VecHelper.writeNBT(normal));
 		compoundTag.put("End", VecHelper.writeNBT(end));
-		compoundTag.putBoolean("Front", front);
 		return true;
 	}
 

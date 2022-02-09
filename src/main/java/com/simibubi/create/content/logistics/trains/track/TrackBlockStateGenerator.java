@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.trains.track.TrackBlock.TrackShape;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,12 +14,12 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.StationTileEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -29,18 +28,20 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -61,74 +62,6 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TURN = BooleanProperty.create("turn");
-
-	public enum TrackShape implements StringRepresentable {
-		NONE("", Vec3.ZERO),
-		ZO("z_ortho", new Vec3(0, 0, 1)),
-		XO("x_ortho", new Vec3(1, 0, 0)),
-		PD("diag", new Vec3(1, 0, 1)),
-		ND("diag_2", new Vec3(-1, 0, 1)),
-		AN("ascending", 180, new Vec3(0, 1, -1), new Vec3(0, 1, 1)),
-		AS("ascending", 0, new Vec3(0, 1, 1), new Vec3(0, 1, -1)),
-		AE("ascending", 270, new Vec3(1, 1, 0), new Vec3(-1, 1, 0)),
-		AW("ascending", 90, new Vec3(-1, 1, 0), new Vec3(1, 1, 0)),
-
-		CR_O("cross_ortho", new Vec3(0, 0, 1), new Vec3(1, 0, 0)),
-		CR_D("cross_diag", new Vec3(1, 0, 1), new Vec3(-1, 0, 1)),
-		CR_PDX("cross_d1_xo", new Vec3(1, 0, 0), new Vec3(1, 0, 1)),
-		CR_PDZ("cross_d1_zo", new Vec3(0, 0, 1), new Vec3(1, 0, 1)),
-		CR_NDX("cross_d2_xo", new Vec3(1, 0, 0), new Vec3(-1, 0, 1)),
-		CR_NDZ("cross_d2_zo", new Vec3(0, 0, 1), new Vec3(-1, 0, 1));
-
-		private String model;
-		private List<Vec3> axes;
-		private int modelRotation;
-		private Vec3 normal;
-
-		private TrackShape(String model, Vec3 axis) {
-			this(model, 0, axis, new Vec3(0, 1, 0));
-		}
-
-		private TrackShape(String model, Vec3 axis, Vec3 secondAxis) {
-			this.model = model;
-			this.modelRotation = 0;
-			this.normal = new Vec3(0, 1, 0);
-			this.axes = ImmutableList.of(axis, secondAxis);
-		}
-
-		private TrackShape(String model, int modelRotation, Vec3 axis, Vec3 normal) {
-			this.model = model;
-			this.modelRotation = modelRotation;
-			this.normal = normal.normalize();
-			this.axes = ImmutableList.of(axis);
-		}
-
-		@Override
-		public String getSerializedName() {
-			return Lang.asId(name());
-		}
-
-		public String getModel() {
-			return model;
-		}
-
-		public List<Vec3> getAxes() {
-			return axes;
-		}
-
-		public boolean isJunction() {
-			return axes.size() > 1;
-		}
-
-		public Vec3 getNormal() {
-			return normal;
-		}
-
-		public int getModelRotation() {
-			return modelRotation;
-		}
-
-	}
 
 	public TrackBlock(Properties p_49795_) {
 		super(p_49795_);
@@ -201,14 +134,18 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this && pState.setValue(HAS_TURN, true) == pOldState.setValue(HAS_TURN, true))
 			return;
+		if (pLevel.isClientSide)
+			return;
 		LevelTickAccess<Block> blockTicks = pLevel.getBlockTicks();
 		if (!blockTicks.hasScheduledTick(pPos, this))
 			pLevel.scheduleTick(pPos, this, 1);
+		updateGirders(pState, pLevel, pPos, blockTicks);
 	}
 
 	@Override
 	public void tick(BlockState p_60462_, ServerLevel p_60463_, BlockPos p_60464_, Random p_60465_) {
-		TrackPropagator.onRailAdded(p_60463_, p_60464_, p_60462_);
+		for (Vec3 axis : getTrackAxes(p_60463_, p_60464_, p_60462_))
+			TrackPropagator.onRailAdded(p_60463_, p_60464_, p_60462_, axis.normalize());
 	}
 
 	@Override
@@ -216,7 +153,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		boolean removeTE = false;
 		if (pState.getValue(HAS_TURN) && (!pState.is(pNewState.getBlock()) || !pNewState.getValue(HAS_TURN))) {
 			BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-			if (blockEntity instanceof TrackTileEntity)
+			if (blockEntity instanceof TrackTileEntity && !pLevel.isClientSide)
 				((TrackTileEntity) blockEntity).removeInboundConnections();
 			removeTE = true;
 		}
@@ -225,6 +162,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			TrackPropagator.onRailRemoved(pLevel, pPos, pState);
 		if (removeTE)
 			pLevel.removeBlockEntity(pPos);
+		if (!pLevel.isClientSide)
+			updateGirders(pState, pLevel, pPos, pLevel.getBlockTicks());
 	}
 
 	@Override
@@ -253,12 +192,22 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			return InteractionResult.SUCCESS;
 		}
 
-//		if (asItem() == itemInHand.getItem()) {
-//			TrackConnectionPlacementHandler.select(world, pos, player.getLookAngle(), itemInHand);
-//			return InteractionResult.SUCCESS;
-//		}
-
 		return InteractionResult.PASS;
+	}
+
+	private void updateGirders(BlockState pState, Level pLevel, BlockPos pPos, LevelTickAccess<Block> blockTicks) {
+		for (Vec3 vec3 : getTrackAxes(pLevel, pPos, pState)) {
+			if (vec3.length() > 1 || vec3.y != 0)
+				continue;
+			for (int side : Iterate.positiveAndNegative) {
+				BlockPos girderPos = pPos.below()
+					.offset(vec3.z * side, 0, vec3.x * side);
+				BlockState girderState = pLevel.getBlockState(girderPos);
+				if (girderState.getBlock()instanceof GirderBlock girderBlock
+					&& !blockTicks.hasScheduledTick(girderPos, girderBlock))
+					pLevel.scheduleTick(girderPos, girderBlock, 1);
+			}
+		}
 	}
 
 	@Override
@@ -298,16 +247,21 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			.add(0, (vertical ? 0 : -.5f), 0)
 			.add(axis.scale(.5));
 	}
-	
+
+	@Override
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		return InteractionResult.SUCCESS;
+	}
+
 	@Override
 	public BlockState overlay(BlockGetter world, BlockPos pos, BlockState existing, BlockState placed) {
 		if (placed.getBlock() != this)
 			return existing;
-		
+
 		TrackShape existingShape = existing.getValue(SHAPE);
 		TrackShape placedShape = placed.getValue(SHAPE);
 		TrackShape combinedShape = null;
-		
+
 		for (boolean flip : Iterate.trueAndFalse) {
 			TrackShape s1 = flip ? existingShape : placedShape;
 			TrackShape s2 = flip ? placedShape : existingShape;
@@ -324,26 +278,22 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			if (s1 == TrackShape.ZO && s2 == TrackShape.ND)
 				combinedShape = TrackShape.CR_NDZ;
 		}
-		
+
 		if (combinedShape != null)
 			existing = existing.setValue(SHAPE, combinedShape);
 		return existing;
 	}
 
 	@Override
-	public BlockState getRotatedBlockState(BlockState state, Direction targetedFace) {
-		switch (state.getValue(SHAPE)) {
-		case ND:
-			return state.setValue(SHAPE, TrackShape.XO);
-		case PD:
-			return state.setValue(SHAPE, TrackShape.ZO);
-		case XO:
-			return state.setValue(SHAPE, TrackShape.PD);
-		case ZO:
-			return state.setValue(SHAPE, TrackShape.ND);
-		default:
-			return state;
-		}
+	public BlockState rotate(BlockState state, Rotation pRotation) {
+		return state.setValue(SHAPE, state.getValue(SHAPE)
+			.rotate(pRotation));
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, Mirror pMirror) {
+		return state.setValue(SHAPE, state.getValue(SHAPE)
+			.mirror(pMirror));
 	}
 
 	@Override

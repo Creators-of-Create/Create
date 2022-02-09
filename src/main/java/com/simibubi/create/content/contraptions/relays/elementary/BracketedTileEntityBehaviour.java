@@ -55,6 +55,11 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		this.bracket = Optional.of(state);
 		reRender = true;
 		tileEntity.notifyUpdate();
+		Level world = getWorld();
+		if (world.isClientSide)
+			return;
+		tileEntity.getBlockState()
+			.updateNeighbourShapes(world, getPos(), 3);
 	}
 
 	public void transformBracket(StructureTransform transform) {
@@ -71,10 +76,15 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 			world.levelEvent(2001, getPos(), Block.getId(getBracket()));
 		this.bracket = Optional.empty();
 		reRender = true;
-		if (inOnReplacedContext)
+		if (inOnReplacedContext) {
 			tileEntity.sendData();
-		else
-			tileEntity.notifyUpdate();
+			return;
+		}
+		tileEntity.notifyUpdate();
+		if (world.isClientSide)
+			return;
+		tileEntity.getBlockState()
+			.updateNeighbourShapes(world, getPos(), 3);
 	}
 
 	public boolean isBracketPresent() {

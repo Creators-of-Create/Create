@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.trains.track;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -12,11 +11,11 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.util.FlwUtil;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
@@ -39,13 +38,12 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 
 	@Override
 	public void update() {
-		if (blockEntity.connections.stream()
-			.allMatch(Map::isEmpty)) {
+		if (blockEntity.connections.isEmpty()) 
 			return;
-		}
 
-		instances = blockEntity.connections.stream()
-			.flatMap(FlwUtil::mapValues)
+		remove();
+		instances = blockEntity.connections.values()
+			.stream()
 			.map(this::createInstance)
 			.filter(Objects::nonNull)
 			.toList();
@@ -56,10 +54,8 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 	@Override
 	public ImmutableBox getVolume() {
 		List<BlockPos> out = new ArrayList<>();
-		out.addAll(blockEntity.connections.getFirst()
-			.keySet());
-		out.addAll(blockEntity.connections.getSecond()
-			.keySet());
+		out.addAll(blockEntity.connections.keySet());
+		out.addAll(blockEntity.connections.keySet());
 		return GridAlignedBB.containingAll(out);
 	}
 
@@ -129,12 +125,15 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 				var modelIndex = i - 1;
 
 				ties[modelIndex].setTransform(pose)
-					.mulPose(segment.tieTransform);
+					.mulPose(segment.tieTransform.pose())
+					.mulNormal(segment.tieTransform.normal());
 				tiesLightPos[modelIndex] = segment.lightPosition.offset(tePosition);
 
 				for (boolean first : Iterate.trueAndFalse) {
+					Pose transform = segment.railTransforms.get(first);
 					(first ? this.left : this.right)[modelIndex].setTransform(pose)
-						.mulPose(segment.railTransforms.get(first));
+						.mulPose(transform.pose())
+						.mulNormal(transform.normal());
 					(first ? leftLightPos : rightLightPos)[modelIndex] = segment.lightPosition.offset(tePosition);
 				}
 			}
@@ -185,8 +184,9 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 				beams = Couple.create(() -> new ModelData[segCount]);
 				beamCaps = Couple.create(() -> Couple.create(() -> new ModelData[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT_2)::createInstances);
-				beamCaps.forEach(c -> c.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT)::createInstances));
+				beams.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT_MIDDLE)::createInstances);
+				beamCaps.forEachWithContext((c, top) -> c.forEach(mat.getModel(top ? AllBlockPartials.GIRDER_SEGMENT_TOP
+					: AllBlockPartials.GIRDER_SEGMENT_BOTTOM)::createInstances));
 
 				GirderAngles[] bakedGirders = bc.getBakedGirders();
 				for (int i = 1; i < bakedGirders.length; i++) {
@@ -195,13 +195,18 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 					lightPos[modelIndex] = segment.lightPosition.offset(tePosition);
 
 					for (boolean first : Iterate.trueAndFalse) {
+						Pose beamTransform = segment.beams.get(first);
 						beams.get(first)[modelIndex].setTransform(pose)
-							.mulPose(segment.beams.get(first));
-						for (boolean top : Iterate.trueAndFalse)
+							.mulPose(beamTransform.pose())
+							.mulNormal(beamTransform.normal());
+						for (boolean top : Iterate.trueAndFalse) {
+							Pose beamCapTransform = segment.beamCaps.get(top)
+								.get(first);
 							beamCaps.get(top)
 								.get(first)[modelIndex].setTransform(pose)
-									.mulPose(segment.beamCaps.get(top)
-										.get(first));
+									.mulPose(beamCapTransform.pose())
+									.mulNormal(beamCapTransform.normal());
+						}
 					}
 				}
 

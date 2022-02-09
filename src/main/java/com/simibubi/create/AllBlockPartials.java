@@ -114,8 +114,9 @@ public class AllBlockPartials {
 		TRACK_SEGMENT_LEFT = block("track/segment_left"),
 		TRACK_SEGMENT_RIGHT = block("track/segment_right"),
 		TRACK_TIE = block("track/tie"),
-		GIRDER_SEGMENT = block("metal_girder/segment"),
-		GIRDER_SEGMENT_2 = block("metal_girder/segment2"),
+		GIRDER_SEGMENT_TOP = block("metal_girder/segment_top"),
+		GIRDER_SEGMENT_MIDDLE = block("metal_girder/segment_middle"),
+		GIRDER_SEGMENT_BOTTOM = block("metal_girder/segment_bottom"),
 		
 		TRACK_STATION_OVERLAY = block("track/station_overlay"),
 		TRACK_STATION_OVERLAY_DIAGONAL = block("track/station_overlay_diagonal"),

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.client.tools.Tools;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
@@ -23,6 +24,7 @@ import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -33,6 +35,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -137,16 +141,27 @@ public class SchematicHandler {
 		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		StructurePlaceSettings placementSettings = new StructurePlaceSettings();
+		StructureTransform transform;
 		BlockPos pos;
 
 		pos = BlockPos.ZERO;
 		schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
+
 		placementSettings.setMirror(Mirror.FRONT_BACK);
 		pos = BlockPos.ZERO.east(size.getX() - 1);
 		schematic.placeInWorld(wMirroredFB, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
+		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
+			placementSettings.getMirror());
+		for (BlockEntity te : wMirroredFB.getRenderedTileEntities())
+			transform.apply(te);
+
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
 		pos = BlockPos.ZERO.south(size.getZ() - 1);
 		schematic.placeInWorld(wMirroredLR, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
+		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
+			placementSettings.getMirror());
+		for (BlockEntity te : wMirroredLR.getRenderedTileEntities())
+			transform.apply(te);
 
 		renderers.get(0)
 			.display(w);
@@ -187,11 +202,11 @@ public class SchematicHandler {
 				renderers.get(0)
 					.render(ms, buffer);
 		}
-		
+
 		if (active)
 			currentTool.getTool()
-			.renderOnSchematic(ms, buffer);
-		
+				.renderOnSchematic(ms, buffer);
+
 		ms.popPose();
 
 	}
@@ -227,7 +242,7 @@ public class SchematicHandler {
 				return;
 		}
 		currentTool.getTool()
-		.handleRightClick();
+			.handleRightClick();
 	}
 
 	public void onKeyInput(int key, boolean pressed) {
@@ -272,10 +287,12 @@ public class SchematicHandler {
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!player.getInventory().getItem(i)
+			if (!player.getInventory()
+				.getItem(i)
 				.sameItem(activeSchematicItem))
 				continue;
-			if (!ItemStack.tagMatches(player.getInventory().getItem(i), activeSchematicItem))
+			if (!ItemStack.tagMatches(player.getInventory()
+				.getItem(i), activeSchematicItem))
 				continue;
 			return false;
 		}
@@ -289,7 +306,8 @@ public class SchematicHandler {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(), transformation.getAnchor(), deployed));
+		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+			transformation.getAnchor(), deployed));
 	}
 
 	public void equip(Tools tool) {

@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import com.jozufozu.flywheel.repack.joml.Math;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.math.Matrix4f;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -24,7 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	public Couple<BlockPos> tePositions;
-	public Couple<Boolean> trackEnds;
 	public Couple<Vec3> starts;
 	public Couple<Vec3> axes;
 	public Couple<Vec3> normals;
@@ -44,37 +43,37 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	private double handleLength;
 
 	public BezierConnection(Couple<BlockPos> positions, Couple<Vec3> starts, Couple<Vec3> axes, Couple<Vec3> normals,
-		Couple<Boolean> targets, boolean primary, boolean girder) {
+		boolean primary, boolean girder) {
 		tePositions = positions;
 		this.starts = starts;
 		this.axes = axes;
 		this.normals = normals;
-		this.trackEnds = targets;
 		this.primary = primary;
 		this.hasGirder = girder;
 		resolved = false;
 	}
 
 	public BezierConnection secondary() {
-		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), trackEnds.swap(),
-			false, hasGirder);
+		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), false, hasGirder);
 	}
 
-	public BezierConnection(CompoundTag compound) {
-		this(Couple.deserializeEach(compound.getList("Positions", Tag.TAG_COMPOUND), NbtUtils::readBlockPos),
-			Couple.deserializeEach(compound.getList("Starts", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
+	public BezierConnection(CompoundTag compound, BlockPos localTo) {
+		this(Couple.deserializeEach(compound.getList("Positions", Tag.TAG_COMPOUND), NbtUtils::readBlockPos)
+			.map(b -> b.offset(localTo)),
+			Couple.deserializeEach(compound.getList("Starts", Tag.TAG_COMPOUND), VecHelper::readNBTCompound)
+				.map(v -> v.add(Vec3.atLowerCornerOf(localTo))),
 			Couple.deserializeEach(compound.getList("Axes", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
 			Couple.deserializeEach(compound.getList("Normals", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
-			Couple.create(compound.getBoolean("TrackEnd1"), compound.getBoolean("TrackEnd2")),
 			compound.getBoolean("Primary"), compound.getBoolean("Girder"));
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(BlockPos localTo) {
+		Couple<BlockPos> tePositions = this.tePositions.map(b -> b.subtract(localTo));
+		Couple<Vec3> starts = this.starts.map(v -> v.subtract(Vec3.atLowerCornerOf(localTo)));
+
 		CompoundTag compound = new CompoundTag();
 		compound.putBoolean("Girder", hasGirder);
 		compound.putBoolean("Primary", primary);
-		compound.putBoolean("TrackEnd1", trackEnds.getFirst());
-		compound.putBoolean("TrackEnd2", trackEnds.getSecond());
 		compound.put("Positions", tePositions.serializeEach(NbtUtils::writeBlockPos));
 		compound.put("Starts", starts.serializeEach(VecHelper::writeNBTCompound));
 		compound.put("Axes", axes.serializeEach(VecHelper::writeNBTCompound));
@@ -85,7 +84,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	public BezierConnection(FriendlyByteBuf buffer) {
 		this(Couple.create(buffer::readBlockPos), Couple.create(() -> VecHelper.read(buffer)),
 			Couple.create(() -> VecHelper.read(buffer)), Couple.create(() -> VecHelper.read(buffer)),
-			Couple.create(buffer::readBoolean), buffer.readBoolean(), buffer.readBoolean());
+			buffer.readBoolean(), buffer.readBoolean());
 	}
 
 	public void write(FriendlyByteBuf buffer) {
@@ -93,7 +92,6 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		starts.forEach(v -> VecHelper.write(v, buffer));
 		axes.forEach(v -> VecHelper.write(v, buffer));
 		normals.forEach(v -> VecHelper.write(v, buffer));
-		trackEnds.forEach(buffer::writeBoolean);
 		buffer.writeBoolean(primary);
 		buffer.writeBoolean(hasGirder);
 	}
@@ -344,8 +342,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	@OnlyIn(Dist.CLIENT)
 	public static class SegmentAngles {
 
-		public Matrix4f tieTransform;
-		public Couple<Matrix4f> railTransforms;
+		public Pose tieTransform;
+		public Couple<Pose> railTransforms;
 		public BlockPos lightPosition;
 
 	}
@@ -353,8 +351,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	@OnlyIn(Dist.CLIENT)
 	public static class GirderAngles {
 
-		public Couple<Matrix4f> beams;
-		public Couple<Couple<Matrix4f>> beamCaps;
+		public Couple<Pose> beams;
+		public Couple<Couple<Pose>> beamCaps;
 		public BlockPos lightPosition;
 
 	}
@@ -398,8 +396,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				.rotateZRadians(tieAngles.z)
 				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 			angles.tieTransform = mts.unwrap()
-				.last()
-				.pose();
+				.last();
 			angles.railTransforms = Couple.create(null, null);
 
 			// Rails
@@ -418,8 +415,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					.translate(0, -2 / 16f + (i % 2 == 0 ? 1 : -1) / 2048f - 1 / 256f, -1 / 32f)
 					.scale(1, 1, (float) diff.length() * scale);
 				angles.railTransforms.set(first, mts.unwrap()
-					.last()
-					.pose());
+					.last());
 			}
 
 			previousOffsets = railOffsets;
@@ -494,8 +490,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 					.scale(1, 1, (float) beamDiff.length() * scale);
 				angles.beams.set(first, mts.unwrap()
-					.last()
-					.pose());
+					.last());
 
 				// Caps
 				for (boolean top : Iterate.trueAndFalse) {
@@ -516,8 +511,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 						.scale(1, 1, (float) diff.length() * scale);
 					angles.beamCaps.get(top)
 						.set(first, mts.unwrap()
-							.last()
-							.pose());
+							.last());
 				}
 			}
 

@@ -84,11 +84,10 @@ public class TrackPlacement {
 
 		ITrackBlock track = (ITrackBlock) state2.getBlock();
 		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(level, pos2, state2, lookVec);
-		Vec3 axis2 = nearestTrackAxis.getFirst();
-		boolean front2 = nearestTrackAxis.getSecond() == AxisDirection.POSITIVE;
+		Vec3 axis2 = nearestTrackAxis.getFirst()
+			.scale(nearestTrackAxis.getSecond() == AxisDirection.POSITIVE ? -1 : 1);
 		Vec3 normal2 = track.getUpNormal(level, pos2, state2)
 			.normalize();
-		axis2 = axis2.scale(front2 ? -1 : 1);
 		Vec3 normedAxis2 = axis2.normalize();
 		Vec3 end2 = track.getCurveStart(level, pos2, state2, axis2);
 
@@ -137,7 +136,6 @@ public class TrackPlacement {
 		if ((parallel && normedAxis1.dot(normedAxis2) > 0) || (!parallel && (intersect[0] < 0 || intersect[1] < 0))) {
 			axis2 = axis2.scale(-1);
 			normedAxis2 = normedAxis2.scale(-1);
-			front2 = !front2;
 			end2 = track.getCurveStart(level, pos2, state2, axis2);
 			if (level.isClientSide) {
 				info.end2 = end2;
@@ -161,7 +159,7 @@ public class TrackPlacement {
 			BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
 			info.curve = new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), Couple.create(front1, front2), true, girder);
+				Couple.create(normal1, normal2), true, girder);
 		}
 
 		// S curve or Straight
@@ -281,7 +279,7 @@ public class TrackPlacement {
 			if (dist2 > dist1)
 				ex2 = (float) ((dist2 - dist1) / axis2.length());
 
-			double turnSize = Math.min(dist1, dist2);
+			double turnSize = Math.min(dist1, dist2) - .1d;
 			boolean ninety = (absAngle + .25f) % 90 < 1;
 
 			if (intersect[0] < 0 || intersect[1] < 0)
@@ -312,7 +310,7 @@ public class TrackPlacement {
 		info.curve = skipCurve ? null
 			: new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), Couple.create(front1, front2), true, girder);
+				Couple.create(normal1, normal2), true, girder);
 
 		info.valid = true;
 
@@ -324,13 +322,15 @@ public class TrackPlacement {
 			Vec3 axis = first ? axis1 : axis2;
 			BlockPos pos = first ? pos1 : pos2;
 			BlockState state = first ? state1 : state2;
+			if (state.hasProperty(TrackBlock.HAS_TURN))
+				state = state.setValue(TrackBlock.HAS_TURN, false);
 
 			for (int i = 0; i < extent; i++) {
 				Vec3 offset = axis.scale(i);
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
 				BlockState toPlace = state;
-				
+
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
 				if (stateAtPos.getBlock()instanceof ITrackBlock trackAtPos) {
@@ -361,8 +361,8 @@ public class TrackPlacement {
 
 		TrackTileEntity tte1 = (TrackTileEntity) te1;
 		TrackTileEntity tte2 = (TrackTileEntity) te2;
-		tte1.addConnection(front1, info.curve);
-		tte2.addConnection(front2, info.curve.secondary());
+		tte1.addConnection(info.curve);
+		tte2.addConnection(info.curve.secondary());
 		return info;
 	}
 

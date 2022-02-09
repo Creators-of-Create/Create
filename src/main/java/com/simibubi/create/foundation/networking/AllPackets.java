@@ -57,6 +57,7 @@ import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.gui.container.ClearContainerPacket;
 import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
+import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -132,6 +133,7 @@ public enum AllPackets {
 	PERSISTENT_DATA(ISyncPersistentData.PersistentDataPacket.class, ISyncPersistentData.PersistentDataPacket::new, PLAY_TO_CLIENT),
 	SYNC_POTATO_PROJECTILE_TYPES(PotatoProjectileTypeManager.SyncPacket.class, PotatoProjectileTypeManager.SyncPacket::new, PLAY_TO_CLIENT),
 	SYNC_RAIL_GRAPH(RailGraphSyncPacket.class, RailGraphSyncPacket::new, PLAY_TO_CLIENT),
+	REMOVE_TE(RemoveTileEntityPacket.class, RemoveTileEntityPacket::new, PLAY_TO_CLIENT),
 
 	;
 

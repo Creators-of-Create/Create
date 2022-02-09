@@ -26,7 +26,7 @@ public class TrackGraphHelper {
 		double length = axis.length();
 
 		List<Pair<BlockPos, DiscoveredLocation>> ends =
-			TrackPropagator.getEnds(level, pos, trackBlockState, null, true);
+			TrackPropagator.getEnds(level, pos, trackBlockState, true, null, null);
 
 		TrackGraph graph = null;
 		TrackNode frontNode = null;
@@ -46,7 +46,7 @@ public class TrackGraphHelper {
 			for (int i = 0; i < 32; i++) {
 				DiscoveredLocation loc = current;
 				List<Pair<BlockPos, DiscoveredLocation>> list =
-					TrackPropagator.getEnds(level, currentPos, level.getBlockState(currentPos), current, true);
+					TrackPropagator.getEnds(level, currentPos, level.getBlockState(currentPos), true, current, null);
 				if (!list.isEmpty()) {
 					currentPos = list.get(0)
 						.getFirst();

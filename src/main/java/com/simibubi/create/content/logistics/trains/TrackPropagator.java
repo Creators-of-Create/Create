@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
-import com.simibubi.create.content.logistics.trains.track.TrackBlock.TrackShape;
+import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -47,11 +47,10 @@ public class TrackPropagator {
 			currentPos = pos;
 			currentNode = location;
 		}
-
 	}
 
 	public static void onRailRemoved(LevelAccessor reader, BlockPos pos, BlockState state) {
-		List<Pair<BlockPos, DiscoveredLocation>> ends = getEnds(reader, pos, state, null, false);
+		List<Pair<BlockPos, DiscoveredLocation>> ends = getEnds(reader, pos, state, false, null, null);
 		TrackGraph foundGraph = null;
 		GlobalRailwayManager manager = Create.RAILWAYS;
 		TrackGraphSync sync = manager.sync;
@@ -78,9 +77,16 @@ public class TrackPropagator {
 		for (Pair<BlockPos, DiscoveredLocation> removedEnd : ends) {
 			BlockPos adjPos = removedEnd.getFirst();
 			BlockState adjState = reader.getBlockState(adjPos);
-
-			if (!getEnds(reader, adjPos, adjState, removedEnd.getSecond(), true).isEmpty())
-				toUpdate.add(onRailAdded(reader, adjPos, adjState));
+			List<Pair<BlockPos, DiscoveredLocation>> adjEnds =
+				getEnds(reader, adjPos, adjState, true, removedEnd.getSecond(), null);
+			if (adjEnds.isEmpty())
+				continue;
+			Vec3 filter = adjEnds.get(0)
+				.getSecond()
+				.getLocation()
+				.subtract(removedEnd.getSecond()
+					.getLocation());
+			toUpdate.add(onRailAdded(reader, adjPos, adjState, filter.normalize()));
 		}
 
 		for (TrackGraph railGraph : toUpdate)
@@ -89,7 +95,7 @@ public class TrackPropagator {
 		manager.markTracksDirty();
 	}
 
-	public static TrackGraph onRailAdded(LevelAccessor reader, BlockPos pos, BlockState state) {
+	public static TrackGraph onRailAdded(LevelAccessor reader, BlockPos pos, BlockState state, Vec3 axisFilter) {
 		// 1. Remove all immediately reachable node locations
 
 		GlobalRailwayManager manager = Create.RAILWAYS;
@@ -97,7 +103,7 @@ public class TrackPropagator {
 		List<FrontierEntry> frontier = new ArrayList<>();
 		Set<DiscoveredLocation> visited = new HashSet<>();
 		Set<TrackGraph> connectedGraphs = new HashSet<>();
-		addInitialEndsOf(reader, pos, state, frontier, false);
+		addInitialEndsOf(reader, pos, state, frontier, false, axisFilter);
 
 		int emergencyExit = 1000;
 		while (!frontier.isEmpty()) {
@@ -155,7 +161,7 @@ public class TrackPropagator {
 
 		// 2. Find the first graph node candidate nearby
 
-		addInitialEndsOf(reader, pos, state, frontier, true);
+		addInitialEndsOf(reader, pos, state, frontier, true, axisFilter);
 
 		emergencyExit = 1000;
 		while (!frontier.isEmpty()) {
@@ -229,8 +235,8 @@ public class TrackPropagator {
 	}
 
 	private static void addInitialEndsOf(LevelAccessor reader, BlockPos pos, BlockState state,
-		List<FrontierEntry> frontier, boolean ignoreTurns) {
-		for (Pair<BlockPos, DiscoveredLocation> initial : getEnds(reader, pos, state, null, ignoreTurns))
+		List<FrontierEntry> frontier, boolean ignoreTurns, Vec3 axisFilter) {
+		for (Pair<BlockPos, DiscoveredLocation> initial : getEnds(reader, pos, state, ignoreTurns, null, axisFilter))
 			frontier.add(new FrontierEntry(initial.getFirst(), pos, initial.getSecond()));
 	}
 
@@ -255,13 +261,13 @@ public class TrackPropagator {
 			}
 
 			for (Pair<BlockPos, DiscoveredLocation> pair : getEnds(reader, prevPos, reader.getBlockState(prevPos),
-				entry.currentNode, false))
+				false, entry.currentNode, null))
 				if (!pair.getSecond()
 					.equals(entry.prevNode))
 					ends.add(pair);
 		}
 
-		ends.addAll(getEnds(reader, entry.currentPos, currentState, entry.currentNode, false));
+		ends.addAll(getEnds(reader, entry.currentPos, currentState, false, entry.currentNode, null));
 		return ends;
 	}
 
@@ -304,7 +310,7 @@ public class TrackPropagator {
 
 	// TODO ITrackBlock
 	public static List<Pair<BlockPos, DiscoveredLocation>> getEnds(LevelReader reader, BlockPos pos, BlockState state,
-		@Nullable DiscoveredLocation fromEnd, boolean ignoreTurns) {
+		boolean ignoreTurns, @Nullable DiscoveredLocation fromEnd, @Nullable Vec3 axisFilter) {
 		Vec3 center = VecHelper.getCenterOf(pos);
 		List<Pair<BlockPos, DiscoveredLocation>> list = new ArrayList<>();
 
@@ -315,19 +321,34 @@ public class TrackPropagator {
 		if (state.getValue(TrackBlock.HAS_TURN) && blockEntity instanceof TrackTileEntity && !ignoreTurns) {
 			TrackTileEntity trackTileEntity = (TrackTileEntity) blockEntity;
 			trackTileEntity.getConnections()
-				.forEach(map -> map.forEach((connectedPos, bc) -> addToSet(fromEnd, list,
-					(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
-					bc)));
+				.forEach((connectedPos, bc) -> {
+					Vec3 curveHandle = bc.axes.getFirst();
+					if (axisFilter != null && !testAxisFilter(curveHandle.normalize(), axisFilter))
+						return;
+					addToSet(fromEnd, list,
+						(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b),
+						bc.normals::get, bc);
+				});
 		}
 
 		TrackShape shape = state.getValue(TrackBlock.SHAPE);
-		if (shape != TrackShape.NONE)
-			shape.getAxes()
-				.forEach(axis -> addToSet(fromEnd, list, (d, b) -> axis.scale(b ? d : -d)
+		if (shape == TrackShape.NONE)
+			return list;
+
+		shape.getAxes()
+			.forEach(axis -> {
+				if (axisFilter != null && !testAxisFilter(axis.normalize(), axisFilter))
+					return;
+				addToSet(fromEnd, list, (d, b) -> axis.scale(b ? d : -d)
 					.add(center)
-					.add(0, axis.y == 0 ? -.5 : 0, 0), b -> shape.getNormal(), null));
+					.add(0, axis.y == 0 ? -.5 : 0, 0), b -> shape.getNormal(), null);
+			});
 
 		return list;
+	}
+
+	private static boolean testAxisFilter(Vec3 axis, Vec3 filter) {
+		return Mth.equal(axis.distanceToSqr(filter), 0) || Mth.equal(axis.distanceToSqr(filter.scale(-1)), 0);
 	}
 
 	private static void addToSet(DiscoveredLocation fromEnd, List<Pair<BlockPos, DiscoveredLocation>> list,
