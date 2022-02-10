@@ -99,7 +99,7 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 				ms.mulPose(Vector3f.YP.rotationDegrees(90));
 		}
 
-		ms.translate(0, -1.5, 0);
+		ms.translate(0, -1.5 - 1 / 128f, 0);
 
 		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
 		BlockState air = Blocks.AIR.defaultBlockState();

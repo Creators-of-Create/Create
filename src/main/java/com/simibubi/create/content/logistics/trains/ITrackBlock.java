@@ -1,9 +1,18 @@
 package com.simibubi.create.content.logistics.trains;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
+import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -27,9 +36,70 @@ public interface ITrackBlock {
 	public BlockState getBogeyAnchor(BlockGetter world, BlockPos pos, BlockState state); // should be on bogey side
 
 	public boolean trackEquals(BlockState state1, BlockState state2);
-	
+
 	public default BlockState overlay(BlockGetter world, BlockPos pos, BlockState existing, BlockState placed) {
 		return existing;
+	}
+
+	public default double getElevationAtCenter(BlockGetter world, BlockPos pos, BlockState state) {
+		return isSlope(world, pos, state) ? .5 : 0;
+	}
+
+	public static Collection<DiscoveredLocation> walkConnectedTracks(BlockGetter world, TrackNodeLocation location,
+		boolean linear) {
+		List<DiscoveredLocation> list = new ArrayList<>();
+		for (BlockPos blockPos : location.allAdjacent()) {
+			BlockState blockState = world.getBlockState(blockPos);
+			if (blockState.getBlock()instanceof ITrackBlock track)
+				list.addAll(track.getConnected(world, blockPos, blockState, linear, location));
+		}
+		return list;
+	}
+
+	public default Collection<DiscoveredLocation> getConnected(BlockGetter world, BlockPos pos, BlockState state,
+		boolean linear, @Nullable TrackNodeLocation connectedTo) {
+		Vec3 center = Vec3.atBottomCenterOf(pos)
+			.add(0, getElevationAtCenter(world, pos, state), 0);
+		List<DiscoveredLocation> list = new ArrayList<>();
+		TrackShape shape = state.getValue(TrackBlock.SHAPE);
+		getTrackAxes(world, pos, state).forEach(axis -> {
+			addToListIfConnected(connectedTo, list, (d, b) -> axis.scale(b ? d : -d)
+				.add(center), b -> shape.getNormal(), null);
+		});
+
+		return list;
+	}
+
+	public static void addToListIfConnected(@Nullable TrackNodeLocation fromEnd, Collection<DiscoveredLocation> list,
+		BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
+		BezierConnection viaTurn) {
+
+		DiscoveredLocation firstLocation = new DiscoveredLocation(offsetFactory.apply(0.5d, true)).viaTurn(viaTurn)
+			.withNormal(normalFactory.apply(true));
+		DiscoveredLocation secondLocation = new DiscoveredLocation(offsetFactory.apply(0.5d, false)).viaTurn(viaTurn)
+			.withNormal(normalFactory.apply(false));
+
+		boolean skipFirst = false;
+		boolean skipSecond = false;
+
+		if (fromEnd != null) {
+			boolean equalsFirst = firstLocation.equals(fromEnd);
+			boolean equalsSecond = secondLocation.equals(fromEnd);
+
+			// not reachable from this end
+			if (!equalsFirst && !equalsSecond)
+				return;
+
+			if (equalsFirst)
+				skipFirst = true;
+			if (equalsSecond)
+				skipSecond = true;
+		}
+
+		if (!skipFirst)
+			list.add(firstLocation);
+		if (!skipSecond)
+			list.add(secondLocation);
 	}
 
 	@OnlyIn(Dist.CLIENT)

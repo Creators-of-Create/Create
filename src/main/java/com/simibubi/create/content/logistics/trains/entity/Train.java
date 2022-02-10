@@ -338,7 +338,7 @@ public class Train {
 			offset += carriage.bogeySpacing;
 
 			if (i < carriageSpacing.size())
-				offset += carriageSpacing.get(carriageSpacing.size() - i - 1);
+				offset += carriageSpacing.get(backwards ? carriageSpacing.size() - i - 1 : i);
 		}
 
 		GlobalStation currentStation = getCurrentStation();

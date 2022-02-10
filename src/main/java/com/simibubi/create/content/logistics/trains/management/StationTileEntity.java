@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.management;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
-import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.CarriageBogey;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
@@ -26,7 +26,6 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -325,12 +324,15 @@ public class StationTileEntity extends SmartTileEntity {
 		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, trackPosition, trackState));
 
 		DiscoveredLocation location = null;
-		List<Pair<BlockPos, DiscoveredLocation>> ends =
-			TrackPropagator.getEnds(level, trackPosition, trackState, true, null, null);
-		for (Pair<BlockPos, DiscoveredLocation> pair : ends)
-			if (trackPosition.relative(assemblyDirection)
-				.equals(pair.getFirst()))
-				location = pair.getSecond();
+		Vec3 centre = Vec3.atBottomCenterOf(trackPosition)
+			.add(0, track.getElevationAtCenter(level, trackPosition, trackState), 0);
+		Collection<DiscoveredLocation> ends = track.getConnected(level, trackPosition, trackState, true, null);
+		Vec3 targetOffset = Vec3.atLowerCornerOf(assemblyDirection.getNormal());
+		for (DiscoveredLocation end : ends)
+			if (Mth.equal(0, targetOffset.distanceToSqr(end.getLocation()
+				.subtract(centre)
+				.normalize())))
+				location = end;
 		if (location == null)
 			return;
 
@@ -349,13 +351,14 @@ public class StationTileEntity extends SmartTileEntity {
 		TrackGraph graph = null;
 		TrackNode secondNode = null;
 
-		for (int i = 0; i < assemblyLength + 20; i++) {
+		for (int j = 0; j < assemblyLength * 2 + 40; j++) {
+			double i = j / 2d;
 			if (points.size() == pointOffsets.size())
 				break;
 
 			DiscoveredLocation currentLocation = location;
 			location = new DiscoveredLocation(location.getLocation()
-				.add(directionVec));
+				.add(directionVec.scale(.5)));
 
 			if (graph == null)
 				graph = Create.RAILWAYS.getGraph(level, currentLocation);

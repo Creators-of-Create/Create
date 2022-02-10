@@ -159,7 +159,7 @@ public class TravellingPoint {
 					TrackEdge newEdge = entry.getValue();
 					Vec3 currentDirection = edge.getDirection(node1, node2, false);
 					Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
-					if (currentDirection.dot(newDirection) < 0)
+					if (currentDirection.dot(newDirection) < 3 / 4f)
 						continue;
 
 					validTargets.add(entry);
@@ -197,7 +197,7 @@ public class TravellingPoint {
 						.get(node1);
 					Vec3 currentDirection = edge.getDirection(node1, node2, true);
 					Vec3 newDirection = newEdge.getDirection(newNode, node1, false);
-					if (currentDirection.dot(newDirection) < 0)
+					if (currentDirection.dot(newDirection) < 3 / 4f)
 						continue;
 
 					validTargets.add(entry);

@@ -1,5 +1,11 @@
 package com.simibubi.create.content.logistics.trains;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
@@ -17,7 +23,7 @@ public class TrackNodeLocation extends Vec3i {
 	public static TrackNodeLocation fromPackedPos(BlockPos bufferPos) {
 		return new TrackNodeLocation(bufferPos);
 	}
-	
+
 	private TrackNodeLocation(BlockPos readBlockPos) {
 		super(readBlockPos.getX(), readBlockPos.getY(), readBlockPos.getZ());
 	}
@@ -36,9 +42,21 @@ public class TrackNodeLocation extends Vec3i {
 		return (this.getY() + this.getZ() * 31) * 31 + this.getX();
 	}
 
+	public Collection<BlockPos> allAdjacent() {
+		Set<BlockPos> set = new HashSet<>();
+		Vec3 vec3 = getLocation();
+		double step = 1 / 8f;
+		for (int x : Iterate.positiveAndNegative)
+			for (int y : Iterate.positiveAndNegative)
+				for (int z : Iterate.positiveAndNegative)
+					set.add(new BlockPos(vec3.add(x * step, y * step, z * step)));
+		return set;
+	}
+
 	public static class DiscoveredLocation extends TrackNodeLocation {
 
 		BezierConnection turn = null;
+		boolean forceNode = false;
 		Vec3 normal;
 
 		public DiscoveredLocation(double p_121865_, double p_121866_, double p_121867_) {
@@ -51,6 +69,13 @@ public class TrackNodeLocation extends Vec3i {
 
 		public DiscoveredLocation viaTurn(BezierConnection turn) {
 			this.turn = turn;
+			if (turn != null)
+				forceNode();
+			return this;
+		}
+		
+		public DiscoveredLocation forceNode() {
+			forceNode = true;
 			return this;
 		}
 		
@@ -65,6 +90,10 @@ public class TrackNodeLocation extends Vec3i {
 
 		public BezierConnection getTurn() {
 			return turn;
+		}
+		
+		public boolean shouldForceNode() {
+			return forceNode;
 		}
 
 	}

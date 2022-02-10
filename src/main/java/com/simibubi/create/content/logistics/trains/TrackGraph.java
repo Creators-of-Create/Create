@@ -409,11 +409,12 @@ public class TrackGraph {
 			if (location.distanceTo(camera) > 50)
 				continue;
 
-			Vec3 v1 = location.add(0, 3 / 16f, 0);
-			Vec3 v2 = v1.add(node.normal.scale(0.75f));
+			Vec3 yOffset = new Vec3(0, 3 / 16f, 0);
+			Vec3 v1 = location.add(yOffset);
+			Vec3 v2 = v1.add(node.normal.scale(0.125f));
 			CreateClient.OUTLINER.showLine(Integer.valueOf(node.netId), v1, v2)
 				.colored(Color.mixColors(Color.WHITE, color, 1))
-				.lineWidth(1 / 8f);
+				.lineWidth(1 / 4f);
 
 			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
 			if (map == null)
@@ -428,8 +429,10 @@ public class TrackGraph {
 
 				TrackEdge edge = entry.getValue();
 				if (!edge.isTurn()) {
-					CreateClient.OUTLINER
-						.showLine(edge, edge.getPosition(node, other, 0), edge.getPosition(node, other, 1))
+					CreateClient.OUTLINER.showLine(edge, edge.getPosition(node, other, 0)
+						.add(yOffset),
+						edge.getPosition(node, other, 1)
+							.add(yOffset))
 						.colored(color)
 						.lineWidth(1 / 16f);
 					continue;
@@ -440,7 +443,7 @@ public class TrackGraph {
 				for (int i = 0; i <= turn.getSegmentCount(); i++) {
 					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
 					if (previous != null)
-						CreateClient.OUTLINER.showLine(previous, previous, current)
+						CreateClient.OUTLINER.showLine(previous, previous.add(yOffset), current.add(yOffset))
 							.colored(color)
 							.lineWidth(1 / 16f);
 					previous = current;

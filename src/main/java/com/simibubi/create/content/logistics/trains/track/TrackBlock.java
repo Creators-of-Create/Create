@@ -1,6 +1,9 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -15,7 +18,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
+import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.StationTileEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -144,8 +150,41 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public void tick(BlockState p_60462_, ServerLevel p_60463_, BlockPos p_60464_, Random p_60465_) {
-		for (Vec3 axis : getTrackAxes(p_60463_, p_60464_, p_60462_))
-			TrackPropagator.onRailAdded(p_60463_, p_60464_, p_60462_, axis.normalize());
+		TrackPropagator.onRailAdded(p_60463_, p_60464_, p_60462_);
+	}
+
+	@Override
+	public Collection<DiscoveredLocation> getConnected(BlockGetter world, BlockPos pos, BlockState state,
+		boolean linear, TrackNodeLocation connectedTo) {
+		Collection<DiscoveredLocation> list;
+
+		if (getTrackAxes(world, pos, state).size() > 1) {
+			Vec3 center = Vec3.atBottomCenterOf(pos)
+				.add(0, getElevationAtCenter(world, pos, state), 0);
+			TrackShape shape = state.getValue(TrackBlock.SHAPE);
+			list = new ArrayList<>();
+			for (Vec3 axis : getTrackAxes(world, pos, state))
+				for (boolean fromCenter : Iterate.trueAndFalse)
+					ITrackBlock.addToListIfConnected(connectedTo, list,
+						(d, b) -> axis.scale(b ? 0 : fromCenter ? -d : d)
+							.add(center),
+						b -> shape.getNormal(), null);
+		} else
+			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
+
+		if (!state.getValue(HAS_TURN))
+			return list;
+		if (linear)
+			return list;
+
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof TrackTileEntity trackTE))
+			return list;
+
+		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
+		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
+			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get, bc));
+		return list;
 	}
 
 	@Override
