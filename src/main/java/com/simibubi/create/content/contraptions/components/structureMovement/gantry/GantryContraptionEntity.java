@@ -175,6 +175,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks) { }
 
 	public void updateClientMotion() {
