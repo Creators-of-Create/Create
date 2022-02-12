@@ -38,7 +38,8 @@ public abstract class LevelRendererMixin {
 	private Minecraft minecraft;
 
 	@Shadow
-	private @Nullable Frustum capturedFrustum;
+	@Nullable
+	private Frustum capturedFrustum;
 
 	@Shadow
 	private Frustum cullingFrustum;
