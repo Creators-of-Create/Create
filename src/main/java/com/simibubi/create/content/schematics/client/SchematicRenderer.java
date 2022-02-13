@@ -72,7 +72,6 @@ public class SchematicRenderer {
 	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
 		if (!active)
 			return;
-		buffer.getBuffer(RenderType.solid());
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
 			if (!usedBlockRenderLayers.contains(layer))
 				continue;

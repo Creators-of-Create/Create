@@ -98,10 +98,13 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		final Vector3f normal = new Vector3f();
 		final Vector4f lightPos = new Vector4f();
 
-		final boolean disableDiffuseMult = this.disableDiffuseMult || !OptifineHandler.shouldApplyDiffuse();
-		DiffuseLightCalculator diffuseCalculator = this.diffuseCalculator;
+		DiffuseLightCalculator diffuseCalculator = ForcedDiffuseState.getForcedCalculator();
+		final boolean disableDiffuseMult = this.disableDiffuseMult || (OptifineHandler.isUsingShaders() && diffuseCalculator == null);
 		if (diffuseCalculator == null) {
-			diffuseCalculator = DiffuseLightCalculator.forCurrentLevel();
+			diffuseCalculator = this.diffuseCalculator;
+			if (diffuseCalculator == null) {
+				diffuseCalculator = DiffuseLightCalculator.forCurrentLevel();
+			}
 		}
 
 		final int vertexCount = template.getVertexCount();
@@ -216,6 +219,10 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 
 	public boolean isEmpty() {
 		return template.isEmpty();
+	}
+
+	public PoseStack getTransforms() {
+		return transforms;
 	}
 
 	@Override
@@ -439,8 +446,8 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	}
 
 	@FunctionalInterface
-	public interface IVertexLighter {
-		public int getPackedLight(float x, float y, float z);
+	public interface VertexLighter {
+		int getPackedLight(float x, float y, float z);
 	}
 
 }

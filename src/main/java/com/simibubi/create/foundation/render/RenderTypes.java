@@ -29,7 +29,7 @@ public class RenderTypes extends RenderStateShard {
 	public static RenderType getOutlineTranslucent(ResourceLocation texture, boolean cull) {
 		return RenderType.create(createLayerName("outline_translucent" + (cull ? "_cull" : "")),
 			DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
-				.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+				.setShaderState(cull ? RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER : RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
 				.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 				.setCullState(cull ? CULL : NO_CULL)
@@ -42,7 +42,7 @@ public class RenderTypes extends RenderStateShard {
 	public static RenderType getGlowingSolid(ResourceLocation texture) {
 		return RenderType.create(createLayerName("glowing_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
 			true, false, RenderType.CompositeState.builder()
-				.setShaderState(NEW_ENTITY_SHADER)
+				.setShaderState(RENDERTYPE_BEACON_BEAM_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
@@ -58,7 +58,7 @@ public class RenderTypes extends RenderStateShard {
 	public static RenderType getGlowingTranslucent(ResourceLocation texture) {
 		return RenderType.create(createLayerName("glowing_translucent"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
 			256, true, true, RenderType.CompositeState.builder()
-				.setShaderState(NEW_ENTITY_SHADER)
+				.setShaderState(RENDERTYPE_BEACON_BEAM_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
 				.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 				.setCullState(NO_CULL)
@@ -78,7 +78,6 @@ public class RenderTypes extends RenderStateShard {
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(BLOCK_SHEET)
-				.setTransparencyState(NO_TRANSPARENCY)
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
 				.createCompositeState(true));
@@ -89,7 +88,7 @@ public class RenderTypes extends RenderStateShard {
 
 	private static final RenderType ITEM_PARTIAL_TRANSLUCENT = RenderType.create(createLayerName("item_partial_translucent"),
 		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
-			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER)
 			.setTextureState(BLOCK_SHEET)
 			.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 			.setLightmapState(LIGHTMAP)
@@ -102,7 +101,7 @@ public class RenderTypes extends RenderStateShard {
 
 	private static final RenderType FLUID = RenderType.create(createLayerName("fluid"),
 		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
-			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER)
 			.setTextureState(BLOCK_SHEET_MIPPED)
 			.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 			.setLightmapState(LIGHTMAP)

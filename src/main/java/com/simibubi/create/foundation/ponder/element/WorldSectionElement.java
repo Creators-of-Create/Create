@@ -348,12 +348,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	@Override
 	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
 		float pt) {
-		transformMS(ms, pt);
-		renderStructure(world, ms, buffer, type, fade);
-	}
-
-	protected void renderStructure(PonderWorld world, PoseStack ms, MultiBufferSource buffer, RenderType type,
-		float fade) {
 		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 
 		int code = hashCode() ^ world.hashCode();
@@ -367,9 +361,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (contraptionBuffer.isEmpty())
 			return;
 
+		transformMS(contraptionBuffer.getTransforms(), pt);
 		int light = lightCoordsFromFade(fade);
 		contraptionBuffer
-			.fullNormalTransform()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(type));
 	}

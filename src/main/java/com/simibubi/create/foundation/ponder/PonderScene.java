@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instruction.HideAllInstruction;
 import com.simibubi.create.foundation.ponder.instruction.PonderInstruction;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
+import com.simibubi.create.foundation.render.ForcedDiffuseState;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
@@ -225,7 +226,7 @@ public class PonderScene {
 	}
 
 	public void renderScene(SuperRenderTypeBuffer buffer, PoseStack ms, float pt) {
-		OptifineHandler.pushForceDiffuse();
+		ForcedDiffuseState.pushCalculator(DiffuseLightCalculator.DEFAULT);
 		ms.pushPose();
 		Minecraft mc = Minecraft.getInstance();
 		Entity prevRVE = mc.cameraEntity;
@@ -244,7 +245,7 @@ public class PonderScene {
 		outliner.renderOutlines(ms, buffer, pt);
 
 		ms.popPose();
-		OptifineHandler.popForceDiffuse();
+		ForcedDiffuseState.popCalculator();
 	}
 
 	public void renderOverlay(PonderUI screen, PoseStack ms, float partialTicks) {
