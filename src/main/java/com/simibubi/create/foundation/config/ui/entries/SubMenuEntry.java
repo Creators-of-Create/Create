@@ -27,6 +27,17 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 		listeners.add(button);
 	}
 
+	public SubMenuEntry(SubMenuConfigScreen parent, String label, SubMenuConfigScreen subMenuConfigScreen) {
+		super(label);
+
+		button = new BoxWidget(0, 0, 35, 16)
+				.showingElement(AllIcons.I_CONFIG_OPEN.asStencil().at(10, 0))
+				.withCallback(() -> ScreenOpener.open(subMenuConfigScreen));
+		button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(button)));
+
+		listeners.add(button);
+	}
+
 	@Override
 	public void tick() {
 		super.tick();

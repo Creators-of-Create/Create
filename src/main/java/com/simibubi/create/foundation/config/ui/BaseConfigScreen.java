@@ -58,20 +58,20 @@ public class BaseConfigScreen extends ConfigScreen {
 		return new BaseConfigScreen(parent);
 	}
 
-	BoxWidget clientConfigWidget;
-	BoxWidget commonConfigWidget;
-	BoxWidget serverConfigWidget;
-	BoxWidget goBack;
-	BoxWidget others;
-	BoxWidget title;
+	protected BoxWidget clientConfigWidget;
+	protected BoxWidget commonConfigWidget;
+	protected BoxWidget serverConfigWidget;
+	protected BoxWidget goBack;
+	protected BoxWidget others;
+	protected BoxWidget title;
 
-	ForgeConfigSpec clientSpec;
-	ForgeConfigSpec commonSpec;
-	ForgeConfigSpec serverSpec;
-	String clientTile = "Client Config";
-	String commonTile = "Common Config";
-	String serverTile = "Server Config";
-	String modID;
+	protected ForgeConfigSpec clientSpec;
+	protected ForgeConfigSpec commonSpec;
+	protected ForgeConfigSpec serverSpec;
+	protected String clientTile = "Client Config";
+	protected String commonTile = "Common Config";
+	protected String serverTile = "Server Config";
+	protected String modID;
 	protected boolean returnOnClose;
 
 	public BaseConfigScreen(Screen parent, @Nonnull String modID) {
@@ -232,7 +232,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		drawCenteredString(ms, minecraft.font, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
 	}
 
-	private void linkTo(Screen screen) {
+	protected  void linkTo(Screen screen) {
 		returnOnClose = false;
 		ScreenOpener.open(screen);
 	}

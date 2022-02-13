@@ -84,8 +84,12 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		labelTooltip.add(new TextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
+	public ValueEntry(String label) {
+		super(label);
+	}
+
 	@Override
-	protected void setEditable(boolean b) {
+	public void setEditable(boolean b) {
 		editable = b;
 		resetButton.active = editable && !isCurrentValueDefault();
 		resetButton.animateGradientFromState();

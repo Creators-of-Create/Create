@@ -122,7 +122,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	protected abstract Function<String, T> getParser();
 
 	@Override
-	protected void setEditable(boolean b) {
+	public void setEditable(boolean b) {
 		super.setEditable(b);
 		textField.setEditable(b);
 	}

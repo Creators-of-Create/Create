@@ -393,7 +393,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		return false;
 	}
 
-	private void updateFilter(String search) {
+	protected void updateFilter(String search) {
 		if (list.search(search)) {
 			this.search.setTextColor(Theme.i(Theme.Key.TEXT));
 		} else {
@@ -401,7 +401,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		}
 	}
 
-	private void attemptBackstep() {
+	protected void attemptBackstep() {
 		if (ConfigHelper.changes.isEmpty() || !(parent instanceof BaseConfigScreen)) {
 			ScreenOpener.open(parent);
 			return;
@@ -449,7 +449,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		addAnnotationsToConfirm(screen).open(this);
 	}
 
-	private ConfirmationScreen addAnnotationsToConfirm(ConfirmationScreen screen) {
+	protected ConfirmationScreen addAnnotationsToConfirm(ConfirmationScreen screen) {
 		AtomicBoolean relog = new AtomicBoolean(false);
 		AtomicBoolean restart = new AtomicBoolean(false);
 		ConfigHelper.changes.values().forEach(change -> {

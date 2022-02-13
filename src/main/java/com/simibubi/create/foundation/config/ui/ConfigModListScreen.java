@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.config.ui.compat.flywheel.FlwConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
@@ -105,6 +106,8 @@ public class ConfigModListScreen extends ConfigScreen {
 
 			if (ConfigHelper.hasAnyForgeConfig(id)) {
 				button.withCallback(() -> ScreenOpener.open(new BaseConfigScreen(parent, id)));
+			} else if (id.equals("flywheel")) {
+				button.withCallback(() -> ScreenOpener.open(new FlwConfigScreen(parent, id)));
 			} else {
 				button.active = false;
 				button.updateColorsFromState();
