@@ -149,7 +149,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
-    implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta12.1")
+    implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
 
 
     // i'll leave this here commented for easier testing

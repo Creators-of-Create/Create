@@ -137,7 +137,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 
 			// Hidden Slots
 			for (int i = 1; i < STACKS_PER_COMPARTMENT; i++)
-				addSlot(new SlotItemHandler(inventory, baseIndex + i, -100, -100));
+				addSlot(new SlotItemHandler(inventory, baseIndex + i, -10000, -10000));
 		}
 
 		addPlayerSlots(-12, 166);

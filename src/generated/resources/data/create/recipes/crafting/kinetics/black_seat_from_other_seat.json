@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "#",
-    "-"
-  ],
-  "key": {
-    "#": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "tag": "forge:dyes/black"
     },
-    "-": {
+    {
       "tag": "create:seats"
     }
-  },
+  ],
   "result": {
     "item": "create:black_seat"
   }
