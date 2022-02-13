@@ -37,9 +37,11 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		float animation = getAnimationProgress(pt, leftHanded, mainHand);
 
 		// Core glows
-		float multiplier = Mth.sin(worldTime * 5);
+		float multiplier;
 		if (mainHand || offHand) 
 			multiplier = animation;
+		else
+			multiplier = Mth.sin(worldTime * 5);
 
 		int lightItensity = (int) (15 * Mth.clamp(multiplier, 0, 1));
 		int glowLight = LightTexture.pack(lightItensity, max(lightItensity, 4));

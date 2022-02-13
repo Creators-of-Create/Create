@@ -128,6 +128,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		Font font = Minecraft.getInstance().font;
 
 		matrixStack.pushPose();
+
+		matrixStack.pushPose();
 		matrixStack.translate(0, 15, 0);
 		boolean singleOutput = recipe.getOutputChance() == 1;
 		int xOffset = singleOutput ? 0 : -7;
@@ -170,6 +172,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			subCategory.draw(sequencedRecipe, matrixStack, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
+		matrixStack.popPose();
+
 		matrixStack.popPose();
 	}
 
