@@ -6,10 +6,10 @@
   ],
   "key": {
     "I": {
-      "tag": "c:brass_blocks"
+      "tag": "c:storage_blocks/brass"
     },
     "P": {
-      "tag": "c:brass_plates"
+      "tag": "c:plates/brass"
     }
   },
   "result": {

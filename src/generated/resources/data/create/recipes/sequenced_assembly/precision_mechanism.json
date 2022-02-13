@@ -1,7 +1,7 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "tag": "c:gold_plates"
+    "tag": "c:plates/gold"
   },
   "transitionalItem": {
     "item": "create:incomplete_precision_mechanism"
@@ -46,7 +46,7 @@
           "item": "create:incomplete_precision_mechanism"
         },
         {
-          "tag": "c:iron_nuggets"
+          "tag": "c:nuggets/iron"
         }
       ],
       "results": [

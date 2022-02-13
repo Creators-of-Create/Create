@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "tag": "c:zinc_ores"
+    "tag": "c:ores/zinc"
   },
   "result": "create:zinc_ingot",
   "experience": 1.0,

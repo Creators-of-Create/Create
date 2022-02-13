@@ -9,7 +9,7 @@
       "item": "minecraft:andesite"
     },
     "B": {
-      "tag": "c:iron_nuggets"
+      "tag": "c:nuggets/iron"
     }
   },
   "result": {

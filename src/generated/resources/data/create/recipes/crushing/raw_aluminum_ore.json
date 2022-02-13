@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "c:aluminum_raw_ores"
+      "tag": "c:raw_ores/aluminum"
     }
   ],
   "results": [
@@ -19,7 +19,7 @@
     {
       "condition": "fabric:item_tags_populated",
       "values": [
-        "c:aluminum_raw_ores"
+        "c:raw_ores/aluminum"
       ]
     }
   ]

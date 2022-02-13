@@ -13,7 +13,7 @@
       "item": "create:andesite_alloy"
     },
     "I": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {

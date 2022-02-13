@@ -10,10 +10,10 @@
       "item": "minecraft:redstone_torch"
     },
     "C": {
-      "tag": "c:brass_plates"
+      "tag": "c:plates/brass"
     },
     "R": {
-      "tag": "c:redstone_dusts"
+      "tag": "c:dusts/redstone"
     },
     "S": {
       "tag": "c:stone"

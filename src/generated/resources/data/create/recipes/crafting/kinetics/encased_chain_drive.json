@@ -10,7 +10,7 @@
       "item": "create:shaft"
     },
     "B": {
-      "tag": "c:iron_nuggets"
+      "tag": "c:nuggets/iron"
     },
     "C": {
       "item": "create:andesite_casing"

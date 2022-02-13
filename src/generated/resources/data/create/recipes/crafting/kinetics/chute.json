@@ -6,7 +6,7 @@
   ],
   "key": {
     "A": {
-      "tag": "c:iron_plates"
+      "tag": "c:plates/iron"
     },
     "I": {
       "item": "create:andesite_alloy"

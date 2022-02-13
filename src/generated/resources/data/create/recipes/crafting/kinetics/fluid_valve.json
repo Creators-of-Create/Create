@@ -13,7 +13,7 @@
       "item": "create:fluid_pipe"
     },
     "I": {
-      "tag": "c:iron_plates"
+      "tag": "c:plates/iron"
     }
   },
   "result": {

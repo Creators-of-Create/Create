@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "c:quicksilver_raw_ores"
+      "tag": "c:raw_ores/quicksilver"
     }
   ],
   "results": [
@@ -19,7 +19,7 @@
     {
       "condition": "fabric:item_tags_populated",
       "values": [
-        "c:quicksilver_raw_ores"
+        "c:raw_ores/quicksilver"
       ]
     }
   ]

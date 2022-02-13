@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "c:silver_raw_blocks"
+      "tag": "c:raw_blocks/silver"
     }
   ],
   "results": [
@@ -21,7 +21,7 @@
     {
       "condition": "fabric:item_tags_populated",
       "values": [
-        "c:silver_raw_blocks"
+        "c:raw_blocks/silver"
       ]
     }
   ]

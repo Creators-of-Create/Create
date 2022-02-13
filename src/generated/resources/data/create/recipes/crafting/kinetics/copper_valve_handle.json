@@ -9,7 +9,7 @@
       "item": "create:andesite_alloy"
     },
     "C": {
-      "tag": "c:copper_plates"
+      "tag": "c:plates/copper"
     }
   },
   "result": {

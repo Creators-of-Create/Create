@@ -9,7 +9,7 @@
       "item": "minecraft:spruce_planks"
     },
     "X": {
-      "tag": "c:colorless_glass"
+      "tag": "c:glass/colorless"
     }
   },
   "result": {

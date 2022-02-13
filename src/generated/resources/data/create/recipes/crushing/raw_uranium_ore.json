@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "c:uranium_raw_ores"
+      "tag": "c:raw_ores/uranium"
     }
   ],
   "results": [
@@ -19,7 +19,7 @@
     {
       "condition": "fabric:item_tags_populated",
       "values": [
-        "c:uranium_raw_ores"
+        "c:raw_ores/uranium"
       ]
     }
   ]

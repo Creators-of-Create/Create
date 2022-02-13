@@ -2,7 +2,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "tag": "c:brass_ingots"
+      "tag": "c:ingots/brass"
     }
   ],
   "results": [

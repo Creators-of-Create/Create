@@ -7,13 +7,13 @@
   ],
   "key": {
     "S": {
-      "tag": "c:gold_plates"
+      "tag": "c:plates/gold"
     },
     "C": {
       "item": "create:cogwheel"
     },
     "W": {
-      "tag": "c:wooden_chests"
+      "tag": "c:chests/wooden"
     },
     "L": {
       "tag": "c:leather"
