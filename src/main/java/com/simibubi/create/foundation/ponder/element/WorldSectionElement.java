@@ -302,13 +302,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	@Override
-	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
-		float pt) {
-		transformMS(ms, pt);
-		renderStructure(world, ms, buffer, type, fade);
-	}
-
-	@Override
 	public void renderFirst(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
 		int light = -1;
 		if (fade != 1)
@@ -345,9 +338,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.pose(),
 				overlayMS.last()
 					.normal());
-//			Minecraft.getInstance()
-//				.getBlockRenderer()
-//				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random());
+//			ModelUtil.VANILLA_RENDERER
+//				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random(),
+//					EmptyModelData.INSTANCE);
 			BlockState state = world.getBlockState(pos);
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
@@ -365,13 +358,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		ms.popPose();
 	}
 
-	protected void renderStructure(PonderWorld world, PoseStack ms, MultiBufferSource buffer, RenderType type,
-		float fade) {
+	@Override
+	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
+		float pt) {
 		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
-		int code = hashCode() ^ world.hashCode();
 
+		int code = hashCode() ^ world.hashCode();
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.chunkBufferLayers()
 			.indexOf(type));
+
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
@@ -379,8 +374,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (contraptionBuffer.isEmpty())
 			return;
 
+		transformMS(contraptionBuffer.getTransforms(), pt);
 		int light = lightCoordsFromFade(fade);
-		contraptionBuffer.light(light)
+		contraptionBuffer
+			.light(light)
 			.renderInto(ms, buffer.getBuffer(type));
 	}
 
@@ -418,8 +415,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
 //		ForgeHooksClient.setRenderType(layer);
-		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
-			.getBlockRenderer();
+		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 		PoseStack ms = new PoseStack();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(512);
@@ -428,7 +424,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
-			FluidState ifluidstate = world.getFluidState(pos);
+			FluidState fluidState = world.getFluidState(pos);
 
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -438,8 +434,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				dispatcher.renderBatched(state, pos, world, ms, builder, true, random);
 			}
 
-			if (!ifluidstate.isEmpty() && ItemBlockRenderTypes.getRenderLayer(ifluidstate) == layer)
-				dispatcher.renderLiquid(pos, world, builder, ifluidstate);
+			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
+				dispatcher.renderLiquid(pos, world, builder, fluidState);
 
 			ms.popPose();
 		});

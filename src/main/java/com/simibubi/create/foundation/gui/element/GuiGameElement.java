@@ -40,8 +40,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -225,7 +225,7 @@ public class GuiGameElement {
 		@Override
 		protected void renderModel(BlockRenderDispatcher blockRenderer, MultiBufferSource.BufferSource buffer,
 			RenderType renderType, VertexConsumer vb, PoseStack ms) {
-			if (blockState.getBlock() instanceof FireBlock) {
+			if (blockState.getBlock() instanceof BaseFireBlock) {
 				Lighting.setupForFlatItems();
 //				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 //				buffer.endBatch();
