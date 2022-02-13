@@ -107,6 +107,16 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.25f)
 			.registerAndAssign(Items.SWEET_BERRIES),
 
+		GLOW_BERRIES = create("glow_berry").damage(2)
+			.reloadTicks(10)
+			.knockback(0.05f)
+			.velocity(1.05f)
+			.renderTumbling()
+			.splitInto(2)
+			.soundPitch(1.2f)
+			.onEntityHit(potion(MobEffects.GLOWING, 1, 200, false))
+			.registerAndAssign(Items.GLOW_BERRIES),
+
 		CHOCOLATE_BERRIES = create("chocolate_berry").damage(4)
 			.reloadTicks(10)
 			.knockback(0.2f)
@@ -121,7 +131,7 @@ public class BuiltinPotatoProjectileTypes {
 			.knockback(0.05f)
 			.velocity(1.25f)
 			.renderTumbling()
-			.onEntityHit(potion(MobEffects.POISON, 1,160, true))
+			.onEntityHit(potion(MobEffects.POISON, 1, 160, true))
 			.registerAndAssign(Items.POISONOUS_POTATO),
 
 		CHORUS_FRUIT = create("chorus_fruit").damage(3)
@@ -197,7 +207,7 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.5f)
 			.registerAndAssign(Items.MELON_SLICE),
 
-		GLISTENING_MELON = create("glistening_melon").damage(5)
+		GLISTERING_MELON = create("glistering_melon").damage(5)
 			.reloadTicks(8)
 			.knockback(0.1f)
 			.velocity(1.45f)
@@ -292,7 +302,7 @@ public class BuiltinPotatoProjectileTypes {
 		};
 	}
 
-	public static void applyEffect(LivingEntity entity, MobEffectInstance effect) {
+	private static void applyEffect(LivingEntity entity, MobEffectInstance effect) {
 		if (effect.getEffect().isInstantenous())
 			effect.getEffect().applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
 		else

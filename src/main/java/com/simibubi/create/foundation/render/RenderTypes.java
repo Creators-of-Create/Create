@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.render;
 
+import java.io.IOException;
+
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
@@ -8,20 +10,29 @@ import com.simibubi.create.lib.mixin.client.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterShadersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 // TODO 1.17: use custom shaders instead of vanilla ones
 public class RenderTypes extends RenderStateShard {
 
+	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> Shaders.glowingShader);
+
 	private static final RenderType OUTLINE_SOLID =
-		RenderTypeAccessor.create$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
+		RenderTypeAccessor.create$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(AllSpecialTextures.BLANK.getLocation(), false, false))
+				.setCullState(CULL)
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
-				.createCompositeState(true));
+				.createCompositeState(false));
 
 	public static RenderType getOutlineSolid() {
 		return OUTLINE_SOLID;
@@ -29,7 +40,7 @@ public class RenderTypes extends RenderStateShard {
 
 	public static RenderType getOutlineTranslucent(ResourceLocation texture, boolean cull) {
 		return RenderTypeAccessor.create$create(createLayerName("outline_translucent" + (cull ? "_cull" : "")),
-			DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
+			DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
 				.setShaderState(cull ? RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER : RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
 				.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -37,14 +48,15 @@ public class RenderTypes extends RenderStateShard {
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
 				.setWriteMaskState(COLOR_WRITE)
-				.createCompositeState(true));
+				.createCompositeState(false));
 	}
 
 	public static RenderType getGlowingSolid(ResourceLocation texture) {
 		return RenderTypeAccessor.create$create(createLayerName("glowing_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
 			true, false, RenderType.CompositeState.builder()
-				.setShaderState(RENDERTYPE_BEACON_BEAM_SHADER)
+				.setShaderState(GLOWING_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setCullState(CULL)
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
 				.createCompositeState(true));
@@ -59,10 +71,9 @@ public class RenderTypes extends RenderStateShard {
 	public static RenderType getGlowingTranslucent(ResourceLocation texture) {
 		return RenderTypeAccessor.create$create(createLayerName("glowing_translucent"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
 			256, true, true, RenderType.CompositeState.builder()
-				.setShaderState(RENDERTYPE_BEACON_BEAM_SHADER)
+				.setShaderState(GLOWING_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
 				.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-				.setCullState(NO_CULL)
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
 				.createCompositeState(true));
@@ -79,6 +90,7 @@ public class RenderTypes extends RenderStateShard {
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(BLOCK_SHEET)
+				.setCullState(CULL)
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
 				.createCompositeState(true));
@@ -101,7 +113,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	private static final RenderType FLUID = RenderTypeAccessor.create$create(createLayerName("fluid"),
-		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
+		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
 			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER)
 			.setTextureState(BLOCK_SHEET_MIPPED)
 			.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -120,6 +132,17 @@ public class RenderTypes extends RenderStateShard {
 	// Mmm gimme those protected fields
 	private RenderTypes() {
 		super(null, null, null);
+	}
+
+	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	private static class Shaders {
+		private static ShaderInstance glowingShader;
+
+		@SubscribeEvent
+		public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
+			ResourceManager resourceManager = event.getResourceManager();
+			event.registerShader(new ShaderInstance(resourceManager, Create.asResource("glowing_shader"), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
+		}
 	}
 
 }
