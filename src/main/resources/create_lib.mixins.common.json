@@ -25,6 +25,7 @@
     "ItemMixin",
     "ItemStackMixin",
     "LavaFluidMixin",
+    "LevelChunkMixin",
     "LevelMixin",
     "LiquidBlockMixin",
     "LivingEntityMixin",
