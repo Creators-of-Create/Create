@@ -13,7 +13,7 @@
       "item": "minecraft:lever"
     },
     "R": {
-      "tag": "c:redstone_dusts"
+      "tag": "c:dusts/redstone"
     },
     "S": {
       "tag": "c:stone"

@@ -13,7 +13,7 @@
       "item": "create:fluid_pipe"
     },
     "I": {
-      "tag": "c:brass_plates"
+      "tag": "c:plates/brass"
     }
   },
   "result": {

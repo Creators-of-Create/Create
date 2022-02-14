@@ -10,7 +10,7 @@
       "tag": "minecraft:planks"
     },
     "C": {
-      "tag": "c:copper_plates"
+      "tag": "c:plates/copper"
     },
     "S": {
       "tag": "minecraft:logs"

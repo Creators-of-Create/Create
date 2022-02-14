@@ -7,13 +7,13 @@
   ],
   "key": {
     "A": {
-      "tag": "c:gold_ingots"
+      "tag": "c:ingots/gold"
     },
     "E": {
       "item": "create:electron_tube"
     },
     "S": {
-      "tag": "c:wooden_rods"
+      "tag": "c:rods/wooden"
     }
   },
   "result": {

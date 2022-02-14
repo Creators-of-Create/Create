@@ -10,7 +10,7 @@
       "item": "create:andesite_alloy"
     },
     "R": {
-      "tag": "c:redstone_dusts"
+      "tag": "c:dusts/redstone"
     }
   },
   "result": {

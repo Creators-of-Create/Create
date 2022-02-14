@@ -35,7 +35,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
-	protected void setEditable(boolean b) {
+	public void setEditable(boolean b) {
 		super.setEditable(b);
 		button.active = b;
 	}

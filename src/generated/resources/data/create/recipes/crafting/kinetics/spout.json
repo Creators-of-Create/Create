@@ -13,7 +13,7 @@
       "item": "minecraft:dried_kelp"
     },
     "S": {
-      "tag": "c:copper_nuggets"
+      "tag": "c:nuggets/copper"
     }
   },
   "result": {

@@ -126,6 +126,7 @@ public class CreateClient implements ClientModInitializer {
 	public static void invalidateRenderers() {
 		BUFFER_CACHE.invalidate();
 
+		SCHEMATIC_HANDLER.updateRenderers();
 		ContraptionRenderDispatcher.reset();
 	}
 

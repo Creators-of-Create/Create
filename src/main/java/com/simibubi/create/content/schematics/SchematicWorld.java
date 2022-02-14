@@ -13,6 +13,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -142,8 +143,13 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	@Override
-	public int getBrightness(LightLayer p_226658_1_, BlockPos p_226658_2_) {
+	public int getBrightness(LightLayer lightLayer, BlockPos pos) {
 		return 15;
+	}
+
+	@Override
+	public float getShade(Direction face, boolean hasShade) {
+		return 1f;
 	}
 
 	@Override

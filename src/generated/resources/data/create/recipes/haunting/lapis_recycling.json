@@ -2,7 +2,7 @@
   "type": "create:haunting",
   "ingredients": [
     {
-      "tag": "c:lapis_lazulis"
+      "tag": "c:gems/lapis"
     }
   ],
   "results": [

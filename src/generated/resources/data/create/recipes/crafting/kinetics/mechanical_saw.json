@@ -10,10 +10,10 @@
       "item": "create:andesite_casing"
     },
     "A": {
-      "tag": "c:iron_plates"
+      "tag": "c:plates/iron"
     },
     "I": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {

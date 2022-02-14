@@ -1560,32 +1560,32 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
-		.initialProperties(() -> Blocks.IRON_BLOCK)
-		.properties(p -> p.requiresCorrectToolForDrops())
-		.transform(pickaxeOnly())
-		.tag(BlockTags.NEEDS_IRON_TOOL)
-		.tag(Tags.Blocks.STORAGE_BLOCKS)
-		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("blocks/zinc"))
-		.tag(Tags.Items.STORAGE_BLOCKS)
-		.build()
-		.lang("Block of Zinc")
-		.register();
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.properties(p -> p.requiresCorrectToolForDrops())
+			.transform(pickaxeOnly())
+			.tag(BlockTags.NEEDS_IRON_TOOL)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
+			.tag(BlockTags.BEACON_BASE_BLOCKS)
+			.transform(tagBlockAndItem("storage_blocks/zinc"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
+			.build()
+			.lang("Block of Zinc")
+			.register();
 
 	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", p -> new Block(p))
-		.initialProperties(() -> Blocks.IRON_BLOCK)
-		.properties(p -> p.requiresCorrectToolForDrops())
-		.transform(pickaxeOnly())
-		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
-			.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
-		.tag(BlockTags.NEEDS_IRON_TOOL)
-		.tag(Tags.Blocks.STORAGE_BLOCKS)
-		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("blocks/brass"))
-		.tag(Tags.Items.STORAGE_BLOCKS)
-		.build()
-		.lang("Block of Brass")
-		.register();
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.properties(p -> p.requiresCorrectToolForDrops())
+			.transform(pickaxeOnly())
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+					.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
+			.tag(BlockTags.NEEDS_IRON_TOOL)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
+			.tag(BlockTags.BEACON_BASE_BLOCKS)
+			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
+			.build()
+			.lang("Block of Brass")
+			.register();
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {

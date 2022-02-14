@@ -6,10 +6,10 @@
   ],
   "key": {
     "S": {
-      "tag": "c:iron_nuggets"
+      "tag": "c:nuggets/iron"
     },
     "P": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "C": {
       "item": "create:andesite_alloy"

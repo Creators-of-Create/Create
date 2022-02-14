@@ -1,6 +1,7 @@
 package com.simibubi.create.lib.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ArmorItem;
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin {
 
+	@Unique
 	private static final ResourceLocation create$copperArmorLocation = new ResourceLocation("create", "textures/models/armor/copper.png");
 
 	@Inject(method = "getArmorLocation", at = @At("HEAD"), cancellable = true)

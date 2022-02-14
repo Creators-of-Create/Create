@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "c:iron_ingots"
+            "tag": "c:ingots/iron"
           }
         ]
       }

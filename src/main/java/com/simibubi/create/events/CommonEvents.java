@@ -2,6 +2,7 @@ package com.simibubi.create.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
@@ -180,12 +181,12 @@ public class CommonEvents {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 
-	public static void onLoadWorld(LevelAccessor world) {
+	public static void onLoadWorld(Executor executor, LevelAccessor world) {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
 	}
 
-	public static void onUnloadWorld(LevelAccessor world) {
+	public static void onUnloadWorld(Executor executor, LevelAccessor world) {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
 		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
@@ -221,25 +222,36 @@ public class CommonEvents {
 	}
 
 	public static void register() {
+		// Fabric Events
 		ServerTickEvents.END_SERVER_TICK.register(CommonEvents::onServerTick);
 		ServerChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
 		ServerTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
 		ServerEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
-		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
-		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
 		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopping);
-		ServerWorldEvents.LOAD.register((server, world) -> CommonEvents.onLoadWorld(world));
-		ServerWorldEvents.UNLOAD.register((server, world) -> CommonEvents.onUnloadWorld(world));
-		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
-		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
-		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+		ServerWorldEvents.LOAD.register(CommonEvents::onLoadWorld);
+		ServerWorldEvents.UNLOAD.register(CommonEvents::onUnloadWorld);
+		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
+		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
+		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
+		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
+		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
+		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
+		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
+		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
+		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
+		// Fabric Biome API requires biomes to only be registered once
 		CommonEvents.onBiomeLoad();
-		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
 
 		// External Events
 
-		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
+		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
+		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
+		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
+		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
 		StartRidingCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
 		LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
@@ -248,23 +260,14 @@ public class CommonEvents {
 		LivingEntityEvents.TICK.register(ExtendoGripItem::holdingExtendoGripIncreasesRange);
 		LivingEntityEvents.TICK.register(DivingBootsItem::accellerateDescentUnderwater);
 		LivingEntityEvents.TICK.register(DivingHelmetItem::breatheUnderwater);
-		EntityEyeHeightCallback.EVENT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
 		LivingEntityEvents.DROPS.register(CrushingWheelTileEntity::handleCrushedMobDrops);
 		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelTileEntity::crushingIsFortunate);
 		LivingEntityEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
-		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
-		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
+		EntityEyeHeightCallback.EVENT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
 		BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
 		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
-		PlayerTickEndCallback.EVENT.register(HauntedBellPulser::hauntedBellCreatesPulse);
-		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);
 		EntityReadExtraDataCallback.EVENT.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
-		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
-		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
-		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
-		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
-		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 	}
 
 }

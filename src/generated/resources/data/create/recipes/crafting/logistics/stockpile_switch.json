@@ -9,10 +9,10 @@
       "item": "create:brass_casing"
     },
     "R": {
-      "tag": "c:redstone_dusts"
+      "tag": "c:dusts/redstone"
     },
     "I": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "C": {
       "item": "minecraft:comparator"

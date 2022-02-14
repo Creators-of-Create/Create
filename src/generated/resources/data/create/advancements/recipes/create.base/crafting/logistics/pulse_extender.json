@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "c:redstone_dusts"
+            "tag": "c:dusts/redstone"
           }
         ]
       }

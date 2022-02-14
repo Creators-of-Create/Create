@@ -332,41 +332,38 @@ public class ClientEvents {
 
 	public static void register() {
 		ModBusEvents.registerClientReloadListeners();
-		ParticleManagerRegistrationCallback.EVENT.register(AllParticleTypes::registerFactories);
 
 		ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onTick);
 		ClientTickEvents.START_CLIENT_TICK.register(ClientEvents::onTickStart);
-		RenderTickStartCallback.EVENT.register(ClientEvents::onRenderTick);
-		ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
+		ClientTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
+		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		ClientWorldEvents.LOAD.register(ClientEvents::onLoadWorld);
 		ClientWorldEvents.UNLOAD.register(ClientEvents::onUnloadWorld);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(ClientEvents::onRenderWorld);
-		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
-		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
-		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
-		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
-		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
-
 		ClientChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
-		ClientTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
+		ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
 		ClientEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
-		ClientWorldEvents.LOAD.register((client, world) -> CommonEvents.onLoadWorld(world));
-		ClientWorldEvents.UNLOAD.register((client, world) -> CommonEvents.onUnloadWorld(world));
-
-		// External Events
-
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(ClientEvents::onRenderWorld);
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
+		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
+		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
 		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);
 		UseBlockCallback.EVENT.register(EjectorTargetHandler::rightClickingBlocksSelectsThem);
 		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
 		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
+
+		// External Events
+
+		ParticleManagerRegistrationCallback.EVENT.register(AllParticleTypes::registerFactories);
+		RenderTickStartCallback.EVENT.register(ClientEvents::onRenderTick);
+		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
+		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
-		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
+		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
-		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
-		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
+		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
+		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
 
 		// Flywheel Events
 

@@ -7,7 +7,7 @@
   ],
   "key": {
     "B": {
-      "tag": "c:brass_ingots"
+      "tag": "c:ingots/brass"
     },
     "C": {
       "item": "create:brass_casing"

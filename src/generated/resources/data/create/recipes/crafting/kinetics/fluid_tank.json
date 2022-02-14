@@ -7,10 +7,10 @@
   ],
   "key": {
     "B": {
-      "tag": "c:copper_plates"
+      "tag": "c:plates/copper"
     },
     "C": {
-      "tag": "c:wooden_barrels"
+      "tag": "c:barrels/wooden"
     }
   },
   "result": {

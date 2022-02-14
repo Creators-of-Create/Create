@@ -125,8 +125,8 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 
 	public static abstract class Entry extends ObjectSelectionList.Entry<Entry> implements TickableGuiEventListener {
 		protected List<GuiEventListener> listeners;
-		protected Map<String, String> annotations;
-		protected String path;
+		public Map<String, String> annotations;
+		public String path;
 
 		protected Entry() {
 			listeners = new ArrayList<>();
@@ -155,7 +155,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 			return listeners;
 		}
 
-		protected void setEditable(boolean b) {}
+		public void setEditable(boolean b) {}
 
 		protected boolean isCurrentValueChanged() {
 			if (path == null) {
@@ -169,7 +169,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 
 		protected static final float labelWidthMult = 0.4f;
 
-		protected TextStencilElement label;
+		public TextStencilElement label;
 		protected List<Component> labelTooltip;
 		protected String unit = null;
 		protected LerpedFloat differenceAnimation = LerpedFloat.linear().startWithValue(0);

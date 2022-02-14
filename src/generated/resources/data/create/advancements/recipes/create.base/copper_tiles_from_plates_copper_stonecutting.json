@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:vertical_framed_glass_from_colorless_glass_stonecutting"
+      "create:copper_tiles_from_plates_copper_stonecutting"
     ]
   },
   "criteria": {
-    "has_colorless_glass": {
+    "has_plates_copper": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "c:colorless_glass"
+            "tag": "c:plates/copper"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:vertical_framed_glass_from_colorless_glass_stonecutting"
+        "recipe": "create:copper_tiles_from_plates_copper_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_colorless_glass",
+      "has_plates_copper",
       "has_the_recipe"
     ]
   ]

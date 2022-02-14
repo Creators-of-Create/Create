@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "tag": "c:gold_plates"
+      "tag": "c:plates/gold"
     },
     "D": {
       "item": "create:depot"

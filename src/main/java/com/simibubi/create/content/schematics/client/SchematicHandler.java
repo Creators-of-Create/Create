@@ -193,6 +193,12 @@ public class SchematicHandler {
 
 	}
 
+	public void updateRenderers() {
+		for (SchematicRenderer renderer : renderers) {
+			renderer.update();
+		}
+	}
+
 	public void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		if (!active)
 			return;

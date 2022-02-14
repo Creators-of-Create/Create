@@ -13,7 +13,7 @@
       "item": "create:refined_radiance"
     },
     "S": {
-      "tag": "c:colorless_glass"
+      "tag": "c:glass/colorless"
     }
   },
   "result": {

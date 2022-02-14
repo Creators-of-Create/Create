@@ -35,7 +35,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 	@Override
 	protected void renderSafe(PortableStorageInterfaceTileEntity te, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		if (Backend.isOn()) return;
+		if (Backend.canUseInstancing(te.getLevel()))
+			return;
 
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);

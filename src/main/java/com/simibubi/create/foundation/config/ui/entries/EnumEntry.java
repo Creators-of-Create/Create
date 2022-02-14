@@ -61,7 +61,7 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	}
 
 	@Override
-	protected void setEditable(boolean b) {
+	public void setEditable(boolean b) {
 		super.setEditable(b);
 		cycleLeft.active = b;
 		cycleLeft.animateGradientFromState();

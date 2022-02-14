@@ -67,30 +67,28 @@ public class SchematicRenderer {
 		if (mc.level == null || mc.player == null || !changed)
 			return;
 
-		redraw(mc);
+		redraw();
 		changed = false;
 	}
 
 	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
 		if (!active)
 			return;
-		buffer.getBuffer(RenderType.solid());
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
 			if (!usedBlockRenderLayers.contains(layer))
 				continue;
 			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
-			superByteBuffer.disableDiffuseMult();
 			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
 		}
 		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffer);
 	}
 
-	protected void redraw(Minecraft minecraft) {
+	protected void redraw() {
 		usedBlockRenderLayers.clear();
 		startedBufferBuilders.clear();
 
 		final SchematicWorld blockAccess = schematic;
-		final BlockRenderDispatcher blockRendererDispatcher = minecraft.getBlockRenderer();
+		final BlockRenderDispatcher blockRendererDispatcher = Minecraft.getInstance().getBlockRenderer();
 
 		List<BlockState> blockstates = new LinkedList<>();
 		Map<RenderType, BufferBuilder> buffers = new HashMap<>();

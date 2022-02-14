@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:horizontal_framed_glass_from_colorless_glass_stonecutting"
+      "create:horizontal_framed_glass_from_glass_colorless_stonecutting"
     ]
   },
   "criteria": {
-    "has_colorless_glass": {
+    "has_glass_colorless": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "c:colorless_glass"
+            "tag": "c:glass/colorless"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:horizontal_framed_glass_from_colorless_glass_stonecutting"
+        "recipe": "create:horizontal_framed_glass_from_glass_colorless_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_colorless_glass",
+      "has_glass_colorless",
       "has_the_recipe"
     ]
   ]
