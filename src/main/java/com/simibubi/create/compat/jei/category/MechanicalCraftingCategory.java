@@ -28,6 +28,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 
 public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
 
@@ -86,11 +87,11 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	private static int getWidth(CraftingRecipe recipe) {
-		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getWidth() : 1;
+		return recipe instanceof IShapedRecipe<?> ? ((IShapedRecipe<?>) recipe).getRecipeWidth() : 1;
 	}
 
 	private static int getHeight(CraftingRecipe recipe) {
-		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getHeight() : 1;
+		return recipe instanceof IShapedRecipe<?> ? ((IShapedRecipe<?>) recipe).getRecipeHeight() : 1;
 	}
 
 	@Override
