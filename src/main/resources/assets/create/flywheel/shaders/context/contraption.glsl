@@ -1,5 +1,4 @@
 #use "flywheel:context/fog.glsl"
-#use "flywheel:core/diffuse.glsl"
 
 uniform sampler3D uLightVolume;
 
