@@ -17,9 +17,9 @@ public class CreateDisplay<R extends Recipe<?>> implements Display {
 	private final List<EntryIngredient> input;
 	private final List<EntryIngredient> output;
 
-	public CreateDisplay(R recipe, String id) {
+	public CreateDisplay(R recipe, CategoryIdentifier<CreateDisplay<R>> id) {
 		this.recipe = recipe;
-		this.uid = CategoryIdentifier.of(Create.asResource(id));
+		this.uid = id;
 		this.input = EntryIngredients.ofIngredients(recipe.getIngredients());
 		this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
 	}

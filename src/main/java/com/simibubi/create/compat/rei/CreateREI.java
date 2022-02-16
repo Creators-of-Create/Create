@@ -236,14 +236,14 @@ public class CreateREI implements REIClientPlugin {
 	public void registerCategories(CategoryRegistry registry) {
 		allCategories.forEach(registry::add);
 		allCategories.forEach(createRecipeCategory -> registry.removePlusButton(createRecipeCategory.getCategoryIdentifier()));
-		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registry.addWorkstations(c.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, ((Supplier<ItemStack> )s).get()))));
+		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registry.addWorkstations(c.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, s.get()))));
 	}
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		allCategories.forEach(c -> c.recipes.forEach(s -> {
 			for (Recipe<?> recipe : s.get()) {
-				registry.add(new CreateDisplay<>(recipe, c.getCategoryIdentifier().getPath()), recipe);
+				registry.add(new CreateDisplay<>(recipe, c.getCategoryIdentifier()), recipe);
 			}
 		}));
 
