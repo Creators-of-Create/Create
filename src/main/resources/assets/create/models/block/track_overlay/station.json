@@ -1,0 +1,34 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create:block/track_station_indicator",
+		"1_2": "create:block/depot_top",
+		"particle": "create:block/track_station_indicator"
+	},
+	"elements": [
+		{
+			"from": [1, 1, 1],
+			"to": [15, 3, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, -2, 9]},
+			"faces": {
+				"north": {"uv": [1, 14, 15, 16], "texture": "#1_2"},
+				"east": {"uv": [1, 14, 15, 16], "texture": "#1_2"},
+				"south": {"uv": [1, 14, 15, 16], "texture": "#1_2"},
+				"west": {"uv": [1, 14, 15, 16], "texture": "#1_2"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#1"},
+				"down": {"uv": [1, 0, 15, 14], "texture": "#1_2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "block",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

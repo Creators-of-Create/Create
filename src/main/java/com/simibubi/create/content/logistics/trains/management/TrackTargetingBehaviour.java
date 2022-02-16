@@ -84,9 +84,13 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 				.get(0));
 	}
 
+	public static enum RenderedTrackOverlayType {
+		STATION, SIGNAL, DUAL_SIGNAL;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction, int tintColor, PoseStack ms,
-		MultiBufferSource buffer, int light, int overlay) {
+		MultiBufferSource buffer, int light, int overlay, RenderedTrackOverlayType type) {
 		BlockState trackState = level.getBlockState(pos);
 		Block block = trackState.getBlock();
 		if (!(block instanceof ITrackBlock))
@@ -97,8 +101,7 @@ public class TrackTargetingBehaviour extends TileEntityBehaviour {
 
 		ITrackBlock track = (ITrackBlock) block;
 		SuperByteBuffer sbb =
-			CachedBufferer.partial(track.prepareStationOverlay(level, pos, trackState, direction, ms), trackState);
-		sbb.color(tintColor);
+			CachedBufferer.partial(track.prepareTrackOverlay(level, pos, trackState, direction, ms, type), trackState);
 		sbb.light(LevelRenderer.getLightColor(level, pos));
 		sbb.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 

@@ -7,40 +7,38 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class GlobalStation {
+public class GlobalStation extends TrackEdgePoint {
 
-	public UUID id;
-	public Couple<TrackNodeLocation> edgeLocation;
-	public double position;
 	public String name;
 	public BlockPos stationPos;
 
 	public WeakReference<Train> nearestTrain;
+	
+	@Nullable
+	public SignalBoundary boundary;
 
 	public GlobalStation(UUID id, BlockPos stationPos) {
-		this.id = id;
+		super(id);
 		this.stationPos = stationPos;
 		name = "Track Station";
 		nearestTrain = new WeakReference<Train>(null);
 	}
 
 	public GlobalStation(CompoundTag nbt) {
-		id = nbt.getUUID("Id");
+		super(nbt);
 		name = nbt.getString("Name");
-		position = nbt.getDouble("Position");
 		stationPos = NbtUtils.readBlockPos(nbt.getCompound("StationPos"));
 		nearestTrain = new WeakReference<Train>(null);
-		edgeLocation = Couple.deserializeEach(nbt.getList("Edge", Tag.TAG_COMPOUND),
-			tag -> TrackNodeLocation.fromPackedPos(NbtUtils.readBlockPos(tag)));
 	}
 
 	public void migrate(LevelAccessor level) {

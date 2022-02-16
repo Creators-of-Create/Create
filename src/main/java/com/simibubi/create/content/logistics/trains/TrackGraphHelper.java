@@ -106,7 +106,7 @@ public class TrackGraphHelper {
 					frontNode = node;
 				if (backwards) {
 					backNode = node;
-					position = distance + .5;
+					position = distance + axis.length() / 2;
 				}
 				break;
 			}

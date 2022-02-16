@@ -174,6 +174,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.logistics.trains.management.StationBlock;
 import com.simibubi.create.content.logistics.trains.management.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalBlock;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
@@ -1309,6 +1310,16 @@ public class AllBlocks {
 		.lang("Train Station")
 		.item(TrackTargetingBlockItem::new)
 		.transform(customItemModel("_", "block"))
+		.register();
+	
+	public static final BlockEntry<SignalBlock> TRACK_SIGNAL = REGISTRATE.block("track_signal", SignalBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+		.lang("Train Signal")
+		.item(TrackTargetingBlockItem::new)
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<StandardBogeyBlock> SMALL_BOGEY =

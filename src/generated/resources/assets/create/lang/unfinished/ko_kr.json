@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 115",
+	"_": "Missing Localizations: 116",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -487,6 +487,7 @@
 	"block.create.tiled_glass": "타일 유리",
 	"block.create.tiled_glass_pane": "타일 유리판",
 	"block.create.track": "UNLOCALIZED: Train Track",
+	"block.create.track_signal": "UNLOCALIZED: Train Signal",
 	"block.create.track_station": "UNLOCALIZED: Train Station",
 	"block.create.tuff_pillar": "응회암 기둥",
 	"block.create.turntable": "돌림판",

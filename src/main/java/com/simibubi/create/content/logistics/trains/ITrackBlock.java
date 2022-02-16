@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
+import com.simibubi.create.content.logistics.trains.management.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -103,8 +104,8 @@ public interface ITrackBlock {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public PartialModel prepareStationOverlay(BlockGetter world, BlockPos pos, BlockState state,
-		AxisDirection direction, PoseStack transform);
+	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
+		AxisDirection direction, PoseStack transform, RenderedTrackOverlayType type);
 
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,

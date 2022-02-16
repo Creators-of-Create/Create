@@ -9,23 +9,32 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.entity.Carriage.CarriageBogey;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -41,9 +50,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class Train {
-
-	public static final double acceleration = 0.005f;
-	public static final double topSpeed = 1.2f;
 
 	public double speed = 0;
 	public double targetSpeed = 0;
@@ -67,6 +73,9 @@ public class Train {
 	public boolean doubleEnded;
 	public List<Carriage> carriages;
 	public List<Integer> carriageSpacing;
+
+	public boolean updateSignalBlocks;
+	public List<UUID> occupiedSignalBlocks;
 
 	List<TrainMigration> migratingPoints;
 	public int migrationCooldown;
@@ -92,22 +101,40 @@ public class Train {
 
 		doubleEnded = carriages.stream()
 			.anyMatch(c -> c.contraption.hasBackwardControls());
-		navigation = new Navigation(this, graph);
+		navigation = new Navigation(this);
 		runtime = new ScheduleRuntime(this);
 		heldForAssembly = true;
 		migratingPoints = new ArrayList<>();
 		currentStation = null;
 		manualSteer = SteerDirection.NONE;
+		occupiedSignalBlocks = new ArrayList<>();
+	}
+
+	public void earlyTick(Level level) {
+		status.tick(level);
+		if (graph == null && !migratingPoints.isEmpty())
+			reattachToTracks(level);
+		if (graph == null)
+			return;
+
+		if (updateSignalBlocks) {
+			updateSignalBlocks = false;
+			collectInitiallyOccupiedSignalBlocks();
+		}
+
+		for (Iterator<UUID> iterator = occupiedSignalBlocks.iterator(); iterator.hasNext();) {
+			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(iterator.next());
+			if (signalEdgeGroup == null) {
+				iterator.remove();
+				continue;
+			}
+			signalEdgeGroup.trains.add(this);
+		}
 	}
 
 	public void tick(Level level) {
-		status.tick(level);
-
-		if (graph == null) {
-			if (!migratingPoints.isEmpty())
-				reattachToTracks(level);
+		if (graph == null)
 			return;
-		}
 
 		updateConductors();
 		runtime.tick(level);
@@ -119,8 +146,9 @@ public class Train {
 
 		double distance = speed;
 		Carriage previousCarriage = null;
+		int carriageCount = carriages.size();
 
-		for (int i = 0; i < carriages.size(); i++) {
+		for (int i = 0; i < carriageCount; i++) {
 			Carriage carriage = carriages.get(i);
 			if (previousCarriage != null) {
 				int target = carriageSpacing.get(i - 1);
@@ -142,8 +170,8 @@ public class Train {
 		boolean blocked = false;
 		boolean iterateFromBack = speed < 0;
 
-		for (int index = 0; index < carriages.size(); index++) {
-			int i = iterateFromBack ? carriages.size() - 1 - index : index;
+		for (int index = 0; index < carriageCount; index++) {
+			int i = iterateFromBack ? carriageCount - 1 - index : index;
 			double leadingStress = i == 0 ? 0 : stress[i - 1] * -(iterateFromBack ? trailingModifier : leadingModifier);
 			double trailingStress =
 				i == stress.length ? 0 : stress[i] * (iterateFromBack ? leadingModifier : trailingModifier);
@@ -154,7 +182,7 @@ public class Train {
 				: carriages.get(i - 1)
 					.getTrailingPoint();
 
-			TravellingPoint toFollowBackward = i == carriages.size() - 1 ? null
+			TravellingPoint toFollowBackward = i == carriageCount - 1 ? null
 				: carriages.get(i + 1)
 					.getLeadingPoint();
 
@@ -164,8 +192,11 @@ public class Train {
 				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
 
 			double totalStress = leadingStress + trailingStress;
+			boolean first = i == 0;
+			boolean last = i == carriageCount - 1;
+			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
-				carriage.travel(level, graph, distance + totalStress, forwardControl, backwardControl);
+				carriage.travel(level, graph, distance + totalStress, forwardControl, backwardControl, carriageType);
 			blocked |= carriage.blocked;
 
 			if (index == 0) {
@@ -185,14 +216,44 @@ public class Train {
 		updateNavigationTarget(distance);
 	}
 
+	public ISignalBoundaryListener frontSignalListener() {
+		return (distance, couple) -> {
+			UUID groupId = couple.getSecond()
+				.getSecond();
+			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
+			SignalBoundary boundary = couple.getFirst();
+			if (signalEdgeGroup != null) {
+				signalEdgeGroup.reserved = boundary;
+				occupiedSignalBlocks.add(groupId);
+			}
+		};
+	}
+
+	public ISignalBoundaryListener backSignalListener() {
+		return (distance, couple) -> {
+			occupiedSignalBlocks.remove(couple.getSecond()
+				.getFirst());
+		};
+	}
+
 	private void updateNavigationTarget(double distance) {
 		if (navigation.destination != null) {
 			boolean recalculate = navigation.distanceToDestination % 100 > 20;
 			boolean imminentRecalculate = navigation.distanceToDestination > 5;
 			navigation.distanceToDestination -= Math.abs(distance);
-			if (recalculate && navigation.distanceToDestination % 100 <= 20
-				|| imminentRecalculate && navigation.distanceToDestination <= 5)
+			boolean signalMode = navigation.waitingForSignal != null;
+			if (signalMode) {
+				navigation.distanceToSignal -= Math.abs(distance);
+				recalculate = navigation.distanceToSignal % 100 > 20;
+			}
+			if (recalculate && (signalMode ? navigation.distanceToSignal : navigation.distanceToDestination) % 100 <= 20
+				|| imminentRecalculate && navigation.distanceToDestination <= 5) {
+				if (signalMode) {
+					navigation.waitingForSignal = null;
+					return;
+				}
 				navigation.startNavigation(navigation.destination, false);
+			}
 		}
 	}
 
@@ -204,9 +265,10 @@ public class Train {
 
 	private void tickPassiveSlowdown() {
 		if (!manualTick && navigation.destination == null && speed != 0) {
-			if (speed > 0)
+			double acceleration = AllConfigs.SERVER.trains.getAccelerationMPTT();
+			if (speed > 0) {
 				speed = Math.max(speed - acceleration, 0);
-			else
+			} else
 				speed = Math.min(speed + acceleration, 0);
 		}
 		manualTick = false;
@@ -375,6 +437,39 @@ public class Train {
 		}
 	}
 
+	public void forEachTravellingPointBackwards(BiConsumer<TravellingPoint, Double> callback) {
+		double lastWheelOffset = 0;
+		for (int i = 0; i < carriages.size(); i++) {
+			int index = carriages.size() - i - 1;
+			Carriage carriage = carriages.get(index);
+			CarriageBogey trailingBogey = carriage.trailingBogey();
+			double trailSpacing = trailingBogey.type.getWheelPointSpacing();
+
+			// trailing point
+			callback.accept(trailingBogey.trailing(),
+				i == 0 ? 0 : carriageSpacing.get(index) - lastWheelOffset - trailSpacing / 2);
+
+			// inside 1st bogey
+			callback.accept(trailingBogey.leading(), trailSpacing);
+
+			lastWheelOffset = trailSpacing / 2;
+
+			if (!carriage.isOnTwoBogeys())
+				continue;
+
+			CarriageBogey leadingBogey = carriage.leadingBogey();
+			double leadSpacing = carriage.leadingBogey().type.getWheelPointSpacing();
+
+			// between bogeys
+			callback.accept(leadingBogey.trailing(), carriage.bogeySpacing - lastWheelOffset - leadSpacing / 2);
+
+			// inside 2nd bogey
+			callback.accept(trailingBogey.leading(), leadSpacing);
+
+			lastWheelOffset = leadSpacing / 2;
+		}
+	}
+
 	public void reattachToTracks(Level level) {
 		if (migrationCooldown > 0) {
 			migrationCooldown--;
@@ -418,6 +513,7 @@ public class Train {
 			GlobalStation currentStation = getCurrentStation();
 			if (currentStation != null)
 				currentStation.reserveFor(this);
+			updateSignalBlocks = true;
 			return;
 		}
 	}
@@ -478,10 +574,72 @@ public class Train {
 			return;
 		if (manualTick)
 			leaveStation();
+		double acceleration = AllConfigs.SERVER.trains.getAccelerationMPTT();
 		if (speed < targetSpeed)
-			speed = Math.min(speed + Train.acceleration * accelerationMod, targetSpeed);
+			speed = Math.min(speed + acceleration * accelerationMod, targetSpeed);
 		else if (speed > targetSpeed)
-			speed = Math.max(speed - Train.acceleration * accelerationMod, targetSpeed);
+			speed = Math.max(speed - acceleration * accelerationMod, targetSpeed);
+	}
+
+	public void collectInitiallyOccupiedSignalBlocks() {
+		TravellingPoint trailingPoint = carriages.get(carriages.size() - 1)
+			.getTrailingPoint();
+		TrackNode node1 = trailingPoint.node1;
+		TrackNode node2 = trailingPoint.node2;
+		TrackEdge edge = trailingPoint.edge;
+		double position = trailingPoint.position;
+		EdgeData signalData = edge.getEdgeData();
+
+		occupiedSignalBlocks.clear();
+
+		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position);
+		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.signalEdgeGroups;
+		MutableObject<UUID> prevGroup = new MutableObject<>(null);
+
+		if (signalData.hasBoundaries()) {
+			SignalBoundary nextBoundary = signalData.nextBoundary(node1, node2, edge, position);
+			if (nextBoundary == null) {
+				double d = 0;
+				SignalBoundary prev = null;
+				SignalBoundary current = signalData.nextBoundary(node1, node2, edge, 0);
+				while (current != null) {
+					prev = current;
+					d = current.getLocationOn(node1, node2, edge);
+					current = signalData.nextBoundary(node1, node2, edge, d);
+				}
+				if (prev != null) {
+					UUID group = prev.getGroup(node2);
+					if (Create.RAILWAYS.signalEdgeGroups.containsKey(group)) {
+						occupiedSignalBlocks.add(group);
+						prevGroup.setValue(group);
+					}
+				}
+
+			} else {
+				UUID group = nextBoundary.getGroup(node1);
+				if (Create.RAILWAYS.signalEdgeGroups.containsKey(group)) {
+					occupiedSignalBlocks.add(group);
+					prevGroup.setValue(group);
+				}
+			}
+
+		} else if (signalData.singleSignalGroup != null && allGroups.containsKey(signalData.singleSignalGroup)) {
+			occupiedSignalBlocks.add(signalData.singleSignalGroup);
+			prevGroup.setValue(signalData.singleSignalGroup);
+		}
+
+		forEachTravellingPointBackwards((tp, d) -> {
+			signalScout.travel(graph, d, signalScout.follow(tp), (distance, couple) -> couple.getSecond()
+				.forEach(id -> {
+					if (!Create.RAILWAYS.signalEdgeGroups.containsKey(id))
+						return;
+					if (id.equals(prevGroup.getValue()))
+						return;
+					occupiedSignalBlocks.add(id);
+					prevGroup.setValue(id);
+				}));
+		});
+
 	}
 
 }

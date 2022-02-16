@@ -24,6 +24,7 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -214,6 +215,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		if (Blocks.SPONGE.asItem() == itemInHand.getItem()) {
 			Create.RAILWAYS.trackNetworks.clear();
 			CreateClient.RAILWAYS.trackNetworks.clear();
+			Create.RAILWAYS.signalEdgeGroups.clear();
+			CreateClient.RAILWAYS.signalEdgeGroups.clear();
 			return InteractionResult.SUCCESS;
 		}
 
@@ -347,13 +350,13 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		PoseStack ms) {
 		new MatrixTransformStack(ms).rotateCentered(Direction.UP,
 			AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
-		return AllBlockPartials.TRACK_ASSEMBLY_OVERLAY;
+		return AllBlockPartials.TRACK_ASSEMBLING_OVERLAY;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public PartialModel prepareStationOverlay(BlockGetter world, BlockPos pos, BlockState state,
-		AxisDirection direction, PoseStack ms) {
+	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state, AxisDirection direction,
+		PoseStack ms, RenderedTrackOverlayType type) {
 		Vec3 axis = state.getValue(SHAPE)
 			.getAxes()
 			.get(0);
@@ -361,13 +364,16 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			.normalize();
 		Vec3 normal = getUpNormal(world, pos, state);
 		Vec3 angles = TrackRenderer.getModelAngles(normal, directionVec);
-		new MatrixTransformStack(ms).centre()
-			.rotateYRadians(angles.y + Math.PI)
-			.rotateXRadians(-angles.x)
-			.unCentre();
 
-		return axis.lengthSqr() > 1 ? axis.y != 0 ? AllBlockPartials.TRACK_STATION_OVERLAY_ASCENDING
-			: AllBlockPartials.TRACK_STATION_OVERLAY_DIAGONAL : AllBlockPartials.TRACK_STATION_OVERLAY;
+		new MatrixTransformStack(ms).centre()
+			.rotateYRadians(angles.y)
+			.rotateXRadians(angles.x)
+			.unCentre()
+			.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
+
+		return type == RenderedTrackOverlayType.STATION ? AllBlockPartials.TRACK_STATION_OVERLAY
+			: type == RenderedTrackOverlayType.SIGNAL ? AllBlockPartials.TRACK_SIGNAL_OVERLAY
+				: AllBlockPartials.TRACK_SIGNAL_DUAL_OVERLAY;
 	}
 
 	@Override

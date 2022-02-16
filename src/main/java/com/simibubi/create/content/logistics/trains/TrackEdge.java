@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.trains;
 
+import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -11,13 +12,19 @@ import net.minecraft.world.phys.Vec3;
 public class TrackEdge {
 
 	BezierConnection turn;
+	EdgeData edgeData;
 
 	public TrackEdge(BezierConnection turn) {
 		this.turn = turn;
+		this.edgeData = new EdgeData();
 	}
 
 	public boolean isTurn() {
 		return turn != null;
+	}
+
+	public EdgeData getEdgeData() {
+		return edgeData;
 	}
 
 	public BezierConnection getTurn() {
@@ -61,11 +68,16 @@ public class TrackEdge {
 	}
 
 	public CompoundTag write() {
-		return isTurn() ? turn.write(BlockPos.ZERO) : new CompoundTag();
+		CompoundTag baseCompound = isTurn() ? turn.write(BlockPos.ZERO) : new CompoundTag();
+		baseCompound.put("Signals", edgeData.write());
+		return baseCompound;
 	}
 
-	public static TrackEdge read(CompoundTag tag) {
-		return new TrackEdge(tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
+	public static TrackEdge read(CompoundTag tag, TrackGraph graph) {
+		TrackEdge trackEdge =
+			new TrackEdge(tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
+		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), graph);
+		return trackEdge;
 	}
 
 }

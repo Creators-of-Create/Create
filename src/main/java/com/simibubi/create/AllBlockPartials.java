@@ -118,10 +118,10 @@ public class AllBlockPartials {
 		GIRDER_SEGMENT_MIDDLE = block("metal_girder/segment_middle"),
 		GIRDER_SEGMENT_BOTTOM = block("metal_girder/segment_bottom"),
 		
-		TRACK_STATION_OVERLAY = block("track/station_overlay"),
-		TRACK_STATION_OVERLAY_DIAGONAL = block("track/station_overlay_diagonal"),
-		TRACK_STATION_OVERLAY_ASCENDING = block("track/station_overlay_ascending"),
-		TRACK_ASSEMBLY_OVERLAY = block("track/assembly_overlay"),
+		TRACK_STATION_OVERLAY = block("track_overlay/station"),
+		TRACK_SIGNAL_OVERLAY = block("track_overlay/signal"),
+		TRACK_ASSEMBLING_OVERLAY = block("track_overlay/assembling"),
+		TRACK_SIGNAL_DUAL_OVERLAY = block("track_overlay/signal_dual"),
 		
 		BOGEY_FRAME = block("track/bogey/bogey_frame"),
 		SMALL_BOGEY_WHEELS = block("track/bogey/bogey_wheel"),
@@ -135,6 +135,17 @@ public class AllBlockPartials {
 		
 		TRAIN_CONTROLS_COVER = block("controls/train/cover"),
 		TRAIN_CONTROLS_LEVER = block("controls/train/lever"),
+		
+		SIGNAL_ON = block("track_signal/indicator_on"),
+		SIGNAL_OFF = block("track_signal/indicator_off"),
+		
+		SIGNAL_PANEL = block("track_signal/panel"),
+		SIGNAL_WHITE_CUBE = block("track_signal/white_cube"),
+		SIGNAL_WHITE_GLOW = block("track_signal/white_glow"),
+		SIGNAL_WHITE = block("track_signal/white_tube"),
+		SIGNAL_RED_CUBE = block("track_signal/red_cube"),
+		SIGNAL_RED_GLOW = block("track_signal/red_glow"),
+		SIGNAL_RED = block("track_signal/red_tube"),
 
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),

@@ -7,9 +7,12 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.contraptions.KineticDebugger;
+import org.lwjgl.glfw.GLFW;
+
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -22,11 +25,11 @@ import net.minecraft.world.level.dimension.DimensionType;
 public class GlobalRailwayManager {
 
 	public Map<UUID, TrackGraph> trackNetworks;
-	private TrackSavedData trackData;
-
+	public Map<UUID, SignalEdgeGroup> signalEdgeGroups;
 	public Map<UUID, Train> trains;
 	public Map<Integer, Carriage> carriageById;
-	
+
+	private TrackSavedData trackData;
 	public TrackGraphSync sync;
 
 	//
@@ -57,6 +60,7 @@ public class GlobalRailwayManager {
 			return;
 		trackData = TrackSavedData.load(server);
 		trackNetworks = trackData.getTrackNetworks();
+		signalEdgeGroups = trackData.getSignalBlocks();
 	}
 
 	public void levelUnloaded(LevelAccessor level) {
@@ -68,6 +72,7 @@ public class GlobalRailwayManager {
 
 	public void cleanUp() {
 		trackNetworks = new HashMap<>();
+		signalEdgeGroups = new HashMap<>();
 		trains = new HashMap<>();
 		carriageById = new HashMap<>();
 		sync = new TrackGraphSync();
@@ -77,7 +82,7 @@ public class GlobalRailwayManager {
 		if (trackData != null)
 			trackData.setDirty();
 	}
-	
+
 	//
 
 	public TrackGraph getOrCreateGraph(UUID graphID) {
@@ -120,16 +125,30 @@ public class GlobalRailwayManager {
 		if (!location.equals(location2))
 			return;
 
+		for (SignalEdgeGroup group : signalEdgeGroups.values()) {
+			group.trains.clear();
+			group.reserved = null;
+		}
+
+		for (TrackGraph graph : trackNetworks.values())
+			graph.getSignals()
+				.forEach(sb -> sb.tick(graph));
+
+		for (Train train : trains.values()) 
+			train.earlyTick(level);
 		for (Train train : trains.values())
 			train.tick(level);
-		
-		
+
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H)) {
+			trackNetworks.values()
+				.forEach(TrackGraph::debugViewSignalData);
+		}
 	}
 
 	public void clientTick() {
-		if (KineticDebugger.isActive()) {
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J)) {
 			trackNetworks.values()
-			.forEach(TrackGraph::debugViewNodes);
+				.forEach(TrackGraph::debugViewNodes);
 		}
 	}
 

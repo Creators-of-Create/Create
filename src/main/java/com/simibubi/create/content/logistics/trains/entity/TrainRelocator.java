@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
@@ -16,6 +18,7 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
@@ -125,58 +128,40 @@ public class TrainRelocator {
 			return false;
 
 		TravellingPoint probe = new TravellingPoint(node1, node2, edge, graphLocation.position);
+		ISignalBoundaryListener ignoreSignals = probe.ignoreSignals();
 		List<Pair<Couple<TrackNode>, Double>> recordedLocations = new ArrayList<>();
 		Consumer<TravellingPoint> recorder =
 			tp -> recordedLocations.add(Pair.of(Couple.create(tp.node1, tp.node2), tp.position));
-		recorder.accept(probe);
-
-		double lastWheelOffset = 0;
 		ITrackSelector steer = probe.steer(SteerDirection.NONE, track.getUpNormal(level, pos, blockState));
-		for (int i = 0; i < train.carriages.size(); i++) {
-			int index = train.carriages.size() - i - 1;
-			Carriage carriage = train.carriages.get(index);
-			double trailSpacing = carriage.trailingBogey().type.getWheelPointSpacing();
-			if (i > 0) {
-				probe.travel(graph, train.carriageSpacing.get(index) - lastWheelOffset - trailSpacing / 2, steer);
-				if (probe.blocked)
-					return false;
-				recorder.accept(probe);
+		MutableBoolean blocked = new MutableBoolean(false);
+		
+		train.forEachTravellingPointBackwards((tp, d) -> {
+			if (blocked.booleanValue())
+				return;
+			probe.travel(graph, d, steer, ignoreSignals);
+			if (probe.blocked) {
+				blocked.setTrue();
+				return;
 			}
-
-			// inside 1st bogey
-			probe.travel(graph, trailSpacing, steer);
-			if (probe.blocked)
-				return false;
 			recorder.accept(probe);
-
-			lastWheelOffset = trailSpacing / 2;
-
-			if (!carriage.isOnTwoBogeys())
-				continue;
-
-			double leadSpacing = carriage.leadingBogey().type.getWheelPointSpacing();
-
-			// between bogeys
-			probe.travel(graph, carriage.bogeySpacing - lastWheelOffset - leadSpacing / 2, steer);
-			if (probe.blocked)
-				return false;
-			recorder.accept(probe);
-
-			// inside 2nd bogey
-			probe.travel(graph, leadSpacing, steer);
-			if (probe.blocked)
-				return false;
-			recorder.accept(probe);
-
-			lastWheelOffset = leadSpacing / 2;
-		}
-
+		});
+		
+		if (blocked.booleanValue())
+			return false;
+		
 		if (simulate)
 			return true;
 
+		train.leaveStation();
 		train.derailed = false;
+		train.navigation.waitingForSignal = null;
+		train.occupiedSignalBlocks.clear();
 		train.graph = graph;
-		train.migratingPoints.clear();
+		train.speed = 0;
+		
+		if (train.navigation.destination != null)
+			train.navigation.cancelNavigation();
+		
 		train.forEachTravellingPoint(tp -> {
 			Pair<Couple<TrackNode>, Double> last = recordedLocations.remove(recordedLocations.size() - 1);
 			tp.node1 = last.getFirst()
@@ -189,7 +174,7 @@ public class TrainRelocator {
 		});
 
 		train.status.successfulMigration();
-		train.leaveStation();
+		train.collectInitiallyOccupiedSignalBlocks();
 		return true;
 	}
 

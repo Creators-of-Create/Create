@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2047",
+	"_": "Missing Localizations: 2048",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -487,6 +487,7 @@
 	"block.create.tiled_glass": "Getegeld Glas",
 	"block.create.tiled_glass_pane": "Getegeld Glazen Paneel",
 	"block.create.track": "UNLOCALIZED: Train Track",
+	"block.create.track_signal": "UNLOCALIZED: Train Signal",
 	"block.create.track_station": "UNLOCALIZED: Train Station",
 	"block.create.tuff_pillar": "UNLOCALIZED: Tuff Pillar",
 	"block.create.turntable": "Draaischijf",

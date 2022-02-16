@@ -58,12 +58,6 @@ public class AllShapes {
 			.add(0, 14, 0, 16, 16, 16)
 			.add(3, 3, -2, 13, 13, 2)
 			.forHorizontal(NORTH),
-		NIXIE_TUBE = shape(0, 0, 0, 16, 4, 16).add(9, 0, 5, 15, 15, 11)
-			.add(1, 0, 5, 7, 15, 11)
-			.forHorizontalAxis(),
-		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
-			.add(1, 1, 5, 7, 16, 11)
-			.forHorizontalAxis(),
 		FUNNEL_COLLISION = shape(0, 0, 0, 16, 4, 16).forDirectional(UP),
 		BELT_FUNNEL_RETRACTED = shape(2, -2, 14, 14, 14, 18).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
@@ -127,7 +121,14 @@ public class AllShapes {
 		STATION = shape(0, 0, 0, 16, 5, 16).add(2, 4, 0, 14, 16, 4)
 			.forHorizontal(NORTH),
 		CONTROLS = shape(0, 0, 4, 16, 4, 16).add(0, 0, 6, 16, 14, 16)
-			.forHorizontal(NORTH)
+			.forHorizontal(NORTH),
+
+		NIXIE_TUBE = shape(9, 0, 5, 15, 12, 11).add(1, 0, 5, 7, 12, 11)
+			.forHorizontalAxis(),
+		NIXIE_TUBE_CEILING = shape(9, 4, 5, 15, 16, 11).add(1, 4, 5, 7, 16, 11)
+			.forHorizontalAxis(),
+		NIXIE_TUBE_WALL = shape(5, 9, 0, 11, 15, 12).add(5, 1, 0, 11, 7, 12)
+			.forHorizontal(Direction.SOUTH)
 
 	;
 

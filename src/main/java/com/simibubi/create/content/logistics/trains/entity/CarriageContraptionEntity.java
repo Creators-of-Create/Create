@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -197,7 +198,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriage.train.manualSteer =
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
-		carriage.train.targetSpeed = Train.topSpeed * targetSpeed;
+		double topSpeed = AllConfigs.SERVER.trains.getTopSpeedMPT();
+		carriage.train.targetSpeed = topSpeed * targetSpeed;
 		if (slow)
 			carriage.train.targetSpeed /= 8;
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;

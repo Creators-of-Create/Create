@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 501",
+	"_": "Missing Localizations: 502",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -487,6 +487,7 @@
 	"block.create.tiled_glass": "十字玻璃窗",
 	"block.create.tiled_glass_pane": "十字玻璃窗戶片",
 	"block.create.track": "UNLOCALIZED: Train Track",
+	"block.create.track_signal": "UNLOCALIZED: Train Signal",
 	"block.create.track_station": "UNLOCALIZED: Train Station",
 	"block.create.tuff_pillar": "UNLOCALIZED: Tuff Pillar",
 	"block.create.turntable": "轉盤",

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
@@ -191,7 +192,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		InteractionHand interactionHand) {
 		int indexOfSeat = contraption.getSeats()
 			.indexOf(localPos);
-		if (indexOfSeat == -1)
+		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand)))
 			return contraption.interactors.containsKey(localPos) && contraption.interactors.get(localPos)
 				.handlePlayerInteraction(player, interactionHand, localPos, this);
 		if (player.isPassenger())

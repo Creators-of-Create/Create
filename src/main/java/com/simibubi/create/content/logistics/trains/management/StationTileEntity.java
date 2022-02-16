@@ -488,6 +488,7 @@ public class StationTileEntity extends SmartTileEntity {
 		GlobalStation station = getOrCreateGlobalStation();
 		train.setCurrentStation(station);
 		station.reserveFor(train);
+		train.collectInitiallyOccupiedSignalBlocks();
 
 		Create.RAILWAYS.trains.put(train.id, train);
 		clearException();

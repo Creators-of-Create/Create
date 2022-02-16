@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -8,6 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalTileEntity;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalTileEntity.SignalState;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
@@ -15,6 +18,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +27,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
@@ -39,10 +44,14 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	private Component parsedCustomText;
 	private Couple<String> displayedStrings;
 
+	private WeakReference<SignalTileEntity> cachedSignalTE;
+	public SignalState signalState;
+
 	public NixieTubeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		hasCustomText = false;
 		redstoneStrength = 0;
+		cachedSignalTE = new WeakReference<>(null);
 	}
 
 	@Override
@@ -56,6 +65,23 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 			updateDisplayedStrings();
 			if (currentStrings == null || !currentStrings.equals(displayedStrings))
 				sendData();
+		}
+
+		if (level.isClientSide) {
+			signalState = null;
+			SignalTileEntity signalTileEntity = cachedSignalTE.get();
+
+			if (signalTileEntity == null || signalTileEntity.isRemoved()) {
+				Direction facing = NixieTubeBlock.getFacing(getBlockState());
+				BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
+				if (blockEntity instanceof SignalTileEntity signal) {
+					signalState = signal.getState();
+					cachedSignalTE = new WeakReference<>(signal);
+				}
+				return;
+			}
+
+			signalState = signalTileEntity.getState();
 		}
 	}
 
@@ -95,6 +121,8 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	public void updateDisplayedStrings() {
+		if (signalState != null)
+			return;
 		if (!hasCustomText) {
 			displayedStrings = Couple.create(redstoneStrength < 10 ? "0" : "1", String.valueOf(redstoneStrength % 10));
 		} else {
@@ -195,9 +223,13 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 
 	// From SignTileEntity
 	public CommandSourceStack getCommandSource(@Nullable ServerPlayer p_195539_1_) {
-		String s = p_195539_1_ == null ? "Nixie Tube" : p_195539_1_.getName().getString();
-		Component itextcomponent = (Component)(p_195539_1_ == null ? new TextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
-		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(this.worldPosition), Vec2.ZERO, (ServerLevel)this.level, 2, s, itextcomponent, this.level.getServer(), p_195539_1_);
+		String s = p_195539_1_ == null ? "Nixie Tube"
+			: p_195539_1_.getName()
+				.getString();
+		Component itextcomponent =
+			(Component) (p_195539_1_ == null ? new TextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
+		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(this.worldPosition), Vec2.ZERO,
+			(ServerLevel) this.level, 2, s, itextcomponent, this.level.getServer(), p_195539_1_);
 	}
 
 	@Override

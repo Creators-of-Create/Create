@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.management.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -36,7 +37,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		Block block = trackState.getBlock();
 		if (!(block instanceof ITrackBlock))
 			return;
-		
+
 		GlobalStation station = te.getOrCreateGlobalStation();
 
 		if (!te.getBlockState()
@@ -44,7 +45,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 			ms.pushPose();
 			ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
 			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), 0xCC993B, ms, buffer,
-				light, overlay);
+				light, overlay, RenderedTrackOverlayType.STATION);
 			ms.popPose();
 			return;
 		}
@@ -62,8 +63,8 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		MutableBlockPos currentPos = targetPosition.mutable();
 
 		PartialModel assemblyOverlay = track.prepareAssemblyOverlay(level, targetPosition, trackState, direction, ms);
-		int colorWhenValid = 0x7092F2;
-		int colorWhenCarriage = 0x70EF70;
+		int colorWhenValid = 0x96B5FF;
+		int colorWhenCarriage = 0xCAFF96;
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
 
 		currentPos.move(direction, 1);

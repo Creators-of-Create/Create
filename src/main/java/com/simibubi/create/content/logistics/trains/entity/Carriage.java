@@ -11,6 +11,7 @@ import org.apache.commons.lang3.mutable.MutableDouble;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -41,6 +42,8 @@ public class Carriage {
 	WeakReference<CarriageContraptionEntity> entity;
 	Couple<CarriageBogey> bogeys;
 
+	static final int FIRST = 0, MIDDLE = 1, LAST = 2, BOTH = 3;
+
 	public Carriage(CarriageBogey bogey1, @Nullable CarriageBogey bogey2, int bogeySpacing) {
 		this.bogeySpacing = bogeySpacing;
 		this.bogeys = Couple.create(bogey1, bogey2);
@@ -63,7 +66,7 @@ public class Carriage {
 
 	public double travel(Level level, TrackGraph graph, double distance,
 		Function<TravellingPoint, ITrackSelector> forwardControl,
-		Function<TravellingPoint, ITrackSelector> backwardControl) {
+		Function<TravellingPoint, ITrackSelector> backwardControl, int type) {
 		Vec3 leadingAnchor = leadingBogey().anchorPosition;
 		Vec3 trailingAnchor = trailingBogey().anchorPosition;
 		boolean onTwoBogeys = isOnTwoBogeys();
@@ -98,9 +101,18 @@ public class Carriage {
 				ITrackSelector backTrackSelector =
 					nextPoint == null ? backwardControl.apply(point) : point.follow(nextPoint);
 
-				double moved = point.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector);
-				double stressCorrection = correction + bogeyCorrection;
-				point.travel(graph, stressCorrection, stressCorrection > 0 ? frontTrackSelector : backTrackSelector);
+				boolean atFront = (type == FIRST || type == BOTH) && actuallyFirstWheel && actuallyFirstBogey;
+				boolean atBack =
+					(type == LAST || type == BOTH) && !actuallyFirstWheel && (!actuallyFirstBogey || !onTwoBogeys);
+
+				ISignalBoundaryListener frontListener = train.frontSignalListener();
+				ISignalBoundaryListener backListener = train.backSignalListener();
+				ISignalBoundaryListener passiveListener = point.ignoreSignals();
+
+				toMove += correction + bogeyCorrection;
+				double moved = point.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector,
+					toMove > 0 ? atFront ? frontListener : atBack ? backListener : passiveListener
+						: atFront ? backListener : atBack ? frontListener : passiveListener);
 				blocked |= point.blocked;
 
 				distanceMoved.setValue(moved);

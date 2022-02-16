@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -12,6 +13,7 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -48,6 +50,7 @@ public class DumpRailwaysCommand {
 			chat.accept("", white);
 		chat.accept("-+------<< Railways Summary: >>------+-", white);
 		chat.accept("Track Networks: " + railways.trackNetworks.size(), blue);
+		chat.accept("Signal Groups: " + railways.signalEdgeGroups.size(), blue);
 		chat.accept("Trains: " + railways.trains.size(), blue);
 		chat.accept("", white);
 
@@ -59,6 +62,9 @@ public class DumpRailwaysCommand {
 				+ graph.getNodes()
 					.size()
 				+ " Nodes", graph.color.getRGB());
+			Collection<SignalBoundary> signals = graph.getSignals();
+			if (!signals.isEmpty())
+				chat.accept(" -> " + signals.size() + " registered Signals", blue);
 			for (GlobalStation globalStation : graph.getStations()) {
 				BlockPos pos = globalStation.stationPos;
 				chat.accept(" -> " + globalStation.name + " (" + globalStation.id.toString()

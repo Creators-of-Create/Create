@@ -14,7 +14,7 @@ public class SeatInteractionBehaviour extends MovingInteractionBehaviour {
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
-		return true;
+		return false;
 	}
 
 	@Override

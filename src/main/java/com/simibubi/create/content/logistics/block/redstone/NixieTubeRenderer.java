@@ -6,10 +6,16 @@ import java.util.Random;
 import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.logistics.block.redstone.DoubleFaceAttachedBlock.DoubleAttachFace;
+import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -17,10 +23,13 @@ import net.minecraft.client.gui.font.glyphs.BakedGlyph;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntity> {
 
@@ -58,11 +67,26 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		int light, int overlay) {
 		ms.pushPose();
 		BlockState blockState = te.getBlockState();
-		TransformStack.cast(ms)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(blockState.getValue(NixieTubeBlock.FACING)));
+		DoubleAttachFace face = blockState.getValue(NixieTubeBlock.FACE);
+		float yRot = AngleHelper.horizontalAngle(blockState.getValue(NixieTubeBlock.FACING)) - 90
+			+ (face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
+		float xRot = face == DoubleAttachFace.WALL ? -90 : face == DoubleAttachFace.WALL_REVERSED ? 90 : 0;
 
-		float height = blockState.getValue(NixieTubeBlock.CEILING) ? 2 : 6;
+		TransformStack msr = TransformStack.cast(ms);
+		msr.centre()
+			.rotateY(yRot)
+			.rotateZ(xRot)
+			.unCentre();
+
+		if (te.signalState != null) {
+			renderAsSignal(te, partialTicks, ms, buffer, light, overlay);
+			ms.popPose();
+			return;
+		}
+
+		msr.centre();
+
+		float height = face == DoubleAttachFace.CEILING ? 5 : 3;
 		float scale = 1 / 20f;
 
 		Couple<String> s = te.getDisplayedStrings();
@@ -122,6 +146,73 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 				.whiteGlyph();
 			((BufferSource) buffer).endBatch(texturedglyph.renderType(Font.DisplayMode.NORMAL));
 		}
+	}
+
+	private void renderAsSignal(NixieTubeTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+		int light, int overlay) {
+		BlockState blockState = te.getBlockState();
+		Direction facing = NixieTubeBlock.getFacing(blockState);
+		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
+		TransformStack msr = TransformStack.cast(ms);
+
+		if (facing == Direction.DOWN)
+			msr.centre()
+				.rotateZ(180)
+				.unCentre();
+
+		boolean invertTubes =
+			facing == Direction.DOWN || blockState.getValue(NixieTubeBlock.FACE) == DoubleAttachFace.WALL_REVERSED;
+
+		CachedBufferer.partial(AllBlockPartials.SIGNAL_PANEL, blockState)
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+
+		ms.pushPose();
+		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
+		float renderTime = AnimationTickHolder.getRenderTime(te.getLevel());
+
+		for (boolean first : Iterate.trueAndFalse) {
+			Vec3 lampVec = Vec3.atCenterOf(te.getBlockPos());
+			Vec3 diff = lampVec.subtract(observerVec);
+
+			if (first && !te.signalState.isRedLight(renderTime))
+				continue;
+			if (!first && !te.signalState.isGreenLight(renderTime))
+				continue;
+
+			boolean flip = first == invertTubes;
+
+			ms.pushPose();
+			ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
+
+			if (diff.lengthSqr() < 36 * 36) {
+				boolean vert = first ^ facing.getAxis()
+					.isHorizontal();
+
+				CachedBufferer.partial(AllBlockPartials.SIGNAL_WHITE_CUBE, blockState)
+					.light(0xf000f0)
+					.disableDiffuseMult()
+					.scale(vert ? 4 : 1, vert ? 1 : 4, 1)
+					.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+
+				CachedBufferer
+					.partial(first ? AllBlockPartials.SIGNAL_RED_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW, blockState)
+					.light(0xf000f0)
+					.disableDiffuseMult()
+					.scale(vert ? 5.125f : 2, vert ? 2 : 5.125f, 2)
+					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+			}
+
+			CachedBufferer.partial(first ? AllBlockPartials.SIGNAL_RED : AllBlockPartials.SIGNAL_WHITE, blockState)
+				.light(0xF000F0)
+				.disableDiffuseMult()
+				.scale(1 + 1 / 16f)
+				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+
+			ms.popPose();
+		}
+		ms.popPose();
+
 	}
 
 }

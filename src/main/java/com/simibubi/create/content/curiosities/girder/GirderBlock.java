@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -159,6 +160,8 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 			state = state.setValue(updateProperty, true);
 		if (sideState.getBlock() == state.getBlock() && sideState.getValue(updateProperty))
 			state = state.setValue(updateProperty, true);
+		if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
+			state = state.setValue(updateProperty, true);
 
 		for (Direction d2 : Iterate.directionsInAxis(axis == Axis.X ? Axis.Z : Axis.X)) {
 			BlockState above = level.getBlockState(pos.above()
@@ -177,7 +180,12 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		Property<Boolean> updateProperty, BlockState sideState, Direction d) {
 		if (sideState.getBlock() == state.getBlock() && sideState.getValue(X) == sideState.getValue(Z))
 			state = state.setValue(updateProperty, true);
+		else if (sideState.getBlock() == state.getBlock() && sideState.getValue(X) != state.getValue(X)
+			&& sideState.getValue(Z) != state.getValue(Z))
+			state = state.setValue(updateProperty, true);
 		else if (sideState.hasProperty(WallBlock.UP) && sideState.getValue(WallBlock.UP))
+			state = state.setValue(updateProperty, true);
+		else if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
 			state = state.setValue(updateProperty, true);
 		else if (sideState.hasBlockEntity()) {
 			BlockEntity blockEntity = level.getBlockEntity(pos.relative(d));
@@ -219,6 +227,8 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		BlockState blockState = world.getBlockState(relative);
 		if (blockState.isAir())
 			return false;
+		if (blockState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(blockState) == side)
+			return true;
 		VoxelShape shape = blockState.getShape(world, relative);
 		if (shape.isEmpty())
 			return false;

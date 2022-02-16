@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalPropagator;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -40,7 +41,7 @@ public class TrackPropagator {
 		TrackGraph foundGraph = null;
 
 		// 1. Remove any nodes this rail was part of
-		
+
 		for (DiscoveredLocation removedLocation : ends) {
 			if (foundGraph == null)
 				foundGraph = manager.getGraph(reader, removedLocation);
@@ -63,7 +64,7 @@ public class TrackPropagator {
 			positionsToUpdate.addAll(removedEnd.allAdjacent());
 
 		// 2. Re-run railAdded for any track that was disconnected from this track
-		
+
 		Set<TrackGraph> toUpdate = new HashSet<>();
 		for (BlockPos blockPos : positionsToUpdate)
 			if (!blockPos.equals(pos)) {
@@ -71,7 +72,7 @@ public class TrackPropagator {
 				if (onRailAdded != null)
 					toUpdate.add(onRailAdded);
 			}
-		
+
 		// 3. Ensure any affected graph gets checked for segmentation
 
 		for (TrackGraph railGraph : toUpdate)
@@ -171,8 +172,11 @@ public class TrackPropagator {
 		}
 
 		frontier.clear();
-		if (graph.createNode(startNode))
-			sync.nodeAdded(graph, graph.locateNode(startNode));
+		Set<TrackNode> addedNodes = new HashSet<>();
+		if (graph.createNode(startNode)) {
+			TrackNode node = graph.locateNode(startNode);
+			sync.nodeAdded(graph, node);
+		}
 
 		frontier.add(new FrontierEntry(startNode, null, startNode));
 
@@ -192,9 +196,12 @@ public class TrackPropagator {
 
 			if (isValidGraphNodeLocation(entry.currentNode, ends, first) && entry.currentNode != startNode) {
 				boolean nodeIsNew = graph.createNode(entry.currentNode);
-				if (nodeIsNew)
-					sync.nodeAdded(graph, graph.locateNode(entry.currentNode));
+				if (nodeIsNew) {
+					TrackNode node = graph.locateNode(entry.currentNode);
+					sync.nodeAdded(graph, node);
+				}
 				graph.connectNodes(parentNode, entry.currentNode, new TrackEdge(entry.currentNode.getTurn()));
+				addedNodes.add(graph.locateNode(entry.currentNode));
 				parentNode = entry.currentNode;
 				if (!nodeIsNew)
 					continue;
@@ -204,6 +211,8 @@ public class TrackPropagator {
 		}
 
 		manager.markTracksDirty();
+		for (TrackNode trackNode : addedNodes)
+			SignalPropagator.notifySignalsOfNewNode(graph, trackNode);
 		return graph;
 	}
 

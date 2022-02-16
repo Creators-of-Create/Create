@@ -16,14 +16,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
+import org.lwjgl.glfw.GLFW;
+
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalPropagator;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -47,7 +55,8 @@ public class TrackGraph {
 	Map<Integer, TrackNode> nodesById;
 	Map<TrackNode, Map<TrackNode, TrackEdge>> connectionsByNode;
 
-	Map<UUID, GlobalStation> stations;
+	private Map<UUID, GlobalStation> stations;
+	private Map<UUID, SignalBoundary> signals;
 
 	public TrackGraph() {
 		this(UUID.randomUUID());
@@ -60,6 +69,7 @@ public class TrackGraph {
 		connectionsByNode = new IdentityHashMap<>();
 		color = Color.rainbowColor(new Random(graphID.getLeastSignificantBits()).nextInt());
 		stations = new HashMap<>();
+		signals = new HashMap<>();
 	}
 
 	//
@@ -69,8 +79,29 @@ public class TrackGraph {
 		return stations.get(id);
 	}
 
+	@Nullable
+	public SignalBoundary getSignal(UUID id) {
+		return signals.get(id);
+	}
+
 	public Collection<GlobalStation> getStations() {
 		return stations.values();
+	}
+
+	public Collection<SignalBoundary> getSignals() {
+		return signals.values();
+	}
+
+	public void addStation(GlobalStation station) {
+		stations.put(station.id, station);
+		SignalPropagator.onEdgePointAdded(this, station, GlobalStation.class);
+		markDirty();
+	}
+
+	public void addSignal(SignalBoundary signal) {
+		signals.put(signal.id, signal);
+		SignalPropagator.onEdgePointAdded(this, signal, SignalBoundary.class);
+		markDirty();
 	}
 
 	public void removeStation(UUID id) {
@@ -78,8 +109,11 @@ public class TrackGraph {
 		markDirty();
 	}
 
-	public void addStation(GlobalStation station) {
-		stations.put(station.id, station);
+	public void removeSignal(UUID id) {
+		SignalBoundary signal = signals.remove(id);
+		if (signal == null)
+			return;
+		SignalPropagator.onSignalRemoved(this, signal);
 		markDirty();
 	}
 
@@ -104,7 +138,8 @@ public class TrackGraph {
 	public boolean createNode(DiscoveredLocation location) {
 		if (!createSpecificNode(location, nextNodeId(), location.normal))
 			return false;
-		Create.RAILWAYS.sync.nodeAdded(this, nodes.get(location));
+		TrackNode newNode = nodes.get(location);
+		Create.RAILWAYS.sync.nodeAdded(this, newNode);
 		markDirty();
 		return true;
 	}
@@ -157,6 +192,10 @@ public class TrackGraph {
 			return true;
 
 		Map<TrackNode, TrackEdge> connections = connectionsByNode.remove(removed);
+		for (TrackEdge trackEdge : connections.values())
+			for (SignalBoundary boundary : trackEdge.getEdgeData()
+				.getBoundaries())
+				signals.remove(boundary.id);
 		for (TrackNode railNode : connections.keySet())
 			if (connectionsByNode.containsKey(railNode))
 				connectionsByNode.get(railNode)
@@ -352,13 +391,19 @@ public class TrackGraph {
 		});
 
 		tag.put("Nodes", nodesList);
-		tag.put("Stations", NBTHelper.writeCompoundList(stations.values(), GlobalStation::write));
+		tag.put("Stations", NBTHelper.writeCompoundList(getStations(), GlobalStation::write));
+		tag.put("Signals", NBTHelper.writeCompoundList(getSignals(), SignalBoundary::write));
 		return tag;
 	}
 
 	public static TrackGraph read(CompoundTag tag) {
 		TrackGraph graph = new TrackGraph(tag.getUUID("Id"));
 		graph.color = new Color(tag.getInt("Color"));
+
+		NBTHelper.readCompoundList(tag.getList("Signals", Tag.TAG_COMPOUND), SignalBoundary::new)
+			.forEach(s -> graph.signals.put(s.id, s));
+		NBTHelper.readCompoundList(tag.getList("Stations", Tag.TAG_COMPOUND), GlobalStation::new)
+			.forEach(s -> graph.stations.put(s.id, s));
 
 		Map<Integer, TrackNode> indexTracker = new HashMap<>();
 		ListTag nodesList = tag.getList("Nodes", Tag.TAG_COMPOUND);
@@ -384,14 +429,110 @@ public class TrackGraph {
 				continue;
 			NBTHelper.iterateCompoundList(nodeTag.getList("Connections", Tag.TAG_COMPOUND), c -> {
 				TrackNode node2 = indexTracker.get(c.getInt("To"));
-				TrackEdge edge = TrackEdge.read(c.getCompound("EdgeData"));
+				TrackEdge edge = TrackEdge.read(c.getCompound("EdgeData"), graph);
+				edge.edgeData.updateDelegates(node1, node2, edge);
 				graph.putConnection(node1, node2, edge);
 			});
 		}
 
-		NBTHelper.readCompoundList(tag.getList("Stations", Tag.TAG_COMPOUND), GlobalStation::new)
-			.forEach(s -> graph.stations.put(s.id, s));
 		return graph;
+	}
+
+	public void debugViewSignalData() {
+		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		if (cameraEntity == null)
+			return;
+		Vec3 camera = cameraEntity.getEyePosition();
+		for (Entry<TrackNodeLocation, TrackNode> nodeEntry : nodes.entrySet()) {
+			TrackNodeLocation nodeLocation = nodeEntry.getKey();
+			TrackNode node = nodeEntry.getValue();
+			if (nodeLocation == null)
+				continue;
+
+			Vec3 location = nodeLocation.getLocation();
+			if (location.distanceTo(camera) > 50)
+				continue;
+
+			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
+			if (map == null)
+				continue;
+
+			int hashCode = node.hashCode();
+			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
+				TrackNode other = entry.getKey();
+
+				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
+					continue;
+				Vec3 yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
+
+				TrackEdge edge = entry.getValue();
+				EdgeData signalData = edge.getEdgeData();
+				UUID singleGroup = signalData.singleSignalGroup;
+				SignalEdgeGroup signalEdgeGroup =
+					singleGroup == null ? null : Create.RAILWAYS.signalEdgeGroups.get(singleGroup);
+
+				if (!edge.isTurn()) {
+					Vec3 p1 = edge.getPosition(node, other, 0);
+					Vec3 p2 = edge.getPosition(node, other, 1);
+
+					if (signalData.hasBoundaries()) {
+						SignalBoundary boundary = signalData.nextBoundary(node, other, edge, 0);
+						SignalBoundary prevBoundaryNonNull = boundary;
+						double prev = 0;
+						double length = edge.getLength(node, other);
+						SignalEdgeGroup group = Create.RAILWAYS.signalEdgeGroups.get(boundary.getGroup(node));
+						while (boundary != null) {
+							if (group != null)
+								CreateClient.OUTLINER
+									.showLine(Pair.of(boundary, edge),
+										edge.getPosition(node, other, prev + (prev == 0 ? 0 : 1 / 16f / length))
+											.add(yOffset),
+										edge.getPosition(node, other,
+											(prev = boundary.getLocationOn(node, other, edge) / length)
+												- 1 / 16f / length)
+											.add(yOffset))
+									.colored(group.color.getRGB())
+									.lineWidth(1 / 16f);
+							boundary =
+								signalData.nextBoundary(node, other, edge, boundary.getLocationOn(node, other, edge));
+							if (boundary != null) {
+								group = Create.RAILWAYS.signalEdgeGroups.get(boundary.getGroup(node));
+								prevBoundaryNonNull = boundary;
+							}
+						}
+						group = Create.RAILWAYS.signalEdgeGroups.get(prevBoundaryNonNull.getGroup(other));
+						if (group != null)
+							CreateClient.OUTLINER.showLine(edge, edge.getPosition(node, other, prev + 1 / 16f / length)
+								.add(yOffset), p2.add(yOffset))
+								.colored(group.color.getRGB())
+								.lineWidth(1 / 16f);
+						continue;
+					}
+
+					if (signalEdgeGroup == null)
+						continue;
+					CreateClient.OUTLINER.showLine(edge, p1.add(yOffset), p2.add(yOffset))
+						.colored(signalEdgeGroup.color.getRGB())
+						.lineWidth(1 / 16f);
+					continue;
+				}
+
+				if (signalEdgeGroup == null)
+					continue;
+
+				Vec3 previous = null;
+				BezierConnection turn = edge.getTurn();
+				for (int i = 0; i <= turn.getSegmentCount(); i++) {
+					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
+					if (previous != null)
+						CreateClient.OUTLINER
+							.showLine(Pair.of(edge, previous), previous.add(yOffset), current.add(yOffset))
+							.colored(signalEdgeGroup.color.getRGB())
+							.lineWidth(1 / 16f);
+					previous = current;
+				}
+			}
+		}
 	}
 
 	public void debugViewNodes() {
@@ -411,10 +552,10 @@ public class TrackGraph {
 
 			Vec3 yOffset = new Vec3(0, 3 / 16f, 0);
 			Vec3 v1 = location.add(yOffset);
-			Vec3 v2 = v1.add(node.normal.scale(0.125f));
+			Vec3 v2 = v1.add(node.normal.scale(3 / 16f));
 			CreateClient.OUTLINER.showLine(Integer.valueOf(node.netId), v1, v2)
 				.colored(Color.mixColors(Color.WHITE, color, 1))
-				.lineWidth(1 / 4f);
+				.lineWidth(1 / 8f);
 
 			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
 			if (map == null)
@@ -424,8 +565,9 @@ public class TrackGraph {
 			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
 				TrackNode other = entry.getKey();
 
-				if (other.hashCode() > hashCode)
+				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
 					continue;
+				yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
 
 				TrackEdge edge = entry.getValue();
 				if (!edge.isTurn()) {
@@ -443,7 +585,8 @@ public class TrackGraph {
 				for (int i = 0; i <= turn.getSegmentCount(); i++) {
 					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
 					if (previous != null)
-						CreateClient.OUTLINER.showLine(previous, previous.add(yOffset), current.add(yOffset))
+						CreateClient.OUTLINER
+							.showLine(Pair.of(edge, previous), previous.add(yOffset), current.add(yOffset))
 							.colored(color)
 							.lineWidth(1 / 16f);
 					previous = current;
