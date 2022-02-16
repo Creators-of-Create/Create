@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
+import com.simibubi.create.lib.extensions.ChunkUnloadListeningBlockEntity;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class SmartTileEntity extends SyncedTileEntity implements IPartialSafeNBT, IInteractionChecker {
+public abstract class SmartTileEntity extends SyncedTileEntity implements IPartialSafeNBT, IInteractionChecker, ChunkUnloadListeningBlockEntity {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
@@ -118,7 +120,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	 */
 	private boolean unloaded;
 
-//	@Override
+	@Override
 	public void onChunkUnloaded() {
 //		super.onChunkUnloaded();
 		unloaded = true;
