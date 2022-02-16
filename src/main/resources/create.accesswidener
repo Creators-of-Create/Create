@@ -1,17 +1,8 @@
 accessWidener v1 named
 
-accessible class com/mojang/blaze3d/platform/GlStateManager$BooleanState
-
 accessible class net/minecraft/client/particle/ParticleEngine$SpriteParticleRegistration
 
-accessible class net/minecraft/world/level/chunk/ChunkStatus$GenerationTask
-accessible class net/minecraft/world/level/chunk/ChunkStatus$LoadingTask
-
-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
-
 accessible class net/minecraft/world/level/chunk/PaletteResize
-
-accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
 extendable method net/minecraft/world/entity/Entity positionRider (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity$MoveFunction;)V
 
@@ -21,11 +12,3 @@ accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
 
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
-
-extendable class net/minecraft/world/inventory/MenuType$MenuSupplier
-
-accessible method net/minecraft/world/entity/LivingEntity spawnItemParticles (Lnet/minecraft/world/item/ItemStack;I)V
-
-accessible method net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/nbt/CompoundTag;)V
-
-accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;

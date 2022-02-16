@@ -2,102 +2,46 @@ package com.simibubi.create.lib.mixin.client;
 
 import java.util.Iterator;
 
-import net.minecraft.world.inventory.InventoryMenu;
-
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Slice;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
-import com.simibubi.create.lib.extensions.AbstractTextureExtensions;
+import com.simibubi.create.lib.block.CullingBlockEntityIterator;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
 	@Shadow
-	@Final
-	private Minecraft minecraft;
+	private Frustum cullingFrustum;
 
 	@Shadow
 	@Nullable
 	private Frustum capturedFrustum;
 
-	@Shadow
-	private Frustum cullingFrustum;
-
-	@Redirect(
-			method = "renderLevel",
-			slice = @Slice(
-					from = @At(
-							value = "INVOKE",
-							target = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;getRenderableBlockEntities()Ljava/util/List;"
-					),
-					to = @At(
-							value = "INVOKE",
-							target = "Lnet/minecraft/client/renderer/OutlineBufferSource;endOutlineBatch()V"
-					)
-			),
-			at = @At(
-					value = "INVOKE",
-					target = "Ljava/util/Iterator;next()Ljava/lang/Object;"
-			)
+	@ModifyVariable(
+		method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lcom/mojang/math/Matrix4f;)V",
+		slice = @Slice(
+				from = @At(
+						value = "INVOKE",
+						target = "Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$CompiledChunk;getRenderableBlockEntities()Ljava/util/List;"
+				),
+				to = @At(
+						value = "INVOKE",
+						target = "Lnet/minecraft/client/renderer/OutlineBufferSource;endOutlineBatch()V"
+				)
+		),
+		at = @At("STORE")
 	)
-	private <E> E create$redirectBlockEntityIterator(Iterator<E> instance) {
-		E obj = instance.next();
-		BlockEntity next = (BlockEntity) obj;
-		if (next instanceof CustomRenderBoundingBoxBlockEntity custom) {
-			Frustum frustum = capturedFrustum != null ? capturedFrustum : cullingFrustum;
-			// skip this BE if not visible
-			if (!frustum.isVisible(custom.getRenderBoundingBox())) {
-				// if this is the last BE in the list, we need to render anyway to avoid an index out of bounds
-				if (!instance.hasNext()) {
-					return obj;
-				}
-				return create$redirectBlockEntityIterator(instance);
-			}
-		}
-		return obj;
-	}
-
-	@Inject(method = "renderLevel",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V",
-					ordinal = 0
-			)
-	)
-	public void create$setBlur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		((AbstractTextureExtensions)this.minecraft.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)).create$setBlurMipmap(false, this.minecraft.options.mipmapLevels > 0);
-	}
-
-	@Inject(
-			method = "renderLevel",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/client/renderer/LevelRenderer;renderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLcom/mojang/math/Matrix4f;)V",
-					ordinal = 1
-			)
-	)
-	public void create$lastBlur(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		((AbstractTextureExtensions)this.minecraft.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)).create$restoreLastBlurMipmap();
+	private Iterator<BlockEntity> wrapBlockEntityIterator(Iterator<BlockEntity> iterator) {
+		return new CullingBlockEntityIterator(iterator, capturedFrustum != null ? capturedFrustum : cullingFrustum);
 	}
 }

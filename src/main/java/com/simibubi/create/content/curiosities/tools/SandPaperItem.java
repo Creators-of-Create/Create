@@ -8,6 +8,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.item.CustomItemEnchantabilityItem;
+import com.simibubi.create.lib.mixin.common.accessor.LivingEntityAccessor;
 import com.simibubi.create.lib.util.NBTSerializer;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
@@ -217,7 +218,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem, CustomI
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack polishing = ItemStack.of(tag.getCompound("Polishing"));
-			entity.spawnItemParticles(polishing, 1);
+			((LivingEntityAccessor) entity).create$spawnItemParticles(polishing, 1);
 		}
 
 		// After 6 ticks play the sound every 7th

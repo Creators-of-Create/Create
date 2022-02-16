@@ -142,7 +142,7 @@ public class RenderTypes extends RenderStateShard {
 		private static ShaderInstance glowingShader;
 
 		public static void onRegisterShaders(List<Pair<ShaderInstance, Consumer<ShaderInstance>>> shaderRegistry, ResourceManager resourceManager) throws IOException {
-			shaderRegistry.add(Pair.of(new ShaderInstance(resourceManager, Create.ID + ":glowing_shader", DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader));
+			shaderRegistry.add(Pair.of(new ShaderInstance(resourceManager, Create.asResource("glowing_shader").toString(), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader));
 		}
 	}
 

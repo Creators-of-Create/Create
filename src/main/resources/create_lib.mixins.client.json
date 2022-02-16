@@ -4,12 +4,12 @@
   "package": "com.simibubi.create.lib.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "AbstractTextureMixin",
     "BufferBuilderMixin",
     "ClientLevel$EntityCallbacksMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
     "FogRendererMixin",
+    "GameRendererMixin",
     "GuiComponentMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
@@ -26,9 +26,9 @@
     "PostChainMixin",
     "RenderTargetMixin",
     "ScreenMixin",
+    "ShaderInstanceMixin",
     "TerrainParticle$ProviderMixin",
     "TerrainParticleMixin",
-    "TextureManagerMixin",
     "accessor.AbstractContainerScreenAccessor",
     "accessor.AbstractSelectionList$EntryAccessor",
     "accessor.AbstractSelectionListAccessor",
@@ -49,9 +49,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "GameRendererMixin",
-    "ShaderInstanceMixin"
-  ]
+  }
 }

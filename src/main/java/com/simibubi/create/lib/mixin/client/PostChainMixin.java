@@ -29,6 +29,8 @@ public abstract class PostChainMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	public void create$isStencil(String name, int width, int height, CallbackInfo ci, RenderTarget rendertarget) {
-		if (((RenderTargetExtensions)screenTarget).create$isStencilEnabled()) { ((RenderTargetExtensions)rendertarget).create$enableStencil(); }
+		if (((RenderTargetExtensions) screenTarget).create$isStencilEnabled()) {
+			((RenderTargetExtensions) rendertarget).create$enableStencil();
+		}
 	}
 }
