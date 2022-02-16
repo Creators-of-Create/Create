@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.jei.category;
+package com.simibubi.create.compat.rei.category;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -7,17 +7,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
+import com.simibubi.create.compat.rei.EmptyBackground;
+import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -25,12 +28,12 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	protected static final int SCALE = 24;
 
-	public ProcessingViaFanCategory(IDrawable icon) {
+	public ProcessingViaFanCategory(Renderer icon) {
 		this(178, icon);
 	}
 
-	public ProcessingViaFanCategory(int width, IDrawable icon) {
-		super(icon, emptyBackground(width, 72));
+	public ProcessingViaFanCategory(int width, Renderer icon) {
+		super(icon, emptyBackground(width, 76));
 	}
 
 	public static Supplier<ItemStack> getFan(String name) {
@@ -39,20 +42,13 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 	}
 
 	@Override
-	public void setIngredients(T recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, T recipe, IIngredients ingredients) {
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-
-		itemStacks.init(0, true, 20, 47);
-		itemStacks.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-
-		itemStacks.init(1, false, 140, 47);
-		itemStacks.set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+	public void addWidgets(CreateDisplay<T> display, List<Widget> ingredients, Point origin) {
+		ingredients.add(basicSlot(origin.x + 21, origin.y + 48)
+				.markInput()
+				.entries(display.getInputEntries().get(0)));
+		ingredients.add(basicSlot(origin.x + 141, origin.y + 48)
+				.markOutput()
+				.entries(display.getOutputEntries().get(0)));
 	}
 
 	@Override
@@ -99,29 +95,22 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 
-		public MultiOutput(IDrawable icon) {
+		public MultiOutput(Renderer icon) {
 			super(icon);
 		}
 
-		public MultiOutput(int width, IDrawable icon) {
+		public MultiOutput(int width, Renderer icon) {
 			super(width, icon);
 		}
 
 		@Override
-		public void setIngredients(T recipe, IIngredients ingredients) {
-			ingredients.setInputIngredients(recipe.getIngredients());
-			ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
-		}
-
-		@Override
-		public void setRecipe(IRecipeLayout recipeLayout, T recipe, IIngredients ingredients) {
-			IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-
-			List<ProcessingOutput> results = recipe.getRollableResults();
+		public void addWidgets(CreateDisplay<T> display, List<Widget> ingredients, Point origin) {
+			List<ProcessingOutput> results = display.getRecipe().getRollableResults();
 			int xOffsetAmount = 1 - Math.min(3, results.size());
 
-			itemStacks.init(0, true, 5 * xOffsetAmount + 20, 47);
-			itemStacks.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+			ingredients.add(basicSlot(origin.x + 5 * xOffsetAmount + 21, origin.y + 48)
+					.markInput()
+					.entries(display.getInputEntries().get(0)));
 
 			int xOffsetOutput = 9 * xOffsetAmount;
 			boolean excessive = results.size() > 9;
@@ -129,11 +118,12 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 				int xOffset = (outputIndex % 3) * 19 + xOffsetOutput;
 				int yOffset = (outputIndex / 3) * -19 + (excessive ? 8 : 0);
 
-				itemStacks.init(outputIndex + 1, false, 140 + xOffset, 47 + yOffset);
-				itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+				ingredients.add(basicSlot(origin.x + 141 + xOffset, origin.y + 48 + yOffset)
+						.markOutput()
+						.entries(EntryIngredients.of(results.get(outputIndex).getStack())));
 			}
 
-			addStochasticTooltip(itemStacks, results);
+			addStochasticTooltip(ingredients, results);
 		}
 
 		@Override

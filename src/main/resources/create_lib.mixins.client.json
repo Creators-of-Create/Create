@@ -49,5 +49,9 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "GameRendererMixin",
+    "ShaderInstanceMixin"
+  ]
 }

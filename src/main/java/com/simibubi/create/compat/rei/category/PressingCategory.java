@@ -24,12 +24,12 @@ import net.minecraft.network.chat.Component;
 public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
 	public PressingCategory() {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS, AllItems.IRON_SHEET), emptyBackground(177, 80));
+		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS, AllItems.IRON_SHEET), emptyBackground(177, 90));
 	}
 
 	@Override
 	public List<Widget> setupDisplay(CreateDisplay<PressingRecipe> display, Rectangle bounds) {
-			Point origin = new Point(bounds.getX(), bounds.getY() + 4);
+			Point origin = new Point(bounds.getX(), bounds.getY() + 15);
 			List<Widget> widgets = new ArrayList<>();
 			List<ProcessingOutput> results = display.getRecipe().getRollableResults();
 			widgets.add(Widgets.createRecipeBase(bounds));

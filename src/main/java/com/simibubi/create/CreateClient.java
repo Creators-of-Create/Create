@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
+import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
@@ -106,6 +107,7 @@ public class CreateClient implements ClientModInitializer {
 		AllPackets.channel.initClientListener();
 		FluidHandlerData.initClient();
 		FluidTileDataHandler.initClient();
+		RenderTypes.init();
 	}
 
 	private static void registerOverlays() {

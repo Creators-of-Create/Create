@@ -1,11 +1,15 @@
 package com.simibubi.create.foundation.render;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
+import com.simibubi.create.lib.event.RegisterShadersCallback;
 import com.simibubi.create.lib.mixin.client.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.RenderStateShard;
@@ -14,10 +18,6 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 // TODO 1.17: use custom shaders instead of vanilla ones
 public class RenderTypes extends RenderStateShard {
@@ -134,14 +134,15 @@ public class RenderTypes extends RenderStateShard {
 		super(null, null, null);
 	}
 
-	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	public static void init() {
+		RegisterShadersCallback.EVENT.register(Shaders::onRegisterShaders);
+	}
+
 	private static class Shaders {
 		private static ShaderInstance glowingShader;
 
-		@SubscribeEvent
-		public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
-			ResourceManager resourceManager = event.getResourceManager();
-			event.registerShader(new ShaderInstance(resourceManager, Create.asResource("glowing_shader"), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
+		public static void onRegisterShaders(List<Pair<ShaderInstance, Consumer<ShaderInstance>>> shaderRegistry, ResourceManager resourceManager) throws IOException {
+			shaderRegistry.add(Pair.of(new ShaderInstance(resourceManager, Create.ID + ":glowing_shader", DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader));
 		}
 	}
 
