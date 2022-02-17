@@ -13,6 +13,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -186,7 +187,7 @@ public class ToolboxHandlerClient {
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
-			texture.render(poseStack, x + 20 * slot - offset, y + offset);
+			texture.render(poseStack, x + 20 * slot - offset, y + offset - AllConfigs.CLIENT.toolboxHotbarOverlayOffset.get());
 		}
 		poseStack.popPose();
 	}

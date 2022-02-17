@@ -25,7 +25,4 @@ public interface ScreenAccessor {
 
 	@Accessor("renderables")
 	List<Widget> create$getRenderables();
-
-	@Invoker("addRenderableWidget")
-	<T extends GuiEventListener & Widget & NarratableEntry> T create$addRenderableWidget(T widget);
 }

@@ -38,6 +38,8 @@ public class CClient extends ConfigBase {
 			Comments.fluidUnit);
 	public final ConfigBool simplifyFluidUnit = b(true, "simplifyFluidUnit",
 			Comments.simplifyFluidUnit);
+	public final ConfigInt toolboxHotbarOverlayOffset = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "toolboxHotbarOverlayOffset",
+			Comments.toolboxHotbarOverlayOffset);
 
 	//overlay group
 	public final ConfigGroup overlay = group(1, "goggleOverlay",
@@ -139,6 +141,7 @@ public class CClient extends ConfigBase {
 		static String[] simplifyFluidUnit = new String[]{
 				"Determines if the fluid unit should be simplified"
 		};
+		static String toolboxHotbarOverlayOffset = "Vertical offset for the Toolbox Hotbar overlay.";
 		static String placementAssist = "Settings for the Placement Assist";
 		static String[] placementIndicator = new String[]{
 				"What indicator should be used when showing where the assisted placement ends up relative to your crosshair",

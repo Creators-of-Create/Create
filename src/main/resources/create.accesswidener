@@ -12,3 +12,6 @@ accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
 
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+
+# Mixin can't handle an invoker here thanks to weird generics, so we need this AW'd
+accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
