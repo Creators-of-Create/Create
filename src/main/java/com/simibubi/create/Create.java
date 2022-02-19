@@ -90,8 +90,6 @@ public class Create implements ModInitializer {
 
 		Milk.enableMilkFluid();
 
-		CopperRegistries.inject();
-
 //		GatherDataEvent.EVENT.register(Create::gatherData);
 
 		AllRecipeTypes.register();
@@ -107,6 +105,7 @@ public class Create implements ModInitializer {
 
 
 		REGISTRATE.get().register();
+		CopperRegistries.inject();
 		init();
 		CommonEvents.register();
 		AllWorldFeatures.registerOreFeatures();
