@@ -28,10 +28,9 @@ public enum AllKeys {
 
 	public static void register() {
 		for (AllKeys key : values()) {
-			key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
 			if (!key.modifiable)
 				continue;
-
+			key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
 			KeyBindingHelper.registerKeyBinding(key.keybind);
 		}
 	}
