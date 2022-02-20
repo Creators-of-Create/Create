@@ -1,7 +1,11 @@
 package com.simibubi.create.foundation.render;
 
+import java.util.function.IntPredicate;
+
+import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
 import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.Rotate;
@@ -34,6 +38,7 @@ import net.minecraft.world.level.Level;
 public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
 	private final VertexList template;
+	private final IntPredicate shadedPredicate;
 
 	// Vertex Position
 	private final PoseStack transforms;
@@ -65,7 +70,14 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		template = new BlockVertexList(buf);
+		if (buf instanceof ShadeSeparatedBufferBuilder separated) {
+			ShadedVertexList template = new BlockVertexList.Shaded(separated);
+			shadedPredicate = template::isShaded;
+			this.template = template;
+		} else {
+			template = new BlockVertexList(buf);
+			shadedPredicate = index -> true;
+		}
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}
@@ -142,7 +154,7 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			if (disableDiffuseMult) {
 				builder.color(r, g, b, a);
 			} else {
-				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz);
+				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz, shadedPredicate.test(i));
 				int colorR = transformColor(r, instanceDiffuse);
 				int colorG = transformColor(g, instanceDiffuse);
 				int colorB = transformColor(b, instanceDiffuse);

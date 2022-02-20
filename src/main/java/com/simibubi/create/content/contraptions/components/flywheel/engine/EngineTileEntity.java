@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class EngineTileEntity extends SmartTileEntity {
 
@@ -31,14 +29,9 @@ public class EngineTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 	}
 
-	protected AABB cachedBoundingBox;
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
-			cachedBoundingBox = super.getRenderBoundingBox().inflate(1.5f);
-		}
-		return cachedBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(1.5f);
 	}
 
 	@Override

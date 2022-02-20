@@ -126,6 +126,7 @@ public class BeltTileEntity extends KineticTileEntity {
 				lighter = new BeltLighter();
 			}
 		});
+		invalidateRenderBoundingBox();
 
 		getInventory().tick();
 
@@ -160,11 +161,11 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	public AABB createRenderBoundingBox() {
 		if (!isController())
-			return super.makeRenderBoundingBox();
+			return super.createRenderBoundingBox();
 		else
-			return super.makeRenderBoundingBox().inflate(beltLength + 1);
+			return super.createRenderBoundingBox().inflate(beltLength + 1);
 	}
 
 	protected void initializeItemHandler() {

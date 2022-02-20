@@ -139,7 +139,6 @@
 			"name": "Axis",
 			"from": [6, 6, 6],
 			"to": [10, 10, 16],
-			"shade": false,
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#1_1"},
