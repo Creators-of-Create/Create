@@ -13,7 +13,6 @@
     "BlockParticleOptionMixin",
     "BoatMixin",
     "ChunkStatusMixin",
-    "ClientboundAddEntityPacketMixin",
     "ClipContextMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
