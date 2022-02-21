@@ -211,6 +211,12 @@ public class SchematicHandler {
 
 	}
 
+	public void updateRenderers() {
+		for (SchematicRenderer renderer : renderers) {
+			renderer.update();
+		}
+	}
+
 	public IIngameOverlay getOverlayRenderer() {
 		return overlayRenderer;
 	}

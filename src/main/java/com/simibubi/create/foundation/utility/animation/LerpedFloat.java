@@ -9,7 +9,7 @@ import net.minecraft.util.Mth;
 // InterpolatedChasingValue, InterpolatedValue, InterpolatedChasingAngle, InterpolatedAngle
 public class LerpedFloat {
 
-	protected Interpolater interpolater;
+	protected Interpolator interpolator;
 	protected float previousValue;
 	protected float value;
 
@@ -19,8 +19,8 @@ public class LerpedFloat {
 
 	protected boolean forcedSync;
 
-	public LerpedFloat(Interpolater interpolater) {
-		this.interpolater = interpolater;
+	public LerpedFloat(Interpolator interpolator) {
+		this.interpolator = interpolator;
 		startWithValue(0);
 		forcedSync = true;
 	}
@@ -79,7 +79,7 @@ public class LerpedFloat {
 	}
 
 	public float getValue(float partialTicks) {
-		return interpolater.interpolate(partialTicks, previousValue, value);
+		return interpolator.interpolate(partialTicks, previousValue, value);
 	}
 
 	public boolean settled() {
@@ -117,7 +117,7 @@ public class LerpedFloat {
 	}
 
 	@FunctionalInterface
-	public interface Interpolater {
+	public interface Interpolator {
 		float interpolate(double progress, double current, double target);
 	}
 

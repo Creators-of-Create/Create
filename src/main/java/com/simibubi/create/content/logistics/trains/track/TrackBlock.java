@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -348,7 +348,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms) {
-		new MatrixTransformStack(ms).rotateCentered(Direction.UP,
+		TransformStack.cast(ms).rotateCentered(Direction.UP,
 			AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
 		return AllBlockPartials.TRACK_ASSEMBLING_OVERLAY;
 	}
@@ -365,7 +365,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		Vec3 normal = getUpNormal(world, pos, state);
 		Vec3 angles = TrackRenderer.getModelAngles(normal, directionVec);
 
-		new MatrixTransformStack(ms).centre()
+		TransformStack.cast(ms).centre()
 			.rotateYRadians(angles.y)
 			.rotateXRadians(angles.x)
 			.unCentre()

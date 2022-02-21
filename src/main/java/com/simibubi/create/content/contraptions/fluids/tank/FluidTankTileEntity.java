@@ -25,8 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -58,7 +56,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	// For rendering purposes only
 	private InterpolatedChasingValue fluidLevel;
-	private AABB renderBoundingBox;
 
 	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -123,7 +120,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		super.initialize();
 		sendData();
 		if (level.isClientSide)
-			updateRenderBoundingBox();
+			invalidateRenderBoundingBox();
 	}
 
 	private void onPositionChanged() {
@@ -304,20 +301,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		return isController() ? worldPosition : controller;
 	}
 
-	public void updateRenderBoundingBox() {
-		if (isController())
-			renderBoundingBox = super.getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
-		else
-			renderBoundingBox = super.getRenderBoundingBox();
-	}
-
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (renderBoundingBox == null) {
-			renderBoundingBox = super.getRenderBoundingBox();
-		}
-		return renderBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		if (isController())
+			return super.createRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
+		else
+			return super.createRenderBoundingBox();
 	}
 
 	@Nullable
@@ -380,7 +369,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 				level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 16);
 			if (isController())
 				tankInventory.setCapacity(getCapacityMultiplier() * getTotalTankSize());
-			updateRenderBoundingBox();
+			invalidateRenderBoundingBox();
 		}
 		if (isController()) {
 			float fillState = getFillState();

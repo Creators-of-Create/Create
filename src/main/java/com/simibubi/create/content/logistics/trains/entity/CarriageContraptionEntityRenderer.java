@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
 
@@ -40,11 +40,11 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				return;
 
 			ms.pushPose();
-			MatrixTransformStack msr = new MatrixTransformStack(ms);
 			float viewYRot = entity.getViewYRot(partialTicks);
 			float viewXRot = entity.getViewXRot(partialTicks);
 			int bogeySpacing = carriage.bogeySpacing;
-			msr.rotateY(viewYRot + 90)
+			TransformStack.cast(ms)
+				.rotateY(viewYRot + 90)
 				.rotateX(-viewXRot)
 				.rotateY(180)
 				.translate(0, 0, first ? 0 : -bogeySpacing)

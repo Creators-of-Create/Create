@@ -45,7 +45,7 @@ import net.minecraftforge.common.util.FakePlayer;
 public class SandPaperItem extends Item implements CustomUseEffectsItem {
 
 	public SandPaperItem(Properties properties) {
-		super(properties.durability(8));
+		super(properties.defaultDurability(8));
 	}
 
 	@Override

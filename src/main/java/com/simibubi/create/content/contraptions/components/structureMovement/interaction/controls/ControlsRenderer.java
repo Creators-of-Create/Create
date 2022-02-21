@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -41,7 +41,8 @@ public class ControlsRenderer {
 			float vAngle = (float) Mth.clamp(first ? firstLever * 70 - 25 : secondLever * 15, -45, 45);
 			SuperByteBuffer lever = CachedBufferer.partial(AllBlockPartials.TRAIN_CONTROLS_LEVER, state);
 			ms.pushPose();
-			new MatrixTransformStack(ms).centre()
+			TransformStack.cast(ms)
+				.centre()
 				.rotateY(hAngle)
 				.translate(0, 0, 4 / 16f)
 				.rotateX(vAngle - 45)

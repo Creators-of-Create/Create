@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class TrackTileEntity extends SmartTileEntity implements ITransformableTE, IMergeableTE {
@@ -118,6 +119,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}

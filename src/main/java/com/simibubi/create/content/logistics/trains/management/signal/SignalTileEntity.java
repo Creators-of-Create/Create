@@ -69,6 +69,7 @@ public class SignalTileEntity extends SmartTileEntity {
 		id = tag.getUUID("Id");
 		state = NBTHelper.readEnum(tag, "State", SignalState.class);
 		overlay = NBTHelper.readEnum(tag, "Overlay", OverlayState.class);
+		invalidateRenderBoundingBox();
 	}
 
 	public boolean isPowered() {
@@ -210,15 +211,9 @@ public class SignalTileEntity extends SmartTileEntity {
 		scheduleBlockTick();
 	}
 
-	// Render
-
-	private AABB renderBounds = null;
-
 	@Override
-	public AABB getRenderBoundingBox() {
-		if (renderBounds == null)
-			renderBounds = new AABB(worldPosition, getTarget().getGlobalPosition()).inflate(2);
-		return renderBounds;
+	protected AABB createRenderBoundingBox() {
+		return new AABB(worldPosition, getTarget().getGlobalPosition()).inflate(2);
 	}
 
 }

@@ -14,7 +14,6 @@
 			"name": "Axle",
 			"from": [6, 6, 0],
 			"to": [10, 10, 4],
-			"shade": false,
 			"faces": {
 				"north": {"uv": [6, 6, 10, 10], "texture": "#0"},
 				"east": {"uv": [6, 12, 10, 16], "rotation": 90, "texture": "#1"},

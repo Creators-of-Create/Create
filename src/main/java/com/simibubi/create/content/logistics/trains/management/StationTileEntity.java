@@ -41,6 +41,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StationTileEntity extends SmartTileEntity {
 
@@ -118,7 +120,7 @@ public class StationTileEntity extends SmartTileEntity {
 		super.read(tag, clientPacket);
 		if (tag.contains("ToMigrate"))
 			toMigrate = tag.getCompound("ToMigrate");
-		renderBounds = null;
+		invalidateRenderBoundingBox();
 	}
 
 	@Override
@@ -511,17 +513,17 @@ public class StationTileEntity extends SmartTileEntity {
 		sendData();
 	}
 
-	// Render
-
-	private AABB renderBounds = null;
-
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (isAssembling())
 			return INFINITE_EXTENT_AABB;
-		if (renderBounds == null)
-			renderBounds = new AABB(worldPosition, getTarget().getGlobalPosition()).inflate(2);
-		return renderBounds;
+		return super.getRenderBoundingBox();
+	}
+
+	@Override
+	protected AABB createRenderBoundingBox() {
+		return new AABB(worldPosition, getTarget().getGlobalPosition()).inflate(2);
 	}
 
 }

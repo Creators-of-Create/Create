@@ -6,7 +6,7 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -197,7 +197,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		float time = AnimationTickHolder.getRenderTime(context.world) / 20;
 		float angle = (time * speed) % 360;
 
-		new MatrixTransformStack(m)
+		TransformStack.cast(m)
 			.centre()
 			.rotateY(axis == Axis.Z ? 90 : 0)
 			.rotateZ(axis.isHorizontal() ? 90 : 0)

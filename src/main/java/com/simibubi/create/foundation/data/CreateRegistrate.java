@@ -18,8 +18,6 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import com.simibubi.create.foundation.block.render.ColoredVertexModel;
-import com.simibubi.create.foundation.block.render.IBlockVertexColor;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
@@ -198,10 +196,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
 	}
 
-	public static <T extends Block> NonNullConsumer<? super T> blockVertexColors(IBlockVertexColor colorFunc) {
-		return entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc));
-	}
-
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
@@ -227,12 +221,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static <T extends Block> void registerCasingConnectivity(T entry,
 		BiConsumer<T, CasingConnectivity> consumer) {
 		consumer.accept(entry, CreateClient.CASING_CONNECTIVITY);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
-		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
 	}
 
 	@OnlyIn(Dist.CLIENT)
