@@ -1,17 +1,14 @@
 package com.simibubi.create.content.schematics.client;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
 import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
 import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,17 +22,19 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 public class SchematicRenderer {
 
+	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
+
 	private final Map<RenderType, SuperByteBuffer> bufferCache = new HashMap<>(getLayerCount());
-	private final Set<RenderType> usedBlockRenderLayers = new HashSet<>(getLayerCount());
-	private final Set<RenderType> startedBufferBuilders = new HashSet<>(getLayerCount());
 	private boolean active;
 	private boolean changed;
 	protected SchematicWorld schematic;
@@ -71,90 +70,90 @@ public class SchematicRenderer {
 		changed = false;
 	}
 
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffers) {
 		if (!active)
 			return;
-		for (RenderType layer : RenderType.chunkBufferLayers()) {
-			if (!usedBlockRenderLayers.contains(layer))
-				continue;
-			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
-			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
-		}
-		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffer);
+		bufferCache.forEach((layer, buffer) -> {
+			buffer.renderInto(ms, buffers.getBuffer(layer));
+		});
+		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffers);
 	}
 
 	protected void redraw() {
-		usedBlockRenderLayers.clear();
-		startedBufferBuilders.clear();
-
-		final SchematicWorld blockAccess = schematic;
-		final BlockRenderDispatcher blockRendererDispatcher = Minecraft.getInstance().getBlockRenderer();
-
-		List<BlockState> blockstates = new LinkedList<>();
-		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
-		PoseStack ms = new PoseStack();
-		Random random = new Random();
-
-		BlockPos.betweenClosedStream(blockAccess.getBounds())
-			.forEach(localPos -> {
-				ms.pushPose();
-				TransformStack.cast(ms)
-					.translate(localPos);
-				BlockPos pos = localPos.offset(anchor);
-				BlockState state = blockAccess.getBlockState(pos);
-
-				for (RenderType blockRenderLayer : RenderType.chunkBufferLayers()) {
-//					if (ItemBlockRenderTypes.getChunkRenderType(state) != blockRenderLayer)
-//						continue;
-//					ForgeHooksClient.setRenderType(blockRenderLayer);
-					if (!buffers.containsKey(blockRenderLayer))
-						buffers.put(blockRenderLayer, new BufferBuilder(512));
-
-					BufferBuilder bufferBuilder = buffers.get(blockRenderLayer);
-					if (startedBufferBuilders.add(blockRenderLayer))
-						bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-
-//					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
-
-//					if (blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true,
-//						random)) {
-					if (state.getRenderShape() == RenderShape.MODEL) {
-						BakedModel model = blockRendererDispatcher.getBlockModel(state);
-						if (((FabricBakedModel) model).isVanillaAdapter()) {
-							if (!FabricModelUtil.doesLayerMatch(state, blockRenderLayer)) {
-								model = null;
-							}
-						} else {
-							model = CullingBakedModel.wrap(model);
-							model = LayerFilteringBakedModel.wrap(model, blockRenderLayer);
-						}
-						if (model != null) {
-							if (blockRendererDispatcher.getModelRenderer()
-								.tesselateBlock(blockAccess, model, state, pos, ms, bufferBuilder, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY)) {
-								usedBlockRenderLayers.add(blockRenderLayer);
-							}
-						}
-					}
-					blockstates.add(state);
-				}
-
-//				ForgeHooksClient.setRenderType(null);
-				ms.popPose();
-			});
-
-		// finishDrawing
+		bufferCache.clear();
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
-			if (!startedBufferBuilders.contains(layer))
-				continue;
-			BufferBuilder buf = buffers.get(layer);
-			buf.end();
-			bufferCache.put(layer, new SuperByteBuffer(buf));
+			SuperByteBuffer buffer = drawLayer(layer);
+			if (!buffer.isEmpty())
+				bufferCache.put(layer, buffer);
 		}
+	}
+
+	protected SuperByteBuffer drawLayer(RenderType layer) {
+		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+
+		PoseStack poseStack = objects.poseStack;
+		Random random = objects.random;
+		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
+		SchematicWorld renderWorld = schematic;
+		BoundingBox bounds = renderWorld.getBounds();
+
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(builder, unshadedBuilder);
+
+		ModelBlockRenderer.enableCaching();
+		for (BlockPos localPos : BlockPos.betweenClosed(bounds.minX(), bounds.minY(), bounds.minZ(), bounds.maxX(), bounds.maxY(), bounds.maxZ())) {
+			BlockPos pos = mutableBlockPos.setWithOffset(localPos, anchor);
+			BlockState state = renderWorld.getBlockState(pos);
+
+			poseStack.pushPose();
+			poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
+
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BakedModel model = dispatcher.getBlockModel(state);
+				if (((FabricBakedModel) model).isVanillaAdapter()) {
+					if (!FabricModelUtil.doesLayerMatch(state, layer)) {
+						model = null;
+					}
+				} else {
+					model = CullingBakedModel.wrap(model);
+					model = LayerFilteringBakedModel.wrap(model, layer);
+					model = shadeSeparatingWrapper.wrapModel(model);
+				}
+				if (model != null) {
+					dispatcher.getModelRenderer()
+						.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+				}
+			}
+
+			poseStack.popPose();
+		}
+		ModelBlockRenderer.clearCache();
+
+		shadeSeparatingWrapper.clear();
+		unshadedBuilder.end();
+		builder.appendUnshadedVertices(unshadedBuilder);
+		builder.end();
+
+		return new SuperByteBuffer(builder);
 	}
 
 	private static int getLayerCount() {
 		return RenderType.chunkBufferLayers()
 			.size();
+	}
+
+	private static class ThreadLocalObjects {
+		public final PoseStack poseStack = new PoseStack();
+		public final Random random = new Random();
+		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 
 }

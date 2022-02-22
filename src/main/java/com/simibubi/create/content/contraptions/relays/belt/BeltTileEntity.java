@@ -128,6 +128,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 				lighter = new BeltLighter();
 			}
 		});
+		invalidateRenderBoundingBox();
 
 		getInventory().tick();
 
@@ -162,11 +163,11 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	public AABB createRenderBoundingBox() {
 		if (!isController())
-			return super.makeRenderBoundingBox();
+			return super.createRenderBoundingBox();
 		else
-			return super.makeRenderBoundingBox().inflate(beltLength + 1);
+			return super.createRenderBoundingBox().inflate(beltLength + 1);
 	}
 
 	protected void initializeItemHandler() {

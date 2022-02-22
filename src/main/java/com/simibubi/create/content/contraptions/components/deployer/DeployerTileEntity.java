@@ -387,8 +387,8 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().inflate(3);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(3);
 	}
 
 	@Override

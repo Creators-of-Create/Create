@@ -9,8 +9,6 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,14 +30,9 @@ public class EngineTileEntity extends SmartTileEntity implements CustomRenderBou
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 	}
 
-	protected AABB cachedBoundingBox;
 	@Override
-	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
-			cachedBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox().inflate(1.5f);
-		}
-		return cachedBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(1.5f);
 	}
 
 	@Override

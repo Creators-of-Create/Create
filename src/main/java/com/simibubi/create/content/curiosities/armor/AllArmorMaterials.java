@@ -5,8 +5,6 @@ import java.util.function.Supplier;
 import com.google.common.base.Suppliers;
 import com.simibubi.create.AllSoundEvents;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
@@ -30,47 +28,54 @@ public enum AllArmorMaterials implements ArmorMaterial {
 	private final float knockbackResistance;
 	private final Supplier<Ingredient> repairMaterial;
 
-	private AllArmorMaterials(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_,
-		SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
-		this.name = p_i231593_3_;
-		this.maxDamageFactor = p_i231593_4_;
-		this.damageReductionAmountArray = p_i231593_5_;
-		this.enchantability = p_i231593_6_;
-		this.soundEvent = p_i231593_7_;
-		this.toughness = p_i231593_8_;
-		this.knockbackResistance = p_i231593_9_;
-		this.repairMaterial = Suppliers.memoize(p_i231593_10_::get);
+	private AllArmorMaterials(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability,
+		SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
+		this.name = name;
+		this.maxDamageFactor = maxDamageFactor;
+		this.damageReductionAmountArray = damageReductionAmountArray;
+		this.enchantability = enchantability;
+		this.soundEvent = soundEvent;
+		this.toughness = toughness;
+		this.knockbackResistance = knockbackResistance;
+		this.repairMaterial = Suppliers.memoize(repairMaterial::get);
 	}
 
-	public int getDurabilityForSlot(EquipmentSlot p_200896_1_) {
-		return MAX_DAMAGE_ARRAY[p_200896_1_.getIndex()] * this.maxDamageFactor;
+	@Override
+	public int getDurabilityForSlot(EquipmentSlot slot) {
+		return MAX_DAMAGE_ARRAY[slot.getIndex()] * this.maxDamageFactor;
 	}
 
-	public int getDefenseForSlot(EquipmentSlot p_200902_1_) {
-		return this.damageReductionAmountArray[p_200902_1_.getIndex()];
+	@Override
+	public int getDefenseForSlot(EquipmentSlot slot) {
+		return this.damageReductionAmountArray[slot.getIndex()];
 	}
 
+	@Override
 	public int getEnchantmentValue() {
 		return this.enchantability;
 	}
 
+	@Override
 	public SoundEvent getEquipSound() {
 		return this.soundEvent;
 	}
 
+	@Override
 	public Ingredient getRepairIngredient() {
 		return this.repairMaterial.get();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@Override
 	public String getName() {
 		return this.name;
 	}
 
+	@Override
 	public float getToughness() {
 		return this.toughness;
 	}
 
+	@Override
 	public float getKnockbackResistance() {
 		return this.knockbackResistance;
 	}

@@ -15,8 +15,6 @@ import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.util.LazyOptional;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -102,9 +100,8 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().expandTowards(0, -offset.getValue(), 0);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().expandTowards(0, -offset.getValue(), 0);
 	}
 
 	@Override
@@ -125,6 +122,7 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 			isMoving = false;
 
 		offset.setValue(newOffset);
+		invalidateRenderBoundingBox();
 	}
 
 	@Override

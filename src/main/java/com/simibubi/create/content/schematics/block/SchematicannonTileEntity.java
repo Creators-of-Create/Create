@@ -38,6 +38,8 @@ import com.simibubi.create.lib.util.LazyOptional;
 import com.simibubi.create.lib.util.LevelUtil;
 import com.simibubi.create.lib.util.NBTSerializer;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -815,6 +817,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}

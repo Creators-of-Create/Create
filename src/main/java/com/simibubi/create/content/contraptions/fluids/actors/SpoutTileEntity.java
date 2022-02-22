@@ -29,8 +29,6 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,14 +59,9 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		processingTicks = -1;
 	}
 
-	protected AABB cachedBoundingBox;
-
 	@Override
-	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null)
-			cachedBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox().expandTowards(0, -2, 0);
-		return cachedBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().expandTowards(0, -2, 0);
 	}
 
 	@Override

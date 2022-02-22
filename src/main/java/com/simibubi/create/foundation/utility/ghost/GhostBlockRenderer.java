@@ -14,7 +14,6 @@ import com.simibubi.create.lib.render.TranslucentBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -56,9 +55,8 @@ public abstract class GhostBlockRenderer {
 //			dispatcher.getModelRenderer()
 //				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 			model = DefaultLayerFilteringBakedModel.wrap(model);
-			model = FixedLightBakedModel.wrap(model, LightTexture.FULL_BRIGHT);
 			dispatcher.getModelRenderer()
-				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();
 		}

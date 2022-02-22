@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class CrushingWheelTileEntity extends KineticTileEntity {
 
-	public static DamageSource damageSource = DamageSourceHelper.create$createArmorBypassingDamageSource("create.crush")
+	public static final DamageSource DAMAGE_SOURCE = DamageSourceHelper.create$createArmorBypassingDamageSource("create.crush")
 			.setScalesWithDifficulty();
 
 	public CrushingWheelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -38,7 +38,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(1);
 	}
 
@@ -49,13 +49,13 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	}
 
 	public static int crushingIsFortunate(DamageSource source) {
-		if (source != damageSource)
+		if (source != DAMAGE_SOURCE)
 			return 0;
 		return 2;		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
 	}
 
 	public static boolean handleCrushedMobDrops(DamageSource source, Collection<ItemEntity> drops) {
-		if (source != CrushingWheelTileEntity.damageSource)
+		if (source != CrushingWheelTileEntity.DAMAGE_SOURCE)
 			return false;
 		Vec3 outSpeed = Vec3.ZERO;
 		for (ItemEntity outputItem : drops) {

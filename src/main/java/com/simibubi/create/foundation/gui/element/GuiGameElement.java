@@ -18,10 +18,8 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.lib.render.FixedColorTintingBakedModel;
-import com.simibubi.create.lib.render.FixedLightBakedModel;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -200,7 +198,6 @@ public class GuiGameElement {
 //					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 			BakedModel model = blockModel;
 			model = DefaultLayerFilteringBakedModel.wrap(model);
-			model = FixedLightBakedModel.wrap(model, LightTexture.FULL_BRIGHT);
 			if (color == -1) {
 				color = this.color;
 			}
@@ -208,7 +205,7 @@ public class GuiGameElement {
 				model = FixedColorTintingBakedModel.wrap(model, color);
 			}
 			blockRenderer.getModelRenderer()
-				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, blockState, BlockPos.ZERO, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, blockState, BlockPos.ZERO, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
 			buffer.endBatch();
 		}
 

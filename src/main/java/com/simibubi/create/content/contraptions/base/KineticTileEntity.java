@@ -46,7 +46,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 
 public class KineticTileEntity extends SmartTileEntity
 	implements IHaveGoggleInformation, IHaveHoveringInformation, CustomRenderBoundingBoxBlockEntity {
@@ -97,7 +96,6 @@ public class KineticTileEntity extends SmartTileEntity
 		effects.tick();
 
 		if (level.isClientSide) {
-			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio());
 			return;
 		}
@@ -569,20 +567,6 @@ public class KineticTileEntity extends SmartTileEntity
 //		super.requestModelDataUpdate();
 		if (!this.remove)
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
-	}
-
-	protected AABB cachedBoundingBox;
-
-	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
-			cachedBoundingBox = makeRenderBoundingBox();
-		}
-		return cachedBoundingBox;
-	}
-
-	protected AABB makeRenderBoundingBox() {
-		return CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox();
 	}
 
 	@Environment(EnvType.CLIENT)

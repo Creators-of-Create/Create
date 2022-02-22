@@ -7,8 +7,12 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
+import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
+import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -35,6 +39,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -59,6 +64,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION =
 		new SuperByteBufferCache.Compartment<>();
+
+	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	List<BlockEntity> renderedTileEntities;
 	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
@@ -338,9 +345,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.pose(),
 				overlayMS.last()
 					.normal());
-//			ModelUtil.VANILLA_RENDERER
-//				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random(),
-//					EmptyModelData.INSTANCE);
 			BlockState state = world.getBlockState(pos);
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
@@ -414,36 +418,66 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
-//		ForgeHooksClient.setRenderType(layer);
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-		PoseStack ms = new PoseStack();
-		Random random = new Random();
-		BufferBuilder builder = new BufferBuilder(512);
-		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		world.setMask(this.section);
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
 
+		PoseStack poseStack = objects.poseStack;
+		Random random = objects.random;
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(builder, unshadedBuilder);
+
+		world.setMask(this.section);
+		ModelBlockRenderer.enableCaching();
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
 			FluidState fluidState = world.getFluidState(pos);
 
-			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			poseStack.pushPose();
+			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.getChunkRenderType(state) == layer) {
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				dispatcher.renderBatched(state, pos, world, ms, builder, true, random);
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BakedModel model = dispatcher.getBlockModel(state);
+				if (((FabricBakedModel) model).isVanillaAdapter()) {
+					if (!FabricModelUtil.doesLayerMatch(state, layer)) {
+						model = null;
+					}
+				} else {
+					model = CullingBakedModel.wrap(model);
+					model = LayerFilteringBakedModel.wrap(model, layer);
+					model = shadeSeparatingWrapper.wrapModel(model);
+				}
+				if (model != null) {
+					dispatcher.getModelRenderer()
+						.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+				}
 			}
 
 			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
 				dispatcher.renderLiquid(pos, world, builder, fluidState);
 
-			ms.popPose();
+			poseStack.popPose();
 		});
-
+		ModelBlockRenderer.clearCache();
 		world.clearMask();
+
+		shadeSeparatingWrapper.clear();
+		unshadedBuilder.end();
+		builder.appendUnshadedVertices(unshadedBuilder);
 		builder.end();
-//		ForgeHooksClient.setRenderType(null);
+
 		return new SuperByteBuffer(builder);
+	}
+
+	private static class ThreadLocalObjects {
+		public final PoseStack poseStack = new PoseStack();
+		public final Random random = new Random();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 
 }

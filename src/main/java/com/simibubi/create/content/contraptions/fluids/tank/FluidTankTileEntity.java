@@ -24,9 +24,6 @@ import com.simibubi.create.lib.util.FluidTileDataHandler;
 import com.simibubi.create.lib.util.FluidUtil;
 import com.simibubi.create.lib.util.LazyOptional;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,7 +57,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	// For rendering purposes only
 	private InterpolatedChasingValue fluidLevel;
-	private AABB renderBoundingBox;
 
 	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -127,7 +123,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		super.initialize();
 		sendData();
 		if (level.isClientSide)
-			updateRenderBoundingBox();
+			invalidateRenderBoundingBox();
 	}
 
 	private void onPositionChanged() {
@@ -319,20 +315,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		return isController() ? worldPosition : controller;
 	}
 
-	public void updateRenderBoundingBox() {
-		if (isController())
-			renderBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
-		else
-			renderBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox();
-	}
-
 	@Override
-	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (renderBoundingBox == null) {
-			renderBoundingBox = CustomRenderBoundingBoxBlockEntity.super.getRenderBoundingBox();
-		}
-		return renderBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		if (isController())
+			return super.createRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
+		else
+			return super.createRenderBoundingBox();
 	}
 
 	@Nullable
@@ -395,7 +383,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 				level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 16);
 			if (isController())
 				tankInventory.setCapacity(getCapacityMultiplier() * getTotalTankSize());
-			updateRenderBoundingBox();
+			invalidateRenderBoundingBox();
 		}
 		if (isController()) {
 			float fillState = getFillState();

@@ -28,8 +28,6 @@ import com.simibubi.create.lib.util.ItemStackUtil;
 import com.simibubi.create.lib.util.LevelUtil;
 import com.simibubi.create.lib.util.NBTSerializer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -163,9 +161,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
-	public AABB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().inflate(3);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(3);
 	}
 
 	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {

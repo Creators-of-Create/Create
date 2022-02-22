@@ -91,7 +91,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
 	}
 

@@ -76,8 +76,6 @@ import net.minecraft.world.phys.Vec3;
 @MethodsReturnNonnullByDefault
 public class SawTileEntity extends BlockBreakingKineticTileEntity implements ItemTransferable {
 
-	private static final AABB RENDER_BOX = new AABB(0, 0, 0, 1, 1, 1);
-
 	private static final Object cuttingRecipesKey = new Object();
 	public static final Supplier<RecipeType<?>> woodcuttingRecipeType =
 		Suppliers.memoize(() -> Registry.RECIPE_TYPE.get(new ResourceLocation("druidcraft", "woodcutting")));
@@ -128,9 +126,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 	}
 
 	@Override
-	protected AABB makeRenderBoundingBox() {
-		return RENDER_BOX.inflate(.125f)
-			.move(worldPosition);
+	protected AABB createRenderBoundingBox() {
+		return new AABB(worldPosition).inflate(.125f);
 	}
 
 	@Override
