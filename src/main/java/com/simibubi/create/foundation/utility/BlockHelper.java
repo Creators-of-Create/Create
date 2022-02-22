@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -66,8 +67,9 @@ public class BlockHelper {
 			return blockState.setValue(BlockStateProperties.HATCH, 0);
 		if (blockState.hasProperty(BlockStateProperties.STAGE))
 			return blockState.setValue(BlockStateProperties.STAGE, 0);
-		if (blockState.hasProperty(BlockStateProperties.LEVEL_CAULDRON))
-			return blockState.setValue(BlockStateProperties.LEVEL_CAULDRON, 0);
+		if (blockState.is(BlockTags.CAULDRONS))
+			return Blocks.CAULDRON.delegate.get()
+				.defaultBlockState();
 		if (blockState.hasProperty(BlockStateProperties.LEVEL_COMPOSTER))
 			return blockState.setValue(BlockStateProperties.LEVEL_COMPOSTER, 0);
 		if (blockState.hasProperty(BlockStateProperties.EXTENDED))
@@ -194,17 +196,19 @@ public class BlockHelper {
 	}
 
 	private static void placeRailWithoutUpdate(Level world, BlockState state, BlockPos target) {
-		int i = target.getX() & 15;
-		int j = target.getY();
-		int k = target.getZ() & 15;
 		LevelChunk chunk = world.getChunkAt(target);
-		LevelChunkSection chunksection = chunk.getSections()[j >> 4];
+		int idx = chunk.getSectionIndex(target.getY());
+		LevelChunkSection chunksection = chunk.getSection(idx);
 		if (chunksection == null) {
-			chunksection = new LevelChunkSection(j >> 4 << 4, world.registryAccess()
-				.registryOrThrow(Registry.BIOME_REGISTRY));
-			chunk.getSections()[j >> 4] = chunksection;
+			chunksection = new LevelChunkSection(chunk.getSectionYFromSectionIndex(idx),
+					world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY));
+			chunk.getSections()[idx] = chunksection;
 		}
-		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
+		BlockState old = chunksection.setBlockState(
+				SectionPos.sectionRelative(target.getX()),
+				SectionPos.sectionRelative(target.getY()),
+				SectionPos.sectionRelative(target.getZ()),
+				state);
 		chunk.setUnsaved(true);
 		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 

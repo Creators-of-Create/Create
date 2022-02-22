@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.io.IOException;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -224,12 +223,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		}
 
-		for (Iterator<Entry<Entity, MutableInt>> iterator = collidingEntities.entrySet()
-			.iterator(); iterator.hasNext();)
-			if (iterator.next()
-				.getValue()
-				.incrementAndGet() > 3)
-				iterator.remove();
+		collidingEntities.entrySet().removeIf(e -> e.getValue().incrementAndGet() > 3);
 
 		xo = getX();
 		yo = getY();
@@ -447,12 +441,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		if (contraption == null)
 			return;
-
-		discard();
-
+		
 		StructureTransform transform = makeStructureTransform();
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
+
+		discard();
 
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
@@ -642,7 +636,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean hasExactlyOnePlayerPassenger() {
 		return false;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
 

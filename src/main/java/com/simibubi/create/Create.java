@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineModifiers;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -30,7 +30,6 @@ import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
@@ -58,7 +57,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4a";
+	public static final String VERSION = "0.4d";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -97,8 +96,8 @@ public class Create {
 		AllInteractionBehaviours.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
-		FurnaceEngineModifiers.register();
 		AllConfigs.register(modLoadingContext);
+		FurnaceEngineInteractions.registerDefaults();
 		BlockSpoutingBehaviour.register();
 
 		ForgeMod.enableMilkFluid();
@@ -124,8 +123,6 @@ public class Create {
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
-
-		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
 		event.enqueueWork(() -> {
 			AllTriggers.register();

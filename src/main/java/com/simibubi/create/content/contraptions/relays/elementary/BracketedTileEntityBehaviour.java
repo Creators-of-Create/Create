@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
@@ -56,10 +57,12 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		tileEntity.notifyUpdate();
 	}
 
-	public void triggerAdvancements(Level world, Player player, BlockState state) {
-		if (trigger == null)
-			return;
-		AllTriggers.triggerFor(trigger.apply(state), player);
+	public void transformBracket(StructureTransform transform) {
+		if (isBracketPresent()) {
+			BlockState bracket = getBracket();
+			BlockState transformedBracket = transform.apply(bracket);
+			applyBracket(transformedBracket);
+		}
 	}
 
 	public void removeBracket(boolean inOnReplacedContext) {
@@ -75,11 +78,21 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean isBracketPresent() {
-		return getBracket() != Blocks.AIR.defaultBlockState();
+		return bracket.isPresent();
 	}
 
 	public BlockState getBracket() {
 		return bracket.orElse(Blocks.AIR.defaultBlockState());
+	}
+
+	public boolean canHaveBracket() {
+		return pred.test(tileEntity.getBlockState());
+	}
+
+	public void triggerAdvancements(Level world, Player player, BlockState state) {
+		if (trigger == null)
+			return;
+		AllTriggers.triggerFor(trigger.apply(state), player);
 	}
 
 	@Override
@@ -110,10 +123,6 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		if (clientPacket && nbt.contains("Redraw"))
 			getWorld().sendBlockUpdated(getPos(), tileEntity.getBlockState(), tileEntity.getBlockState(), 16);
 		super.read(nbt, clientPacket);
-	}
-
-	public boolean canHaveBracket() {
-		return pred.test(tileEntity.getBlockState());
 	}
 
 }

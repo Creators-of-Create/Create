@@ -18,8 +18,6 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import com.simibubi.create.foundation.block.render.ColoredVertexModel;
-import com.simibubi.create.foundation.block.render.IBlockVertexColor;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
@@ -33,6 +31,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -146,6 +145,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
 			})
+			.tag(BlockTags.DRIPSTONE_REPLACEABLE)
+			.tag(BlockTags.AZALEA_ROOT_REPLACEABLE)
+			.tag(BlockTags.MOSS_REPLACEABLE)
+			.tag(BlockTags.LUSH_GROUND_REPLACEABLE)
 			.item()
 			.build();
 		return builder;
@@ -184,17 +187,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(ConnectedTextureBehaviour behavior) {
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(Supplier<ConnectedTextureBehaviour> behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
 		BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
-	}
-
-	public static <T extends Block> NonNullConsumer<? super T> blockVertexColors(IBlockVertexColor colorFunc) {
-		return entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
@@ -212,7 +211,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
+	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
+		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
 	}
@@ -221,12 +221,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static <T extends Block> void registerCasingConnectivity(T entry,
 		BiConsumer<T, CasingConnectivity> consumer) {
 		consumer.accept(entry, CreateClient.CASING_CONNECTIVITY);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
-		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
 	}
 
 	@OnlyIn(Dist.CLIENT)

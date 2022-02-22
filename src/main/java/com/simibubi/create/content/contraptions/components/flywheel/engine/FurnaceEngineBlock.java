@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +35,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 
 	@Override
 	protected boolean isValidBaseBlock(BlockState baseBlock, BlockGetter world, BlockPos pos) {
-		return baseBlock.getBlock() instanceof AbstractFurnaceBlock;
+		return FurnaceEngineInteractions.getHandler(baseBlock).getHeatSource(baseBlock).isValid();
 	}
 
 	@Override
@@ -42,6 +44,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public PartialModel getFrameModel() {
 		return AllBlockPartials.FURNACE_GENERATOR_FRAME;
 	}
@@ -63,9 +66,8 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	@SubscribeEvent
 	public static void usingFurnaceEngineOnFurnacePreventsGUI(RightClickBlock event) {
 		ItemStack item = event.getItemStack();
-		if (!(item.getItem() instanceof BlockItem))
+		if (!(item.getItem() instanceof BlockItem blockItem))
 			return;
-		BlockItem blockItem = (BlockItem) item.getItem();
 		if (blockItem.getBlock() != AllBlocks.FURNACE_ENGINE.get())
 			return;
 		BlockState state = event.getWorld().getBlockState(event.getPos());

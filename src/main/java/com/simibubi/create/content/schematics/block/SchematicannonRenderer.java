@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.block;
 import java.util.Random;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -24,16 +25,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
 	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {}
-
-	@Override
-	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
-		return true;
-	}
 
 	@Override
 	protected void renderSafe(SchematicannonTileEntity tileEntity, float partialTicks, PoseStack ms,
@@ -43,8 +38,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance()
-			.canUseInstancing(tileEntity.getLevel()))
+		if (Backend.canUseInstancing(tileEntity.getLevel()))
 			return;
 
 		BlockPos pos = tileEntity.getBlockPos();
@@ -178,7 +172,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				Minecraft.getInstance()
 					.getBlockRenderer()
 					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay,
-						EmptyModelData.INSTANCE);
+						VirtualEmptyModelData.INSTANCE);
 			}
 
 			// Render the item
@@ -210,6 +204,11 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			}
 
 		}
+	}
+
+	@Override
+	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
+		return true;
 	}
 
 	@Override

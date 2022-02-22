@@ -1,5 +1,7 @@
 package com.simibubi.create.content.palettes;
 
+import static com.simibubi.create.AllTags.pickaxeOnly;
+
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -74,7 +76,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 	protected BlockBuilder<B, CreateRegistrate> transformBlock(BlockBuilder<B, CreateRegistrate> builder,
 		String variantName, PaletteBlockPattern pattern) {
 		getBlockTags().forEach(builder::tag);
-		return builder;
+		return builder.transform(pickaxeOnly());
 	}
 
 	protected ItemBuilder<BlockItem, BlockBuilder<B, CreateRegistrate>> transformItem(

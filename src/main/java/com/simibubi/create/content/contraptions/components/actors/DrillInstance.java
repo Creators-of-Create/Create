@@ -19,7 +19,7 @@ public class DrillInstance extends SingleRotatingInstance {
 
     @Override
     protected Instancer<RotatingData> getModel() {
-		BlockState referenceState = tile.getBlockState();
+		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing = referenceState.getValue(BlockStateProperties.FACING);
 		return getRotatingMaterial().getModel(AllBlockPartials.DRILL_HEAD, referenceState, facing);
 	}

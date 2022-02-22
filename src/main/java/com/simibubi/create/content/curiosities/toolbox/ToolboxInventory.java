@@ -147,6 +147,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		if (!settling && !te.getLevel().isClientSide)
 			settle(slot / STACKS_PER_COMPARTMENT);
 		te.sendData();
+		te.setChanged();
 		super.onContentsChanged(slot);
 	}
 

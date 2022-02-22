@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.api.FlywheelRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
@@ -15,10 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EngineTileEntity extends SmartTileEntity implements FlywheelRendered {
+public class EngineTileEntity extends SmartTileEntity {
 
 	public float appliedCapacity;
 	public float appliedSpeed;
@@ -32,14 +29,9 @@ public class EngineTileEntity extends SmartTileEntity implements FlywheelRendere
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 	}
 
-	protected AABB cachedBoundingBox;
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
-			cachedBoundingBox = super.getRenderBoundingBox().inflate(1.5f);
-		}
-		return cachedBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(1.5f);
 	}
 
 	@Override
@@ -86,8 +78,13 @@ public class EngineTileEntity extends SmartTileEntity implements FlywheelRendere
 
 	@Override
 	public void setRemoved() {
-		detachWheel();
 		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
+		detachWheel();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	protected void refreshWheelSpeed() {

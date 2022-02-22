@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -17,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,8 +32,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolAction;
 
 public class LitBlazeBurnerBlock extends Block implements IWrenchable {
+
+	public static final ToolAction EXTINGUISH_FLAME_ACTION = ToolAction.get(Create.asResource("extinguish_flame").toString());
 
 	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 
@@ -50,6 +55,15 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
+
+		if (heldItem.getItem() instanceof ShovelItem || heldItem.getItem().canPerformAction(heldItem, EXTINGUISH_FLAME_ACTION)) {
+			world.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5f, 2);
+			if (world.isClientSide)
+				return InteractionResult.SUCCESS;
+			heldItem.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
+			return InteractionResult.SUCCESS;
+		}
 
 		if (state.getValue(FLAME_TYPE) == FlameType.REGULAR) {
 			if (heldItem.is(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {

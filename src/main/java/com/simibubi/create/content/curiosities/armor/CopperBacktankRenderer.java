@@ -40,8 +40,8 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_SHAFT, te.getBlockState());
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_SHAFT, state);
 	}
 
 }

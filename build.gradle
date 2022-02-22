@@ -17,21 +17,20 @@ plugins {
     id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
 }
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
-// apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
 // jozu: I use a gradle workspace with both projects.
 // The project is named Flywheel-Forge, but sub-projects are named by folder.
 boolean inWorkspace = findProject(':Flywheel') != null
 
-ext.buildnumber = 0
-project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
+ext.buildNumber = System.getenv('BUILD_NUMBER')
+if (buildNumber == null) buildNumber = 'custom'
 
-version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals('custom') ? "+${buildnumber}" : '')
+version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildNumber.equals('custom') ? "+${buildNumber}" : '')
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -39,8 +38,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    // mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
-    mappings channel: 'official', version: "${minecraft_version}"
+    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -74,12 +72,6 @@ minecraft {
             mods {
                 create {
                     source sourceSets.main
-                }
-
-                if (inWorkspace) {
-                    flywheel {
-                        source project(":Flywheel").sourceSets.main
-                    }
                 }
             }
         }

@@ -80,14 +80,14 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
     @Override
     public void update() {
-        DyeColor color = tile.color.orElse(null);
+        DyeColor color = blockEntity.color.orElse(null);
 
         boolean bottom = true;
         for (BeltData key : keys) {
 
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
             key.setScrollTexture(spriteShiftEntry)
-               .setColor(tile)
+               .setColor(blockEntity)
                .setRotationalSpeed(getScrollSpeed());
             bottom = false;
         }
@@ -113,7 +113,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     }
 
     private float getScrollSpeed() {
-        float speed = tile.getSpeed();
+        float speed = blockEntity.getSpeed();
         if (((facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ^ upward) ^
                 ((alongX && !diagonal) || (alongZ && diagonal))) {
             speed = -speed;
@@ -168,7 +168,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 				.setRotation(q)
 				.setRotationalSpeed(getScrollSpeed())
 				.setRotationOffset(bottom ? 0.5f : 0f)
-                .setColor(tile)
+                .setColor(blockEntity)
                 .setPosition(getInstancePosition())
                 .setBlockLight(world.getBrightness(LightLayer.BLOCK, pos))
                 .setSkyLight(world.getBrightness(LightLayer.SKY, pos));

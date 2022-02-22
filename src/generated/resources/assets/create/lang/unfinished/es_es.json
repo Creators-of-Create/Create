@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 330",
+	"_": "Missing Localizations: 334",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -821,6 +821,8 @@
 	"create.recipe.fan_washing.fan": "Ventilador detrás del agua fluyente",
 	"create.recipe.fan_smoking": "Ahumador a granel",
 	"create.recipe.fan_smoking.fan": "Ventilador detrás del fuego",
+	"create.recipe.fan_haunting": "UNLOCALIZED: Bulk Haunting",
+	"create.recipe.fan_haunting.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Voladuras a granel",
 	"create.recipe.fan_blasting.fan": "Ventilador detrás de la lava",
 	"create.recipe.pressing": "Prensando",
@@ -1163,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "no es combustible para hornos",
 	"create.item_attributes.washable": "se puede lavar",
 	"create.item_attributes.washable.inverted": "no se puede lavar",
+	"create.item_attributes.hauntable": "UNLOCALIZED: can be Haunted",
+	"create.item_attributes.hauntable.inverted": "UNLOCALIZED: cannot be Haunted",
 	"create.item_attributes.crushable": "puede ser molido",
 	"create.item_attributes.crushable.inverted": "no puede ser molido",
 	"create.item_attributes.smeltable": "se puede fundir",

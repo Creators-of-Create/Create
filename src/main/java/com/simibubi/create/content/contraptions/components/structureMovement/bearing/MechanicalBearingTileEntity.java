@@ -59,9 +59,14 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 	@Override
 	public void setRemoved() {
+		super.setRemoved();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
 		if (!level.isClientSide)
 			disassemble();
-		super.setRemoved();
+		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Override
@@ -313,11 +318,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			.isReplaceable())
 			return false;
 		TooltipHelper.addHint(tooltip, "hint.empty_bearing");
-		return true;
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
 		return true;
 	}
 

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 369",
+	"_": "Missing Localizations: 373",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -821,6 +821,8 @@
 	"create.recipe.fan_washing.fan": "Wiatrak za płynącą wodą",
 	"create.recipe.fan_smoking": "Hurtowe wędzenie",
 	"create.recipe.fan_smoking.fan": "Wiatrak za ogniem",
+	"create.recipe.fan_haunting": "UNLOCALIZED: Bulk Haunting",
+	"create.recipe.fan_haunting.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Hurtowe topienie",
 	"create.recipe.fan_blasting.fan": "Wiatrak za lawą",
 	"create.recipe.pressing": "Tłoczenie",
@@ -1163,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "nie jest paliwem dla pieca",
 	"create.item_attributes.washable": "może zostać opłukany",
 	"create.item_attributes.washable.inverted": "nie może zostać opłukany",
+	"create.item_attributes.hauntable": "UNLOCALIZED: can be Haunted",
+	"create.item_attributes.hauntable.inverted": "UNLOCALIZED: cannot be Haunted",
 	"create.item_attributes.crushable": "może być rozkruszony",
 	"create.item_attributes.crushable.inverted": "nie może być rozkruszony",
 	"create.item_attributes.smeltable": "może zostać przepalony",

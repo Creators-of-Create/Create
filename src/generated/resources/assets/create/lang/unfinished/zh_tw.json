@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 388",
+	"_": "Missing Localizations: 392",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -821,6 +821,8 @@
 	"create.recipe.fan_washing.fan": "在水後放置鼓風機",
 	"create.recipe.fan_smoking": "批次煙燻",
 	"create.recipe.fan_smoking.fan": "在火焰後放置鼓風機",
+	"create.recipe.fan_haunting": "UNLOCALIZED: Bulk Haunting",
+	"create.recipe.fan_haunting.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "批次融煉",
 	"create.recipe.fan_blasting.fan": "在熔岩後放置鼓風機",
 	"create.recipe.pressing": "金屬壓片",
@@ -1163,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "不是燃料",
 	"create.item_attributes.washable": "可被篩洗",
 	"create.item_attributes.washable.inverted": "不可被篩洗",
+	"create.item_attributes.hauntable": "UNLOCALIZED: can be Haunted",
+	"create.item_attributes.hauntable.inverted": "UNLOCALIZED: cannot be Haunted",
 	"create.item_attributes.crushable": "可被粉碎",
 	"create.item_attributes.crushable.inverted": "不可被粉碎",
 	"create.item_attributes.smeltable": "可被熔爐融煉",

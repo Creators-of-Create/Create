@@ -8,7 +8,9 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -20,7 +22,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class DeployerActorInstance extends ActorInstance {
 
-	private final MatrixTransformStack stack = new MatrixTransformStack();
+	private final PoseStack stack = new PoseStack();
 	Direction facing;
     boolean stationaryTimer;
 
@@ -42,7 +43,7 @@ public class DeployerActorInstance extends ActorInstance {
     ModelData hand;
     RotatingData shaft;
 
-	public DeployerActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public DeployerActorInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
 		Material<ModelData> mat = materialManager.defaultSolid()
@@ -94,27 +95,29 @@ public class DeployerActorInstance extends ActorInstance {
 
         Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
-		stack.setIdentity()
-				.translate(context.localPos)
+        TransformStack tstack = TransformStack.cast(stack);
+        stack.setIdentity();
+        tstack.translate(context.localPos)
 				.translate(offset);
 
         transformModel(stack, pole, hand, yRot, xRot, zRot);
     }
 
-    static void transformModel(MatrixTransformStack msr, ModelData pole, ModelData hand, float yRot, float xRot, float zRot) {
+    static void transformModel(PoseStack stack, ModelData pole, ModelData hand, float yRot, float xRot, float zRot) {
+        TransformStack tstack = TransformStack.cast(stack);
 
-        msr.centre();
-        msr.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
-        msr.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
+        tstack.centre();
+        tstack.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
+        tstack.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
 
-        msr.pushPose();
-        msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
-        msr.unCentre();
-        pole.setTransform(msr.unwrap());
-        msr.popPose();
+        stack.pushPose();
+        tstack.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
+        tstack.unCentre();
+        pole.setTransform(stack);
+        stack.popPose();
 
-        msr.unCentre();
+        tstack.unCentre();
 
-        hand.setTransform(msr.unwrap());
+        hand.setTransform(stack);
     }
 }

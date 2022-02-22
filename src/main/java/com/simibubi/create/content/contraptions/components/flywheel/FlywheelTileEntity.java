@@ -50,8 +50,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().inflate(2);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(2);
 	}
 
 	@Override

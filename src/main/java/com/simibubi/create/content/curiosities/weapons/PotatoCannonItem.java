@@ -53,7 +53,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 	public static final int MAX_DAMAGE = 100;
 
 	public PotatoCannonItem(Properties properties) {
-		super(properties);
+		super(properties.defaultDurability(MAX_DAMAGE));
 	}
 
 	@Override
@@ -82,11 +82,6 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		return BackTankUtil.isBarVisible(stack, maxUses());
 	}
@@ -105,18 +100,8 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 		return AllConfigs.SERVER.curiosities.maxPotatoCannonShots.get();
 	}
 
-	@Override
-	public boolean canBeDepleted() {
-		return true;
-	}
-
 	public boolean isCannon(ItemStack stack) {
 		return stack.getItem() instanceof PotatoCannonItem;
-	}
-
-	@Override
-	public int getMaxDamage(ItemStack stack) {
-		return MAX_DAMAGE;
 	}
 
 	@Override
@@ -273,11 +258,6 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 	public Predicate<ItemStack> getAllSupportedProjectiles() {
 		return stack -> PotatoProjectileTypeManager.getTypeForStack(stack)
 			.isPresent();
-	}
-
-	@Override
-	public int getEnchantmentValue() {
-		return 1;
 	}
 
 	@Override

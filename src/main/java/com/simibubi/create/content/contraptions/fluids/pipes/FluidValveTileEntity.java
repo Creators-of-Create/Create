@@ -80,11 +80,6 @@ public class FluidValveTileEntity extends KineticTileEntity {
 		behaviours.add(new ValvePipeBehaviour(this));
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	class ValvePipeBehaviour extends StraightPipeFluidTransportBehaviour {
 
 		public ValvePipeBehaviour(SmartTileEntity te) {

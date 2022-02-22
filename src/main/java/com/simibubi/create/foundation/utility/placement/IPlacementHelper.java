@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +55,7 @@ public interface IPlacementHelper {
 	 *
 	 * @return the PlacementOffset object describing where to place the new block.<br>
 	 *     Use {@link PlacementOffset#fail} when no new position could be found.<br>
-	 *     Use {@link PlacementOffset#success(Vector3i)} with the new BlockPos to indicate a success
+	 *     Use {@link PlacementOffset#success(Vec3i)} with the new BlockPos to indicate a success
 	 *     and call {@link PlacementOffset#withTransform(Function)} if the blocks default state has to be modified before it is placed
 	 */
 	PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray);

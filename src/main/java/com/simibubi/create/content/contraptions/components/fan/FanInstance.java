@@ -36,7 +36,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 	}
 
     private float getFanSpeed() {
-        float speed = tile.getSpeed() * 5;
+        float speed = blockEntity.getSpeed() * 5;
         if (speed > 0)
             speed = Mth.clamp(speed, 80, 64 * 20);
         if (speed < 0)

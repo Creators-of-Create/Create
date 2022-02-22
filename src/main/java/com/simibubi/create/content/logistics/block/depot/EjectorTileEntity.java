@@ -576,11 +576,6 @@ public class EjectorTileEntity extends KineticTileEntity {
 		return super.getCapability(cap, side);
 	}
 
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
-	}
-
 	public float getLidProgress(float pt) {
 		return lidProgress.getValue(pt);
 	}

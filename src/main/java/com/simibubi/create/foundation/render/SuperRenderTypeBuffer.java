@@ -15,7 +15,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 
 public class SuperRenderTypeBuffer implements MultiBufferSource {
 
-	private static final SuperRenderTypeBuffer INSTANCE = new SuperRenderTypeBuffer();;
+	private static final SuperRenderTypeBuffer INSTANCE = new SuperRenderTypeBuffer();
 
 	public static SuperRenderTypeBuffer getInstance() {
 		return INSTANCE;

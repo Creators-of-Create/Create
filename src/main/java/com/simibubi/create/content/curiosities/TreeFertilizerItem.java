@@ -76,7 +76,7 @@ public class TreeFertilizerItem extends Item {
 		return super.useOn(context);
 	}
 
-	private class TreesDreamWorld extends PlacementSimulationServerWorld {
+	private static class TreesDreamWorld extends PlacementSimulationServerWorld {
 		private final BlockPos saplingPos;
 		private final BlockState soil;
 

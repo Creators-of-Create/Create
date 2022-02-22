@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -24,7 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class ArmInstance extends SingleRotatingInstance implements IDynamicInstance {
+public class ArmInstance extends SingleRotatingInstance implements DynamicInstance {
 
 	final ModelData base;
 	final ModelData lowerBody;
@@ -69,7 +69,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 	@Override
 	public void beginFrame() {
-		if (arm.phase == ArmTileEntity.Phase.DANCING && tile.getSpeed() != 0) {
+		if (arm.phase == ArmTileEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
 			animateArm(true);
 			firstRender = true;
 			return;
@@ -107,7 +107,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		int color;
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (tile.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (blockEntity.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -172,7 +172,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 	@Override
 	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, tile.getBlockState());
+		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, blockEntity.getBlockState());
 	}
 
 	@Override

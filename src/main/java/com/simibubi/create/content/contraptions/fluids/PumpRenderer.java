@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -26,6 +27,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		if (Backend.canUseInstancing(te.getLevel())) return;
 		if (!(te instanceof PumpTileEntity pump))
 			return;
 		Vec3 rotationOffset = new Vec3(.5, 14 / 16f, .5);
@@ -48,8 +50,8 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, state);
 	}
 
 }

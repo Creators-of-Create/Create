@@ -51,10 +51,10 @@ import net.minecraftforge.client.model.generators.ModelFile;
 public class BuilderTransformers {
 
 	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
-		CTSpriteShiftEntry casingShift) {
+		Supplier<CTSpriteShiftEntry> casingShift) {
 		return builder -> encasedBase(builder, () -> AllBlocks.SHAFT.get())
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
-			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
+			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(casingShift.get())))
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
 			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
 				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
@@ -64,24 +64,24 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
-		String casing, CTSpriteShiftEntry casingShift) {
+		String casing, Supplier<CTSpriteShiftEntry> casingShift) {
 		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get(), false);
 	}
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedLargeCogwheel(
-		String casing, CTSpriteShiftEntry casingShift) {
+		String casing, Supplier<CTSpriteShiftEntry> casingShift) {
 		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.LARGE_COGWHEEL.get(), true)
-			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(casingShift)));
+			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(casingShift.get())));
 	}
 
 	private static <B extends EncasedCogwheelBlock, P> BlockBuilder<B, P> encasedCogwheelBase(BlockBuilder<B, P> b,
-		String casing, CTSpriteShiftEntry casingShift, Supplier<ItemLike> drop, boolean large) {
+		String casing, Supplier<CTSpriteShiftEntry> casingShift, Supplier<ItemLike> drop, boolean large) {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
 		return encasedBase(b, drop)
 			.addLayer(() -> RenderType::cutoutMipped)
-			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
 						: EncasedCogwheelBlock.BOTTOM_SHAFT))))
@@ -138,12 +138,12 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(
-		CTSpriteShiftEntry ct) {
+		Supplier<CTSpriteShiftEntry> ct) {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
-			.onRegister(connectedTextures(new EncasedCTBehaviour(ct)))
-			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct)))
+			.onRegister(connectedTextures(() -> new EncasedCTBehaviour(ct.get())))
+			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
 			.simpleItem();
 	}
 

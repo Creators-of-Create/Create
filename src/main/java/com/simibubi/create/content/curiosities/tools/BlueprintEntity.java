@@ -26,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -113,9 +114,15 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public void readAdditionalSaveData(CompoundTag p_70037_1_) {
-		this.direction = Direction.from3DDataValue(p_70037_1_.getByte("Facing"));
-		this.verticalOrientation = Direction.from3DDataValue(p_70037_1_.getByte("Orientation"));
-		this.size = p_70037_1_.getInt("Size");
+		if (p_70037_1_.contains("Facing", Tag.TAG_ANY_NUMERIC)) {
+			this.direction = Direction.from3DDataValue(p_70037_1_.getByte("Facing"));
+			this.verticalOrientation = Direction.from3DDataValue(p_70037_1_.getByte("Orientation"));
+			this.size = p_70037_1_.getInt("Size");
+		} else {
+			this.direction = Direction.SOUTH;
+			this.verticalOrientation = Direction.DOWN;
+			this.size = 1;
+		}
 		super.readAdditionalSaveData(p_70037_1_);
 		this.updateFacingWithBoundingBox(this.direction, this.verticalOrientation);
 	}

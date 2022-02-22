@@ -142,7 +142,8 @@ public class AllItems {
 		.lang("Builder's Tea")
 		.register();
 
-	public static final ItemEntry<Item> RAW_ZINC = ingredient("raw_zinc");
+	public static final ItemEntry<Item> RAW_ZINC =
+		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), forgeItemTag("raw_materials"));
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
@@ -221,6 +222,8 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
+		.properties(p -> p.stacksTo(1)
+			.durability(99))
 		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
@@ -285,16 +288,17 @@ public class AllItems {
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> p.stacksTo(1))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.properties(p -> p.rarity(Rarity.UNCOMMON))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
+			.properties(p -> p.stacksTo(1).rarity(Rarity.UNCOMMON))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 

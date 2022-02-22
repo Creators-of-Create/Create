@@ -73,8 +73,6 @@ import net.minecraftforge.items.IItemHandler;
 @MethodsReturnNonnullByDefault
 public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
-	private static final AABB RENDER_BOX = new AABB(0, 0, 0, 1, 1, 1);
-
 	private static final Object cuttingRecipesKey = new Object();
 	public static final Supplier<RecipeType<?>> woodcuttingRecipeType =
 		Suppliers.memoize(() -> Registry.RECIPE_TYPE.get(new ResourceLocation("druidcraft", "woodcutting")));
@@ -125,9 +123,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	protected AABB makeRenderBoundingBox() {
-		return RENDER_BOX.inflate(.125f)
-			.move(worldPosition);
+	protected AABB createRenderBoundingBox() {
+		return new AABB(worldPosition).inflate(.125f);
 	}
 
 	@Override
@@ -476,8 +473,10 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	public static boolean isSawable(BlockState stateToBreak) {
+		if (stateToBreak.is(BlockTags.SAPLINGS))
+			return false;
 		if (stateToBreak.is(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(stateToBreak)
-			|| stateToBreak.is(BlockTags.LEAVES))
+			|| (stateToBreak.is(BlockTags.LEAVES)))
 			return true;
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooBlock)
@@ -497,11 +496,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (TreeCutter.canDynamicTreeCutFrom(block))
 			return true;
 		return false;
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
-		return true;
 	}
 
 }

@@ -31,7 +31,7 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
 		Direction facing = state.getValue(GantryCarriageBlock.FACING);

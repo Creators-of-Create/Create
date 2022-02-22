@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
@@ -27,15 +27,15 @@ public class BracketedKineticTileInstance extends SingleRotatingInstance {
 	@Override
 	public void init() {
 		super.init();
-		if (!ICogWheel.isLargeCog(tile.getBlockState()))
+		if (!ICogWheel.isLargeCog(blockEntity.getBlockState()))
 			return;
 
 		// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
 		// mesh properly
 
-		float speed = tile.getSpeed();
-		Axis axis = KineticTileEntityRenderer.getRotationAxisOf(tile);
-		BlockPos pos = tile.getBlockPos();
+		float speed = blockEntity.getSpeed();
+		Axis axis = KineticTileEntityRenderer.getRotationAxisOf(blockEntity);
+		BlockPos pos = blockEntity.getBlockPos();
 		float offset = BracketedKineticTileRenderer.getShaftAngleOffset(axis, pos);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		Instancer<RotatingData> half = getRotatingMaterial().getModel(AllBlockPartials.COGWHEEL_SHAFT, blockState,
@@ -47,10 +47,10 @@ public class BracketedKineticTileInstance extends SingleRotatingInstance {
 
 	@Override
 	protected Instancer<RotatingData> getModel() {
-		if (!ICogWheel.isLargeCog(tile.getBlockState()))
+		if (!ICogWheel.isLargeCog(blockEntity.getBlockState()))
 			return super.getModel();
 
-		Axis axis = KineticTileEntityRenderer.getRotationAxisOf(tile);
+		Axis axis = KineticTileEntityRenderer.getRotationAxisOf(blockEntity);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
 			() -> this.rotateToAxis(axis));
@@ -59,10 +59,11 @@ public class BracketedKineticTileInstance extends SingleRotatingInstance {
 	private PoseStack rotateToAxis(Axis axis) {
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		PoseStack poseStack = new PoseStack();
-		new MatrixTransformStack(poseStack).centre()
-			.rotateToFace(facing)
-			.multiply(Vector3f.XN.rotationDegrees(-90))
-			.unCentre();
+		TransformStack.cast(poseStack)
+				.centre()
+				.rotateToFace(facing)
+				.multiply(Vector3f.XN.rotationDegrees(-90))
+				.unCentre();
 		return poseStack;
 	}
 

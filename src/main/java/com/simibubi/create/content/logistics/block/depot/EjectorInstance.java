@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Mth;
 
-public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
+public class EjectorInstance extends ShaftInstance implements DynamicInstance {
 
 	protected final EjectorTileEntity tile;
 

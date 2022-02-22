@@ -7,6 +7,9 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.core.model.ModelUtil;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -32,6 +35,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -56,6 +60,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION =
 		new SuperByteBufferCache.Compartment<>();
+
+	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	List<BlockEntity> renderedTileEntities;
 	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
@@ -299,13 +305,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	@Override
-	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
-		float pt) {
-		transformMS(ms, pt);
-		renderStructure(world, ms, buffer, type, fade);
-	}
-
-	@Override
 	public void renderFirst(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
 		int light = -1;
 		if (fade != 1)
@@ -342,9 +341,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.pose(),
 				overlayMS.last()
 					.normal());
-			Minecraft.getInstance()
-				.getBlockRenderer()
-				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random,
+			ModelUtil.VANILLA_RENDERER
+				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, new Random(),
 					EmptyModelData.INSTANCE);
 			ms.popPose();
 		}
@@ -352,13 +350,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		ms.popPose();
 	}
 
-	protected void renderStructure(PonderWorld world, PoseStack ms, MultiBufferSource buffer, RenderType type,
-		float fade) {
+	@Override
+	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
+		float pt) {
 		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
-		int code = hashCode() ^ world.hashCode();
 
+		int code = hashCode() ^ world.hashCode();
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.chunkBufferLayers()
 			.indexOf(type));
+
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
@@ -366,8 +366,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (contraptionBuffer.isEmpty())
 			return;
 
+		transformMS(contraptionBuffer.getTransforms(), pt);
 		int light = lightCoordsFromFade(fade);
-		contraptionBuffer.light(light)
+		contraptionBuffer
+			.light(light)
 			.renderInto(ms, buffer.getBuffer(type));
 	}
 
@@ -404,38 +406,57 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
-		ForgeHooksClient.setRenderType(layer);
-		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
-			.getBlockRenderer();
-		PoseStack ms = new PoseStack();
-		Random random = new Random();
-		BufferBuilder builder = new BufferBuilder(512);
-		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		world.setMask(this.section);
+		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
 
+		PoseStack poseStack = objects.poseStack;
+		Random random = objects.random;
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(builder, unshadedBuilder);
+
+		world.setMask(this.section);
+		ForgeHooksClient.setRenderType(layer);
+		ModelBlockRenderer.enableCaching();
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
-			FluidState ifluidstate = world.getFluidState(pos);
+			FluidState fluidState = world.getFluidState(pos);
 
-			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			poseStack.pushPose();
+			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
 
 			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
 				BlockEntity tileEntity = world.getBlockEntity(pos);
-				dispatcher.renderBatched(state, pos, world, ms, builder, true, random,
+				dispatcher.renderBatched(state, pos, world, poseStack, shadeSeparatingWrapper, true, random,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
 			}
 
-			if (!ifluidstate.isEmpty() && ItemBlockRenderTypes.canRenderInLayer(ifluidstate, layer))
-				dispatcher.renderLiquid(pos, world, builder, ifluidstate);
+			if (!fluidState.isEmpty() && ItemBlockRenderTypes.canRenderInLayer(fluidState, layer))
+				dispatcher.renderLiquid(pos, world, builder, fluidState);
 
-			ms.popPose();
+			poseStack.popPose();
 		});
-
-		world.clearMask();
-		builder.end();
+		ModelBlockRenderer.clearCache();
 		ForgeHooksClient.setRenderType(null);
+		world.clearMask();
+
+		shadeSeparatingWrapper.clear();
+		unshadedBuilder.end();
+		builder.appendUnshadedVertices(unshadedBuilder);
+		builder.end();
+
 		return new SuperByteBuffer(builder);
+	}
+
+	private static class ThreadLocalObjects {
+		public final PoseStack poseStack = new PoseStack();
+		public final Random random = new Random();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 
 }

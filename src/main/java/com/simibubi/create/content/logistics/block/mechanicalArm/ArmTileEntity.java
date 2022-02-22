@@ -40,8 +40,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ArmTileEntity extends KineticTileEntity implements ITransformableTE {
 
@@ -160,9 +158,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().inflate(3);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(3);
 	}
 
 	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {
@@ -395,8 +392,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			ArmInteractionPoint.transformPos(transform, (CompoundTag) inbt);
 		}
 
-		sendData();
-		setChanged();
+		notifyUpdate();
 	}
 
 	protected void initInteractionPoints() {
@@ -515,11 +511,6 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			return false;
 
 		TooltipHelper.addHint(tooltip, "hint.mechanical_arm_no_targets");
-		return true;
-	}
-
-	@Override
-	public boolean shouldRenderNormally() {
 		return true;
 	}
 

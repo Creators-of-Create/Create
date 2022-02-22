@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1934",
+	"_": "Missing Localizations: 1938",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -821,6 +821,8 @@
 	"create.recipe.fan_washing.fan": "UNLOCALIZED: Fan behind Flowing Water",
 	"create.recipe.fan_smoking": "UNLOCALIZED: Bulk Smoking",
 	"create.recipe.fan_smoking.fan": "UNLOCALIZED: Fan behind Fire",
+	"create.recipe.fan_haunting": "UNLOCALIZED: Bulk Haunting",
+	"create.recipe.fan_haunting.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "UNLOCALIZED: Bulk Blasting",
 	"create.recipe.fan_blasting.fan": "UNLOCALIZED: Fan behind Lava",
 	"create.recipe.pressing": "Persen",
@@ -1163,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "UNLOCALIZED: is not furnace fuel",
 	"create.item_attributes.washable": "UNLOCALIZED: can be Washed",
 	"create.item_attributes.washable.inverted": "UNLOCALIZED: cannot be Washed",
+	"create.item_attributes.hauntable": "UNLOCALIZED: can be Haunted",
+	"create.item_attributes.hauntable.inverted": "UNLOCALIZED: cannot be Haunted",
 	"create.item_attributes.crushable": "UNLOCALIZED: can be Crushed",
 	"create.item_attributes.crushable.inverted": "UNLOCALIZED: cannot be Crushed",
 	"create.item_attributes.smeltable": "UNLOCALIZED: can be Smelted",

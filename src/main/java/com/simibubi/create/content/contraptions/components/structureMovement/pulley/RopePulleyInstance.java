@@ -35,10 +35,10 @@ public class RopePulleyInstance extends AbstractPulleyInstance {
 
 	protected float getOffset() {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
-		return PulleyRenderer.getTileOffset(partialTicks, (PulleyTileEntity) tile);
+		return PulleyRenderer.getTileOffset(partialTicks, (PulleyTileEntity) blockEntity);
 	}
 
 	protected boolean isRunning() {
-		return ((PulleyTileEntity) tile).running || tile.isVirtual();
+		return ((PulleyTileEntity) blockEntity).running || blockEntity.isVirtual();
 	}
 }

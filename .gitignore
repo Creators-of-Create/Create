@@ -41,3 +41,5 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+.DS_Store
