@@ -125,7 +125,8 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		Axis axis = direction.getAxis();
 		Property<Boolean> updateProperty =
 			axis == Axis.X ? X : axis == Axis.Z ? Z : direction == Direction.UP ? TOP : BOTTOM;
-		state = state.setValue(updateProperty, false);
+		if (!isConnected(world, pos, state, direction) && !isConnected(world, pos, state, direction.getOpposite()))
+			state = state.setValue(updateProperty, false);
 		for (Direction d : Iterate.directionsInAxis(axis))
 			state = updateState(world, pos, state, d);
 		return state;
@@ -158,9 +159,11 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		if (sideState.getBlock() instanceof GirderEncasedShaftBlock
 			&& sideState.getValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS) != axis)
 			state = state.setValue(updateProperty, true);
-		if (sideState.getBlock() == state.getBlock() && sideState.getValue(updateProperty))
+		else if (sideState.getBlock() == state.getBlock() && sideState.getValue(updateProperty))
 			state = state.setValue(updateProperty, true);
-		if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
+		else if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
+			state = state.setValue(updateProperty, true);
+		else if (isFacingBracket(level, pos, d))
 			state = state.setValue(updateProperty, true);
 
 		for (Direction d2 : Iterate.directionsInAxis(axis == Axis.X ? Axis.Z : Axis.X)) {
@@ -176,31 +179,49 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		return state;
 	}
 
+	public static boolean isFacingBracket(BlockAndTintGetter level, BlockPos pos, Direction d) {
+		BlockEntity blockEntity = level.getBlockEntity(pos.relative(d));
+		if (!(blockEntity instanceof SmartTileEntity ste))
+			return false;
+		BracketedTileEntityBehaviour behaviour = ste.getBehaviour(BracketedTileEntityBehaviour.TYPE);
+		if (behaviour == null)
+			return false;
+		BlockState bracket = behaviour.getBracket();
+		if (!bracket.hasProperty(BracketBlock.FACING))
+			return false;
+		return bracket.getValue(BracketBlock.FACING) == d;
+	}
+
 	public static BlockState updateVerticalProperty(LevelAccessor level, BlockPos pos, BlockState state,
 		Property<Boolean> updateProperty, BlockState sideState, Direction d) {
-		if (sideState.getBlock() == state.getBlock() && sideState.getValue(X) == sideState.getValue(Z))
+		if (isGirder(sideState) && isXGirder(sideState) == isZGirder(sideState))
 			state = state.setValue(updateProperty, true);
-		else if (sideState.getBlock() == state.getBlock() && sideState.getValue(X) != state.getValue(X)
-			&& sideState.getValue(Z) != state.getValue(Z))
+		else if (isGirder(sideState) && isXGirder(sideState) != isXGirder(state)
+			&& isZGirder(sideState) != isZGirder(state))
 			state = state.setValue(updateProperty, true);
 		else if (sideState.hasProperty(WallBlock.UP) && sideState.getValue(WallBlock.UP))
 			state = state.setValue(updateProperty, true);
 		else if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
 			state = state.setValue(updateProperty, true);
-		else if (sideState.hasBlockEntity()) {
-			BlockEntity blockEntity = level.getBlockEntity(pos.relative(d));
-			if (!(blockEntity instanceof SmartTileEntity ste))
-				return state;
-			BracketedTileEntityBehaviour behaviour = ste.getBehaviour(BracketedTileEntityBehaviour.TYPE);
-			if (behaviour == null)
-				return state;
-			BlockState bracket = behaviour.getBracket();
-			if (!bracket.hasProperty(BracketBlock.FACING))
-				return state;
-			if (bracket.getValue(BracketBlock.FACING) == d)
-				state = state.setValue(updateProperty, true);
-		}
+		else if (isFacingBracket(level, pos, d))
+			state = state.setValue(updateProperty, true);
 		return state;
+	}
+
+	public static boolean isGirder(BlockState state) {
+		return state.getBlock() instanceof GirderBlock || state.getBlock() instanceof GirderEncasedShaftBlock;
+	}
+
+	public static boolean isXGirder(BlockState state) {
+		return (state.getBlock() instanceof GirderBlock && state.getValue(X))
+			|| (state.getBlock() instanceof GirderEncasedShaftBlock
+				&& state.getValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS) == Axis.Z);
+	}
+
+	public static boolean isZGirder(BlockState state) {
+		return (state.getBlock() instanceof GirderBlock && state.getValue(Z))
+			|| (state.getBlock() instanceof GirderEncasedShaftBlock
+				&& state.getValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS) == Axis.X);
 	}
 
 	@Override
@@ -221,13 +242,15 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		if (state.getBlock() instanceof GirderBlock && !state.getValue(axis == Axis.X ? X : Z))
 			return false;
 		if (state.getBlock() instanceof GirderEncasedShaftBlock
-			&& state.getValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS) != axis)
+			&& state.getValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS) == axis)
 			return false;
 		BlockPos relative = pos.relative(side);
 		BlockState blockState = world.getBlockState(relative);
 		if (blockState.isAir())
 			return false;
 		if (blockState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(blockState) == side)
+			return true;
+		if (isFacingBracket(world, pos, side))
 			return true;
 		VoxelShape shape = blockState.getShape(world, relative);
 		if (shape.isEmpty())

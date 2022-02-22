@@ -26,10 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -139,6 +136,7 @@ public class FluidTankConnectivityHandler {
 
 			te.setWindows(te.window);
 			te.onFluidStackChanged(te.tankInventory.getFluid());
+			te.updateBoilerState();
 			te.setChanged();
 		}
 
@@ -152,10 +150,8 @@ public class FluidTankConnectivityHandler {
 		BlockEntityType<?> type = te.getType();
 		Level world = te.getLevel();
 		BlockPos origin = te.getBlockPos();
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-		FluidTank teTank = (FluidTank) capability.orElse(null);
-		FluidStack fluid = capability.map(ifh -> ifh.getFluidInTank(0))
-			.orElse(FluidStack.EMPTY);
+		FluidTank teTank = te.tankInventory;
+		FluidStack fluid = te.tankInventory.getFluidInTank(0);
 
 		Search:
 
@@ -236,7 +232,6 @@ public class FluidTankConnectivityHandler {
 		}
 
 		te.setWindows(!opaque);
-
 		return amount;
 	}
 

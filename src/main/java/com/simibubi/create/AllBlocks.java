@@ -51,6 +51,8 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGe
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
+import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
@@ -843,6 +845,24 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
+	public static final BlockEntry<SteamEngineBlock> STEAM_ENGINE =
+		REGISTRATE.block("steam_engine", SteamEngineBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.transform(pickaxeOnly())
+			.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.item()
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<PoweredShaftBlock> POWERED_SHAFT =
+		REGISTRATE.block("powered_shaft", PoweredShaftBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.transform(pickaxeOnly())
+			.transform(BlockStressDefaults.setCapacity(64.0))
+			.blockstate(BlockStateGen.axisBlockProvider(false))
+			.loot((lt, block) -> lt.dropOther(block, AllBlocks.SHAFT.get()))
+			.register();
+
 	// Contraptions
 
 	public static final BlockEntry<MechanicalPistonBlock> MECHANICAL_PISTON =
@@ -1311,7 +1331,7 @@ public class AllBlocks {
 		.item(TrackTargetingBlockItem::new)
 		.transform(customItemModel("_", "block"))
 		.register();
-	
+
 	public static final BlockEntry<SignalBlock> TRACK_SIGNAL = REGISTRATE.block("track_signal", SignalBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))

@@ -70,7 +70,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends B
         if (d == 0) {
             offset = 22.5f;
         }
-        return offset;
+        return offset + blockEntity.getRotationAngleOffset(axis);
     }
 
     protected Direction.Axis getRotationAxis() {

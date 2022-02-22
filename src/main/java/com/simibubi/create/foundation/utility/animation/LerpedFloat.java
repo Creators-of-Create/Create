@@ -69,6 +69,10 @@ public class LerpedFloat {
 		value = chaseFunction.chase(value, chaseSpeed, chaseTarget);
 	}
 
+	public void setValueNoUpdate(double value) {
+		this.value = (float) value;
+	}
+	
 	public void setValue(double value) {
 		this.previousValue = this.value;
 		this.value = (float) value;

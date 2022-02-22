@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -23,6 +24,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractShaftBlock {
+public class ShaftBlock extends AbstractSimpleShaftBlock {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -40,6 +42,14 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 	public static boolean isShaft(BlockState state) {
 		return AllBlocks.SHAFT.has(state);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockState stateForPlacement = super.getStateForPlacement(context);
+		if (PoweredShaftBlock.stillValid(stateForPlacement, context.getLevel(), context.getClickedPos()))
+			return PoweredShaftBlock.getEquivalent(stateForPlacement);
+		return stateForPlacement;
 	}
 
 	@Override
@@ -106,13 +116,13 @@ public class ShaftBlock extends AbstractShaftBlock {
 		// shafts and cogs
 
 		private PlacementHelper() {
-			super(state -> state.getBlock() instanceof AbstractShaftBlock, state -> state.getValue(AXIS), AXIS);
+			super(state -> state.getBlock() instanceof AbstractSimpleShaftBlock, state -> state.getValue(AXIS), AXIS);
 		}
 
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
 			return i -> i.getItem() instanceof BlockItem
-				&& ((BlockItem) i.getItem()).getBlock() instanceof AbstractShaftBlock;
+				&& ((BlockItem) i.getItem()).getBlock() instanceof AbstractSimpleShaftBlock;
 		}
 
 		@Override

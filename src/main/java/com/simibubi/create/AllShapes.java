@@ -128,6 +128,16 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(9, 4, 5, 15, 16, 11).add(1, 4, 5, 7, 16, 11)
 			.forHorizontalAxis(),
 		NIXIE_TUBE_WALL = shape(5, 9, 0, 11, 15, 12).add(5, 1, 0, 11, 7, 12)
+			.forHorizontal(Direction.SOUTH),
+
+		STEAM_ENGINE = shape(1, 0, 1, 15, 3, 15).add(3, 0, 3, 13, 15, 13)
+			.add(1, 5, 4, 15, 13, 12)
+			.forHorizontalAxis(),
+		STEAM_ENGINE_CEILING = shape(1, 13, 1, 15, 16, 15).add(3, 1, 3, 13, 16, 13)
+			.add(1, 3, 4, 15, 11, 12)
+			.forHorizontalAxis(),
+		STEAM_ENGINE_WALL = shape(1, 1, 0, 15, 15, 3).add(3, 3, 0, 13, 13, 15)
+			.add(1, 4, 5, 15, 12, 13)
 			.forHorizontal(Direction.SOUTH)
 
 	;

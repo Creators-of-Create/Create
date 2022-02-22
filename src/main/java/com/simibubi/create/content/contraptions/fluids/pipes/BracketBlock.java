@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
@@ -47,7 +47,7 @@ public class BracketBlock extends WrenchableDirectionalBlock {
 	}
 
 	public Optional<BlockState> getSuitableBracket(BlockState blockState, Direction direction) {
-		if (blockState.getBlock() instanceof AbstractShaftBlock)
+		if (blockState.getBlock() instanceof AbstractSimpleShaftBlock)
 			return getSuitableBracket(blockState.getValue(RotatedPillarKineticBlock.AXIS), direction,
 				blockState.getBlock() instanceof CogWheelBlock ? BracketType.COG : BracketType.SHAFT);
 		return getSuitableBracket(FluidPropagator.getStraightPipeAxis(blockState), direction, BracketType.PIPE);

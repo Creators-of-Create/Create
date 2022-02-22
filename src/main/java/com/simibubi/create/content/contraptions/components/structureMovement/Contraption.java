@@ -749,7 +749,7 @@ public abstract class Contraption {
 				if (tankInventory instanceof FluidTank)
 					((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
 				tank.getFluidLevel()
-					.start(tank.getFillState());
+					.startWithValue(tank.getFillState());
 				mfs.assignTileEntity(tank);
 			});
 

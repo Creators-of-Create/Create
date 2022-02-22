@@ -52,6 +52,9 @@ import com.simibubi.create.content.contraptions.components.press.PressInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineRenderer;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
@@ -505,6 +508,19 @@ public class AllTileEntities {
 		.instance(() -> PSIInstance::new)
 		.validBlocks(AllBlocks.PORTABLE_FLUID_INTERFACE)
 		.renderer(() -> PortableStorageInterfaceRenderer::new)
+		.register();
+	
+	public static final BlockEntityEntry<SteamEngineTileEntity> STEAM_ENGINE = Create.registrate()
+		.tileEntity("steam_engine", SteamEngineTileEntity::new)
+		.validBlocks(AllBlocks.STEAM_ENGINE)
+		.renderer(() -> SteamEngineRenderer::new)
+		.register();
+	
+	public static final BlockEntityEntry<PoweredShaftTileEntity> POWERED_SHAFT = Create.registrate()
+		.tileEntity("powered_shaft", PoweredShaftTileEntity::new)
+		.instance(() -> SingleRotatingInstance::new, false)
+		.validBlocks(AllBlocks.POWERED_SHAFT)
+		.renderer(() -> KineticTileEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<FlywheelTileEntity> FLYWHEEL = Create.registrate()

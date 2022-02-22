@@ -136,6 +136,11 @@ public class AllBlockPartials {
 		TRAIN_CONTROLS_COVER = block("controls/train/cover"),
 		TRAIN_CONTROLS_LEVER = block("controls/train/lever"),
 		
+		ENGINE_PISTON = block("steam_engine/piston"),
+		ENGINE_LINKAGE = block("steam_engine/linkage"),
+		ENGINE_CONNECTOR = block("steam_engine/shaft_connector"),
+		BOILER_GAUGE = block("steam_engine/gauge"),
+		
 		SIGNAL_ON = block("track_signal/indicator_on"),
 		SIGNAL_OFF = block("track_signal/indicator_off"),
 		

@@ -19,7 +19,7 @@ public class BracketedKineticTileEntity extends SimpleKineticTileEntity implemen
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractShaftBlock)
+		behaviours.add(new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractSimpleShaftBlock)
 			.withTrigger(state -> AllTriggers.BRACKET_APPLY_TRIGGER.constructTriggerFor(state.getBlock())));
 		super.addBehaviours(behaviours);
 	}

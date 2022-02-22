@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 114",
+	"_": "Missing Localizations: 116",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -384,6 +384,7 @@
 	"block.create.portable_fluid_interface": "移动式流体接口",
 	"block.create.portable_storage_interface": "移动式存储接口",
 	"block.create.powered_latch": "锁存器",
+	"block.create.powered_shaft": "UNLOCALIZED: Powered Shaft",
 	"block.create.powered_toggle_latch": "转换锁存器",
 	"block.create.pulley_magnet": "滑轮磁铁",
 	"block.create.pulse_extender": "脉冲延长器",
@@ -480,6 +481,7 @@
 	"block.create.spout": "注液器",
 	"block.create.spruce_window": "云杉木窗户",
 	"block.create.spruce_window_pane": "云杉木窗户板",
+	"block.create.steam_engine": "UNLOCALIZED: Steam Engine",
 	"block.create.sticker": "黏着器",
 	"block.create.sticky_mechanical_piston": "黏性动力活塞",
 	"block.create.stockpile_switch": "存量转换器",

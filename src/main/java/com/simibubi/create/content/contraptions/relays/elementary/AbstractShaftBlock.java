@@ -1,38 +1,27 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.Optional;
-
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
-	implements ITE<SimpleKineticTileEntity>, SimpleWaterloggedBlock, IWrenchableWithBracket {
+	implements ITE<KineticTileEntity>, SimpleWaterloggedBlock {
 
 	public AbstractShaftBlock(Properties properties) {
 		super(properties);
@@ -40,24 +29,14 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-		return IWrenchableWithBracket.super.onWrenched(state, context);
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+		return false;
 	}
 
 	@Override
-	public PushReaction getPistonPushReaction(BlockState state) {
-		return PushReaction.NORMAL;
+	public Class<KineticTileEntity> getTileEntityClass() {
+		return KineticTileEntity.class;
 	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state != newState && !isMoving)
-			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
-		super.onRemove(state, world, pos, newState, isMoving);
-	}
-
-	// IRotate:
 
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
@@ -84,7 +63,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
 		BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -95,33 +74,6 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 			.getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
 			Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
-	}
-
-	@Override
-	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext) {
-		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
-		if (behaviour == null)
-			return Optional.empty();
-		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.defaultBlockState())
-			return Optional.empty();
-		return Optional.of(new ItemStack(bracket.getBlock()));
-	}
-
-	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
-		return false;
-	}
-
-	@Override
-	public Class<SimpleKineticTileEntity> getTileEntityClass() {
-		return SimpleKineticTileEntity.class;
-	}
-
-	@Override
-	public BlockEntityType<? extends SimpleKineticTileEntity> getTileEntityType() {
-		return AllTileEntities.BRACKETED_KINETIC.get();
 	}
 
 }

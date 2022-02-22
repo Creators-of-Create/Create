@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
+public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel {
 
 	boolean isLarge;
 

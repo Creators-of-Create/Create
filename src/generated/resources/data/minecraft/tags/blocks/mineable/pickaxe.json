@@ -72,6 +72,8 @@
     "create:item_drain",
     "create:spout",
     "create:portable_fluid_interface",
+    "create:steam_engine",
+    "create:powered_shaft",
     "create:mechanical_piston",
     "create:sticky_mechanical_piston",
     "create:piston_extension_pole",
