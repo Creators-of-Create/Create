@@ -48,8 +48,9 @@ public final class EntityHelper {
 			} else {
 				if (entity == null) {
 					Create.LOGGER.error("Tried to send extra data to entity [{}], which doesn't exist!", id);
+				} else {
+					Create.LOGGER.error("Tried to send extra data for an entity that doesn't implement ExtraSpawnDataEntity");
 				}
-				Create.LOGGER.error("Tried to send extra data for an entity that doesn't implement ExtraSpawnDataEntity");
 			}
 		});
 	}
