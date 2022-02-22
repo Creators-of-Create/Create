@@ -1,10 +1,19 @@
 package com.simibubi.create.lib.mixin.client;
 
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
+import com.simibubi.create.lib.util.EntityHelper;
+
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+
+import net.minecraft.world.entity.Entity;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.lib.block.CustomDataPacketHandlingBlockEntity;
@@ -16,12 +25,28 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
 	@Shadow
 	@Final
 	private Connection connection;
+
+	@ModifyArgs(
+			method = "handleAddEntity",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/multiplayer/ClientLevel;putNonPlayerEntity(ILnet/minecraft/world/entity/Entity;)V"
+			)
+	)
+	private void create$handleAddEntity(Args args) {
+		Entity entity = args.get(1);
+		if (entity instanceof ExtraSpawnDataEntity) {
+			EntityHelper.entityLoad(entity);
+		}
+	}
 
 	@Inject(method = "method_38542", at = @At("HEAD"), cancellable = true)
 	public void create$handleCustomBlockEntity(ClientboundBlockEntityDataPacket packet, BlockEntity blockEntity, CallbackInfo ci) {
