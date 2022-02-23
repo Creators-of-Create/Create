@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.backend.IrisShaderHandler;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
@@ -12,6 +13,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.lib.event.RegisterShadersCallback;
 import com.simibubi.create.lib.mixin.client.accessor.RenderTypeAccessor;
 
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -22,7 +24,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 // TODO 1.17: use custom shaders instead of vanilla ones
 public class RenderTypes extends RenderStateShard {
 
-	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> Shaders.glowingShader);
+	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> IrisShaderHandler.isShaderPackInUse() ? GameRenderer.getNewEntityShader() : Shaders.glowingShader);
 
 	private static final RenderType OUTLINE_SOLID =
 		RenderTypeAccessor.create$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
