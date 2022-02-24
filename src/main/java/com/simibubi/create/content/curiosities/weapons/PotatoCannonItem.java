@@ -13,9 +13,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.extensions.ItemExtensions;
-import com.simibubi.create.lib.item.CustomMaxCountItem;
 import com.simibubi.create.lib.item.EntitySwingListenerItem;
+import com.simibubi.create.lib.item.ReequipAnimationItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,14 +38,13 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwingListenerItem, ItemExtensions {
+public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwingListenerItem, ReequipAnimationItem {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
