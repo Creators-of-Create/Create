@@ -33,7 +33,6 @@ import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 import com.simibubi.create.lib.event.OverlayRenderCallback;
-import com.simibubi.create.lib.util.EntityHelper;
 import com.simibubi.create.lib.util.FluidHandlerData;
 import com.simibubi.create.lib.util.FluidTileDataHandler;
 
@@ -106,7 +105,6 @@ public class CreateClient implements ClientModInitializer {
 		ClientEvents.register();
 		InputEvents.register();
 		AllPackets.channel.initClientListener();
-		EntityHelper.initClientPacketHandling();
 		FluidHandlerData.initClient();
 		FluidTileDataHandler.initClient();
 		RenderTypes.init();

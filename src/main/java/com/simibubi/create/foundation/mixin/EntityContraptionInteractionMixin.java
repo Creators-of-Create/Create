@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
-
 import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +18,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
+import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -117,7 +115,7 @@ public abstract class EntityContraptionInteractionMixin {
 
 			if (particles) {
 				Vec3 vec3d = self.getDeltaMovement();
-				self.level.addParticle(((BlockParticleOptionExtensions) new BlockParticleOption(ParticleTypes.BLOCK, blockstate)).create$setPos(pos),
+				self.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,
 					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), vec3d.x * -4.0D, 1.5D,
 					vec3d.z * -4.0D);

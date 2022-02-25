@@ -12,8 +12,8 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.lib.extensions.ItemExtensions;
 import com.simibubi.create.lib.item.EntitySwingListenerItem;
+import com.simibubi.create.lib.item.ReequipAnimationItem;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
@@ -45,7 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class ZapperItem extends Item implements EntitySwingListenerItem, ItemExtensions {
+public abstract class ZapperItem extends Item implements EntitySwingListenerItem, ReequipAnimationItem {
 
 	public ZapperItem(Properties properties) {
 		super(properties.stacksTo(1));

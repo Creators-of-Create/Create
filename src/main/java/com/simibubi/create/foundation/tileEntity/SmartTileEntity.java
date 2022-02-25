@@ -102,7 +102,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
-			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent(getBlockState(), this, behaviours));
+			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent<>(getBlockState(), this, behaviours));
 		}
 		super.load(tag);
 		forEachBehaviour(tb -> tb.read(tag, clientPacket));

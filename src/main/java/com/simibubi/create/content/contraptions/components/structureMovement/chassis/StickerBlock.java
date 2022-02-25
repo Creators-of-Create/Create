@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.lib.block.CustomLandingEffectsBlock;
 import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
 import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
-import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -148,8 +147,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 	public boolean addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
 		if (state.getValue(FACING) == Direction.UP) {
 			Vec3 Vector3d = entity.getDeltaMovement();
-			world.addParticle(
-					((BlockParticleOptionExtensions) new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState())).create$setPos(pos),
+			world.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()),
 				entity.getX() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(),
 				entity.getY() + 0.1D,
 				entity.getZ() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(),

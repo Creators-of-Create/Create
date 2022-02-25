@@ -11,7 +11,7 @@ public class BurnUtil {
 			return 0;
 		} else if (stack.is(AllItems.CREATIVE_BLAZE_CAKE.get())) {
 			return Integer.MAX_VALUE;
-		}else {
+		} else {
 			Integer burnTime = FuelRegistry.INSTANCE.get(stack.getItem());
 			return burnTime == null ? 0 : burnTime;
 		}

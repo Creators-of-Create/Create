@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.lib.block.CustomDataPacketHandlingBlockEntity;
+import com.simibubi.create.lib.block.CustomUpdateTagHandlingBlockEntity;
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class SyncedTileEntity extends BlockEntity implements BlockEntityExtensions, CustomDataPacketHandlingBlockEntity {
+public abstract class SyncedTileEntity extends BlockEntity implements BlockEntityExtensions, CustomDataPacketHandlingBlockEntity, CustomUpdateTagHandlingBlockEntity {
 
 	public SyncedTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -33,10 +34,10 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
-	//@Override
-//	public void handleUpdateTag(CompoundTag tag) {
-//		readClient(tag);
-//	}
+	@Override
+	public void handleUpdateTag(CompoundTag tag) {
+		readClient(tag);
+	}
 
 	@Override
 	public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet) {

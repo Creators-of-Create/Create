@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.goggles;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.lib.item.EquipmentItem;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,15 +14,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
-public class GogglesItem extends Item implements EquipmentItem {
+public class GogglesItem extends Item {
 
 	public GogglesItem(Properties properties) {
 		super(properties);
 		DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
 	}
 
-	@Override
-	public EquipmentSlot getEquipmentSlot(ItemStack stack) {
+	// Set in properties
+	public static EquipmentSlot getEquipmentSlot(ItemStack stack) {
 		return EquipmentSlot.HEAD;
 	}
 

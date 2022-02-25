@@ -27,8 +27,6 @@
     "RenderTargetMixin",
     "ScreenMixin",
     "ShaderInstanceMixin",
-    "TerrainParticle$ProviderMixin",
-    "TerrainParticleMixin",
     "accessor.AbstractContainerScreenAccessor",
     "accessor.AbstractSelectionList$EntryAccessor",
     "accessor.AbstractSelectionListAccessor",

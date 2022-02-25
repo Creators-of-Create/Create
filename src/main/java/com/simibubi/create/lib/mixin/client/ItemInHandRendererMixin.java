@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -11,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.lib.event.RenderHandCallback;
-import com.simibubi.create.lib.extensions.ItemExtensions;
+import com.simibubi.create.lib.item.ReequipAnimationItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,19 +30,9 @@ public abstract class ItemInHandRendererMixin {
 	private ItemStack mainHandItem;
 	@Shadow
 	private ItemStack offHandItem;
+
+	@Unique
 	private static int create$mainHandSlot = 0;
-
-	private static boolean create$shouldCauseReequipAnimation(@Nonnull ItemStack from, @Nonnull ItemStack to, int slot) {
-		if (from.isEmpty() && to.isEmpty()) return false;
-		if (from.isEmpty() || to.isEmpty()) return true;
-
-		boolean changed = false;
-		if (slot != -1) {
-			changed = slot != create$mainHandSlot;
-			create$mainHandSlot = slot;
-		}
-		return ((ItemExtensions) from.getItem()).shouldCauseReequipAnimation(from, to, changed);
-	}
 
 	@Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
 	private void create$renderArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
@@ -63,12 +54,28 @@ public abstract class ItemInHandRendererMixin {
 	)
 	public void create$tick(CallbackInfo ci,
 							LocalPlayer clientPlayerEntity, ItemStack itemStack, ItemStack itemStack2) {
-		if (create$shouldCauseReequipAnimation(mainHandItem, itemStack, clientPlayerEntity.getInventory().selected)) {
+		if (!create$shouldCauseReequipAnimation(mainHandItem, itemStack, clientPlayerEntity.getInventory().selected)) {
 			mainHandItem = itemStack;
 		}
 
-		if (create$shouldCauseReequipAnimation(offHandItem, itemStack2, -1)) {
+		if (!create$shouldCauseReequipAnimation(offHandItem, itemStack2, -1)) {
 			offHandItem = itemStack2;
 		}
+	}
+
+	@Unique
+	private static boolean create$shouldCauseReequipAnimation(@Nonnull ItemStack from, @Nonnull ItemStack to, int slot) {
+		if (!from.isEmpty() && !to.isEmpty()) {
+			boolean changed = false;
+			if (slot != -1) {
+				changed = slot != create$mainHandSlot;
+				create$mainHandSlot = slot;
+			}
+
+			if (from.getItem() instanceof ReequipAnimationItem handler) {
+				return handler.shouldCauseReequipAnimation(from, to, changed);
+			}
+		}
+		return true;
 	}
 }

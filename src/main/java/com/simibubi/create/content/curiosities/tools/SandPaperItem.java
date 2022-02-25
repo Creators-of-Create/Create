@@ -7,7 +7,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.item.CustomItemEnchantabilityItem;
 import com.simibubi.create.lib.mixin.common.accessor.LivingEntityAccessor;
 import com.simibubi.create.lib.util.NBTSerializer;
 
@@ -42,7 +41,7 @@ import net.minecraft.world.phys.Vec3;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SandPaperItem extends Item implements CustomUseEffectsItem, CustomItemEnchantabilityItem {
+public class SandPaperItem extends Item implements CustomUseEffectsItem {
 
 	public SandPaperItem(Properties properties) {
 		super(properties.defaultDurability(8));
@@ -244,13 +243,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem, CustomI
 	}
 
 	@Override
-	public int getItemEnchantability(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public int getEnchantmentValue() {
-		return 5;
+		return 1;
 	}
 
 //	@Override
