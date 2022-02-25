@@ -21,7 +21,6 @@
     "ExperienceOrbMixin",
     "FlyingMobMixin",
     "ItemEntityMixin",
-    "ItemMixin",
     "ItemStackMixin",
     "LavaFluidMixin",
     "LevelChunkMixin",

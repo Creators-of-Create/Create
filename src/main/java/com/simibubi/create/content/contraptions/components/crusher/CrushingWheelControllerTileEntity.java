@@ -163,7 +163,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 						ItemStack stack = inventory.getStackInSlot(slot);
 						if (stack.isEmpty())
 							continue;
-						ItemStack remainder = behaviour.handleInsertion(stack, facing, false);
+						ItemStack remainder = behaviour.handleInsertion(stack, facing.getOpposite(), false);
 						if (ItemStackUtil.equals(remainder, stack, false))
 							continue;
 						inventory.setStackInSlot(slot, remainder);

@@ -144,8 +144,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
 
-		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
-		String issueTrackerLink = "https://github.com/Creators-of-Create/Create/issues";
+		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create"; // TODO on release
+		String issueTrackerLink = "https://github.com/Fabricators-of-Create/Create/issues";
 		String supportLink = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
 		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
