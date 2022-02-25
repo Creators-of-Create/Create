@@ -239,13 +239,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public int getItemEnchantability(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public int getEnchantmentValue() {
-		return 5;
+		return 1;
 	}
 
 	@Override

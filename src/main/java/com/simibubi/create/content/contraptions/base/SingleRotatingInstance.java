@@ -10,35 +10,35 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
 	protected RotatingData rotatingModel;
 
-    public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
+	public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
 	}
 
-    @Override
-    public void init() {
-    	rotatingModel = setup(getModel().createInstance());
-    }
+	@Override
+	public void init() {
+		rotatingModel = setup(getModel().createInstance());
+	}
 
-    @Override
-    public void update() {
-        updateRotation(rotatingModel);
-    }
+	@Override
+	public void update() {
+		updateRotation(rotatingModel);
+	}
 
-    @Override
-    public void updateLight() {
-        relight(pos, rotatingModel);
-    }
+	@Override
+	public void updateLight() {
+		relight(pos, rotatingModel);
+	}
 
-    @Override
-    public void remove() {
-        rotatingModel.delete();
-    }
+	@Override
+	public void remove() {
+		rotatingModel.delete();
+	}
 
-    protected BlockState getRenderedBlockState() {
-        return blockState;
-    }
+	protected BlockState getRenderedBlockState() {
+		return blockState;
+	}
 
-    protected Instancer<RotatingData> getModel() {
-        return getRotatingMaterial().getModel(getRenderedBlockState());
-    }
+	protected Instancer<RotatingData> getModel() {
+		return getRotatingMaterial().getModel(getRenderedBlockState());
+	}
 }

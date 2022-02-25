@@ -5,22 +5,22 @@ import com.jozufozu.flywheel.core.layout.CommonItems;
 
 public class AllInstanceFormats {
 
-	public static BufferLayout ROTATING = kineticInstance()
+	public static final BufferLayout ROTATING = kineticInstance()
 			.addItems(CommonItems.NORMAL)
 			.build();
 
-	public static BufferLayout BELT = kineticInstance()
+	public static final BufferLayout BELT = kineticInstance()
 			.addItems(CommonItems.QUATERNION, CommonItems.UV, CommonItems.VEC4,
 					CommonItems.NORMALIZED_BYTE)
 			.build();
 
-	public static BufferLayout ACTOR = BufferLayout.builder()
+	public static final BufferLayout ACTOR = BufferLayout.builder()
 			.addItems(CommonItems.VEC3, CommonItems.LIGHT, CommonItems.FLOAT,
 					CommonItems.NORMAL, CommonItems.QUATERNION, CommonItems.NORMAL,
 					CommonItems.FLOAT)
 			.build();
 
-	public static BufferLayout FLAP = BufferLayout.builder()
+	public static final BufferLayout FLAP = BufferLayout.builder()
 			.addItems(CommonItems.VEC3, CommonItems.LIGHT, CommonItems.VEC3, CommonItems.VEC3,
 					CommonItems.FLOAT, CommonItems.FLOAT, CommonItems.FLOAT, CommonItems.FLOAT)
 			.build();

@@ -5194,6 +5194,8 @@ d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
 eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/blocks/windowable.json
 893a01e6004d6d8272bd1658e98da88bb572ee57 data/create/tags/blocks/wrench_pickup.json
+74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/items/blaze_burner_regular_fuel.json
+97061ef67cac1fafd869493d06115b968bcb99bf data/create/tags/items/blaze_burner_special_fuel.json
 5212172aee2239136c94f9868ad39ec2e17cf1c6 data/create/tags/items/create_ingots.json
 4480f211f4a37bfee193eba945bc9f5a8d2c6e34 data/create/tags/items/crushed_ores.json
 bce28787b0271382842823d04a977912a88b01c2 data/create/tags/items/sandpaper.json
