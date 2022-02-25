@@ -1,6 +1,6 @@
 package com.simibubi.create.lib.util;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +15,6 @@ public class EnchantmentUtil {
 
 	public static void addCompat(Item item, Supplier<Enchantment>... enchants) {
 		Set<Supplier<Enchantment>> set = ITEMS_TO_ENCHANTS.computeIfAbsent(item, item2 -> new HashSet<>());
-		set.addAll(Arrays.asList(enchants));
+		Collections.addAll(set, enchants);
 	}
 }

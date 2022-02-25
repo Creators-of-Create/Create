@@ -139,7 +139,7 @@ public interface ItemAttribute {
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
-		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s) != EquipmentSlot.MAINHAND),
+		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s).getType() != EquipmentSlot.Type.HAND),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		HAUNTABLE(InWorldProcessing::isHauntable),
