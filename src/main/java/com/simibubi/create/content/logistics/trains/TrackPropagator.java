@@ -38,25 +38,22 @@ public class TrackPropagator {
 		Collection<DiscoveredLocation> ends = track.getConnected(reader, pos, state, false, null);
 		GlobalRailwayManager manager = Create.RAILWAYS;
 		TrackGraphSync sync = manager.sync;
-		TrackGraph foundGraph = null;
 
 		// 1. Remove any nodes this rail was part of
 
 		for (DiscoveredLocation removedLocation : ends) {
-			if (foundGraph == null)
-				foundGraph = manager.getGraph(reader, removedLocation);
-			if (foundGraph == null)
-				continue;
-			TrackNode removedNode = foundGraph.locateNode(removedLocation);
-			if (removedNode != null) {
+			List<TrackGraph> intersecting = manager.getGraphs(reader, removedLocation);
+			for (TrackGraph foundGraph : intersecting) {
+				TrackNode removedNode = foundGraph.locateNode(removedLocation);
+				if (removedNode == null)
+					continue;
 				foundGraph.removeNode(reader, removedLocation);
 				sync.nodeRemoved(foundGraph, removedNode);
+				if (!foundGraph.isEmpty())
+					continue;
+				manager.removeGraph(foundGraph);
+				sync.graphRemoved(foundGraph);
 			}
-		}
-
-		if (foundGraph != null && foundGraph.isEmpty()) {
-			manager.removeGraph(foundGraph);
-			sync.graphRemoved(foundGraph);
 		}
 
 		Set<BlockPos> positionsToUpdate = new HashSet<>();
@@ -100,14 +97,17 @@ public class TrackPropagator {
 				break;
 
 			FrontierEntry entry = frontier.remove(0);
-			TrackGraph graph = manager.getGraph(reader, entry.currentNode);
-			if (graph != null) {
+			List<TrackGraph> intersecting = manager.getGraphs(reader, entry.currentNode);
+			for (TrackGraph graph : intersecting) {
 				TrackNode node = graph.locateNode(entry.currentNode);
 				graph.removeNode(reader, entry.currentNode);
 				sync.nodeRemoved(graph, node);
 				connectedGraphs.add(graph);
 				continue;
 			}
+
+			if (!intersecting.isEmpty())
+				continue;
 
 			Collection<DiscoveredLocation> ends = ITrackBlock.walkConnectedTracks(reader, entry.currentNode, false);
 			if (entry.prevNode != null)
@@ -117,7 +117,6 @@ public class TrackPropagator {
 
 		frontier.clear();
 		visited.clear();
-
 		TrackGraph graph = null;
 
 		// Remove empty graphs
@@ -173,11 +172,7 @@ public class TrackPropagator {
 
 		frontier.clear();
 		Set<TrackNode> addedNodes = new HashSet<>();
-		if (graph.createNode(startNode)) {
-			TrackNode node = graph.locateNode(startNode);
-			sync.nodeAdded(graph, node);
-		}
-
+		graph.createNodeIfAbsent(startNode);
 		frontier.add(new FrontierEntry(startNode, null, startNode));
 
 		// 3. Build up the graph via all connected nodes
@@ -195,11 +190,7 @@ public class TrackPropagator {
 				ends.remove(entry.prevNode);
 
 			if (isValidGraphNodeLocation(entry.currentNode, ends, first) && entry.currentNode != startNode) {
-				boolean nodeIsNew = graph.createNode(entry.currentNode);
-				if (nodeIsNew) {
-					TrackNode node = graph.locateNode(entry.currentNode);
-					sync.nodeAdded(graph, node);
-				}
+				boolean nodeIsNew = graph.createNodeIfAbsent(entry.currentNode);
 				graph.connectNodes(parentNode, entry.currentNode, new TrackEdge(entry.currentNode.getTurn()));
 				addedNodes.add(graph.locateNode(entry.currentNode));
 				parentNode = entry.currentNode;

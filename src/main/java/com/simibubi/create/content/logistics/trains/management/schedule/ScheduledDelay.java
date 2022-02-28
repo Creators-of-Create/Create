@@ -19,7 +19,7 @@ public class ScheduledDelay extends TimedWaitCondition {
 	
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		int time = context.getInt("Time") + 1900;
+		int time = context.getInt("Time");
 		if (time >= value * timeUnit.ticksPer)
 			return true;
 		context.putInt("Time", time + 1);

@@ -39,7 +39,7 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
 		BlockPos pos = te.getBlockPos();
-		TrackTargetingBehaviour target = te.getTarget();
+		TrackTargetingBehaviour<SignalBoundary> target = te.edgePoint;
 		BlockPos targetPosition = target.getGlobalPosition();
 		Level level = te.getLevel();
 		BlockState trackState = level.getBlockState(targetPosition);

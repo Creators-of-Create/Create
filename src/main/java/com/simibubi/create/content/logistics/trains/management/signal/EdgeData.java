@@ -1,109 +1,77 @@
 package com.simibubi.create.content.logistics.trains.management.signal;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
-import com.simibubi.create.content.logistics.trains.management.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class EdgeData {
 
+	public static final UUID passiveGroup = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
 	public UUID singleSignalGroup;
-	private List<SignalBoundary> boundaries;
-	private List<GlobalStation> stations;
+	private List<TrackEdgePoint> points;
 
 	public EdgeData() {
-		boundaries = new ArrayList<>();
-		stations = new ArrayList<>();
-		singleSignalGroup = null;
+		points = new ArrayList<>();
+		singleSignalGroup = passiveGroup;
 	}
 
-	public boolean hasBoundaries() {
-		return !boundaries.isEmpty();
+	public boolean hasSignalBoundaries() {
+		return singleSignalGroup == null;
 	}
 
-	public boolean hasStations() {
-		return !stations.isEmpty();
+	public boolean hasPoints() {
+		return !points.isEmpty();
 	}
 
-	public List<SignalBoundary> getBoundaries() {
-		return boundaries;
-	}
-
-	public List<GlobalStation> getStations() {
-		return stations;
+	public List<TrackEdgePoint> getPoints() {
+		return points;
 	}
 
 	public void removePoint(TrackNode node1, TrackNode node2, TrackEdge edge, TrackEdgePoint point) {
-		if (point instanceof GlobalStation gs)
-			stations.remove(gs);
-		if (point instanceof SignalBoundary sb)
-			boundaries.remove(sb);
-		updateDelegates(node1, node2, edge);
+		points.remove(point);
+		if (point.getType() == EdgePointType.SIGNAL)
+			singleSignalGroup = next(point.getType(), node1, node2, edge, 0) == null ? passiveGroup : null;
 	}
 
-	public <T extends TrackEdgePoint> void addPoint(TrackNode node1, TrackNode node2, TrackEdge edge, T boundary,
-		Class<T> type) {
-		T next = next(type, node1, node2, edge, boundary.getLocationOn(node1, node2, edge));
-		if (boundary instanceof GlobalStation gs)
-			stations.add(next == null ? stations.size() : stations.indexOf(next), gs);
-		if (boundary instanceof SignalBoundary sb)
-			boundaries.add(next == null ? boundaries.size() : boundaries.indexOf(next), sb);
-		updateDelegates(node1, node2, edge);
-	}
-
-	public void updateDelegates(TrackNode node1, TrackNode node2, TrackEdge edge) {
-		for (GlobalStation globalStation : stations)
-			globalStation.boundary = getBoundary(node1, node2, edge, globalStation.getLocationOn(node1, node2, edge));
-		for (SignalBoundary boundary : boundaries)
-			boundary.station = getStation(node1, node2, edge, boundary.getLocationOn(node1, node2, edge));
-	}
-
-	@Nullable
-	public SignalBoundary nextBoundary(TrackNode node1, TrackNode node2, TrackEdge edge, double minPosition) {
-		return next(SignalBoundary.class, node1, node2, edge, minPosition);
-	}
-
-	@Nullable
-	public GlobalStation nextStation(TrackNode node1, TrackNode node2, TrackEdge edge, double minPosition) {
-		return next(GlobalStation.class, node1, node2, edge, minPosition);
-	}
-
-	@Nullable
-	public SignalBoundary getBoundary(TrackNode node1, TrackNode node2, TrackEdge edge, double exactPosition) {
-		return get(SignalBoundary.class, node1, node2, edge, exactPosition);
-	}
-
-	@Nullable
-	public GlobalStation getStation(TrackNode node1, TrackNode node2, TrackEdge edge, double exactPosition) {
-		return get(GlobalStation.class, node1, node2, edge, exactPosition);
+	public <T extends TrackEdgePoint> void addPoint(TrackNode node1, TrackNode node2, TrackEdge edge,
+		TrackEdgePoint point) {
+		if (point.getType() == EdgePointType.SIGNAL)
+			singleSignalGroup = null;
+		double locationOn = point.getLocationOn(node1, node2, edge);
+		int i = 0;
+		for (; i < points.size(); i++)
+			if (points.get(i)
+				.getLocationOn(node1, node2, edge) > locationOn)
+				break;
+		points.add(i, point);
 	}
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	private <T extends TrackEdgePoint> T next(Class<T> type, TrackNode node1, TrackNode node2, TrackEdge edge,
+	public <T extends TrackEdgePoint> T next(EdgePointType<T> type, TrackNode node1, TrackNode node2, TrackEdge edge,
 		double minPosition) {
-		for (TrackEdgePoint point : type == GlobalStation.class ? stations : boundaries)
-			if (point.getLocationOn(node1, node2, edge) > minPosition)
+		for (TrackEdgePoint point : points)
+			if (point.getType() == type && point.getLocationOn(node1, node2, edge) > minPosition)
 				return (T) point;
 		return null;
 	}
 
 	@Nullable
-	private <T extends TrackEdgePoint> T get(Class<T> type, TrackNode node1, TrackNode node2, TrackEdge edge,
+	public <T extends TrackEdgePoint> T get(EdgePointType<T> type, TrackNode node1, TrackNode node2, TrackEdge edge,
 		double exactPosition) {
 		T next = next(type, node1, node2, edge, exactPosition - .5f);
 		if (next != null && Mth.equal(next.getLocationOn(node1, node2, edge), exactPosition))
@@ -112,43 +80,42 @@ public class EdgeData {
 	}
 
 	public CompoundTag write() {
-		CompoundTag signalCompound = new CompoundTag();
-		if (hasBoundaries()) {
-			signalCompound.put("Boundaries", NBTHelper.writeCompoundList(boundaries, this::writePoint));
-		} else if (singleSignalGroup != null)
-			signalCompound.putUUID("Group", singleSignalGroup);
-		if (hasStations())
-			signalCompound.put("Stations", NBTHelper.writeCompoundList(stations, this::writePoint));
-		return signalCompound;
+		CompoundTag nbt = new CompoundTag();
+		if (singleSignalGroup == passiveGroup)
+			NBTHelper.putMarker(nbt, "PassiveGroup");
+		else if (singleSignalGroup != null)
+			nbt.putUUID("SignalGroup", singleSignalGroup);
+
+		if (hasPoints())
+			nbt.put("Points", NBTHelper.writeCompoundList(points, point -> {
+				CompoundTag tag = new CompoundTag();
+				tag.putUUID("Id", point.id);
+				tag.putString("Type", point.getType()
+					.getId()
+					.toString());
+				return tag;
+			}));
+		return nbt;
 	}
 
-	public static EdgeData read(CompoundTag tag, TrackGraph graph) {
-		EdgeData signalEdgeData = new EdgeData();
-		if (tag.contains("Group"))
-			signalEdgeData.singleSignalGroup = tag.getUUID("Group");
-		if (tag.contains("Boundaries"))
-			NBTHelper.iterateCompoundList(tag.getList("Boundaries", Tag.TAG_COMPOUND),
-				readPoint(graph::getSignal, signalEdgeData.boundaries));
-		if (tag.contains("Stations"))
-			NBTHelper.iterateCompoundList(tag.getList("Stations", Tag.TAG_COMPOUND),
-				readPoint(graph::getStation, signalEdgeData.stations));
-		return signalEdgeData;
-	}
+	public static EdgeData read(CompoundTag nbt, TrackGraph graph) {
+		EdgeData data = new EdgeData();
+		if (nbt.contains("SignalGroup"))
+			data.singleSignalGroup = nbt.getUUID("Group");
+		else if (!nbt.contains("PassiveGroup"))
+			data.singleSignalGroup = null;
 
-	private <T extends TrackEdgePoint> CompoundTag writePoint(T point) {
-		CompoundTag compoundTag = new CompoundTag();
-		compoundTag.putUUID("Id", point.id);
-		return compoundTag;
-	}
-
-	private static <T extends TrackEdgePoint> Consumer<CompoundTag> readPoint(Function<UUID, T> lookup,
-		Collection<T> target) {
-		return tag -> {
-			UUID id = tag.getUUID("Id");
-			T signal = lookup.apply(id);
-			if (signal != null)
-				target.add(signal);
-		};
+		if (nbt.contains("Points"))
+			NBTHelper.iterateCompoundList(nbt.getList("Points", Tag.TAG_COMPOUND), tag -> {
+				ResourceLocation location = new ResourceLocation(tag.getString("Type"));
+				EdgePointType<?> type = EdgePointType.TYPES.get(location);
+				if (type == null || !tag.contains("Id"))
+					return;
+				TrackEdgePoint point = graph.getPoint(type, tag.getUUID("Id"));
+				if (point != null)
+					data.points.add(point);
+			});
+		return data;
 	}
 
 }

@@ -24,7 +24,7 @@ public class StationPoweredCondition extends ScheduleWaitCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		BlockPos stationPos = currentStation.stationPos;
+		BlockPos stationPos = currentStation.getTilePos();
 		if (!level.isLoaded(stationPos))
 			return false;
 		return level.hasNeighborSignal(stationPos);

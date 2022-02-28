@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -60,6 +61,14 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 
 	public <S, R> Couple<S> mapWithParams(BiFunction<T, R, S> function, Couple<R> values) {
 		return Couple.create(function.apply(first, values.first), function.apply(second, values.second));
+	}
+
+	public boolean both(Predicate<T> test) {
+		return test.test(getFirst()) && test.test(getSecond());
+	}
+	
+	public boolean either(Predicate<T> test) {
+		return test.test(getFirst()) || test.test(getSecond());
 	}
 
 	public void replace(Function<T, T> function) {

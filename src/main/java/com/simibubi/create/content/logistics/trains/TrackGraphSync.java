@@ -56,8 +56,16 @@ public class TrackGraphSync {
 
 	public void nodeRemoved(TrackGraph graph, TrackNode node) {
 		flushPacket(graph.id);
-		if (currentPacket.addedNodes.remove(node.getNetId()) == null)
-			currentPacket.removedNodes.add(node.getNetId());
+		int nodeId = node.getNetId();
+		if (currentPacket.addedNodes.remove(nodeId) == null)
+			currentPacket.removedNodes.add(nodeId);
+		currentPacket.addedEdges.removeIf(pair -> {
+			Couple<Integer> ids = pair.getFirst();
+			return ids.getFirst()
+				.intValue() == nodeId
+				|| ids.getSecond()
+					.intValue() == nodeId;
+		});
 	}
 
 	public void graphSplit(TrackGraph graph, Set<TrackGraph> additional) {
@@ -80,19 +88,25 @@ public class TrackGraphSync {
 	//
 
 	public void sendFullGraphTo(TrackGraph graph, ServerPlayer player) {
-		// TODO ensure packet size limit
-
 		RailGraphSyncPacket packet = new RailGraphSyncPacket(graph.id);
+		int sent = 0;
 		for (TrackNode node : graph.nodes.values()) {
-			packet.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
+			RailGraphSyncPacket currentPacket = packet;
+			currentPacket.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
 			if (!graph.connectionsByNode.containsKey(node))
 				continue;
 			graph.connectionsByNode.get(node)
-				.forEach((node2, edge) -> packet.addedEdges
+				.forEach((node2, edge) -> currentPacket.addedEdges
 					.add(Pair.of(Couple.create(node.getNetId(), node2.getNetId()), edge)));
-		}
 
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
+			if (sent++ > 1000) {
+				sent = 0;
+				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
+				packet = new RailGraphSyncPacket(graph.id);
+			}
+		}
+		if (sent > 0)
+			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
 	private RailGraphSyncPacket currentPacket;
@@ -161,6 +175,7 @@ public class TrackGraphSync {
 
 		@Override
 		public void write(FriendlyByteBuf buffer) {
+
 			buffer.writeUUID(graphId);
 			buffer.writeBoolean(delete);
 			if (delete)
@@ -209,11 +224,11 @@ public class TrackGraphSync {
 							railGraph.removeNode(null, node.getLocation());
 					}
 
-					for (Entry<Integer, Pair<TrackNodeLocation, Vec3>> entry : addedNodes.entrySet())
-						railGraph.createSpecificNode(entry.getValue()
-							.getFirst(), entry.getKey(),
-							entry.getValue()
-								.getSecond());
+					for (Entry<Integer, Pair<TrackNodeLocation, Vec3>> entry : addedNodes.entrySet()) {
+						Integer nodeId = entry.getKey();
+						Pair<TrackNodeLocation, Vec3> nodeLocation = entry.getValue();
+						railGraph.loadNode(nodeLocation.getFirst(), nodeId, nodeLocation.getSecond());
+					}
 
 					for (Pair<Couple<Integer>, TrackEdge> pair : addedEdges) {
 						Couple<TrackNode> nodes = pair.getFirst()

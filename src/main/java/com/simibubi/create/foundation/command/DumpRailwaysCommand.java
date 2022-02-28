@@ -13,6 +13,7 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
 
 import net.minecraft.ChatFormatting;
@@ -62,11 +63,11 @@ public class DumpRailwaysCommand {
 				+ graph.getNodes()
 					.size()
 				+ " Nodes", graph.color.getRGB());
-			Collection<SignalBoundary> signals = graph.getSignals();
+			Collection<SignalBoundary> signals = graph.getPoints(EdgePointType.SIGNAL);
 			if (!signals.isEmpty())
 				chat.accept(" -> " + signals.size() + " registered Signals", blue);
-			for (GlobalStation globalStation : graph.getStations()) {
-				BlockPos pos = globalStation.stationPos;
+			for (GlobalStation globalStation : graph.getPoints(EdgePointType.STATION)) {
+				BlockPos pos = globalStation.getTilePos();
 				chat.accept(" -> " + globalStation.name + " (" + globalStation.id.toString()
 					.substring(0, 5) + ") [" + pos.getX() + "," + pos.getY() + "," + pos.getZ() + "]", darkBlue);
 				if (globalStation.getPresentTrain() != null) {

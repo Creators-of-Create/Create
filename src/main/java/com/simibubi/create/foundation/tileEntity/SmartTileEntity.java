@@ -129,12 +129,11 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	}
 
 	protected void setRemovedNotDueToChunkUnload() {
-
+		forEachBehaviour(TileEntityBehaviour::remove);
 	}
 
 	@Override
 	public void setRemoved() {
-		forEachBehaviour(TileEntityBehaviour::remove);
 		super.setRemoved();
 
 		if (!unloaded) {

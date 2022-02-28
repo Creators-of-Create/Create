@@ -75,10 +75,10 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 	protected void displayScreen(StationTileEntity te, Player player) {
 		if (!(player instanceof LocalPlayer))
 			return;
-		GlobalStation station = te.getOrCreateGlobalStation();
-		if (station == null)
-			return;
+		GlobalStation station = te.getStation();
 		BlockState blockState = te.getBlockState();
+		if (station == null || blockState == null)
+			return;
 		boolean assembling = blockState.getBlock() == this && blockState.getValue(ASSEMBLING);
 		ScreenOpener.open(assembling ? new AssemblyScreen(te, station) : new StationScreen(te, station));
 	}

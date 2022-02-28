@@ -73,7 +73,7 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 		BlockState blockState = level.getBlockState(blockPos);
 
 		if (!name.isBlank()) {
-			GlobalStation station = te.getOrCreateGlobalStation();
+			GlobalStation station = te.getStation();
 			if (station != null)
 				station.name = name;
 			Create.RAILWAYS.markTracksDirty();
@@ -113,12 +113,11 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 	}
 
 	private boolean disassembleAndEnterMode(StationTileEntity te) {
-		GlobalStation station = te.getOrCreateGlobalStation();
+		GlobalStation station = te.getStation();
 		if (station != null) {
 			Train train = station.getPresentTrain();
-			if (train != null && !train.disassemble(te.getAssemblyDirection(), te.getTarget()
-				.getGlobalPosition()
-				.above()))
+			BlockPos trackPosition = te.edgePoint.getGlobalPosition();
+			if (train != null && !train.disassemble(te.getAssemblyDirection(), trackPosition.above()))
 				return false;
 		}
 		return te.tryEnterAssemblyMode();

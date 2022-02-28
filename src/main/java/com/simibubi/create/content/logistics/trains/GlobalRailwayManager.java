@@ -1,6 +1,9 @@
 package com.simibubi.create.content.logistics.trains;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -118,6 +121,16 @@ public class GlobalRailwayManager {
 		return null;
 	}
 
+	public List<TrackGraph> getGraphs(LevelAccessor level, TrackNodeLocation vertex) {
+		if (trackNetworks == null)
+			return Collections.emptyList();
+		ArrayList<TrackGraph> intersecting = new ArrayList<>();
+		for (TrackGraph railGraph : trackNetworks.values())
+			if (railGraph.locateNode(vertex) != null)
+				intersecting.add(railGraph);
+		return intersecting;
+	}
+
 	public void tick(Level level) {
 		ResourceLocation location2 = DimensionType.OVERWORLD_LOCATION.location();
 		ResourceLocation location = level.dimension()
@@ -131,10 +144,8 @@ public class GlobalRailwayManager {
 		}
 
 		for (TrackGraph graph : trackNetworks.values())
-			graph.getSignals()
-				.forEach(sb -> sb.tick(graph));
-
-		for (Train train : trains.values()) 
+			graph.tickPoints();
+		for (Train train : trains.values())
 			train.earlyTick(level);
 		for (Train train : trains.values())
 			train.tick(level);
@@ -143,10 +154,14 @@ public class GlobalRailwayManager {
 			trackNetworks.values()
 				.forEach(TrackGraph::debugViewSignalData);
 		}
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown()) {
+			trackNetworks.values()
+				.forEach(TrackGraph::debugViewNodes);
+		}
 	}
 
 	public void clientTick() {
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J)) {
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && !AllKeys.altDown()) {
 			trackNetworks.values()
 				.forEach(TrackGraph::debugViewNodes);
 		}

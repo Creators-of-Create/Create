@@ -16,37 +16,12 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 
 public class SignalPropagator {
-
-	public static <T extends TrackEdgePoint> void onEdgePointAdded(TrackGraph graph, T point, Class<T> type) {
-		Couple<TrackNodeLocation> edgeLocation = point.edgeLocation;
-		Couple<TrackNode> startNodes = edgeLocation.map(graph::locateNode);
-		Couple<TrackEdge> startEdges = startNodes.mapWithParams((l1, l2) -> graph.getConnectionsFrom(l1)
-			.get(l2), startNodes.swap());
-
-		for (boolean front : Iterate.trueAndFalse) {
-			TrackNode node1 = startNodes.get(front);
-			TrackNode node2 = startNodes.get(!front);
-			TrackEdge startEdge = startEdges.get(front);
-			startEdge.getEdgeData()
-				.addPoint(node1, node2, startEdge, point, type);
-		}
-	}
-
-	public static <T extends TrackEdgePoint> void onEdgePointRemoved(TrackGraph graph, T point, Class<T> type) {
-		Couple<TrackNodeLocation> edgeLocation = point.edgeLocation;
-		Couple<TrackNode> startNodes = edgeLocation.map(graph::locateNode);
-		startNodes.forEachWithParams((l1, l2) -> {
-			TrackEdge trackEdge = graph.getConnectionsFrom(l1)
-				.get(l2);
-			trackEdge.getEdgeData()
-				.removePoint(l1, l2, trackEdge, point);
-		}, startNodes.swap());
-	}
 
 	public static void onSignalRemoved(TrackGraph graph, SignalBoundary signal) {
 		signal.sidesToUpdate.map($ -> false);
@@ -61,8 +36,6 @@ public class SignalPropagator {
 				return false;
 			}, Predicates.alwaysFalse());
 		}
-
-		onEdgePointRemoved(graph, signal, SignalBoundary.class);
 	}
 
 	public static void notifySignalsOfNewNode(TrackGraph graph, TrackNode node) {
@@ -118,7 +91,7 @@ public class SignalPropagator {
 
 		// Check for signal on the same edge
 		SignalBoundary immediateBoundary = startEdge.getEdgeData()
-			.nextBoundary(node1, node2, startEdge, signal.getLocationOn(node1, node2, startEdge));
+			.next(EdgePointType.SIGNAL, node1, node2, startEdge, signal.getLocationOn(node1, node2, startEdge));
 		if (immediateBoundary != null) {
 			if (boundaryCallback.test(Pair.of(node1, immediateBoundary)))
 				notifyTrains(graph, startEdge, startEdges.get(!front));
@@ -160,14 +133,15 @@ public class SignalPropagator {
 					EdgeData signalData = currentEdge.getEdgeData();
 
 					// no boundary- update group of edge
-					if (!signalData.hasBoundaries()) {
+					if (!signalData.hasSignalBoundaries()) {
 						if (nonBoundaryCallback.test(signalData))
 							notifyTrains(graph, currentEdge);
 						continue;
 					}
 
 					// other/own boundary found
-					SignalBoundary nextBoundary = signalData.nextBoundary(currentNode, nextNode, currentEdge, 0);
+					SignalBoundary nextBoundary =
+						signalData.next(EdgePointType.SIGNAL, currentNode, nextNode, currentEdge, 0);
 					if (boundaryCallback.test(Pair.of(currentNode, nextBoundary)))
 						notifyTrains(graph, edge, oppositeEdge);
 					continue EdgeWalk;

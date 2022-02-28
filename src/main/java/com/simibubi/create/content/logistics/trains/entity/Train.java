@@ -31,6 +31,7 @@ import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
@@ -556,7 +557,7 @@ public class Train {
 			return null;
 		if (graph == null)
 			return null;
-		return graph.getStation(currentStation);
+		return graph.getPoint(EdgePointType.STATION, currentStation);
 	}
 
 	@Nullable
@@ -596,16 +597,16 @@ public class Train {
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.signalEdgeGroups;
 		MutableObject<UUID> prevGroup = new MutableObject<>(null);
 
-		if (signalData.hasBoundaries()) {
-			SignalBoundary nextBoundary = signalData.nextBoundary(node1, node2, edge, position);
+		if (signalData.hasSignalBoundaries()) {
+			SignalBoundary nextBoundary = signalData.next(EdgePointType.SIGNAL, node1, node2, edge, position);
 			if (nextBoundary == null) {
 				double d = 0;
 				SignalBoundary prev = null;
-				SignalBoundary current = signalData.nextBoundary(node1, node2, edge, 0);
+				SignalBoundary current = signalData.next(EdgePointType.SIGNAL, node1, node2, edge, 0);
 				while (current != null) {
 					prev = current;
 					d = current.getLocationOn(node1, node2, edge);
-					current = signalData.nextBoundary(node1, node2, edge, d);
+					current = signalData.next(EdgePointType.SIGNAL, node1, node2, edge, d);
 				}
 				if (prev != null) {
 					UUID group = prev.getGroup(node2);

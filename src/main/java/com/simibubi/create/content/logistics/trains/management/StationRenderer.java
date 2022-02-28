@@ -29,7 +29,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		int light, int overlay) {
 
 		BlockPos pos = te.getBlockPos();
-		TrackTargetingBehaviour target = te.getTarget();
+		TrackTargetingBehaviour<GlobalStation> target = te.edgePoint;
 		BlockPos targetPosition = target.getGlobalPosition();
 		Level level = te.getLevel();
 
@@ -38,7 +38,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		if (!(block instanceof ITrackBlock))
 			return;
 
-		GlobalStation station = te.getOrCreateGlobalStation();
+		GlobalStation station = te.getStation();
 
 		if (!te.getBlockState()
 			.getValue(StationBlock.ASSEMBLING) || station == null || station.getPresentTrain() != null) {

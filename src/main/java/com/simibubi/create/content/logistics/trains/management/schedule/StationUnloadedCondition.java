@@ -25,7 +25,7 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 		if (currentStation == null)
 			return false;
 		if (level instanceof ServerLevel serverLevel) 
-			return !serverLevel.isPositionEntityTicking(currentStation.stationPos);
+			return !serverLevel.isPositionEntityTicking(currentStation.getTilePos());
 		return false;
 	}
 

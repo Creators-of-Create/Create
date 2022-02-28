@@ -5,13 +5,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Objects;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
-import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.signal.SignalTileEntity.OverlayState;
 import com.simibubi.create.content.logistics.trains.management.signal.SignalTileEntity.SignalState;
 import com.simibubi.create.foundation.utility.Couple;
@@ -22,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.LevelAccessor;
 
 public class SignalBoundary extends TrackEdgePoint {
 
@@ -29,22 +27,45 @@ public class SignalBoundary extends TrackEdgePoint {
 	public Couple<UUID> groups;
 	public Couple<Boolean> sidesToUpdate;
 
-	@Nullable
-	public GlobalStation station;
-
-	public SignalBoundary(UUID id, BlockPos tilePosition, boolean front) {
-		super(id);
+	public SignalBoundary() {
 		signals = Couple.create(HashSet::new);
 		groups = Couple.create(null, null);
 		sidesToUpdate = Couple.create(true, true);
-		this.signals.get(front)
-			.add(tilePosition);
 	}
 
 	public void setGroup(TrackNode side, UUID groupId) {
 		boolean primary = isPrimary(side);
 		groups.set(primary, groupId);
 		sidesToUpdate.set(primary, false);
+	}
+
+	@Override
+	public boolean canMerge() {
+		return true;
+	}
+
+	@Override
+	public void invalidate(LevelAccessor level) {
+		signals.forEach(s -> s.forEach(pos -> invalidateAt(level, pos)));
+	}
+
+	@Override
+	public void tileAdded(BlockPos tilePos, boolean front) {
+		signals.get(front)
+			.add(tilePos);
+	}
+
+	@Override
+	public void tileRemoved(BlockPos tilePos, boolean front) {
+		signals.forEach(s -> s.remove(tilePos));
+		if (signals.both(Set::isEmpty))
+			removeFromAllGraphs();
+	}
+
+	@Override
+	public void onRemoved(TrackGraph graph) {
+		super.onRemoved(graph);
+		SignalPropagator.onSignalRemoved(graph, this);
 	}
 
 	public void queueUpdate(TrackNode side) {
@@ -55,14 +76,13 @@ public class SignalBoundary extends TrackEdgePoint {
 		return groups.get(isPrimary(side));
 	}
 
+	@Override
 	public boolean canNavigateVia(TrackNode side) {
-		return !signals.get(!isPrimary(side))
+		return !signals.get(isPrimary(side))
 			.isEmpty();
 	}
 
 	public OverlayState getOverlayFor(BlockPos tile) {
-		if (station != null)
-			return OverlayState.SKIP;
 		for (boolean first : Iterate.trueAndFalse) {
 			Set<BlockPos> set = signals.get(first);
 			for (BlockPos blockPos : set) {
@@ -92,7 +112,9 @@ public class SignalBoundary extends TrackEdgePoint {
 		return SignalState.INVALID;
 	}
 
+	@Override
 	public void tick(TrackGraph graph) {
+		super.tick(graph);
 		for (boolean front : Iterate.trueAndFalse) {
 			if (!sidesToUpdate.get(front))
 				continue;
@@ -101,12 +123,13 @@ public class SignalBoundary extends TrackEdgePoint {
 		}
 	}
 
-	public SignalBoundary(CompoundTag nbt) {
-		super(nbt);
+	@Override
+	public void read(CompoundTag nbt) {
+		super.read(nbt);
 
+		sidesToUpdate = Couple.create(true, true);
 		signals = Couple.create(HashSet::new);
 		groups = Couple.create(null, null);
-		sidesToUpdate = Couple.create(true, true);
 
 		for (int i = 1; i <= 2; i++)
 			if (nbt.contains("Tiles" + i)) {
@@ -121,12 +144,9 @@ public class SignalBoundary extends TrackEdgePoint {
 			sidesToUpdate.set(i == 1, nbt.contains("Update" + i));
 	}
 
-	public CompoundTag write() {
-		CompoundTag nbt = new CompoundTag();
-		nbt.putUUID("Id", id);
-		nbt.putDouble("Position", position);
-		nbt.put("Edge", edgeLocation.serializeEach(loc -> NbtUtils.writeBlockPos(new BlockPos(loc))));
-
+	@Override
+	public void write(CompoundTag nbt) {
+		super.write(nbt);
 		for (int i = 1; i <= 2; i++)
 			if (!signals.get(i == 1)
 				.isEmpty())
@@ -137,7 +157,6 @@ public class SignalBoundary extends TrackEdgePoint {
 		for (int i = 1; i <= 2; i++)
 			if (sidesToUpdate.get(i == 1))
 				nbt.putBoolean("Update" + i, true);
-		return nbt;
 	}
 
 }

@@ -93,6 +93,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			TrackTileEntity other = (TrackTileEntity) blockEntity;
 			other.removeConnection(bezierConnection.tePositions.getFirst());
 		}
+		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
 	}
 
 	@Override

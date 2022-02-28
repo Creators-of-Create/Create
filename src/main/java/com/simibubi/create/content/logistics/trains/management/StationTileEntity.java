@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
@@ -22,6 +24,7 @@ import com.simibubi.create.content.logistics.trains.entity.Carriage.CarriageBoge
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -46,91 +49,42 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StationTileEntity extends SmartTileEntity {
 
-	UUID id;
+	public TrackTargetingBehaviour<GlobalStation> edgePoint;
 
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
-	protected CompoundTag toMigrate;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		setLazyTickRate(20);
-		id = UUID.randomUUID();
 		lastException = null;
-		toMigrate = null;
 		failedCarriageIndex = -1;
-	}
-
-	public void migrate(GlobalStation globalStation) {
-		if (toMigrate != null)
-			return;
-		toMigrate = globalStation.write();
-		setChanged();
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new TrackTargetingBehaviour(this));
-	}
-
-	public TrackTargetingBehaviour getTarget() {
-		return getBehaviour(TrackTargetingBehaviour.TYPE);
-	}
-
-	@Override
-	public void initialize() {
-		if (!level.isClientSide)
-			getOrCreateGlobalStation();
-		super.initialize();
-	}
-
-	public GlobalStation getOrCreateGlobalStation() {
-		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) { // TODO thread breach
-			GlobalStation station = trackGraph.getStation(id);
-			if (station == null)
-				continue;
-			return station;
-		}
-
-		if (level.isClientSide)
-			return null;
-
-		TrackTargetingBehaviour target = getTarget();
-		if (!target.hasValidTrack())
-			return null;
-		GraphLocation loc = target.determineGraphLocation();
-		if (loc == null)
-			return null;
-
-		GlobalStation globalStation =
-			toMigrate != null ? new GlobalStation(toMigrate) : new GlobalStation(id, worldPosition);
-		globalStation.setLocation(loc.edge, loc.position);
-		loc.graph.addStation(globalStation);
-		toMigrate = null;
-		setChanged();
-
-		return globalStation;
+		edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.STATION);
+		behaviours.add(edgePoint);
 	}
 
 	@Override
 	protected void read(CompoundTag tag, boolean clientPacket) {
-		id = tag.getUUID("Id");
 		lastException = AssemblyException.read(tag);
 		failedCarriageIndex = tag.getInt("FailedCarriageIndex");
 		super.read(tag, clientPacket);
-		if (tag.contains("ToMigrate"))
-			toMigrate = tag.getCompound("ToMigrate");
 		invalidateRenderBoundingBox();
 	}
 
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
-		tag.putUUID("Id", id);
 		AssemblyException.write(tag, lastException);
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
 		super.write(tag, clientPacket);
-		if (!clientPacket && toMigrate != null)
-			tag.put("ToMigrate", toMigrate);
+	}
+	
+	@Nullable
+	public GlobalStation getStation() {
+		return edgePoint.getEdgePoint();
 	}
 
 	// Train Assembly
@@ -147,8 +101,6 @@ public class StationTileEntity extends SmartTileEntity {
 	public void lazyTick() {
 		if (isAssembling() && !level.isClientSide)
 			refreshAssemblyInfo();
-		if (!level.isClientSide)
-			getOrCreateGlobalStation();
 		super.lazyTick();
 	}
 
@@ -157,12 +109,6 @@ public class StationTileEntity extends SmartTileEntity {
 		if (isAssembling() && level.isClientSide)
 			refreshAssemblyInfo();
 		super.tick();
-
-		if (level.isClientSide)
-			return;
-		if (toMigrate == null)
-			return;
-		getOrCreateGlobalStation();
 	}
 
 	public void trackClicked(Player player, ITrackBlock track, BlockState state, BlockPos pos) {
@@ -172,7 +118,7 @@ public class StationTileEntity extends SmartTileEntity {
 		if (bb == null || !bb.isInside(pos))
 			return;
 
-		int bogeyOffset = pos.distManhattan(getTarget().getGlobalPosition()) - 1;
+		int bogeyOffset = pos.distManhattan(edgePoint.getGlobalPosition()) - 1;
 		if (!isValidBogeyOffset(bogeyOffset))
 			return;
 
@@ -187,13 +133,12 @@ public class StationTileEntity extends SmartTileEntity {
 	}
 
 	public boolean tryEnterAssemblyMode() {
-		TrackTargetingBehaviour target = getTarget();
-		if (!target.hasValidTrack())
+		if (!edgePoint.hasValidTrack())
 			return false;
 
-		BlockPos targetPosition = target.getGlobalPosition();
-		BlockState trackState = target.getTrackBlockState();
-		ITrackBlock track = target.getTrack();
+		BlockPos targetPosition = edgePoint.getGlobalPosition();
+		BlockState trackState = edgePoint.getTrackBlockState();
+		ITrackBlock track = edgePoint.getTrack();
 		Vec3 trackAxis = track.getTrackAxes(level, targetPosition, trackState)
 			.get(0);
 
@@ -210,18 +155,17 @@ public class StationTileEntity extends SmartTileEntity {
 	}
 
 	public void refreshAssemblyInfo() {
-		TrackTargetingBehaviour target = getTarget();
-		if (!target.hasValidTrack())
+		if (!edgePoint.hasValidTrack())
 			return;
 
-		GlobalStation station = getOrCreateGlobalStation();
+		GlobalStation station = getStation();
 		if (station == null || station.getPresentTrain() != null)
 			return;
 
 		int prevLength = assemblyLength;
-		BlockPos targetPosition = target.getGlobalPosition();
-		BlockState trackState = target.getTrackBlockState();
-		ITrackBlock track = target.getTrack();
+		BlockPos targetPosition = edgePoint.getGlobalPosition();
+		BlockState trackState = edgePoint.getTrackBlockState();
+		ITrackBlock track = edgePoint.getTrack();
 		getAssemblyDirection();
 
 		MutableBlockPos currentPos = targetPosition.mutable();
@@ -248,7 +192,7 @@ public class StationTileEntity extends SmartTileEntity {
 			}
 
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
-			if (potentialBogeyState.getBlock()instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
+			if (potentialBogeyState.getBlock() instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
 				bogeyTypes[bogeyIndex] = bogey;
 				bogeyLocations[bogeyIndex] = i;
 				bogeyIndex++;
@@ -285,13 +229,12 @@ public class StationTileEntity extends SmartTileEntity {
 	public Direction getAssemblyDirection() {
 		if (assemblyDirection != null)
 			return assemblyDirection;
-		TrackTargetingBehaviour target = getTarget();
-		if (!target.hasValidTrack())
+		if (!edgePoint.hasValidTrack())
 			return null;
-		BlockPos targetPosition = target.getGlobalPosition();
-		BlockState trackState = target.getTrackBlockState();
-		ITrackBlock track = target.getTrack();
-		AxisDirection axisDirection = target.getTargetDirection();
+		BlockPos targetPosition = edgePoint.getGlobalPosition();
+		BlockState trackState = edgePoint.getTrackBlockState();
+		ITrackBlock track = edgePoint.getTrack();
+		AxisDirection axisDirection = edgePoint.getTargetDirection();
 		Vec3 axis = track.getTrackAxes(level, targetPosition, trackState)
 			.get(0)
 			.normalize()
@@ -303,8 +246,7 @@ public class StationTileEntity extends SmartTileEntity {
 	protected void setRemovedNotDueToChunkUnload() {
 		assemblyAreas.get(level)
 			.remove(worldPosition);
-		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values())
-			trackGraph.removeStation(id);
+
 		super.setRemovedNotDueToChunkUnload();
 	}
 
@@ -316,13 +258,12 @@ public class StationTileEntity extends SmartTileEntity {
 			return;
 		}
 
-		TrackTargetingBehaviour target = getTarget();
-		if (!target.hasValidTrack())
+		if (!edgePoint.hasValidTrack())
 			return;
 
-		BlockPos trackPosition = target.getGlobalPosition();
-		BlockState trackState = target.getTrackBlockState();
-		ITrackBlock track = target.getTrack();
+		BlockPos trackPosition = edgePoint.getGlobalPosition();
+		BlockState trackState = edgePoint.getTrackBlockState();
+		ITrackBlock track = edgePoint.getTrack();
 		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, trackPosition, trackState));
 
 		DiscoveredLocation location = null;
@@ -487,11 +428,13 @@ public class StationTileEntity extends SmartTileEntity {
 		}
 
 		Train train = new Train(UUID.randomUUID(), playerUUID, graph, carriages, spacing);
-		GlobalStation station = getOrCreateGlobalStation();
-		train.setCurrentStation(station);
-		station.reserveFor(train);
+		GlobalStation station = getStation();
+		if (station != null) {
+			train.setCurrentStation(station);
+			station.reserveFor(train);
+		}
+		
 		train.collectInitiallyOccupiedSignalBlocks();
-
 		Create.RAILWAYS.trains.put(train.id, train);
 		clearException();
 	}
@@ -523,7 +466,7 @@ public class StationTileEntity extends SmartTileEntity {
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return new AABB(worldPosition, getTarget().getGlobalPosition()).inflate(2);
+		return new AABB(worldPosition, edgePoint.getGlobalPosition()).inflate(2);
 	}
 
 }

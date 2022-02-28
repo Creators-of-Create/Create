@@ -15,8 +15,9 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.GraphLocation;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -258,12 +259,12 @@ public class TravellingPoint {
 	private void edgeTraversedFrom(TrackGraph graph, boolean forward, ISignalBoundaryListener signalListener,
 		double prevPos, double totalDistance) {
 		EdgeData signalsOnEdge = edge.getEdgeData();
-		if (!signalsOnEdge.hasBoundaries())
+		if (!signalsOnEdge.hasSignalBoundaries())
 			return;
 
 		double from = forward ? prevPos : position;
 		double to = forward ? position : prevPos;
-		SignalBoundary nextBoundary = signalsOnEdge.nextBoundary(node1, node2, edge, from);
+		SignalBoundary nextBoundary = signalsOnEdge.next(EdgePointType.SIGNAL, node1, node2, edge, from);
 		List<SignalBoundary> discoveredBoundaries = null;
 
 		while (nextBoundary != null) {
@@ -273,7 +274,7 @@ public class TravellingPoint {
 			if (discoveredBoundaries == null)
 				discoveredBoundaries = new ArrayList<>();
 			discoveredBoundaries.add(nextBoundary);
-			nextBoundary = signalsOnEdge.nextBoundary(node1, node2, edge, d);
+			nextBoundary = signalsOnEdge.next(EdgePointType.SIGNAL, node1, node2, edge, d);
 		}
 
 		if (discoveredBoundaries == null)

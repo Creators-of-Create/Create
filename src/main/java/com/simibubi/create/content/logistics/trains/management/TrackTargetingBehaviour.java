@@ -1,8 +1,20 @@
 package com.simibubi.create.content.logistics.trains.management;
 
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.TrackEdge;
+import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
+import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
+import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
+import com.simibubi.create.content.logistics.trains.management.signal.SingleTileEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -23,31 +35,141 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TrackTargetingBehaviour extends TileEntityBehaviour {
+public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntityBehaviour {
 
-	public static final BehaviourType<TrackTargetingBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<TrackTargetingBehaviour<?>> TYPE = new BehaviourType<>();
 
 	private BlockPos targetTrack;
 	private AxisDirection targetDirection;
+	private UUID id;
 
-	public TrackTargetingBehaviour(SmartTileEntity te) {
+	private CompoundTag migrationData;
+	private EdgePointType<T> edgePointType;
+	private T edgePoint;
+
+	public TrackTargetingBehaviour(SmartTileEntity te, EdgePointType<T> edgePointType) {
 		super(te);
+		this.edgePointType = edgePointType;
 		targetDirection = AxisDirection.POSITIVE;
 		targetTrack = BlockPos.ZERO;
+		id = UUID.randomUUID();
+		migrationData = null;
 	}
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
+		nbt.putUUID("Id", id);
 		nbt.put("TargetTrack", NbtUtils.writeBlockPos(targetTrack));
 		nbt.putBoolean("TargetDirection", targetDirection == AxisDirection.POSITIVE);
+		if (migrationData != null && !clientPacket)
+			nbt.put("Migrate", migrationData);
 		super.write(nbt, clientPacket);
 	}
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
+		UUID prevId = id;
+		id = nbt.getUUID("Id");
 		targetTrack = NbtUtils.readBlockPos(nbt.getCompound("TargetTrack"));
 		targetDirection = nbt.getBoolean("TargetDirection") ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
+		if (nbt.contains("Migrate"))
+			migrationData = nbt.getCompound("Migrate");
+		if (clientPacket && !prevId.equals(id))
+			edgePoint = null;
 		super.read(nbt, clientPacket);
+	}
+
+	@Nullable
+	public T getEdgePoint() {
+		return edgePoint;
+	}
+
+	public void invalidateEdgePoint(CompoundTag migrationData) {
+		this.migrationData = migrationData;
+		id = UUID.randomUUID();
+		edgePoint = null;
+		tileEntity.sendData();
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (edgePoint == null)
+			edgePoint = createEdgePoint();
+	}
+
+	@SuppressWarnings("unchecked")
+	public T createEdgePoint() {
+		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) { // TODO thread breach
+			T point = trackGraph.getPoint(edgePointType, id);
+			if (point == null)
+				continue;
+			return point;
+		}
+
+		if (getWorld().isClientSide)
+			return null;
+		if (!hasValidTrack())
+			return null;
+		GraphLocation loc = determineGraphLocation();
+		if (loc == null)
+			return null;
+
+		TrackGraph graph = loc.graph;
+		TrackNode node1 = graph.locateNode(loc.edge.getFirst());
+		TrackNode node2 = graph.locateNode(loc.edge.getSecond());
+		TrackEdge edge = graph.getConnectionsFrom(node1)
+			.get(node2);
+
+		boolean front = getTargetDirection() == AxisDirection.POSITIVE;
+
+		if (edge == null)
+			return null;
+
+		EdgeData signalData = edge.getEdgeData();
+		if (signalData.hasPoints()) {
+			for (EdgePointType<?> otherType : EdgePointType.TYPES.values()) {
+				TrackEdgePoint otherPoint = signalData.get(otherType, node1, node2, edge, loc.position);
+				if (otherPoint == null)
+					continue;
+				if (otherType != edgePointType) {
+					if (!otherPoint.canCoexistWith(edgePointType, front))
+						return null;
+					continue;
+				}
+				if (!otherPoint.canMerge())
+					return null;
+				otherPoint.tileAdded(getPos(), front);
+				id = otherPoint.getId();
+				tileEntity.setChanged();
+				return (T) otherPoint;
+			}
+		}
+
+		T point = edgePointType.create();
+		point.setId(id);
+
+		if (point instanceof SingleTileEdgePoint step) {
+			point.setLocation(loc.edge, loc.position);
+			if (migrationData != null) {
+				step.read(migrationData, true);
+				migrationData = null;
+				tileEntity.setChanged();
+			}
+		} else
+			point.setLocation(front ? loc.edge : loc.edge.swap(),
+				front ? loc.position : edge.getLength(node1, node2) - loc.position);
+
+		point.tileAdded(getPos(), front);
+		loc.graph.addPoint(edgePointType, point);
+		return point;
+	}
+
+	@Override
+	public void remove() {
+		if (edgePoint != null && !getWorld().isClientSide)
+			edgePoint.tileRemoved(getPos(), getTargetDirection() == AxisDirection.POSITIVE);
+		super.remove();
 	}
 
 	@Override

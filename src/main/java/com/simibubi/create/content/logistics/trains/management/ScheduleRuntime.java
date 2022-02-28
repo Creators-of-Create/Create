@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.schedule.FilteredDestination;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleDestination;
@@ -128,7 +129,7 @@ public class ScheduleRuntime {
 			String regex = filtered.nameFilter.replace("*", ".*");
 			GlobalStation best = null;
 			double bestCost = Double.MAX_VALUE;
-			for (GlobalStation globalStation : train.graph.getStations()) {
+			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 				if (!globalStation.name.matches(regex))
 					continue;
 				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);

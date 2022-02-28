@@ -228,7 +228,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 				if (!entry.getValue()
 					.isInside(pos))
 					continue;
-				if (world.getBlockEntity(entry.getKey())instanceof StationTileEntity station)
+				if (world.getBlockEntity(entry.getKey()) instanceof StationTileEntity station)
 					station.trackClicked(player, this, state, pos);
 			}
 			return InteractionResult.SUCCESS;
@@ -245,7 +245,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 				BlockPos girderPos = pPos.below()
 					.offset(vec3.z * side, 0, vec3.x * side);
 				BlockState girderState = pLevel.getBlockState(girderPos);
-				if (girderState.getBlock()instanceof GirderBlock girderBlock
+				if (girderState.getBlock() instanceof GirderBlock girderBlock
 					&& !blockTicks.hasScheduledTick(girderPos, girderBlock))
 					pLevel.scheduleTick(girderPos, girderBlock, 1);
 			}
@@ -348,8 +348,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms) {
-		TransformStack.cast(ms).rotateCentered(Direction.UP,
-			AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
+		TransformStack.cast(ms)
+			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
 		return AllBlockPartials.TRACK_ASSEMBLING_OVERLAY;
 	}
 
@@ -365,11 +365,13 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		Vec3 normal = getUpNormal(world, pos, state);
 		Vec3 angles = TrackRenderer.getModelAngles(normal, directionVec);
 
-		TransformStack.cast(ms).centre()
+		TransformStack.cast(ms)
+			.centre()
 			.rotateYRadians(angles.y)
 			.rotateXRadians(angles.x)
 			.unCentre()
-			.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
+			.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0)
+			.scale(type == RenderedTrackOverlayType.STATION ? 1 + 1 / 512f : 1);
 
 		return type == RenderedTrackOverlayType.STATION ? AllBlockPartials.TRACK_STATION_OVERLAY
 			: type == RenderedTrackOverlayType.SIGNAL ? AllBlockPartials.TRACK_SIGNAL_OVERLAY
