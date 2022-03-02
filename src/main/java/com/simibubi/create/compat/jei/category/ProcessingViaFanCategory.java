@@ -35,7 +35,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	public static Supplier<ItemStack> getFan(String name) {
 		return () -> AllBlocks.ENCASED_FAN.asStack()
-				.setHoverName(Lang.translate("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
+			.setHoverName(Lang.translate("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
 	}
 
 	@Override
@@ -65,15 +65,15 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 
 		AnimatedKinetics.defaultBlockElement(AllBlockPartials.ENCASED_FAN_INNER)
-				.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
-				.scale(SCALE)
-				.render(matrixStack);
+			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
+			.scale(SCALE)
+			.render(matrixStack);
 
 		AnimatedKinetics.defaultBlockElement(AllBlocks.ENCASED_FAN.getDefaultState())
-				.rotateBlock(0, 180, 0)
-				.atLocal(0, 0, 0)
-				.scale(SCALE)
-				.render(matrixStack);
+			.rotateBlock(0, 180, 0)
+			.atLocal(0, 0, 0)
+			.scale(SCALE)
+			.render(matrixStack);
 
 		renderAttachedBlock(matrixStack, recipe);
 		matrixStack.popPose();
@@ -139,7 +139,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		@Override
 		protected void renderWidgets(PoseStack matrixStack, T recipe, double mouseX, double mouseY) {
 			int size = recipe.getRollableResultsAsItemStacks()
-					.size();
+				.size();
 			int xOffsetAmount = 1 - Math.min(3, size);
 
 			AllGuiTextures.JEI_SHADOW.render(matrixStack, 46, 29);

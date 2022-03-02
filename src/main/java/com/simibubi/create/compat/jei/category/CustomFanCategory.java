@@ -18,7 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-public class CustomFanCategory extends ProcessingViaFanCategory<CustomFanProcessingRecipe> {
+public class CustomFanCategory extends ProcessingViaFanCategory.MultiOutput<CustomFanProcessingRecipe> {
 
 	public CustomFanCategory() {
 		super(185, doubleItemIcon(AllItems.PROPELLER.get(), Items.BUCKET));

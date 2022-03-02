@@ -26,17 +26,17 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 public class InWorldProcessing {
 
 	public static final DamageSource FIRE_DAMAGE_SOURCE = new DamageSource("create.fan_fire").setScalesWithDifficulty()
-			.setIsFire();
+		.setIsFire();
 	public static final DamageSource LAVA_DAMAGE_SOURCE = new DamageSource("create.fan_lava").setScalesWithDifficulty()
-			.setIsFire();
+		.setIsFire();
 
 	public static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
 	public static boolean canProcess(ItemEntity entity, AbstractFanProcessingType type) {
 		if (entity.getPersistentData()
-				.contains("CreateData")) {
+			.contains("CreateData")) {
 			CompoundTag compound = entity.getPersistentData()
-					.getCompound("CreateData");
+				.getCompound("CreateData");
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
 
@@ -91,7 +91,7 @@ public class InWorldProcessing {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
 			int processingTime =
-					(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			transported.processingTime = processingTime;
 			if (!type.canProcess(transported.stack, world))
 				transported.processingTime = -1;
@@ -135,9 +135,9 @@ public class InWorldProcessing {
 		if (type_changed || processing.getInt("Time") < 0) {
 			processing.putString("Type", type.name());
 			int timeModifierForStackSize = ((entity.getItem()
-					.getCount() - 1) / 16) + 1;
+				.getCount() - 1) / 16) + 1;
 			int processingTime =
-					(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
 		}
 
@@ -176,7 +176,7 @@ public class InWorldProcessing {
 						if (!ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
 							continue;
 						int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(),
-								stack.getCount());
+							stack.getCount());
 						previouslyRolled.grow(amount);
 						stack.shrink(amount);
 					}
@@ -189,7 +189,7 @@ public class InWorldProcessing {
 			}
 		} else {
 			ItemStack out = recipe.getResultItem()
-					.copy();
+				.copy();
 			stacks = ItemHelper.multipliedOutput(stackIn, out);
 		}
 
