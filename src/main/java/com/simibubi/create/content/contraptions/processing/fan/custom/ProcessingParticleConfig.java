@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public record ProcessingParticleConfig(int chance, String col, String id,
+public record ProcessingParticleConfig(int chance, String col, ResourceLocation id,
 									   Vec3Config base_offset,
 									   Vec3Config random_offset,
 									   Vec3Config speed,
@@ -25,7 +25,7 @@ public record ProcessingParticleConfig(int chance, String col, String id,
 	public static final Codec<ProcessingParticleConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 			Codec.INT.fieldOf("chance").forGetter(e -> e.chance),
 			Codec.STRING.optionalFieldOf("color").forGetter(e -> Optional.ofNullable(e.col)),
-			Codec.STRING.optionalFieldOf("id").forGetter(e -> Optional.ofNullable(e.id)),
+			ResourceLocation.CODEC.optionalFieldOf("id").forGetter(e -> Optional.ofNullable(e.id)),
 			Vec3Config.CODEC.optionalFieldOf("base_offset").forGetter(e -> Optional.of(e.base_offset)),
 			Vec3Config.CODEC.optionalFieldOf("random_offset").forGetter(e -> Optional.of(e.random_offset)),
 			Vec3Config.CODEC.optionalFieldOf("speed").forGetter(e -> Optional.of(e.speed)),
@@ -41,8 +41,8 @@ public record ProcessingParticleConfig(int chance, String col, String id,
 		if (level.random.nextInt(chance) != 0)
 			return;
 		ParticleOptions option = null;
-		if (id != null && id.length() > 0) {
-			ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(id));
+		if (id != null) {
+			ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(id);
 			if (type instanceof SimpleParticleType simple) {
 				option = simple;
 			} else throw new IllegalArgumentException("particle type " + id + " is not simple particle type");

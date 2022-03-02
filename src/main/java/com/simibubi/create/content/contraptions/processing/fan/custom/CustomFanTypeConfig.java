@@ -33,14 +33,15 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 								  EffectEntityConfig entity_effect,
 								  List<ProcessingParticleConfig> processing_particle, MorphConfig morph) {
 
-	public record BlockPredicateConfig(List<String> blocks, List<String> block_states, List<String> fluids,
-									   List<String> tags) {
+	public record BlockPredicateConfig(List<ResourceLocation> blocks, List<String> block_states,
+									   List<ResourceLocation> fluids,
+									   List<ResourceLocation> tags) {
 
 		public static final Codec<BlockPredicateConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-						Codec.list(Codec.STRING).optionalFieldOf("blocks").forGetter(e -> Optional.ofNullable(e.blocks)),
+						Codec.list(ResourceLocation.CODEC).optionalFieldOf("blocks").forGetter(e -> Optional.ofNullable(e.blocks)),
 						Codec.list(Codec.STRING).optionalFieldOf("block_states").forGetter(e -> Optional.ofNullable(e.block_states)),
-						Codec.list(Codec.STRING).optionalFieldOf("fluids").forGetter(e -> Optional.ofNullable(e.fluids)),
-						Codec.list(Codec.STRING).optionalFieldOf("tags").forGetter(e -> Optional.ofNullable(e.tags)))
+						Codec.list(ResourceLocation.CODEC).optionalFieldOf("fluids").forGetter(e -> Optional.ofNullable(e.fluids)),
+						Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags").forGetter(e -> Optional.ofNullable(e.tags)))
 				.apply(i, (blocks, block_states, fluids, tags) -> new BlockPredicateConfig(
 						blocks.orElse(null),
 						block_states.orElse(null),
@@ -54,8 +55,7 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				throw new IllegalArgumentException("block predicate must have at least one of the following predicates: [blocks, block_states, fluids, tags]. They need to be in the list form. Error in custom fan processing recipe: " + name);
 			}
 			if (blocks != null) {
-				for (String str : blocks) {
-					ResourceLocation id = new ResourceLocation(str);
+				for (ResourceLocation id : blocks) {
 					Block block = ForgeRegistries.BLOCKS.getValue(id);
 					if (block != null && blockState.is(block)) {
 						return true;
@@ -70,8 +70,7 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				}
 			}
 			if (fluids != null) {
-				for (String str : fluids) {
-					ResourceLocation id = new ResourceLocation(str);
+				for (ResourceLocation id : fluids) {
 					Fluid fluid = ForgeRegistries.FLUIDS.getValue(id);
 					if (fluidState.is(fluid)) {
 						return true;
@@ -79,8 +78,7 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				}
 			}
 			if (tags != null) {
-				for (String str : tags) {
-					ResourceLocation id = new ResourceLocation(str);
+				for (ResourceLocation id : tags) {
 					Tag<Block> block_tag = BlockTags.getAllTags().getTag(id);
 					if (block_tag != null && block_tag.contains(blockState.getBlock())) {
 						return true;
@@ -97,7 +95,7 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 
 		public BlockState getBlockForDisplay() {
 			if (blocks != null && blocks.size() > 0) {
-				return Optional.ofNullable(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blocks.get(0)))).orElse(Blocks.AIR).defaultBlockState();
+				return Optional.ofNullable(ForgeRegistries.BLOCKS.getValue(blocks.get(0))).orElse(Blocks.AIR).defaultBlockState();
 			}
 			if (block_states != null && block_states.size() > 0) {
 				String str = block_states.get(0);
@@ -122,10 +120,10 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				return state;
 			}
 			if (fluids != null && fluids.size() > 0) {
-				return Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluids.get(0)))).map(e -> e.defaultFluidState().createLegacyBlock()).orElse(Blocks.AIR.defaultBlockState());
+				return Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(fluids.get(0))).map(e -> e.defaultFluidState().createLegacyBlock()).orElse(Blocks.AIR.defaultBlockState());
 			}
 			if (tags != null && tags.size() > 0) {
-				ResourceLocation tag = new ResourceLocation(tags.get(0));
+				ResourceLocation tag = tags.get(0);
 				return Optional.ofNullable(BlockTags.getAllTags().getTag(tag))
 						.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultBlockState() : null)
 						.or(() -> Optional.ofNullable(FluidTags.getAllTags().getTag(tag))
@@ -180,10 +178,10 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 	public record EffectEntityConfig(float damage, boolean is_fire,
 									 List<EffectEntityConfig.MobEffectConfig> mob_effects) {
 
-		public record MobEffectConfig(String id, int duration, int level) {
+		public record MobEffectConfig(ResourceLocation id, int duration, int level) {
 
 			public static final Codec<EffectEntityConfig.MobEffectConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-					Codec.STRING.fieldOf("id").forGetter(e -> e.id),
+					ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
 					Codec.INT.optionalFieldOf("duration").forGetter(e -> Optional.of(e.duration)),
 					Codec.INT.optionalFieldOf("level").forGetter(e -> Optional.of(e.level))
 			).apply(i, (id, duration, level) -> new EffectEntityConfig.MobEffectConfig(id, duration.orElse(0), level.orElse(0))));
@@ -201,7 +199,7 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				return;
 			if (mob_effects != null && entity instanceof LivingEntity livingEntity) {
 				for (EffectEntityConfig.MobEffectConfig eff : mob_effects) {
-					ResourceLocation id = new ResourceLocation(eff.id);
+					ResourceLocation id = eff.id;
 					MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(id);
 					if (effect == null) {
 						throw new IllegalArgumentException("effect " + eff.id + " does not exist. Error in custom fan processing type " + name);
@@ -219,16 +217,16 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 	public record MorphConfig(String color_1, String color_2, float alpha, int sprite_length,
 							  List<MorphConfig.ParticleConfig> particles) {
 
-		public record ParticleConfig(String id, float chance, float speed) {
+		public record ParticleConfig(ResourceLocation id, float chance, float speed) {
 
 			public static final Codec<MorphConfig.ParticleConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-					Codec.STRING.fieldOf("id").forGetter(e -> e.id),
+					ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
 					Codec.FLOAT.fieldOf("chance").forGetter(e -> e.chance),
 					Codec.FLOAT.fieldOf("speed").forGetter(e -> e.speed)
 			).apply(i, MorphConfig.ParticleConfig::new));
 
 			public void addParticle(AirFlowParticle particle) {
-				ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(id));
+				ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(id);
 				if (type instanceof SimpleParticleType simple) {
 					particle.addParticle(simple, chance, speed);
 				} else throw new IllegalArgumentException("particle type " + id + " is not simple particle type");
