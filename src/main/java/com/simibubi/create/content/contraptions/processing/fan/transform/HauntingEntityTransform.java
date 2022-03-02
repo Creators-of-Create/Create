@@ -4,7 +4,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllFanProcessingTypes;
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.particles.ParticleTypes;

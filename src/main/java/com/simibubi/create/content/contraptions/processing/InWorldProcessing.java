@@ -5,14 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
-import com.simibubi.create.content.contraptions.processing.fan.TypeBlasting;
-import com.simibubi.create.content.contraptions.processing.fan.TypeHaunting;
-import com.simibubi.create.content.contraptions.processing.fan.TypeSmoking;
-import com.simibubi.create.content.contraptions.processing.fan.TypeSplashing;
-import com.simibubi.create.content.contraptions.processing.fan.transform.HorseTransform;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;

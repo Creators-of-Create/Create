@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.processing.fan.custom;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -7,9 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings({"rawtypes", "ConstantConditions"})
 public record CustomTransformConfig(String block_type, ResourceLocation old_type, ResourceLocation new_type,

@@ -4,7 +4,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
-import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;

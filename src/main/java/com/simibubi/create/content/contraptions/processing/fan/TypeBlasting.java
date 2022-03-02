@@ -8,16 +8,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
-
-import net.minecraft.core.particles.BlockParticleOption;
-
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;

@@ -7,13 +7,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
-
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
-
-import com.simibubi.create.content.contraptions.processing.fan.custom.CustomTransformType;
-import com.simibubi.create.content.contraptions.processing.fan.custom.TypeCustom;
-
-import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

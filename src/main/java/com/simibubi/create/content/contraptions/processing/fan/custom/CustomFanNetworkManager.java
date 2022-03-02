@@ -7,13 +7,12 @@ import java.util.function.Supplier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
-
 import org.apache.logging.log4j.LogManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 

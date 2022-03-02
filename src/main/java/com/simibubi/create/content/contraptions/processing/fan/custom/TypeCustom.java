@@ -5,13 +5,12 @@ import static com.simibubi.create.content.contraptions.processing.InWorldProcess
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
-import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
+import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

@@ -7,6 +7,8 @@ import static com.simibubi.create.content.contraptions.processing.burner.BlazeBu
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
@@ -27,8 +29,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import org.jetbrains.annotations.Nullable;
 
 public class TypeSmoking extends AbstractFanProcessingType {
 	public TypeSmoking(int priority, String name) {
