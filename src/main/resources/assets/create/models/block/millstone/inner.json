@@ -94,7 +94,6 @@
 			"name": "Axis",
 			"from": [6, 0, 6],
 			"to": [10, 8, 10],
-			"shade": false,
 			"faces": {
 				"north": {"uv": [6, 8, 10, 16], "rotation": 180, "texture": "#1_0"},
 				"east": {"uv": [6, 8, 10, 16], "rotation": 180, "texture": "#1_0"},

@@ -68,10 +68,15 @@ public class AllTags {
 	}
 
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
-		String path) {
-		return b -> b.tag(forgeBlockTag(path))
-			.item()
-			.tag(forgeItemTag(path));
+		String... path) {
+		return b -> {
+			for (String p : path) 
+				b.tag(forgeBlockTag(p));
+			ItemBuilder<BlockItem,BlockBuilder<T,P>> item = b.item();
+			for (String p : path) 
+				item.tag(forgeItemTag(p));
+			return item;
+		};
 	}
 
 	public enum NameSpace {
@@ -101,6 +106,7 @@ public class AllTags {
 		BRITTLE,
 		FAN_HEATERS,
 		FAN_TRANSPARENT,
+		ORE_OVERRIDE_STONE,
 		SAFE_NBT,
 		SAILS,
 		SEATS,
@@ -109,8 +115,6 @@ public class AllTags {
 		WINDMILL_SAILS,
 		WINDOWABLE,
 		WRENCH_PICKUP,
-		
-		ORE_OVERRIDE_STONE,
 
 		WG_STONE(FORGE),
 
@@ -179,6 +183,8 @@ public class AllTags {
 
 	public enum AllItemTags {
 
+		BLAZE_BURNER_REGULAR_FUEL,
+		BLAZE_BURNER_SPECIAL_FUEL,
 		CREATE_INGOTS,
 		CRUSHED_ORES,
 		SANDPAPER,

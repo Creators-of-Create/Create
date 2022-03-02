@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class CrushingWheelTileEntity extends KineticTileEntity {
 
-	public static DamageSource damageSource = new DamageSource("create.crush").bypassArmor()
+	public static final DamageSource DAMAGE_SOURCE = new DamageSource("create.crush").bypassArmor()
 			.setScalesWithDifficulty();
 
 	public CrushingWheelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -40,7 +40,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(1);
 	}
 
@@ -52,14 +52,14 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 
 	@SubscribeEvent
 	public static void crushingIsFortunate(LootingLevelEvent event) {
-		if (event.getDamageSource() != damageSource)
+		if (event.getDamageSource() != DAMAGE_SOURCE)
 			return;
 		event.setLootingLevel(2);		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
 	}
 
 	@SubscribeEvent
 	public static void handleCrushedMobDrops(LivingDropsEvent event) {
-		if (event.getSource() != CrushingWheelTileEntity.damageSource)
+		if (event.getSource() != CrushingWheelTileEntity.DAMAGE_SOURCE)
 			return;
 		Vec3 outSpeed = Vec3.ZERO;
 		for (ItemEntity outputItem : event.getDrops()) {

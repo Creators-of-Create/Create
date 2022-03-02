@@ -14,84 +14,84 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class KineticTileInstance<T extends KineticTileEntity> extends BlockEntityInstance<T> {
 
-    protected final Direction.Axis axis;
+	protected final Direction.Axis axis;
 
-    public KineticTileInstance(MaterialManager modelManager, T tile) {
-        super(modelManager, tile);
+	public KineticTileInstance(MaterialManager modelManager, T tile) {
+		super(modelManager, tile);
 
-        axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
-    }
+		axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
+	}
 
-    protected final void updateRotation(RotatingData instance) {
-        updateRotation(instance, getRotationAxis(), getTileSpeed());
-    }
+	protected final void updateRotation(RotatingData instance) {
+		updateRotation(instance, getRotationAxis(), getTileSpeed());
+	}
 
-    protected final void updateRotation(RotatingData instance, Direction.Axis axis) {
-        updateRotation(instance, axis, getTileSpeed());
-    }
+	protected final void updateRotation(RotatingData instance, Direction.Axis axis) {
+		updateRotation(instance, axis, getTileSpeed());
+	}
 
-    protected final void updateRotation(RotatingData instance, float speed) {
-        updateRotation(instance, getRotationAxis(), speed);
-    }
+	protected final void updateRotation(RotatingData instance, float speed) {
+		updateRotation(instance, getRotationAxis(), speed);
+	}
 
-    protected final void updateRotation(RotatingData instance, Direction.Axis axis, float speed) {
-        instance.setRotationAxis(axis)
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationalSpeed(speed)
-                .setColor(blockEntity);
-    }
+	protected final void updateRotation(RotatingData instance, Direction.Axis axis, float speed) {
+		instance.setRotationAxis(axis)
+				.setRotationOffset(getRotationOffset(axis))
+				.setRotationalSpeed(speed)
+				.setColor(blockEntity);
+	}
 
-    protected final RotatingData setup(RotatingData key) {
-        return setup(key, getRotationAxis(), getTileSpeed());
-    }
+	protected final RotatingData setup(RotatingData key) {
+		return setup(key, getRotationAxis(), getTileSpeed());
+	}
 
-    protected final RotatingData setup(RotatingData key, Direction.Axis axis) {
-        return setup(key, axis, getTileSpeed());
-    }
+	protected final RotatingData setup(RotatingData key, Direction.Axis axis) {
+		return setup(key, axis, getTileSpeed());
+	}
 
-    protected final RotatingData setup(RotatingData key, float speed) {
-        return setup(key, getRotationAxis(), speed);
-    }
+	protected final RotatingData setup(RotatingData key, float speed) {
+		return setup(key, getRotationAxis(), speed);
+	}
 
-    protected final RotatingData setup(RotatingData key, Direction.Axis axis, float speed) {
-        key.setRotationAxis(axis)
-                .setRotationalSpeed(speed)
-                .setRotationOffset(getRotationOffset(axis))
-                .setColor(blockEntity)
-                .setPosition(getInstancePosition());
+	protected final RotatingData setup(RotatingData key, Direction.Axis axis, float speed) {
+		key.setRotationAxis(axis)
+				.setRotationalSpeed(speed)
+				.setRotationOffset(getRotationOffset(axis))
+				.setColor(blockEntity)
+				.setPosition(getInstancePosition());
 
-        return key;
-    }
+		return key;
+	}
 
-    protected float getRotationOffset(final Direction.Axis axis) {
-        float offset = ICogWheel.isLargeCog(blockState) ? 11.25f : 0;
-        double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
-                + ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
-        if (d == 0) {
-            offset = 22.5f;
-        }
-        return offset;
-    }
+	protected float getRotationOffset(final Direction.Axis axis) {
+		float offset = ICogWheel.isLargeCog(blockState) ? 11.25f : 0;
+		double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
+				+ ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
+		if (d == 0) {
+			offset = 22.5f;
+		}
+		return offset;
+	}
 
-    protected Direction.Axis getRotationAxis() {
-        return axis;
-    }
+	protected Direction.Axis getRotationAxis() {
+		return axis;
+	}
 
-    protected float getTileSpeed() {
-        return blockEntity.getSpeed();
-    }
+	protected float getTileSpeed() {
+		return blockEntity.getSpeed();
+	}
 
-    protected BlockState shaft() {
-        return shaft(getRotationAxis());
-    }
+	protected BlockState shaft() {
+		return shaft(getRotationAxis());
+	}
 
-    protected Material<RotatingData> getRotatingMaterial() {
+	protected Material<RotatingData> getRotatingMaterial() {
 		return materialManager.defaultSolid()
 				.material(AllMaterialSpecs.ROTATING);
 	}
 
-    public static BlockState shaft(Direction.Axis axis) {
-        return AllBlocks.SHAFT.getDefaultState()
-                .setValue(ShaftBlock.AXIS, axis);
-    }
+	public static BlockState shaft(Direction.Axis axis) {
+		return AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, axis);
+	}
 }

@@ -1,16 +1,4 @@
 {
-  "source": "create:belt.vert",
-  "states": [
-    {
-      "when": "create:rainbow_debug",
-      "define": "DEBUG_RAINBOW"
-    },
-    {
-      "when": {
-        "provider": "flywheel:normal_debug",
-        "value": "true"
-      },
-      "define": "DEBUG_NORMAL"
-    }
-  ]
+  "vertex": "create:belt.vert",
+  "fragment": "flywheel:block.frag"
 }

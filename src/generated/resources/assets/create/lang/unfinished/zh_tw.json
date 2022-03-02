@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 393",
+	"_": "Missing Localizations: 392",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -602,7 +602,6 @@
 	"item.create.honeyed_apple": "蜂蜜蘋果",
 	"item.create.incomplete_cogwheel": "未完成的小齒輪",
 	"item.create.incomplete_large_cogwheel": "未完成的大齒輪",
-	"item.create.incomplete_netherrack": "UNLOCALIZED: Incomplete Netherrack",
 	"item.create.incomplete_precision_mechanism": "未完成的精確控制器",
 	"item.create.iron_sheet": "鐵板",
 	"item.create.linked_controller": "遙控器",

@@ -17,7 +17,7 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(1);
 	}
 

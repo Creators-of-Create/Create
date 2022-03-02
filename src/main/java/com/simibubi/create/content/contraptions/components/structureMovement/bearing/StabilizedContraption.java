@@ -10,6 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StabilizedContraption extends Contraption {
 
@@ -41,7 +43,7 @@ public class StabilizedContraption extends Contraption {
 	protected ContraptionType getType() {
 		return ContraptionType.STABILIZED;
 	}
-	
+
 	@Override
 	public CompoundTag writeNBT(boolean spawnPacket) {
 		CompoundTag tag = super.writeNBT(spawnPacket);
@@ -54,17 +56,18 @@ public class StabilizedContraption extends Contraption {
 		facing = Direction.from3DDataValue(tag.getInt("Facing"));
 		super.readNBT(world, tag, spawnData);
 	}
-	
+
 	@Override
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return false;
 	}
-	
+
 	public Direction getFacing() {
 		return facing;
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new NonStationaryLighter<>(this);
 	}

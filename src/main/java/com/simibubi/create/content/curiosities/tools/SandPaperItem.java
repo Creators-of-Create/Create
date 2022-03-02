@@ -45,7 +45,7 @@ import net.minecraftforge.common.util.FakePlayer;
 public class SandPaperItem extends Item implements CustomUseEffectsItem {
 
 	public SandPaperItem(Properties properties) {
-		super(properties.durability(8));
+		super(properties.defaultDurability(8));
 	}
 
 	@Override
@@ -239,13 +239,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public int getItemEnchantability(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public int getEnchantmentValue() {
-		return 5;
+		return 1;
 	}
 
 	@Override

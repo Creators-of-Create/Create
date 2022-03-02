@@ -149,7 +149,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		if (state.is(BlockTags.LEAVES))
 			return true;
 		if (state.getBlock() instanceof CocoaBlock)
-			return true;
+			return state.getValue(CocoaBlock.AGE) == CocoaBlock.MAX_AGE;
 
 		if (state.getCollisionShape(world, pos)
 			.isEmpty()) {

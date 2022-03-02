@@ -33,8 +33,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -56,14 +54,9 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		processingTicks = -1;
 	}
 
-	protected AABB cachedBoundingBox;
-
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null)
-			cachedBoundingBox = super.getRenderBoundingBox().expandTowards(0, -2, 0);
-		return cachedBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().expandTowards(0, -2, 0);
 	}
 
 	@Override

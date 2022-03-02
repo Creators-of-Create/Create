@@ -15,8 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity {
 
@@ -113,15 +111,9 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		return powered;
 	}
 
-	protected AABB cachedBoundingBox;
-
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
-			cachedBoundingBox = super.getRenderBoundingBox().inflate(2);
-		}
-		return cachedBoundingBox;
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(2);
 	}
 
 	public boolean isTransferring() {

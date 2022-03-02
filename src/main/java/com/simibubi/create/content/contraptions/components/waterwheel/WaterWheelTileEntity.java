@@ -38,7 +38,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(1);
 	}
 

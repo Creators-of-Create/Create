@@ -1,13 +1,10 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
@@ -18,10 +15,13 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
-public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
+import java.util.Arrays;
+import java.util.List;
+
+public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<SplashingRecipe> {
 
 	public FanWashingCategory() {
-		super(185, doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
+		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 
 		itemStacks.init(0, true, xOffsetGlobal + 12, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
-			.get(0)
-			.getItems()));
+				.get(0)
+				.getItems()));
 
 		boolean single = results.size() == 1;
 		boolean excessive = results.size() > 9;
@@ -53,9 +53,9 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 			int yOffset = (outputIndex / 3) * -19;
 
 			itemStacks.init(outputIndex + 1, false, xOffsetGlobal + (single ? 126 : 126 + xOffset),
-				47 + yOffset + (excessive ? 8 : 0));
+					47 + yOffset + (excessive ? 8 : 0));
 			itemStacks.set(outputIndex + 1, results.get(outputIndex)
-				.getStack());
+					.getStack());
 		}
 
 		addStochasticTooltip(itemStacks, results);
@@ -64,7 +64,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 	@Override
 	protected void renderWidgets(PoseStack matrixStack, SplashingRecipe recipe, double mouseX, double mouseY) {
 		int size = recipe.getRollableResultsAsItemStacks()
-			.size();
+				.size();
 		int xOffsetGlobal = 8 * (3 - Math.min(3, size));
 
 		AllGuiTextures.JEI_SLOT.render(matrixStack, xOffsetGlobal + 12, 47);
@@ -92,14 +92,11 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack, SplashingRecipe recipe) {
 		matrixStack.pushPose();
-
 		GuiGameElement.of(Fluids.WATER)
-			.scale(24)
-			.atLocal(0, 0, 2)
-			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-			.render(matrixStack);
-
-		matrixStack.popPose();
+				.scale(SCALE)
+				.atLocal(0, 0, 2)
+				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
+				.render(matrixStack);
 	}
 
 }

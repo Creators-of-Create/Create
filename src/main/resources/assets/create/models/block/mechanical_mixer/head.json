@@ -11,7 +11,6 @@
 			"name": "MixerCenter",
 			"from": [7, -4.5, 7],
 			"to": [9, 7.5, 9],
-			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7, 8]},
 			"faces": {
 				"north": {"uv": [0, 12, 12, 14], "rotation": 90, "texture": "#6"},
