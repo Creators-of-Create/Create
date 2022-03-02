@@ -215,8 +215,6 @@ public class ItemHelper {
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
-				if (stackInSlot.isEmpty())
-					continue;
 				int maxExtractionCountForItem = amountFunction.apply(stackInSlot);
 				if (maxExtractionCountForItem == 0)
 					continue;
@@ -224,7 +222,8 @@ public class ItemHelper {
 			}
 
 			ItemStack stack = inv.extractItem(slot, maxExtractionCount - extracting.getCount(), true);
-
+			if (stack.isEmpty())
+				continue;
 			if (!test.test(stack))
 				continue;
 			if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting))
