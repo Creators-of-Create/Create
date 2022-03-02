@@ -142,7 +142,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public int getBrightness(LightLayer p_226658_1_, BlockPos p_226658_2_) {
-		return 10;
+		return 15;
 	}
 
 	@Override
