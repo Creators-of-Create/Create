@@ -12,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GantryContraption extends TranslatingContraption {
 
@@ -64,6 +66,7 @@ public class GantryContraption extends TranslatingContraption {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new NonStationaryLighter<>(this);
 	}

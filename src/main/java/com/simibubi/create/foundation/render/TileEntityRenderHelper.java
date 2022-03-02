@@ -77,9 +77,9 @@ public class TileEntityRenderHelper {
 			} catch (Exception e) {
 				iterator.remove();
 
-				String message = "TileEntity " + tileEntity.getType()
+				String message = "BlockEntity " + tileEntity.getType()
 					.getRegistryName()
-					.toString() + " didn't want to render while moved.\n";
+					.toString() + " could not be rendered virtually.";
 				if (AllConfigs.CLIENT.explainRenderErrors.get())
 					Create.LOGGER.error(message, e);
 				else

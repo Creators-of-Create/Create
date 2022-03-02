@@ -127,7 +127,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public AABB getRenderBoundingBox() {
+	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -3, 0);
 	}
 

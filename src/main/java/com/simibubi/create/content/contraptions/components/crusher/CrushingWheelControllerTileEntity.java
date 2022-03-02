@@ -231,7 +231,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 					processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 				}
 			}
-			processingEntity.hurt(CrushingWheelTileEntity.damageSource, crusherDamage);
+			processingEntity.hurt(CrushingWheelTileEntity.DAMAGE_SOURCE, crusherDamage);
 			if (!processingEntity.isAlive()) {
 				processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 			}

@@ -126,6 +126,7 @@ public class BeltTileEntity extends KineticTileEntity {
 				lighter = new BeltLighter();
 			}
 		});
+		invalidateRenderBoundingBox();
 
 		getInventory().tick();
 
@@ -160,11 +161,11 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
+	public AABB createRenderBoundingBox() {
 		if (!isController())
-			return super.makeRenderBoundingBox();
+			return super.createRenderBoundingBox();
 		else
-			return super.makeRenderBoundingBox().inflate(beltLength + 1);
+			return super.createRenderBoundingBox().inflate(beltLength + 1);
 	}
 
 	protected void initializeItemHandler() {
@@ -234,7 +235,9 @@ public class BeltTileEntity extends KineticTileEntity {
 			beltLength = compound.getInt("Length");
 			if (prevBeltLength != beltLength) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					lighter = null;
+					if (lighter != null) {
+						lighter.initializeLight();
+					}
 				});
 			}
 		}
@@ -593,11 +596,6 @@ public class BeltTileEntity extends KineticTileEntity {
 			GridAlignedBB beltVolume = getVolume();
 
 			if (beltVolume.intersects(changed)) {
-				if (light == null) {
-					initializeLight();
-					return;
-				}
-
 				if (type == LightLayer.BLOCK)
 					updateBlockLight();
 

@@ -546,6 +546,8 @@ public class ContraptionCollider {
 			boolean emptyCollider = collidedState.getCollisionShape(world, pos)
 				.isEmpty();
 
+			if (collidedState.getBlock() instanceof CocoaBlock)
+				continue;
 			if (AllMovementBehaviours.contains(blockInfo.state.getBlock())) {
 				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state.getBlock());
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
@@ -567,8 +569,6 @@ public class ContraptionCollider {
 
 			if (AllBlocks.PULLEY_MAGNET.has(collidedState) && pos.equals(BlockPos.ZERO)
 				&& movementDirection == Direction.UP)
-				continue;
-			if (collidedState.getBlock() instanceof CocoaBlock)
 				continue;
 			if (!collidedState.getMaterial()
 				.isReplaceable() && !emptyCollider) {

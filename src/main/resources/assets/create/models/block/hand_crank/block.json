@@ -11,7 +11,6 @@
 			"name": "Axis",
 			"from": [6, 0, 6],
 			"to": [10, 5, 10],
-			"shade": false,
 			"faces": {
 				"north": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},
 				"east": {"uv": [6, 0, 10, 5], "rotation": 180, "texture": "#0"},

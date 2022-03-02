@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Tra
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PulleyContraption extends TranslatingContraption {
 
@@ -56,6 +58,7 @@ public class PulleyContraption extends TranslatingContraption {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new PulleyLighter(this);
 	}

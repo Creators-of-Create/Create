@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "forge:raw_blocks/tin"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_tin_ore",
+      "count": 9
+    },
+    {
+      "item": "create:experience_nugget",
+      "count": 9,
+      "chance": 0.75
+    }
+  ],
+  "processingTime": 400,
+  "conditions": [
+    {
+      "value": {
+        "tag": "forge:raw_blocks/tin",
+        "type": "forge:tag_empty"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

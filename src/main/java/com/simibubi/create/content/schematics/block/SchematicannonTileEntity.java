@@ -55,6 +55,8 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -812,6 +814,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}

@@ -1,19 +1,13 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.core.shader.spec.BooleanStateProvider;
-import com.simibubi.create.Create;
+import javax.annotation.Nonnull;
+
+import com.jozufozu.flywheel.core.shader.GameStateProvider;
+import com.jozufozu.flywheel.core.shader.ShaderConstants;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 
-import net.minecraft.resources.ResourceLocation;
-
-public class RainbowDebugStateProvider implements BooleanStateProvider {
-
-	public static final RainbowDebugStateProvider INSTANCE = new RainbowDebugStateProvider();
-	public static final ResourceLocation NAME = Create.asResource("rainbow_debug");
-
-	protected RainbowDebugStateProvider() {
-
-	}
+public enum RainbowDebugStateProvider implements GameStateProvider {
+	INSTANCE;
 
 	@Override
 	public boolean isTrue() {
@@ -21,7 +15,7 @@ public class RainbowDebugStateProvider implements BooleanStateProvider {
 	}
 
 	@Override
-	public ResourceLocation getID() {
-		return NAME;
+	public void alterConstants(@Nonnull ShaderConstants constants) {
+		constants.define("DEBUG_RAINBOW");
 	}
 }

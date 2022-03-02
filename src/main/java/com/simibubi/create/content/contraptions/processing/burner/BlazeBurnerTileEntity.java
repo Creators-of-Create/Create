@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -169,13 +170,17 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		FuelType newFuel = FuelType.NONE;
 		int newBurnTime;
 
-		if (AllItems.BLAZE_CAKE.isIn(itemStack)) {
+		if (AllItemTags.BLAZE_BURNER_SPECIAL_FUEL.matches(itemStack)) {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
 			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
+			else if (AllItemTags.BLAZE_BURNER_REGULAR_FUEL.matches(itemStack)) {
+				newBurnTime = 1600; // Same as coal
+				newFuel = FuelType.NORMAL;
+			}
 		}
 
 		if (newFuel == FuelType.NONE)

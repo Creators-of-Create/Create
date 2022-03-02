@@ -34,8 +34,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public AABB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().expandTowards(0, -offset, 0);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().expandTowards(0, -offset, 0);
 	}
 
 	@Override
@@ -43,6 +43,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		super.tick();
 		if (isVirtual())
 			prevAnimatedOffset = offset;
+		invalidateRenderBoundingBox();
 	}
 
 	@Override

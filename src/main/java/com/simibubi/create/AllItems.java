@@ -94,18 +94,13 @@ public class AllItems {
 			.model(AssetLookup.existingItemModel())
 			.register();
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_NETHERRACK =
-			REGISTRATE.item("incomplete_netherrack", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
-					.register();
-
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.register();
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
-		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.tag(AllItemTags.BLAZE_BURNER_SPECIAL_FUEL.tag, AllItemTags.UPRIGHT_ON_BELT.tag)
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
@@ -147,7 +142,8 @@ public class AllItems {
 		.lang("Builder's Tea")
 		.register();
 
-	public static final ItemEntry<Item> RAW_ZINC = ingredient("raw_zinc");
+	public static final ItemEntry<Item> RAW_ZINC =
+		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), forgeItemTag("raw_materials"));
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
@@ -292,16 +288,17 @@ public class AllItems {
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> p.stacksTo(1))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.properties(p -> p.rarity(Rarity.UNCOMMON))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
+			.properties(p -> p.stacksTo(1).rarity(Rarity.UNCOMMON))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 

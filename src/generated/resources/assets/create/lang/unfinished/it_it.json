@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1275",
+	"_": "Missing Localizations: 1274",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -602,7 +602,6 @@
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.incomplete_cogwheel": "UNLOCALIZED: Incomplete Cogwheel",
 	"item.create.incomplete_large_cogwheel": "UNLOCALIZED: Incomplete Large Cogwheel",
-	"item.create.incomplete_netherrack": "UNLOCALIZED: Incomplete Netherrack",
 	"item.create.incomplete_precision_mechanism": "UNLOCALIZED: Incomplete Precision Mechanism",
 	"item.create.iron_sheet": "Lamiera di ferro",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
