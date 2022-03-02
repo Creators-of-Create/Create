@@ -20,7 +20,7 @@ public abstract class EntityTransformHelper<A extends LivingEntity, B extends Li
 
 	public static void clientEffect(AbstractFanProcessingType type, Level level, Entity entity) {
 		for (EntityTransformHelper<?, ?> helper : LIST) {
-			if (helper.fan_type.test(type)) {
+			if (helper.fanType.test(type)) {
 				helper._clientEffect(level, entity);
 			}
 		}
@@ -28,21 +28,21 @@ public abstract class EntityTransformHelper<A extends LivingEntity, B extends Li
 
 	public static void serverEffect(AbstractFanProcessingType type, Level level, Entity entity) {
 		for (EntityTransformHelper<?, ?> helper : LIST) {
-			if (helper.fan_type.test(type)) {
+			if (helper.fanType.test(type)) {
 				helper._serverEffect(level, entity);
 			}
 		}
 	}
 
-	public final Predicate<AbstractFanProcessingType> fan_type;
+	public final Predicate<AbstractFanProcessingType> fanType;
 	public final Class<A> cls;
 	public final Predicate<A> predicate;
 	public final Function<A, EntityType<B>> getter;
 	public final String key;
 
-	public EntityTransformHelper(String key, Predicate<AbstractFanProcessingType> fan_type, Class<A> cls, Predicate<A> predicate, Function<A, EntityType<B>> getter) {
+	public EntityTransformHelper(String key, Predicate<AbstractFanProcessingType> fanType, Class<A> cls, Predicate<A> predicate, Function<A, EntityType<B>> getter) {
 		this.key = key;
-		this.fan_type = fan_type;
+		this.fanType = fanType;
 		this.cls = cls;
 		this.predicate = predicate;
 		this.getter = getter;
@@ -69,22 +69,22 @@ public abstract class EntityTransformHelper<A extends LivingEntity, B extends Li
 
 	public abstract void clientEffect(Level level, A entity);
 
-	public void serverEffect(A entity_old, Level level) {
-		int progress = entity_old.getPersistentData().getInt(key);
+	public void serverEffect(A entityOld, Level level) {
+		int progress = entityOld.getPersistentData().getInt(key);
 		if (progress < 100) {
-			onProgress(level, entity_old, progress);
-			entity_old.getPersistentData().putInt(key, progress + 1);
+			onProgress(level, entityOld, progress);
+			entityOld.getPersistentData().putInt(key, progress + 1);
 			return;
 		}
-		onComplete(level, entity_old);
-		B entity_new = getter.apply(entity_old).create(level);
-		CompoundTag serializeNBT = entity_old.saveWithoutId(new CompoundTag());
+		onComplete(level, entityOld);
+		B entity_new = getter.apply(entityOld).create(level);
+		CompoundTag serializeNBT = entityOld.saveWithoutId(new CompoundTag());
 		serializeNBT.remove("UUID");
-		postTransform(entity_old, entity_new);
+		postTransform(entityOld, entity_new);
 		entity_new.deserializeNBT(serializeNBT);
-		entity_new.setPos(entity_old.getPosition(0));
+		entity_new.setPos(entityOld.getPosition(0));
 		level.addFreshEntity(entity_new);
-		entity_old.discard();
+		entityOld.discard();
 	}
 
 	public abstract void postTransform(A a, B b);

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @SuppressWarnings({"rawtypes", "ConstantConditions"})
-public record CustomTransformConfig(String block_type, ResourceLocation old_type, ResourceLocation new_type,
+public record CustomTransformConfig(String blockType, ResourceLocation oldType, ResourceLocation newType,
 									ProgressionSoundConfig progression, CompletionSoundConfig completion,
 									List<ProcessingParticleConfig> particles) {
 
@@ -50,9 +50,9 @@ public record CustomTransformConfig(String block_type, ResourceLocation old_type
 	}
 
 	public static final Codec<CustomTransformConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-		Codec.STRING.fieldOf("block_type").forGetter(e -> e.block_type),
-		ResourceLocation.CODEC.fieldOf("old_type").forGetter(e -> e.old_type),
-		ResourceLocation.CODEC.fieldOf("new_type").forGetter(e -> e.new_type),
+		Codec.STRING.fieldOf("block_type").forGetter(e -> e.blockType),
+		ResourceLocation.CODEC.fieldOf("old_type").forGetter(e -> e.oldType),
+		ResourceLocation.CODEC.fieldOf("new_type").forGetter(e -> e.newType),
 		ProgressionSoundConfig.CODEC.optionalFieldOf("progression").forGetter(e -> Optional.ofNullable(e.progression)),
 		CompletionSoundConfig.CODEC.optionalFieldOf("completion").forGetter(e -> Optional.ofNullable(e.completion)),
 		Codec.list(ProcessingParticleConfig.CODEC).optionalFieldOf("particles").forGetter(e -> Optional.ofNullable(e.particles))
@@ -61,15 +61,15 @@ public record CustomTransformConfig(String block_type, ResourceLocation old_type
 			completion.orElse(null), particles.orElse(null))));
 
 	public EntityType getNewType() {
-		return ForgeRegistries.ENTITIES.getValue(new_type);
+		return ForgeRegistries.ENTITIES.getValue(newType);
 	}
 
 	public EntityType getOldType() {
-		return ForgeRegistries.ENTITIES.getValue(old_type);
+		return ForgeRegistries.ENTITIES.getValue(oldType);
 	}
 
 	public Class getOldClass() {
-		return ForgeRegistries.ENTITIES.getValue(old_type).getBaseClass();
+		return ForgeRegistries.ENTITIES.getValue(oldType).getBaseClass();
 	}
 
 

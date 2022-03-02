@@ -92,14 +92,14 @@ public class CustomFanNetworkManager {
 					.getOrThrow(false, LogManager.getLogger()::error);
 				buffer.writeNbt((CompoundTag) tag);
 			}
-			List<CustomTransformConfig> list_transform = new ArrayList<>();
+			List<CustomTransformConfig> listTransform = new ArrayList<>();
 			EntityTransformHelper.LIST.forEach(e -> {
 				if (e instanceof CustomTransformType custom) {
-					list_transform.add(custom.config);
+					listTransform.add(custom.config);
 				}
 			});
-			buffer.writeInt(list_transform.size());
-			for (CustomTransformConfig config : list_transform) {
+			buffer.writeInt(listTransform.size());
+			for (CustomTransformConfig config : listTransform) {
 				Tag tag = CustomTransformConfig.CODEC.encodeStart(NbtOps.INSTANCE, config)
 					.getOrThrow(false, LogManager.getLogger()::error);
 				buffer.writeNbt((CompoundTag) tag);

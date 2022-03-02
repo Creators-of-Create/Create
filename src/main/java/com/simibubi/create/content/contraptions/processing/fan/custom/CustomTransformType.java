@@ -12,7 +12,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 
 	@SuppressWarnings({"raw_types", "unchecked"})
 	public CustomTransformType(CustomTransformConfig config) {
-		super("CreateCustomTransform", e -> e.name.equals(config.block_type()), config.getOldClass(), e -> e.getType() == config.getOldType(), e -> config.getNewType());
+		super("CreateCustomTransform", e -> e.name.equals(config.blockType()), config.getOldClass(), e -> e.getType() == config.getOldType(), e -> config.getNewType());
 		this.config = config;
 	}
 
