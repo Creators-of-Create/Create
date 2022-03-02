@@ -21,23 +21,20 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 		return AbstractCookingRecipe.class;
 	}
 
-	@Override
-	public void renderAttachedBlock(PoseStack matrixStack, AbstractCookingRecipe recipe) {
-		matrixStack.pushPose();
-	}
-
 
 	protected AllGuiTextures getBlockShadow() {
 		return AllGuiTextures.JEI_LIGHT;
 	}
 
 	@Override
-	protected void renderAttachedBlock(PoseStack matrixStack) {
+	public void renderAttachedBlock(PoseStack matrixStack, AbstractCookingRecipe recipe) {
+		matrixStack.pushPose();
 		GuiGameElement.of(Fluids.LAVA)
-			.scale(SCALE)
-			.atLocal(0, 0, 2)
-			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-			.render(matrixStack);
+				.scale(SCALE)
+				.atLocal(0, 0, 2)
+				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
+				.render(matrixStack);
+		matrixStack.popPose();
 	}
 
 }

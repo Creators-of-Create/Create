@@ -58,12 +58,12 @@ public class FanHauntingCategory extends ProcessingViaFanCategory.MultiOutput<Ha
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack, HauntingRecipe recipe) {
 		matrixStack.pushPose();
-
 		GuiGameElement.of(Blocks.SOUL_FIRE.defaultBlockState())
 			.scale(SCALE)
 			.atLocal(0, 0, 2)
 			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
+		matrixStack.popPose();
 	}
 
 }

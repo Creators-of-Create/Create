@@ -97,6 +97,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<Spl
 				.atLocal(0, 0, 2)
 				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 				.render(matrixStack);
+		matrixStack.popPose();
 	}
 
 }
