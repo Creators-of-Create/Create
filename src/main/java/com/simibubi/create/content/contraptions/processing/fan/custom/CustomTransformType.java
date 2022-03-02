@@ -12,7 +12,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 
 	@SuppressWarnings({"raw_types", "unchecked"})
 	public CustomTransformType(CustomTransformConfig config) {
-		super("CreateCustomTransform", e -> e.name.equals(config.block_type()), config.getOldClass(), e -> e.getType()==config.getOldType(), e -> config.getNewType());
+		super("CreateCustomTransform", e -> e.name.equals(config.block_type()), config.getOldClass(), e -> e.getType() == config.getOldType(), e -> config.getNewType());
 		this.config = config;
 	}
 
@@ -21,7 +21,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 		CustomTransformConfig.ProgressionSoundConfig c = config.progression();
 		if (c != null && progress % c.interval() == 0) {
 			level.playSound(null, entity.blockPosition(), c.getSound(), SoundSource.NEUTRAL,
-					c.volume() + c.volume_slope() * progress / 100f, c.pitch() + c.pitch_slope() * progress / 100f);
+				c.volume() + c.volume_slope() * progress / 100f, c.pitch() + c.pitch_slope() * progress / 100f);
 		}
 	}
 
@@ -30,7 +30,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 		CustomTransformConfig.CompletionSoundConfig c = config.completion();
 		if (c != null) {
 			level.playSound(null, entity.blockPosition(), c.getSound(),
-					SoundSource.NEUTRAL, c.volume(), c.pitch());
+				SoundSource.NEUTRAL, c.volume(), c.pitch());
 		}
 	}
 

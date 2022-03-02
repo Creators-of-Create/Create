@@ -24,27 +24,27 @@ public abstract class HauntingEntityTransform<A extends LivingEntity, B extends 
 	public void onProgress(Level level, A entity, int progress) {
 		if (progress % 10 == 0) {
 			level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
-					1f, 1.5f * progress / 100f);
+				1f, 1.5f * progress / 100f);
 		}
 	}
 
 	@Override
 	public void onComplete(Level level, A entity) {
 		level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
-				SoundSource.NEUTRAL, 1.25f, 0.65f);
+			SoundSource.NEUTRAL, 1.25f, 0.65f);
 	}
 
 	@Override
 	public void clientEffect(Level level, A entity) {
 		Vec3 p = entity.getPosition(0);
 		Vec3 v = p.add(0, 0.5f, 0)
-				.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
-						.multiply(1, 0.2f, 1)
-						.normalize()
-						.scale(1f));
+			.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+				.multiply(1, 0.2f, 1)
+				.normalize()
+				.scale(1f));
 		level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
 		if (level.random.nextInt(3) == 0)
 			level.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
-					(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+				(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
 	}
 }

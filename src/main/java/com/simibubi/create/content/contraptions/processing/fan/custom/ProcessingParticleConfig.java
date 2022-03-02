@@ -23,19 +23,19 @@ public record ProcessingParticleConfig(int chance, String col, ResourceLocation 
 									   Vec3Config random_speed) {
 
 	public static final Codec<ProcessingParticleConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-			Codec.INT.fieldOf("chance").forGetter(e -> e.chance),
-			Codec.STRING.optionalFieldOf("color").forGetter(e -> Optional.ofNullable(e.col)),
-			ResourceLocation.CODEC.optionalFieldOf("id").forGetter(e -> Optional.ofNullable(e.id)),
-			Vec3Config.CODEC.optionalFieldOf("base_offset").forGetter(e -> Optional.of(e.base_offset)),
-			Vec3Config.CODEC.optionalFieldOf("random_offset").forGetter(e -> Optional.of(e.random_offset)),
-			Vec3Config.CODEC.optionalFieldOf("speed").forGetter(e -> Optional.of(e.speed)),
-			Vec3Config.CODEC.optionalFieldOf("random_speed").forGetter(e -> Optional.of(e.random_speed))
+		Codec.INT.fieldOf("chance").forGetter(e -> e.chance),
+		Codec.STRING.optionalFieldOf("color").forGetter(e -> Optional.ofNullable(e.col)),
+		ResourceLocation.CODEC.optionalFieldOf("id").forGetter(e -> Optional.ofNullable(e.id)),
+		Vec3Config.CODEC.optionalFieldOf("base_offset").forGetter(e -> Optional.of(e.base_offset)),
+		Vec3Config.CODEC.optionalFieldOf("random_offset").forGetter(e -> Optional.of(e.random_offset)),
+		Vec3Config.CODEC.optionalFieldOf("speed").forGetter(e -> Optional.of(e.speed)),
+		Vec3Config.CODEC.optionalFieldOf("random_speed").forGetter(e -> Optional.of(e.random_speed))
 	).apply(i, (chance, col, id, base_offset, random_offset, speed, random_speed) -> new ProcessingParticleConfig(chance,
-			col.orElse(null), id.orElse(null),
-			base_offset.orElse(Vec3Config.ZERO),
-			random_offset.orElse(Vec3Config.ZERO),
-			speed.orElse(Vec3Config.ZERO),
-			random_speed.orElse(Vec3Config.ZERO))));
+		col.orElse(null), id.orElse(null),
+		base_offset.orElse(Vec3Config.ZERO),
+		random_offset.orElse(Vec3Config.ZERO),
+		speed.orElse(Vec3Config.ZERO),
+		random_speed.orElse(Vec3Config.ZERO))));
 
 	public void spawnParticlesForProcessing(Level level, Vec3 pos) {
 		if (level.random.nextInt(chance) != 0)

@@ -67,18 +67,18 @@ public class TypeBlasting extends AbstractFanProcessingType {
 
 		RECIPE_WRAPPER.setItem(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
+			.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
 		if (!smokingRecipe.isPresent()) {
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<SmeltingRecipe> smeltingRecipe = world.getRecipeManager()
-					.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, world);
+				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, world);
 
 			if (smeltingRecipe.isPresent())
 				return applyRecipeOn(stack, smeltingRecipe.get());
 
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
-					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, world);
+				.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, world);
 
 			if (blastingRecipe.isPresent())
 				return applyRecipeOn(stack, blastingRecipe.get());
@@ -98,19 +98,19 @@ public class TypeBlasting extends AbstractFanProcessingType {
 	public boolean canProcess(ItemStack stack, Level level) {
 		RECIPE_WRAPPER.setItem(0, stack);
 		Optional<SmeltingRecipe> smeltingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level);
+			.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level);
 
 		if (smeltingRecipe.isPresent())
 			return true;
 
 		RECIPE_WRAPPER.setItem(0, stack);
 		Optional<BlastingRecipe> blastingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level);
+			.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level);
 
 		if (blastingRecipe.isPresent())
 			return true;
 
 		return !stack.getItem()
-				.isFireResistant();
+			.isFireResistant();
 	}
 }

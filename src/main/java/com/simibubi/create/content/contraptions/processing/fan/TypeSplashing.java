@@ -32,9 +32,9 @@ public class TypeSplashing extends AbstractRecipeFanType<SplashingRecipe> {
 			return;
 		Vector3f color = new Color(0x0055FF).asVectorF();
 		level.addParticle(new DustParticleOptions(color, 1), pos.x + (level.random.nextFloat() - .5f) * .5f,
-				pos.y + .5f, pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+			pos.y + .5f, pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 		level.addParticle(ParticleTypes.SPIT, pos.x + (level.random.nextFloat() - .5f) * .5f, pos.y + .5f,
-				pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+			pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 	}
 
 	@Override
@@ -43,13 +43,13 @@ public class TypeSplashing extends AbstractRecipeFanType<SplashingRecipe> {
 			return;
 
 		if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
-				|| entity.getType() == EntityType.BLAZE) {
+			|| entity.getType() == EntityType.BLAZE) {
 			entity.hurt(DamageSource.DROWN, 2);
 		}
 		if (entity.isOnFire()) {
 			entity.clearFire();
 			level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL,
-					0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
+				0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
 		}
 	}
 

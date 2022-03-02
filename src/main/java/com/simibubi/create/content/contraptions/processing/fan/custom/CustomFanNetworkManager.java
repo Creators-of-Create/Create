@@ -36,10 +36,10 @@ public class CustomFanNetworkManager {
 
 		@Override
 		protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profile) {
-			TypeCustom.MAP.entrySet().removeIf(e->e.getValue() instanceof TypeCustom);
+			TypeCustom.MAP.entrySet().removeIf(e -> e.getValue() instanceof TypeCustom);
 			map.forEach((k, v) -> {
 				CustomFanTypeConfig config = CustomFanTypeConfig.CODEC.decode(JsonOps.INSTANCE, v)
-						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
+					.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 				try {
 					new TypeCustom(config);
 				} catch (IllegalArgumentException e) {
@@ -53,10 +53,10 @@ public class CustomFanNetworkManager {
 
 		@Override
 		protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profile) {
-			EntityTransformHelper.LIST.removeIf(e->e instanceof CustomTransformType);
+			EntityTransformHelper.LIST.removeIf(e -> e instanceof CustomTransformType);
 			map.forEach((k, v) -> {
 				CustomTransformConfig config = CustomTransformConfig.CODEC.decode(JsonOps.INSTANCE, v)
-						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
+					.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 				try {
 					new CustomTransformType(config);
 				} catch (IllegalArgumentException e) {
@@ -65,7 +65,6 @@ public class CustomFanNetworkManager {
 			});
 		}
 	};
-
 
 
 	public static class SyncPacket extends SimplePacketBase {
@@ -90,19 +89,19 @@ public class CustomFanNetworkManager {
 			buffer.writeInt(list_type.size());
 			for (CustomFanTypeConfig config : list_type) {
 				Tag tag = CustomFanTypeConfig.CODEC.encodeStart(NbtOps.INSTANCE, config)
-						.getOrThrow(false, LogManager.getLogger()::error);
+					.getOrThrow(false, LogManager.getLogger()::error);
 				buffer.writeNbt((CompoundTag) tag);
 			}
 			List<CustomTransformConfig> list_transform = new ArrayList<>();
-			EntityTransformHelper.LIST.forEach(e->{
-				if (e instanceof CustomTransformType custom){
+			EntityTransformHelper.LIST.forEach(e -> {
+				if (e instanceof CustomTransformType custom) {
 					list_transform.add(custom.config);
 				}
 			});
 			buffer.writeInt(list_transform.size());
 			for (CustomTransformConfig config : list_transform) {
 				Tag tag = CustomTransformConfig.CODEC.encodeStart(NbtOps.INSTANCE, config)
-						.getOrThrow(false, LogManager.getLogger()::error);
+					.getOrThrow(false, LogManager.getLogger()::error);
 				buffer.writeNbt((CompoundTag) tag);
 			}
 		}
@@ -110,13 +109,13 @@ public class CustomFanNetworkManager {
 		@Override
 		public void handle(Supplier<NetworkEvent.Context> context) {
 			context.get().enqueueWork(() -> {
-				TypeCustom.MAP.entrySet().removeIf(e->e.getValue() instanceof TypeCustom);
-				EntityTransformHelper.LIST.removeIf(e->e instanceof CustomTransformType);
+				TypeCustom.MAP.entrySet().removeIf(e -> e.getValue() instanceof TypeCustom);
+				EntityTransformHelper.LIST.removeIf(e -> e instanceof CustomTransformType);
 				int size = buffer.readInt();
 				for (int i = 0; i < size; i++) {
 					CompoundTag tag = buffer.readAnySizeNbt();
 					CustomFanTypeConfig config = CustomFanTypeConfig.CODEC.decode(NbtOps.INSTANCE, tag)
-							.getOrThrow(false, LogManager.getLogger()::error).getFirst();
+						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 					try {
 						new TypeCustom(config);
 					} catch (IllegalArgumentException e) {
@@ -127,7 +126,7 @@ public class CustomFanNetworkManager {
 				for (int i = 0; i < size; i++) {
 					CompoundTag tag = buffer.readAnySizeNbt();
 					CustomTransformConfig config = CustomTransformConfig.CODEC.decode(NbtOps.INSTANCE, tag)
-							.getOrThrow(false, LogManager.getLogger()::error).getFirst();
+						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 					try {
 						new CustomTransformType(config);
 					} catch (IllegalArgumentException e) {

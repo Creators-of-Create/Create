@@ -58,11 +58,11 @@ public class TypeSmoking extends AbstractFanProcessingType {
 		BlockState blockState = reader.getBlockState(pos);
 		Block block = blockState.getBlock();
 		return block == Blocks.FIRE
-				|| BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
-				.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-				.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR).orElse(false)
-				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING;
+			|| BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
+			.orElse(false)
+			|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
+			.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR).orElse(false)
+			|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING;
 	}
 
 	@Nullable
@@ -70,8 +70,8 @@ public class TypeSmoking extends AbstractFanProcessingType {
 	public List<ItemStack> process(ItemStack stack, Level world) {
 		RECIPE_WRAPPER.setItem(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
-		if(!smokingRecipe.isPresent())
+			.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
+		if (!smokingRecipe.isPresent())
 			return null;
 		return applyRecipeOn(stack, smokingRecipe.get());
 	}
@@ -87,7 +87,7 @@ public class TypeSmoking extends AbstractFanProcessingType {
 	public boolean canProcess(ItemStack stack, Level level) {
 		RECIPE_WRAPPER.setItem(0, stack);
 		Optional<SmokingRecipe> recipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level);
+			.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level);
 		return recipe.isPresent();
 	}
 }

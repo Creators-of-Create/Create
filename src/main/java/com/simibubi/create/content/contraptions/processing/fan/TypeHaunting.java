@@ -31,9 +31,9 @@ public class TypeHaunting extends AbstractRecipeFanType<HauntingRecipe> {
 		if (level.random.nextInt(8) != 0)
 			return;
 		pos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
-				.multiply(1, 0.05f, 1)
-				.normalize()
-				.scale(0.15f));
+			.multiply(1, 0.05f, 1)
+			.normalize()
+			.scale(0.15f));
 		level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
 		if (level.random.nextInt(2) == 0)
 			level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y + .25f, pos.z, 0, 0, 0);
@@ -55,10 +55,10 @@ public class TypeHaunting extends AbstractRecipeFanType<HauntingRecipe> {
 		BlockState blockState = reader.getBlockState(pos);
 		Block block = blockState.getBlock();
 		return block == Blocks.SOUL_FIRE
-				|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
-				.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-				.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL).orElse(false);
+			|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
+			.orElse(false)
+			|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
+			.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL).orElse(false);
 	}
 
 	@Override

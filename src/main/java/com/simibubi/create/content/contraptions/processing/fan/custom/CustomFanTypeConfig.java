@@ -38,15 +38,15 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 									   List<ResourceLocation> tags) {
 
 		public static final Codec<BlockPredicateConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-						Codec.list(ResourceLocation.CODEC).optionalFieldOf("blocks").forGetter(e -> Optional.ofNullable(e.blocks)),
-						Codec.list(Codec.STRING).optionalFieldOf("block_states").forGetter(e -> Optional.ofNullable(e.block_states)),
-						Codec.list(ResourceLocation.CODEC).optionalFieldOf("fluids").forGetter(e -> Optional.ofNullable(e.fluids)),
-						Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags").forGetter(e -> Optional.ofNullable(e.tags)))
-				.apply(i, (blocks, block_states, fluids, tags) -> new BlockPredicateConfig(
-						blocks.orElse(null),
-						block_states.orElse(null),
-						fluids.orElse(null),
-						tags.orElse(null))));
+				Codec.list(ResourceLocation.CODEC).optionalFieldOf("blocks").forGetter(e -> Optional.ofNullable(e.blocks)),
+				Codec.list(Codec.STRING).optionalFieldOf("block_states").forGetter(e -> Optional.ofNullable(e.block_states)),
+				Codec.list(ResourceLocation.CODEC).optionalFieldOf("fluids").forGetter(e -> Optional.ofNullable(e.fluids)),
+				Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags").forGetter(e -> Optional.ofNullable(e.tags)))
+			.apply(i, (blocks, block_states, fluids, tags) -> new BlockPredicateConfig(
+				blocks.orElse(null),
+				block_states.orElse(null),
+				fluids.orElse(null),
+				tags.orElse(null))));
 
 		public boolean isApplicable(BlockGetter reader, BlockPos pos, String name) {
 			FluidState fluidState = reader.getFluidState(pos);
@@ -125,10 +125,10 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			if (tags != null && tags.size() > 0) {
 				ResourceLocation tag = tags.get(0);
 				return Optional.ofNullable(BlockTags.getAllTags().getTag(tag))
-						.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultBlockState() : null)
-						.or(() -> Optional.ofNullable(FluidTags.getAllTags().getTag(tag))
-								.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultFluidState().createLegacyBlock() : null))
-						.orElse(Blocks.AIR.defaultBlockState());
+					.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultBlockState() : null)
+					.or(() -> Optional.ofNullable(FluidTags.getAllTags().getTag(tag))
+						.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultFluidState().createLegacyBlock() : null))
+					.orElse(Blocks.AIR.defaultBlockState());
 			}
 			return null;
 		}
@@ -181,17 +181,17 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 		public record MobEffectConfig(ResourceLocation id, int duration, int level) {
 
 			public static final Codec<EffectEntityConfig.MobEffectConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-					ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
-					Codec.INT.optionalFieldOf("duration").forGetter(e -> Optional.of(e.duration)),
-					Codec.INT.optionalFieldOf("level").forGetter(e -> Optional.of(e.level))
+				ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
+				Codec.INT.optionalFieldOf("duration").forGetter(e -> Optional.of(e.duration)),
+				Codec.INT.optionalFieldOf("level").forGetter(e -> Optional.of(e.level))
 			).apply(i, (id, duration, level) -> new EffectEntityConfig.MobEffectConfig(id, duration.orElse(0), level.orElse(0))));
 
 		}
 
 		public static final Codec<EffectEntityConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-				Codec.FLOAT.optionalFieldOf("damage").forGetter(e -> Optional.of(e.damage)),
-				Codec.BOOL.optionalFieldOf("is_fire").forGetter(e -> Optional.of(e.is_fire)),
-				Codec.list(EffectEntityConfig.MobEffectConfig.CODEC).optionalFieldOf("mob_effects").forGetter(e -> Optional.ofNullable(e.mob_effects))
+			Codec.FLOAT.optionalFieldOf("damage").forGetter(e -> Optional.of(e.damage)),
+			Codec.BOOL.optionalFieldOf("is_fire").forGetter(e -> Optional.of(e.is_fire)),
+			Codec.list(EffectEntityConfig.MobEffectConfig.CODEC).optionalFieldOf("mob_effects").forGetter(e -> Optional.ofNullable(e.mob_effects))
 		).apply(i, (damage, is_fire, mob_effects) -> new EffectEntityConfig(damage.orElse(0f), is_fire.orElse(true), mob_effects.orElse(null))));
 
 		public void affectEntity(Entity entity, Level level, String name) {
@@ -220,9 +220,9 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 		public record ParticleConfig(ResourceLocation id, float chance, float speed) {
 
 			public static final Codec<MorphConfig.ParticleConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-					ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
-					Codec.FLOAT.fieldOf("chance").forGetter(e -> e.chance),
-					Codec.FLOAT.fieldOf("speed").forGetter(e -> e.speed)
+				ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
+				Codec.FLOAT.fieldOf("chance").forGetter(e -> e.chance),
+				Codec.FLOAT.fieldOf("speed").forGetter(e -> e.speed)
 			).apply(i, MorphConfig.ParticleConfig::new));
 
 			public void addParticle(AirFlowParticle particle) {
@@ -235,11 +235,11 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 		}
 
 		public static final Codec<MorphConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-				Codec.STRING.fieldOf("color_1").forGetter(e -> e.color_1),
-				Codec.STRING.fieldOf("color_2").forGetter(e -> e.color_2),
-				Codec.FLOAT.fieldOf("alpha").forGetter(e -> e.alpha),
-				Codec.INT.fieldOf("sprite_length").forGetter(e -> e.sprite_length),
-				Codec.list(MorphConfig.ParticleConfig.CODEC).optionalFieldOf("particles").forGetter(e -> Optional.ofNullable(e.particles))
+			Codec.STRING.fieldOf("color_1").forGetter(e -> e.color_1),
+			Codec.STRING.fieldOf("color_2").forGetter(e -> e.color_2),
+			Codec.FLOAT.fieldOf("alpha").forGetter(e -> e.alpha),
+			Codec.INT.fieldOf("sprite_length").forGetter(e -> e.sprite_length),
+			Codec.list(MorphConfig.ParticleConfig.CODEC).optionalFieldOf("particles").forGetter(e -> Optional.ofNullable(e.particles))
 		).apply(i, (color_1, color_2, alpha, sprite_length, particles) -> new MorphConfig(color_1, color_2, alpha, sprite_length, particles.orElse(null))));
 
 		public void morphType(AirFlowParticle particle) {
@@ -252,13 +252,13 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 	}
 
 	public static final Codec<CustomFanTypeConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-			Codec.INT.optionalFieldOf("priority").forGetter(e -> Optional.of(e.priority)),
-			Codec.STRING.fieldOf("name").forGetter(e -> e.name),
-			BlockPredicateConfig.CODEC.fieldOf("block").forGetter(e -> e.block),
-			EffectEntityConfig.CODEC.optionalFieldOf("entity_effect").forGetter(e -> Optional.ofNullable(e.entity_effect)),
-			Codec.list(ProcessingParticleConfig.CODEC).optionalFieldOf("processing_particles").forGetter(e -> Optional.ofNullable(e.processing_particle)),
-			MorphConfig.CODEC.optionalFieldOf("morph").forGetter(e -> Optional.ofNullable(e.morph))
+		Codec.INT.optionalFieldOf("priority").forGetter(e -> Optional.of(e.priority)),
+		Codec.STRING.fieldOf("name").forGetter(e -> e.name),
+		BlockPredicateConfig.CODEC.fieldOf("block").forGetter(e -> e.block),
+		EffectEntityConfig.CODEC.optionalFieldOf("entity_effect").forGetter(e -> Optional.ofNullable(e.entity_effect)),
+		Codec.list(ProcessingParticleConfig.CODEC).optionalFieldOf("processing_particles").forGetter(e -> Optional.ofNullable(e.processing_particle)),
+		MorphConfig.CODEC.optionalFieldOf("morph").forGetter(e -> Optional.ofNullable(e.morph))
 	).apply(i, (priority, name, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority.orElse(0), name, block,
-			entity_effect.orElse(null), processing_particles.get(), morph.orElse(null))));
+		entity_effect.orElse(null), processing_particles.get(), morph.orElse(null))));
 
 }
