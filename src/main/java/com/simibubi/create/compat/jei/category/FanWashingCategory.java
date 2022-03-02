@@ -31,13 +31,11 @@ public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<Spl
 
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack, SplashingRecipe recipe) {
-		matrixStack.pushPose();
 		GuiGameElement.of(Fluids.WATER)
 				.scale(SCALE)
 				.atLocal(0, 0, 2)
 				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 				.render(matrixStack);
-		matrixStack.popPose();
 	}
 
 }
