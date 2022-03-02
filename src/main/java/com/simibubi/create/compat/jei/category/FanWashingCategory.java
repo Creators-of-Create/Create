@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -32,10 +31,10 @@ public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<Spl
 	@Override
 	public void renderAttachedBlock(PoseStack matrixStack, SplashingRecipe recipe) {
 		GuiGameElement.of(Fluids.WATER)
-				.scale(SCALE)
-				.atLocal(0, 0, 2)
-				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-				.render(matrixStack);
+			.scale(SCALE)
+			.atLocal(0, 0, 2)
+			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
+			.render(matrixStack);
 	}
 
 }

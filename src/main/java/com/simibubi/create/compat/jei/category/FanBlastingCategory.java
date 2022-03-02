@@ -21,7 +21,7 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 		return AbstractCookingRecipe.class;
 	}
 
-
+	@Override
 	protected AllGuiTextures getBlockShadow() {
 		return AllGuiTextures.JEI_LIGHT;
 	}
