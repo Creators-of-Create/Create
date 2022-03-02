@@ -28,34 +28,6 @@ public class FanHauntingCategory extends ProcessingViaFanCategory.MultiOutput<Ha
 	}
 
 	@Override
-	protected void renderWidgets(PoseStack matrixStack, HauntingRecipe recipe, double mouseX, double mouseY) {
-		int size = recipe.getRollableResultsAsItemStacks()
-			.size();
-		int xOffsetGlobal = 8 * (3 - Math.min(3, size));
-
-		AllGuiTextures.JEI_SLOT.render(matrixStack, xOffsetGlobal + 12, 47);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 47 + 4, 29);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 66 + 4, 39);
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, xOffsetGlobal + 42, 51);
-
-		if (size == 1) {
-			getRenderedSlot(recipe, 0).render(matrixStack, xOffsetGlobal + 126, 47);
-			return;
-		}
-
-		for (int i = 0; i < size; i++) {
-			int xOffset = (i % 3) * 19;
-			int yOffset = (i / 3) * -19 + (size > 9 ? 8 : 0);
-			getRenderedSlot(recipe, i).render(matrixStack, xOffsetGlobal + 126 + xOffset, 47 + yOffset);
-		}
-	}
-
-	@Override
-	protected void translateFan(PoseStack ms) {
-		ms.translate(56 + 4, 33, 0);
-	}
-
-	@Override
 	public void renderAttachedBlock(PoseStack matrixStack, HauntingRecipe recipe) {
 		matrixStack.pushPose();
 		GuiGameElement.of(Blocks.SOUL_FIRE.defaultBlockState())
