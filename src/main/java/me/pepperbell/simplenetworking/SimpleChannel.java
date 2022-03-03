@@ -3,13 +3,15 @@ package me.pepperbell.simplenetworking;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -37,8 +39,10 @@ public class SimpleChannel {
 	private static final Logger LOGGER = LogManager.getLogger("Simple Networking API");
 
 	private final ResourceLocation channelName;
-	private final BiMap<Integer, Class<?>> c2sIdMap = HashBiMap.create();
-	private final BiMap<Integer, Class<?>> s2cIdMap = HashBiMap.create();
+	private final Map<Class<? extends C2SPacket>, Integer> c2sIdMap = new HashMap<>();
+	private final Map<Class<? extends S2CPacket>, Integer> s2cIdMap = new HashMap<>();
+	private final Int2ObjectMap<Constructor<? extends C2SPacket>> c2sCtorMap = new Int2ObjectOpenHashMap<>();
+	private final Int2ObjectMap<Constructor<? extends S2CPacket>> s2cCtorMap = new Int2ObjectOpenHashMap<>();
 	private C2SHandler c2sHandler;
 	private S2CHandler s2cHandler;
 
@@ -62,7 +66,14 @@ public class SimpleChannel {
 	 * The visibility of this constructor does not matter.
 	 */
 	public <T extends C2SPacket> void registerC2SPacket(Class<T> clazz, int id) {
-		c2sIdMap.put(id, clazz);
+		try {
+			Constructor<T> ctor = clazz.getDeclaredConstructor(FriendlyByteBuf.class);
+			ctor.setAccessible(true);
+			c2sCtorMap.put(id, ctor);
+			c2sIdMap.put(clazz, id);
+		} catch (Exception e) {
+			LOGGER.error("Could not register C2S packet for channel '" + channelName + "' with id " + id, e);
+		}
 	}
 
 	/**
@@ -70,11 +81,19 @@ public class SimpleChannel {
 	 * The visibility of this constructor does not matter.
 	 */
 	public <T extends S2CPacket> void registerS2CPacket(Class<T> clazz, int id) {
-		s2cIdMap.put(id, clazz);
+		try {
+			Constructor<T> ctor = clazz.getDeclaredConstructor(FriendlyByteBuf.class);
+			ctor.setAccessible(true);
+			s2cCtorMap.put(id, ctor);
+			s2cIdMap.put(clazz, id);
+		} catch (Exception e) {
+			LOGGER.error("Could not register S2C packet for channel '" + channelName + "' with id " + id, e);
+		}
 	}
 
-	private FriendlyByteBuf createBuf(C2SPacket packet) {
-		Integer id = c2sIdMap.inverse().get(packet.getClass());
+	@Nullable
+	public FriendlyByteBuf createBuf(C2SPacket packet) {
+		Integer id = c2sIdMap.get(packet.getClass());
 		if (id == null) {
 			LOGGER.error("Could not get id for C2S packet '" + packet.toString() + "' in channel '" + channelName + "'");
 			return null;
@@ -85,8 +104,9 @@ public class SimpleChannel {
 		return buf;
 	}
 
-	private FriendlyByteBuf createBuf(S2CPacket packet) {
-		Integer id = s2cIdMap.inverse().get(packet.getClass());
+	@Nullable
+	public FriendlyByteBuf createBuf(S2CPacket packet) {
+		Integer id = s2cIdMap.get(packet.getClass());
 		if (id == null) {
 			LOGGER.error("Could not get id for S2C packet '" + packet.toString() + "' in channel '" + channelName + "'");
 			return null;
@@ -95,6 +115,33 @@ public class SimpleChannel {
 		buf.writeVarInt(id);
 		packet.encode(buf);
 		return buf;
+	}
+
+	@Nullable
+	@Environment(EnvType.CLIENT)
+	public Packet<?> createVanillaPacket(C2SPacket packet) {
+		FriendlyByteBuf buf = createBuf(packet);
+		if (buf == null) return null;
+		return ClientPlayNetworking.createC2SPacket(channelName, buf);
+	}
+
+	@Nullable
+	public Packet<?> createVanillaPacket(S2CPacket packet) {
+		FriendlyByteBuf buf = createBuf(packet);
+		if (buf == null) return null;
+		return ServerPlayNetworking.createS2CPacket(channelName, buf);
+	}
+
+	public void send(C2SPacket packet, PacketSender packetSender) {
+		FriendlyByteBuf buf = createBuf(packet);
+		if (buf == null) return;
+		packetSender.sendPacket(channelName, buf);
+	}
+
+	public void send(S2CPacket packet, PacketSender packetSender) {
+		FriendlyByteBuf buf = createBuf(packet);
+		if (buf == null) return;
+		packetSender.sendPacket(channelName, buf);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -110,10 +157,9 @@ public class SimpleChannel {
 		ServerPlayNetworking.send(player, channelName, buf);
 	}
 
-	public void sendToClients(S2CPacket packet, Collection<ServerPlayer> players) {
-		FriendlyByteBuf buf = createBuf(packet);
-		if (buf == null) return;
-		Packet<?> vanillaPacket = ServerPlayNetworking.createS2CPacket(channelName, buf);
+	public void sendToClients(S2CPacket packet, Iterable<ServerPlayer> players) {
+		Packet<?> vanillaPacket = createVanillaPacket(packet);
+		if (vanillaPacket == null) return;
 		for (ServerPlayer player : players) {
 			ServerPlayNetworking.getSender(player).sendPacket(vanillaPacket);
 		}
@@ -144,9 +190,10 @@ public class SimpleChannel {
 	}
 
 	public void sendToClientsTrackingAndSelf(S2CPacket packet, Entity entity) {
-		Collection<ServerPlayer> clients = new ArrayList<>(PlayerLookup.tracking(entity));
-		if (entity instanceof ServerPlayer && !clients.contains(entity)) {
-			clients.add((ServerPlayer) entity);
+		Collection<ServerPlayer> clients = PlayerLookup.tracking(entity);
+		if (entity instanceof ServerPlayer player && !clients.contains(player)) {
+			clients = new ArrayList<>(clients);
+			clients.add(player);
 		}
 		sendToClients(packet, clients);
 	}
@@ -159,43 +206,22 @@ public class SimpleChannel {
 		sendToClients(packet, PlayerLookup.around(world, pos, radius));
 	}
 
-	@Environment(EnvType.CLIENT)
-	public void sendResponseToServer(ResponseTarget target, C2SPacket packet) {
-		FriendlyByteBuf buf = createBuf(packet);
-		if (buf == null) return;
-		target.sender.sendPacket(channelName, buf);
-	}
-
-	public void sendResponseToClient(ResponseTarget target, S2CPacket packet) {
-		FriendlyByteBuf buf = createBuf(packet);
-		if (buf == null) return;
-		target.sender.sendPacket(channelName, buf);
-	}
-
-	public static class ResponseTarget {
-		private final PacketSender sender;
-
-		private ResponseTarget(PacketSender sender) {
-			this.sender = sender;
-		}
+	public ResourceLocation getChannelName() {
+		return channelName;
 	}
 
 	private class C2SHandler implements ServerPlayNetworking.PlayChannelHandler {
 		@Override
 		public void receive(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {
 			int id = buf.readVarInt();
-			C2SPacket packet = null;
+			C2SPacket packet;
 			try {
-				Class<?> clazz = c2sIdMap.get(id);
-				Constructor<?> ctor = clazz.getDeclaredConstructor(FriendlyByteBuf.class);
-				ctor.setAccessible(true);
-				packet = (C2SPacket) ctor.newInstance(buf);
+				packet = c2sCtorMap.get(id).newInstance(buf);
 			} catch (Exception e) {
 				LOGGER.error("Could not create C2S packet in channel '" + channelName + "' with id " + id, e);
+				return;
 			}
-			if (packet != null) {
-				packet.handle(server, player, handler, new ResponseTarget(responseSender));
-			}
+			packet.handle(server, player, handler, responseSender, SimpleChannel.this);
 		}
 	}
 
@@ -204,18 +230,14 @@ public class SimpleChannel {
 		@Override
 		public void receive(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
 			int id = buf.readVarInt();
-			S2CPacket packet = null;
+			S2CPacket packet;
 			try {
-				Class<?> clazz = s2cIdMap.get(id);
-				Constructor<?> ctor = clazz.getDeclaredConstructor(FriendlyByteBuf.class);
-				ctor.setAccessible(true);
-				packet = (S2CPacket) ctor.newInstance(buf);
+				packet = s2cCtorMap.get(id).newInstance(buf);
 			} catch (Exception e) {
 				LOGGER.error("Could not create S2C packet in channel '" + channelName + "' with id " + id, e);
+				return;
 			}
-			if (packet != null) {
-				packet.handle(client, handler, new ResponseTarget(responseSender));
-			}
+			packet.handle(client, handler, responseSender, SimpleChannel.this);
 		}
 	}
 }
