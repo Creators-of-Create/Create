@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.processing.fan.custom;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.mojang.serialization.Codec;
@@ -9,10 +10,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @SuppressWarnings({"rawtypes", "ConstantConditions"})
-public record CustomTransformConfig(String blockType, ResourceLocation oldType, ResourceLocation newType,
+public record CustomTransformConfig(String blockType, EntityType<?> oldType,
+									EntityType<?> newType,
 									ProgressionSoundConfig progression, CompletionSoundConfig completion,
 									List<ProcessingParticleConfig> particles) {
 
@@ -51,26 +54,23 @@ public record CustomTransformConfig(String blockType, ResourceLocation oldType, 
 
 	public static final Codec<CustomTransformConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 		Codec.STRING.fieldOf("block_type").forGetter(e -> e.blockType),
-		ResourceLocation.CODEC.fieldOf("old_type").forGetter(e -> e.oldType),
-		ResourceLocation.CODEC.fieldOf("new_type").forGetter(e -> e.newType),
+		ResourceLocation.CODEC.fieldOf("old_type").forGetter(e -> e.oldType.getRegistryName()),
+		ResourceLocation.CODEC.fieldOf("new_type").forGetter(e -> e.newType.getRegistryName()),
 		ProgressionSoundConfig.CODEC.optionalFieldOf("progression").forGetter(e -> Optional.ofNullable(e.progression)),
 		CompletionSoundConfig.CODEC.optionalFieldOf("completion").forGetter(e -> Optional.ofNullable(e.completion)),
 		Codec.list(ProcessingParticleConfig.CODEC).optionalFieldOf("particles").forGetter(e -> Optional.ofNullable(e.particles))
 	).apply(i, (block_type, old_type, new_type, progression, completion, particles) ->
-		new CustomTransformConfig(block_type, old_type, new_type, progression.orElse(null),
+		new CustomTransformConfig(block_type,
+			checkType(old_type),
+			checkType(new_type),
+			progression.orElse(null),
 			completion.orElse(null), particles.orElse(null))));
 
-	public EntityType getNewType() {
-		return ForgeRegistries.ENTITIES.getValue(newType);
+	public static EntityType<?> checkType(ResourceLocation id) {
+		if (id == null || id.getPath().length() == 0) throw new IllegalArgumentException("id cannot be empty");
+		EntityType<?> raw = ForgeRegistries.ENTITIES.getValue(id);
+		if (raw == null) throw new IllegalArgumentException("entity type " + id + " not found");
+		return raw;
 	}
-
-	public EntityType getOldType() {
-		return ForgeRegistries.ENTITIES.getValue(oldType);
-	}
-
-	public Class getOldClass() {
-		return ForgeRegistries.ENTITIES.getValue(oldType).getBaseClass();
-	}
-
 
 }

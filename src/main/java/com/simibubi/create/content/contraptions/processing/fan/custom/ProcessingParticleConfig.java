@@ -15,8 +15,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public record ProcessingParticleConfig(int chance, String col, ResourceLocation id,
+import javax.annotation.ParametersAreNonnullByDefault;
+
+public record ProcessingParticleConfig(int chance, String col, SimpleParticleType simple,
 									   Vec3Config baseOffset,
 									   Vec3Config randomOffset,
 									   Vec3Config speed,
@@ -25,27 +28,34 @@ public record ProcessingParticleConfig(int chance, String col, ResourceLocation 
 	public static final Codec<ProcessingParticleConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 		Codec.INT.fieldOf("chance").forGetter(e -> e.chance),
 		Codec.STRING.optionalFieldOf("color").forGetter(e -> Optional.ofNullable(e.col)),
-		ResourceLocation.CODEC.optionalFieldOf("id").forGetter(e -> Optional.ofNullable(e.id)),
+		ResourceLocation.CODEC.optionalFieldOf("id").forGetter(e -> Optional.ofNullable(e.simple).map(ForgeRegistryEntry::getRegistryName)),
 		Vec3Config.CODEC.optionalFieldOf("base_offset").forGetter(e -> Optional.of(e.baseOffset)),
 		Vec3Config.CODEC.optionalFieldOf("random_offset").forGetter(e -> Optional.of(e.randomOffset)),
 		Vec3Config.CODEC.optionalFieldOf("speed").forGetter(e -> Optional.of(e.speed)),
 		Vec3Config.CODEC.optionalFieldOf("random_speed").forGetter(e -> Optional.of(e.randomSpeed))
 	).apply(i, (chance, col, id, base_offset, random_offset, speed, random_speed) -> new ProcessingParticleConfig(chance,
-		col.orElse(null), id.orElse(null),
+		colorCheck(col, id), id.map(CustomFanTypeConfig.MorphConfig.ParticleConfig::checkType).orElse(null),
 		base_offset.orElse(Vec3Config.ZERO),
 		random_offset.orElse(Vec3Config.ZERO),
 		speed.orElse(Vec3Config.ZERO),
 		random_speed.orElse(Vec3Config.ZERO))));
 
+	public static String colorCheck(Optional<String> color, Optional<ResourceLocation> particle) {
+		if (color.isPresent() && particle.isEmpty()) {
+			Integer.parseInt(color.get());
+			return color.get();
+		}
+		if (color.isEmpty() && particle.isPresent())
+			return null;
+		throw new IllegalArgumentException("either particle or color should be present");
+	}
+
 	public void spawnParticlesForProcessing(Level level, Vec3 pos) {
 		if (level.random.nextInt(chance) != 0)
 			return;
 		ParticleOptions option = null;
-		if (id != null) {
-			ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(id);
-			if (type instanceof SimpleParticleType simple) {
-				option = simple;
-			} else throw new IllegalArgumentException("particle type " + id + " is not simple particle type");
+		if (simple != null) {
+			option = simple;
 		} else if (col != null && col.length() > 0) {
 			Vector3f color = new Color(Integer.parseInt(col, 16)).asVectorF();
 			option = new DustParticleOptions(color, 1);
@@ -58,7 +68,7 @@ public record ProcessingParticleConfig(int chance, String col, ResourceLocation 
 		double vz = speed.z() + (level.random.nextFloat() - .5f) * randomSpeed.z() * 2;
 		if (option != null) {
 			level.addParticle(option, x, y, z, vx, vy, vz);
-		} else throw new IllegalArgumentException("particle not known for " + id);
+		}
 	}
 
 }

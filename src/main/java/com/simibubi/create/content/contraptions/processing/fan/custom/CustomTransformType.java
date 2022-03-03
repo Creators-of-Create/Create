@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.processing.fan.custom;
 import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
 
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
@@ -10,9 +12,9 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 
 	public final CustomTransformConfig config;
 
-	@SuppressWarnings({"raw_types", "unchecked"})
+	@SuppressWarnings({"raw_types", "unchecked", "unsafe"})
 	public CustomTransformType(CustomTransformConfig config) {
-		super("CreateCustomTransform", e -> e.name.equals(config.blockType()), config.getOldClass(), e -> e.getType() == config.getOldType(), e -> config.getNewType());
+		super("CreateCustomTransform", e -> e.name.equals(config.blockType()), LivingEntity.class, e -> e.getType() == config.oldType(), e -> (EntityType<LivingEntity>) config.newType());
 		this.config = config;
 	}
 

@@ -38,9 +38,9 @@ public class CustomFanNetworkManager {
 		protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profile) {
 			TypeCustom.MAP.entrySet().removeIf(e -> e.getValue() instanceof TypeCustom);
 			map.forEach((k, v) -> {
-				CustomFanTypeConfig config = CustomFanTypeConfig.CODEC.decode(JsonOps.INSTANCE, v)
-					.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 				try {
+					CustomFanTypeConfig config = CustomFanTypeConfig.CODEC.decode(JsonOps.INSTANCE, v)
+						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 					new TypeCustom(config);
 				} catch (IllegalArgumentException e) {
 					LogManager.getLogger().error(e);
