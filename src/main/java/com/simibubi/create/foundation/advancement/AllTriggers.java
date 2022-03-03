@@ -71,7 +71,7 @@ public class AllTriggers {
 	}
 
 	public static void triggerForNearbyPlayers(ITriggerable trigger, LevelAccessor world, BlockPos pos, int range,
-											   Predicate<Player> playerFilter) {
+		Predicate<Player> playerFilter) {
 		if (world == null)
 			return;
 		if (world.isClientSide())
