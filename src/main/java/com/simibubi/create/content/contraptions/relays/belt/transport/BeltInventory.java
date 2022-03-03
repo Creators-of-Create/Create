@@ -58,10 +58,10 @@ public class BeltInventory {
 			belt.setChanged();
 			belt.sendData();
 		}
-		
+
 		if (belt.getSpeed() == 0)
 			return;
-		
+
 		// Reverse item collection if belt just reversed
 		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
 			beltMovementPositive = !beltMovementPositive;
@@ -107,7 +107,7 @@ public class BeltInventory {
 			// Don't move if held by processing (client)
 			if (world.isClientSide && currentItem.locked)
 				continue;
-			
+
 			// Don't move if held by external components
 			if (currentItem.lockedExternally) {
 				currentItem.lockedExternally = false;
@@ -149,16 +149,17 @@ public class BeltInventory {
 				if (currentItem.locked)
 					continue;
 			}
-			
+
+
+			// Belt Funnels
+			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
+				continue;
+
 			if (noMovement)
 				continue;
 
 			// Belt Tunnels
 			if (BeltTunnelInteractionHandler.flapTunnelsAndCheckIfStuck(this, currentItem, nextOffset))
-				continue;
-
-			// Belt Funnels
-			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
 				continue;
 
 			// Horizontal Crushing Wheels
@@ -243,7 +244,7 @@ public class BeltInventory {
 			belt.sendData();
 			return false;
 		}
-		
+
 		if (noMovement)
 			return false;
 
@@ -449,5 +450,5 @@ public class BeltInventory {
 	public List<TransportedItemStack> getTransportedItems() {
 		return items;
 	}
-	
+
 }
