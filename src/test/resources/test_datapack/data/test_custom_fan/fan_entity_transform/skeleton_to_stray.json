@@ -1,5 +1,5 @@
 {
-  "block_type": "test_datapack:powder_snow",
+  "block_type": "test_custom_fan:powder_snow",
   "old_type": "minecraft:skeleton",
   "new_type": "minecraft:stray",
   "progression": {

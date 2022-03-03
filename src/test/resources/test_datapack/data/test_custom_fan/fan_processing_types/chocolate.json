@@ -2,17 +2,18 @@
   "priority": 0,
   "block": {
     "blocks": [
-      "minecraft:powder_snow"
     ],
     "block_states": [],
-    "fluids": []
+    "fluids": [
+      "create:chocolate"
+    ]
   },
   "entity_effect": {
     "damage": 0,
     "is_fire": false,
     "mob_effects": [
       {
-        "id": "minecraft:slowness",
+        "id": "minecraft:speed",
         "duration": 200,
         "level": 3
       }
@@ -21,7 +22,7 @@
   "processing_particles": [
     {
       "chance": 8,
-      "color": "FFFFFF",
+      "color": "7B3F00",
       "id": null,
       "base_offset": {
         "x": 0,
@@ -39,32 +40,11 @@
         "z": 0
       },
       "random_speed": null
-    },
-    {
-      "chance": 8,
-      "color": null,
-      "id": "snowflake",
-      "base_offset": {
-        "x": 0,
-        "y": 0.125,
-        "z": 0
-      },
-      "random_offset": {
-        "x": 0.5,
-        "y": 0,
-        "z": 0.5
-      },
-      "speed": {
-        "x": 0,
-        "y": 0.0625,
-        "z": 0
-      },
-      "random_speed": null
     }
   ],
   "morph": {
-    "color_1": "FFFFFF",
-    "color_2": "A0A0FF",
+    "color_1": "7B3F00",
+    "color_2": "7B3F00",
     "alpha": 1,
     "sprite_length": 3,
     "particles": [

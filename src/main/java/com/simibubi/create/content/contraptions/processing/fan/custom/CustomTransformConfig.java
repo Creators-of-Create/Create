@@ -19,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
  * ? {} completion: optional. Sound to play when the transform is complete
  * ? [{}] particles: optional. List of particles to generate. See particle config documentation for details.
  */
-public record CustomTransformConfig(String blockType, EntityType<?> oldType,
+public record CustomTransformConfig(ResourceLocation blockType, EntityType<?> oldType,
 									EntityType<?> newType,
 									ProgressionSoundConfig progression, CompletionSoundConfig completion,
 									List<ProcessingParticleConfig> particles) {
@@ -56,7 +56,7 @@ public record CustomTransformConfig(String blockType, EntityType<?> oldType,
 	}
 
 	public static final Codec<CustomTransformConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-		Codec.STRING.fieldOf("block_type").forGetter(e -> e.blockType),
+		ResourceLocation.CODEC.fieldOf("block_type").forGetter(e -> e.blockType),
 		ResourceLocation.CODEC.fieldOf("old_type").forGetter(e -> e.oldType.getRegistryName()),
 		ResourceLocation.CODEC.fieldOf("new_type").forGetter(e -> e.newType.getRegistryName()),
 		ProgressionSoundConfig.CODEC.optionalFieldOf("progression").forGetter(e -> Optional.ofNullable(e.progression)),

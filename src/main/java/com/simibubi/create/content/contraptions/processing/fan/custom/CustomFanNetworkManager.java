@@ -1,14 +1,5 @@
 package com.simibubi.create.content.contraptions.processing.fan.custom;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.apache.logging.log4j.LogManager;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
@@ -29,6 +20,15 @@ import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
+import org.apache.logging.log4j.LogManager;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 @ParametersAreNonnullByDefault
 public class CustomFanNetworkManager {
 
@@ -41,7 +41,7 @@ public class CustomFanNetworkManager {
 				try {
 					CustomFanTypeConfig config = CustomFanTypeConfig.CODEC.decode(JsonOps.INSTANCE, v)
 						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
-					new TypeCustom(config);
+					new TypeCustom(k, config);
 				} catch (IllegalArgumentException e) {
 					LogManager.getLogger().throwing(e);
 				}
@@ -55,12 +55,12 @@ public class CustomFanNetworkManager {
 		protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profile) {
 			EntityTransformHelper.LIST.removeIf(e -> e instanceof CustomTransformType);
 			map.forEach((k, v) -> {
-				CustomTransformConfig config = CustomTransformConfig.CODEC.decode(JsonOps.INSTANCE, v)
-					.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 				try {
+					CustomTransformConfig config = CustomTransformConfig.CODEC.decode(JsonOps.INSTANCE, v)
+						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 					new CustomTransformType(config);
-				} catch (IllegalArgumentException e) {
-					LogManager.getLogger().error(e);
+				} catch (Exception e) {
+					LogManager.getLogger().throwing(e);
 				}
 			});
 		}
@@ -80,17 +80,22 @@ public class CustomFanNetworkManager {
 
 		@Override
 		public void write(FriendlyByteBuf buffer) {
-			List<CustomFanTypeConfig> listType = new ArrayList<>();
+			List<TypeCustom> listType = new ArrayList<>();
 			TypeCustom.MAP.forEach((k, v) -> {
 				if (v instanceof TypeCustom custom) {
-					listType.add(custom.getConfig());
+					listType.add(custom);
 				}
 			});
 			buffer.writeInt(listType.size());
-			for (CustomFanTypeConfig config : listType) {
-				Tag tag = CustomFanTypeConfig.CODEC.encodeStart(NbtOps.INSTANCE, config)
-					.getOrThrow(false, LogManager.getLogger()::error);
-				buffer.writeNbt((CompoundTag) tag);
+			for (TypeCustom type : listType) {
+				try {
+					Tag tag = CustomFanTypeConfig.CODEC.encodeStart(NbtOps.INSTANCE, type.getConfig())
+						.getOrThrow(false, LogManager.getLogger()::error);
+					buffer.writeResourceLocation(type.name());
+					buffer.writeNbt((CompoundTag) tag);
+				} catch (Exception e) {
+					LogManager.getLogger().error(e);
+				}
 			}
 			List<CustomTransformConfig> listTransform = new ArrayList<>();
 			EntityTransformHelper.LIST.forEach(e -> {
@@ -113,13 +118,14 @@ public class CustomFanNetworkManager {
 				EntityTransformHelper.LIST.removeIf(e -> e instanceof CustomTransformType);
 				int size = buffer.readInt();
 				for (int i = 0; i < size; i++) {
+					ResourceLocation id = buffer.readResourceLocation();
 					CompoundTag tag = buffer.readAnySizeNbt();
 					CustomFanTypeConfig config = CustomFanTypeConfig.CODEC.decode(NbtOps.INSTANCE, tag)
 						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 					try {
-						new TypeCustom(config);
-					} catch (IllegalArgumentException e) {
-						LogManager.getLogger().error(e);
+						new TypeCustom(id, config);
+					} catch (Exception e) {
+						LogManager.getLogger().throwing(e);
 					}
 				}
 				size = buffer.readInt();
@@ -130,7 +136,7 @@ public class CustomFanNetworkManager {
 					try {
 						new CustomTransformType(config);
 					} catch (IllegalArgumentException e) {
-						LogManager.getLogger().error(e);
+						LogManager.getLogger().throwing(e);
 					}
 				}
 			});

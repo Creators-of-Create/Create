@@ -1,18 +1,12 @@
 package com.simibubi.create.content.contraptions.processing.fan.custom;
 
-import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.applyRecipeOn;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -21,14 +15,21 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.simibubi.create.content.contraptions.processing.InWorldProcessing.applyRecipeOn;
+
 public class TypeCustom extends AbstractFanProcessingType {
 
 	public static final CustomRecipeWrapper RECIPE_WRAPPER = new CustomRecipeWrapper();
 
 	private final CustomFanTypeConfig config;
 
-	public TypeCustom(CustomFanTypeConfig config) {
-		super(config.priority(), config.name());
+	public TypeCustom(ResourceLocation name, CustomFanTypeConfig config) {
+		super(config.priority(), name);
 		this.config = config;
 	}
 
@@ -51,13 +52,13 @@ public class TypeCustom extends AbstractFanProcessingType {
 	@Override
 	public void affectEntity(Entity entity, Level level) {
 		if (config.entityEffect() != null) {
-			config.entityEffect().affectEntity(entity, level, config.name());
+			config.entityEffect().affectEntity(entity, level, name);
 		}
 	}
 
 	@Override
 	public boolean isApplicable(BlockGetter reader, BlockPos pos) {
-		return config.block().isApplicable(reader, pos, config.name());
+		return config.block().isApplicable(reader, pos, name);
 	}
 
 	@Nullable

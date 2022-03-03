@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions.processing.fan.custom;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
@@ -27,10 +23,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * Config for datapack fan processing types
  * - priority: required/ Higher value means this fan type is checked first, if multiple fan types conflicts
- * - name: required. Name of this fan type, usually in full capital letters (NONE, BLASTING, SPLASHING, etc)
  * - {} block: required. Block predicate to test blocks
  * | ? [] blocks: optional. List of block candidates. Use block_states if some states of this block shouldn't be used
  * | ? [()] block_states: optional. List of block state candidates. See documentation
@@ -53,7 +52,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
  * | | - chance: required. Chance to generate
  * | | - speed: required. Speed factor from the air current speed
  */
-public record CustomFanTypeConfig(int priority, ResourceLocation name, BlockPredicateConfig block,
+public record CustomFanTypeConfig(int priority, BlockPredicateConfig block,
 								  EffectEntityConfig entityEffect,
 								  List<ProcessingParticleConfig> processingParticle, MorphConfig morph) {
 
@@ -228,12 +227,11 @@ public record CustomFanTypeConfig(int priority, ResourceLocation name, BlockPred
 
 	public static final Codec<CustomFanTypeConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 		Codec.INT.optionalFieldOf("priority").forGetter(e -> Optional.of(e.priority)),
-		ResourceLocation.CODEC.fieldOf("name").forGetter(e -> e.name),
 		BlockPredicateConfig.CODEC.fieldOf("block").forGetter(e -> e.block),
 		EffectEntityConfig.CODEC.optionalFieldOf("entity_effect").forGetter(e -> Optional.ofNullable(e.entityEffect)),
 		Codec.list(ProcessingParticleConfig.CODEC).fieldOf("processing_particles").forGetter(e -> e.processingParticle),
 		MorphConfig.CODEC.fieldOf("morph").forGetter(e -> e.morph)
-	).apply(i, (priority, name, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority.orElse(0), name, block,
+	).apply(i, (priority, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority.orElse(0), block,
 		entity_effect.orElse(null), processing_particles, morph)));
 
 }

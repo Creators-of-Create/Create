@@ -1,6 +1,6 @@
 {
   "type": "create:custom_fan",
-  "block_type": "test_custom_fan:powder_snow",
+  "block_type": "test_custom_fan:chocolate",
   "ingredients": [
     {
       "item": "minecraft:lava_bucket"
@@ -9,9 +9,6 @@
   "results": [
     {
       "item": "minecraft:bucket"
-    },
-    {
-      "item": "minecraft:magma_block"
     }
   ]
 }
