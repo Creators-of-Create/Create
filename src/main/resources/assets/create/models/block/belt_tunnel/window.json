@@ -38,7 +38,7 @@
 			"faces": {
 				"north": {"uv": [8, 0, 16, 9.5], "texture": "#2"},
 				"east": {"uv": [0, 9.5, 9.5, 10.5], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [8, 0, 16, 9], "texture": "#2"},
+				"south": {"uv": [8, 0, 16, 9.5], "texture": "#2"},
 				"west": {"uv": [0, 10.5, 9.5, 11.5], "rotation": 90, "texture": "#2"},
 				"up": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#3"}
 			}

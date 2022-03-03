@@ -45,11 +45,7 @@ public class InWorldProcessing {
 				updateLegacyTag(processing);
 
 				if (AbstractFanProcessingType.valueOf(new ResourceLocation(processing.getString("Type"))) != type) {
-					boolean canProcess = type.canProcess(entity.getItem(), entity.level);
-					processing.putString("Type", type.name().toString());
-					if (!canProcess)
-						processing.putInt("Time", -1);
-					return canProcess;
+					return type.canProcess(entity.getItem(), entity.level);
 				} else if (processing.getInt("Time") >= 0)
 					return true;
 				else if (processing.getInt("Time") == -1)

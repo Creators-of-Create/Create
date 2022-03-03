@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import java.util.Iterator;
-
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.world.InteractionHand;
@@ -21,12 +19,12 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public int getSlots() {
-		return 1;
+		return 1 + te.overflowItems.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return getHeld();
+		return slot >= te.overflowItems.size() ? getHeld() : te.overflowItems.get(slot);
 	}
 
 	public ItemStack getHeld() {
@@ -47,14 +45,18 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		ItemStack held = getHeld();
+		if (slot < te.overflowItems.size())
+			return stack;
 		if (!isItemValid(slot, stack))
 			return stack;
+
+		ItemStack held = getHeld();
 		if (held.isEmpty()) {
 			if (!simulate)
 				set(stack);
 			return ItemStack.EMPTY;
 		}
+
 		if (!ItemHandlerHelper.canItemStacksStack(held, stack))
 			return stack;
 
@@ -78,35 +80,17 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 		if (amount == 0)
 			return ItemStack.EMPTY;
 
-		ItemStack extractedFromOverflow = ItemStack.EMPTY;
-		ItemStack returnToOverflow = ItemStack.EMPTY;
-
-		for (Iterator<ItemStack> iterator = te.overflowItems.iterator(); iterator.hasNext();) {
-			ItemStack existing = iterator.next();
-			if (existing.isEmpty()) {
-				iterator.remove();
-				continue;
-			}
-
-			int toExtract = Math.min(amount, existing.getMaxStackSize());
-			if (existing.getCount() <= toExtract) {
-				if (!simulate)
-					iterator.remove();
-				extractedFromOverflow = existing;
-				break;
-			}
-			if (!simulate) {
-				iterator.remove();
-				returnToOverflow = ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract);
-			}
-			extractedFromOverflow = ItemHandlerHelper.copyStackWithSize(existing, toExtract);
-			break;
+		if (slot < te.overflowItems.size()) {
+			ItemStack itemStack = te.overflowItems.get(slot);
+			int toExtract = Math.min(amount, itemStack.getCount());
+			ItemStack extracted = simulate ? itemStack.copy() : itemStack.split(toExtract);
+			extracted.setCount(toExtract);
+			if (!simulate && itemStack.isEmpty())
+				te.overflowItems.remove(slot);
+			if (!simulate && !extracted.isEmpty())
+				te.setChanged();
+			return extracted;
 		}
-
-		if (!returnToOverflow.isEmpty())
-			te.overflowItems.add(returnToOverflow);
-		if (!extractedFromOverflow.isEmpty())
-			return extractedFromOverflow;
 
 		ItemStack held = getHeld();
 		if (amount == 0 || held.isEmpty())
@@ -126,7 +110,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return Math.min(getHeld().getMaxStackSize(), 64);
+		return Math.min(getStackInSlot(slot).getMaxStackSize(), 64);
 	}
 
 	@Override
@@ -137,6 +121,10 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
+		if (slot < te.overflowItems.size()) {
+			te.overflowItems.set(slot, stack);
+			return;
+		}
 		set(stack);
 	}
 

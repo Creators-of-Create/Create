@@ -1,4 +1,5 @@
 {
+	"_": "Missing Localizations: 0",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -232,8 +233,8 @@
 	"block.create.hand_crank": "手摇曲柄",
 	"block.create.haunted_bell": "森魂钟",
 	"block.create.honey": "蜂蜜",
-	"block.create.horizontal_framed_glass": "竖直边框玻璃",
-	"block.create.horizontal_framed_glass_pane": "竖直边框玻璃板",
+	"block.create.horizontal_framed_glass": "水平边框玻璃",
+	"block.create.horizontal_framed_glass_pane": "水平边框玻璃板",
 	"block.create.hose_pulley": "软管滑轮",
 	"block.create.item_drain": "分液池",
 	"block.create.item_vault": "物品保险库",
@@ -820,6 +821,8 @@
 	"create.recipe.fan_washing.fan": "在水后放置鼓风机",
 	"create.recipe.fan_smoking": "批量烟熏",
 	"create.recipe.fan_smoking.fan": "在火焰后放置鼓风机",
+	"create.recipe.fan_haunting": "批量缠魂",
+	"create.recipe.fan_haunting.fan": "在灵魂火后放置鼓风机",
 	"create.recipe.fan_blasting": "批量熔炼",
 	"create.recipe.fan_blasting.fan": "在熔岩后放置鼓风机",
 	"create.recipe.pressing": "金属压片",
@@ -1162,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "不可作为燃料",
 	"create.item_attributes.washable": "可被洗涤",
 	"create.item_attributes.washable.inverted": "不可被洗涤",
+	"create.item_attributes.hauntable": "可被缠魂",
+	"create.item_attributes.hauntable.inverted": "不可被缠魂",
 	"create.item_attributes.crushable": "可被粉碎",
 	"create.item_attributes.crushable.inverted": "不可被粉碎",
 	"create.item_attributes.smeltable": "可被熔炉烧制",
