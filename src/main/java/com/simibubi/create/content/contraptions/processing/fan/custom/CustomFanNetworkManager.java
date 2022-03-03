@@ -80,14 +80,14 @@ public class CustomFanNetworkManager {
 
 		@Override
 		public void write(FriendlyByteBuf buffer) {
-			List<CustomFanTypeConfig> list_type = new ArrayList<>();
+			List<CustomFanTypeConfig> listType = new ArrayList<>();
 			TypeCustom.MAP.forEach((k, v) -> {
 				if (v instanceof TypeCustom custom) {
-					list_type.add(custom.getConfig());
+					listType.add(custom.getConfig());
 				}
 			});
-			buffer.writeInt(list_type.size());
-			for (CustomFanTypeConfig config : list_type) {
+			buffer.writeInt(listType.size());
+			for (CustomFanTypeConfig config : listType) {
 				Tag tag = CustomFanTypeConfig.CODEC.encodeStart(NbtOps.INSTANCE, config)
 					.getOrThrow(false, LogManager.getLogger()::error);
 				buffer.writeNbt((CompoundTag) tag);

@@ -72,10 +72,10 @@ public class CustomFanCategory extends ProcessingViaFanCategory.MultiOutput<Cust
 		AbstractFanProcessingType type = AbstractFanProcessingType.valueOf(recipe.type);
 		if (type instanceof TypeCustom custom) {
 			GuiGameElement.of(Optional.ofNullable(custom.getConfig().block().getBlockForDisplay()).orElse(Blocks.AIR.defaultBlockState()))
-					.scale(24)
-					.atLocal(0, 0, 2)
-					.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-					.render(matrixStack);
+				.scale(24)
+				.atLocal(0, 0, 2)
+				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
+				.render(matrixStack);
 		}
 	}
 

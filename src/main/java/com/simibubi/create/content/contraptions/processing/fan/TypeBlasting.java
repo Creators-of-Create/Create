@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.resources.ResourceLocation;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
@@ -19,6 +17,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;

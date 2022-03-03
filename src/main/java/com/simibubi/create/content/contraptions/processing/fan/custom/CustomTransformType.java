@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.processing.fan.custom;
 import com.simibubi.create.content.contraptions.processing.fan.transform.EntityTransformHelper;
 
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -23,7 +22,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 		CustomTransformConfig.ProgressionSoundConfig c = config.progression();
 		if (c != null && progress % c.interval() == 0) {
 			level.playSound(null, entity.blockPosition(), c.sound(), SoundSource.NEUTRAL,
-				c.volume() + c.volume_slope() * progress / 100f, c.pitch() + c.pitch_slope() * progress / 100f);
+				c.volume() + c.volumeSlope() * progress / 100f, c.pitch() + c.pitchSlope() * progress / 100f);
 		}
 	}
 

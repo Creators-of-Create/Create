@@ -7,8 +7,6 @@ import static com.simibubi.create.content.contraptions.processing.burner.BlazeBu
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.resources.ResourceLocation;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -19,6 +17,7 @@ import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurner
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;

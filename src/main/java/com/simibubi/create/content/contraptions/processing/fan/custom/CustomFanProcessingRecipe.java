@@ -64,7 +64,7 @@ public class CustomFanProcessingRecipe extends ProcessingRecipe<TypeCustom.Custo
 		if (inv.type == AbstractFanProcessingType.NONE || !inv.type.name.equals(type))
 			return false;
 		return ingredients.get(0)
-				.test(inv.getItem(0));
+			.test(inv.getItem(0));
 	}
 
 	@Override
