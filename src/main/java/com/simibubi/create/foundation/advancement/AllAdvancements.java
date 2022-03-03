@@ -374,7 +374,7 @@ public class AllAdvancements implements DataProvider {
 		Advancement clockwork_component_eob = deadEnd().parent(clockwork_component)
 			.addCriterion("0", itemGathered(AllItems.PRECISION_MECHANISM.get()))
 			.save(t, id + ":clockwork_component_eob");
-		
+
 		Advancement extendo_grip =
 			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).parent(clockwork_component)
 				.addCriterion("0", AllTriggers.EXTENDO.instance())
