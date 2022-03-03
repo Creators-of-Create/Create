@@ -76,13 +76,9 @@ public class InWorldProcessing {
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
 
-				if (Type.valueOf(processing.getString("Type")) != type) {
-					boolean canProcess = type.canProcess(entity.getItem(), entity.level);
-					processing.putString("Type", type.name());
-					if (!canProcess)
-						processing.putInt("Time", -1);
-					return canProcess;
-				} else if (processing.getInt("Time") >= 0)
+				if (Type.valueOf(processing.getString("Type")) != type)
+					return type.canProcess(entity.getItem(), entity.level);
+				else if (processing.getInt("Time") >= 0)
 					return true;
 				else if (processing.getInt("Time") == -1)
 					return false;
@@ -445,12 +441,10 @@ public class InWorldProcessing {
 		},
 		NONE {
 			@Override
-			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
-			}
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {}
 
 			@Override
-			public void affectEntity(Entity entity, Level level) {
-			}
+			public void affectEntity(Entity entity, Level level) {}
 
 			@Override
 			public boolean canProcess(ItemStack stack, Level level) {
