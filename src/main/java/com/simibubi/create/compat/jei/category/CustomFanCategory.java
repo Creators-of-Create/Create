@@ -16,9 +16,12 @@ import com.simibubi.create.content.contraptions.processing.fan.custom.BlockState
 import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanTypeConfig;
 import com.simibubi.create.content.contraptions.processing.fan.custom.TypeCustom;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -60,7 +63,7 @@ public class CustomFanCategory extends ProcessingViaFanCategory.MultiOutput<Cust
 		list.add(Ingredient.of(blocks.toArray(new ItemLike[0])));
 		ingredients.setInputIngredients(list);
 		if (pred.fluids().size() > 0)
-			ingredients.setInputs(VanillaTypes.FLUID, pred.fluids().stream().map(e -> new FluidStack(e, 0)).toList());
+			ingredients.setInputs(VanillaTypes.FLUID, pred.fluids().stream().map(e -> new FluidStack(e, 1000)).toList());
 		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
 	}
 
@@ -74,6 +77,20 @@ public class CustomFanCategory extends ProcessingViaFanCategory.MultiOutput<Cust
 					.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 					.render(matrixStack);
 		}
+	}
+
+	@Override
+	protected void renderWidgets(PoseStack matrixStack, CustomFanProcessingRecipe recipe, double mouseX, double mouseY) {
+		super.renderWidgets(matrixStack, recipe, mouseX, mouseY);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 110, 7);
+	}
+
+	@Override
+	public void setRecipe(IRecipeLayout recipeLayout, CustomFanProcessingRecipe recipe, IIngredients ingredients) {
+		super.setRecipe(recipeLayout, recipe, ingredients);
+		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
+		itemStacks.init(recipe.getRollableResults().size() + 1, true, 110, 7);
+		itemStacks.set(recipe.getRollableResults().size() + 1, ingredients.getInputs(VanillaTypes.ITEM).get(1));
 	}
 
 }
