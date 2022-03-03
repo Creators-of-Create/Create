@@ -7,9 +7,11 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -18,9 +20,9 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class AbstractFanProcessingType implements Comparable<AbstractFanProcessingType> {
 
-	public static final Map<String, AbstractFanProcessingType> MAP = Maps.newConcurrentMap();
+	public static final Map<ResourceLocation, AbstractFanProcessingType> MAP = Maps.newConcurrentMap();
 
-	public static final AbstractFanProcessingType NONE = new AbstractFanProcessingType(-3000, "NONE") {
+	public static final AbstractFanProcessingType NONE = new AbstractFanProcessingType(-3000, new ResourceLocation(Create.ID, "none")) {
 		@Override
 		public void spawnParticlesForProcessing(Level level, Vec3 pos) {
 		}
@@ -50,7 +52,7 @@ public abstract class AbstractFanProcessingType implements Comparable<AbstractFa
 		}
 	};
 
-	public static AbstractFanProcessingType valueOf(String type) {
+	public static AbstractFanProcessingType valueOf(ResourceLocation type) {
 		return MAP.getOrDefault(type, NONE);
 	}
 
@@ -65,10 +67,10 @@ public abstract class AbstractFanProcessingType implements Comparable<AbstractFa
 		return NONE;
 	}
 
-	public final String name;
+	public final ResourceLocation name;
 	public int priority;
 
-	public AbstractFanProcessingType(int priority, String name) {
+	public AbstractFanProcessingType(int priority, ResourceLocation name) {
 		this.name = name;
 		this.priority = priority;
 		AbstractFanProcessingType old = MAP.put(name, this);
@@ -89,7 +91,7 @@ public abstract class AbstractFanProcessingType implements Comparable<AbstractFa
 
 	public abstract boolean isApplicable(BlockGetter reader, BlockPos pos);
 
-	public String name() {
+	public ResourceLocation name() {
 		return name;
 	}
 

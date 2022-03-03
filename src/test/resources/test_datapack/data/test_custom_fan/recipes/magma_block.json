@@ -1,6 +1,6 @@
 {
   "type": "create:custom_fan",
-  "block_type": "POWDER_SNOW",
+  "block_type": "test_datapack:powder_snow",
   "ingredients": [
     {
       "item": "minecraft:lava_bucket"

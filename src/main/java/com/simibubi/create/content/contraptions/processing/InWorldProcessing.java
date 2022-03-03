@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -14,6 +15,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -40,9 +42,11 @@ public class InWorldProcessing {
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
 
-				if (AbstractFanProcessingType.valueOf(processing.getString("Type")) != type) {
+				updateLegacyTag(processing);
+
+				if (AbstractFanProcessingType.valueOf(new ResourceLocation(processing.getString("Type"))) != type) {
 					boolean canProcess = type.canProcess(entity.getItem(), entity.level);
-					processing.putString("Type", type.name());
+					processing.putString("Type", type.name().toString());
 					if (!canProcess)
 						processing.putInt("Time", -1);
 					return canProcess;
@@ -115,6 +119,15 @@ public class InWorldProcessing {
 		return TransportedResult.convertTo(transportedStacks);
 	}
 
+	private static void updateLegacyTag(CompoundTag processing) {
+		if (processing.contains("Type")) {
+			String str = processing.getString("Type");
+			if (!str.equals(str.toLowerCase(Locale.ROOT))) {
+				processing.putString("Type", "create:" + str.toLowerCase(Locale.ROOT));
+			}
+		}
+	}
+
 	private static List<ItemStack> process(ItemStack stack, AbstractFanProcessingType type, Level world) {
 		return type.process(stack, world);
 	}
@@ -130,8 +143,10 @@ public class InWorldProcessing {
 			createData.put("Processing", new CompoundTag());
 		CompoundTag processing = createData.getCompound("Processing");
 
-		if (!processing.contains("Type") || AbstractFanProcessingType.valueOf(processing.getString("Type")) != type) {
-			processing.putString("Type", type.name());
+		updateLegacyTag(processing);
+
+		if (!processing.contains("Type") || AbstractFanProcessingType.valueOf(new ResourceLocation(processing.getString("Type"))) != type) {
+			processing.putString("Type", type.name().toString());
 			int timeModifierForStackSize = ((entity.getItem()
 				.getCount() - 1) / 16) + 1;
 			int processingTime =

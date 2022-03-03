@@ -20,7 +20,7 @@
       "trigger": "create:fan_processing",
       "conditions": {
         "accepted_entries": [
-          "NONE"
+          "create:none"
         ]
       }
     }

@@ -72,7 +72,7 @@ public class BlockStatePredicate {
 		return state;
 	}
 
-	public boolean testBlockState(BlockState blockState, String name) {
+	public boolean testBlockState(BlockState blockState, ResourceLocation name) {
 		if (!blockState.is(block)) return false;
 		for (PropertyPair<?> pair : properties) {
 			if (!blockState.hasProperty(pair.property)) return false;

@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class TypeSplashing extends AbstractRecipeFanType<SplashingRecipe> {
 
-	public TypeSplashing(int priority, String name) {
+	public TypeSplashing(int priority, ResourceLocation name) {
 		super(priority, name, AllRecipeTypes.SPLASHING::find);
 	}
 

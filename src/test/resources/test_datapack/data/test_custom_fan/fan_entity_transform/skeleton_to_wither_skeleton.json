@@ -1,5 +1,5 @@
 {
-  "block_type": "HAUNTING",
+  "block_type": "create:haunting",
   "old_type": "minecraft:skeleton",
   "new_type": "minecraft:wither_skeleton",
   "progression": {

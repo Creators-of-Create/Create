@@ -1,13 +1,12 @@
 {
   "priority": 0,
-  "name": "POWDER_SNOW",
+  "name": "test_datapack:powder_snow",
   "block": {
     "blocks": [
       "minecraft:powder_snow"
     ],
     "block_states": [],
-    "fluids": [],
-    "tags": []
+    "fluids": []
   },
   "entity_effect": {
     "damage": 0,

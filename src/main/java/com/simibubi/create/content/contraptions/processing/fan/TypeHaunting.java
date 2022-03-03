@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class TypeHaunting extends AbstractRecipeFanType<HauntingRecipe> {
 
-	public TypeHaunting(int priority, String name) {
+	public TypeHaunting(int priority, ResourceLocation name) {
 		super(priority, name, AllRecipeTypes.HAUNTING::find);
 	}
 

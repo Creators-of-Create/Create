@@ -9,6 +9,7 @@ import java.util.Optional;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -22,9 +23,9 @@ public abstract class AbstractRecipeFanType<T extends ProcessingRecipe<RecipeWra
 
 	}
 
-	private final FanRecipeFinder finder;
+	private final FanRecipeFinder<T> finder;
 
-	public AbstractRecipeFanType(int priority, String name, FanRecipeFinder finder) {
+	public AbstractRecipeFanType(int priority, ResourceLocation name, FanRecipeFinder<T> finder) {
 		super(priority, name);
 		this.finder = finder;
 	}

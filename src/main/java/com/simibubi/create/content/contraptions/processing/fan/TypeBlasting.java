@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import net.minecraft.resources.ResourceLocation;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
@@ -32,7 +34,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class TypeBlasting extends AbstractFanProcessingType {
 
-	public TypeBlasting(int priority, String name) {
+	public TypeBlasting(int priority, ResourceLocation name) {
 		super(priority, name);
 	}
 

@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProces
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
@@ -25,7 +26,8 @@ public class AllTriggers {
 	public static final StringSerializableTrigger<Block> BRACKET_APPLY_TRIGGER =
 		add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
 	public static final StringSerializableTrigger<AbstractFanProcessingType> FAN_PROCESSING =
-		add(new SimpleSerializableTrigger<>("fan_processing", AbstractFanProcessingType::name, AbstractFanProcessingType::valueOf));
+		add(new SimpleSerializableTrigger<>("fan_processing", e -> e.name().toString(),
+			e -> AbstractFanProcessingType.valueOf(new ResourceLocation(e))));
 
 	public static final SimpleTrigger ROTATION = simple("rotation"), OVERSTRESSED = simple("overstressed"),
 		SHIFTING_GEARS = simple("shifting_gears"), CONNECT_BELT = simple("connect_belt"), BONK = simple("bonk"),
@@ -69,7 +71,7 @@ public class AllTriggers {
 	}
 
 	public static void triggerForNearbyPlayers(ITriggerable trigger, LevelAccessor world, BlockPos pos, int range,
-		Predicate<Player> playerFilter) {
+											   Predicate<Player> playerFilter) {
 		if (world == null)
 			return;
 		if (world.isClientSide())
