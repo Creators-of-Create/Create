@@ -1,16 +1,19 @@
 package com.simibubi.create.content.contraptions.processing.fan.custom;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * use a single string to represent block state
+ * format: "[block id]&[property name]=[value name]&..."
+ * use a single string because property values are hard to encode back to string
+ */
 public class BlockStatePredicate {
 
 	public static class PropertyPair<T extends Comparable<T>> {

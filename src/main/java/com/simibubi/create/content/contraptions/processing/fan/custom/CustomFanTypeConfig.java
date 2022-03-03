@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticle;
@@ -30,13 +31,40 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+/**
+ * Config for datapack fan processing types
+ * - priority: required/ Higher value means this fan type is checked first, if multiple fan types conflicts
+ * - name: required. Name of this fan type, usually in full capital letters (NONE, BLASTING, SPLASHING, etc)
+ * - {} block: required. Block predicate to test blocks
+ * | ? [] blocks: optional. List of block candidates. Use block_states if some states of this block shouldn't be used
+ * | ? [()] block_states: optional. List of block state candidates. See documentation
+ * | ? [] fluids: optional. List of fluid candidates.
+ * | ? [] tags: optional. List of block or fluid candidates
+ * ? entity_effect: optional. MobEffects to apply to LivingEntity
+ * | ? damage: optional.
+ * | ? is_fire: optional.
+ * | ? [{}] mob_effects: optional. List of mob effects to apply
+ * | | - id: required. mob effect id
+ * | | ? duration: optional.
+ * | | ? level: optional.
+ * - [{()}] processing_particle: required. Particle effects when item is processed. Without it players can't know if it works.
+ * - {} morph: required. Particle effects of the air current. Without it players can't know if it works.
+ * | - color_1: required. In hex format. Example: FFFFFF for white
+ * | - color_2: required. The real color of particle is randomly interpolated between 1 and 2
+ * | - alpha: required. Transparency in 0~1
+ * | - sprite_length: required. Length of sprite to use. Usually 3 or 1
+ * | ? [{}] particles: optional. Extra particles to fall from air current.
+ * | | - id: required. ID for particle. Must be simple particle
+ * | | - chance: required. Chance to generate
+ * | | - speed: required. Speed factor from the air current speed
+ */
 public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfig block,
-								  EffectEntityConfig entity_effect,
+								  EffectEntityConfig entityEffect,
 								  List<ProcessingParticleConfig> processingParticle, MorphConfig morph) {
 
 	public record BlockPredicateConfig(List<Block> blocks, List<BlockStatePredicate> blockStates,
 									   List<Fluid> fluids,
-									   List<ResourceLocation> tags) {
+									   List<Either<Tag<Block>, Tag<Fluid>>> tags) {
 
 		public static final Codec<BlockPredicateConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 				Codec.list(ResourceLocation.CODEC).optionalFieldOf("blocks").forGetter(e ->
@@ -45,12 +73,26 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 					Optional.ofNullable(e.blockStates.stream().map(BlockStatePredicate::toString).toList())),
 				Codec.list(ResourceLocation.CODEC).optionalFieldOf("fluids").forGetter(e ->
 					Optional.ofNullable(e.fluids).map(x -> x.stream().map(ForgeRegistryEntry::getRegistryName).toList())),
-				Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags").forGetter(e -> Optional.ofNullable(e.tags)))
+				Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags").forGetter(e ->
+					Optional.ofNullable(e.tags).map(x -> x.stream().map(y ->
+						y.map(BlockTags.getAllTags()::getId, FluidTags.getAllTags()::getId)).toList())))
 			.apply(i, (blocks, block_states, fluids, tags) -> new BlockPredicateConfig(
 				blocks.map(e -> e.stream().map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).toList()).orElse(null),
 				block_states.map(e -> e.stream().map(BlockStatePredicate::new).toList()).orElse(null),
 				fluids.map(e -> e.stream().map(ForgeRegistries.FLUIDS::getValue).filter(Objects::nonNull).toList()).orElse(null),
-				tags.orElse(null))));
+				tags.map(e -> e.stream().map(BlockPredicateConfig::checkTag).filter(Objects::nonNull).toList()).orElse(null))));
+
+		public static Either<Tag<Block>, Tag<Fluid>> checkTag(ResourceLocation id) {
+			Tag<Block> blockTag = BlockTags.getAllTags().getTag(id);
+			if (blockTag != null) {
+				return Either.left(blockTag);
+			}
+			Tag<Fluid> fluidTag = FluidTags.getAllTags().getTag(id);
+			if (fluidTag != null) {
+				return Either.right(fluidTag);
+			}
+			return null;
+		}
 
 		public boolean isApplicable(BlockGetter reader, BlockPos pos, String name) {
 			FluidState fluidState = reader.getFluidState(pos);
@@ -80,16 +122,9 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				}
 			}
 			if (tags != null) {
-				for (ResourceLocation id : tags) {
-					Tag<Block> blockTag = BlockTags.getAllTags().getTag(id);
-					if (blockTag != null && blockTag.contains(blockState.getBlock())) {
+				for (Either<Tag<Block>, Tag<Fluid>> tag : tags) {
+					if (tag.map(a -> a.contains(blockState.getBlock()), b -> b.contains(fluidState.getType())))
 						return true;
-					}
-					Tag<Fluid> fluidTag = FluidTags.getAllTags().getTag(id);
-					if (fluidTag != null && fluidTag.contains(fluidState.getType())) {
-						return true;
-					}
-
 				}
 			}
 			return false;
@@ -106,12 +141,12 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				return fluids.get(0).defaultFluidState().createLegacyBlock();
 			}
 			if (tags != null && tags.size() > 0) {
-				ResourceLocation tag = tags.get(0);
-				return Optional.ofNullable(BlockTags.getAllTags().getTag(tag))
-					.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultBlockState() : null)
-					.or(() -> Optional.ofNullable(FluidTags.getAllTags().getTag(tag))
-						.map(e -> e.getValues().size() > 0 ? e.getValues().get(0).defaultFluidState().createLegacyBlock() : null))
-					.orElse(Blocks.AIR.defaultBlockState());
+				for (Either<Tag<Block>, Tag<Fluid>> tag : tags) {
+					BlockState sample = tag.map(a -> a.getValues().size() > 0 ? a.getValues().get(0).defaultBlockState() : null,
+						b -> b.getValues().size() > 0 ? b.getValues().get(0).defaultFluidState().createLegacyBlock() : null);
+					if (sample != null)
+						return sample;
+				}
 			}
 			return Blocks.AIR.defaultBlockState();
 		}
@@ -200,10 +235,10 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 		Codec.INT.optionalFieldOf("priority").forGetter(e -> Optional.of(e.priority)),
 		Codec.STRING.fieldOf("name").forGetter(e -> e.name),
 		BlockPredicateConfig.CODEC.fieldOf("block").forGetter(e -> e.block),
-		EffectEntityConfig.CODEC.optionalFieldOf("entity_effect").forGetter(e -> Optional.ofNullable(e.entity_effect)),
+		EffectEntityConfig.CODEC.optionalFieldOf("entity_effect").forGetter(e -> Optional.ofNullable(e.entityEffect)),
 		Codec.list(ProcessingParticleConfig.CODEC).fieldOf("processing_particles").forGetter(e -> e.processingParticle),
-		MorphConfig.CODEC.optionalFieldOf("morph").forGetter(e -> Optional.ofNullable(e.morph))
+		MorphConfig.CODEC.fieldOf("morph").forGetter(e -> e.morph)
 	).apply(i, (priority, name, block, entity_effect, processing_particles, morph) -> new CustomFanTypeConfig(priority.orElse(0), name, block,
-		entity_effect.orElse(null), processing_particles, morph.orElse(null))));
+		entity_effect.orElse(null), processing_particles, morph)));
 
 }

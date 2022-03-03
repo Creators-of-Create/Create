@@ -50,8 +50,8 @@ public class TypeCustom extends AbstractFanProcessingType {
 
 	@Override
 	public void affectEntity(Entity entity, Level level) {
-		if (config.entity_effect() != null) {
-			config.entity_effect().affectEntity(entity, level, config.name());
+		if (config.entityEffect() != null) {
+			config.entityEffect().affectEntity(entity, level, config.name());
 		}
 	}
 

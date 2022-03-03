@@ -19,6 +19,15 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+/**
+ * - chance: required. Chance to spawn every tick of processing
+ * ! color: optional. color of particle if not using id. In hex format. Example: FFFFFF for white
+ * ! id: optional. Should be present if and only if color is not present. ID for simple particle.
+ * ? base_offset: optional. Vector representing the relative position to spawn particle
+ * ? random_offset: optional. Vector representing how far the particle can spawn off the base offset
+ * ? speed: optional. Initial speed of the particle.
+ * ? random_speed: optional. Random addition of the speed of the particle
+ * */
 public record ProcessingParticleConfig(int chance, String col, SimpleParticleType simple,
 									   Vec3Config baseOffset,
 									   Vec3Config randomOffset,
