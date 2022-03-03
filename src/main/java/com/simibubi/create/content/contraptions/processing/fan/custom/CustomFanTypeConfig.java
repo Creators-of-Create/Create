@@ -220,7 +220,14 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			Codec.FLOAT.fieldOf("alpha").forGetter(e -> e.alpha),
 			Codec.INT.fieldOf("sprite_length").forGetter(e -> e.spriteLength),
 			Codec.list(MorphConfig.ParticleConfig.CODEC).optionalFieldOf("particles").forGetter(e -> Optional.ofNullable(e.particles))
-		).apply(i, (color_1, color_2, alpha, sprite_length, particles) -> new MorphConfig(color_1, color_2, alpha, sprite_length, particles.orElse(null))));
+		).apply(i, (color_1, color_2, alpha, sprite_length, particles) -> new MorphConfig(
+				checkColor(color_1), checkColor(color_2), alpha, sprite_length, particles.orElse(null))));
+
+		public static String checkColor(String color) {
+			// check if color can be parsed
+			Integer.parseInt(color, 16);
+			return color;
+		}
 
 		public void morphType(AirFlowParticle particle) {
 			particle.setProperties(Integer.parseInt(color1, 16), Integer.parseInt(color2, 16), alpha, spriteLength);

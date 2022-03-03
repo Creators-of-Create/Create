@@ -43,7 +43,7 @@ public class CustomFanNetworkManager {
 						.getOrThrow(false, LogManager.getLogger()::error).getFirst();
 					new TypeCustom(config);
 				} catch (IllegalArgumentException e) {
-					LogManager.getLogger().error(e);
+					LogManager.getLogger().throwing(e);
 				}
 			});
 		}
