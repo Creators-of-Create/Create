@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 4",
+	"_": "Missing Localizations: 6",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -825,6 +825,8 @@
 	"create.recipe.fan_haunting.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "一括精錬",
 	"create.recipe.fan_blasting.fan": "溶岩の奥のケース入りファン",
+	"create.recipe.custom_fan": "UNLOCALIZED: Custom Fan Recipe from Datapack",
+	"create.recipe.custom_fan.fan": "UNLOCALIZED: Fan behind some block",
 	"create.recipe.pressing": "プレス",
 	"create.recipe.mixing": "混合",
 	"create.recipe.deploying": "使用",

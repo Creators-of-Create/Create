@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1585",
+	"_": "Missing Localizations: 1587",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -825,6 +825,8 @@
 	"create.recipe.fan_haunting.fan": "UNLOCALIZED: Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Fonte",
 	"create.recipe.fan_blasting.fan": "Ventilateur derrière de la lave",
+	"create.recipe.custom_fan": "UNLOCALIZED: Custom Fan Recipe from Datapack",
+	"create.recipe.custom_fan.fan": "UNLOCALIZED: Fan behind some block",
 	"create.recipe.pressing": "Pressage",
 	"create.recipe.mixing": "Mixage",
 	"create.recipe.deploying": "UNLOCALIZED: Deploying",
