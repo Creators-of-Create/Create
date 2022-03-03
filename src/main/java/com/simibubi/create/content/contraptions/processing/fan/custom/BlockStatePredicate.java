@@ -41,8 +41,8 @@ public class BlockStatePredicate {
 		}
 	}
 
-	private final Block block;
-	private final List<PropertyPair<?>> properties = new ArrayList<>();
+	public final Block block;
+	public final List<PropertyPair<?>> properties = new ArrayList<>();
 	private final String str;
 
 	public BlockStatePredicate(String str) {
