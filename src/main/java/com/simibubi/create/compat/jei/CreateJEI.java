@@ -31,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nonnull;
@@ -94,7 +95,7 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 	autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
+			.recipes(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
 							.size() > 1 && !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.isManualRecipe(r),
 					BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
@@ -173,11 +174,11 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 	autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
-			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
+			.recipes(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
 					.size() == 1)
 			.recipes(r -> (r.getType() == RecipeType.CRAFTING
-					&& r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType()) && (r instanceof ShapedRecipe)
-					&& !AllRecipeTypes.isManualRecipe(r))
+					   && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType()) && (r instanceof IShapedRecipe<?>)
+					  && !AllRecipeTypes.isManualRecipe(r))
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 			.enableWhen(c -> c.allowRegularCraftingInCrafter)
 			.build(),

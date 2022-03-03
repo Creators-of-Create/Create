@@ -32,6 +32,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -40,6 +41,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -237,10 +239,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
-		return ((r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE
-			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
+		return ((r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				 && AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-			&& !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
+				 && !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 
@@ -289,9 +291,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		// SoundEvents.BLOCK_STONE_BREAK
 		boolean slow = Math.abs(getSpeed()) < 65;
-		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
+		if (slow && AnimationTickHolder.getTicks() % 2 == 0)
 			return;
-		if (runningTicks == 20) 
+		if (runningTicks == 20)
 			AllSoundEvents.MIXING.playAt(level, worldPosition, .75f, 1, true);
 	}
 
