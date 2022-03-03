@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1185",
+	"_": "Missing Localizations: 1187",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -825,13 +825,9 @@
 	"create.recipe.fan_haunting.fan": "Ventilador atrás do fogo das almas ",
 	"create.recipe.fan_blasting": "Fundição em massa",
 	"create.recipe.fan_blasting.fan": "entilador atrás de lava",
-<<<<<<< HEAD
 	"create.recipe.custom_fan": "UNLOCALIZED: Custom Fan Recipe from Datapack",
 	"create.recipe.custom_fan.fan": "UNLOCALIZED: Fan behind some block",
-	"create.recipe.pressing": "Prensa Mecânica",
-=======
 	"create.recipe.pressing": "Prensando",
->>>>>>> mc1.18/dev
 	"create.recipe.mixing": "Misturando",
 	"create.recipe.deploying": "Implantando",
 	"create.recipe.automatic_shapeless": "Fabricação sem forma automático",
