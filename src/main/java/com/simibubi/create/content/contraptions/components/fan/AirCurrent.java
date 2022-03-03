@@ -79,7 +79,7 @@ public class AirCurrent {
 	}
 
 	protected void tickAffectedEntities(Level world, Direction facing) {
-		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext(); ) {
+		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
 			if (!entity.isAlive() || !entity.getBoundingBox()
 				.intersects(bounds) || isPlayerCreativeFlying(entity)) {

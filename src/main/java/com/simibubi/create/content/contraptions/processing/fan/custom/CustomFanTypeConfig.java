@@ -77,12 +77,24 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 					Optional.ofNullable(e.tags).map(x -> x.stream().map(y ->
 						y.map(BlockTags.getAllTags()::getId, FluidTags.getAllTags()::getId)).toList())))
 			.apply(i, (blocks, block_states, fluids, tags) -> new BlockPredicateConfig(
-				blocks.map(e -> e.stream().map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).toList()).orElse(null),
+				blocks.map(e -> e.stream().map(BlockPredicateConfig::checkBlock).filter(Objects::nonNull).toList()).orElse(null),
 				block_states.map(e -> e.stream().map(BlockStatePredicate::new).toList()).orElse(null),
-				fluids.map(e -> e.stream().map(ForgeRegistries.FLUIDS::getValue).filter(Objects::nonNull).toList()).orElse(null),
+				fluids.map(e -> e.stream().map(BlockPredicateConfig::checkFluid).filter(Objects::nonNull).toList()).orElse(null),
 				tags.map(e -> e.stream().map(BlockPredicateConfig::checkTag).filter(Objects::nonNull).toList()).orElse(null))));
 
-		public static Either<Tag<Block>, Tag<Fluid>> checkTag(ResourceLocation id) {
+		private static Block checkBlock(ResourceLocation id){
+			if (!ForgeRegistries.BLOCKS.containsKey(id))
+				throw new IllegalArgumentException(id + " is not a block");
+			return ForgeRegistries.BLOCKS.getValue(id);
+		}
+
+		private static Fluid checkFluid(ResourceLocation id){
+			if (!ForgeRegistries.FLUIDS.containsKey(id))
+				throw new IllegalArgumentException(id + " is not a fluid");
+			return ForgeRegistries.FLUIDS.getValue(id);
+		}
+
+		private static Either<Tag<Block>, Tag<Fluid>> checkTag(ResourceLocation id) {
 			Tag<Block> blockTag = BlockTags.getAllTags().getTag(id);
 			if (blockTag != null) {
 				return Either.left(blockTag);
@@ -91,7 +103,7 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			if (fluidTag != null) {
 				return Either.right(fluidTag);
 			}
-			return null;
+			throw new IllegalArgumentException("tag "+id+" is neither a block tag or fluid tag");
 		}
 
 		public boolean isApplicable(BlockGetter reader, BlockPos pos, String name) {
@@ -163,7 +175,17 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 				Codec.INT.optionalFieldOf("duration").forGetter(e -> Optional.of(e.duration)),
 				Codec.INT.optionalFieldOf("level").forGetter(e -> Optional.of(e.level))
 			).apply(i, (id, duration, level) -> new EffectEntityConfig.MobEffectConfig(
-				Objects.requireNonNull(ForgeRegistries.MOB_EFFECTS.getValue(id)), duration.orElse(0), level.orElse(0))));
+				checkMobEffect(id), duration.orElse(0), level.orElse(0))));
+
+			private static MobEffect checkMobEffect(ResourceLocation id){
+				if (!ForgeRegistries.MOB_EFFECTS.containsKey(id))
+					throw new IllegalArgumentException(id + " is not a valid mob effect");
+				MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(id);
+				if (effect.isInstantenous()) {
+					throw new IllegalArgumentException("instantenous effects are not supported");
+				}
+				return effect;
+			}
 
 		}
 
@@ -201,6 +223,8 @@ public record CustomFanTypeConfig(int priority, String name, BlockPredicateConfi
 			).apply(i, (id, chance, speed) -> new MorphConfig.ParticleConfig(checkType(id), chance, speed)));
 
 			public static SimpleParticleType checkType(ResourceLocation id) {
+				if (!ForgeRegistries.PARTICLE_TYPES.containsKey(id))
+					throw new IllegalArgumentException(id + " is not a valid particle type");
 				ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(id);
 				if (type instanceof SimpleParticleType simple) {
 					return simple;

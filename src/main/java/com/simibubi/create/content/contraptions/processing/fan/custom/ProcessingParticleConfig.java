@@ -45,7 +45,7 @@ public record ProcessingParticleConfig(int chance, String col, SimpleParticleTyp
 			speed.orElse(Vec3Config.ZERO),
 			random_speed.orElse(Vec3Config.ZERO))));
 
-	public static String colorCheck(Optional<String> color, Optional<ResourceLocation> particle) {
+	private static String colorCheck(Optional<String> color, Optional<ResourceLocation> particle) {
 		if (color.isPresent() && particle.isEmpty()) {
 			// check if color can be parsed
 			Integer.parseInt(color.get(), 16);

@@ -49,8 +49,8 @@ public class BlockStatePredicate {
 		this.str = str;
 		String[] parts = str.split("\\&");
 		ResourceLocation id = new ResourceLocation(parts[0]);
+		if (!ForgeRegistries.BLOCKS.containsKey(id)) throw new IllegalArgumentException("invalid block id for block state " + str);
 		block = ForgeRegistries.BLOCKS.getValue(id);
-		if (block == null) throw new IllegalArgumentException("invalid block id for block state " + str);
 		BlockState state = block.defaultBlockState();
 		for (int i = 1; i < parts.length; i++) {
 			String[] equation = parts[i].split("=");

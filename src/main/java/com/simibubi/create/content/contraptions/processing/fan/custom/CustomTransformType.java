@@ -22,7 +22,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 	public void onProgress(Level level, LivingEntity entity, int progress) {
 		CustomTransformConfig.ProgressionSoundConfig c = config.progression();
 		if (c != null && progress % c.interval() == 0) {
-			level.playSound(null, entity.blockPosition(), c.getSound(), SoundSource.NEUTRAL,
+			level.playSound(null, entity.blockPosition(), c.sound(), SoundSource.NEUTRAL,
 				c.volume() + c.volume_slope() * progress / 100f, c.pitch() + c.pitch_slope() * progress / 100f);
 		}
 	}
@@ -31,7 +31,7 @@ public class CustomTransformType extends EntityTransformHelper<LivingEntity, Liv
 	public void onComplete(Level level, LivingEntity entity) {
 		CustomTransformConfig.CompletionSoundConfig c = config.completion();
 		if (c != null) {
-			level.playSound(null, entity.blockPosition(), c.getSound(),
+			level.playSound(null, entity.blockPosition(), c.sound(),
 				SoundSource.NEUTRAL, c.volume(), c.pitch());
 		}
 	}

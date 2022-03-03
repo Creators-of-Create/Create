@@ -24,36 +24,34 @@ public record CustomTransformConfig(String blockType, EntityType<?> oldType,
 									ProgressionSoundConfig progression, CompletionSoundConfig completion,
 									List<ProcessingParticleConfig> particles) {
 
-	public record ProgressionSoundConfig(int interval, ResourceLocation id, float volume, float pitch,
+	public record ProgressionSoundConfig(int interval, SoundEvent sound, float volume, float pitch,
 										 float volume_slope,
 										 float pitch_slope) {
 
 		public static final Codec<ProgressionSoundConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 				Codec.INT.fieldOf("interval").forGetter(e -> e.interval),
-				ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
+				ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.sound.getRegistryName()),
 				Codec.FLOAT.fieldOf("volume").forGetter(e -> e.volume),
 				Codec.FLOAT.fieldOf("pitch").forGetter(e -> e.pitch),
 				Codec.FLOAT.optionalFieldOf("volume_slope").forGetter(e -> Optional.of(e.volume_slope)),
 				Codec.FLOAT.optionalFieldOf("pitch_slope").forGetter(e -> Optional.of(e.pitch_slope))
 		).apply(i, (interval, id, volume, pitch, volume_slope, pitch_slope) ->
-				new ProgressionSoundConfig(interval, id, volume, pitch, volume_slope.orElse(0f), pitch_slope.orElse(0f))));
+				new ProgressionSoundConfig(interval, checkSound(id), volume, pitch, volume_slope.orElse(0f), pitch_slope.orElse(0f))));
 
-		public SoundEvent getSound() {
+		public static SoundEvent checkSound(ResourceLocation id) {
+			if (!ForgeRegistries.SOUND_EVENTS.containsKey(id))
+				throw new IllegalArgumentException(id + " is not a valid sound event");
 			return ForgeRegistries.SOUND_EVENTS.getValue(id);
 		}
 	}
 
-	public record CompletionSoundConfig(ResourceLocation id, float volume, float pitch) {
+	public record CompletionSoundConfig(SoundEvent sound, float volume, float pitch) {
 
 		public static final Codec<CompletionSoundConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-				ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id),
+				ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.sound.getRegistryName()),
 				Codec.FLOAT.fieldOf("volume").forGetter(e -> e.volume),
 				Codec.FLOAT.fieldOf("pitch").forGetter(e -> e.pitch)
-		).apply(i, CompletionSoundConfig::new));
-
-		public SoundEvent getSound() {
-			return ForgeRegistries.SOUND_EVENTS.getValue(id);
-		}
+		).apply(i, (id, v, p) -> new CompletionSoundConfig(ProgressionSoundConfig.checkSound(id), v, p)));
 
 	}
 
@@ -73,9 +71,9 @@ public record CustomTransformConfig(String blockType, EntityType<?> oldType,
 
 	public static EntityType<?> checkType(ResourceLocation id) {
 		if (id == null || id.getPath().length() == 0) throw new IllegalArgumentException("id cannot be empty");
-		EntityType<?> raw = ForgeRegistries.ENTITIES.getValue(id);
-		if (raw == null) throw new IllegalArgumentException("entity type " + id + " not found");
-		return raw;
+		if (!ForgeRegistries.ENTITIES.containsKey(id))
+			throw new IllegalArgumentException("entity type " + id + " not found");
+		return ForgeRegistries.ENTITIES.getValue(id);
 	}
 
 }
