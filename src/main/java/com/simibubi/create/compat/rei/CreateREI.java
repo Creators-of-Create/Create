@@ -134,7 +134,7 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
+			.recipes(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
 				.size() > 1 && !MechanicalPressTileEntity.canCompress((Recipe<?>) r),
 					BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
@@ -209,11 +209,11 @@ public class CreateREI implements REIClientPlugin {
 			.build(),
 
 	autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
-			.recipes(r -> r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
+			.recipes(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
 				.size() == 1)
 			.recipes(
 				r -> (r.getType() == RecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType())
-					&& (r instanceof ShapedRecipe))
+					&& (r instanceof IShapedRecipe<?>))
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 			.enableWhen(c -> c.allowRegularCraftingInCrafter)
 			.build(),

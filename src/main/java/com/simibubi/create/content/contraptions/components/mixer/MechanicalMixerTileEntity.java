@@ -36,6 +36,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -236,10 +237,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
-		return ((r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE
-			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
+		return ((r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				 && AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-			&& !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
+				 && !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 

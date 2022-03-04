@@ -79,12 +79,12 @@ public class BlueprintItem extends Item {
 			inv.setStackInSlot(i, ItemStack.EMPTY);
 		inv.setStackInSlot(9, recipe.getResultItem());
 
-		if (recipe instanceof ShapedRecipe) {
-			ShapedRecipe shapedRecipe = (ShapedRecipe) recipe;
-			for (int row = 0; row < shapedRecipe.getHeight(); row++)
-				for (int col = 0; col < shapedRecipe.getWidth(); col++)
+		if (recipe instanceof IShapedRecipe) {
+			IShapedRecipe<?> shapedRecipe = (IShapedRecipe<?>) recipe;
+			for (int row = 0; row < shapedRecipe.getRecipeHeight(); row++)
+				for (int col = 0; col < shapedRecipe.getRecipeWidth(); col++)
 					inv.setStackInSlot(row * 3 + col,
-							convertIngredientToFilter(ingredients.get(row * shapedRecipe.getWidth() + col)));
+							convertIngredientToFilter(ingredients.get(row * shapedRecipe.getRecipeWidth() + col)));
 		} else {
 			for (int i = 0; i < ingredients.size(); i++)
 				inv.setStackInSlot(i, convertIngredientToFilter(ingredients.get(i)));

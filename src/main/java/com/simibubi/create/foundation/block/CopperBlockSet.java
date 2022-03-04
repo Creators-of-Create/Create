@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -229,10 +230,18 @@ public class CopperBlockSet {
 			String path = Registry.BLOCK.getKey(block)
 				.getPath();
 			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
+
 			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
-			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
-			prov.simpleBlock(block, prov.models()
-				.cubeColumn(path, texture, endTexture));
+			if (Objects.equals(blocks.getName(), blocks.getEndTextureName())) {
+				// End texture and base texture are equal, so we should use cube_all.
+				prov.simpleBlock(block, prov.models().cubeAll(path, texture));
+			} else {
+				// End texture and base texture aren't equal, so we should use cube_column.
+				ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
+				prov.simpleBlock(block, prov.models()
+						.cubeColumn(path, texture, endTexture));
+			}
+
 		}
 
 		@Override

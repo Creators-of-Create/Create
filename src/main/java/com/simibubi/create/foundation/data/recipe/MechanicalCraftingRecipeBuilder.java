@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,11 +32,13 @@ public class MechanicalCraftingRecipeBuilder {
 	private final List<String> pattern = Lists.newArrayList();
 	private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
 	private boolean acceptMirrored;
+	private List<ICondition> recipeConditions;
 
 	public MechanicalCraftingRecipeBuilder(ItemLike p_i48261_1_, int p_i48261_2_) {
 		result = p_i48261_1_.asItem();
 		count = p_i48261_2_;
 		acceptMirrored = true;
+		recipeConditions = new ArrayList<>();
 	}
 
 	/**
@@ -127,7 +130,7 @@ public class MechanicalCraftingRecipeBuilder {
 	public void build(Consumer<FinishedRecipe> p_200467_1_, ResourceLocation p_200467_2_) {
 		validate(p_200467_2_);
 		p_200467_1_
-			.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key, acceptMirrored));
+			.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key, acceptMirrored, recipeConditions));
 	}
 
 	/**
@@ -156,6 +159,19 @@ public class MechanicalCraftingRecipeBuilder {
 		}
 	}
 
+	public MechanicalCraftingRecipeBuilder whenModLoaded(String modid) {
+		return withCondition(new ModLoadedCondition(modid));
+	}
+
+	public MechanicalCraftingRecipeBuilder whenModMissing(String modid) {
+		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
+	}
+
+	public MechanicalCraftingRecipeBuilder withCondition(ICondition condition) {
+		recipeConditions.add(condition);
+		return this;
+	}
+
 	public class Result implements FinishedRecipe {
 		private final ResourceLocation id;
 		private final Item result;
@@ -163,15 +179,17 @@ public class MechanicalCraftingRecipeBuilder {
 		private final List<String> pattern;
 		private final Map<Character, Ingredient> key;
 		private final boolean acceptMirrored;
+		private List<ICondition> recipeConditions;
 
 		public Result(ResourceLocation p_i48271_2_, Item p_i48271_3_, int p_i48271_4_, List<String> p_i48271_6_,
-			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical) {
+			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical, List<ICondition> recipeConditions) {
 			this.id = p_i48271_2_;
 			this.result = p_i48271_3_;
 			this.count = p_i48271_4_;
 			this.pattern = p_i48271_6_;
 			this.key = p_i48271_7_;
 			this.acceptMirrored = asymmetrical;
+			this.recipeConditions = recipeConditions;
 		}
 
 		public void serializeRecipeData(JsonObject p_218610_1_) {
@@ -194,6 +212,13 @@ public class MechanicalCraftingRecipeBuilder {
 
 			p_218610_1_.add("result", jsonobject1);
 			p_218610_1_.addProperty("acceptMirrored", acceptMirrored);
+
+			if (recipeConditions.isEmpty())
+				return;
+
+			JsonArray conds = new JsonArray();
+			recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+			p_218610_1_.add("conditions", conds);
 		}
 
 		public RecipeSerializer<?> getType() {
