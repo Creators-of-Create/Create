@@ -101,7 +101,7 @@ public class EdgeData {
 	public static EdgeData read(CompoundTag nbt, TrackGraph graph) {
 		EdgeData data = new EdgeData();
 		if (nbt.contains("SignalGroup"))
-			data.singleSignalGroup = nbt.getUUID("Group");
+			data.singleSignalGroup = nbt.getUUID("SignalGroup");
 		else if (!nbt.contains("PassiveGroup"))
 			data.singleSignalGroup = null;
 

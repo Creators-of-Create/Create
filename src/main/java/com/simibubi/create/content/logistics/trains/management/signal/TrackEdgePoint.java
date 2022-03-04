@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.LevelAccessor;
 
 public abstract class TrackEdgePoint {
@@ -82,17 +83,33 @@ public abstract class TrackEdgePoint {
 			.equals(node1.getLocation());
 	}
 
-	public void read(CompoundTag nbt) {
+	public void read(CompoundTag nbt, boolean migration) {
+		if (migration)
+			return;
+
 		id = nbt.getUUID("Id");
 		position = nbt.getDouble("Position");
 		edgeLocation = Couple.deserializeEach(nbt.getList("Edge", Tag.TAG_COMPOUND),
 			tag -> TrackNodeLocation.fromPackedPos(NbtUtils.readBlockPos(tag)));
 	}
 
+	public void read(FriendlyByteBuf buffer) {
+		id = buffer.readUUID();
+		edgeLocation = Couple.create(() -> TrackNodeLocation.fromPackedPos(buffer.readBlockPos()));
+		position = buffer.readDouble();
+	}
+
 	public void write(CompoundTag nbt) {
 		nbt.putUUID("Id", id);
 		nbt.putDouble("Position", position);
 		nbt.put("Edge", edgeLocation.serializeEach(loc -> NbtUtils.writeBlockPos(new BlockPos(loc))));
+	}
+
+	public void write(FriendlyByteBuf buffer) {
+		buffer.writeResourceLocation(type.getId());
+		buffer.writeUUID(id);
+		edgeLocation.forEach(loc -> buffer.writeBlockPos(new BlockPos(loc)));
+		buffer.writeDouble(position);
 	}
 
 	public void tick(TrackGraph graph) {}

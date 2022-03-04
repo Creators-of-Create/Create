@@ -27,7 +27,7 @@ public class TrackSavedData extends SavedData {
 	}
 
 	private static TrackSavedData load(CompoundTag nbt) {
-		TrackSavedData sd = new TrackSavedData();
+		TrackSavedData sd = new TrackSavedData();//TODO load trains before everything else
 		sd.trackNetworks = new HashMap<>();
 		sd.signalEdgeGroups = new HashMap<>();
 		NBTHelper.iterateCompoundList(nbt.getList("RailGraphs", Tag.TAG_COMPOUND), c -> {

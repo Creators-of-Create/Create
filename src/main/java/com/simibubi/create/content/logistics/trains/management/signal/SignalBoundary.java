@@ -19,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.LevelAccessor;
 
 public class SignalBoundary extends TrackEdgePoint {
@@ -124,8 +125,11 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void read(CompoundTag nbt) {
-		super.read(nbt);
+	public void read(CompoundTag nbt, boolean migration) {
+		super.read(nbt, migration);
+		
+		if (migration)
+			return;
 
 		sidesToUpdate = Couple.create(true, true);
 		signals = Couple.create(HashSet::new);
@@ -143,6 +147,15 @@ public class SignalBoundary extends TrackEdgePoint {
 		for (int i = 1; i <= 2; i++)
 			sidesToUpdate.set(i == 1, nbt.contains("Update" + i));
 	}
+	
+	@Override
+	public void read(FriendlyByteBuf buffer) {
+		super.read(buffer);
+		for (int i = 1; i <= 2; i++) {
+			if (buffer.readBoolean())
+				groups.set(i == 1, buffer.readUUID());
+		}
+	}
 
 	@Override
 	public void write(CompoundTag nbt) {
@@ -157,6 +170,17 @@ public class SignalBoundary extends TrackEdgePoint {
 		for (int i = 1; i <= 2; i++)
 			if (sidesToUpdate.get(i == 1))
 				nbt.putBoolean("Update" + i, true);
+	}
+	
+	@Override
+	public void write(FriendlyByteBuf buffer) {
+		super.write(buffer);
+		for (int i = 1; i <= 2; i++) {
+			boolean hasGroup = groups.get(i == 1) != null;
+			buffer.writeBoolean(hasGroup);
+			if (hasGroup)
+				buffer.writeUUID(groups.get(i == 1));
+		}
 	}
 
 }

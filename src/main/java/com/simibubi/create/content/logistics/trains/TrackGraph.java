@@ -75,6 +75,7 @@ public class TrackGraph {
 	public <T extends TrackEdgePoint> void addPoint(EdgePointType<T> type, T point) {
 		edgePoints.put(type, point);
 		EdgePointManager.onEdgePointAdded(this, point, type);
+		Create.RAILWAYS.sync.pointAdded(this, point);
 		markDirty();
 	}
 
@@ -91,6 +92,7 @@ public class TrackGraph {
 		if (removed == null)
 			return null;
 		EdgePointManager.onEdgePointRemoved(this, removed, type);
+		Create.RAILWAYS.sync.pointRemoved(this, removed);
 		markDirty();
 		return removed;
 	}
@@ -197,12 +199,13 @@ public class TrackGraph {
 			TrackNode n2 = toOther.locateNode(node2.location);
 			if (n1 == null || n2 == null)
 				return;
-			toOther.putConnection(n1, n2, edge);
-			Create.RAILWAYS.sync.edgeAdded(toOther, n1, n2, edge);
+			if (toOther.putConnection(n1, n2, edge)) {
+				Create.RAILWAYS.sync.edgeAdded(toOther, n1, n2, edge);
+				Create.RAILWAYS.sync.edgeDataChanged(toOther, n1, n2, edge);
+			}
 		}));
 
-		edgePoints.transferAll(toOther.edgePoints);
-
+		edgePoints.transferAll(toOther, toOther.edgePoints);
 		nodes.clear();
 		connectionsByNode.clear();
 
@@ -325,9 +328,13 @@ public class TrackGraph {
 			map2.remove(node1);
 	}
 
-	public void putConnection(TrackNode node1, TrackNode node2, TrackEdge edge) {
-		connectionsByNode.computeIfAbsent(node1, n -> new IdentityHashMap<>())
-			.put(node2, edge);
+	public boolean putConnection(TrackNode node1, TrackNode node2, TrackEdge edge) {
+		Map<TrackNode, TrackEdge> connections = connectionsByNode.computeIfAbsent(node1, n -> new IdentityHashMap<>());
+		if (connections.containsKey(node2) && connections.get(node2)
+			.getEdgeData()
+			.hasPoints())
+			return false;
+		return connections.put(node2, edge) == null;
 	}
 
 	public void markDirty() {

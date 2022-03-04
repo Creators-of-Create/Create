@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -54,9 +55,13 @@ public class EdgePointStorage {
 				.forEach(p -> p.tick(graph)));
 	}
 
-	public void transferAll(EdgePointStorage other) {
-		pointsByType.forEach((type, map) -> other.getMap(type)
-			.putAll(map));
+	public void transferAll(TrackGraph target, EdgePointStorage other) {
+		pointsByType.forEach((type, map) -> {
+			other.getMap(type)
+				.putAll(map);
+			map.values()
+				.forEach(ep -> Create.RAILWAYS.sync.pointAdded(target, ep));
+		});
 		pointsByType.clear();
 	}
 
@@ -83,7 +88,7 @@ public class EdgePointStorage {
 			Map<UUID, TrackEdgePoint> map = getMap(type);
 			NBTHelper.iterateCompoundList(list, tag -> {
 				TrackEdgePoint edgePoint = type.create();
-				edgePoint.read(tag);
+				edgePoint.read(tag, false);
 				map.put(edgePoint.getId(), edgePoint);
 			});
 		}

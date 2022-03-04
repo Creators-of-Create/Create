@@ -74,8 +74,11 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 
 		if (!name.isBlank()) {
 			GlobalStation station = te.getStation();
-			if (station != null)
+			GraphLocation graphLocation = te.edgePoint.determineGraphLocation();
+			if (station != null && graphLocation != null) {
 				station.name = name;
+				Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
+			}
 			Create.RAILWAYS.markTracksDirty();
 		}
 

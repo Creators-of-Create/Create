@@ -241,10 +241,11 @@ public class Train {
 		if (navigation.destination != null) {
 			boolean recalculate = navigation.distanceToDestination % 100 > 20;
 			boolean imminentRecalculate = navigation.distanceToDestination > 5;
-			navigation.distanceToDestination -= Math.abs(distance);
+			double toSubstract = navigation.destinationBehindTrain ? -distance : distance;
+			navigation.distanceToDestination -= toSubstract;
 			boolean signalMode = navigation.waitingForSignal != null;
 			if (signalMode) {
-				navigation.distanceToSignal -= Math.abs(distance);
+				navigation.distanceToSignal -= toSubstract;
 				recalculate = navigation.distanceToSignal % 100 > 20;
 			}
 			if (recalculate && (signalMode ? navigation.distanceToSignal : navigation.distanceToDestination) % 100 <= 20

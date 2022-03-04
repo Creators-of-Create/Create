@@ -68,13 +68,12 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
-		UUID prevId = id;
 		id = nbt.getUUID("Id");
 		targetTrack = NbtUtils.readBlockPos(nbt.getCompound("TargetTrack"));
 		targetDirection = nbt.getBoolean("TargetDirection") ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
 		if (nbt.contains("Migrate"))
 			migrationData = nbt.getCompound("Migrate");
-		if (clientPacket && !prevId.equals(id))
+		if (clientPacket)
 			edgePoint = null;
 		super.read(nbt, clientPacket);
 	}
@@ -86,7 +85,6 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 	public void invalidateEdgePoint(CompoundTag migrationData) {
 		this.migrationData = migrationData;
-		id = UUID.randomUUID();
 		edgePoint = null;
 		tileEntity.sendData();
 	}
@@ -100,14 +98,16 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 	@SuppressWarnings("unchecked")
 	public T createEdgePoint() {
-		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) { // TODO thread breach
-			T point = trackGraph.getPoint(edgePointType, id);
-			if (point == null)
-				continue;
-			return point;
-		}
+		boolean isClientSide = getWorld().isClientSide;
+		if (migrationData == null || isClientSide)
+			for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) { // TODO thread breach
+				T point = trackGraph.getPoint(edgePointType, id);
+				if (point == null)
+					continue;
+				return point;
+			}
 
-		if (getWorld().isClientSide)
+		if (isClientSide)
 			return null;
 		if (!hasValidTrack())
 			return null;
@@ -125,6 +125,10 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 		if (edge == null)
 			return null;
+
+		double length = edge.getLength(node1, node2);
+		CompoundTag data = migrationData;
+		migrationData = null;
 
 		EdgeData signalData = edge.getEdgeData();
 		if (signalData.hasPoints()) {
@@ -147,19 +151,13 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		}
 
 		T point = edgePointType.create();
+		boolean reverseEdge = front || point instanceof SingleTileEdgePoint;
+
+		if (data != null)
+			point.read(data, true);
+
 		point.setId(id);
-
-		if (point instanceof SingleTileEdgePoint step) {
-			point.setLocation(loc.edge, loc.position);
-			if (migrationData != null) {
-				step.read(migrationData, true);
-				migrationData = null;
-				tileEntity.setChanged();
-			}
-		} else
-			point.setLocation(front ? loc.edge : loc.edge.swap(),
-				front ? loc.position : edge.getLength(node1, node2) - loc.position);
-
+		point.setLocation(reverseEdge ? loc.edge : loc.edge.swap(), reverseEdge ? loc.position : length - loc.position);
 		point.tileAdded(getPos(), front);
 		loc.graph.addPoint(edgePointType, point);
 		return point;

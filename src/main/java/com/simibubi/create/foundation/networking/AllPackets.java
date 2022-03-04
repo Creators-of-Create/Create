@@ -43,10 +43,11 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
-import com.simibubi.create.content.logistics.trains.TrackGraphSync.RailGraphSyncPacket;
+import com.simibubi.create.content.logistics.trains.TrackGraphSyncPacket;
 import com.simibubi.create.content.logistics.trains.management.StationEditPacket;
 import com.simibubi.create.content.logistics.trains.management.TrainEditPacket;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEditPacket;
+import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroupPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
@@ -132,7 +133,8 @@ public enum AllPackets {
 	SOUL_PULSE(SoulPulseEffectPacket.class, SoulPulseEffectPacket::new, PLAY_TO_CLIENT),
 	PERSISTENT_DATA(ISyncPersistentData.PersistentDataPacket.class, ISyncPersistentData.PersistentDataPacket::new, PLAY_TO_CLIENT),
 	SYNC_POTATO_PROJECTILE_TYPES(PotatoProjectileTypeManager.SyncPacket.class, PotatoProjectileTypeManager.SyncPacket::new, PLAY_TO_CLIENT),
-	SYNC_RAIL_GRAPH(RailGraphSyncPacket.class, RailGraphSyncPacket::new, PLAY_TO_CLIENT),
+	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket::new, PLAY_TO_CLIENT),
+	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket::new, PLAY_TO_CLIENT),
 	REMOVE_TE(RemoveTileEntityPacket.class, RemoveTileEntityPacket::new, PLAY_TO_CLIENT),
 
 	;

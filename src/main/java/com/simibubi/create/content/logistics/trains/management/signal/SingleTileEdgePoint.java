@@ -34,15 +34,10 @@ public abstract class SingleTileEdgePoint extends TrackEdgePoint {
 	}
 
 	@Override
-	public final void read(CompoundTag nbt) {
-		read(nbt, false);
-	}
-
 	public void read(CompoundTag nbt, boolean migration) {
+		super.read(nbt, migration);
 		if (migration)
 			return;
-
-		super.read(nbt);
 		tilePos = NbtUtils.readBlockPos(nbt.getCompound("TilePos"));
 	}
 

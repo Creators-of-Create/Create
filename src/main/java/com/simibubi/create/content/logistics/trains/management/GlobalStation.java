@@ -9,6 +9,7 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.signal.SingleTileEdgePoint;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class GlobalStation extends SingleTileEdgePoint {
 
@@ -26,11 +27,23 @@ public class GlobalStation extends SingleTileEdgePoint {
 		name = nbt.getString("Name");
 		nearestTrain = new WeakReference<Train>(null);
 	}
+	
+	@Override
+	public void read(FriendlyByteBuf buffer) {
+		super.read(buffer);
+		name = buffer.readUtf();
+	}
 
 	@Override
 	public void write(CompoundTag nbt) {
 		super.write(nbt);
 		nbt.putString("Name", name);
+	}
+	
+	@Override
+	public void write(FriendlyByteBuf buffer) {
+		super.write(buffer);
+		buffer.writeUtf(name);
 	}
 	
 	public boolean canApproachFrom(TrackNode side) {

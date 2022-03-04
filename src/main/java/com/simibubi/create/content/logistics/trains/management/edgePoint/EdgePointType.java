@@ -9,6 +9,7 @@ import com.simibubi.create.content.logistics.trains.management.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class EdgePointType<T extends TrackEdgePoint> {
@@ -41,6 +42,14 @@ public class EdgePointType<T extends TrackEdgePoint> {
 
 	public ResourceLocation getId() {
 		return id;
+	}
+	
+	public static TrackEdgePoint read(FriendlyByteBuf buffer) {
+		ResourceLocation type = buffer.readResourceLocation();
+		EdgePointType<?> edgePointType = TYPES.get(type);
+		TrackEdgePoint point = edgePointType.create();
+		point.read(buffer);
+		return point;
 	}
 
 }

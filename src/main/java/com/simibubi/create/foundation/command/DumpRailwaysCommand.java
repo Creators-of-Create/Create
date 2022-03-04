@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -40,7 +40,7 @@ public class DumpRailwaysCommand {
 	}
 
 	static void fillReport(ServerLevel level, BiConsumer<String, Integer> chat) {
-		GlobalRailwayManager railways = Create.RAILWAYS;
+		GlobalRailwayManager railways = CreateClient.RAILWAYS;
 		int white = ChatFormatting.WHITE.getColor();
 		int blue = 0xD3DEDC;
 		int darkBlue = 0x92A9BD;
@@ -68,6 +68,8 @@ public class DumpRailwaysCommand {
 				chat.accept(" -> " + signals.size() + " registered Signals", blue);
 			for (GlobalStation globalStation : graph.getPoints(EdgePointType.STATION)) {
 				BlockPos pos = globalStation.getTilePos();
+				if (pos == null)
+					pos = BlockPos.ZERO;
 				chat.accept(" -> " + globalStation.name + " (" + globalStation.id.toString()
 					.substring(0, 5) + ") [" + pos.getX() + "," + pos.getY() + "," + pos.getZ() + "]", darkBlue);
 				if (globalStation.getPresentTrain() != null) {

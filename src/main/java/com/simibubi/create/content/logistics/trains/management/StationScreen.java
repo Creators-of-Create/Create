@@ -144,6 +144,8 @@ public class StationScreen extends AbstractStationScreen {
 				int trainIconWidth = getTrainIconWidth(imminentTrain);
 				int targetPos = background.width / 2 - trainIconWidth / 2;
 				float f = (float) (imminentTrain.navigation.distanceToDestination / 15f);
+				if (imminentTrain.currentStation.equals(station.getId()))
+					f = 0;
 				trainPosition.startWithValue(targetPos - (targetPos + 5) * f);
 			}
 			return;
@@ -167,15 +169,16 @@ public class StationScreen extends AbstractStationScreen {
 			return;
 		}
 
-		if (train.navigation.destination != station && train.getCurrentStation() != station) {
+		boolean trainAtStation = train.currentStation != null && train.currentStation.equals(station.getId());
+		if (train.navigation.destination != station && !trainAtStation) {
 			leavingAnimation = 80;
 			return;
 		}
 
-		disassembleTrainButton.active = train.getCurrentStation() == station; // TODO te.canAssemble
+		disassembleTrainButton.active = trainAtStation; // TODO te.canAssemble
 		openScheduleButton.active = train.runtime.schedule != null;
 
-		float f = (float) (train.navigation.distanceToDestination / 30f);
+		float f = trainAtStation ? 0 : (float) (train.navigation.distanceToDestination / 30f);
 		trainPosition.setValue(targetPos - (targetPos + trainIconWidth) * f);
 	}
 

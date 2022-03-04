@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
@@ -22,6 +23,7 @@ public class EdgePointManager {
 			TrackEdge startEdge = startEdges.get(front);
 			startEdge.getEdgeData()
 				.addPoint(node1, node2, startEdge, point);
+			Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge);
 		}
 	}
 
@@ -32,8 +34,11 @@ public class EdgePointManager {
 		startNodes.forEachWithParams((l1, l2) -> {
 			TrackEdge trackEdge = graph.getConnectionsFrom(l1)
 				.get(l2);
+			if (trackEdge == null)
+				return;
 			trackEdge.getEdgeData()
 				.removePoint(l1, l2, trackEdge, point);
+			Create.RAILWAYS.sync.edgeDataChanged(graph, l1, l2, trackEdge);
 		}, startNodes.swap());
 	}
 

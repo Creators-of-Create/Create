@@ -13,6 +13,7 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.TrackGraphSync;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -28,7 +29,9 @@ public class SignalPropagator {
 		for (boolean front : Iterate.trueAndFalse) {
 			if (signal.sidesToUpdate.get(front))
 				continue;
-			Create.RAILWAYS.signalEdgeGroups.remove(signal.groups.get(front));
+			UUID id = signal.groups.get(front);
+			if (Create.RAILWAYS.signalEdgeGroups.remove(id) != null)
+				Create.RAILWAYS.sync.edgeGroupRemoved(id);
 			walkSignals(graph, signal, front, pair -> {
 				TrackNode node1 = pair.getFirst();
 				SignalBoundary boundary = pair.getSecond();
@@ -51,23 +54,30 @@ public class SignalPropagator {
 
 	public static void propagateSignalGroup(TrackGraph graph, SignalBoundary signal, boolean front) {
 		Map<UUID, SignalEdgeGroup> globalGroups = Create.RAILWAYS.signalEdgeGroups;
+		TrackGraphSync sync = Create.RAILWAYS.sync;
+
 		SignalEdgeGroup group = new SignalEdgeGroup(UUID.randomUUID());
 		UUID groupId = group.id;
 		globalGroups.put(groupId, group);
+		sync.edgeGroupCreated(groupId);
 		signal.groups.set(front, groupId);
+		sync.pointAdded(graph, signal);
 
 		walkSignals(graph, signal, front, pair -> {
 			TrackNode node1 = pair.getFirst();
 			SignalBoundary boundary = pair.getSecond();
 			UUID currentGroup = boundary.getGroup(node1);
 			if (currentGroup != null)
-				globalGroups.remove(currentGroup);
+				if (globalGroups.remove(currentGroup) != null)
+					sync.edgeGroupRemoved(currentGroup);
 			boundary.setGroup(node1, groupId);
+			sync.pointAdded(graph, boundary);
 			return true;
 
 		}, signalData -> {
 			if (signalData.singleSignalGroup != null)
-				globalGroups.remove(signalData.singleSignalGroup);
+				if (globalGroups.remove(signalData.singleSignalGroup) != null)
+					sync.edgeGroupRemoved(signalData.singleSignalGroup);
 			signalData.singleSignalGroup = groupId;
 			return true;
 
@@ -85,16 +95,19 @@ public class SignalPropagator {
 		TrackNode node1 = startNodes.get(front);
 		TrackNode node2 = startNodes.get(!front);
 		TrackEdge startEdge = startEdges.get(front);
+		TrackEdge oppositeEdge = startEdges.get(!front);
 
 		if (startEdge == null)
 			return;
+
+		Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge, oppositeEdge);
 
 		// Check for signal on the same edge
 		SignalBoundary immediateBoundary = startEdge.getEdgeData()
 			.next(EdgePointType.SIGNAL, node1, node2, startEdge, signal.getLocationOn(node1, node2, startEdge));
 		if (immediateBoundary != null) {
 			if (boundaryCallback.test(Pair.of(node1, immediateBoundary)))
-				notifyTrains(graph, startEdge, startEdges.get(!front));
+				notifyTrains(graph, startEdge, oppositeEdge);
 			return;
 		}
 
@@ -134,16 +147,20 @@ public class SignalPropagator {
 
 					// no boundary- update group of edge
 					if (!signalData.hasSignalBoundaries()) {
-						if (nonBoundaryCallback.test(signalData))
-							notifyTrains(graph, currentEdge);
+						if (!nonBoundaryCallback.test(signalData))
+							continue;
+						notifyTrains(graph, currentEdge);
+						Create.RAILWAYS.sync.edgeDataChanged(graph, currentNode, nextNode, edge, oppositeEdge);
 						continue;
 					}
 
 					// other/own boundary found
 					SignalBoundary nextBoundary =
 						signalData.next(EdgePointType.SIGNAL, currentNode, nextNode, currentEdge, 0);
-					if (boundaryCallback.test(Pair.of(currentNode, nextBoundary)))
+					if (boundaryCallback.test(Pair.of(currentNode, nextBoundary))) {
 						notifyTrains(graph, edge, oppositeEdge);
+						Create.RAILWAYS.sync.edgeDataChanged(graph, currentNode, nextNode, edge, oppositeEdge);
+					}
 					continue EdgeWalk;
 				}
 

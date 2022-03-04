@@ -94,11 +94,6 @@ public class Navigation {
 			if (waitingForSignal == null)
 				distanceToSignal = Double.MAX_VALUE;
 
-			if (train.getCurrentStation() != null) {
-				int i = 0;
-				i++;
-			}
-
 			if (distanceToSignal > 1 / 16f) {
 				signalScout.node1 = leadingPoint.node1;
 				signalScout.node2 = leadingPoint.node2;

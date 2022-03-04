@@ -46,6 +46,7 @@ public class GlobalRailwayManager {
 			loadTrackData(serverPlayer.getServer());
 			trackNetworks.values()
 				.forEach(g -> sync.sendFullGraphTo(g, serverPlayer));
+			sync.sendEdgeGroups(signalEdgeGroups.keySet(), serverPlayer);
 		}
 	}
 
@@ -150,21 +151,21 @@ public class GlobalRailwayManager {
 		for (Train train : trains.values())
 			train.tick(level);
 
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H)) {
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && AllKeys.altDown())
 			trackNetworks.values()
 				.forEach(TrackGraph::debugViewSignalData);
-		}
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown()) {
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown())
 			trackNetworks.values()
 				.forEach(TrackGraph::debugViewNodes);
-		}
 	}
 
 	public void clientTick() {
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && !AllKeys.altDown()) {
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && !AllKeys.altDown())
+			trackNetworks.values()
+				.forEach(TrackGraph::debugViewSignalData);
+		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && !AllKeys.altDown())
 			trackNetworks.values()
 				.forEach(TrackGraph::debugViewNodes);
-		}
 	}
 
 }
