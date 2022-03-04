@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import me.pepperbell.simplenetworking.C2SPacket;
 import me.pepperbell.simplenetworking.S2CPacket;
 import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,13 +29,13 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 	}
 
 	@Override
-	public final void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, SimpleChannel.ResponseTarget responseTarget) {
-		handle(new Context(server, handler, player, responseTarget));
+	public final void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, PacketSender responseSender, SimpleChannel channel) {
+		handle(new Context(server, listener, player, responseSender, channel));
 	}
 
 	@Override
-	public final void handle(Minecraft client, ClientPacketListener handler, SimpleChannel.ResponseTarget responseTarget) {
-		handle(new Context(client, handler, null, responseTarget));
+	public final void handle(Minecraft client, ClientPacketListener listener, PacketSender responseSender, SimpleChannel channel) {
+		handle(new Context(client, listener, null, responseSender, channel));
 	}
 
 	public enum NetworkDirection {
@@ -42,7 +43,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 		PLAY_TO_SERVER
 	}
 
-	public record Context(Executor exec, PacketListener handler, @Nullable ServerPlayer sender, SimpleChannel.ResponseTarget responseTarget) implements Supplier<Context> {
+	public record Context(Executor exec, PacketListener listener, @Nullable ServerPlayer sender, PacketSender responseSender, SimpleChannel channel) implements Supplier<Context> {
 		public void enqueueWork(Runnable runnable) {
 			exec().execute(runnable);
 		}

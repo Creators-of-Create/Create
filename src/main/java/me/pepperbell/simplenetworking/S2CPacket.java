@@ -1,6 +1,6 @@
 package me.pepperbell.simplenetworking;
 
-import me.pepperbell.simplenetworking.SimpleChannel.ResponseTarget;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 
@@ -12,5 +12,5 @@ public interface S2CPacket extends Packet {
 	 * 	// code here
 	 * }</code></pre>
 	 */
-	void handle(Minecraft client, ClientPacketListener handler, ResponseTarget responseTarget);
+	void handle(Minecraft client, ClientPacketListener listener, PacketSender responseSender, SimpleChannel channel);
 }
