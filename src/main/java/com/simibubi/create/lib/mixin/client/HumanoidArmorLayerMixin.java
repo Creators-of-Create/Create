@@ -1,7 +1,9 @@
 package com.simibubi.create.lib.mixin.client;
 
+import com.simibubi.create.content.curiosities.armor.AllArmorMaterials;
+import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
+
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -15,14 +17,10 @@ import net.minecraft.world.item.ArmorItem;
 @Environment(EnvType.CLIENT)
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin {
-
-	@Unique
-	private static final ResourceLocation create$copperArmorLocation = new ResourceLocation("create", "textures/models/armor/copper.png");
-
 	@Inject(method = "getArmorLocation", at = @At("HEAD"), cancellable = true)
 	private void create$getArmorLocation(ArmorItem armorItem, boolean bl, String string, CallbackInfoReturnable<ResourceLocation> cir) {
-		if (armorItem.getMaterial().getName().equals("copper")) {
-			cir.setReturnValue(create$copperArmorLocation);
+		if (armorItem.getMaterial() == AllArmorMaterials.COPPER) {
+			cir.setReturnValue(CopperArmorItem.TEXTURE);
 		}
 	}
 }

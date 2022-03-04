@@ -43,6 +43,7 @@
     "StructureTemplateMixin",
     "WalkNodeEvaluatorMixin",
     "accessor.AbstractMinecartAccessor",
+    "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.ArrayVoxelShapeAccessor",
     "accessor.BaseSpawnerAccessor",
     "accessor.BeaconBlockEntityAccessor",

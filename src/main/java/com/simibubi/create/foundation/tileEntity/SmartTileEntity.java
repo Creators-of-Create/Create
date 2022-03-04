@@ -116,6 +116,8 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	/* TODO: Remove this hack once this issue is resolved: https://github.com/MinecraftForge/MinecraftForge/issues/8302
 		Once the PR linked in the issue is accepted, we should use the new method for determining whether setRemoved was
 		called due to a chunk unload or not, and remove this volatile workaround
+
+		here in fabric land, we actually need to reimplement this bug for parity :)
 	 */
 	private boolean unloaded;
 
