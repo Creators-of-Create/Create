@@ -14,8 +14,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.jozufozu.flywheel.core.instancing.ConditionalInstance.ICondition;
 import com.simibubi.create.AllRecipeTypes;
 
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +35,7 @@ public class MechanicalCraftingRecipeBuilder {
 	private final List<String> pattern = Lists.newArrayList();
 	private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
 	private boolean acceptMirrored;
-	private List<ICondition> recipeConditions;
+	private List<ConditionJsonProvider> recipeConditions;
 
 	public MechanicalCraftingRecipeBuilder(ItemLike p_i48261_1_, int p_i48261_2_) {
 		result = p_i48261_1_.asItem();
@@ -160,14 +163,14 @@ public class MechanicalCraftingRecipeBuilder {
 	}
 
 	public MechanicalCraftingRecipeBuilder whenModLoaded(String modid) {
-		return withCondition(new ModLoadedCondition(modid));
+		return withCondition(DefaultResourceConditions.allModsLoaded(modid));
 	}
 
 	public MechanicalCraftingRecipeBuilder whenModMissing(String modid) {
-		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
+		return withCondition(DefaultResourceConditions.not(DefaultResourceConditions.allModsLoaded(modid)));
 	}
 
-	public MechanicalCraftingRecipeBuilder withCondition(ICondition condition) {
+	public MechanicalCraftingRecipeBuilder withCondition(ConditionJsonProvider condition) {
 		recipeConditions.add(condition);
 		return this;
 	}
@@ -179,10 +182,10 @@ public class MechanicalCraftingRecipeBuilder {
 		private final List<String> pattern;
 		private final Map<Character, Ingredient> key;
 		private final boolean acceptMirrored;
-		private List<ICondition> recipeConditions;
+		private List<ConditionJsonProvider> recipeConditions;
 
 		public Result(ResourceLocation p_i48271_2_, Item p_i48271_3_, int p_i48271_4_, List<String> p_i48271_6_,
-			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical, List<ICondition> recipeConditions) {
+			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical, List<ConditionJsonProvider> recipeConditions) {
 			this.id = p_i48271_2_;
 			this.result = p_i48271_3_;
 			this.count = p_i48271_4_;
@@ -217,7 +220,7 @@ public class MechanicalCraftingRecipeBuilder {
 				return;
 
 			JsonArray conds = new JsonArray();
-			recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+			recipeConditions.forEach(c -> conds.add(c.toJson()));
 			p_218610_1_.add("conditions", conds);
 		}
 

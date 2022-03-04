@@ -11,6 +11,8 @@ import com.simibubi.create.compat.rei.category.animations.AnimatedCrafter;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.lib.util.ShapedRecipeUtil;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
@@ -31,8 +33,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.common.crafting.IShapedRecipe;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -61,11 +63,11 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	private static int getWidth(CraftingRecipe recipe) {
-		return recipe instanceof IShapedRecipe<?> ? ((IShapedRecipe<?>) recipe).getRecipeWidth() : 1;
+		return recipe instanceof ShapedRecipe ? ShapedRecipeUtil.WIDTH : 1;
 	}
 
 	private static int getHeight(CraftingRecipe recipe) {
-		return recipe instanceof IShapedRecipe<?> ? ((IShapedRecipe<?>) recipe).getRecipeHeight() : 1;
+		return recipe instanceof ShapedRecipe ? ShapedRecipeUtil.HEIGHT : 1;
 	}
 
 	@Override
