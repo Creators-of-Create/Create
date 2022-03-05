@@ -15,10 +15,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import com.simibubi.create.lib.extensions.AbstractMinecartExtensions;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
-import com.simibubi.create.lib.util.NBTSerializable;
+import io.github.fabricators_of_create.porting_lib.extensions.AbstractMinecartExtensions;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializable;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
@@ -242,8 +242,8 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 	}
 
 	@Override
-	public void create$deserializeNBT(CompoundTag nbt) {
-		handler.create$deserializeNBT(nbt);
+	public void deserializeNBT(CompoundTag nbt) {
+		handler.deserializeNBT(nbt);
 	}
 
 }

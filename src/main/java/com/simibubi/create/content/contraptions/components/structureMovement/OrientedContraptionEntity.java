@@ -21,9 +21,9 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

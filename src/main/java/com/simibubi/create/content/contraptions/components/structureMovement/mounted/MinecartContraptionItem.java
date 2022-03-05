@@ -14,8 +14,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

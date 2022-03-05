@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
-import com.simibubi.create.lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

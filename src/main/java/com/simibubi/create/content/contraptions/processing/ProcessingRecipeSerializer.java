@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;

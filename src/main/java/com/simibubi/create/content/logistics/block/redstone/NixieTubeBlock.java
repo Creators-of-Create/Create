@@ -13,8 +13,8 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
-import com.simibubi.create.lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;

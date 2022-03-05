@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.lib.util.FontRenderUtil;
+import io.github.fabricators_of_create.porting_lib.util.FontRenderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

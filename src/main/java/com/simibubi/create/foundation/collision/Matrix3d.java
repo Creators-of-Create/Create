@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.collision;
 
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.lib.util.Matrix4fHelper;
+import io.github.fabricators_of_create.porting_lib.util.Matrix4fHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -14,8 +14,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
-import com.simibubi.create.lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

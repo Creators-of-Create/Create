@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;

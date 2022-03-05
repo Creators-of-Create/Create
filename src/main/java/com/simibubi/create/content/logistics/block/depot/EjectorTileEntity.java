@@ -28,10 +28,11 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -572,8 +573,8 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
-		return depotBehaviour.lazyItemHandler.orElse(null);
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
+		return depotBehaviour.lazyItemHandler.cast();
 	}
 
 	public float getLidProgress(float pt) {

@@ -14,7 +14,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;

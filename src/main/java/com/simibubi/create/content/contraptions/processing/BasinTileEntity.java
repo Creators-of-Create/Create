@@ -37,17 +37,17 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.CombinedInvWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -144,8 +144,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
-		inputInventory.create$deserializeNBT(compound.getCompound("InputItems"));
-		outputInventory.create$deserializeNBT(compound.getCompound("OutputItems"));
+		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 
 		preferredSpoutput = null;
 		if (compound.contains("PreferredSpoutput"))
@@ -548,8 +548,8 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 	}
 
 	public void readOnlyItems(CompoundTag compound) {
-		inputInventory.create$deserializeNBT(compound.getCompound("InputItems"));
-		outputInventory.create$deserializeNBT(compound.getCompound("OutputItems"));
+		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 	}
 
 	public static HeatLevel getHeatLevelOf(BlockState state) {
@@ -688,13 +688,13 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 
 	@Override
 	@Nullable
-	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
 		return fluidCapability.orElse(null);
 	}
 
 	@Override
 	@Nullable
-	public IItemHandler getItemHandler(Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(Direction direction) {
 		return itemCapability.getValueUnsafer();
 	}
 

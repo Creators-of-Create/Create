@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

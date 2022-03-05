@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.item;
 
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
 
 import net.minecraft.world.item.ItemStack;
 

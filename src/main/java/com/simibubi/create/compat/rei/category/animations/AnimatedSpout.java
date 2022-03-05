@@ -11,7 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;

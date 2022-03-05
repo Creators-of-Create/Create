@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

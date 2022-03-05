@@ -24,9 +24,9 @@ import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -19,8 +19,8 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.lib.extensions.RenderTargetExtensions;
-import com.simibubi.create.lib.util.GuiUtils;
+import io.github.fabricators_of_create.porting_lib.extensions.RenderTargetExtensions;
+import io.github.fabricators_of_create.porting_lib.util.GuiUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;

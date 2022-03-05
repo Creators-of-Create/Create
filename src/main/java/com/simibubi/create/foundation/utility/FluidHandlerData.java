@@ -1,9 +1,9 @@
-package com.simibubi.create.lib.util;
+package com.simibubi.create.foundation.utility;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

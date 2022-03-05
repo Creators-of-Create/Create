@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

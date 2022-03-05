@@ -16,9 +16,9 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.lib.mixin.common.accessor.PotionBrewingAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.PotionBrewingAccessor;
 
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Registry;

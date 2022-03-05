@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import com.simibubi.create.lib.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -13,8 +13,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.item.EntitySwingListenerItem;
-import com.simibubi.create.lib.item.ReequipAnimationItem;
+import io.github.fabricators_of_create.porting_lib.item.EntitySwingListenerItem;
+import io.github.fabricators_of_create.porting_lib.item.ReequipAnimationItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

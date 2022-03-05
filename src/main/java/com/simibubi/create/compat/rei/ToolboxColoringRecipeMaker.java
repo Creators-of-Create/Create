@@ -6,11 +6,11 @@ import java.util.stream.Stream;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
-import com.simibubi.create.lib.mixin.common.accessor.IngredientAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.IngredientAccessor;
 
-import com.simibubi.create.lib.mixin.common.accessor.ItemValueAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ItemValueAccessor;
 
-import com.simibubi.create.lib.mixin.common.accessor.TagValueAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.TagValueAccessor;
 
 import me.alphamode.forgetags.DyeUtil;
 import net.minecraft.core.NonNullList;

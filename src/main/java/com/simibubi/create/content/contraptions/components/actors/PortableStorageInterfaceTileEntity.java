@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
+import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

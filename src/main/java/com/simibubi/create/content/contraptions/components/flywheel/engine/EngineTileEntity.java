@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBloc
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
+import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

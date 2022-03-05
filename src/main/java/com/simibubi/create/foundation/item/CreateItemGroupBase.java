@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
-import com.simibubi.create.lib.util.ItemGroupUtil;
+import io.github.fabricators_of_create.porting_lib.util.ItemGroupUtil;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.fabricmc.api.EnvType;

@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.fabricmc.fabric.api.entity.EntityPickInteractionAware;

@@ -5,9 +5,9 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;

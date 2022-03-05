@@ -9,9 +9,9 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
-import com.simibubi.create.lib.block.NeighborChangeListeningBlock;
-import com.simibubi.create.lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.block.NeighborChangeListeningBlock;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

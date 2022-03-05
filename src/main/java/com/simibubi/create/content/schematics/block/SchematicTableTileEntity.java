@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

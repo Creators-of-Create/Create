@@ -14,11 +14,11 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.LevelUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import io.github.tropheusj.milk.Milk;
 import me.alphamode.forgetags.Tags;

@@ -4,9 +4,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import com.simibubi.create.lib.block.CustomLandingEffectsBlock;
-import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
-import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

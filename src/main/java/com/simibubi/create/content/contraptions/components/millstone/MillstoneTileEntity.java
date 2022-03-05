@@ -12,13 +12,13 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.CombinedInvWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -178,7 +178,7 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		return capability.orElse(null);
 	}
 

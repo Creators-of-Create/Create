@@ -5,9 +5,9 @@ import java.util.Optional;
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.gui.container.GhostItemContainer;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.SlotItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.SlotItemHandler;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

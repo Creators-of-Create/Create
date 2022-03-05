@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;

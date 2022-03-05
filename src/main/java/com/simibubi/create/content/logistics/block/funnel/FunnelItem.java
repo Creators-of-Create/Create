@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.lib.item.BlockUseBypassingItem;
+import io.github.fabricators_of_create.porting_lib.item.BlockUseBypassingItem;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

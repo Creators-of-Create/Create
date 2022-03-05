@@ -7,8 +7,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.mixin.common.accessor.LivingEntityAccessor;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LivingEntityAccessor;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.mixin.content.registry.AxeItemAccessor;

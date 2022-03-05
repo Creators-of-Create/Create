@@ -18,9 +18,9 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.simibubi.create.lib.extensions.EntityExtensions;
-import com.simibubi.create.lib.item.UseFirstBehaviorItem;
-import com.simibubi.create.lib.mixin.common.accessor.BucketItemAccessor;
+import io.github.fabricators_of_create.porting_lib.extensions.EntityExtensions;
+import io.github.fabricators_of_create.porting_lib.item.UseFirstBehaviorItem;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BucketItemAccessor;
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;

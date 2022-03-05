@@ -10,13 +10,13 @@ import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import com.simibubi.create.lib.mixin.common.accessor.BucketItemAccessor;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BucketItemAccessor;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
-import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
 
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;

@@ -17,10 +17,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

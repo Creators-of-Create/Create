@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.SlotItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.SlotItemHandler;
 
 public class ToolboxSlot extends SlotItemHandler {
 

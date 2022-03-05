@@ -19,7 +19,7 @@ import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.lib.mixin.client.accessor.AbstractSelectionList$EntryAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractSelectionList$EntryAccessor;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractSelectionList;

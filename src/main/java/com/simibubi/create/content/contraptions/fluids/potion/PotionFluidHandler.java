@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

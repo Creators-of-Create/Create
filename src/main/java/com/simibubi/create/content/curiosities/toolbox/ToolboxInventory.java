@@ -9,8 +9,8 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

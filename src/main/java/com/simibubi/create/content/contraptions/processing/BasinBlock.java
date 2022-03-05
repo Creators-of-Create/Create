@@ -15,11 +15,11 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

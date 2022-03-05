@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.gui.container.GhostItemContainer;
 import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import com.simibubi.create.lib.mixin.client.accessor.AbstractContainerScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractContainerScreenAccessor;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;

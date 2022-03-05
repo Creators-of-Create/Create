@@ -9,8 +9,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

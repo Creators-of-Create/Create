@@ -29,14 +29,14 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
-import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.ItemStackUtil;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -728,7 +728,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		if (direction == Direction.DOWN) return null; // special case for #114
 		return lazyHandler.orElse(null);
 	}

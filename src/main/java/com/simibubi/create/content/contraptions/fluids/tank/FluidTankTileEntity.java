@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.FluidTileDataHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -14,15 +15,15 @@ import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
-import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.util.FluidTileDataHandler;
-import com.simibubi.create.lib.util.FluidUtil;
-import com.simibubi.create.lib.util.LazyOptional;
+
+import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
@@ -478,9 +479,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Nullable
 	@Override
-	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
 		if (!fluidCapability.isPresent())
 			refreshCapability();
-		return fluidCapability.orElse(null);
+		return fluidCapability.cast();
 	}
 }

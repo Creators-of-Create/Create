@@ -31,11 +31,11 @@ import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.ItemStackUtil;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -264,7 +264,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		return direction == Direction.DOWN ? null : invProvider.orElse(null);
 	}
 

@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -1,15 +1,12 @@
-package com.simibubi.create.lib.util;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.simibubi.create.foundation.utility;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,6 +19,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FluidTileDataHandler {
 	public static final ResourceLocation PACKET_ID = Create.asResource("fluid_tile_handler_data");

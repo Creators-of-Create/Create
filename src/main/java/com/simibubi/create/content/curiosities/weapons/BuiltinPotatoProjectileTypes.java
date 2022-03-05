@@ -9,8 +9,8 @@ import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import com.simibubi.create.lib.util.LevelUtil;
-import com.simibubi.create.lib.util.PlantUtil;
+import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
+import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;

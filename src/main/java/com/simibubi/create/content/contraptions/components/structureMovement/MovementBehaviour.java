@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

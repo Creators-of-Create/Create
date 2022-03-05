@@ -18,7 +18,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.lib.block.CustomRunningEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;

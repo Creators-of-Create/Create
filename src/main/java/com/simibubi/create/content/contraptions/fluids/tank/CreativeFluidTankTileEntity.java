@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

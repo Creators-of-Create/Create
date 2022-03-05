@@ -1,7 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

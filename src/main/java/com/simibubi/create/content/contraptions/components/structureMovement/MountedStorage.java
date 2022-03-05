@@ -6,12 +6,12 @@ import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

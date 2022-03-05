@@ -63,7 +63,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

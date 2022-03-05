@@ -14,8 +14,8 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

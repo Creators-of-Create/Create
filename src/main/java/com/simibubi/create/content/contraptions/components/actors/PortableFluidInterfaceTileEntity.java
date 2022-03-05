@@ -5,11 +5,11 @@ import com.simibubi.create.content.contraptions.components.actors.PortableItemIn
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,8 +54,8 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 	@Nullable
 	@Override
-	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
-		return capability.getValueUnsafer();
+	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
+		return capability.cast();
 	}
 
 	public class InterfaceFluidHandler implements IFluidHandler {

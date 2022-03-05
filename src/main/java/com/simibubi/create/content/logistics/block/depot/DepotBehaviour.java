@@ -22,10 +22,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.util.ItemStackUtil;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

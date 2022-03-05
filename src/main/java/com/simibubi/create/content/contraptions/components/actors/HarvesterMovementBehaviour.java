@@ -14,7 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.PlantUtil;
+import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;

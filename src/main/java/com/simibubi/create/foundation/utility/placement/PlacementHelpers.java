@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
-import com.simibubi.create.lib.event.OverlayRenderCallback;
+import io.github.fabricators_of_create.porting_lib.event.OverlayRenderCallback;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

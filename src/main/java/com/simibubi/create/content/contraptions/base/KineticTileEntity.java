@@ -25,7 +25,7 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.block.CustomRenderBoundingBoxBlockEntity;
+import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

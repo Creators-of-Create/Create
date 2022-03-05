@@ -8,8 +8,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.LevelUtil;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.bell;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllParticleTypes;
-import com.simibubi.create.lib.util.ParticleHelper;
+import io.github.fabricators_of_create.porting_lib.util.ParticleHelper;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

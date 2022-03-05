@@ -14,8 +14,8 @@ import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.lib.mixin.client.accessor.BlockRenderDispatcherAccessor;
-import com.simibubi.create.lib.render.FixedLightBakedModel;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.BlockRenderDispatcherAccessor;
+import io.github.fabricators_of_create.porting_lib.render.FixedLightBakedModel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;

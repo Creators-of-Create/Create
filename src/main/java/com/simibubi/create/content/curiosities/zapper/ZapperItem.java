@@ -12,8 +12,8 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.lib.item.EntitySwingListenerItem;
-import com.simibubi.create.lib.item.ReequipAnimationItem;
+import io.github.fabricators_of_create.porting_lib.item.EntitySwingListenerItem;
+import io.github.fabricators_of_create.porting_lib.item.ReequipAnimationItem;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

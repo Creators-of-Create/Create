@@ -15,8 +15,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

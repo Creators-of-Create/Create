@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

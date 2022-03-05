@@ -9,12 +9,12 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.CombinedInvWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -223,7 +223,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		initCapability();
 		return itemCapability.orElse(null);
 	}

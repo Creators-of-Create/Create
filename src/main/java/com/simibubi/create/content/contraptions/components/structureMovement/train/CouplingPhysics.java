@@ -4,7 +4,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
+import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

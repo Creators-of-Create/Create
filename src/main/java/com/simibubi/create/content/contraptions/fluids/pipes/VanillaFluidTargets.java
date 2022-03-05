@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_HONEY;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;

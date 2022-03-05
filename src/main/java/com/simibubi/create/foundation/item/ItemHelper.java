@@ -11,8 +11,8 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

@@ -19,8 +19,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.MinecartAndRailUtil;
-import com.simibubi.create.lib.util.NBTSerializable;
+import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -308,7 +308,7 @@ public class MinecartController implements NBTSerializable {
 	}
 
 	@Override
-	public void create$deserializeNBT(CompoundTag nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		Optional<StallData> internalSD = Optional.empty();
 		Optional<StallData> externalSD = Optional.empty();
 		Optional<CouplingData> mainCD = Optional.empty();

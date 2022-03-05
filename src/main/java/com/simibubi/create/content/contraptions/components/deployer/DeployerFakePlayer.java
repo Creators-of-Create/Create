@@ -100,7 +100,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 		return -1;
 	}
 
-	public static boolean deployerCollectsDropsFromKilledEntities(DamageSource s, Collection<ItemEntity> drops) {
+	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource s, Collection<ItemEntity> drops) {
 		if (!(s instanceof EntityDamageSource))
 			return false;
 		EntityDamageSource source = (EntityDamageSource) s;

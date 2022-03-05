@@ -7,9 +7,9 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.BlockPos;

@@ -13,10 +13,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.item.CustomMaxCountItem;
-import com.simibubi.create.lib.item.EntityTickListenerItem;
-import com.simibubi.create.lib.mixin.common.accessor.BeaconBlockEntityAccessor;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.item.CustomMaxCountItem;
+import io.github.fabricators_of_create.porting_lib.item.EntityTickListenerItem;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BeaconBlockEntityAccessor;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

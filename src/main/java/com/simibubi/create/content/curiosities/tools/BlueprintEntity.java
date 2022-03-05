@@ -21,12 +21,12 @@ import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
-import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
-import com.simibubi.create.lib.transfer.item.InvWrapper;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.NetworkUtil;
+import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.InvWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.api.EnvType;

@@ -9,7 +9,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.lib.mixin.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;

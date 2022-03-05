@@ -28,13 +28,14 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.utility.FluidHandlerData;
+import com.simibubi.create.foundation.utility.FluidTileDataHandler;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
-import com.simibubi.create.lib.event.OverlayRenderCallback;
-import com.simibubi.create.lib.util.FluidHandlerData;
-import com.simibubi.create.lib.util.FluidTileDataHandler;
+
+import io.github.fabricators_of_create.porting_lib.event.OverlayRenderCallback;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
@@ -122,6 +123,7 @@ public class CreateClient implements ClientModInitializer {
 				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
 				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
 			}
+			return false;
 		}));
 	}
 

@@ -6,11 +6,11 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import com.simibubi.create.lib.mixin.common.accessor.IngredientAccessor;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.util.MultiItemValue;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.IngredientAccessor;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.MultiItemValue;
 
-import com.simibubi.create.lib.util.ShapedRecipeUtil;
+import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -24,7 +24,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.Outline;
 import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
-import com.simibubi.create.lib.util.GuiUtils;
+import io.github.fabricators_of_create.porting_lib.util.GuiUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

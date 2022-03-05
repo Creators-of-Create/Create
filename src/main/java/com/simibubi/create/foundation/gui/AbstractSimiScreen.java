@@ -6,7 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
-import com.simibubi.create.lib.mixin.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

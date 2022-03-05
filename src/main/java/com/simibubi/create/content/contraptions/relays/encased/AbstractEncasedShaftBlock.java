@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

@@ -15,12 +15,12 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
-import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
 
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;

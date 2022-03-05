@@ -43,9 +43,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.minecraft.core.BlockPos;
@@ -187,7 +187,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
 			return itemHandler.orElse(null);
 		}

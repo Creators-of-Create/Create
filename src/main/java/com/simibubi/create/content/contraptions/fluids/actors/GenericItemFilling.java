@@ -3,11 +3,11 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidStorageHandler;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStorageHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;

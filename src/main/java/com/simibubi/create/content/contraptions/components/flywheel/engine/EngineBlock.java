@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import com.simibubi.create.lib.item.BlockUseBypassingItem;
+import io.github.fabricators_of_create.porting_lib.item.BlockUseBypassingItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.Minecraft;

@@ -7,9 +7,9 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.lib.block.CustomSoundTypeBlock;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

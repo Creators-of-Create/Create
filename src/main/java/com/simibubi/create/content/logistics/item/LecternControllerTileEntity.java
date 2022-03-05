@@ -7,7 +7,7 @@ import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

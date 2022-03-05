@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.fluid;
 
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.transfer.item.EmptyHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.EmptyHandler;
 
 /**
  * Combines multiple IFluidHandlers into one interface (See CombinedInvWrapper

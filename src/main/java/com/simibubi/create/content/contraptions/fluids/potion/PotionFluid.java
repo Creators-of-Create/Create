@@ -7,8 +7,8 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.transfer.fluid.FluidAttributes;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidAttributes;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import com.tterrag.registrate.fabric.EnvExecutor;
 

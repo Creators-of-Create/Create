@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.util.KeyBindingHelper;
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;

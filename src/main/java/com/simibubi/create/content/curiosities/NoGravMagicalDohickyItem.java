@@ -1,8 +1,8 @@
 package com.simibubi.create.content.curiosities;
 
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.item.EntityTickListenerItem;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.item.EntityTickListenerItem;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;

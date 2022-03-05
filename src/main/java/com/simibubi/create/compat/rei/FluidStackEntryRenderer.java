@@ -12,9 +12,9 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.util.FluidTextUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 
-import com.simibubi.create.lib.util.FluidUnit;
+import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
 
 import dev.architectury.fluid.FluidStack;
 import me.shedaniel.math.Point;

@@ -16,7 +16,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.LevelUtil;
+import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -28,8 +28,8 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.mixin.common.accessor.DimensionTypeAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.DimensionTypeAccessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

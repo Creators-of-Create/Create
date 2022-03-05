@@ -11,7 +11,7 @@ import com.simibubi.create.compat.rei.category.animations.AnimatedCrafter;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import com.simibubi.create.lib.util.ShapedRecipeUtil;
+import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;

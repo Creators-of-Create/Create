@@ -26,10 +26,10 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.api.EnvType;

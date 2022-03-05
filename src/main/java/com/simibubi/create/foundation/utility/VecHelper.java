@@ -6,8 +6,8 @@ import javax.annotation.Nullable;
 
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.lib.util.GameRendererHelper;
-import com.simibubi.create.lib.util.Vector3fHelper;
+import io.github.fabricators_of_create.porting_lib.util.GameRendererHelper;
+import io.github.fabricators_of_create.porting_lib.util.Vector3fHelper;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

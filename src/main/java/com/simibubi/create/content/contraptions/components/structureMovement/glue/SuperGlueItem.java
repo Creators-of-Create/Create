@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.item.CustomMaxCountItem;
+import io.github.fabricators_of_create.porting_lib.item.CustomMaxCountItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

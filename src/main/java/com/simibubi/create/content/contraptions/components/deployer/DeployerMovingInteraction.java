@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.Tag;

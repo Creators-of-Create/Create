@@ -11,7 +11,7 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity.State
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.block.CustomFrictionBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomFrictionBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

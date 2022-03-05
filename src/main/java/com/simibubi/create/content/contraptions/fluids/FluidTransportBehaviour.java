@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -31,13 +31,13 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.LazyOptional;
-import com.simibubi.create.lib.util.LevelUtil;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -697,7 +697,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 
 	@Override
 	@Nullable
-	public IItemHandler getItemHandler(Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(Direction direction) {
 		return tunnelCapability.getValueUnsafer();
 	}
 

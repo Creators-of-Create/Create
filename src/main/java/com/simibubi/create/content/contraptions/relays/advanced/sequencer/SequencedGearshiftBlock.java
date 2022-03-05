@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

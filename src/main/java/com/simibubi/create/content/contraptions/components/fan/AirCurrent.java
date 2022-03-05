@@ -17,8 +17,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
-import com.simibubi.create.lib.util.DamageSourceHelper;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
+import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

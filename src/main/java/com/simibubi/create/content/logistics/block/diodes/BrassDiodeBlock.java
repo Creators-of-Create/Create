@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

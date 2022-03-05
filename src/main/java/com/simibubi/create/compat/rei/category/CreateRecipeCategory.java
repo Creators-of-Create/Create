@@ -18,7 +18,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;

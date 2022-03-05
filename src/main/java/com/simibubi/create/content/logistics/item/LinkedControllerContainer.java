@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.item;
 
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.foundation.gui.container.GhostItemContainer;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.transfer.item.SlotItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.SlotItemHandler;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

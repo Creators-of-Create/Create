@@ -24,7 +24,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

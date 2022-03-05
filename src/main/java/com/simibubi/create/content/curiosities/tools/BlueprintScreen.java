@@ -18,8 +18,8 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.mixin.common.accessor.PlayerAccessor;
-import com.simibubi.create.lib.mixin.common.accessor.SlotAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.PlayerAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.SlotAccessor;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.Rect2i;

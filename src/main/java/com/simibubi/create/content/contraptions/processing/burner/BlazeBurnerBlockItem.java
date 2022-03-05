@@ -8,7 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.util.AbstractSpawnerHelper;
+import io.github.fabricators_of_create.porting_lib.util.AbstractSpawnerHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

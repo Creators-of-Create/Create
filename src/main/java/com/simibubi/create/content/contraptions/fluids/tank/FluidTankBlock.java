@@ -10,12 +10,12 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.block.CustomSoundTypeBlock;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.minecraft.core.BlockPos;

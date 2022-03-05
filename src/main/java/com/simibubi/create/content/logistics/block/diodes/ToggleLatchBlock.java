@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.diodes;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -8,8 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
-import com.simibubi.create.lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

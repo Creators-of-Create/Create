@@ -5,7 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

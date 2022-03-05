@@ -20,9 +20,9 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
@@ -179,7 +179,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements ItemTransfe
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		if (!this.cap.isPresent()) {
 			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
 				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());

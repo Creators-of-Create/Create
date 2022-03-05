@@ -43,9 +43,9 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.lib.mixin.client.accessor.ScreenAccessor;
-import com.simibubi.create.lib.util.GuiUtils;
-import com.simibubi.create.lib.util.KeyBindingHelper;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.util.GuiUtils;
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

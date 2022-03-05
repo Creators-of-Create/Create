@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.util.FluidUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

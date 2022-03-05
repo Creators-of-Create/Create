@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

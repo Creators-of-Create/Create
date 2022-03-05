@@ -11,8 +11,8 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
-import com.simibubi.create.lib.extensions.ChunkUnloadListeningBlockEntity;
 
+import io.github.fabricators_of_create.porting_lib.block.ChunkUnloadListeningBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

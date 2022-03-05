@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankB
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

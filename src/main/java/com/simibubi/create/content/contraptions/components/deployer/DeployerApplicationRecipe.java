@@ -15,7 +15,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

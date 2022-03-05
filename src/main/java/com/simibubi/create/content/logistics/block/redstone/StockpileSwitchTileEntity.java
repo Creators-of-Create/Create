@@ -8,9 +8,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.lib.util.BiomeManagerHelper;
-import com.simibubi.create.lib.util.MinecraftServerUtil;
+import io.github.fabricators_of_create.porting_lib.util.BiomeManagerHelper;
+import io.github.fabricators_of_create.porting_lib.util.MinecraftServerUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;

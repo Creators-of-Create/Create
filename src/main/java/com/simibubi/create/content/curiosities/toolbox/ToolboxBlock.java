@@ -9,8 +9,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.lib.util.NetworkUtil;
-import com.simibubi.create.lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;

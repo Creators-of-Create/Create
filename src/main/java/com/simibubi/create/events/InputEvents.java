@@ -6,9 +6,9 @@ import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
-import com.simibubi.create.lib.event.KeyInputCallback;
-import com.simibubi.create.lib.event.MouseButtonCallback;
-import com.simibubi.create.lib.event.MouseScrolledCallback;
+import io.github.fabricators_of_create.porting_lib.event.KeyInputCallback;
+import io.github.fabricators_of_create.porting_lib.event.MouseButtonCallback;
+import io.github.fabricators_of_create.porting_lib.event.MouseScrolledCallback;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.schematics.block;
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.container.ContainerBase;
-import com.simibubi.create.lib.transfer.item.SlotItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.SlotItemHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

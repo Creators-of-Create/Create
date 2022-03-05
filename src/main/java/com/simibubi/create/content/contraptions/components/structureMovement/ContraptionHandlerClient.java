@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
-import com.simibubi.create.lib.mixin.client.accessor.KeyMappingAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.KeyMappingAccessor;
 
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,7 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.syn
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

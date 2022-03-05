@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.item.ItemEntity;

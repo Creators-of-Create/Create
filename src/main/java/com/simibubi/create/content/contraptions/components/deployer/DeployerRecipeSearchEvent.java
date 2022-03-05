@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

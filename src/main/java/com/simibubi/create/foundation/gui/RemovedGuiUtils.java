@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.lib.util.GuiUtils;
+import io.github.fabricators_of_create.porting_lib.util.GuiUtils;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.FormattedText;

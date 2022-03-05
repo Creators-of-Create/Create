@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;

@@ -10,8 +10,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
-import com.simibubi.create.lib.event.RegisterShadersCallback;
-import com.simibubi.create.lib.mixin.client.accessor.RenderTypeAccessor;
+import io.github.fabricators_of_create.porting_lib.event.RegisterShadersCallback;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;

@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.lib.util.StairsBlockHelper;
+import io.github.fabricators_of_create.porting_lib.util.StairsBlockHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;

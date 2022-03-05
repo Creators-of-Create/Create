@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.function.Consumer;
 
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

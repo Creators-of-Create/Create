@@ -19,11 +19,11 @@ import com.simibubi.create.foundation.utility.ResetableLazy;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.lib.transfer.item.IItemHandler;
-import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
-import com.simibubi.create.lib.transfer.item.ItemTransferable;
-import com.simibubi.create.lib.util.EntityHelper;
-import com.simibubi.create.lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -279,7 +279,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	@Nullable
 	@Override
-	public IItemHandler getItemHandler(@Nullable Direction direction) {
+	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		return inventoryProvider.orElse(null);
 	}
 

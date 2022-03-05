@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

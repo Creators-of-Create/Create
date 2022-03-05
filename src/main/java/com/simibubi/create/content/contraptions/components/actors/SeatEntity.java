@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllEntityTypes;
-import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
+import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;

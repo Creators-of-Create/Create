@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.tileEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.lib.block.CustomDataPacketHandlingBlockEntity;
-import com.simibubi.create.lib.block.CustomUpdateTagHandlingBlockEntity;
-import com.simibubi.create.lib.extensions.BlockEntityExtensions;
+import io.github.fabricators_of_create.porting_lib.block.CustomDataPacketHandlingBlockEntity;
+import io.github.fabricators_of_create.porting_lib.block.CustomUpdateTagHandlingBlockEntity;
+import io.github.fabricators_of_create.porting_lib.extensions.BlockEntityExtensions;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -80,7 +80,7 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 	}
 
 	@Override
-	public void create$deserializeNBT(BlockState state, CompoundTag nbt) {
+	public void deserializeNBT(BlockState state, CompoundTag nbt) {
 		this.load(nbt);
 	}
 }

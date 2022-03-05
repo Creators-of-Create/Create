@@ -5,9 +5,9 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.lib.item.UseFirstBehaviorItem;
-import com.simibubi.create.lib.transfer.item.ItemStackHandler;
-import com.simibubi.create.lib.util.NetworkUtil;
+import io.github.fabricators_of_create.porting_lib.item.UseFirstBehaviorItem;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

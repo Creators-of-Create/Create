@@ -11,8 +11,10 @@ import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
-import com.simibubi.create.lib.event.EntityReadExtraDataCallback;
-import com.simibubi.create.lib.event.ProjectileImpactCallback;
+
+import io.github.fabricators_of_create.porting_lib.event.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.EntityReadExtraDataCallback;
+import io.github.fabricators_of_create.porting_lib.event.ProjectileImpactCallback;
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
@@ -50,16 +52,14 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
-import com.simibubi.create.lib.event.BlockPlaceCallback;
-import com.simibubi.create.lib.event.DataPackReloadCallback;
-import com.simibubi.create.lib.event.EntityEyeHeightCallback;
-import com.simibubi.create.lib.event.FluidPlaceBlockCallback;
-import com.simibubi.create.lib.event.LivingEntityEvents;
-import com.simibubi.create.lib.event.MobEntitySetTargetCallback;
-import com.simibubi.create.lib.event.OnDatapackSyncCallback;
-import com.simibubi.create.lib.event.PlayerTickEndCallback;
-import com.simibubi.create.lib.event.ServerPlayerCreationCallback;
-import com.simibubi.create.lib.event.StartRidingCallback;
+import io.github.fabricators_of_create.porting_lib.event.BlockPlaceCallback;
+import io.github.fabricators_of_create.porting_lib.event.DataPackReloadCallback;
+import io.github.fabricators_of_create.porting_lib.event.FluidPlaceBlockCallback;
+import io.github.fabricators_of_create.porting_lib.event.LivingEntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.MobEntitySetTargetCallback;
+import io.github.fabricators_of_create.porting_lib.event.OnDatapackSyncCallback;
+import io.github.fabricators_of_create.porting_lib.event.ServerPlayerCreationCallback;
+import io.github.fabricators_of_create.porting_lib.event.StartRidingCallback;
 
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
@@ -263,7 +263,7 @@ public class CommonEvents {
 		LivingEntityEvents.DROPS.register(CrushingWheelTileEntity::handleCrushedMobDrops);
 		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelTileEntity::crushingIsFortunate);
 		LivingEntityEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
-		EntityEyeHeightCallback.EVENT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
+		EntityEvents.EYE_HEIGHT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
 		BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
 		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
 		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);

@@ -19,8 +19,8 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
-import com.simibubi.create.lib.util.LevelUtil;
+import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
+import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;

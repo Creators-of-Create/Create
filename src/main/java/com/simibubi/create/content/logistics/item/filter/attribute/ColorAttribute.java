@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import com.simibubi.create.lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
