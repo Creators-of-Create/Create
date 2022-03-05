@@ -163,7 +163,9 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 						ItemStack stack = inventory.getStackInSlot(slot);
 						if (stack.isEmpty())
 							continue;
-						ItemStack remainder = behaviour.handleInsertion(stack, facing.getOpposite(), false);
+						// fabric: not quite sure what's going on here, but it fixes #171 and #160
+						Direction inserting = facing == Direction.DOWN ? Direction.UP : facing;
+						ItemStack remainder = behaviour.handleInsertion(stack, inserting, false);
 						if (ItemStackUtil.equals(remainder, stack, false))
 							continue;
 						inventory.setStackInSlot(slot, remainder);
