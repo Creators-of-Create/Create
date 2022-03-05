@@ -98,7 +98,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 			super.renderTooltip(ms, x, y);
 			return;
 		}
-		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), ((SlotAccessor) hoveredSlot).create$getSlotIndex()), x, y/*, font*/);
+		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), ((SlotAccessor) hoveredSlot).port_lib$getSlotIndex()), x, y/*, font*/);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		List<Component> list = super.getTooltipFromItem(stack);
 		if (hoveredSlot.container == menu.playerInventory)
 			return list;
-		return hoveredSlot != null ? addToTooltip(list, ((SlotAccessor)hoveredSlot).create$getSlotIndex()) : list;
+		return hoveredSlot != null ? addToTooltip(list, ((SlotAccessor)hoveredSlot).port_lib$getSlotIndex()) : list;
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot) {

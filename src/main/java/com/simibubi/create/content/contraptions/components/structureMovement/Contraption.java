@@ -874,7 +874,7 @@ public abstract class Contraption {
 
 		ListTag paletteNBT = new ListTag();
 		for(int i = 0; i < palette.getSize(); ++i)
-			paletteNBT.add(NbtUtils.writeBlockState(((HashMapPaletteAccessor<BlockState>)palette).create$getValues().byId(i)));
+			paletteNBT.add(NbtUtils.writeBlockState(((HashMapPaletteAccessor<BlockState>)palette).port_lib$getValues().byId(i)));
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
 
@@ -891,9 +891,9 @@ public abstract class Contraption {
 			});
 
 			ListTag list = c.getList("Palette", 10);
-			((HashMapPaletteAccessor)palette).create$getValues().clear();
+			((HashMapPaletteAccessor)palette).port_lib$getValues().clear();
 			for (int i = 0; i < list.size(); ++i)
-				((HashMapPaletteAccessor)palette).create$getValues().add(NbtUtils.readBlockState(list.getCompound(i)));
+				((HashMapPaletteAccessor)palette).port_lib$getValues().add(NbtUtils.readBlockState(list.getCompound(i)));
 
 			blockList = c.getList("BlockList", 10);
 		} else {

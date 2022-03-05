@@ -698,7 +698,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	@Override
 	@Nullable
 	public LazyOptional<IItemHandler> getItemHandler(Direction direction) {
-		return tunnelCapability.getValueUnsafer();
+		return tunnelCapability.cast();
 	}
 
 	public LazyOptional<IItemHandler> getBeltCapability() {

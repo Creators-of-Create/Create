@@ -110,7 +110,7 @@ public class DeployerHandler {
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
-			Fluid fluid = ((BucketItemAccessor) bucketItem).create$getContent();
+			Fluid fluid = ((BucketItemAccessor) bucketItem).port_lib$getContent();
 			if (fluid != Fluids.EMPTY && world.getFluidState(targetPos)
 				.getType() == fluid)
 				return false;
@@ -154,13 +154,13 @@ public class DeployerHandler {
 			Entity entity = entities.get(world.random.nextInt(entities.size()));
 			List<ItemEntity> capturedDrops = new ArrayList<>();
 			boolean success = false;
-			((EntityExtensions) entity).create$captureDrops(capturedDrops);
+			entity.captureDrops(capturedDrops);
 
 			// Use on entity
 			if (mode == Mode.USE) {
 				InteractionResult cancelResult = UseEntityCallback.EVENT.invoker().interact(player, world, hand, entity, new EntityHitResult(entity));
 				if (cancelResult == InteractionResult.FAIL) {
-					((EntityExtensions) entity).create$captureDrops(null);
+					entity.captureDrops(null);
 					return;
 				}
 				if (cancelResult == null || cancelResult == InteractionResult.PASS) {
@@ -195,7 +195,7 @@ public class DeployerHandler {
 				success = true;
 			}
 
-			((EntityExtensions) entity).create$captureDrops(null);
+			entity.captureDrops(null);
 			capturedDrops.forEach(e -> player.getInventory()
 				.placeItemBackInInventory(e.getItem()));
 			if (success)

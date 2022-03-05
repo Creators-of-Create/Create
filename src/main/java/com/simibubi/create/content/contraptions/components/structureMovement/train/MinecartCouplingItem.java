@@ -35,8 +35,7 @@ public class MinecartCouplingItem extends Item {
 		AbstractMinecart minecart = (AbstractMinecart) interacted;
 		if (player == null)
 			return InteractionResult.PASS;
-		LazyOptional<MinecartController> capability =
-			LazyOptional.ofObject(MinecartAndRailUtil.getController(minecart));
+		LazyOptional<MinecartController> capability = minecart.lazyController();
 		if (!capability.isPresent())
 			return InteractionResult.PASS;
 		MinecartController controller = capability.orElse(null);

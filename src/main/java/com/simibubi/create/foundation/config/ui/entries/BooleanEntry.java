@@ -54,7 +54,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 		button.x = x + width - 80 - resetWidth;
 		button.y = y + 10;
 		button.setWidth(35);
-		((AbstractWidgetAccessor) button).create$setHeight(height - 20);
+		((AbstractWidgetAccessor) button).port_lib$setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 

@@ -45,7 +45,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity implements ItemTran
 
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return itemHandler.orElse(null);
+		return itemHandler.cast();
 	}
 
 	public FilteringBehaviour createFilter() {

@@ -205,7 +205,7 @@ public class SchematicChunkSource extends ChunkSource {
 		}
 
 		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null,
-				DimensionTypeAccessor.create$getDefaultOverworld(), null, false, false, 0);
+				DimensionTypeAccessor.port_lib$getDefaultOverworld(), null, false, false, 0);
 
 		public EmptierChunk(RegistryAccess registryAccess) {
 			super(DUMMY_LEVEL.withAccess(registryAccess), null);

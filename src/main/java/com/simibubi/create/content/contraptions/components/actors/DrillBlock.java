@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
-	public static DamageSource damageSourceDrill = DamageSourceHelper.create$createArmorBypassingDamageSource("create.mechanical_drill");
+	public static DamageSource damageSourceDrill = DamageSourceHelper.port_lib$createArmorBypassingDamageSource("create.mechanical_drill");
 
 	public DrillBlock(Properties properties) {
 		super(properties);

@@ -98,7 +98,7 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				((ScreenAccessor) gui).create$getChildren().stream()
+				((ScreenAccessor) gui).port_lib$getChildren().stream()
 						.filter(w -> w instanceof AbstractWidget)
 						.map(w -> (AbstractWidget) w)
 						.filter(w -> w.getMessage().getString().equals(target))

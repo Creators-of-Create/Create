@@ -4,12 +4,12 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import com.simibubi.create.foundation.utility.FluidHandlerData;
-import com.simibubi.create.foundation.utility.FluidHandlerData.FluidTankData;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.FluidHandlerData;
+import io.github.fabricators_of_create.porting_lib.util.FluidHandlerData.FluidTankData;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
 import io.github.fabricators_of_create.porting_lib.util.FluidUtil;

@@ -38,7 +38,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		int listWidth = Math.min(width - 80, 300);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 60, 15, height - 45, 40);
-		list.setLeftPos(this.width / 2 - ((AbstractSelectionListAccessor) list).create$getWidth() / 2);
+		list.setLeftPos(this.width / 2 - ((AbstractSelectionListAccessor) list).port_lib$getWidth() / 2);
 		addRenderableWidget(list);
 
 		allEntries = new ArrayList<>();
@@ -135,7 +135,7 @@ public class ConfigModListScreen extends ConfigScreen {
 
 			button.x = x + width - 108;
 			button.y = y + 10;
-			((AbstractWidgetAccessor) button).create$setHeight(height - 20);
+			((AbstractWidgetAccessor) button).port_lib$setHeight(height - 20);
 			button.render(ms, mouseX, mouseY, partialTicks);
 		}
 

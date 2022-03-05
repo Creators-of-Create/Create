@@ -265,7 +265,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 	@Nullable
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return direction == Direction.DOWN ? null : invProvider.orElse(null);
+		return direction == Direction.DOWN ? null : invProvider.cast();
 	}
 
 	protected void spawnEventParticles(ItemStack stack) {

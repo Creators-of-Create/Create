@@ -30,7 +30,7 @@ public class CouplingHandler {
 
 	public static InteractionResult preventEntitiesFromMoutingOccupiedCart(Entity e, Entity mounting) {
 		if (e instanceof AbstractMinecart cart) {
-			LazyOptional<MinecartController> optional = LazyOptional.ofObject(MinecartAndRailUtil.getController(cart));
+			LazyOptional<MinecartController> optional = cart.lazyController();
 			if (!optional.isPresent())
 				return InteractionResult.PASS;
 			if (mounting instanceof AbstractContraptionEntity)

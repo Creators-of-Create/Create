@@ -63,9 +63,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class InWorldProcessing {
 
-	private static final DamageSource FIRE_DAMAGE_SOURCE = DamageSourceHelper.create$createFireDamageSource("create.fan_fire").setScalesWithDifficulty();
+	private static final DamageSource FIRE_DAMAGE_SOURCE = DamageSourceHelper.port_lib$createFireDamageSource("create.fan_fire").setScalesWithDifficulty();
 
-	private static final DamageSource LAVA_DAMAGE_SOURCE = DamageSourceHelper.create$createFireDamageSource("create.fan_lava").setScalesWithDifficulty();
+	private static final DamageSource LAVA_DAMAGE_SOURCE = DamageSourceHelper.port_lib$createFireDamageSource("create.fan_lava").setScalesWithDifficulty();
 
 	private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();

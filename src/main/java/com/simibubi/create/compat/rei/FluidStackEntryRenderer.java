@@ -80,12 +80,12 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 				tooltip.set(0, name);
 
 			ArrayList<Component> potionTooltip = new ArrayList<>();
-			PotionFluidHandler.addPotionTooltip(new com.simibubi.create.lib.transfer.fluid.FluidStack(variant, fluid.getAmount(), fluid.getTag()), potionTooltip, 1);
+			PotionFluidHandler.addPotionTooltip(new io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack(variant, fluid.getAmount(), fluid.getTag()), potionTooltip, 1);
 			tooltip.addAll(1, new ArrayList<>(potionTooltip));
 		}
 
-		String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount());
 		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
+		String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
 		Component text = Lang.translate(unit.getTranslationKey(), amount).withStyle(ChatFormatting.GOLD);
 		if (tooltip.isEmpty())
 			tooltip.add(0, text);

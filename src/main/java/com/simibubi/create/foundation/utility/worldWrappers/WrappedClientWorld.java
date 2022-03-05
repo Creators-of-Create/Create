@@ -37,8 +37,8 @@ public class WrappedClientWorld extends ClientLevel {
 
 	private WrappedClientWorld(Level world) {
 		super(mc.getConnection(), mc.level.getLevelData(), world.dimension(), world.dimensionType(),
-			((ClientPacketListenerAccessor) mc.getConnection()).create$getServerChunkRadius(), mc.level.getServerSimulationDistance(),
-			world.getProfilerSupplier(), mc.levelRenderer, world.isDebug(), ((BiomeManagerAccessor) world.getBiomeManager()).create$getBiomeZoomSeed());
+			((ClientPacketListenerAccessor) mc.getConnection()).port_lib$getServerChunkRadius(), mc.level.getServerSimulationDistance(),
+			world.getProfilerSupplier(), mc.levelRenderer, world.isDebug(), ((BiomeManagerAccessor) world.getBiomeManager()).port_lib$getBiomeZoomSeed());
 		this.world = world;
 	}
 

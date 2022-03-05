@@ -109,7 +109,7 @@ public class MinecartController implements NBTSerializable {
 		}
 		BlockPos blockpos = new BlockPos(i, j, k);
 		BlockState blockstate = world.getBlockState(blockpos);
-		if (MinecartAndRailUtil.canCartUseRail(cart) && blockstate.is(BlockTags.RAILS)
+		if (blockstate.is(BlockTags.RAILS)
 				&& blockstate.getBlock() instanceof PoweredRailBlock
 				&& (MinecartAndRailUtil.isActivatorRail(
 				blockstate.getBlock()))) {
@@ -297,7 +297,7 @@ public class MinecartController implements NBTSerializable {
 	}
 
 	@Override
-	public CompoundTag create$serializeNBT() {
+	public CompoundTag serializeNBT() {
 		CompoundTag compoundNBT = new CompoundTag();
 
 		stallData.forEachWithContext((opt, internal) -> opt

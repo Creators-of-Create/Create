@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "create-refmap.json",
   "mixins": [
-    "CustomItemUseEffectsMixin"
+    "CustomItemUseEffectsMixin",
+    "fabric.AbstractMinecartMixin",
+    "fabric.EntityMixin"
   ],
   "client": [
     "DestroyProgressMixin",

@@ -673,7 +673,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		}
 
 		// Widgets
-		((ScreenAccessor) this).create$getRenderables().forEach(w -> {
+		((ScreenAccessor) this).port_lib$getRenderables().forEach(w -> {
 			if (w instanceof PonderButton button) {
 				button.fade()
 					.startWithValue(fade);

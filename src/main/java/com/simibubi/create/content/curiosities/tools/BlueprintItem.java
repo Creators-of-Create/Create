@@ -95,7 +95,7 @@ public class BlueprintItem extends Item {
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
 		Ingredient.Value[] acceptedItems =
-				((IngredientAccessor) ingredient).create$getAcceptedItems(); // values
+				((IngredientAccessor) ingredient).port_lib$getValues(); // values
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)

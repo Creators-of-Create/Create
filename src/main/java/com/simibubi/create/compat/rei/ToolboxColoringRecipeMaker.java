@@ -43,7 +43,7 @@ public final class ToolboxColoringRecipeMaker {
 				Ingredient.Value dyeList = ItemValueAccessor.createItemValue(dyeStack);
 				Ingredient.Value colorList = TagValueAccessor.createTagValue(colorTag);
 				Stream<Ingredient.Value> colorIngredientStream = Stream.of(dyeList, colorList);
-				Ingredient colorIngredient = IngredientAccessor.create$fromValues(colorIngredientStream);
+				Ingredient colorIngredient = IngredientAccessor.port_lib$fromValues(colorIngredientStream);
 				NonNullList<Ingredient> inputs =
 					NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, colorIngredient);
 				Block coloredShulkerBox = AllBlocks.TOOLBOXES.get(color)

@@ -189,7 +189,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
-			return itemHandler.orElse(null);
+			return itemHandler.cast();
 		}
 		return null;
 	}

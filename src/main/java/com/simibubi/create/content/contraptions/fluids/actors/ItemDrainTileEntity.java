@@ -288,7 +288,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Override
 	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
 		if (direction != Direction.UP) {
-			return internalTank.getCapability().getValueUnsafer();
+			return internalTank.getCapability().cast();
 		}
 		return null;
 	}
@@ -297,7 +297,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		if (direction != null && direction.getAxis().isHorizontal()) {
-			return itemHandlers.get(direction).orElse(null);
+			return itemHandlers.get(direction).cast();
 		}
 		return null;
 	}

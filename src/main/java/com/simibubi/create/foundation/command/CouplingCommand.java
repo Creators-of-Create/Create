@@ -102,8 +102,7 @@ public class CouplingCommand {
 							if (!(cart2 instanceof AbstractMinecart))
 								throw ONLY_MINECARTS_ALLOWED.create();
 
-							LazyOptional<MinecartController> cart1Capability =
-									MinecartAndRailUtil.getControllerLazy((AbstractMinecart) cart1);
+							LazyOptional<MinecartController> cart1Capability = ((AbstractMinecart) cart1).lazyController();
 							if (!cart1Capability.isPresent()) {
 								ctx.getSource()
 									.sendSuccess(new TextComponent("Minecart has no Couplings Attached"), true);
@@ -150,8 +149,7 @@ public class CouplingCommand {
 						if (!(cart instanceof AbstractMinecart))
 							throw ONLY_MINECARTS_ALLOWED.create();
 
-						LazyOptional<MinecartController> capability =
-							MinecartAndRailUtil.getControllerLazy((AbstractMinecart) cart);
+						LazyOptional<MinecartController> capability = ((AbstractMinecart) cart).lazyController();
 						if (!capability.isPresent()) {
 							ctx.getSource()
 								.sendSuccess(new TextComponent("Minecart has no Couplings Attached"), true);

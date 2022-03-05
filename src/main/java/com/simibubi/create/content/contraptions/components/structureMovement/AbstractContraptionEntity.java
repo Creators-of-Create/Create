@@ -556,7 +556,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
 //			String srg = "f_146795_"; // removalReason
-			((EntityAccessor)entity).create$setRemovalReason(RemovalReason.UNLOADED_TO_CHUNK);
+			((EntityAccessor)entity).port_lib$setRemovalReason(RemovalReason.UNLOADED_TO_CHUNK);
 //			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
 
 			// Gather passengers into same chunk when saving
@@ -565,7 +565,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
-			((EntityAccessor)entity).create$setRemovalReason(null);
+			((EntityAccessor)entity).port_lib$setRemovalReason(null);
 //			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
 		}
 

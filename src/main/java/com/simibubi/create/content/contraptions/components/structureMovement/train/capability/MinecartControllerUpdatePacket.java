@@ -24,7 +24,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	public MinecartControllerUpdatePacket(MinecartController controller) {
 		entityID = controller.cart()
 			.getId();
-		nbt = controller.create$serializeNBT();
+		nbt = controller.serializeNBT();
 	}
 
 	public MinecartControllerUpdatePacket(FriendlyByteBuf buffer) {
@@ -54,7 +54,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 		Entity entityByID = world.getEntity(entityID);
 		if (entityByID == null)
 			return;
-		LazyOptional.ofObject(MinecartAndRailUtil.getController((AbstractMinecart) entityByID))
+		((AbstractMinecart) entityByID).lazyController()
 				.ifPresent(mc -> mc.deserializeNBT(nbt));
 	}
 

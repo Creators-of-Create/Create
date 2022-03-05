@@ -48,7 +48,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		this.parent = parent;
 		returnOnClose = true;
 		if (parent instanceof TitleScreen)
-			vanillaPanorama = ((TitleScreenAccessor) parent).create$getPanorama();
+			vanillaPanorama = ((TitleScreenAccessor) parent).port_lib$getPanorama();
 		else
 			vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	}
@@ -159,7 +159,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		((ScreenAccessor) this).create$getRenderables().forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+		((ScreenAccessor) this).port_lib$getRenderables().forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)

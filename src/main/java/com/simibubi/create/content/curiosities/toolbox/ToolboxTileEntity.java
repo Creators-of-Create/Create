@@ -280,7 +280,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	@Nullable
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return inventoryProvider.orElse(null);
+		return inventoryProvider.cast();
 	}
 
 	@Override

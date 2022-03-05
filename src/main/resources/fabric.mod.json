@@ -26,19 +26,14 @@
       "com.simibubi.create.CreateClient"
     ],
     "fabric-datagen": [
-      "com.simibubi.create.lib.data.DataInit"
+      "com.simibubi.create.CreateData"
     ],
     "rei": [
       "com.simibubi.create.compat.rei.CreateREI"
     ]
   },
 
-  "mixins": [
-    "create.mixins.json",
-    "create_lib.mixins.common.json",
-    "create_lib.mixins.client.json",
-    "create_lib.mixins.compat.json"
-  ],
+  "mixins": [ "create.mixins.json" ],
   "accessWidener": "create.accesswidener",
 
   "depends": {
@@ -47,5 +42,11 @@
     "minecraft": ">=1.18.1",
     "registrate-fabric": "*",
     "flywheel": "*"
+  },
+
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1688": ["com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions"]
+    }
   }
 }

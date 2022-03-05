@@ -361,7 +361,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 	@Nullable
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return handler.orElse(null);
+		return handler.cast();
 	}
 
 	public void clear() {

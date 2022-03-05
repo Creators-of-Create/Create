@@ -54,7 +54,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 				Ingredient transit = Ingredient.of(parent.getTransitionalItem());
 
 				processingRecipe.getIngredients()
-					.set(0, index == 0 ? IngredientAccessor.create$fromValues(ImmutableList.of(transit, parent.getIngredient()).stream().flatMap(i -> Arrays.stream(((IngredientAccessor) (Object) i).create$getAcceptedItems()))) : transit);
+					.set(0, index == 0 ? IngredientAccessor.port_lib$fromValues(ImmutableList.of(transit, parent.getIngredient()).stream().flatMap(i -> Arrays.stream(((IngredientAccessor) i).port_lib$getValues()))) : transit);
 				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
 				return sequencedRecipe;
 			}

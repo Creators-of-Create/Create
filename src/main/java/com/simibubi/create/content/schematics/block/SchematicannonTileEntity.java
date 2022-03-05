@@ -220,7 +220,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		if (!clientPacket) {
-			compound.put("Inventory", inventory.create$serializeNBT());
+			compound.put("Inventory", inventory.serializeNBT());
 			if (state == State.RUNNING) {
 				compound.putBoolean("Running", true);
 			}

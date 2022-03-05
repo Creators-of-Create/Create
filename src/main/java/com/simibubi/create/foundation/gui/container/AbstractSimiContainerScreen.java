@@ -110,7 +110,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		renderTooltip(matrixStack, mouseX, mouseY);
-		for (Widget widget : ((ScreenAccessor) this).create$getRenderables()) {
+		for (Widget widget : ((ScreenAccessor) this).port_lib$getRenderables()) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (!tooltip.isEmpty())

@@ -225,7 +225,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		initCapability();
-		return itemCapability.orElse(null);
+		return itemCapability.cast();
 	}
 
 	private void initCapability() {

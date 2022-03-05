@@ -117,8 +117,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 			.isEmpty())
 			return;
 
-		LazyOptional<MinecartController> optional =
-			LazyOptional.ofObject(MinecartAndRailUtil.getController(cart));
+		LazyOptional<MinecartController> optional = cart.lazyController();
 		if (optional.isPresent() && optional.orElse(null)
 			.isCoupledThroughContraption())
 			return;

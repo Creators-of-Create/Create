@@ -409,7 +409,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
 		if(invHandler == null)
 			initHandler();
-		return invHandler == null ? null : invHandler.orElse(null);
+		return invHandler == null ? null : invHandler.cast();
 	}
 
 	@Override

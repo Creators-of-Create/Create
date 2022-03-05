@@ -185,7 +185,7 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 	@Override
 	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
 		if (direction == null || HosePulleyBlock.hasPipeTowards(level, worldPosition, getBlockState(), direction)) {
-			return capability.orElse(null);
+			return capability.cast();
 		}
 		return null;
 	}

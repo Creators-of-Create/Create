@@ -184,7 +184,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements ItemTransfe
 			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
 				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
 				if (teBelow instanceof ItemTransferable transferable) {
-					IItemHandler capBelow = transferable.getItemHandler(Direction.UP);
+					IItemHandler capBelow = transferable.getItemHandler(Direction.UP)
+							.orElse(null);
 					if (capBelow != null) {
 						cap = LazyOptional.of(() -> capBelow)
 								.cast();
@@ -192,6 +193,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements ItemTransfe
 				}
 			}
 		}
-		return this.cap.orElse(null);
+		return this.cap.cast();
 	}
 }

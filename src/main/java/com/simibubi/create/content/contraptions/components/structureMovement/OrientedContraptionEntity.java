@@ -285,7 +285,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		LazyOptional<MinecartController> capability;
 		if(riding instanceof AbstractMinecart minecart)
-			capability = MinecartAndRailUtil.getControllerLazy(minecart);
+			capability = minecart.lazyController();
 		else
 			capability = LazyOptional.empty();
 		if (capability.isPresent()) {
@@ -434,7 +434,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		BlockPos blockpos = new BlockPos(i, j, k);
 		BlockState blockstate = this.level.getBlockState(blockpos);
-		if (MinecartAndRailUtil.canCartUseRail(furnaceCart) && blockstate.is(BlockTags.RAILS))
+		if (blockstate.is(BlockTags.RAILS))
 			if (fuel > 1)
 				riding.setDeltaMovement(riding.getDeltaMovement()
 					.normalize()

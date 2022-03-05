@@ -12,8 +12,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeI
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 
+import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
+
 import io.github.fabricators_of_create.porting_lib.event.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.EntityReadExtraDataCallback;
+import io.github.fabricators_of_create.porting_lib.event.MinecartEvents;
 import io.github.fabricators_of_create.porting_lib.event.ProjectileImpactCallback;
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -268,6 +271,10 @@ public class CommonEvents {
 		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
 		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);
 		EntityReadExtraDataCallback.EVENT.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
+		MinecartEvents.SPAWN.register(AbstractMinecartExtensions::minecartSpawn);
+		MinecartEvents.READ.register(AbstractMinecartExtensions::minecartRead);
+		MinecartEvents.WRITE.register(AbstractMinecartExtensions::minecartWrite);
+		MinecartEvents.REMOVE.register(AbstractMinecartExtensions::minecartRemove);
 	}
 
 }

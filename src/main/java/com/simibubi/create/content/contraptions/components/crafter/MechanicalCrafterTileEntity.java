@@ -146,7 +146,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
-		compound.put("Inventory", inventory.create$serializeNBT());
+		compound.put("Inventory", inventory.serializeNBT());
 
 		CompoundTag inputNBT = new CompoundTag();
 		input.write(inputNBT);
@@ -509,7 +509,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 	@Nullable
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return invSupplier.orElse(null);
+		return invSupplier.cast();
 	}
 
 	public void connectivityChanged() {

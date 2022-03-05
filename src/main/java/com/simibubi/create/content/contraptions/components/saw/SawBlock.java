@@ -34,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
-	public static DamageSource damageSourceSaw = DamageSourceHelper.create$createArmorBypassingDamageSource("create.mechanical_saw");
+	public static DamageSource damageSourceSaw = DamageSourceHelper.port_lib$createArmorBypassingDamageSource("create.mechanical_saw");
 
 	public SawBlock(Properties properties) {
 		super(properties);

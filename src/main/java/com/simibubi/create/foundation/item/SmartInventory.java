@@ -114,7 +114,7 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	@Override
-	public CompoundTag create$serializeNBT() {
+	public CompoundTag serializeNBT() {
 		return getInv().serializeNBT();
 	}
 

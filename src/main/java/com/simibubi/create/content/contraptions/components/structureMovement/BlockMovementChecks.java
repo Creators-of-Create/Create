@@ -33,6 +33,8 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
+import com.simibubi.create.foundation.utility.fabric.FabricTags;
+
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.minecraft.core.BlockPos;
@@ -195,7 +197,7 @@ public class BlockMovementChecks {
 			return true;
 		if (state.getDestroySpeed(world, pos) == -1)
 			return false;
-		if (TagUtil.NON_MOVABLE.contains(state.getBlock()))
+		if (FabricTags.NON_MOVABLE.contains(state.getBlock()))
 			return false;
 		if (ContraptionMovementSetting.get(state.getBlock()) == ContraptionMovementSetting.UNMOVABLE)
 			return false;
@@ -353,7 +355,7 @@ public class BlockMovementChecks {
 			return state.getValue(HarvesterBlock.FACING) == facing;
 		if (AllBlocks.MECHANICAL_PLOUGH.has(state))
 			return state.getValue(PloughBlock.FACING) == facing;
-		
+
 		if (AllBlocks.CART_ASSEMBLER.has(state))
 			return Direction.DOWN == facing;
 		if (AllBlocks.MECHANICAL_SAW.has(state))

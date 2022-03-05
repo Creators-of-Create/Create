@@ -51,7 +51,7 @@ public class SchematicProcessor extends StructureProcessor implements StructureP
 
 	@Nullable
 	@Override
-	public StructureTemplate.StructureEntityInfo create$processEntity(LevelReader world, BlockPos pos, StructureTemplate.StructureEntityInfo rawInfo,
+	public StructureTemplate.StructureEntityInfo processEntity(LevelReader world, BlockPos pos, StructureTemplate.StructureEntityInfo rawInfo,
 			StructureTemplate.StructureEntityInfo info, StructurePlaceSettings settings, StructureTemplate template) {
 		return EntityType.by(info.nbt).flatMap(type -> {
 			if (world instanceof Level) {

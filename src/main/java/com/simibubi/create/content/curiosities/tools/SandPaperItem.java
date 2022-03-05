@@ -217,7 +217,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack polishing = ItemStack.of(tag.getCompound("Polishing"));
-			((LivingEntityAccessor) entity).create$spawnItemParticles(polishing, 1);
+			((LivingEntityAccessor) entity).port_lib$spawnItemParticles(polishing, 1);
 		}
 
 		// After 6 ticks play the sound every 7th

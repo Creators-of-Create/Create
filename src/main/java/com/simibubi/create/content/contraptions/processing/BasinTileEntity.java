@@ -170,8 +170,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		compound.put("InputItems", inputInventory.create$serializeNBT());
-		compound.put("OutputItems", outputInventory.create$serializeNBT());
+		compound.put("InputItems", inputInventory.serializeNBT());
+		compound.put("OutputItems", outputInventory.serializeNBT());
 
 		if (preferredSpoutput != null)
 			NBTHelper.writeEnum(compound, "PreferredSpoutput", preferredSpoutput);
@@ -689,13 +689,13 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, simulate, targetTank))
 	@Override
 	@Nullable
 	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
-		return fluidCapability.orElse(null);
+		return fluidCapability.cast();
 	}
 
 	@Override
 	@Nullable
 	public LazyOptional<IItemHandler> getItemHandler(Direction direction) {
-		return itemCapability.getValueUnsafer();
+		return itemCapability.cast();
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

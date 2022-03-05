@@ -54,8 +54,7 @@ public class MinecartSim2020 {
 		if (c instanceof MinecartFurnace)
 			return Mth.equal(((MinecartFurnace) c).xPush, 0)
 				&& Mth.equal(((MinecartFurnace) c).zPush, 0);
-		LazyOptional<MinecartController> capability =
-				MinecartAndRailUtil.getControllerLazy(c);
+		LazyOptional<MinecartController> capability = c.lazyController();
 		if (capability.isPresent() && capability.orElse(null)
 			.isStalled())
 			return false;

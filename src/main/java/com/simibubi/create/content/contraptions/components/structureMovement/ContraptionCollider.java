@@ -82,7 +82,7 @@ public class ContraptionCollider {
 				continue;
 
 			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayer) {
-				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).create$setAboveGroundTickCount(0);
+				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).port_lib$setAboveGroundTickCount(0);
 				continue;
 			}
 

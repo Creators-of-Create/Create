@@ -95,7 +95,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 			this.isAttributeFilter = isAttributeFilter;
 			Slot slot = gui.getMenu().slots.get(slotIndex + 36);
 			AbstractContainerScreenAccessor access = (AbstractContainerScreenAccessor) gui;
-			this.area = new Rectangle(access.create$getGuiLeft() + slot.x, access.create$getGuiTop() + slot.y, 16, 16);
+			this.area = new Rectangle(access.port_lib$getGuiLeft() + slot.x, access.port_lib$getGuiTop() + slot.y, 16, 16);
 		}
 
 		public void accept(I ingredient) {

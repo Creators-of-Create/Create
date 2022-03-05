@@ -50,7 +50,7 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
 		button.x = x + width - 108;
 		button.y = y + 10;
-		((AbstractWidgetAccessor) button).create$setHeight(height - 20);
+		((AbstractWidgetAccessor) button).port_lib$setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 

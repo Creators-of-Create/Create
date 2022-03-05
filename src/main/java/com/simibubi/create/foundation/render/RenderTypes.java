@@ -11,6 +11,7 @@ import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 import io.github.fabricators_of_create.porting_lib.event.RegisterShadersCallback;
+import io.github.fabricators_of_create.porting_lib.event.RegisterShadersCallback.ShaderRegistry;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.GameRenderer;
@@ -27,7 +28,7 @@ public class RenderTypes extends RenderStateShard {
 	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> IrisShaderHandler.isShaderPackInUse() ? GameRenderer.getNewEntityShader() : Shaders.glowingShader);
 
 	private static final RenderType OUTLINE_SOLID =
-		RenderTypeAccessor.create$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
+		RenderTypeAccessor.port_lib$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(AllSpecialTextures.BLANK.getLocation(), false, false))
@@ -41,7 +42,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static RenderType getOutlineTranslucent(ResourceLocation texture, boolean cull) {
-		return RenderTypeAccessor.create$create(createLayerName("outline_translucent" + (cull ? "_cull" : "")),
+		return RenderTypeAccessor.port_lib$create(createLayerName("outline_translucent" + (cull ? "_cull" : "")),
 			DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
 				.setShaderState(cull ? RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER : RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -54,7 +55,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static RenderType getGlowingSolid(ResourceLocation texture) {
-		return RenderTypeAccessor.create$create(createLayerName("glowing_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
+		return RenderTypeAccessor.port_lib$create(createLayerName("glowing_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
 			true, false, RenderType.CompositeState.builder()
 				.setShaderState(GLOWING_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -71,7 +72,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static RenderType getGlowingTranslucent(ResourceLocation texture) {
-		return RenderTypeAccessor.create$create(createLayerName("glowing_translucent"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
+		return RenderTypeAccessor.port_lib$create(createLayerName("glowing_translucent"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
 			256, true, true, RenderType.CompositeState.builder()
 				.setShaderState(GLOWING_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -88,7 +89,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	private static final RenderType ITEM_PARTIAL_SOLID =
-		RenderTypeAccessor.create$create(createLayerName("item_partial_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
+		RenderTypeAccessor.port_lib$create(createLayerName("item_partial_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(BLOCK_SHEET)
@@ -101,7 +102,7 @@ public class RenderTypes extends RenderStateShard {
 		return ITEM_PARTIAL_SOLID;
 	}
 
-	private static final RenderType ITEM_PARTIAL_TRANSLUCENT = RenderTypeAccessor.create$create(createLayerName("item_partial_translucent"),
+	private static final RenderType ITEM_PARTIAL_TRANSLUCENT = RenderTypeAccessor.port_lib$create(createLayerName("item_partial_translucent"),
 		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
 			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER)
 			.setTextureState(BLOCK_SHEET)
@@ -114,7 +115,7 @@ public class RenderTypes extends RenderStateShard {
 		return ITEM_PARTIAL_TRANSLUCENT;
 	}
 
-	private static final RenderType FLUID = RenderTypeAccessor.create$create(createLayerName("fluid"),
+	private static final RenderType FLUID = RenderTypeAccessor.port_lib$create(createLayerName("fluid"),
 		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
 			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER)
 			.setTextureState(BLOCK_SHEET_MIPPED)
@@ -143,8 +144,8 @@ public class RenderTypes extends RenderStateShard {
 	private static class Shaders {
 		private static ShaderInstance glowingShader;
 
-		public static void onRegisterShaders(List<Pair<ShaderInstance, Consumer<ShaderInstance>>> shaderRegistry, ResourceManager resourceManager) throws IOException {
-			shaderRegistry.add(Pair.of(new ShaderInstance(resourceManager, Create.asResource("glowing_shader").toString(), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader));
+		public static void onRegisterShaders(ResourceManager resourceManager, ShaderRegistry shaderRegistry) throws IOException {
+			shaderRegistry.registerShader(new ShaderInstance(resourceManager, Create.asResource("glowing_shader").toString(), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
 		}
 	}
 

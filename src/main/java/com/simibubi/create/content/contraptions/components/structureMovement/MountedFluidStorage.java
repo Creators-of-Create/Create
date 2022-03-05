@@ -121,7 +121,7 @@ public class MountedFluidStorage {
 		inv.setFluid(tank.getFluid().copy());
 	}
 
-	public LazyOptional<IFluidHandler> getFluidHandler() {
+	public IFluidHandler getFluidHandler() {
 		return tank;
 	}
 

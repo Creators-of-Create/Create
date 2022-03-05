@@ -320,7 +320,7 @@ public class CopperBlockSet {
 			Supplier<BlockState> defaultStateSupplier = () -> blocks.get(parent, state, waxed)
 				.getDefaultState();
 			if (waxed) {
-				return p -> StairBlockAccessor.create$init(defaultStateSupplier.get(), p);
+				return p -> StairBlockAccessor.port_lib$init(defaultStateSupplier.get(), p);
 			} else {
 				return p -> {
 					WeatheringCopperStairBlock block =

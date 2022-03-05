@@ -131,7 +131,7 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		addRenderableWidget(goBack);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 80, 35, height - 45, 40);
-		list.setLeftPos(this.width / 2 - ((AbstractSelectionListAccessor) list).create$getWidth() / 2);
+		list.setLeftPos(this.width / 2 - ((AbstractSelectionListAccessor) list).port_lib$getWidth() / 2);
 
 		addRenderableWidget(list);
 

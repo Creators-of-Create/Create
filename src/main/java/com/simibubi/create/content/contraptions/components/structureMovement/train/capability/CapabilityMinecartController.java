@@ -15,7 +15,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import io.github.fabricators_of_create.porting_lib.extensions.AbstractMinecartExtensions;
+import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
+
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializable;
@@ -104,7 +105,7 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 
 			cartsWithCoupling.remove(uniqueID);
 
-			MinecartController controller = MinecartAndRailUtil.getController(cart);
+			MinecartController controller = cart.getController();
 //			capability.addListener(new MinecartRemovalListener(world, cart)); // fabric: handled via AbstractMinecartMixin
 			carts.put(uniqueID, controller);
 
@@ -204,7 +205,7 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 	public static void attach(AbstractMinecart entity) {
 		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecart) entity);
 //		ResourceLocation id = Create.asResource("minecart_controller");
-		((AbstractMinecartExtensions) entity).create$setCapabilityController(capability);
+		((AbstractMinecartExtensions) entity).setCap(capability);
 //		((AbstractMinecartExtensions) entity).addListener((cart) -> { // fabric: handled via AbstractMinecartMixin
 //			if (capability.cap.isPresent())
 //				capability.cap.invalidate();
@@ -214,9 +215,9 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 	}
 
 	public static void startTracking(Entity entity) {
-		if (!(entity instanceof AbstractMinecart))
+		if (!(entity instanceof AbstractMinecart cart))
 			return;
-		MinecartAndRailUtil.getController((AbstractMinecart) entity).sendData();
+		cart.getController().sendData();
 	}
 
 	/* Capability provider */
@@ -237,8 +238,8 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 //	}
 
 	@Override
-	public CompoundTag create$serializeNBT() {
-		return handler.create$serializeNBT();
+	public CompoundTag serializeNBT() {
+		return handler.serializeNBT();
 	}
 
 	@Override

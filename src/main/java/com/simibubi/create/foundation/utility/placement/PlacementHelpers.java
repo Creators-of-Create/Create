@@ -141,9 +141,9 @@ public class PlacementHelpers {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void afterRenderOverlayLayer(PoseStack stack, float partialTicks, Window res, OverlayRenderCallback.Types type) {
+	public static boolean afterRenderOverlayLayer(PoseStack stack, float partialTicks, Window res, OverlayRenderCallback.Types type) {
 		if (type != OverlayRenderCallback.Types.CROSSHAIRS)
-			return;
+			return false;
 
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
@@ -155,6 +155,7 @@ public class PlacementHelpers {
 
 			drawDirectionIndicator(stack, partialTicks, screenX, screenY, progress);
 		}
+		return false;
 	}
 
 	public static float getCurrentAlpha() {

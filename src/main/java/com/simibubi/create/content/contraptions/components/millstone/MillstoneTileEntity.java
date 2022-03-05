@@ -179,7 +179,7 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 	@Nullable
 	@Override
 	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return capability.orElse(null);
+		return capability.cast();
 	}
 
 	private boolean canProcess(ItemStack stack) {
