@@ -100,7 +100,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
-		.tag(AllItemTags.BLAZE_BURNER_SPECIAL_FUEL.tag, AllItemTags.UPRIGHT_ON_BELT.tag)
+		.tag(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.tag, AllItemTags.UPRIGHT_ON_BELT.tag)
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 

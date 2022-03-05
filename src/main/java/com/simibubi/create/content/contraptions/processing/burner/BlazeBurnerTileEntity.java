@@ -170,14 +170,14 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		FuelType newFuel = FuelType.NONE;
 		int newBurnTime;
 
-		if (AllItemTags.BLAZE_BURNER_SPECIAL_FUEL.matches(itemStack)) {
+		if (AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.matches(itemStack)) {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
 			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
-			else if (AllItemTags.BLAZE_BURNER_REGULAR_FUEL.matches(itemStack)) {
+			else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {
 				newBurnTime = 1600; // Same as coal
 				newFuel = FuelType.NORMAL;
 			}

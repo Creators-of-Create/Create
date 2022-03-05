@@ -593,7 +593,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	protected boolean shouldIgnoreBlockState(BlockState state, BlockEntity te) {
-		// Block doesnt have a mapping (Water, lava, etc)
+		// Block doesn't have a mapping (Water, lava, etc)
 		if (state.getBlock() == Blocks.STRUCTURE_VOID)
 			return true;
 
@@ -603,7 +603,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (requirement.isInvalid())
 			return false;
 
-		// Block doesnt need to be placed twice (Doors, beds, double plants)
+		// Block doesn't need to be placed twice (Doors, beds, double plants)
 		if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
 			&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;

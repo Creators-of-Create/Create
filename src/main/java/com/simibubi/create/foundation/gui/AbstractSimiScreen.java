@@ -112,6 +112,21 @@ public abstract class AbstractSimiScreen extends Screen {
 		ms.popPose();
 	}
 
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		boolean keyPressed = super.keyPressed(keyCode, scanCode, modifiers);
+		if (keyPressed || getFocused() != null)
+			return keyPressed;
+		
+		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
+		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+			this.onClose();
+			return true;
+		}
+		
+		return false;
+	}
+
 	protected void prepareFrame() {
 	}
 
@@ -137,21 +152,6 @@ public abstract class AbstractSimiScreen extends Screen {
 	@Deprecated
 	protected void debugWindowArea(PoseStack matrixStack) {
 		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
-	}
-	
-	@Override
-	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-		boolean keyPressed = super.keyPressed(pKeyCode, pScanCode, pModifiers);
-		if (keyPressed || getFocused() != null)
-			return keyPressed;
-		
-		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
-			this.onClose();
-			return true;
-		}
-		
-		return false;
 	}
 
 }

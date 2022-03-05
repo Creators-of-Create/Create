@@ -20,14 +20,18 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -46,6 +50,8 @@ public class OpenEndedPipe extends FlowSource {
 	static {
 		registerEffectHandler(new PotionEffectHandler());
 		registerEffectHandler(new MilkEffectHandler());
+		registerEffectHandler(new WaterEffectHandler());
+		registerEffectHandler(new LavaEffectHandler());
 	}
 
 	private Level world;
@@ -348,15 +354,15 @@ public class OpenEndedPipe extends FlowSource {
 			if (pipe.cachedEffects.isEmpty())
 				return;
 
-			List<LivingEntity> list =
+			List<LivingEntity> entities =
 				pipe.getWorld().getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
-			for (LivingEntity livingentity : list) {
-				for (MobEffectInstance effectinstance : pipe.cachedEffects) {
-					MobEffect effect = effectinstance.getEffect();
+			for (LivingEntity entity : entities) {
+				for (MobEffectInstance effectInstance : pipe.cachedEffects) {
+					MobEffect effect = effectInstance.getEffect();
 					if (effect.isInstantenous()) {
-						effect.applyInstantenousEffect(null, null, livingentity, effectinstance.getAmplifier(), 0.5D);
+						effect.applyInstantenousEffect(null, null, entity, effectInstance.getAmplifier(), 0.5D);
 					} else {
-						livingentity.addEffect(new MobEffectInstance(effectinstance));
+						entity.addEffect(new MobEffectInstance(effectInstance));
 					}
 				}
 			}
@@ -366,7 +372,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class MilkEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return Tags.Fluids.MILK.contains(fluid.getFluid());
+			return fluid.getFluid().is(Tags.Fluids.MILK);
 		}
 
 		@Override
@@ -374,11 +380,60 @@ public class OpenEndedPipe extends FlowSource {
 			Level world = pipe.getWorld();
 			if (world.getGameTime() % 5 != 0)
 				return;
-			List<LivingEntity> list =
+			List<LivingEntity> entities =
 				world.getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
 			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
-			for (LivingEntity livingentity : list)
-				livingentity.curePotionEffects(curativeItem);
+			for (LivingEntity entity : entities)
+				entity.curePotionEffects(curativeItem);
+		}
+	}
+
+	public static class WaterEffectHandler implements IEffectHandler {
+		@Override
+		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			return fluid.getFluid().is(FluidTags.WATER);
+		}
+
+		@Override
+		public void applyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			Level world = pipe.getWorld();
+			if (world.getGameTime() % 5 != 0)
+				return;
+			List<Entity> entities = world.getEntities((Entity) null, pipe.getAOE(), Entity::isOnFire);
+			for (Entity entity : entities)
+				entity.clearFire();
+			BlockPos.betweenClosedStream(pipe.getAOE()).forEach(pos -> dowseFire(world, pos));
+		}
+
+		// Adapted from ThrownPotion
+		private static void dowseFire(Level level, BlockPos pos) {
+			BlockState state = level.getBlockState(pos);
+			if (state.is(BlockTags.FIRE)) {
+				level.removeBlock(pos, false);
+			} else if (AbstractCandleBlock.isLit(state)) {
+				AbstractCandleBlock.extinguish(null, state, level, pos);
+			} else if (CampfireBlock.isLitCampfire(state)) {
+				level.levelEvent(null, 1009, pos, 0);
+				CampfireBlock.dowse(null, level, pos, state);
+				level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
+			}
+		}
+	}
+
+	public static class LavaEffectHandler implements IEffectHandler {
+		@Override
+		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			return fluid.getFluid().is(FluidTags.LAVA);
+		}
+
+		@Override
+		public void applyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			Level world = pipe.getWorld();
+			if (world.getGameTime() % 5 != 0)
+				return;
+			List<Entity> entities = world.getEntities((Entity) null, pipe.getAOE(), entity -> !entity.fireImmune());
+			for (Entity entity : entities)
+				entity.setSecondsOnFire(3);
 		}
 	}
 

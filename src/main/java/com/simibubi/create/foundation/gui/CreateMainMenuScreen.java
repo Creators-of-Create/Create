@@ -30,14 +30,18 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
-	protected final Screen parent;
-	protected boolean returnOnClose;
-
 	public static final CubeMap PANORAMA_RESOURCES =
 		new CubeMap(Create.asResource("textures/gui/title/background/panorama"));
 	public static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
-	public static PanoramaRenderer panorama = new PanoramaRenderer(PANORAMA_RESOURCES);
+	public static final PanoramaRenderer PANORAMA = new PanoramaRenderer(PANORAMA_RESOURCES);
+
+	public static final String PROJECT_LINK = "https://www.curseforge.com/minecraft/mc-mods/create";
+	public static final String ISSUE_TRACKER_LINK = "https://github.com/Creators-of-Create/Create/issues";
+	public static final String SUPPORT_LINK = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
+
+	protected final Screen parent;
+	protected boolean returnOnClose;
 
 	private PanoramaRenderer vanillaPanorama;
 	private long firstRenderTime;
@@ -69,7 +73,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		if (parent instanceof TitleScreen) {
 			if (alpha < 1)
 				vanillaPanorama.render(elapsedPartials, 1);
-			panorama.render(elapsedPartials, alpha);
+			PANORAMA.render(elapsedPartials, alpha);
 
 			RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
@@ -115,7 +119,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		drawCenteredString(ms, font, new TextComponent(Create.NAME).withStyle(ChatFormatting.BOLD)
 			.append(
 				new TextComponent(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
-			width / 2, 89, 0xff_E4BB67);
+			width / 2, 89, 0xFF_E4BB67);
 		ms.popPose();
 
 		RenderSystem.disableDepthTest();
@@ -128,14 +132,14 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	private void addButtons() {
-		int yStart = height / 4 + (parent instanceof TitleScreen ? 40 : 40);
+		int yStart = height / 4 + 40;
 		int center = width / 2;
 		int bHeight = 20;
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
 		addRenderableWidget(
-			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"), $ -> onClose()));
+			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"), $ -> linkTo(parent)));
 		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
@@ -144,16 +148,12 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
 
-		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
-		String issueTrackerLink = "https://github.com/Creators-of-Create/Create/issues";
-		String supportLink = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
-
 		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
-			$ -> linkTo(projectLink)));
+			$ -> linkTo(PROJECT_LINK)));
 		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
-			$ -> linkTo(issueTrackerLink)));
+			$ -> linkTo(ISSUE_TRACKER_LINK)));
 		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
-			$ -> linkTo(supportLink)));
+			$ -> linkTo(SUPPORT_LINK)));
 	}
 
 	@Override
@@ -169,10 +169,6 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), ChatFormatting.GRAY,
 				ChatFormatting.GRAY), mouseX, mouseY);
 		}
-	}
-
-	public void tick() {
-		super.tick();
 	}
 
 	private void linkTo(Screen screen) {
@@ -193,12 +189,6 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	@Override
 	public boolean isPauseScreen() {
 		return true;
-	}
-
-	@Override
-	public void onClose() {
-		super.onClose();
-		ScreenOpener.open(parent);
 	}
 
 }

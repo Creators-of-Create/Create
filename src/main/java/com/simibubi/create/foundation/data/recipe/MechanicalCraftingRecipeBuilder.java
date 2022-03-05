@@ -16,8 +16,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
 
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
-
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.SetTag;

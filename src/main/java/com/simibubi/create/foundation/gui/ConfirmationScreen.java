@@ -99,8 +99,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		super.tick();
-		confirm.tick();
-		cancel.tick();
+		source.tick();
 	}
 
 	@Override
@@ -109,9 +108,9 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 		ArrayList<FormattedText> copy = new ArrayList<>(text);
 		text.clear();
-		copy.forEach(t -> text.addAll(minecraft.font.getSplitter().splitLines(t, 300, Style.EMPTY)));
+		copy.forEach(t -> text.addAll(font.getSplitter().splitLines(t, 300, Style.EMPTY)));
 
-		textHeight = text.size() * (minecraft.font.lineHeight + 1) + 4;
+		textHeight = text.size() * (font.lineHeight + 1) + 4;
 		textWidth = 300;
 
 		if (centered) {
@@ -133,7 +132,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		int buttonX = x + textWidth / 2 - 6 - (int) (70 * (tristate ? 1.5f : 1));
 
 		TextStencilElement confirmText =
-				new TextStencilElement(minecraft.font, tristate ? "Save" : "Confirm").centered(true, true);
+				new TextStencilElement(font, tristate ? "Save" : "Confirm").centered(true, true);
 		confirm = new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.Confirm));
 		confirm.showingElement(confirmText.withElementRenderer(BoxWidget.gradientFactory.apply(confirm)));
 		addRenderableWidget(confirm);
@@ -142,7 +141,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 		if (tristate) {
 			TextStencilElement confirmDontSaveText =
-					new TextStencilElement(minecraft.font, "Don't Save").centered(true, true);
+					new TextStencilElement(font, "Don't Save").centered(true, true);
 			confirmDontSave =
 					new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.ConfirmDontSave));
 			confirmDontSave.showingElement(
@@ -151,7 +150,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 			buttonX += 12 + 70;
 		}
 
-		TextStencilElement cancelText = new TextStencilElement(minecraft.font, "Cancel").centered(true, true);
+		TextStencilElement cancelText = new TextStencilElement(font, "Cancel").centered(true, true);
 		cancel = new BoxWidget(buttonX, y + textHeight + 6, 70, 16)
 				.withCallback(() -> accept(Response.Cancel));
 		cancel.showingElement(cancelText.withElementRenderer(BoxWidget.gradientFactory.apply(cancel)));
@@ -162,6 +161,8 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 				.withBounds(width + 10, textHeight + 35)
 				.at(-5, y - 5);
 
+		if (text.size() == 1)
+			x = (width - font.width(text.get(0))) / 2;
 	}
 
 	@Override
@@ -176,26 +177,21 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-
 		textBackground.render(ms);
-		int offset = minecraft.font.lineHeight + 1;
+		int offset = font.lineHeight + 1;
 		int lineY = y - offset;
 
 		ms.pushPose();
 		ms.translate(0, 0, 200);
 
 		for (FormattedText line : text) {
-			lineY = lineY + offset;
+			lineY += offset;
 			if (line == null)
 				continue;
-			int textX = x;
-			if (text.size() == 1)
-				x = (width - minecraft.font.width(line)) / 2;
-			minecraft.font.draw(ms, line.getString(), textX, lineY, 0xeaeaea);
+			font.draw(ms, line.getString(), x, lineY, 0xeaeaea);
 		}
 
 		ms.popPose();
-
 	}
 
 	@Override
