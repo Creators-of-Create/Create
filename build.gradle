@@ -63,7 +63,7 @@ dependencies {
 
 //    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
 
-    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:0.1.0+1.18.${project.port_lib_hash}"))
+    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:0.1.0-interfacent+1.18-interfacent.${project.port_lib_hash}"))
     modImplementation(include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
     implementation(include('com.electronwill.night-config:core:3.6.0'))
