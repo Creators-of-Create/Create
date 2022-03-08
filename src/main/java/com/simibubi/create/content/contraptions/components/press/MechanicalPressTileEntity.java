@@ -3,8 +3,9 @@ package com.simibubi.create.content.contraptions.components.press;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
@@ -344,22 +345,19 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		return AllRecipeTypes.PRESSING.find(pressingInv, level);
 	}
 
-	private static final List<ResourceLocation> RECIPE_DENY_LIST =
-		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
+	private static final Set<ResourceLocation> RECIPE_DENY_SET =
+		ImmutableSet.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
 
 	public static <C extends Container> boolean canCompress(Recipe<C> recipe) {
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!(recipe instanceof CraftingRecipe))
+		if (!(recipe instanceof CraftingRecipe) || !AllConfigs.SERVER.recipes.allowShapedSquareInPress.get())
 			return false;
-		
+
 		RecipeSerializer<?> serializer = recipe.getSerializer();
-		for (ResourceLocation denied : RECIPE_DENY_LIST) 
-			if (serializer != null && denied.equals(serializer.getRegistryName()))
-				return false;
-		
-		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()
-			&& (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
-				.size() == 1;
+		if (serializer != null && RECIPE_DENY_SET.contains(serializer.getRegistryName()))
+			return false;
+
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		return (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.matchAllIngredients(ingredients);
 	}
 
 	@Override
