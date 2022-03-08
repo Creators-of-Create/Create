@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility.ghost;
 
+import java.util.List;
 import java.util.Random;
 
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
@@ -8,6 +9,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+
+import io.github.fabricators_of_create.porting_lib.model.EmptyModelData;
+import io.github.fabricators_of_create.porting_lib.model.IModelData;
 import io.github.fabricators_of_create.porting_lib.render.FixedLightBakedModel;
 import io.github.fabricators_of_create.porting_lib.render.TranslucentBakedModel;
 
@@ -16,9 +20,15 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 public abstract class GhostBlockRenderer {
 
@@ -86,33 +96,28 @@ public abstract class GhostBlockRenderer {
 			ms.translate(-.5, -.5, -.5);
 
 			float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
-//			dispatcher.getModelRenderer()
-//				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, alpha,
-//					LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY);
-			model = DefaultLayerFilteringBakedModel.wrap(model);
-			model = FixedLightBakedModel.wrap(model, LevelRenderer.getLightColor(mc.level, pos));
-			model = TranslucentBakedModel.wrap(model, () -> params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha());
-			dispatcher.getModelRenderer()
-				.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+			renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, alpha,
+					LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY,
+					EmptyModelData.INSTANCE);
 
 			ms.popPose();
 		}
 
 		// ModelBlockRenderer
 		public void renderModel(PoseStack.Pose pose, VertexConsumer consumer,
-			@Nullable BlockState state, BakedModel model, float red, float green, float blue,
-			float alpha, int packedLight, int packedOverlay, IModelData modelData) {
+								@Nullable BlockState state, BakedModel model, float red, float green, float blue,
+								float alpha, int packedLight, int packedOverlay, IModelData modelData) {
 			Random random = new Random();
 
 			for (Direction direction : Direction.values()) {
 				random.setSeed(42L);
 				renderQuadList(pose, consumer, red, green, blue, alpha,
-					model.getQuads(state, direction, random, modelData), packedLight, packedOverlay);
+					model.getQuads(state, direction, random), packedLight, packedOverlay);
 			}
 
 			random.setSeed(42L);
 			renderQuadList(pose, consumer, red, green, blue, alpha,
-				model.getQuads(state, null, random, modelData), packedLight, packedOverlay);
+				model.getQuads(state, null, random), packedLight, packedOverlay);
 		}
 
 		// ModelBlockRenderer
@@ -133,7 +138,13 @@ public abstract class GhostBlockRenderer {
 					f2 = 1.0F;
 				}
 
-				consumer.putBulkData(pose, quad, f, f1, f2, alpha, packedLight, packedOverlay);
+				consumer.putBulkData(
+						pose, quad,
+						new float[] { f, f1, f2, alpha },
+						1f, 1f, 1f,
+						new int[] { packedLight, packedLight, packedLight, packedLight },
+						packedOverlay, false
+				);
 			}
 
 		}

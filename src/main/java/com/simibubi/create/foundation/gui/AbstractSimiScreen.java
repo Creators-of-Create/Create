@@ -2,14 +2,18 @@ package com.simibubi.create.foundation.gui;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.InputConstants.Key;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -120,7 +124,8 @@ public abstract class AbstractSimiScreen extends Screen {
 			return keyPressed;
 
 		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
-		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+		Key invKeyCode = KeyBindingHelper.getKeyCode(this.minecraft.options.keyInventory);
+		if (Objects.equals(invKeyCode, mouseKey)) {
 			this.onClose();
 			return true;
 		}
