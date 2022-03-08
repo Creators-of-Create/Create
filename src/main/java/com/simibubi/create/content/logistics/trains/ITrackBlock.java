@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
-import com.simibubi.create.content.logistics.trains.management.TrackTargetingBehaviour.RenderedTrackOverlayType;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.utility.Iterate;

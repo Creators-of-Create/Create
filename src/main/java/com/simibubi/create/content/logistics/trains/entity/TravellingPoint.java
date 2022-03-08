@@ -9,15 +9,18 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+
+import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
-import com.simibubi.create.content.logistics.trains.management.GraphLocation;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -68,6 +71,10 @@ public class TravellingPoint {
 	}
 
 	public ITrackSelector follow(TravellingPoint other) {
+		return follow(other, null);
+	}
+	
+	public ITrackSelector follow(TravellingPoint other, @Nullable Consumer<Boolean> success) {
 		return (graph, pair) -> {
 			List<Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
 			boolean forward = pair.getFirst();
@@ -75,8 +82,11 @@ public class TravellingPoint {
 			TrackNode secondary = forward ? other.node2 : other.node1;
 
 			for (Entry<TrackNode, TrackEdge> entry : validTargets)
-				if (entry.getKey() == target || entry.getKey() == secondary)
+				if (entry.getKey() == target || entry.getKey() == secondary) {
+					if (success != null)
+						success.accept(true);
 					return entry;
+				}
 
 			Vector<List<Entry<TrackNode, TrackEdge>>> frontiers = new Vector<>(validTargets.size());
 			Vector<Set<TrackEdge>> visiteds = new Vector<>(validTargets.size());
@@ -107,15 +117,19 @@ public class TravellingPoint {
 							continue;
 
 						TrackNode nextNode = nextEntry.getKey();
-						if (nextNode == target)
+						if (nextNode == target) {
+							if (success != null)
+								success.accept(true);
 							return entry;
+						}
 
 						frontier.add(nextEntry);
 					}
 				}
 			}
 
-			Create.LOGGER.warn("Couldn't find follow target, choosing first");
+			if (success != null)
+				success.accept(false);
 			return validTargets.get(0);
 		};
 	}

@@ -8,9 +8,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
-import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;

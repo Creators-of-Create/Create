@@ -23,14 +23,14 @@ import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointManager;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointStorage;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
-import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
@@ -217,6 +217,7 @@ public class TrackGraph {
 			if (train.graph != this)
 				continue;
 			train.graph = toOther;
+			train.syncTrackGraphChanges();
 		}
 	}
 

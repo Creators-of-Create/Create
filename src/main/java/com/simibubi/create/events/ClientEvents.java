@@ -35,7 +35,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionP
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
-import com.simibubi.create.content.logistics.trains.management.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;

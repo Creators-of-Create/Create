@@ -40,11 +40,7 @@ public class CarriageContraption extends Contraption {
 	public Couple<Boolean> blazeBurnerConductors;
 	public Map<BlockPos, Couple<Boolean>> conductorSeats;
 
-	// runtime
-	private Carriage carriage;
-	public int temporaryCarriageIdHolder = -1;
-
-	// for assembly only
+	// during assembly only
 	private int bogeys;
 	private boolean sidewaysControls;
 	private BlockPos secondBogeyPos;
@@ -138,8 +134,6 @@ public class CarriageContraption extends Contraption {
 	public CompoundTag writeNBT(boolean spawnPacket) {
 		CompoundTag tag = super.writeNBT(spawnPacket);
 		NBTHelper.writeEnum(tag, "AssemblyDirection", getAssemblyDirection());
-		if (spawnPacket)
-			tag.putInt("CarriageId", carriage.id);
 		tag.putBoolean("FrontControls", forwardControls);
 		tag.putBoolean("BackControls", backwardControls);
 		tag.putBoolean("FrontBlazeConductor", blazeBurnerConductors.getFirst());
@@ -159,8 +153,6 @@ public class CarriageContraption extends Contraption {
 	@Override
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
 		assemblyDirection = NBTHelper.readEnum(nbt, "AssemblyDirection", Direction.class);
-		if (spawnData)
-			temporaryCarriageIdHolder = nbt.getInt("CarriageId");
 		forwardControls = nbt.getBoolean("FrontControls");
 		backwardControls = nbt.getBoolean("BackControls");
 		blazeBurnerConductors =
@@ -189,15 +181,6 @@ public class CarriageContraption extends Contraption {
 
 	public Direction getAssemblyDirection() {
 		return assemblyDirection;
-	}
-
-	public void setCarriage(Carriage carriage) {
-		this.carriage = carriage;
-		temporaryCarriageIdHolder = carriage.id;
-	}
-
-	public Carriage getCarriage() {
-		return carriage;
 	}
 
 	public boolean hasForwardControls() {

@@ -9,8 +9,8 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.ScheduleItem;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -30,9 +30,9 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 		ItemStack itemInHand = player.getItemInHand(activeHand);
 		if (!AllItems.SCHEDULE.isIn(itemInHand))
 			return false;
-		if (!(contraptionEntity instanceof CarriageContraptionEntity carriage))
+		if (!(contraptionEntity instanceof CarriageContraptionEntity carriageEntity))
 			return false;
-		Contraption contraption = carriage.getContraption();
+		Contraption contraption = carriageEntity.getContraption();
 		if (!(contraption instanceof CarriageContraption carriageContraption))
 			return false;
 
@@ -49,7 +49,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 				Schedule schedule = ScheduleItem.getSchedule(itemInHand);
 				if (schedule == null)
 					return false;
-				Train train = carriage.getCarriage().train;
+				Train train = carriageEntity.getCarriage().train;
 				if (train == null)
 					return false;
 				if (train.heldForAssembly) {

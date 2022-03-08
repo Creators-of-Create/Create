@@ -34,7 +34,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
-import com.simibubi.create.content.logistics.trains.management.StationBlock;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
 import net.minecraft.core.BlockPos;

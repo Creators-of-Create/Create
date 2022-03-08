@@ -2,11 +2,11 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.Map.Entry;
 
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
-import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 

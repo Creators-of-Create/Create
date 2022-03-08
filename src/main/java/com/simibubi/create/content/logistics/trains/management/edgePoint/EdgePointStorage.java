@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
-import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;

@@ -10,11 +10,11 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
-import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;

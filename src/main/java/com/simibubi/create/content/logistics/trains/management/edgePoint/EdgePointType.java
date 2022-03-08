@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.trains.management.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
-import com.simibubi.create.content.logistics.trains.management.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

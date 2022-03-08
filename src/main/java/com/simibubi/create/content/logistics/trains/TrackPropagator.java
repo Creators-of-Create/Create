@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalPropagator;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalPropagator;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;

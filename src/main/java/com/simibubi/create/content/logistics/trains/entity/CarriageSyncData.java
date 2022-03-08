@@ -1,0 +1,281 @@
+package com.simibubi.create.content.logistics.trains.entity;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.Vector;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import com.simibubi.create.content.logistics.trains.TrackEdge;
+import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pair;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+
+public class CarriageSyncData {
+
+	public Vector<Pair<Couple<Integer>, Float>> wheelLocations;
+	public float distanceToDestination;
+
+	// For Client interpolation
+	private TravellingPoint[] pointsToApproach;
+	private float[] pointDistanceSnapshot;
+	private float destinationDistanceSnapshot;
+
+	public CarriageSyncData() {
+		wheelLocations = new Vector<>(4);
+		pointDistanceSnapshot = new float[4];
+		pointsToApproach = new TravellingPoint[4];
+		destinationDistanceSnapshot = 0;
+		for (int i = 0; i < 4; i++) {
+			wheelLocations.add(null);
+			pointsToApproach[i] = new TravellingPoint();
+		}
+	}
+
+	public CarriageSyncData copy() {
+		CarriageSyncData data = new CarriageSyncData();
+		for (int i = 0; i < 4; i++)
+			data.wheelLocations.set(i, wheelLocations.get(i));
+		data.distanceToDestination = distanceToDestination;
+		return data;
+	}
+
+	public void write(FriendlyByteBuf buffer) {
+		for (Pair<Couple<Integer>, Float> pair : wheelLocations) {
+			buffer.writeBoolean(pair == null);
+			if (pair == null)
+				break;
+			pair.getFirst()
+				.forEach(buffer::writeInt);
+			buffer.writeFloat(pair.getSecond());
+		}
+		buffer.writeFloat(distanceToDestination);
+	}
+
+	public void read(FriendlyByteBuf buffer) {
+		for (int i = 0; i < 4; i++) {
+			if (buffer.readBoolean())
+				break;
+			wheelLocations.set(i, Pair.of(Couple.create(buffer::readInt), buffer.readFloat()));
+		}
+		distanceToDestination = buffer.readFloat();
+	}
+
+	public void update(CarriageContraptionEntity entity, Carriage carriage) {
+		TrackGraph graph = carriage.train.graph;
+		if (graph == null)
+			return;
+
+		for (boolean first : Iterate.trueAndFalse) {
+			if (!first && !carriage.isOnTwoBogeys())
+				break;
+			CarriageBogey bogey = carriage.bogeys.get(first);
+			for (boolean firstPoint : Iterate.trueAndFalse) {
+				TravellingPoint point = bogey.points.get(firstPoint);
+				int index = (first ? 0 : 2) + (firstPoint ? 0 : 1);
+				Pair<Couple<Integer>, Float> pair =
+					Pair.of(Couple.create(point.node1.getNetId(), point.node2.getNetId()), (float) point.position);
+				wheelLocations.set(index, pair);
+			}
+		}
+
+		distanceToDestination = (float) carriage.train.navigation.distanceToDestination;
+		setDirty(true);
+	}
+
+	public void apply(CarriageContraptionEntity entity, Carriage carriage) {
+		TrackGraph graph = carriage.train.graph;
+		if (graph == null)
+			return;
+
+		for (int i = 0; i < wheelLocations.size(); i++) {
+			Pair<Couple<Integer>, Float> pair = wheelLocations.get(i);
+			if (pair == null)
+				break;
+
+			CarriageBogey bogey = carriage.bogeys.get(i / 2 == 0);
+			TravellingPoint bogeyPoint = bogey.points.get(i % 2 == 0);
+			TravellingPoint point = carriage.pointsInitialised ? pointsToApproach[i] : bogeyPoint;
+
+			Couple<TrackNode> nodes = pair.getFirst()
+				.map(graph::getNode);
+			if (nodes.either(Objects::isNull))
+				continue;
+			TrackEdge edge = graph.getConnectionsFrom(nodes.getFirst())
+				.get(nodes.getSecond());
+			if (edge == null)
+				continue;
+
+			point.node1 = nodes.getFirst();
+			point.node2 = nodes.getSecond();
+			point.edge = edge;
+			point.position = pair.getSecond();
+
+			if (carriage.pointsInitialised) {
+				float foundDistance = -1;
+				boolean direction = false;
+				for (boolean forward : Iterate.trueAndFalse) {
+					float distanceTo = getDistanceTo(graph, bogeyPoint, point, foundDistance, forward);
+					if (distanceTo > 0 && (foundDistance == -1 || distanceTo < foundDistance)) {
+						foundDistance = distanceTo;
+						direction = forward;
+					}
+				}
+
+				if (foundDistance != -1) {
+					pointDistanceSnapshot[i] = (direction ? 1 : -1) * foundDistance;
+				} else {
+					// could not pathfind to server location
+					bogeyPoint.node1 = point.node1;
+					bogeyPoint.node2 = point.node2;
+					bogeyPoint.edge = point.edge;
+					bogeyPoint.position = point.position;
+					pointDistanceSnapshot[i] = 0;
+				}
+			}
+		}
+
+		if (!carriage.pointsInitialised) {
+			carriage.train.navigation.distanceToDestination = distanceToDestination;
+			carriage.pointsInitialised = true;
+			return;
+		}
+
+		destinationDistanceSnapshot = (float) (distanceToDestination - carriage.train.navigation.distanceToDestination);
+	}
+
+	public void approach(CarriageContraptionEntity entity, Carriage carriage, float partial) {
+		TrackGraph graph = carriage.train.graph;
+		if (graph == null)
+			return;
+
+		carriage.train.navigation.distanceToDestination += partial * destinationDistanceSnapshot;
+
+		for (boolean first : Iterate.trueAndFalse) {
+			if (!first && !carriage.isOnTwoBogeys())
+				break;
+			CarriageBogey bogey = carriage.bogeys.get(first);
+			for (boolean firstPoint : Iterate.trueAndFalse) {
+				int index = (first ? 0 : 2) + (firstPoint ? 0 : 1);
+				float f = pointDistanceSnapshot[index];
+				if (Mth.equal(f, 0))
+					continue;
+
+				TravellingPoint point = bogey.points.get(firstPoint);
+				MutableBoolean success = new MutableBoolean(true);
+				TravellingPoint toApproach = pointsToApproach[index];
+
+				point.travel(graph, partial * f,
+					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b)),
+					point.ignoreSignals());
+
+				// could not pathfind to server location
+				if (!success.booleanValue()) {
+					point.node1 = toApproach.node1;
+					point.node2 = toApproach.node2;
+					point.edge = toApproach.edge;
+					point.position = toApproach.position;
+					pointDistanceSnapshot[index] = 0;
+				}
+			}
+		}
+	}
+
+	public float getDistanceTo(TrackGraph graph, TravellingPoint current, TravellingPoint target, float maxDistance,
+		boolean forward) {
+		if (maxDistance == -1)
+			maxDistance = 32;
+
+		Set<TrackEdge> visited = new HashSet<>();
+		Map<TrackEdge, Pair<Boolean, TrackEdge>> reachedVia = new IdentityHashMap<>();
+		PriorityQueue<Pair<Double, Pair<Couple<TrackNode>, TrackEdge>>> frontier =
+			new PriorityQueue<>((p1, p2) -> Double.compare(p1.getFirst(), p2.getFirst()));
+
+		TrackNode initialNode1 = forward ? current.node1 : current.node2;
+		TrackNode initialNode2 = forward ? current.node2 : current.node1;
+		TrackEdge initialEdge = graph.getConnectionsFrom(initialNode1)
+			.get(initialNode2);
+
+		TrackNode targetNode1 = forward ? target.node1 : target.node2;
+		TrackNode targetNode2 = forward ? target.node2 : target.node1;
+		TrackEdge targetEdge = graph.getConnectionsFrom(targetNode1)
+			.get(targetNode2);
+
+		double distanceToNode2 =
+			forward ? initialEdge.getLength(initialNode1, initialNode2) - current.position : current.position;
+
+		frontier.add(Pair.of(distanceToNode2, Pair.of(Couple.create(initialNode1, initialNode2), initialEdge)));
+
+		while (!frontier.isEmpty()) {
+			Pair<Double, Pair<Couple<TrackNode>, TrackEdge>> poll = frontier.poll();
+			double distance = poll.getFirst();
+
+			Pair<Couple<TrackNode>, TrackEdge> currentEntry = poll.getSecond();
+			TrackNode node1 = currentEntry.getFirst()
+				.getFirst();
+			TrackNode node2 = currentEntry.getFirst()
+				.getSecond();
+			TrackEdge edge = currentEntry.getSecond();
+
+			if (edge == targetEdge)
+				return (float) (distance
+					- (forward ? edge.getLength(node1, node2) - target.position : target.position));
+
+			if (distance > maxDistance)
+				continue;
+
+			List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
+			Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node2);
+			for (Entry<TrackNode, TrackEdge> entry : connectionsFrom.entrySet()) {
+				TrackNode newNode = entry.getKey();
+				TrackEdge newEdge = entry.getValue();
+				Vec3 currentDirection = edge.getDirection(node1, node2, false);
+				Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
+				if (currentDirection.dot(newDirection) < 3 / 4f)
+					continue;
+				if (!visited.add(entry.getValue()))
+					continue;
+				validTargets.add(entry);
+			}
+
+			if (validTargets.isEmpty())
+				continue;
+
+			for (Entry<TrackNode, TrackEdge> entry : validTargets) {
+				TrackNode newNode = entry.getKey();
+				TrackEdge newEdge = entry.getValue();
+				reachedVia.put(newEdge, Pair.of(validTargets.size() > 1, edge));
+				frontier.add(Pair.of(newEdge.getLength(node2, newNode) + distance,
+					Pair.of(Couple.create(node2, newNode), newEdge)));
+			}
+		}
+
+		return -1;
+	}
+
+	//
+
+	private boolean isDirty;
+
+	public void setDirty(boolean dirty) {
+		isDirty = dirty;
+	}
+
+	public boolean isDirty() {
+		return isDirty;
+	}
+
+}

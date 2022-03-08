@@ -52,6 +52,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.DataSerializerEntry;
 
 @Mod(Create.ID)
 public class Create {
@@ -116,6 +117,7 @@ public class Create {
 		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
+		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 	}

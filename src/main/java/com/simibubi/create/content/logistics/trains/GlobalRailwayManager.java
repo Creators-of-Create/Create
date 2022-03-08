@@ -10,12 +10,15 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.lwjgl.glfw.GLFW;
 
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.content.logistics.trains.entity.Carriage;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
+import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
+import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -24,18 +27,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.PacketDistributor;
 
 public class GlobalRailwayManager {
 
 	public Map<UUID, TrackGraph> trackNetworks;
 	public Map<UUID, SignalEdgeGroup> signalEdgeGroups;
 	public Map<UUID, Train> trains;
-	public Map<Integer, Carriage> carriageById;
-
-	private TrackSavedData trackData;
 	public TrackGraphSync sync;
 
-	//
+	private RailwaySavedData savedData;
 
 	public GlobalRailwayManager() {
 		cleanUp();
@@ -47,6 +51,9 @@ public class GlobalRailwayManager {
 			trackNetworks.values()
 				.forEach(g -> sync.sendFullGraphTo(g, serverPlayer));
 			sync.sendEdgeGroups(signalEdgeGroups.keySet(), serverPlayer);
+			for (Train train : trains.values())
+				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+					new TrainPacket(train, false));
 		}
 	}
 
@@ -55,16 +62,16 @@ public class GlobalRailwayManager {
 		if (server == null || server.overworld() != level)
 			return;
 		cleanUp();
-		trackData = null;
+		savedData = null;
 		loadTrackData(server);
 	}
 
 	private void loadTrackData(MinecraftServer server) {
-		if (trackData != null)
+		if (savedData != null)
 			return;
-		trackData = TrackSavedData.load(server);
-		trackNetworks = trackData.getTrackNetworks();
-		signalEdgeGroups = trackData.getSignalBlocks();
+		savedData = RailwaySavedData.load(server);
+		trackNetworks = savedData.getTrackNetworks();
+		signalEdgeGroups = savedData.getSignalBlocks();
 	}
 
 	public void levelUnloaded(LevelAccessor level) {
@@ -78,13 +85,12 @@ public class GlobalRailwayManager {
 		trackNetworks = new HashMap<>();
 		signalEdgeGroups = new HashMap<>();
 		trains = new HashMap<>();
-		carriageById = new HashMap<>();
 		sync = new TrackGraphSync();
 	}
 
 	public void markTracksDirty() {
-		if (trackData != null)
-			trackData.setDirty();
+		if (savedData != null)
+			savedData.setDirty();
 	}
 
 	//
@@ -166,6 +172,19 @@ public class GlobalRailwayManager {
 		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && !AllKeys.altDown())
 			trackNetworks.values()
 				.forEach(TrackGraph::debugViewNodes);
+	}
+
+	public GlobalRailwayManager sided(LevelAccessor level) {
+		if (level != null && !level.isClientSide())
+			return this;
+		MutableObject<GlobalRailwayManager> m = new MutableObject<>();
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientManager(m));
+		return m.getValue();
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void clientManager(MutableObject<GlobalRailwayManager> m) {
+		m.setValue(CreateClient.RAILWAYS);
 	}
 
 }

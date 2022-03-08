@@ -10,8 +10,8 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.FilterContainer;
 import com.simibubi.create.content.logistics.item.filter.FilterScreen;
-import com.simibubi.create.content.logistics.trains.management.ScheduleContainer;
-import com.simibubi.create.content.logistics.trains.management.ScheduleScreen;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleContainer;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.content.schematics.block.SchematicTableContainer;
 import com.simibubi.create.content.schematics.block.SchematicTableScreen;
 import com.simibubi.create.content.schematics.block.SchematicannonContainer;

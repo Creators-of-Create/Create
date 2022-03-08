@@ -13,6 +13,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -21,7 +22,6 @@ import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
-import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -35,6 +35,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -72,7 +73,7 @@ public class TrainRelocator {
 			return;
 		if (mc.level == null)
 			return;
-		Train relocating = getRelocating();
+		Train relocating = getRelocating(mc.level);
 		if (relocating != null) {
 			Boolean relocate = relocateClient(relocating, false); // TODO send packet
 			if (relocate != null && relocate.booleanValue()) {
@@ -134,7 +135,7 @@ public class TrainRelocator {
 			tp -> recordedLocations.add(Pair.of(Couple.create(tp.node1, tp.node2), tp.position));
 		ITrackSelector steer = probe.steer(SteerDirection.NONE, track.getUpNormal(level, pos, blockState));
 		MutableBoolean blocked = new MutableBoolean(false);
-		
+
 		train.forEachTravellingPointBackwards((tp, d) -> {
 			if (blocked.booleanValue())
 				return;
@@ -145,10 +146,10 @@ public class TrainRelocator {
 			}
 			recorder.accept(probe);
 		});
-		
+
 		if (blocked.booleanValue())
 			return false;
-		
+
 		if (simulate)
 			return true;
 
@@ -158,10 +159,10 @@ public class TrainRelocator {
 		train.occupiedSignalBlocks.clear();
 		train.graph = graph;
 		train.speed = 0;
-		
+
 		if (train.navigation.destination != null)
 			train.navigation.cancelNavigation();
-		
+
 		train.forEachTravellingPoint(tp -> {
 			Pair<Couple<TrackNode>, Double> last = recordedLocations.remove(recordedLocations.size() - 1);
 			tp.node1 = last.getFirst()
@@ -190,7 +191,7 @@ public class TrainRelocator {
 			return;
 
 		if (relocatingTrain != null) {
-			Train relocating = getRelocating();
+			Train relocating = getRelocating(mc.level);
 			if (relocating == null) {
 				relocatingTrain = null;
 				return;
@@ -270,10 +271,8 @@ public class TrainRelocator {
 		return false;
 	}
 
-	private static Train getRelocating() {
-		if (relocatingTrain == null)
-			return null;
-		return Create.RAILWAYS.trains.get(relocatingTrain); // TODO: thread breach
+	private static Train getRelocating(LevelAccessor level) {
+		return relocatingTrain == null ? null : Create.RAILWAYS.sided(level).trains.get(relocatingTrain);
 	}
 
 	private static Train getTrainFromEntity(CarriageContraptionEntity carriageContraptionEntity) {

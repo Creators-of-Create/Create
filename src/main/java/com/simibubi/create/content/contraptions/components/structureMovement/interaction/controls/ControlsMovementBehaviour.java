@@ -41,10 +41,7 @@ public class ControlsMovementBehaviour extends MovementBehaviour {
 			Collection<Integer> pressed = ControlsHandler.currentlyPressed;
 			equipAnimation.chase(1, .2f, Chaser.EXP);
 			steering.chase((pressed.contains(3) ? 1 : 0) + (pressed.contains(2) ? -1 : 0), 0.2f, Chaser.EXP);
-			if (context.contraption.entity instanceof CarriageContraptionEntity car) {
-				Carriage carriage = car.getCarriage();
-				speed.chase(Math.abs(carriage.train.speed), 0.2f, Chaser.EXP);
-			}
+			speed.chase(0, 0.2f, Chaser.EXP); // TODO
 		} else
 			equipAnimation.chase(0, .2f, Chaser.EXP);
 		float pt = AnimationTickHolder.getPartialTicks(context.world);

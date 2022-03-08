@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
-import com.simibubi.create.content.logistics.trains.management.GraphLocation;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;

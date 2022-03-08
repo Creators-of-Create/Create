@@ -19,23 +19,22 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
-import com.simibubi.create.content.logistics.trains.entity.Carriage.CarriageBogey;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
-import com.simibubi.create.content.logistics.trains.management.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.GraphLocation;
-import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime;
-import com.simibubi.create.content.logistics.trains.management.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.signal.EdgeData;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalBoundary;
-import com.simibubi.create.content.logistics.trains.management.signal.SignalEdgeGroup;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -49,6 +48,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 
 public class Train {
 
@@ -84,7 +84,9 @@ public class Train {
 
 	double[] stress;
 
-	public Train(UUID id, UUID owner, TrackGraph graph, List<Carriage> carriages, List<Integer> carriageSpacing) {
+	public Train(UUID id, UUID owner, TrackGraph graph, List<Carriage> carriages, List<Integer> carriageSpacing,
+		boolean doubleEnded) {
+
 		this.id = id;
 		this.owner = owner;
 		this.graph = graph;
@@ -94,14 +96,10 @@ public class Train {
 		this.stress = new double[carriageSpacing.size()];
 		this.name = Lang.translate("train.unnamed");
 		this.status = new TrainStatus(this);
+		this.doubleEnded = doubleEnded;
 
-		carriages.forEach(c -> {
-			c.setTrain(this);
-			Create.RAILWAYS.carriageById.put(c.id, c);
-		});
+		carriages.forEach(c -> c.setTrain(this));
 
-		doubleEnded = carriages.stream()
-			.anyMatch(c -> c.contraption.hasBackwardControls());
 		navigation = new Navigation(this);
 		runtime = new ScheduleRuntime(this);
 		heldForAssembly = true;
@@ -283,14 +281,14 @@ public class Train {
 
 	public boolean hasForwardConductor() {
 		for (Carriage carriage : carriages)
-			if (carriage.hasForwardConductor)
+			if (carriage.presentConductors.getFirst())
 				return true;
 		return false;
 	}
 
 	public boolean hasBackwardConductor() {
 		for (Carriage carriage : carriages)
-			if (carriage.hasBackwardConductor)
+			if (carriage.presentConductors.getSecond())
 				return true;
 		return false;
 	}
@@ -370,6 +368,8 @@ public class Train {
 			return;
 		speed = -Mth.clamp(speed, -.5, .5);
 		derailed = true;
+		graph = null;
+		syncTrackGraphChanges();
 		status.crash();
 	}
 
@@ -396,8 +396,6 @@ public class Train {
 			entity.setPos(Vec3
 				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
 			entity.disassemble();
-			Create.RAILWAYS.carriageById.remove(carriage.id);
-			CreateClient.RAILWAYS.carriageById.remove(carriage.id);
 
 			offset += carriage.bogeySpacing;
 
@@ -410,7 +408,7 @@ public class Train {
 			currentStation.cancelReservation(this);
 
 		Create.RAILWAYS.trains.remove(id);
-		CreateClient.RAILWAYS.trains.remove(id); // TODO Thread breach
+		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
 		return true;
 	}
 
@@ -428,7 +426,7 @@ public class Train {
 		navigation.cancelNavigation();
 		forEachTravellingPoint(tp -> migratingPoints.add(new TrainMigration(tp)));
 		graph = null;
-
+		syncTrackGraphChanges();
 	}
 
 	public void forEachTravellingPoint(Consumer<TravellingPoint> callback) {
@@ -497,6 +495,7 @@ public class Train {
 			migrationCooldown = 40;
 			status.failedMigration();
 			derailed = true;
+			syncTrackGraphChanges();
 			return;
 		}
 
@@ -516,7 +515,16 @@ public class Train {
 			if (currentStation != null)
 				currentStation.reserveFor(this);
 			updateSignalBlocks = true;
+			syncTrackGraphChanges();
 			return;
+		}
+	}
+
+	public void syncTrackGraphChanges() {
+		for (Carriage carriage : carriages) {
+			CarriageContraptionEntity entity = carriage.entity.get();
+			if (entity != null)
+				entity.setGraph(graph == null ? null : graph.id);
 		}
 	}
 

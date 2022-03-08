@@ -20,7 +20,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		double cameraY, double cameraZ) {
 		if (!super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ))
 			return false;
-		return ((CarriageContraption) entity.getContraption()).temporaryCarriageIdHolder != -1;
+		return entity.validForRender;
 	}
 
 	@Override

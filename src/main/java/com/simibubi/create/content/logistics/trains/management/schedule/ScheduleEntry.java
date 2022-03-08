@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.trains.management.schedule;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleDestination;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
