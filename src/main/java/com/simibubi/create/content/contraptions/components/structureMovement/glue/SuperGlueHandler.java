@@ -97,7 +97,7 @@ public class SuperGlueHandler {
 			if (!world.isClientSide) {
 				entity.playPlaceSound();
 				world.addFreshEntity(entity);
-				AllPackets.channel.sendToClientsTrackingAndSelf(new GlueEffectPacket(ray.getBlockPos(), face, true), entity);
+				AllPackets.channel.sendToClientsTracking(new GlueEffectPacket(ray.getBlockPos(), face, true), entity);
 			}
 			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);
 		}

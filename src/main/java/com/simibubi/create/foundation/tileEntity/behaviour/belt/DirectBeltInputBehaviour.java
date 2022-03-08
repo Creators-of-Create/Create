@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
 
 	private InsertionCallback tryInsert;
 	private AvailabilityPredicate canInsert;

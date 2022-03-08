@@ -128,7 +128,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected void saveChanges() {
 		UnmodifiableConfig values = spec.getValues();
 		ConfigHelper.changes.forEach((path, change) -> {
-			ForgeConfigSpec.ConfigValue configValue = values.get(path);
+			ForgeConfigSpec.ConfigValue<Object> configValue = values.get(path);
 			configValue.set(change.value);
 
 			if (type == ModConfig.Type.SERVER) {
@@ -148,8 +148,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		values.valueMap().forEach((key, obj) -> {
 			if (obj instanceof AbstractConfig) {
 				resetConfig((UnmodifiableConfig) obj);
-			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
-				ForgeConfigSpec.ConfigValue configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
+			} else if (obj instanceof ForgeConfigSpec.ConfigValue) {
+				ForgeConfigSpec.ConfigValue<Object> configValue = (ForgeConfigSpec.ConfigValue<Object>) obj;
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw((List<String>) configValue.getPath());
 
 				List<String> comments = new ArrayList<>();
@@ -253,7 +253,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		search = new ConfigTextField(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
 		search.setResponder(this::updateFilter);
-		search.setHint("Search..");
+		search.setHint("Search...");
 		search.moveCursorToStart();
 		addRenderableWidget(search);
 
@@ -326,7 +326,6 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				.withPadding(2, 2)
 				.showingElement(stencil);
 
-
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
@@ -376,17 +375,17 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	@Override
-	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (super.keyPressed(keyCode, scanCode, modifiers))
 			return true;
 
 		if (Screen.hasControlDown()) {
-			if (code == GLFW.GLFW_KEY_F) {
+			if (keyCode == GLFW.GLFW_KEY_F) {
 				search.setFocus(true);
 			}
 		}
 
-		if (code == GLFW.GLFW_KEY_BACKSPACE) {
+		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 			attemptBackstep();
 		}
 
@@ -407,36 +406,31 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			return;
 		}
 
-		Consumer<Response> action = success -> {
+		showLeavingPrompt(success -> {
 			if (success == Response.Cancel)
 				return;
 			if (success == Response.Confirm)
 				saveChanges();
 			ConfigHelper.changes.clear();
 			ScreenOpener.open(parent);
-		};
-
-		showLeavingPrompt(action);
+		});
 	}
 
 	@Override
 	public void onClose() {
 		if (ConfigHelper.changes.isEmpty()) {
 			super.onClose();
-			ScreenOpener.open(parent);
 			return;
 		}
 
-		Consumer<Response> action = success -> {
+		showLeavingPrompt(success -> {
 			if (success == Response.Cancel)
 				return;
 			if (success == Response.Confirm)
 				saveChanges();
 			ConfigHelper.changes.clear();
 			super.onClose();
-		};
-
-		showLeavingPrompt(action);
+		});
 	}
 
 	public void showLeavingPrompt(Consumer<Response> action) {

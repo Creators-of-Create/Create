@@ -86,7 +86,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 		if (blockState == null)
 			return false;
 		Direction direction = blockState.getValue(CrushingWheelControllerBlock.FACING);
-		return direction == Direction.DOWN || direction == side;
+		return direction == Direction.DOWN || direction.getOpposite() == side;
 	}
 
 	@Override
@@ -149,24 +149,22 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 			inventory.remainingTime = 0;
 
 			// Output Items
-			if (facing.getAxis()
-				.isHorizontal() || facing == Direction.DOWN) {
+			if (facing != Direction.UP) {
+				Direction inputDir = facing.getOpposite();
 				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1f * offset : 0f, (-1f),
 					facing.getAxis() == Axis.Z ? 1f * offset : 0f);
 				DirectBeltInputBehaviour behaviour =
 					TileEntityBehaviour.get(level, nextPos, DirectBeltInputBehaviour.TYPE);
 				if (behaviour != null) {
 					boolean changed = false;
-					if (!behaviour.canInsertFromSide(facing))
+					if (!behaviour.canInsertFromSide(inputDir))
 						return;
 					for (int slot = 0; slot < inventory.getSlots(); slot++) {
 						ItemStack stack = inventory.getStackInSlot(slot);
 						if (stack.isEmpty())
 							continue;
-						// fabric: not quite sure what's going on here, but it fixes #171 and #160
-						Direction inserting = facing == Direction.DOWN ? Direction.UP : facing;
-						ItemStack remainder = behaviour.handleInsertion(stack, inserting, false);
-						if (ItemStackUtil.equals(remainder, stack, false))
+						ItemStack remainder = behaviour.handleInsertion(stack, inputDir, false);
+						if (remainder.equals(stack, false))
 							continue;
 						inventory.setStackInSlot(slot, remainder);
 						changed = true;

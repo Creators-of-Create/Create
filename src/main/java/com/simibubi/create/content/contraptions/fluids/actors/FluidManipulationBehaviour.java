@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
-import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -212,7 +213,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {
-		return maxBlocks() != -1 && !AllTags.AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
+		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get().test(fluid);
 	}
 
 	@Override
@@ -236,6 +237,33 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			affectedArea = BoundingBox.fromCorners(NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaFrom")),
 				NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaTo")));
 		super.read(nbt, clientPacket);
+	}
+
+	public enum BottomlessFluidMode implements Predicate<Fluid> {
+		ALLOW_ALL {
+			@Override
+			public boolean test(Fluid fluid) {
+				return true;
+			}
+		},
+		DENY_ALL {
+			@Override
+			public boolean test(Fluid fluid) {
+				return false;
+			}
+		},
+		ALLOW_BY_TAG {
+			@Override
+			public boolean test(Fluid fluid) {
+				return AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid);
+			}
+		},
+		DENY_BY_TAG {
+			@Override
+			public boolean test(Fluid fluid) {
+				return !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
+			}
+		};
 	}
 
 }

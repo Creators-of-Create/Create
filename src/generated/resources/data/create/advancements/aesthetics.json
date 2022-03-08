@@ -28,8 +28,8 @@
       "trigger": "create:bracket_apply",
       "conditions": {
         "accepted_entries": [
-          "create:large_cogwheel",
-          "create:cogwheel"
+          "create:cogwheel",
+          "create:large_cogwheel"
         ]
       }
     },

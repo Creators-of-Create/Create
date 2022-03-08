@@ -80,7 +80,9 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true), FORGE("c"), TIC("tconstruct")
+		MOD(Create.ID, false, true),
+		FORGE("c"),
+		TIC("tconstruct")
 
 		;
 
@@ -186,8 +188,8 @@ public class AllTags {
 
 	public enum AllItemTags {
 
-		BLAZE_BURNER_REGULAR_FUEL,
-		BLAZE_BURNER_SPECIAL_FUEL,
+		BLAZE_BURNER_FUEL_REGULAR(MOD, "blaze_burner_fuel/regular"),
+		BLAZE_BURNER_FUEL_SPECIAL(MOD, "blaze_burner_fuel/special"),
 		CREATE_INGOTS,
 		CRUSHED_ORES,
 		SANDPAPER,
@@ -259,7 +261,8 @@ public class AllTags {
 
 	public enum AllFluidTags {
 
-		NO_INFINITE_DRAINING(MOD, true, false),
+		BOTTOMLESS_ALLOW(MOD, "bottomless/allow"),
+		BOTTOMLESS_DENY(MOD, "bottomless/deny"),
 
 		HONEY(FORGE)
 
@@ -319,12 +322,10 @@ public class AllTags {
 				.addTag(child));
 		}
 
-		private static void loadClass() {}
-
 	}
 
 	public static void register() {
-		AllFluidTags.loadClass();
+		AllFluidTags.BOTTOMLESS_ALLOW.add(Fluids.WATER, Fluids.LAVA);
 
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
