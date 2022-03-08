@@ -62,7 +62,7 @@ import io.github.fabricators_of_create.porting_lib.event.FogEvents.ColorData;
 import io.github.fabricators_of_create.porting_lib.event.OnStartUseItemCallback;
 import io.github.fabricators_of_create.porting_lib.event.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.event.ParticleManagerRegistrationCallback;
-import io.github.fabricators_of_create.porting_lib.event.PlayerTickEndCallback;
+import io.github.fabricators_of_create.porting_lib.event.PlayerTickEvents;
 import io.github.fabricators_of_create.porting_lib.event.RenderHandCallback;
 import io.github.fabricators_of_create.porting_lib.event.RenderTickStartCallback;
 import io.github.fabricators_of_create.porting_lib.event.RenderTooltipBorderColorCallback;
@@ -360,7 +360,7 @@ public class ClientEvents {
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
 		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
-		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
+		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
 		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);

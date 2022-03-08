@@ -94,7 +94,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 		return stack;
 	}
 
-	public static int deployerHasEyesOnHisFeet(Entity entity) {
+	public static int deployerHasEyesOnHisFeet(Entity entity, float height) {
 		if (entity instanceof DeployerFakePlayer)
 			return 0;
 		return -1;
