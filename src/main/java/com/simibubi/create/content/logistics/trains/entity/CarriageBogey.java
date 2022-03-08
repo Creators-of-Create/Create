@@ -51,7 +51,7 @@ public class CarriageBogey {
 		if (carriage.train.derailed)
 			yRot += derailAngle;
 
-		wheelAngle.setValue((wheelAngle.getValue() - angleDiff * Math.signum(carriage.train.speed)) % 360);
+		wheelAngle.setValue((wheelAngle.getValue() - angleDiff) % 360);
 		pitch.setValue(xRot);
 		yaw.setValue(-yRot);
 	}

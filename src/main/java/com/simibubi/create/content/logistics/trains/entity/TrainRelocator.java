@@ -12,6 +12,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -23,6 +24,7 @@ import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISign
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -33,7 +35,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,6 +43,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 
 public class TrainRelocator {
@@ -48,10 +52,12 @@ public class TrainRelocator {
 	static WeakReference<CarriageContraptionEntity> hoveredEntity = new WeakReference<>(null);
 	static UUID relocatingTrain;
 	static Vec3 relocatingOrigin;
+	static int relocatingEntityId;
 
 	static BlockPos lastHoveredPos;
 	static Boolean lastHoveredResult;
 
+	@OnlyIn(Dist.CLIENT)
 	public static void onClicked(ClickInputEvent event) {
 		if (relocatingTrain == null)
 			return;
@@ -75,18 +81,16 @@ public class TrainRelocator {
 			return;
 		Train relocating = getRelocating(mc.level);
 		if (relocating != null) {
-			Boolean relocate = relocateClient(relocating, false); // TODO send packet
-			if (relocate != null && relocate.booleanValue()) {
+			Boolean relocate = relocateClient(relocating, false);
+			if (relocate != null && relocate.booleanValue())
 				relocatingTrain = null;
-				player.displayClientMessage(Lang.translate("train.relocate.success")
-					.withStyle(ChatFormatting.GREEN), true);
-			}
 			if (relocate != null)
 				event.setCanceled(true);
 		}
 	}
 
 	@Nullable
+	@OnlyIn(Dist.CLIENT)
 	public static Boolean relocateClient(Train relocating, boolean simulate) {
 		Minecraft mc = Minecraft.getInstance();
 		HitResult hitResult = mc.hitResult;
@@ -103,12 +107,16 @@ public class TrainRelocator {
 		BlockState blockState = mc.level.getBlockState(blockPos);
 		if (!(blockState.getBlock()instanceof ITrackBlock track))
 			return lastHoveredResult = null;
-		return lastHoveredResult = relocate(relocating, mc.player, blockPos, simulate);
+
+		Vec3 lookAngle = mc.player.getLookAngle();
+		boolean result = relocate(relocating, mc.level, blockPos, lookAngle, true);
+		if (!simulate && result)
+			AllPackets.channel
+				.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, lookAngle, relocatingEntityId));
+		return lastHoveredResult = result;
 	}
 
-	public static boolean relocate(Train train, Player player, BlockPos pos, boolean simulate) {
-		Vec3 lookAngle = player.getLookAngle();
-		Level level = player.getLevel();
+	public static boolean relocate(Train train, Level level, BlockPos pos, Vec3 lookAngle, boolean simulate) {
 		BlockState blockState = level.getBlockState(pos);
 		if (!(blockState.getBlock()instanceof ITrackBlock track))
 			return false;
@@ -179,6 +187,7 @@ public class TrainRelocator {
 		return true;
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void clientTick() {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
@@ -197,7 +206,10 @@ public class TrainRelocator {
 				return;
 			}
 
-			if (Math.abs(relocating.speed) > 1 / 1024d) {
+			Entity entity = mc.level.getEntity(relocatingEntityId);
+			if (entity instanceof AbstractContraptionEntity ce && Math.abs(ce.getPosition(0)
+				.subtract(ce.getPosition(1))
+				.lengthSqr()) > 1 / 1024d) {
 				player.displayClientMessage(Lang.translate("train.cannot_relocate_moving")
 					.withStyle(ChatFormatting.RED), true);
 				relocatingTrain = null;
@@ -252,16 +264,19 @@ public class TrainRelocator {
 		}
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static boolean carriageWrenched(Vec3 vec3, CarriageContraptionEntity entity) {
 		Train train = getTrainFromEntity(entity);
 		if (train != null && !train.heldForAssembly) {
 			relocatingOrigin = vec3;
 			relocatingTrain = train.id;
+			relocatingEntityId = entity.getId();
 			return true;
 		}
 		return false;
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static boolean addToTooltip(List<Component> tooltip, boolean shiftKeyDown) {
 		Train train = getTrainFromEntity(hoveredEntity.get());
 		if (train != null && train.derailed) {
@@ -271,6 +286,7 @@ public class TrainRelocator {
 		return false;
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	private static Train getRelocating(LevelAccessor level) {
 		return relocatingTrain == null ? null : Create.RAILWAYS.sided(level).trains.get(relocatingTrain);
 	}

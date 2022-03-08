@@ -6,7 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 public class CarriageCouplingRenderer {
 
 	public static void renderAll(PoseStack ms, MultiBufferSource buffer) {
-		Collection<Train> trains = Create.RAILWAYS.trains.values(); // TODO: thread breach
+		Collection<Train> trains = CreateClient.RAILWAYS.trains.values();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		BlockState air = Blocks.AIR.defaultBlockState();
 		float partialTicks = AnimationTickHolder.getPartialTicks();
@@ -51,7 +51,7 @@ public class CarriageCouplingRenderer {
 				CarriageBogey bogey2 = carriage2.leadingBogey();
 				Vec3 anchor = bogey1.trailingCouplingAnchor;
 				Vec3 anchor2 = bogey2.leadingCouplingAnchor;
-
+				
 				if (anchor == null || anchor2 == null)
 					continue;
 				if (!anchor.closerThan(camera, 64))

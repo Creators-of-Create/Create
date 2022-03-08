@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -114,7 +116,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		CarriageContraptionEntity entity =
 			new CarriageContraptionEntity(AllEntityTypes.CARRIAGE_CONTRAPTION.get(), world);
 		entity.setContraption(contraption);
-		entity.setInitialOrientation(contraption.getAssemblyDirection());
+		entity.setInitialOrientation(contraption.getAssemblyDirection()
+			.getClockWise());
 		entity.startAtInitialYaw();
 		return entity;
 	}
@@ -129,6 +132,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				if (train == null || train.carriages.size() <= carriageIndex)
 					return;
 				carriage = train.carriages.get(carriageIndex);
+				if (carriage != null)
+					carriage.entity = new WeakReference<>(this);
 				updateTrackGraph();
 			} else
 				discard();
@@ -170,7 +175,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriage.alignEntity(this);
 
-		double distanceTo = position().distanceTo(new Vec3(xo, yo, zo));
+		Vec3 diff = position().subtract(xo, yo, zo);
+		Vec3 relativeDiff = VecHelper.rotate(diff, yaw, Axis.Y);
+		double distanceTo = diff.length() * Math.signum(-relativeDiff.x);
 
 		carriage.bogeys.getFirst()
 			.updateAngles(distanceTo);
@@ -410,6 +417,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	public void setGraph(@Nullable UUID graphId) {
 		entityData.set(TRACK_GRAPH, Optional.ofNullable(graphId));
+		prevPosInvalid = true;
 	}
 
 }

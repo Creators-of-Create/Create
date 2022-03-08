@@ -28,6 +28,7 @@ public class CarriageSyncData {
 
 	public Vector<Pair<Couple<Integer>, Float>> wheelLocations;
 	public float distanceToDestination;
+	public boolean leadingCarriage;
 
 	// For Client interpolation
 	private TravellingPoint[] pointsToApproach;
@@ -39,6 +40,7 @@ public class CarriageSyncData {
 		pointDistanceSnapshot = new float[4];
 		pointsToApproach = new TravellingPoint[4];
 		destinationDistanceSnapshot = 0;
+		leadingCarriage = false;
 		for (int i = 0; i < 4; i++) {
 			wheelLocations.add(null);
 			pointsToApproach[i] = new TravellingPoint();
@@ -50,6 +52,7 @@ public class CarriageSyncData {
 		for (int i = 0; i < 4; i++)
 			data.wheelLocations.set(i, wheelLocations.get(i));
 		data.distanceToDestination = distanceToDestination;
+		data.leadingCarriage = leadingCarriage;
 		return data;
 	}
 
@@ -63,6 +66,7 @@ public class CarriageSyncData {
 			buffer.writeFloat(pair.getSecond());
 		}
 		buffer.writeFloat(distanceToDestination);
+		buffer.writeBoolean(leadingCarriage);
 	}
 
 	public void read(FriendlyByteBuf buffer) {
@@ -72,12 +76,15 @@ public class CarriageSyncData {
 			wheelLocations.set(i, Pair.of(Couple.create(buffer::readInt), buffer.readFloat()));
 		}
 		distanceToDestination = buffer.readFloat();
+		leadingCarriage = buffer.readBoolean();
 	}
 
 	public void update(CarriageContraptionEntity entity, Carriage carriage) {
 		TrackGraph graph = carriage.train.graph;
 		if (graph == null)
 			return;
+
+		leadingCarriage = entity.carriageIndex == (carriage.train.speed >= 0 ? 0 : carriage.train.carriages.size() - 1);
 
 		for (boolean first : Iterate.trueAndFalse) {
 			if (!first && !carriage.isOnTwoBogeys())
@@ -154,6 +161,9 @@ public class CarriageSyncData {
 			return;
 		}
 
+		if (!leadingCarriage)
+			return;
+		
 		destinationDistanceSnapshot = (float) (distanceToDestination - carriage.train.navigation.distanceToDestination);
 	}
 
@@ -208,6 +218,9 @@ public class CarriageSyncData {
 		TrackNode initialNode2 = forward ? current.node2 : current.node1;
 		TrackEdge initialEdge = graph.getConnectionsFrom(initialNode1)
 			.get(initialNode2);
+
+		if (initialEdge == null)
+			return -1; // graph changed
 
 		TrackNode targetNode1 = forward ? target.node1 : target.node2;
 		TrackNode targetNode2 = forward ? target.node2 : target.node1;

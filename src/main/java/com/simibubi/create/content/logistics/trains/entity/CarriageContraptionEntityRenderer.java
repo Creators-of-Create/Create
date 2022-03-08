@@ -18,6 +18,11 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 	@Override
 	public boolean shouldRender(CarriageContraptionEntity entity, Frustum clippingHelper, double cameraX,
 		double cameraY, double cameraZ) {
+		Carriage carriage = entity.getCarriage();
+		if (carriage != null)
+			for (CarriageBogey bogey : carriage.bogeys)
+				if (bogey != null)
+					bogey.leadingCouplingAnchor = bogey.trailingCouplingAnchor = null;
 		if (!super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ))
 			return false;
 		return entity.validForRender;

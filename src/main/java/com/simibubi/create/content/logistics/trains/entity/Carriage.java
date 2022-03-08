@@ -38,7 +38,7 @@ public class Carriage {
 
 	CompoundTag serialisedEntity;
 	WeakReference<CarriageContraptionEntity> entity;
-	
+
 	// client
 	public boolean pointsInitialised;
 
@@ -63,8 +63,6 @@ public class Carriage {
 
 	public void setContraption(Level level, CarriageContraption contraption) {
 		CarriageContraptionEntity entity = CarriageContraptionEntity.create(level, contraption);
-		entity.setInitialOrientation(contraption.getAssemblyDirection()
-			.getClockWise());
 		entity.setCarriage(this);
 		contraption.startMoving(level);
 		serialisedEntity = entity.serializeNBT();

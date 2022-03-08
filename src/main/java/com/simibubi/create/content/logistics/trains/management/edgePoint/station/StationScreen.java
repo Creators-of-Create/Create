@@ -175,7 +175,7 @@ public class StationScreen extends AbstractStationScreen {
 		}
 
 		boolean trainAtStation = trainPresent();
-		disassembleTrainButton.active = trainAtStation; // TODO te.canAssemble
+		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble;
 		openScheduleButton.active = train.runtime.getSchedule() != null;
 
 		float f = trainAtStation ? 0 : (float) (train.navigation.distanceToDestination / 30f);
@@ -221,7 +221,7 @@ public class StationScreen extends AbstractStationScreen {
 				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
 				continue;
 			}
-			Carriage carriage = carriages.get(train.currentlyBackwards ? carriages.size() - i - 1 : i);
+			Carriage carriage = carriages.get(te.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}
 

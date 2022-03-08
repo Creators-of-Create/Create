@@ -62,6 +62,8 @@ public class StationTileEntity extends SmartTileEntity {
 	// for display
 	UUID imminentTrain;
 	boolean trainPresent;
+	boolean trainBackwards;
+	boolean trainCanDisassemble;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -88,11 +90,15 @@ public class StationTileEntity extends SmartTileEntity {
 		if (!tag.contains("ImminentTrain")) {
 			imminentTrain = null;
 			trainPresent = false;
+			trainCanDisassemble = false;
+			trainBackwards = false;
 			return;
 		}
 
 		imminentTrain = tag.getUUID("ImminentTrain");
 		trainPresent = tag.getBoolean("TrainPresent");
+		trainCanDisassemble = tag.getBoolean("TrainCanDisassemble");
+		trainBackwards = tag.getBoolean("TrainBackwards");
 	}
 
 	@Override
@@ -103,15 +109,13 @@ public class StationTileEntity extends SmartTileEntity {
 
 		if (!clientPacket)
 			return;
-		GlobalStation station = getStation();
-		if (station == null)
-			return;
-		Train imminentTrain = station.getImminentTrain();
 		if (imminentTrain == null)
 			return;
 
-		tag.putUUID("ImminentTrain", imminentTrain.id);
-		tag.putBoolean("TrainPresent", imminentTrain.getCurrentStation() == station);
+		tag.putUUID("ImminentTrain", imminentTrain);
+		tag.putBoolean("TrainPresent", trainPresent);
+		tag.putBoolean("TrainCanDisassemble", trainCanDisassemble);
+		tag.putBoolean("TrainBackwards", trainBackwards);
 	}
 
 	@Nullable
@@ -156,6 +160,8 @@ public class StationTileEntity extends SmartTileEntity {
 		if (this.trainPresent != trainPresent || !Objects.equals(imminentID, this.imminentTrain)) {
 			this.imminentTrain = imminentID;
 			this.trainPresent = trainPresent;
+			this.trainCanDisassemble = trainPresent && imminentTrain.canDisassemble();
+			this.trainBackwards = imminentTrain != null && imminentTrain.currentlyBackwards;
 			sendData();
 		}
 	}

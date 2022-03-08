@@ -374,15 +374,8 @@ public class Train {
 	}
 
 	public boolean disassemble(Direction assemblyDirection, BlockPos pos) {
-		for (Carriage carriage : carriages) {
-			CarriageContraptionEntity entity = carriage.entity.get();
-			if (entity == null)
-				return false;
-			if (!Mth.equal(entity.pitch, 0))
-				return false;
-			if (!Mth.equal(((entity.yaw % 90) + 360) % 90, 0))
-				return false;
-		}
+		if (!canDisassemble())
+			return false;
 
 		int offset = 1;
 		boolean backwards = currentlyBackwards;
@@ -409,6 +402,19 @@ public class Train {
 
 		Create.RAILWAYS.trains.remove(id);
 		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
+		return true;
+	}
+
+	public boolean canDisassemble() {
+		for (Carriage carriage : carriages) {
+			CarriageContraptionEntity entity = carriage.entity.get();
+			if (entity == null)
+				return false;
+			if (!Mth.equal(entity.pitch, 0))
+				return false;
+			if (!Mth.equal(((entity.yaw % 90) + 360) % 90, 0))
+				return false;
+		}
 		return true;
 	}
 
