@@ -1422,7 +1422,7 @@
 	"create.train.relocate.abort": "UNLOCALIZED: Relocation aborted",
 	"create.train.relocate.success": "UNLOCALIZED: Relocation successful",
 	"create.train.relocate.valid": "UNLOCALIZED: Can relocate to here, Click to Confirm",
-	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to this Track",
+	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to here",
 	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
 
 	"create.contraption.controls.start_controlling": "UNLOCALIZED: Now controlling: %1$s",

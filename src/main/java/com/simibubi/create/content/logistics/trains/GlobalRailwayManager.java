@@ -53,7 +53,7 @@ public class GlobalRailwayManager {
 			sync.sendEdgeGroups(signalEdgeGroups.keySet(), serverPlayer);
 			for (Train train : trains.values())
 				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-					new TrainPacket(train, false));
+					new TrainPacket(train, true));
 		}
 	}
 
@@ -70,6 +70,7 @@ public class GlobalRailwayManager {
 		if (savedData != null)
 			return;
 		savedData = RailwaySavedData.load(server);
+		trains = savedData.getTrains();
 		trackNetworks = savedData.getTrackNetworks();
 		signalEdgeGroups = savedData.getSignalBlocks();
 	}

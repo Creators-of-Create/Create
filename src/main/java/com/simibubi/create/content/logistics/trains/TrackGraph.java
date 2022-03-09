@@ -32,6 +32,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -305,6 +306,10 @@ public class TrackGraph {
 
 	public Map<TrackNode, TrackEdge> getConnectionsFrom(TrackNode node) {
 		return connectionsByNode.getOrDefault(node, new HashMap<>());
+	}
+
+	public TrackEdge getConnection(Couple<TrackNode> nodes) {
+		return getConnectionsFrom(nodes.getFirst()).get(nodes.getSecond());
 	}
 
 	public void connectNodes(TrackNodeLocation location, TrackNodeLocation location2, TrackEdge edge) {

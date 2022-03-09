@@ -37,12 +37,17 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion.BlockInteraction;
@@ -132,8 +137,13 @@ public class Train {
 	}
 
 	public void tick(Level level) {
-		if (graph == null)
+		Create.RAILWAYS.markTracksDirty();
+
+		if (graph == null) {
+			carriages.forEach(c -> c.manageEntity(level));
+			updateConductors();
 			return;
+		}
 
 		updateConductors();
 		runtime.tick(level);
@@ -151,8 +161,8 @@ public class Train {
 			Carriage carriage = carriages.get(i);
 			if (previousCarriage != null) {
 				int target = carriageSpacing.get(i - 1);
-				Vec3 leadingAnchor = carriage.leadingBogey().anchorPosition;
-				Vec3 trailingAnchor = previousCarriage.trailingBogey().anchorPosition;
+				Vec3 leadingAnchor = carriage.leadingAnchor();
+				Vec3 trailingAnchor = previousCarriage.trailingAnchor();
 				double actual = leadingAnchor.distanceTo(trailingAnchor);
 				stress[i - 1] = target - actual;
 			}
@@ -296,11 +306,31 @@ public class Train {
 	private void collideWithOtherTrains(Level level, Carriage carriage) {
 		if (derailed)
 			return;
-		Collision: for (Train train : Create.RAILWAYS.trains.values()) {
-			if (train == this)
+
+		Vec3 start = (speed < 0 ? carriage.getTrailingPoint() : carriage.getLeadingPoint()).getPosition();
+		Vec3 end = (speed < 0 ? carriage.getLeadingPoint() : carriage.getTrailingPoint()).getPosition();
+
+		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, this);
+		if (collision == null)
+			return;
+
+		Train train = collision.getFirst();
+
+		double combinedSpeed = Math.abs(speed) + Math.abs(train.speed);
+		if (combinedSpeed > .2f) {
+			Vec3 v = collision.getSecond();
+			level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5), BlockInteraction.NONE);
+		}
+
+		crash();
+		train.crash();
+	}
+
+	public static Pair<Train, Vec3> findCollidingTrain(Level level, Vec3 start, Vec3 end, Train ignore) {
+		for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
+			if (train == ignore)
 				continue;
-			Vec3 start = (speed < 0 ? carriage.getTrailingPoint() : carriage.getLeadingPoint()).getPosition();
-			Vec3 end = (speed < 0 ? carriage.getLeadingPoint() : carriage.getTrailingPoint()).getPosition();
+
 			Vec3 diff = end.subtract(start);
 			Vec3 lastPoint = null;
 
@@ -309,10 +339,13 @@ public class Train {
 					if (betweenBits && lastPoint == null)
 						continue;
 
-					Vec3 start2 = otherCarriage.getLeadingPoint()
-						.getPosition();
-					Vec3 end2 = otherCarriage.getTrailingPoint()
-						.getPosition();
+					TravellingPoint otherLeading = otherCarriage.getLeadingPoint();
+					TravellingPoint otherTrailing = otherCarriage.getTrailingPoint();
+					if (otherLeading.edge == null || otherTrailing.edge == null)
+						continue;
+
+					Vec3 start2 = otherLeading.getPosition();
+					Vec3 end2 = otherTrailing.getPosition();
 					if (betweenBits) {
 						end2 = start2;
 						start2 = lastPoint;
@@ -328,6 +361,7 @@ public class Train {
 					Vec3 normedDiff = diff.normalize();
 					Vec3 normedDiff2 = diff2.normalize();
 					double[] intersect = VecHelper.intersect(start, start2, normedDiff, normedDiff2, Axis.Y);
+
 					if (intersect == null) {
 						Vec3 intersectSphere = VecHelper.intersectSphere(start2, normedDiff2, start, .125f);
 						if (intersectSphere == null)
@@ -339,6 +373,7 @@ public class Train {
 						intersect[0] = intersectSphere.distanceTo(start) - .125;
 						intersect[1] = intersectSphere.distanceTo(start2) - .125;
 					}
+
 					if (intersect[0] > diff.length())
 						continue;
 					if (intersect[1] > diff2.length())
@@ -348,18 +383,11 @@ public class Train {
 					if (intersect[1] < 0)
 						continue;
 
-					double combinedSpeed = Math.abs(speed) + Math.abs(train.speed);
-					if (combinedSpeed > .2f) {
-						Vec3 v = start.add(normedDiff.scale(intersect[0]));
-						level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5),
-							BlockInteraction.NONE);
-					}
-					crash();
-					train.crash();
-					break Collision;
+					return Pair.of(train, start.add(normedDiff.scale(intersect[0])));
 				}
 			}
 		}
+		return null;
 	}
 
 	public void crash() {
@@ -552,9 +580,8 @@ public class Train {
 
 	public void leaveStation() {
 		GlobalStation currentStation = getCurrentStation();
-		if (currentStation == null)
-			return;
-		currentStation.trainDeparted(this);
+		if (currentStation != null)
+			currentStation.trainDeparted(this);
 		this.currentStation = null;
 	}
 
@@ -656,6 +683,79 @@ public class Train {
 				}));
 		});
 
+	}
+
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		tag.putUUID("Id", id);
+		tag.putUUID("Owner", owner);
+		if (graph != null)
+			tag.putUUID("Graph", graph.id);
+		tag.put("Carriages", NBTHelper.writeCompoundList(carriages, Carriage::write));
+		tag.putIntArray("CarriageSpacing", carriageSpacing);
+		tag.putBoolean("DoubleEnded", doubleEnded);
+		tag.putDouble("Speed", speed);
+		tag.putDouble("TargetSpeed", targetSpeed);
+		tag.putString("IconType", icon.id.toString());
+		tag.putString("Name", Component.Serializer.toJson(name));
+		if (currentStation != null)
+			tag.putUUID("Station", currentStation);
+		tag.putBoolean("Backwards", currentlyBackwards);
+		tag.putBoolean("StillAssembling", heldForAssembly);
+		tag.putBoolean("Derailed", derailed);
+		tag.putBoolean("UpdateSignals", updateSignalBlocks);
+		tag.put("SignalBlocks", NBTHelper.writeCompoundList(occupiedSignalBlocks, uid -> {
+			CompoundTag compoundTag = new CompoundTag();
+			compoundTag.putUUID("Id", uid);
+			return compoundTag;
+		}));
+		tag.put("MigratingPoints", NBTHelper.writeCompoundList(migratingPoints, TrainMigration::write));
+
+		tag.put("Runtime", runtime.write());
+		tag.put("Navigation", navigation.write());
+
+		return tag;
+	}
+
+	public static Train read(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks) {
+		UUID id = tag.getUUID("Id");
+		UUID owner = tag.getUUID("Owner");
+		UUID graphId = tag.contains("Graph") ? tag.getUUID("Graph") : null;
+		TrackGraph graph = graphId == null ? null : trackNetworks.get(graphId);
+		List<Carriage> carriages = new ArrayList<>();
+		NBTHelper.iterateCompoundList(tag.getList("Carriages", Tag.TAG_COMPOUND),
+			c -> carriages.add(Carriage.read(c, graph)));
+		List<Integer> carriageSpacing = new ArrayList<>();
+		for (int i : tag.getIntArray("CarriageSpacing"))
+			carriageSpacing.add(i);
+		boolean doubleEnded = tag.getBoolean("DoubleEnded");
+
+		Train train = new Train(id, owner, graph, carriages, carriageSpacing, doubleEnded);
+
+		train.speed = tag.getDouble("Speed");
+		train.targetSpeed = tag.getDouble("TargetSpeed");
+		train.icon = TrainIconType.byId(new ResourceLocation(tag.getString("IconType")));
+		train.name = Component.Serializer.fromJson(tag.getString("Name"));
+		train.currentStation = tag.contains("Station") ? tag.getUUID("Station") : null;
+		train.currentlyBackwards = tag.getBoolean("Backwards");
+		train.heldForAssembly = tag.getBoolean("StillAssembling");
+		train.derailed = tag.getBoolean("Derailed");
+		train.updateSignalBlocks = tag.getBoolean("UpdateSignals");
+
+		NBTHelper.iterateCompoundList(tag.getList("SignalBlocks", Tag.TAG_COMPOUND),
+			c -> train.occupiedSignalBlocks.add(c.getUUID("Id")));
+
+		NBTHelper.iterateCompoundList(tag.getList("MigratingPoints", Tag.TAG_COMPOUND),
+			c -> train.migratingPoints.add(TrainMigration.read(c)));
+
+		train.runtime.read(tag.getCompound("Runtime"));
+		train.navigation.read(tag.getCompound("Navigation"), graph);
+
+		if (train.getCurrentStation() != null)
+			train.getCurrentStation()
+				.reserveFor(train);
+
+		return train;
 	}
 
 }

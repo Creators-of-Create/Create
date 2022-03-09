@@ -15,9 +15,11 @@ import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISign
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
@@ -37,7 +39,10 @@ public class Carriage {
 	public Couple<Boolean> presentConductors;
 
 	public int bogeySpacing;
-	Couple<CarriageBogey> bogeys;
+	public Couple<CarriageBogey> bogeys;
+
+	public Vec3 positionAnchor;
+	public Couple<Vec3> rotationAnchors;
 
 	CompoundTag serialisedEntity;
 	WeakReference<CarriageContraptionEntity> entity;
@@ -54,6 +59,9 @@ public class Carriage {
 		this.id = netIdGenerator.incrementAndGet();
 		this.serialisedEntity = new CompoundTag();
 		this.pointsInitialised = false;
+		this.rotationAnchors = Couple.create(null, null);
+
+		updateContraptionAnchors();
 
 		bogey1.carriage = this;
 		if (bogey2 != null)
@@ -69,9 +77,7 @@ public class Carriage {
 		entity.setCarriage(this);
 		contraption.startMoving(level);
 		contraption.onEntityInitialize(level, entity);
-		for (CarriageBogey carriageBogey : bogeys)
-			if (carriageBogey != null)
-				carriageBogey.updateAnchorPosition();
+		updateContraptionAnchors();
 		alignEntity(entity);
 
 		List<Entity> players = new ArrayList<>();
@@ -89,10 +95,8 @@ public class Carriage {
 	public double travel(Level level, TrackGraph graph, double distance,
 		Function<TravellingPoint, ITrackSelector> forwardControl,
 		Function<TravellingPoint, ITrackSelector> backwardControl, int type) {
-		Vec3 leadingAnchor = leadingBogey().anchorPosition;
-		Vec3 trailingAnchor = trailingBogey().anchorPosition;
 		boolean onTwoBogeys = isOnTwoBogeys();
-		double stress = onTwoBogeys ? bogeySpacing - leadingAnchor.distanceTo(trailingAnchor) : 0;
+		double stress = onTwoBogeys ? bogeySpacing - leadingAnchor().distanceTo(trailingAnchor()) : 0;
 		blocked = false;
 
 		MutableDouble distanceMoved = new MutableDouble(distance);
@@ -139,13 +143,11 @@ public class Carriage {
 
 				distanceMoved.setValue(moved);
 			}
-
-			bogey.updateAnchorPosition();
 		}
 
-		double actualMovement = distanceMoved.getValue();
-		manageEntity(level, actualMovement);
-		return actualMovement;
+		updateContraptionAnchors();
+		manageEntity(level);
+		return distanceMoved.getValue();
 	}
 
 	public void updateConductors() {
@@ -162,7 +164,7 @@ public class Carriage {
 		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
 
-		Vec3 pos = leadingBogey().anchorPosition;
+		Vec3 pos = positionAnchor;
 		cce.setPos(pos);
 		cce.setCarriage(this);
 		cce.setGraph(train.graph == null ? null : train.graph.id);
@@ -171,10 +173,10 @@ public class Carriage {
 	}
 
 	public ChunkPos getChunk() {
-		return new ChunkPos(new BlockPos(leadingBogey().anchorPosition));
+		return new ChunkPos(new BlockPos(positionAnchor));
 	}
 
-	protected void manageEntity(Level level, double actualMovement) {
+	public void manageEntity(Level level) {
 		CarriageContraptionEntity entity = this.entity.get();
 		if (entity == null) {
 			if (CarriageEntityHandler.isActiveChunk(level, getChunk()))
@@ -182,12 +184,7 @@ public class Carriage {
 		} else {
 			CarriageEntityHandler.validateCarriageEntity(entity);
 			if (!entity.isAlive() || entity.leftTickingChunks) {
-				for (Entity passenger : entity.getPassengers())
-					if (!(passenger instanceof Player))
-						passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
-				serialisedEntity = entity.serializeNBT();
-				entity.discard();
-				this.entity.clear();
+				removeAndSaveEntity(entity);
 				return;
 			}
 		}
@@ -200,19 +197,34 @@ public class Carriage {
 		entity.syncCarriage();
 	}
 
+	private void removeAndSaveEntity(CarriageContraptionEntity entity) {
+		for (Entity passenger : entity.getPassengers())
+			if (!(passenger instanceof Player))
+				passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
+		serialisedEntity = entity.serializeNBT();
+		entity.discard();
+		this.entity.clear();
+	}
+
+	public void updateContraptionAnchors() {
+		CarriageBogey leadingBogey = leadingBogey();
+		if (leadingBogey.points.either(t -> t.edge == null))
+			return;
+		positionAnchor = leadingBogey.getAnchorPosition();
+		rotationAnchors = bogeys.mapWithContext((b, first) -> isOnTwoBogeys() ? b.getAnchorPosition()
+			: leadingBogey.points.get(first)
+				.getPosition());
+	}
+
 	public void alignEntity(CarriageContraptionEntity entity) {
-		Vec3 positionVec = isOnTwoBogeys() ? leadingBogey().anchorPosition
-			: leadingBogey().leading()
-				.getPosition();
-		Vec3 coupledVec = isOnTwoBogeys() ? trailingBogey().anchorPosition
-			: leadingBogey().trailing()
-				.getPosition();
+		Vec3 positionVec = rotationAnchors.getFirst();
+		Vec3 coupledVec = rotationAnchors.getSecond();
 
 		double diffX = positionVec.x - coupledVec.x;
 		double diffY = positionVec.y - coupledVec.y;
 		double diffZ = positionVec.z - coupledVec.z;
 
-		entity.setPos(leadingBogey().anchorPosition);
+		entity.setPos(positionAnchor);
 		entity.prevYaw = entity.yaw;
 		entity.prevPitch = entity.pitch;
 		entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
@@ -237,6 +249,56 @@ public class Carriage {
 
 	public boolean isOnTwoBogeys() {
 		return bogeys.getSecond() != null;
+	}
+
+	public Vec3 leadingAnchor() {
+		return isOnTwoBogeys() ? rotationAnchors.getFirst() : positionAnchor;
+	}
+
+	public Vec3 trailingAnchor() {
+		return isOnTwoBogeys() ? rotationAnchors.getSecond() : positionAnchor;
+	}
+
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		tag.put("FirstBogey", bogeys.getFirst()
+			.write());
+		if (isOnTwoBogeys())
+			tag.put("SecondBogey", bogeys.getSecond()
+				.write());
+		tag.putInt("Spacing", bogeySpacing);
+		tag.putBoolean("FrontConductor", presentConductors.getFirst());
+		tag.putBoolean("BackConductor", presentConductors.getSecond());
+
+		CarriageContraptionEntity entity = this.entity.get();
+		if (entity != null)
+			serialisedEntity = entity.serializeNBT();
+
+		tag.put("Entity", serialisedEntity.copy());
+		tag.put("PositionAnchor", VecHelper.writeNBT(positionAnchor));
+		tag.put("RotationAnchors", rotationAnchors.serializeEach(VecHelper::writeNBTCompound));
+
+		return tag;
+	}
+
+	public static Carriage read(CompoundTag tag, TrackGraph graph) {
+		CarriageBogey bogey1 = CarriageBogey.read(tag.getCompound("FirstBogey"), graph);
+		CarriageBogey bogey2 =
+			tag.contains("SecondBogey") ? CarriageBogey.read(tag.getCompound("SecondBogey"), graph) : null;
+
+		Carriage carriage = new Carriage(bogey1, bogey2, tag.getInt("Spacing"));
+
+		carriage.presentConductors = Couple.create(tag.getBoolean("FrontConductor"), tag.getBoolean("BackConductor"));
+		carriage.serialisedEntity = tag.getCompound("Entity")
+			.copy();
+
+		if (carriage.positionAnchor == null) {
+			carriage.positionAnchor = VecHelper.readNBT(tag.getList("PositionAnchor", Tag.TAG_DOUBLE));
+			carriage.rotationAnchors =
+				Couple.deserializeEach(tag.getList("RotationAnchors", Tag.TAG_COMPOUND), VecHelper::readNBTCompound);
+		}
+
+		return carriage;
 	}
 
 }

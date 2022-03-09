@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -57,8 +58,11 @@ public class TrainPacket extends SimplePacketBase {
 			carriageSpacing.add(buffer.readVarInt());
 
 		boolean doubleEnded = buffer.readBoolean();
-
 		train = new Train(trainId, owner, null, carriages, carriageSpacing, doubleEnded);
+
+		train.heldForAssembly = buffer.readBoolean();
+		train.name = Component.Serializer.fromJson(buffer.readUtf());
+		train.icon = TrainIconType.byId(buffer.readResourceLocation());
 	}
 
 	@Override
@@ -90,6 +94,9 @@ public class TrainPacket extends SimplePacketBase {
 		train.carriageSpacing.forEach(buffer::writeVarInt);
 
 		buffer.writeBoolean(train.doubleEnded);
+		buffer.writeBoolean(train.heldForAssembly);
+		buffer.writeUtf(Component.Serializer.toJson(train.name));
+		buffer.writeResourceLocation(train.icon.id);
 	}
 
 	@Override

@@ -64,8 +64,8 @@ public class ControlsInputPacket extends SimplePacketBase {
 			Entity entity = world.getEntity(contraptionEntityId);
 			if (!(entity instanceof AbstractContraptionEntity ace))
 				return;
-			if (ace.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
-				.distanceTo(player.position()) > 10)
+			if (!ace.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
+				.closerThan(player.position(), 16))
 				return;
 
 			ControlsServerHandler.receivePressed(world, ace, controlsPos, uniqueID, activatedButtons, press);

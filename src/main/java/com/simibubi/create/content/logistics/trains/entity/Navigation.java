@@ -16,6 +16,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
@@ -26,18 +27,24 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class Navigation {
 
-	Train train;
+	public Train train;
+
 	public GlobalStation destination;
 	public double distanceToDestination;
 	public boolean destinationBehindTrain;
-	List<TrackEdge> currentPath;
+	List<Couple<TrackNode>> currentPath;
 
 	private TravellingPoint signalScout;
 	public Pair<UUID, Boolean> waitingForSignal;
@@ -186,39 +193,29 @@ public class Navigation {
 	public ITrackSelector control(TravellingPoint mp) {
 		if (destination == null)
 			return mp.steer(train.manualSteer, new Vec3(0, 1, 0));
-		return (graph, pair) -> {
-			List<Entry<TrackNode, TrackEdge>> options = pair.getSecond();
-			if (currentPath.isEmpty())
-				return options.get(0);
-			TrackEdge target = currentPath.get(0);
-			for (Entry<TrackNode, TrackEdge> entry : options) {
-				if (entry.getValue() != target)
-					continue;
-				currentPath.remove(0);
-				return entry;
-			}
-			return options.get(0);
-		};
+		return (graph, pair) -> navigateOptions(currentPath, graph, pair.getSecond());
 	}
 
 	public ITrackSelector controlSignalScout() {
 		if (destination == null)
 			return signalScout.steer(train.manualSteer, new Vec3(0, 1, 0));
-		List<TrackEdge> pathCopy = new ArrayList<>(currentPath);
-		return (graph, pair) -> {
-			List<Entry<TrackNode, TrackEdge>> options = pair.getSecond();
-			if (pathCopy.isEmpty())
-				return options.get(0);
-			TrackEdge target = pathCopy.get(0);
-			for (Entry<TrackNode, TrackEdge> entry : options) {
-				if (entry.getValue() != target)
-					continue;
-				pathCopy.remove(0);
-				return entry;
-			}
-			return options.get(0);
-		};
+		List<Couple<TrackNode>> pathCopy = new ArrayList<>(currentPath);
+		return (graph, pair) -> navigateOptions(pathCopy, graph, pair.getSecond());
+	}
 
+	private Entry<TrackNode, TrackEdge> navigateOptions(List<Couple<TrackNode>> path, TrackGraph graph,
+		List<Entry<TrackNode, TrackEdge>> options) {
+		if (path.isEmpty())
+			return options.get(0);
+		Couple<TrackNode> nodes = path.get(0);
+		TrackEdge targetEdge = graph.getConnection(nodes);
+		for (Entry<TrackNode, TrackEdge> entry : options) {
+			if (entry.getValue() != targetEdge)
+				continue;
+			path.remove(0);
+			return entry;
+		}
+		return options.get(0);
 	}
 
 	public void cancelNavigation() {
@@ -232,7 +229,7 @@ public class Navigation {
 	}
 
 	public double startNavigation(GlobalStation destination, boolean simulate) {
-		Pair<Double, List<TrackEdge>> pathTo = findPathTo(destination);
+		Pair<Double, List<Couple<TrackNode>>> pathTo = findPathTo(destination);
 		boolean noneFound = pathTo.getFirst() == null;
 		double distance = noneFound ? -1 : Math.abs(pathTo.getFirst());
 
@@ -280,21 +277,21 @@ public class Navigation {
 		return distanceToDestination;
 	}
 
-	private Pair<Double, List<TrackEdge>> findPathTo(GlobalStation destination) {
+	private Pair<Double, List<Couple<TrackNode>>> findPathTo(GlobalStation destination) {
 		TrackGraph graph = train.graph;
-		List<TrackEdge> path = new ArrayList<>();
+		List<Couple<TrackNode>> path = new ArrayList<>();
 
 		if (graph == null)
 			return Pair.of(null, path);
 
-		MutableObject<Pair<Double, List<TrackEdge>>> frontResult = new MutableObject<>(Pair.of(null, path));
-		MutableObject<Pair<Double, List<TrackEdge>>> backResult = new MutableObject<>(Pair.of(null, path));
+		MutableObject<Pair<Double, List<Couple<TrackNode>>>> frontResult = new MutableObject<>(Pair.of(null, path));
+		MutableObject<Pair<Double, List<Couple<TrackNode>>>> backResult = new MutableObject<>(Pair.of(null, path));
 
 		for (boolean forward : Iterate.trueAndFalse) {
 			if (this.destination == destination && destinationBehindTrain == forward)
 				continue;
 
-			List<TrackEdge> currentPath = new ArrayList<>();
+			List<Couple<TrackNode>> currentPath = new ArrayList<>();
 			TravellingPoint initialPoint = forward ? train.carriages.get(0)
 				.getLeadingPoint()
 				: train.carriages.get(train.carriages.size() - 1)
@@ -313,13 +310,17 @@ public class Navigation {
 				TrackNode node2 = currentEntry.getFirst()
 					.getSecond();
 
-				Pair<Boolean, TrackEdge> backTrack = reachedVia.get(edge);
-				TrackEdge toReach = edge;
-				while (backTrack != null && toReach != initialEdge) {
+				Pair<Boolean, Couple<TrackNode>> backTrack = reachedVia.get(edge);
+				Couple<TrackNode> toReach = Couple.create(node1, node2);
+				TrackEdge edgeReached = edge;
+				while (backTrack != null) {
+					if (edgeReached == initialEdge)
+						break;
 					if (backTrack.getFirst())
 						currentPath.add(0, toReach);
 					toReach = backTrack.getSecond();
-					backTrack = reachedVia.get(backTrack.getSecond());
+					edgeReached = graph.getConnection(toReach);
+					backTrack = reachedVia.get(edgeReached);
 				}
 
 				double position = edge.getLength(node1, node2) - destination.getLocationOn(node1, node2, edge);
@@ -336,8 +337,8 @@ public class Navigation {
 				break;
 		}
 
-		Pair<Double, List<TrackEdge>> front = frontResult.getValue();
-		Pair<Double, List<TrackEdge>> back = backResult.getValue();
+		Pair<Double, List<Couple<TrackNode>>> front = frontResult.getValue();
+		Pair<Double, List<Couple<TrackNode>>> back = backResult.getValue();
 
 		boolean frontEmpty = front.getFirst() == null;
 		boolean backEmpty = back.getFirst() == null;
@@ -398,7 +399,7 @@ public class Navigation {
 				.getTrailingPoint();
 
 		Set<TrackEdge> visited = new HashSet<>();
-		Map<TrackEdge, Pair<Boolean, TrackEdge>> reachedVia = new IdentityHashMap<>();
+		Map<TrackEdge, Pair<Boolean, Couple<TrackNode>>> reachedVia = new IdentityHashMap<>();
 		PriorityQueue<Pair<Double, Pair<Couple<TrackNode>, TrackEdge>>> frontier =
 			new PriorityQueue<>((p1, p2) -> Double.compare(p1.getFirst(), p2.getFirst()));
 
@@ -458,7 +459,7 @@ public class Navigation {
 			for (Entry<TrackNode, TrackEdge> entry : validTargets) {
 				TrackNode newNode = entry.getKey();
 				TrackEdge newEdge = entry.getValue();
-				reachedVia.put(newEdge, Pair.of(validTargets.size() > 1, edge));
+				reachedVia.put(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
 				frontier.add(Pair.of(newEdge.getLength(node2, newNode) + distance,
 					Pair.of(Couple.create(node2, newNode), newEdge)));
 			}
@@ -467,8 +468,51 @@ public class Navigation {
 
 	@FunctionalInterface
 	public interface StationTest {
-		boolean test(double distance, Map<TrackEdge, Pair<Boolean, TrackEdge>> reachedVia,
+		boolean test(double distance, Map<TrackEdge, Pair<Boolean, Couple<TrackNode>>> reachedVia,
 			Pair<Couple<TrackNode>, TrackEdge> current, GlobalStation station);
+	}
+
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		if (destination == null)
+			return tag;
+		tag.putUUID("Destination", destination.id);
+		tag.putDouble("DistanceToDestination", distanceToDestination);
+		tag.putBoolean("BehindTrain", destinationBehindTrain);
+		tag.put("Path", NBTHelper.writeCompoundList(currentPath, c -> {
+			CompoundTag nbt = new CompoundTag();
+			nbt.put("Nodes", c.map(TrackNode::getLocation)
+				.map(BlockPos::new)
+				.serializeEach(NbtUtils::writeBlockPos));
+			return nbt;
+		}));
+		if (waitingForSignal == null)
+			return tag;
+		tag.putUUID("BlockingSignal", waitingForSignal.getFirst());
+		tag.putBoolean("BlockingSignalSide", waitingForSignal.getSecond());
+		tag.putDouble("DistanceToSignal", distanceToSignal);
+		return tag;
+	}
+
+	public void read(CompoundTag tag, TrackGraph graph) {
+		destination =
+			tag.contains("Destination") ? graph.getPoint(EdgePointType.STATION, tag.getUUID("Destination")) : null;
+		if (destination == null)
+			return;
+		distanceToDestination = tag.getDouble("DistanceToDestination");
+		destinationBehindTrain = tag.getBoolean("BehindTrain");
+		currentPath.clear();
+		NBTHelper.iterateCompoundList(tag.getList("Path", Tag.TAG_COMPOUND),
+			c -> currentPath.add(Couple
+				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND),
+					c2 -> TrackNodeLocation.fromPackedPos(NbtUtils.readBlockPos(c2)))
+				.map(graph::locateNode)));
+		waitingForSignal = tag.contains("BlockingSignal")
+			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))
+			: null;
+		if (waitingForSignal == null)
+			return;
+		distanceToSignal = tag.getDouble("DistanceToSignal");
 	}
 
 }

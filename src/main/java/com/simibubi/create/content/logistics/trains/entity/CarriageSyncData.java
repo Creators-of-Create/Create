@@ -19,6 +19,7 @@ import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
@@ -27,18 +28,22 @@ import net.minecraft.world.phys.Vec3;
 public class CarriageSyncData {
 
 	public Vector<Pair<Couple<Integer>, Float>> wheelLocations;
+	public Pair<Vec3, Couple<Vec3>> fallbackLocations;
 	public float distanceToDestination;
 	public boolean leadingCarriage;
 
 	// For Client interpolation
+	private Pair<Vec3, Couple<Vec3>> fallbackPointSnapshot;
 	private TravellingPoint[] pointsToApproach;
 	private float[] pointDistanceSnapshot;
 	private float destinationDistanceSnapshot;
 
 	public CarriageSyncData() {
 		wheelLocations = new Vector<>(4);
+		fallbackLocations = null;
 		pointDistanceSnapshot = new float[4];
 		pointsToApproach = new TravellingPoint[4];
+		fallbackPointSnapshot = null;
 		destinationDistanceSnapshot = 0;
 		leadingCarriage = false;
 		for (int i = 0; i < 4; i++) {
@@ -51,12 +56,26 @@ public class CarriageSyncData {
 		CarriageSyncData data = new CarriageSyncData();
 		for (int i = 0; i < 4; i++)
 			data.wheelLocations.set(i, wheelLocations.get(i));
+		if (fallbackLocations != null)
+			data.fallbackLocations = fallbackLocations.copy();
 		data.distanceToDestination = distanceToDestination;
 		data.leadingCarriage = leadingCarriage;
 		return data;
 	}
 
 	public void write(FriendlyByteBuf buffer) {
+		buffer.writeBoolean(leadingCarriage);
+		buffer.writeBoolean(fallbackLocations != null);
+
+		if (fallbackLocations != null) {
+			Vec3 contraptionAnchor = fallbackLocations.getFirst();
+			Couple<Vec3> rotationAnchors = fallbackLocations.getSecond();
+			VecHelper.write(contraptionAnchor, buffer);
+			VecHelper.write(rotationAnchors.getFirst(), buffer);
+			VecHelper.write(rotationAnchors.getSecond(), buffer);
+			return;
+		}
+
 		for (Pair<Couple<Integer>, Float> pair : wheelLocations) {
 			buffer.writeBoolean(pair == null);
 			if (pair == null)
@@ -66,24 +85,37 @@ public class CarriageSyncData {
 			buffer.writeFloat(pair.getSecond());
 		}
 		buffer.writeFloat(distanceToDestination);
-		buffer.writeBoolean(leadingCarriage);
 	}
 
 	public void read(FriendlyByteBuf buffer) {
+		leadingCarriage = buffer.readBoolean();
+		boolean fallback = buffer.readBoolean();
+
+		if (fallback) {
+			fallbackLocations =
+				Pair.of(VecHelper.read(buffer), Couple.create(VecHelper.read(buffer), VecHelper.read(buffer)));
+			return;
+		}
+
+		fallbackLocations = null;
 		for (int i = 0; i < 4; i++) {
 			if (buffer.readBoolean())
 				break;
 			wheelLocations.set(i, Pair.of(Couple.create(buffer::readInt), buffer.readFloat()));
 		}
 		distanceToDestination = buffer.readFloat();
-		leadingCarriage = buffer.readBoolean();
 	}
 
 	public void update(CarriageContraptionEntity entity, Carriage carriage) {
 		TrackGraph graph = carriage.train.graph;
-		if (graph == null)
+		if (graph == null) {
+			fallbackLocations = Pair.of(carriage.positionAnchor, carriage.rotationAnchors);
+			carriage.pointsInitialised = true;
+			setDirty(true);
 			return;
+		}
 
+		fallbackLocations = null;
 		leadingCarriage = entity.carriageIndex == (carriage.train.speed >= 0 ? 0 : carriage.train.carriages.size() - 1);
 
 		for (boolean first : Iterate.trueAndFalse) {
@@ -104,6 +136,13 @@ public class CarriageSyncData {
 	}
 
 	public void apply(CarriageContraptionEntity entity, Carriage carriage) {
+		fallbackPointSnapshot = null;
+		if (fallbackLocations != null) {
+			fallbackPointSnapshot = Pair.of(carriage.positionAnchor, carriage.rotationAnchors);
+			carriage.pointsInitialised = true;
+			return;
+		}
+
 		TrackGraph graph = carriage.train.graph;
 		if (graph == null)
 			return;
@@ -163,11 +202,22 @@ public class CarriageSyncData {
 
 		if (!leadingCarriage)
 			return;
-		
+
 		destinationDistanceSnapshot = (float) (distanceToDestination - carriage.train.navigation.distanceToDestination);
 	}
 
 	public void approach(CarriageContraptionEntity entity, Carriage carriage, float partial) {
+		if (fallbackLocations != null && fallbackPointSnapshot != null) {
+			carriage.positionAnchor = approachVector(partial, carriage.positionAnchor, fallbackLocations.getFirst(),
+				fallbackPointSnapshot.getFirst());
+			carriage.rotationAnchors.replaceWithContext((current, first) -> approachVector(partial, current,
+				fallbackLocations.getSecond()
+					.get(first),
+				fallbackPointSnapshot.getSecond()
+					.get(first)));
+			return;
+		}
+
 		TrackGraph graph = carriage.train.graph;
 		if (graph == null)
 			return;
@@ -202,6 +252,13 @@ public class CarriageSyncData {
 				}
 			}
 		}
+	}
+
+	private Vec3 approachVector(float partial, Vec3 current, Vec3 target, Vec3 snapshot) {
+		if (current == null || snapshot == null)
+			return target;
+		return current.add(target.subtract(snapshot)
+			.scale(partial));
 	}
 
 	public float getDistanceTo(TrackGraph graph, TravellingPoint current, TravellingPoint target, float maxDistance,

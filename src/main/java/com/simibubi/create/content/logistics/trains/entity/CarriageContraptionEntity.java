@@ -163,11 +163,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriageData.approach(this, carriage, 1f / getType().updateInterval());
 
-		carriage.bogeys.getFirst()
-			.updateAnchorPosition();
-		if (carriage.isOnTwoBogeys())
-			carriage.bogeys.getSecond()
-				.updateAnchorPosition();
+		if (!carriage.train.derailed)
+			carriage.updateContraptionAnchors();
 
 		xo = getX();
 		yo = getY();
@@ -182,10 +179,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		movingBackwards = signum < 0;
 		carriage.bogeys.getFirst()
-			.updateAngles(distanceTo);
+			.updateAngles(this, distanceTo);
 		if (carriage.isOnTwoBogeys())
 			carriage.bogeys.getSecond()
-				.updateAngles(distanceTo);
+				.updateAngles(this, distanceTo);
 
 		if (carriage.train.derailed)
 			spawnDerailParticles(carriage);
@@ -278,7 +275,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return true;
 		if (player.isSpectator())
 			return false;
-		if (!toGlobalVector(VecHelper.getCenterOf(controlsLocalPos), 1).closerThan(player.position(), 10))
+		if (!toGlobalVector(VecHelper.getCenterOf(controlsLocalPos), 1).closerThan(player.position(), 8))
 			return false;
 		if (heldControls.contains(5))
 			return false;

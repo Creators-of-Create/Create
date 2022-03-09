@@ -22,7 +22,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		if (carriage != null)
 			for (CarriageBogey bogey : carriage.bogeys)
 				if (bogey != null)
-					bogey.leadingCouplingAnchor = bogey.trailingCouplingAnchor = null;
+					bogey.couplingAnchors.replace(v -> null);
 		if (!super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ))
 			return false;
 		return entity.validForRender;

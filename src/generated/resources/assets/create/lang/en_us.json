@@ -1421,7 +1421,7 @@
 	"create.train.relocate.abort": "Relocation aborted",
 	"create.train.relocate.success": "Relocation successful",
 	"create.train.relocate.valid": "Can relocate to here, Click to Confirm",
-	"create.train.relocate.invalid": "Cannot relocate Train to this Track",
+	"create.train.relocate.invalid": "Cannot relocate Train to here",
 	"create.train.relocate.too_far": "Cannot relocate Train this far away",
 
 	"create.contraption.controls.start_controlling": "Now controlling: %1$s",

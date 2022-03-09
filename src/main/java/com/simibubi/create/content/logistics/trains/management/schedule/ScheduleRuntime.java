@@ -9,8 +9,10 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.FilteredDestination;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleDestination;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 
 public class ScheduleRuntime {
@@ -180,6 +182,9 @@ public class ScheduleRuntime {
 		tag.putBoolean("Paused", paused);
 		if (schedule != null)
 			tag.put("Schedule", schedule.write());
+		NBTHelper.writeEnum(tag, "State", state);
+		tag.putIntArray("ConditionProgress", conditionProgress);
+		tag.put("ConditionContext", NBTHelper.writeCompoundList(conditionContext, CompoundTag::copy));
 		return tag;
 	}
 
@@ -190,6 +195,10 @@ public class ScheduleRuntime {
 		currentEntry = tag.getInt("CurrentEntry");
 		if (tag.contains("Schedule"))
 			schedule = Schedule.fromTag(tag.getCompound("Schedule"));
+		state = NBTHelper.readEnum(tag, "State", State.class);
+		for (int i : tag.getIntArray("ConditionProgress"))
+			conditionProgress.add(i);
+		NBTHelper.iterateCompoundList(tag.getList("ConditionContext", Tag.TAG_COMPOUND), conditionContext::add);
 	}
 
 }

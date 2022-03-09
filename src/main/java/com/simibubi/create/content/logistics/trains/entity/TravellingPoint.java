@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
@@ -18,12 +19,17 @@ import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.phys.Vec3;
 
 public class TravellingPoint {
@@ -73,7 +79,7 @@ public class TravellingPoint {
 	public ITrackSelector follow(TravellingPoint other) {
 		return follow(other, null);
 	}
-	
+
 	public ITrackSelector follow(TravellingPoint other, @Nullable Consumer<Boolean> success) {
 		return (graph, pair) -> {
 			List<Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
@@ -329,6 +335,37 @@ public class TravellingPoint {
 		position = location.position;
 		edge = graph.getConnectionsFrom(node1)
 			.get(node2);
+	}
+
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		Couple<TrackNode> nodes = Couple.create(node1, node2);
+		if (nodes.either(Objects::isNull))
+			return tag;
+		tag.put("Nodes", nodes.map(TrackNode::getLocation)
+			.map(BlockPos::new)
+			.serializeEach(NbtUtils::writeBlockPos));
+		tag.putDouble("Position", position);
+		return tag;
+	}
+
+	public static TravellingPoint read(CompoundTag tag, TrackGraph graph) {
+		if (graph == null)
+			return new TravellingPoint(null, null, null, 0);
+
+		Couple<TrackNode> locs =
+			tag.contains("Nodes")
+				? Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), NbtUtils::readBlockPos)
+					.map(TrackNodeLocation::fromPackedPos)
+					.map(graph::locateNode)
+				: Couple.create(null, null);
+
+		if (locs.either(Objects::isNull))
+			return new TravellingPoint(null, null, null, 0);
+
+		double position = tag.getDouble("Position");
+		return new TravellingPoint(locs.getFirst(), locs.getSecond(), graph.getConnectionsFrom(locs.getFirst())
+			.get(locs.getSecond()), position);
 	}
 
 }

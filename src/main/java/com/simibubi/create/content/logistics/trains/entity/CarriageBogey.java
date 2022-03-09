@@ -1,15 +1,23 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CarriageBogey {
 
@@ -17,14 +25,12 @@ public class CarriageBogey {
 
 	IBogeyBlock type;
 	Couple<TravellingPoint> points;
-	Vec3 anchorPosition;
 
 	LerpedFloat wheelAngle;
 	LerpedFloat yaw;
 	LerpedFloat pitch;
 
-	public Vec3 leadingCouplingAnchor;
-	public Vec3 trailingCouplingAnchor;
+	public Couple<Vec3> couplingAnchors;
 
 	int derailAngle;
 
@@ -34,22 +40,27 @@ public class CarriageBogey {
 		wheelAngle = LerpedFloat.angular();
 		yaw = LerpedFloat.angular();
 		pitch = LerpedFloat.angular();
-		updateAnchorPosition();
-		derailAngle = Create.RANDOM.nextInt(90) - 45;
+		derailAngle = Create.RANDOM.nextInt(60) - 30;
+		couplingAnchors = Couple.create(null, null);
 	}
 
-	public void updateAngles(double distanceMoved) {
+	public void updateAngles(CarriageContraptionEntity entity, double distanceMoved) {
 		double angleDiff = 360 * distanceMoved / (Math.PI * 2 * type.getWheelRadius());
-		Vec3 positionVec = leading().getPosition();
-		Vec3 coupledVec = trailing().getPosition();
-		double diffX = positionVec.x - coupledVec.x;
-		double diffY = positionVec.y - coupledVec.y;
-		double diffZ = positionVec.z - coupledVec.z;
-		float yRot = AngleHelper.deg(Mth.atan2(diffZ, diffX)) + 90;
-		float xRot = AngleHelper.deg(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)));
 
-		if (carriage.train.derailed)
-			yRot += derailAngle;
+		float xRot = 0;
+		float yRot = 0;
+
+		if (leading().edge == null || carriage.train.derailed) {
+			yRot = -90 + entity.yaw - derailAngle;
+		} else {
+			Vec3 positionVec = leading().getPosition();
+			Vec3 coupledVec = trailing().getPosition();
+			double diffX = positionVec.x - coupledVec.x;
+			double diffY = positionVec.y - coupledVec.y;
+			double diffZ = positionVec.z - coupledVec.z;
+			yRot = AngleHelper.deg(Mth.atan2(diffZ, diffX)) + 90;
+			xRot = AngleHelper.deg(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)));
+		}
 
 		wheelAngle.setValue((wheelAngle.getValue() - angleDiff) % 360);
 		pitch.setValue(xRot);
@@ -69,10 +80,11 @@ public class CarriageBogey {
 			.distanceTo(trailing().getPosition());
 	}
 
-	public void updateAnchorPosition() {
-		if (points.getFirst().node1 == null)
-			return;
-		anchorPosition = points.getFirst()
+	@Nullable
+	public Vec3 getAnchorPosition() {
+		if (leading().edge == null)
+			return null;
+		return points.getFirst()
 			.getPosition()
 			.add(points.getSecond()
 				.getPosition())
@@ -94,10 +106,24 @@ public class CarriageBogey {
 		thisOffset = VecHelper.rotate(thisOffset, -entityXRot, Axis.X);
 		thisOffset = VecHelper.rotate(thisOffset, entityYRot + 90, Axis.Y);
 
-		if (leading)
-			leadingCouplingAnchor = entityPos.add(thisOffset);
-		else
-			trailingCouplingAnchor = entityPos.add(thisOffset);
+		couplingAnchors.set(leading, entityPos.add(thisOffset));
+	}
+
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		tag.putString("Type", ((Block) type).getRegistryName()
+			.toString());
+		tag.put("Points", points.serializeEach(TravellingPoint::write));
+		return tag;
+	}
+
+	public static CarriageBogey read(CompoundTag tag, TrackGraph graph) {
+		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
+		IBogeyBlock type = (IBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
+		Couple<TravellingPoint> points =
+			Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND), c -> TravellingPoint.read(c, graph));
+		CarriageBogey carriageBogey = new CarriageBogey(type, points.getFirst(), points.getSecond());
+		return carriageBogey;
 	}
 
 }

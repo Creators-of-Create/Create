@@ -49,8 +49,8 @@ public class CarriageCouplingRenderer {
 
 				CarriageBogey bogey1 = carriage.trailingBogey();
 				CarriageBogey bogey2 = carriage2.leadingBogey();
-				Vec3 anchor = bogey1.trailingCouplingAnchor;
-				Vec3 anchor2 = bogey2.leadingCouplingAnchor;
+				Vec3 anchor = bogey1.couplingAnchors.getSecond();
+				Vec3 anchor2 = bogey2.couplingAnchors.getFirst();
 				
 				if (anchor == null || anchor2 == null)
 					continue;
