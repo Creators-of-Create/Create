@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
@@ -138,7 +139,7 @@ public class CarriageContraption extends Contraption {
 		tag.putBoolean("BackControls", backwardControls);
 		tag.putBoolean("FrontBlazeConductor", blazeBurnerConductors.getFirst());
 		tag.putBoolean("BackBlazeConductor", blazeBurnerConductors.getSecond());
-		NBTHelper.writeCompoundList(conductorSeats.entrySet(), e -> {
+		ListTag list = NBTHelper.writeCompoundList(conductorSeats.entrySet(), e -> {
 			CompoundTag compoundTag = new CompoundTag();
 			compoundTag.put("Pos", NbtUtils.writeBlockPos(e.getKey()));
 			compoundTag.putBoolean("Forward", e.getValue()
@@ -147,6 +148,7 @@ public class CarriageContraption extends Contraption {
 				.getSecond());
 			return compoundTag;
 		});
+		tag.put("ConductorSeats", list);
 		return tag;
 	}
 
@@ -160,7 +162,7 @@ public class CarriageContraption extends Contraption {
 		conductorSeats.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("ConductorSeats", Tag.TAG_COMPOUND),
 			c -> conductorSeats.put(NbtUtils.readBlockPos(c.getCompound("Pos")),
-				Couple.create(nbt.getBoolean("Forward"), nbt.getBoolean("Backward"))));
+				Couple.create(c.getBoolean("Forward"), c.getBoolean("Backward"))));
 		super.readNBT(world, nbt, spawnData);
 	}
 

@@ -1,0 +1,76 @@
+package com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.function.Supplier;
+
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.foundation.networking.SimplePacketBase;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkEvent.Context;
+
+public class ControlsInputPacket extends SimplePacketBase {
+
+	private Collection<Integer> activatedButtons;
+	private boolean press;
+	private int contraptionEntityId;
+	private BlockPos controlsPos;
+
+	public ControlsInputPacket(Collection<Integer> activatedButtons, boolean press, int contraptionEntityId,
+		BlockPos controlsPos) {
+		this.contraptionEntityId = contraptionEntityId;
+		this.activatedButtons = activatedButtons;
+		this.press = press;
+		this.controlsPos = controlsPos;
+	}
+
+	public ControlsInputPacket(FriendlyByteBuf buffer) {
+		contraptionEntityId = buffer.readInt();
+		activatedButtons = new ArrayList<>();
+		press = buffer.readBoolean();
+		int size = buffer.readVarInt();
+		for (int i = 0; i < size; i++)
+			activatedButtons.add(buffer.readVarInt());
+		controlsPos = buffer.readBlockPos();
+	}
+
+	@Override
+	public void write(FriendlyByteBuf buffer) {
+		buffer.writeInt(contraptionEntityId);
+		buffer.writeBoolean(press);
+		buffer.writeVarInt(activatedButtons.size());
+		activatedButtons.forEach(buffer::writeVarInt);
+		buffer.writeBlockPos(controlsPos);
+	}
+
+	@Override
+	public void handle(Supplier<Context> context) {
+		Context ctx = context.get();
+		ctx.enqueueWork(() -> {
+			ServerPlayer player = ctx.getSender();
+			Level world = player.getCommandSenderWorld();
+			UUID uniqueID = player.getUUID();
+
+			if (player.isSpectator() && press)
+				return;
+
+			Entity entity = world.getEntity(contraptionEntityId);
+			if (!(entity instanceof AbstractContraptionEntity ace))
+				return;
+			if (ace.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
+				.distanceTo(player.position()) > 10)
+				return;
+
+			ControlsServerHandler.receivePressed(world, ace, controlsPos, uniqueID, activatedButtons, press);
+		});
+		ctx.setPacketHandled(true);
+	}
+
+}

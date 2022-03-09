@@ -3,6 +3,7 @@ package com.simibubi.create.events;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
@@ -114,6 +115,7 @@ public class CommonEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 		LinkedControllerServerHandler.tick(world);
+		ControlsServerHandler.tick(world);
 		Create.RAILWAYS.tick(world);
 	}
 

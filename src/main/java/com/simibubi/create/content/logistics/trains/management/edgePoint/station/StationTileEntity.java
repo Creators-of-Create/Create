@@ -155,12 +155,14 @@ public class StationTileEntity extends SmartTileEntity {
 
 		Train imminentTrain = station.getImminentTrain();
 		boolean trainPresent = imminentTrain != null && imminentTrain.getCurrentStation() == station;
+		boolean canDisassemble = trainPresent && imminentTrain.canDisassemble();
 		UUID imminentID = imminentTrain != null ? imminentTrain.id : null;
 
-		if (this.trainPresent != trainPresent || !Objects.equals(imminentID, this.imminentTrain)) {
+		if (this.trainPresent != trainPresent || this.trainCanDisassemble != canDisassemble
+			|| !Objects.equals(imminentID, this.imminentTrain)) {
 			this.imminentTrain = imminentID;
 			this.trainPresent = trainPresent;
-			this.trainCanDisassemble = trainPresent && imminentTrain.canDisassemble();
+			this.trainCanDisassemble = canDisassemble;
 			this.trainBackwards = imminentTrain != null && imminentTrain.currentlyBackwards;
 			sendData();
 		}

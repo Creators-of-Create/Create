@@ -30,7 +30,8 @@ public class TrackGraphHelper {
 
 		TrackNodeLocation location = new TrackNodeLocation(Vec3.atBottomCenterOf(pos)
 			.add(0, track.getElevationAtCenter(level, pos, trackBlockState), 0));
-		graph = Create.RAILWAYS.getGraph(level, location);
+		graph = Create.RAILWAYS.sided(level)
+			.getGraph(level, location);
 		if (graph != null) {
 			TrackNode node = graph.locateNode(location);
 			if (node != null) {
@@ -79,7 +80,8 @@ public class TrackGraphHelper {
 			for (int i = 0; i < 100 && distance < 32; i++) {
 				DiscoveredLocation loc = current;
 				if (graph == null)
-					graph = Create.RAILWAYS.getGraph(level, loc);
+					graph = Create.RAILWAYS.sided(level)
+						.getGraph(level, loc);
 
 				if (graph == null || graph.locateNode(loc) == null) {
 					Collection<DiscoveredLocation> list = ITrackBlock.walkConnectedTracks(level, loc, true);

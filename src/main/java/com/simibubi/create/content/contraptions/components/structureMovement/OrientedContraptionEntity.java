@@ -113,8 +113,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public float getInitialYaw() {
-		return (isInitialOrientationPresent() ? entityData.get(INITIAL_ORIENTATION) : Direction.SOUTH)
-			.toYRot();
+		return (isInitialOrientationPresent() ? entityData.get(INITIAL_ORIENTATION) : Direction.SOUTH).toYRot();
 	}
 
 	@Override
@@ -177,8 +176,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		super.writeAdditional(compound, spawnPacket);
 
 		if (motionBeforeStall != null)
-			compound.put("CachedMotion",
-				newDoubleList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
+			compound.put("CachedMotion", newDoubleList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
 
 		Direction optional = entityData.get(INITIAL_ORIENTATION);
 		if (optional.getAxis()
@@ -200,7 +198,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
 		super.onSyncedDataUpdated(key);
-		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent() && !manuallyPlaced)
+		if (INITIAL_ORIENTATION.equals(key) && isInitialOrientationPresent() && !manuallyPlaced)
 			startAtInitialYaw();
 	}
 

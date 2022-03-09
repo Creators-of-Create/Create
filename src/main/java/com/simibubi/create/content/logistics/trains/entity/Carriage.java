@@ -1,7 +1,8 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.lang.ref.WeakReference;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -19,7 +20,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -65,6 +68,21 @@ public class Carriage {
 		CarriageContraptionEntity entity = CarriageContraptionEntity.create(level, contraption);
 		entity.setCarriage(this);
 		contraption.startMoving(level);
+		contraption.onEntityInitialize(level, entity);
+		for (CarriageBogey carriageBogey : bogeys)
+			if (carriageBogey != null)
+				carriageBogey.updateAnchorPosition();
+		alignEntity(entity);
+
+		List<Entity> players = new ArrayList<>();
+		for (Entity passenger : entity.getPassengers())
+			if (!(passenger instanceof Player))
+				passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
+			else
+				players.add(passenger);
+		for (Entity player : players)
+			player.stopRiding();
+
 		serialisedEntity = entity.serializeNBT();
 	}
 
@@ -137,16 +155,18 @@ public class Carriage {
 	}
 
 	public void createEntity(Level level) {
-		Optional<Entity> entityFromData = EntityType.create(serialisedEntity, level);
-		Entity entity = entityFromData.orElse(null);
+		Entity entity = EntityType.loadEntityRecursive(serialisedEntity, level, e -> {
+			level.addFreshEntity(e);
+			return e;
+		});
 		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
+
 		Vec3 pos = leadingBogey().anchorPosition;
 		cce.setPos(pos);
 		cce.setCarriage(this);
 		cce.setGraph(train.graph == null ? null : train.graph.id);
 		cce.syncCarriage();
-		level.addFreshEntity(cce);
 		this.entity = new WeakReference<>(cce);
 	}
 
@@ -161,8 +181,12 @@ public class Carriage {
 				createEntity(level);
 		} else {
 			CarriageEntityHandler.validateCarriageEntity(entity);
-			if (!entity.isAlive()) {
+			if (!entity.isAlive() || entity.leftTickingChunks) {
+				for (Entity passenger : entity.getPassengers())
+					if (!(passenger instanceof Player))
+						passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
 				serialisedEntity = entity.serializeNBT();
+				entity.discard();
 				this.entity.clear();
 				return;
 			}
@@ -193,13 +217,6 @@ public class Carriage {
 		entity.prevPitch = entity.pitch;
 		entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
 		entity.pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1;
-	}
-
-	public void discardEntity() {
-		CarriageContraptionEntity entity = this.entity.get();
-		if (entity == null)
-			return;
-		entity.discard();
 	}
 
 	public TravellingPoint getLeadingPoint() {

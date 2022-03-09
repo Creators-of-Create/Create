@@ -6,7 +6,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -21,6 +24,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.foundation.collision.Matrix3d;
@@ -39,6 +43,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -63,6 +68,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	private static final EntityDataAccessor<Boolean> STALLED =
 		SynchedEntityData.defineId(AbstractContraptionEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Optional<UUID>> CONTROLLED_BY =
+		SynchedEntityData.defineId(AbstractContraptionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -178,6 +185,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return getName();
 	}
 
+	public Optional<UUID> getControllingPlayer() {
+		return entityData.get(CONTROLLED_BY);
+	}
+
+	public void setControllingPlayer(@Nullable UUID playerId) {
+		entityData.set(CONTROLLED_BY, Optional.ofNullable(playerId));
+	}
+
 	public boolean startControlling(BlockPos controlsLocalPos, Player player) {
 		return false;
 	}
@@ -186,7 +201,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return true;
 	}
 
-	public void stopControlling(BlockPos controlsLocalPos) {}
+	public void stopControlling(BlockPos controlsLocalPos) {
+		getControllingPlayer().map(level::getPlayerByUUID)
+			.map(p -> (p instanceof ServerPlayer) ? ((ServerPlayer) p) : null)
+			.ifPresent(p -> AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> p),
+				new ControlsStopControllingPacket()));
+		setControllingPlayer(null);
+	}
 
 	public boolean handlePlayerInteraction(Player player, BlockPos localPos, Direction side,
 		InteractionHand interactionHand) {
@@ -403,6 +424,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	protected void defineSynchedData() {
 		this.entityData.define(STALLED, false);
+		this.entityData.define(CONTROLLED_BY, Optional.empty());
 	}
 
 	@Override

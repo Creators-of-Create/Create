@@ -157,12 +157,12 @@ public class GlobalRailwayManager {
 		for (Train train : trains.values())
 			train.tick(level);
 
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && AllKeys.altDown())
-			trackNetworks.values()
-				.forEach(TrackGraph::debugViewSignalData);
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown())
-			trackNetworks.values()
-				.forEach(TrackGraph::debugViewNodes);
+//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && AllKeys.altDown())
+//			trackNetworks.values()
+//				.forEach(TrackGraph::debugViewSignalData);
+//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown())
+//			trackNetworks.values()
+//				.forEach(TrackGraph::debugViewNodes);
 	}
 
 	public void clientTick() {

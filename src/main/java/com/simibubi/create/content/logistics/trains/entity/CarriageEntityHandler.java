@@ -16,14 +16,14 @@ public class CarriageEntityHandler {
 		if (!event.didChunkChange())
 			return;
 		Entity entity = event.getEntity();
-		if (!(entity instanceof CarriageContraptionEntity))
+		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
 		SectionPos newPos = event.getNewPos();
 		Level level = entity.getLevel();
 		if (level.isClientSide)
 			return;
 		if (!isActiveChunk(level, newPos.chunk()))
-			entity.discard();
+			cce.leftTickingChunks = true;
 	}
 
 	public static void validateCarriageEntity(CarriageContraptionEntity entity) {
@@ -33,7 +33,7 @@ public class CarriageEntityHandler {
 		if (level.isClientSide)
 			return;
 		if (!isActiveChunk(level, entity.chunkPosition()))
-			entity.discard();
+			entity.leftTickingChunks = true;
 	}
 
 	public static boolean isActiveChunk(Level level, ChunkPos chunk) {

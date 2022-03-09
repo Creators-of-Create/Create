@@ -3,50 +3,80 @@ package com.simibubi.create.content.contraptions.components.structureMovement.in
 import java.util.Collection;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ControlsMovementBehaviour extends MovementBehaviour {
 
-	// TODO: this is specific to Carriage Contraptions - need to move this behaviour
-	// there
-	LerpedFloat steering = LerpedFloat.linear();
-	LerpedFloat speed = LerpedFloat.linear();
-	LerpedFloat equipAnimation = LerpedFloat.linear();
+	// TODO: rendering the levers should be specific to Carriage Contraptions -
+	static class LeverAngles {
+		LerpedFloat steering = LerpedFloat.linear();
+		LerpedFloat speed = LerpedFloat.linear();
+		LerpedFloat equipAnimation = LerpedFloat.linear();
+	}
 
 	@Override
 	public void tick(MovementContext context) {
-		steering.tickChaser();
-		speed.tickChaser();
-		equipAnimation.tickChaser();
 		super.tick(context);
+		if (!context.world.isClientSide)
+			return;
+		if (!(context.temporaryData instanceof LeverAngles))
+			context.temporaryData = new LeverAngles();
+		LeverAngles angles = (LeverAngles) context.temporaryData;
+		angles.steering.tickChaser();
+		angles.speed.tickChaser();
+		angles.equipAnimation.tickChaser();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		if (ControlsHandler.entityRef.get() == context.contraption.entity && ControlsHandler.controlsPos != null
+		if (!(context.temporaryData instanceof LeverAngles angles))
+			return;
+
+		AbstractContraptionEntity entity = context.contraption.entity;
+		if (!(entity instanceof CarriageContraptionEntity cce))
+			return;
+
+		StructureBlockInfo info = context.contraption.getBlocks()
+			.get(context.localPos);
+		Direction initialOrientation = cce.getInitialOrientation()
+			.getCounterClockWise();
+		boolean inverted = false;
+		if (info != null && info.state.hasProperty(ControlsBlock.FACING))
+			inverted = !info.state.getValue(ControlsBlock.FACING)
+				.equals(initialOrientation);
+
+		if (ControlsHandler.entityRef.get() == entity && ControlsHandler.controlsPos != null
 			&& ControlsHandler.controlsPos.equals(context.localPos)) {
 			Collection<Integer> pressed = ControlsHandler.currentlyPressed;
-			equipAnimation.chase(1, .2f, Chaser.EXP);
-			steering.chase((pressed.contains(3) ? 1 : 0) + (pressed.contains(2) ? -1 : 0), 0.2f, Chaser.EXP);
-			speed.chase(0, 0.2f, Chaser.EXP); // TODO
-		} else
-			equipAnimation.chase(0, .2f, Chaser.EXP);
+			angles.equipAnimation.chase(1, .2f, Chaser.EXP);
+			angles.steering.chase((pressed.contains(3) ? 1 : 0) + (pressed.contains(2) ? -1 : 0), 0.2f, Chaser.EXP);
+			float f = cce.movingBackwards ^ inverted ? -1 : 1;
+			angles.speed.chase(Math.min(context.motion.length(), 0.5f) * f, 0.2f, Chaser.EXP);
+
+		} else {
+			angles.equipAnimation.chase(0, .2f, Chaser.EXP);
+			angles.steering.chase(0, 0, Chaser.EXP);
+			angles.speed.chase(0, 0, Chaser.EXP);
+		}
+
 		float pt = AnimationTickHolder.getPartialTicks(context.world);
-		ControlsRenderer.render(context, renderWorld, matrices, buffer, equipAnimation.getValue(pt), speed.getValue(pt),
-			steering.getValue(pt));
+		ControlsRenderer.render(context, renderWorld, matrices, buffer, angles.equipAnimation.getValue(pt),
+			angles.speed.getValue(pt), angles.steering.getValue(pt));
 	}
 
 }

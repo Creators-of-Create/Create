@@ -451,7 +451,7 @@ public class TrackGraph {
 				EdgeData signalData = edge.getEdgeData();
 				UUID singleGroup = signalData.singleSignalGroup;
 				SignalEdgeGroup signalEdgeGroup =
-					singleGroup == null ? null : Create.RAILWAYS.signalEdgeGroups.get(singleGroup);
+					singleGroup == null ? null : Create.RAILWAYS.sided(null).signalEdgeGroups.get(singleGroup);
 
 				if (!edge.isTurn()) {
 					Vec3 p1 = edge.getPosition(node, other, 0);
@@ -479,7 +479,7 @@ public class TrackGraph {
 								continue;
 
 							prevBoundary = boundary;
-							group = Create.RAILWAYS.signalEdgeGroups.get(boundary.getGroup(node));
+							group = Create.RAILWAYS.sided(null).signalEdgeGroups.get(boundary.getGroup(node));
 
 							if (group != null)
 								CreateClient.OUTLINER
@@ -496,7 +496,7 @@ public class TrackGraph {
 						}
 
 						if (prevBoundary != null) {
-							group = Create.RAILWAYS.signalEdgeGroups.get(prevBoundary.getGroup(other));
+							group = Create.RAILWAYS.sided(null).signalEdgeGroups.get(prevBoundary.getGroup(other));
 							if (group != null)
 								CreateClient.OUTLINER
 									.showLine(edge, edge.getPosition(node, other, prev + 1 / 16f / length)

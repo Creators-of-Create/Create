@@ -27,13 +27,13 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -45,9 +45,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -61,6 +58,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private Carriage carriage;
 	public boolean validForRender;
+	public boolean movingBackwards;
+
+	public boolean leftTickingChunks;
 
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
@@ -95,10 +95,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (!level.isClientSide)
 			return;
 
-		if (key == TRACK_GRAPH)
+		if (TRACK_GRAPH.equals(key))
 			updateTrackGraph();
 
-		if (key == CARRIAGE_DATA) {
+		if (CARRIAGE_DATA.equals(key)) {
 			CarriageSyncData carriageData = getCarriageData();
 			if (carriageData == null)
 				return;
@@ -177,8 +177,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		Vec3 diff = position().subtract(xo, yo, zo);
 		Vec3 relativeDiff = VecHelper.rotate(diff, yaw, Axis.Y);
-		double distanceTo = diff.length() * Math.signum(-relativeDiff.x);
+		double signum = Math.signum(-relativeDiff.x);
+		double distanceTo = diff.length() * signum;
 
+		movingBackwards = signum < 0;
 		carriage.bogeys.getFirst()
 			.updateAngles(distanceTo);
 		if (carriage.isOnTwoBogeys())
@@ -272,6 +274,14 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return false;
 		if (carriage.train.derailed)
 			return false;
+		if (level.isClientSide)
+			return true;
+		if (player.isSpectator())
+			return false;
+		if (!toGlobalVector(VecHelper.getCenterOf(controlsLocalPos), 1).closerThan(player.position(), 10))
+			return false;
+		if (heldControls.contains(5))
+			return false;
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(controlsLocalPos);
@@ -326,8 +336,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 						new TextComponent(Strings.repeat("|", progress) + (arrived ? " ->" : " <-"));
 					TextComponent greenComponent =
 						new TextComponent((arrived ? "<- " : "-> ") + Strings.repeat("|", 30 - progress));
-					int mixedColor = Color.mixColors(0xff_91EA44, 0xff_FFC244, progress / 30f);
-					int targetColor = arrived ? 0xff_91EA44 : 0xff_ffffff;
+					int mixedColor = Color.mixColors(0x00_91EA44, 0x00_FFC244, progress / 30f);
+					int targetColor = arrived ? 0x00_91EA44 : 0x00_ffffff;
 					player.displayClientMessage(greenComponent.withStyle(st -> st.withColor(mixedColor))
 						.append(whiteComponent.withStyle(st -> st.withColor(targetColor))), true);
 					return true;
@@ -344,12 +354,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					navDistanceTotal = nav.distanceToDestination;
 					return true;
 				}
-				if (level.isClientSide)
-					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> displayApproachStationMessage(lookAhead));
-			} else {
-				if (level.isClientSide)
-					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::cleanUpApproachStationMessage);
-			}
+				displayApproachStationMessage(player, lookAhead);
+			} else
+				cleanUpApproachStationMessage(player);
 		}
 
 		carriage.train.manualSteer =
@@ -366,20 +373,17 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	boolean stationMessage = false;
 
-	@OnlyIn(Dist.CLIENT)
-	private void displayApproachStationMessage(GlobalStation station) {
-		Minecraft instance = Minecraft.getInstance();
-		instance.player.displayClientMessage(Lang.translate("contraption.controls.approach_station",
-			instance.options.keyJump.getTranslatedKeyMessage(), station.name), true);
+	private void displayApproachStationMessage(Player player, GlobalStation station) {
+		player.displayClientMessage(
+			Lang.translate("contraption.controls.approach_station", new KeybindComponent("key.jump"), station.name),
+			true);
 		stationMessage = true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	private void cleanUpApproachStationMessage() {
+	private void cleanUpApproachStationMessage(Player player) {
 		if (!stationMessage)
 			return;
-		Minecraft instance = Minecraft.getInstance();
-		instance.player.displayClientMessage(new TextComponent(""), true);
+		player.displayClientMessage(new TextComponent(""), true);
 		stationMessage = false;
 	}
 

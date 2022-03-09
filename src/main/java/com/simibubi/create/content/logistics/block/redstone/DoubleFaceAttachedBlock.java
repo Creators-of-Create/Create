@@ -57,7 +57,7 @@ public class DoubleFaceAttachedBlock extends HorizontalDirectionalBlock {
 						face = DoubleAttachFace.WALL_REVERSED;
 				}
 				blockstate = this.defaultBlockState()
-					.setValue(FACE, face) // TODO wall reversed
+					.setValue(FACE, face)
 					.setValue(FACING, direction.getOpposite());
 			}
 
