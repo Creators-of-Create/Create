@@ -148,7 +148,7 @@ publishing {
 
     repositories {
         maven {
-            url = "https://maven.devos.community/${System.getenv().PUBLISH_SUFFIX}/"
+            url = "https://mvn.devos.one/${System.getenv().PUBLISH_SUFFIX}/"
             credentials {
                 username = System.getenv().MAVEN_USER
                 password = System.getenv().MAVEN_PASS
