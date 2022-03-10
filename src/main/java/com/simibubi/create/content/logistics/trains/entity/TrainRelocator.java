@@ -60,6 +60,10 @@ public class TrainRelocator {
 	static Boolean lastHoveredResult;
 	static List<Vec3> toVisualise;
 
+	public static boolean isRelocating() {
+		return relocatingTrain != null;
+	}
+	
 	@OnlyIn(Dist.CLIENT)
 	public static void onClicked(ClickInputEvent event) {
 		if (relocatingTrain == null)

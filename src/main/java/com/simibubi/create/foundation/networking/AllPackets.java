@@ -53,6 +53,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket.TrainEditReturnPacket;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEditPacket;
+import com.simibubi.create.content.logistics.trains.track.TrackRemovalPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
@@ -118,6 +119,7 @@ public enum AllPackets {
 	C_CONFIGURE_TRAIN(TrainEditPacket.class, TrainEditPacket::new, PLAY_TO_SERVER),
 	RELOCATE_TRAIN(TrainRelocationPacket.class, TrainRelocationPacket::new, PLAY_TO_SERVER),
 	CONTROLS_INPUT(ControlsInputPacket.class, ControlsInputPacket::new, PLAY_TO_SERVER),
+	REMOVE_TRACKS(TrackRemovalPacket.class, TrackRemovalPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),

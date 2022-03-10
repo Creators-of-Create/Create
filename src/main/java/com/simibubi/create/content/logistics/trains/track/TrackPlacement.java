@@ -286,20 +286,21 @@ public class TrackPlacement {
 				return info.withMessage("too_sharp")
 					.tooJumbly();
 
-			int minTurnSize = ninety ? 7 : 3;
-			int maxAscend = ninety ? 3 : 2;
+			double minTurnSize = ninety ? 7 : 3.25;
+			double turnSizeToFitAscend =
+				minTurnSize + (ninety ? Math.max(0, absAscend - 3) * 2f : Math.max(0, absAscend - 1.5f) * 1.5f);
 
 			if (turnSize < minTurnSize)
 				return info.withMessage("too_sharp");
-			if (absAscend > maxAscend)
+			if (turnSize < turnSizeToFitAscend)
 				return info.withMessage("too_steep");
 
 			// This is for standardising curve sizes
-			ex1 += (turnSize - minTurnSize) / axis1.length();
-			ex2 += (turnSize - minTurnSize) / axis2.length();
-			info.end1Extent = Math.round(ex1);
-			info.end2Extent = Math.round(ex2);
-			turnSize = minTurnSize;
+			ex1 += (turnSize - turnSizeToFitAscend) / axis1.length();
+			ex2 += (turnSize - turnSizeToFitAscend) / axis2.length();
+			info.end1Extent = Mth.floor(ex1);
+			info.end2Extent = Mth.floor(ex2);
+			turnSize = turnSizeToFitAscend;
 		}
 
 		Vec3 offset1 = axis1.scale(info.end1Extent);

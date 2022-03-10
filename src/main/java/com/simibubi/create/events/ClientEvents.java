@@ -37,6 +37,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRende
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
+import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -153,6 +154,7 @@ public class ClientEvents {
 		ToolboxHandlerClient.clientTick();
 		TrackTargetingBlockItem.clientTick();
 		TrackPlacement.clientTick();
+		TrackRemoval.clientTick();
 		TrainRelocator.clientTick();
 	}
 

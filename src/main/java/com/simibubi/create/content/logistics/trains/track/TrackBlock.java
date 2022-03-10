@@ -292,6 +292,15 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		if (context.getLevel().isClientSide)
+			TrackRemoval.wrenched(context.getClickedPos());
+		return InteractionResult.SUCCESS;
+	}
+	
+	@Override
+	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
+		if (context.getLevel().isClientSide)
+			TrackRemoval.sneakWrenched(context.getClickedPos());
 		return InteractionResult.SUCCESS;
 	}
 
