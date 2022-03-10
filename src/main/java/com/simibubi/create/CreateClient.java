@@ -6,6 +6,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
+import com.simibubi.create.content.curiosities.armor.AllArmorMaterials;
+import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
@@ -35,6 +37,7 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import io.github.fabricators_of_create.porting_lib.event.OverlayRenderCallback;
 
+import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import io.github.fabricators_of_create.porting_lib.util.FluidHandlerData;
 import io.github.fabricators_of_create.porting_lib.util.FluidTileDataHandler;
 import net.fabricmc.api.ClientModInitializer;
@@ -107,6 +110,7 @@ public class CreateClient implements ClientModInitializer {
 		InputEvents.register();
 		AllPackets.channel.initClientListener();
 		RenderTypes.init();
+		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
 	}
 
 	private static void registerOverlays() {
