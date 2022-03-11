@@ -56,6 +56,9 @@ public class TravellingPoint {
 	public static interface ISignalBoundaryListener extends BiConsumer<Double, Pair<SignalBoundary, Couple<UUID>>> {
 	};
 
+	public static interface ITurnListener extends BiConsumer<Double, TrackEdge> {
+	};
+
 	public TravellingPoint() {}
 
 	public TravellingPoint(TrackNode node1, TrackNode node2, TrackEdge edge, double position) {
@@ -66,6 +69,11 @@ public class TravellingPoint {
 	}
 
 	public ISignalBoundaryListener ignoreSignals() {
+		return (d, c) -> {
+		};
+	}
+
+	public ITurnListener ignoreTurns() {
 		return (d, c) -> {
 		};
 	}
@@ -170,7 +178,7 @@ public class TravellingPoint {
 	}
 
 	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
-		ISignalBoundaryListener signalListener) {
+		ISignalBoundaryListener signalListener, ITurnListener turnListener) {
 		blocked = false;
 		double edgeLength = edge.getLength(node1, node2);
 		if (distance == 0)
@@ -185,7 +193,7 @@ public class TravellingPoint {
 
 		boolean forward = distance > 0;
 		double collectedDistance = forward ? -prevPos : -edgeLength + prevPos;
-		edgeTraversedFrom(graph, forward, signalListener, prevPos, collectedDistance);
+		edgeTraversedFrom(graph, forward, signalListener, turnListener, prevPos, collectedDistance);
 
 		if (forward) {
 			// Moving forward
@@ -223,7 +231,9 @@ public class TravellingPoint {
 				position -= edgeLength;
 
 				collectedDistance += edgeLength;
-				edgeTraversedFrom(graph, forward, signalListener, 0, collectedDistance);
+				if (edge.isTurn())
+					turnListener.accept(collectedDistance, edge);
+				edgeTraversedFrom(graph, forward, signalListener, turnListener, 0, collectedDistance);
 				prevPos = 0;
 
 				edgeLength = edge.getLength(node1, node2);
@@ -268,7 +278,7 @@ public class TravellingPoint {
 				edgeLength = edge.getLength(node1, node2);
 				position += edgeLength;
 
-				edgeTraversedFrom(graph, forward, signalListener, edgeLength, collectedDistance);
+				edgeTraversedFrom(graph, forward, signalListener, turnListener, edgeLength, collectedDistance);
 			}
 
 		}
@@ -277,7 +287,10 @@ public class TravellingPoint {
 	}
 
 	private void edgeTraversedFrom(TrackGraph graph, boolean forward, ISignalBoundaryListener signalListener,
-		double prevPos, double totalDistance) {
+		ITurnListener turnListener, double prevPos, double totalDistance) {
+		if (edge.isTurn())
+			turnListener.accept(Math.max(0, totalDistance), edge);
+		
 		EdgeData signalsOnEdge = edge.getEdgeData();
 		if (!signalsOnEdge.hasSignalBoundaries())
 			return;

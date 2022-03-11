@@ -49,6 +49,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
@@ -81,6 +82,12 @@ public class CommonEvents {
 		Player player = event.getPlayer();
 		ToolboxHandler.playerLogin(player);
 		Create.RAILWAYS.playerLogin(player);
+	}
+	
+	@SubscribeEvent
+	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
+		Player player = event.getPlayer();
+		Create.RAILWAYS.playerLogout(player);
 	}
 
 	@SubscribeEvent
@@ -188,7 +195,6 @@ public class CommonEvents {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
 		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
-		Create.RAILWAYS.levelUnloaded(world);
 	}
 
 	@SubscribeEvent

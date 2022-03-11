@@ -49,7 +49,8 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	public NixieTubeBlock(Properties properties, DyeColor color) {
 		super(properties);
 		this.color = color;
-		registerDefaultState(defaultBlockState().setValue(FACE, DoubleAttachFace.FLOOR));
+		registerDefaultState(defaultBlockState().setValue(FACE, DoubleAttachFace.FLOOR)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@Override

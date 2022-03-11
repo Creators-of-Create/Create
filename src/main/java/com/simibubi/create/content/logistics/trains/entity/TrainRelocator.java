@@ -24,6 +24,7 @@ import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITurnListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -63,7 +64,7 @@ public class TrainRelocator {
 	public static boolean isRelocating() {
 		return relocatingTrain != null;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static void onClicked(ClickInputEvent event) {
 		if (relocatingTrain == null)
@@ -105,7 +106,7 @@ public class TrainRelocator {
 			return null;
 		BlockPos blockPos = blockhit.getBlockPos();
 
-		if (simulate && toVisualise != null) {
+		if (simulate && toVisualise != null && lastHoveredResult != null) {
 			for (int i = 0; i < toVisualise.size() - 1; i++) {
 				Vec3 vec1 = toVisualise.get(i);
 				Vec3 vec2 = toVisualise.get(i + 1);
@@ -158,6 +159,7 @@ public class TrainRelocator {
 
 		TravellingPoint probe = new TravellingPoint(node1, node2, edge, graphLocation.position);
 		ISignalBoundaryListener ignoreSignals = probe.ignoreSignals();
+		ITurnListener ignoreTurns = probe.ignoreTurns();
 		List<Pair<Couple<TrackNode>, Double>> recordedLocations = new ArrayList<>();
 		List<Vec3> recordedVecs = new ArrayList<>();
 		Consumer<TravellingPoint> recorder = tp -> {
@@ -171,7 +173,7 @@ public class TrainRelocator {
 		train.forEachTravellingPointBackwards((tp, d) -> {
 			if (blocked.booleanValue())
 				return;
-			probe.travel(graph, d, steer, ignoreSignals);
+			probe.travel(graph, d, steer, ignoreSignals, ignoreTurns);
 			recorder.accept(probe);
 			if (probe.blocked) {
 				blocked.setTrue();

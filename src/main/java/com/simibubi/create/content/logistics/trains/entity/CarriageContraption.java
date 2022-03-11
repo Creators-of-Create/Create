@@ -32,6 +32,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CarriageContraption extends Contraption {
 
@@ -177,6 +179,7 @@ public class CarriageContraption extends Contraption {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new NonStationaryLighter<>(this);
 	}

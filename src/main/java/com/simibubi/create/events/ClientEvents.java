@@ -159,14 +159,13 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderSelection(DrawSelectionEvent event) {
-	}
+	public static void onRenderSelection(DrawSelectionEvent event) {}
 
 	@SubscribeEvent
 	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
 		CreateClient.checkGraphicsFanciness();
 	}
-	
+
 	@SubscribeEvent
 	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
 		CreateClient.RAILWAYS.cleanUp();
@@ -183,12 +182,13 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld()
-			.isClientSide()) {
-			CreateClient.invalidateRenderers();
-			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
-			AnimationTickHolder.reset();
-		}
+		if (!event.getWorld()
+			.isClientSide())
+			return;
+		CreateClient.invalidateRenderers();
+		CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
+		AnimationTickHolder.reset();
+		ControlsHandler.levelUnloaded(event.getWorld());
 	}
 
 	@SubscribeEvent
@@ -281,13 +281,15 @@ public class ClientEvents {
 
 		Fluid fluid = fluidstate.getType();
 
-		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
+		if (AllFluids.CHOCOLATE.get()
+			.isSame(fluid)) {
 			event.setDensity(5f);
 			event.setCanceled(true);
 			return;
 		}
 
-		if (AllFluids.HONEY.get().isSame(fluid)) {
+		if (AllFluids.HONEY.get()
+			.isSame(fluid)) {
 			event.setDensity(1.5f);
 			event.setCanceled(true);
 			return;
@@ -307,18 +309,20 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
-           return;
+		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+			return;
 
 		Fluid fluid = fluidstate.getType();
 
-		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
+		if (AllFluids.CHOCOLATE.get()
+			.isSame(fluid)) {
 			event.setRed(98 / 256f);
 			event.setGreen(32 / 256f);
 			event.setBlue(32 / 256f);
 		}
 
-		if (AllFluids.HONEY.get().isSame(fluid)) {
+		if (AllFluids.HONEY.get()
+			.isSame(fluid)) {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);

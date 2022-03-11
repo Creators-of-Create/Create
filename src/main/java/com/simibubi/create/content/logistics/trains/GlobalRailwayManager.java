@@ -57,6 +57,8 @@ public class GlobalRailwayManager {
 		}
 	}
 
+	public void playerLogout(Player player) {}
+
 	public void levelLoaded(LevelAccessor level) {
 		MinecraftServer server = level.getServer();
 		if (server == null || server.overworld() != level)
@@ -73,13 +75,6 @@ public class GlobalRailwayManager {
 		trains = savedData.getTrains();
 		trackNetworks = savedData.getTrackNetworks();
 		signalEdgeGroups = savedData.getSignalBlocks();
-	}
-
-	public void levelUnloaded(LevelAccessor level) {
-//		MinecraftServer server = level.getServer();
-//		if (server == null || server.overworld() != level)
-//			return;
-//		cleanUp();
 	}
 
 	public void cleanUp() {

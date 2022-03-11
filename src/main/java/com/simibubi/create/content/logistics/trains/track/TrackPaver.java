@@ -6,12 +6,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -33,7 +32,7 @@ public class TrackPaver {
 		if (defaultBlockState.hasProperty(SlabBlock.TYPE))
 			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
 		boolean wallLike = isWallLike(defaultBlockState);
-		
+
 		if (defaultBlockState.getBlock() instanceof GirderBlock)
 			for (Direction d : Iterate.horizontalDirections)
 				if (Vec3.atLowerCornerOf(d.getNormal())
@@ -144,9 +143,9 @@ public class TrackPaver {
 			int floor = Mth.floor(yValue);
 			boolean placeSlab = slab && yValue - floor >= .5;
 			BlockPos targetPos = new BlockPos(entry.getKey()
-				.getKey(), floor,
+				.getFirst(), floor,
 				entry.getKey()
-					.getValue());
+					.getSecond());
 			targetPos = targetPos.offset(tePosition)
 				.above(placeSlab ? 1 : 0);
 			BlockState stateToPlace =

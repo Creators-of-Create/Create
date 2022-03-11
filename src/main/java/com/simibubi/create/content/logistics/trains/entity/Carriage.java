@@ -136,9 +136,12 @@ public class Carriage {
 				ISignalBoundaryListener passiveListener = point.ignoreSignals();
 
 				toMove += correction + bogeyCorrection;
-				double moved = point.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector,
-					toMove > 0 ? atFront ? frontListener : atBack ? backListener : passiveListener
-						: atFront ? backListener : atBack ? frontListener : passiveListener);
+				double moved =
+					point
+						.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector,
+							toMove > 0 ? atFront ? frontListener : atBack ? backListener : passiveListener
+								: atFront ? backListener : atBack ? frontListener : passiveListener,
+							point.ignoreTurns());
 				blocked |= point.blocked;
 
 				distanceMoved.setValue(moved);
@@ -227,8 +230,17 @@ public class Carriage {
 		entity.setPos(positionAnchor);
 		entity.prevYaw = entity.yaw;
 		entity.prevPitch = entity.pitch;
+
 		entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
 		entity.pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1;
+
+		if (entity.firstPositionUpdate) {
+			entity.xo = entity.getX();
+			entity.yo = entity.getY();
+			entity.zo = entity.getZ();
+			entity.prevYaw = entity.yaw;
+			entity.prevPitch = entity.pitch;
+		}
 	}
 
 	public TravellingPoint getLeadingPoint() {

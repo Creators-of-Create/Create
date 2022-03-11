@@ -35,6 +35,7 @@ import com.simibubi.create.content.logistics.trains.management.schedule.Schedule
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -246,24 +247,34 @@ public class Train {
 	}
 
 	private void updateNavigationTarget(double distance) {
-		if (navigation.destination != null) {
-			boolean recalculate = navigation.distanceToDestination % 100 > 20;
-			boolean imminentRecalculate = navigation.distanceToDestination > 5;
-			double toSubstract = navigation.destinationBehindTrain ? -distance : distance;
-			navigation.distanceToDestination -= toSubstract;
-			boolean signalMode = navigation.waitingForSignal != null;
+		if (navigation.destination == null)
+			return;
+
+		boolean recalculate = navigation.distanceToDestination % 100 > 20;
+		boolean imminentRecalculate = navigation.distanceToDestination > 5;
+		double toSubstract = navigation.destinationBehindTrain ? -distance : distance;
+		navigation.distanceToDestination -= toSubstract;
+		boolean signalMode = navigation.waitingForSignal != null;
+		boolean navigatingManually = runtime.paused;
+
+		if (signalMode) {
+			navigation.distanceToSignal -= toSubstract;
+			recalculate = navigation.distanceToSignal % 100 > 20;
+		}
+
+		if (recalculate && (signalMode ? navigation.distanceToSignal : navigation.distanceToDestination) % 100 <= 20
+			|| imminentRecalculate && navigation.distanceToDestination <= 5) {
 			if (signalMode) {
-				navigation.distanceToSignal -= toSubstract;
-				recalculate = navigation.distanceToSignal % 100 > 20;
+				navigation.waitingForSignal = null;
+				return;
 			}
-			if (recalculate && (signalMode ? navigation.distanceToSignal : navigation.distanceToDestination) % 100 <= 20
-				|| imminentRecalculate && navigation.distanceToDestination <= 5) {
-				if (signalMode) {
-					navigation.waitingForSignal = null;
-					return;
-				}
-				navigation.startNavigation(navigation.destination, false);
+			GlobalStation destination = navigation.destination;
+			if (!navigatingManually) {
+				GlobalStation preferredDestination = runtime.findNextStation();
+				if (preferredDestination != null)
+					destination = preferredDestination;
 			}
+			navigation.startNavigation(destination, navigatingManually ? -1 : Double.MAX_VALUE, false);
 		}
 	}
 
@@ -680,9 +691,34 @@ public class Train {
 						return;
 					occupiedSignalBlocks.add(id);
 					prevGroup.setValue(id);
-				}));
+				}), signalScout.ignoreTurns());
 		});
 
+	}
+
+	public Couple<Couple<TrackNode>> getEndpointEdges() {
+		return Couple.create(carriages.get(0)
+			.getLeadingPoint(),
+			carriages.get(carriages.size() - 1)
+				.getTrailingPoint())
+			.map(tp -> Couple.create(tp.node1, tp.node2));
+	}
+
+	public static class Penalties {
+		static final int STATION = 200, STATION_WITH_TRAIN = 300;
+		static final int MANUAL_TRAIN = 200, IDLE_TRAIN = 700, ARRIVING_TRAIN = 50, WAITING_TRAIN = 50, ANY_TRAIN = 25;
+	}
+
+	public int getNavigationPenalty() {
+		if (manualTick)
+			return Penalties.MANUAL_TRAIN;
+		if (runtime.getSchedule() == null || runtime.paused)
+			return Penalties.IDLE_TRAIN;
+		if (navigation.waitingForSignal != null && navigation.ticksWaitingForSignal > 0)
+			return Penalties.WAITING_TRAIN + Math.min(navigation.ticksWaitingForSignal / 20, 1000);
+		if (navigation.destination != null && navigation.distanceToDestination < 50 || navigation.distanceToSignal < 20)
+			return Penalties.ARRIVING_TRAIN;
+		return Penalties.ANY_TRAIN;
 	}
 
 	public CompoundTag write() {

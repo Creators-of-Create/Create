@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
@@ -62,9 +63,15 @@ public class CarriageBogey {
 			xRot = AngleHelper.deg(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)));
 		}
 
-		wheelAngle.setValue((wheelAngle.getValue() - angleDiff) % 360);
-		pitch.setValue(xRot);
-		yaw.setValue(-yRot);
+		double newWheelAngle = (wheelAngle.getValue() - angleDiff) % 360;
+
+		for (boolean twice : Iterate.trueAndFalse) {
+			if (twice && !entity.firstPositionUpdate)
+				continue;
+			wheelAngle.setValue(newWheelAngle);
+			pitch.setValue(xRot);
+			yaw.setValue(-yRot);
+		}
 	}
 
 	public TravellingPoint leading() {

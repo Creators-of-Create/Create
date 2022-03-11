@@ -25,7 +25,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 					bogey.couplingAnchors.replace(v -> null);
 		if (!super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ))
 			return false;
-		return entity.validForRender;
+		return entity.validForRender && !entity.firstPositionUpdate;
 	}
 
 	@Override

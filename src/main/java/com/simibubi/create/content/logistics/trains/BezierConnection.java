@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.trains;
 
 import java.util.Iterator;
 
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;

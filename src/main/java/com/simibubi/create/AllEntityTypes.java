@@ -41,7 +41,7 @@ public class AllEntityTypes {
 		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false);
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
-			() -> CarriageContraptionEntityRenderer::new, 5, 3, true);
+			() -> CarriageContraptionEntityRenderer::new, 15, 3, true);
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 		register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new, MobCategory.MISC, 10,

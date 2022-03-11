@@ -61,10 +61,12 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	public boolean movingBackwards;
 
 	public boolean leftTickingChunks;
+	public boolean firstPositionUpdate;
 
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 		validForRender = false;
+		firstPositionUpdate = true;
 	}
 
 	@Override
@@ -172,12 +174,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriage.alignEntity(this);
 
-		Vec3 diff = position().subtract(xo, yo, zo);
-		Vec3 relativeDiff = VecHelper.rotate(diff, yaw, Axis.Y);
-		double signum = Math.signum(-relativeDiff.x);
-		double distanceTo = diff.length() * signum;
+		double distanceTo = 0;
+		if (!firstPositionUpdate) {
+			Vec3 diff = position().subtract(xo, yo, zo);
+			Vec3 relativeDiff = VecHelper.rotate(diff, yaw, Axis.Y);
+			double signum = Math.signum(-relativeDiff.x);
+			distanceTo = diff.length() * signum;
+			movingBackwards = signum < 0;
+		}
 
-		movingBackwards = signum < 0;
 		carriage.bogeys.getFirst()
 			.updateAngles(this, distanceTo);
 		if (carriage.isOnTwoBogeys())
@@ -187,6 +192,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (carriage.train.derailed)
 			spawnDerailParticles(carriage);
 
+		firstPositionUpdate = false;
 		validForRender = true;
 	}
 
@@ -198,6 +204,18 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			Vec3 v = position().add(derailParticleOffset);
 			level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, v.x, v.y, v.z, 0, .04, 0);
 		}
+	}
+
+	@Override
+	public void onClientRemoval() {
+		super.onClientRemoval();
+		entityData.set(CARRIAGE_DATA, new CarriageSyncData());
+		if (carriage != null) {
+			carriage.pointsInitialised = false;
+			carriage.leadingBogey().couplingAnchors = Couple.create(null, null);
+			carriage.trailingBogey().couplingAnchors = Couple.create(null, null);
+		}
+		firstPositionUpdate = true;
 	}
 
 	@Override
@@ -250,7 +268,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return false;
 		if (carriage.train.derailed)
 			return false;
-		if (!level.isClientSide && carriage.train.heldForAssembly) {
+		if (carriage.train.heldForAssembly) {
 			player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
 			return false;
 		}
@@ -260,6 +278,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			train.status.manualControls();
 		train.navigation.cancelNavigation();
 		train.runtime.paused = true;
+		train.navigation.waitingForSignal = null;
 		return true;
 	}
 
@@ -347,7 +366,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 			if (lookAhead != null) {
 				if (spaceDown) {
-					nav.startNavigation(lookAhead, false);
+					nav.startNavigation(lookAhead, -1, false);
 					navDistanceTotal = nav.distanceToDestination;
 					return true;
 				}

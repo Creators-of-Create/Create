@@ -58,9 +58,10 @@ public class TrackBlockItem extends BlockItem {
 		}
 
 		boolean placing = !(state.getBlock() instanceof ITrackBlock);
-		if (placing && !state.getMaterial()
-			.isReplaceable()) {
-			pos = pos.relative(pContext.getClickedFace());
+		if (placing) {
+			if (!state.getMaterial()
+				.isReplaceable())
+				pos = pos.relative(pContext.getClickedFace());
 			state = getPlacementState(pContext);
 			if (state == null)
 				return InteractionResult.FAIL;

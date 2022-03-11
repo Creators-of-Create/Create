@@ -4,7 +4,6 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 

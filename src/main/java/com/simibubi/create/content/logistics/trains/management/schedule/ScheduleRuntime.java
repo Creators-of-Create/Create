@@ -97,7 +97,7 @@ public class ScheduleRuntime {
 			destinationReached();
 			return;
 		}
-		if (train.navigation.startNavigation(nextStation, false) != -1)
+		if (train.navigation.startNavigation(nextStation, Double.MAX_VALUE, false) != -1)
 			state = State.IN_TRANSIT;
 	}
 
@@ -134,7 +134,7 @@ public class ScheduleRuntime {
 				if (!globalStation.name.matches(regex))
 					continue;
 				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);
-				double cost = matchesCurrent ? 0 : train.navigation.startNavigation(globalStation, true);
+				double cost = matchesCurrent ? 0 : train.navigation.startNavigation(globalStation, bestCost, true);
 				if (cost < 0)
 					continue;
 				if (cost > bestCost)

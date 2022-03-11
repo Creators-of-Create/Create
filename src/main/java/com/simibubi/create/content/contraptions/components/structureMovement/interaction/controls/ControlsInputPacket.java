@@ -22,13 +22,15 @@ public class ControlsInputPacket extends SimplePacketBase {
 	private boolean press;
 	private int contraptionEntityId;
 	private BlockPos controlsPos;
+	private boolean stopControlling;
 
 	public ControlsInputPacket(Collection<Integer> activatedButtons, boolean press, int contraptionEntityId,
-		BlockPos controlsPos) {
+		BlockPos controlsPos, boolean stopControlling) {
 		this.contraptionEntityId = contraptionEntityId;
 		this.activatedButtons = activatedButtons;
 		this.press = press;
 		this.controlsPos = controlsPos;
+		this.stopControlling = stopControlling;
 	}
 
 	public ControlsInputPacket(FriendlyByteBuf buffer) {
@@ -39,6 +41,7 @@ public class ControlsInputPacket extends SimplePacketBase {
 		for (int i = 0; i < size; i++)
 			activatedButtons.add(buffer.readVarInt());
 		controlsPos = buffer.readBlockPos();
+		stopControlling = buffer.readBoolean();
 	}
 
 	@Override
@@ -48,6 +51,7 @@ public class ControlsInputPacket extends SimplePacketBase {
 		buffer.writeVarInt(activatedButtons.size());
 		activatedButtons.forEach(buffer::writeVarInt);
 		buffer.writeBlockPos(controlsPos);
+		buffer.writeBoolean(stopControlling);
 	}
 
 	@Override
@@ -64,11 +68,14 @@ public class ControlsInputPacket extends SimplePacketBase {
 			Entity entity = world.getEntity(contraptionEntityId);
 			if (!(entity instanceof AbstractContraptionEntity ace))
 				return;
-			if (!ace.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
-				.closerThan(player.position(), 16))
+			if (stopControlling) {
+				ace.stopControlling(controlsPos);
 				return;
+			}
 
-			ControlsServerHandler.receivePressed(world, ace, controlsPos, uniqueID, activatedButtons, press);
+			if (ace.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
+				.closerThan(player.position(), 16))
+				ControlsServerHandler.receivePressed(world, ace, controlsPos, uniqueID, activatedButtons, press);
 		});
 		ctx.setPacketHandled(true);
 	}
