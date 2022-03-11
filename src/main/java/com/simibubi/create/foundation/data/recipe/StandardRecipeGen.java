@@ -229,6 +229,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("GP")
 				.pattern(" S")),
 
+		DEBRIS_SHIELD = create(AllItems.DEBRIS_SHIELD).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('I', I.ironSheet())
+					.define('P', I.cog())
+					.define('S', Tags.Items.RODS_WOODEN)
+					.pattern(" I")
+					.pattern("IP")
+					.pattern(" S")),
+
 		FILTER = create(AllItems.FILTER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('S', ItemTags.WOOL)
 				.define('A', Tags.Items.NUGGETS_IRON)

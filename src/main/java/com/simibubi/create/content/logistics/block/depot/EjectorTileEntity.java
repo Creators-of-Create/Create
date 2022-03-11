@@ -10,6 +10,8 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldHandler;
+import com.simibubi.create.content.contraptions.debrisShield.IDebrisShielded;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
@@ -64,7 +66,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class EjectorTileEntity extends KineticTileEntity {
+public class EjectorTileEntity extends KineticTileEntity implements IDebrisShielded {
 
 	List<IntAttached<ItemStack>> launchedItems;
 	ScrollValueBehaviour maxStackSize;
@@ -74,6 +76,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	boolean powered;
 	boolean launch;
 	State state;
+	private DebrisShieldHandler<EjectorTileEntity> acceptDroppedItems;
 
 	// item collision
 	@Nullable
@@ -114,6 +117,9 @@ public class EjectorTileEntity extends KineticTileEntity {
 		depotBehaviour.canFunnelsPullFrom = side -> side != getFacing();
 		depotBehaviour.enableMerging();
 		depotBehaviour.addSubBehaviours(behaviours);
+
+		acceptDroppedItems = new DebrisShieldHandler<>(this);
+		acceptDroppedItems.addBehaviours(behaviours);
 	}
 
 	@Override
@@ -503,6 +509,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 		compound.put("LaunchedItems",
 			NBTHelper.writeCompoundList(launchedItems, ia -> ia.serializeNBT(ItemStack::serializeNBT)));
 
+		acceptDroppedItems.write(compound);
+
 		if (earlyTarget != null) {
 			compound.put("EarlyTarget", VecHelper.writeNBT(earlyTarget.getFirst()));
 			compound.put("EarlyTargetPos", NbtUtils.writeBlockPos(earlyTarget.getSecond()));
@@ -515,6 +523,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 		super.writeSafe(compound, clientPacket);
 		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
 		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
+
+		acceptDroppedItems.write(compound);
 	}
 
 	@Override
@@ -545,6 +555,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		if (compound.contains("ForceAngle"))
 			lidProgress.startWithValue(compound.getFloat("ForceAngle"));
+
+		acceptDroppedItems.read(compound);
 	}
 
 	public void updateSignal() {
@@ -582,6 +594,21 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 	public State getState() {
 		return state;
+	}
+
+	@Override
+	public DebrisShieldHandler.SelectionMode toggleShielded() {
+		return acceptDroppedItems.toggle();
+	}
+
+	@Override
+	public void setShielded(DebrisShieldHandler.SelectionMode lockingState) {
+		acceptDroppedItems.setShielded(lockingState);
+	}
+
+	@Override
+	public boolean isShielded() {
+		return acceptDroppedItems.isShielded();
 	}
 
 	@Override

@@ -41,6 +41,8 @@ public class ScrollValueRenderer {
 			return;
 		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return;
+		if (behaviour.needsDebrisShield && !AllItems.DEBRIS_SHIELD.isIn(mc.player.getMainHandItem()))
+			return;
 		boolean highlight = behaviour.testHit(target.getLocation());
 
 		if (behaviour instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {

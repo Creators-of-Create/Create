@@ -584,6 +584,7 @@
 	"item.create.crushed_tin_ore": "Crushed Tin Ore",
 	"item.create.crushed_uranium_ore": "Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "Crushed Zinc Ore",
+	"item.create.debris_shield": "Debris Shield",
 	"item.create.diving_boots": "Diving Boots",
 	"item.create.diving_helmet": "Diving Helmet",
 	"item.create.dough": "Dough",
@@ -1255,11 +1256,15 @@
 	"create.weighted_ejector.targeting": "Ejecting to [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Ejected Stack Size",
 
+	"create.logistics.has_debris_shield": "Accepts Dropped Items",
 	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
 
 	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Forced Round Robin",
 	"create.mechanical_arm.selection_mode.prefer_first": "Prefer First Target",
+
+	"create.debris_shield.selection_mode.open": "Yes",
+	"create.debris_shield.selection_mode.shielded": "No",
 
 	"create.tunnel.selection_mode.split": "Split",
 	"create.tunnel.selection_mode.forced_split": "Forced Split",
@@ -1496,6 +1501,11 @@
 	"item.create.wrench.tooltip.action1": "_Rotates components_ toward or away from the face with which you interacted.",
 	"item.create.wrench.tooltip.control2": "R-Click while Sneaking",
 	"item.create.wrench.tooltip.action2": "_Disassembles Kinetic components_ and places them back in _your inventory_.",
+
+	"item.create.debris_shield.tooltip": "DEBRIS SHIELD",
+	"item.create.debris_shield.tooltip.summary": "A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
+	"item.create.debris_shield.tooltip.condition1": "When Held",
+	"item.create.debris_shield.tooltip.behaviour1": "Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
 
 	"block.create.nozzle.tooltip": "NOZZLE",
 	"block.create.nozzle.tooltip.summary": "Attach to the front of an _Encased Fan_ to distribute its effect on Entities in _all directions_.",

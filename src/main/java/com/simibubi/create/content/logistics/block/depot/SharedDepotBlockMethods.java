@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.depot;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.debrisShield.IDebrisShielded;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -105,6 +106,14 @@ public class SharedDepotBlockMethods {
 			TileEntityBehaviour.get(worldIn, entityIn.blockPosition(), DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour == null)
 			return;
+		if (!(inputBehaviour.tileEntity instanceof IDebrisShielded))
+			return;
+
+		IDebrisShielded tileEntity = (IDebrisShielded) inputBehaviour.tileEntity;
+		if (tileEntity.isShielded()) {
+			return;
+		}
+
 		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);
 		itemEntity.setItem(remainder);
 		if (remainder.isEmpty())

@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldHandler;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
@@ -169,14 +170,14 @@ public class BeltSlicer {
 					if (itemstack.isEmpty())
 						continue;
 					int count = itemstack.getCount();
-					
+
 					if (AllItems.BELT_CONNECTOR.isIn(itemstack)) {
 						if (!world.isClientSide)
 							itemstack.shrink(1);
 						beltFound = true;
 						continue;
 					}
-					
+
 					if (AllBlocks.SHAFT.isIn(itemstack)) {
 						int taken = Math.min(count, requiredShafts - amountRetrieved);
 						if (!world.isClientSide)
@@ -244,6 +245,7 @@ public class BeltSlicer {
 		if (beltLength == BeltConnectorItem.maxLength())
 			return InteractionResult.FAIL;
 
+		DebrisShieldHandler.SelectionMode selectionMode = controllerTE.debrisShieldHandler.getShielded();
 		BlockPos beltVector = new BlockPos(BeltHelper.getBeltVector(state));
 		BeltPart part = state.getValue(BeltBlock.PART);
 		Direction facing = state.getValue(BeltBlock.HORIZONTAL_FACING);
@@ -318,8 +320,10 @@ public class BeltSlicer {
 				// Attach at end
 				world.setBlock(next, state.setValue(BeltBlock.CASING, false), Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 				BeltTileEntity segmentTE = BeltHelper.getSegmentTE(world, next);
-				if (segmentTE != null)
+				if (segmentTE != null) {
 					segmentTE.color = controllerTE.color;
+					segmentTE.setShielded(selectionMode);
+				}
 				world.playSound(null, pos, SoundEvents.WOOL_PLACE,
 					player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.5F, 1F);
 
@@ -348,7 +352,7 @@ public class BeltSlicer {
 					player.getInventory().placeItemBackInInventory(AllItems.BELT_CONNECTOR.asStack());
 				}
 
-				// Transfer items to other controller
+				// Transfer items and locking state to other controller
 				BlockPos search = controllerTE.getBlockPos();
 				for (int i = 0; i < 10000; i++) {
 					BlockState blockState = world.getBlockState(search);
@@ -380,6 +384,13 @@ public class BeltSlicer {
 							newController.getInventory()
 								.addItem(transportedItemStack);
 						}
+					}
+
+					List<BlockPos> newBeltChain = BeltBlock.getBeltChain(world, search);
+					for (BlockPos newBelt : newBeltChain) {
+						BeltTileEntity newBeltTE = BeltHelper.getSegmentTE(world, newBelt);
+						if (newBeltTE != null && newBeltTE != controllerTE)
+							newBeltTE.setShielded(selectionMode);
 					}
 
 					break;

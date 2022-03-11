@@ -211,6 +211,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 					.orElse(null);
 				if (handler == null)
 					return;
+				if (te.isShielded())
+					return;
 				ItemStack remainder = handler.insertItem(0, itemEntity.getItem()
 					.copy(), false);
 				if (remainder.isEmpty())

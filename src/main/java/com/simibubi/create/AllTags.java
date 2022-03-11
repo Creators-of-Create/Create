@@ -71,10 +71,10 @@ public class AllTags {
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String... path) {
 		return b -> {
-			for (String p : path) 
+			for (String p : path)
 				b.tag(forgeBlockTag(p));
 			ItemBuilder<BlockItem,BlockBuilder<T,P>> item = b.item();
-			for (String p : path) 
+			for (String p : path)
 				item.tag(forgeItemTag(p));
 			return item;
 		};
@@ -348,7 +348,7 @@ public class AllTags {
 		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 			Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
 			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
-		
+
 		AllBlockTags.ORE_OVERRIDE_STONE.includeAll(BlockTags.STONE_ORE_REPLACEABLES);
 	}
 

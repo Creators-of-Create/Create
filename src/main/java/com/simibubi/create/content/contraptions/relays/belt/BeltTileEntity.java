@@ -6,11 +6,13 @@ import static net.minecraft.core.Direction.AxisDirection.NEGATIVE;
 import static net.minecraft.core.Direction.AxisDirection.POSITIVE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightListener;
@@ -22,6 +24,8 @@ import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldHandler;
+import com.simibubi.create.content.contraptions.debrisShield.IDebrisShielded;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
@@ -33,6 +37,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.client.renderer.LightTexture;
@@ -65,7 +70,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTileEntity extends KineticTileEntity {
+public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -77,6 +82,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	protected BlockPos controller;
 	protected BeltInventory inventory;
 	protected LazyOptional<IItemHandler> itemHandler;
+	protected DebrisShieldHandler<BeltTileEntity> debrisShieldHandler;
 
 	public CompoundTag trackerUpdateTag;
 
@@ -102,6 +108,9 @@ public class BeltTileEntity extends KineticTileEntity {
 			.setInsertionHandler(this::tryInsertingFromSide));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
+
+		debrisShieldHandler = new DebrisShieldHandler<>(this);
+		debrisShieldHandler.addBehaviours(behaviours);
 	}
 
 	@Override
@@ -213,6 +222,9 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (isController())
 			compound.put("Inventory", getInventory().write());
+
+		debrisShieldHandler.write(compound);
+
 		super.write(compound, clientPacket);
 	}
 
@@ -247,6 +259,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		CasingType casingBefore = casing;
 		casing = NBTHelper.readEnum(compound, "Casing", CasingType.class);
+		debrisShieldHandler.read(compound);
 
 		if (!clientPacket)
 			return;
@@ -541,6 +554,32 @@ public class BeltTileEntity extends KineticTileEntity {
 			return isController();
 		BlockState state = getBlockState();
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
+	}
+
+	public boolean canBlockBeShielded(BlockState blockState) {
+		return AllBlocks.BELT.has(blockState);
+	}
+
+	public boolean isShielded() {
+		return debrisShieldHandler.isShielded();
+	}
+
+	public void setShielded(DebrisShieldHandler.SelectionMode mode) {
+		debrisShieldHandler.setShielded(mode);
+	}
+
+	@Override
+	public DebrisShieldHandler.SelectionMode toggleShielded() {
+		return debrisShieldHandler.toggle();
+	}
+
+	public Iterable<BlockPos> getNeighbours() {
+		BlockState blockState = getBlockState();
+		BlockPos blockPos = getBlockPos();
+
+		return Arrays.stream(Iterate.trueAndFalseBoxed)
+				.map(side -> BeltBlock.nextSegmentPosition(blockState, blockPos, side))
+				.collect(Collectors.toList());
 	}
 
 	/**

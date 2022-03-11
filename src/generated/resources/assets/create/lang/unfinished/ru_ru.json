@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 378",
+	"_": "Missing Localizations: 386",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -585,6 +585,7 @@
 	"item.create.crushed_tin_ore": "Дроблёная оловянная руда",
 	"item.create.crushed_uranium_ore": "Дроблёная урановая руда",
 	"item.create.crushed_zinc_ore": "Дроблёная цинковая руда",
+	"item.create.debris_shield": "UNLOCALIZED: Debris Shield",
 	"item.create.diving_boots": "Ботинки для дайвинга",
 	"item.create.diving_helmet": "Шлем для дайвинга",
 	"item.create.dough": "Тесто",
@@ -1256,11 +1257,15 @@
 	"create.weighted_ejector.targeting": "Бросает до [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Размер бросаемого стака",
 
+	"create.logistics.has_debris_shield": "UNLOCALIZED: Accepts Dropped Items",
 	"create.logistics.when_multiple_outputs_available": "Когда доступно несколько выходов",
 
 	"create.mechanical_arm.selection_mode.round_robin": "По кругу",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Принудительно по кругу",
 	"create.mechanical_arm.selection_mode.prefer_first": "Предпочитать первичную цель",
+
+	"create.debris_shield.selection_mode.open": "UNLOCALIZED: Yes",
+	"create.debris_shield.selection_mode.shielded": "UNLOCALIZED: No",
 
 	"create.tunnel.selection_mode.split": "Разделить",
 	"create.tunnel.selection_mode.forced_split": "Принудительно разделить",
@@ -1497,6 +1502,11 @@
 	"item.create.wrench.tooltip.action1": "_Поворачивает_ _компонент_ с которым вы взаимодействуете _к_ _лицу_ или _от_ _лица_.",
 	"item.create.wrench.tooltip.control2": "ПКМ крадучись",
 	"item.create.wrench.tooltip.action2": "Разбирает кинетические компоненты и помещает их обратно в ваш инвентарь.",
+
+	"item.create.debris_shield.tooltip": "UNLOCALIZED: DEBRIS SHIELD",
+	"item.create.debris_shield.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
+	"item.create.debris_shield.tooltip.condition1": "UNLOCALIZED: When Held",
+	"item.create.debris_shield.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
 
 	"block.create.nozzle.tooltip": "ФОРСУНКА",
 	"block.create.nozzle.tooltip.summary": "Прикрепите к передней части _вентилятора_, чтобы распределить его влияние на сущностей _во_ _всех_ _направлениях_.",
