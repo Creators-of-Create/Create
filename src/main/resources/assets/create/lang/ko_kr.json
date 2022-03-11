@@ -2387,7 +2387,7 @@
 
 	"create.ponder.valve_handle.header": "밸브 손잡이로 동력 생산하기",
 	"create.ponder.valve_handle.text_1": "밸브 손잡이를 사용하면 수동으로 동력을 생성할 수 있습니다.",
-	"create.ponder.valve_handle.text_2": "오클릭하면 반시계 방향으로 회전합니다.",
+	"create.ponder.valve_handle.text_2": "우클릭하면 반시계 방향으로 회전합니다.",
 	"create.ponder.valve_handle.text_3": "전달되는 속도는 상대적으로 낮습니다.",
 	"create.ponder.valve_handle.text_4": "웅크리고 우클릭하면 시계 방향으로 회전합니다.",
 	"create.ponder.valve_handle.text_5": "염료로 염색할 수 있습니다.",
