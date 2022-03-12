@@ -445,8 +445,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
 
-		discard();
-
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
 
@@ -462,6 +460,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			((AbstractContraptionEntity) entity).disassemble();
 		}
 
+		discard();
+		
 		ejectPassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
 		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(level, blockPosition());

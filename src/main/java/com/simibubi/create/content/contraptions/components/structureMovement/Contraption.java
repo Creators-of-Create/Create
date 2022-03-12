@@ -1129,6 +1129,8 @@ public abstract class Contraption {
 			if (getSeatMapping().isEmpty())
 				continue;
 			Integer seatIndex = getSeatMapping().get(seatedEntity.getUUID());
+			if (seatIndex == null)
+				continue;
 			BlockPos seatPos = getSeats().get(seatIndex);
 			seatPos = transform.apply(seatPos);
 			if (!(world.getBlockState(seatPos)
