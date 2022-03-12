@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
@@ -50,9 +49,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
 		returnOnClose = true;
-		if (parent instanceof TitleScreen)
-			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, (TitleScreen) parent,
-				"f_96729_"); // panorama
+		if (parent instanceof TitleScreen titleScreen)
+			vanillaPanorama = titleScreen.panorama;
 		else
 			vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	}

@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.WeatheringCopperStairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.generators.ModelProvider;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class CopperBlockSet {
 	protected static final WeatherState[] WEATHER_STATES = WeatherState.values();
@@ -325,9 +324,8 @@ public class CopperBlockSet {
 					WeatheringCopperStairBlock block =
 						new WeatheringCopperStairBlock(state, Blocks.AIR.defaultBlockState(), p);
 					// WeatheringCopperStairBlock does not have a constructor that takes a Supplier,
-					// so reflection is the easiest solution
-					ObfuscationReflectionHelper.setPrivateValue(StairBlock.class, block, defaultStateSupplier,
-						"stateSupplier");
+					// so setting the field directly is the easiest solution
+					block.stateSupplier = defaultStateSupplier;
 					return block;
 				};
 			}

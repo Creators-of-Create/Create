@@ -8,6 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.schematics.block.LaunchedItem.ForBelt;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -165,18 +167,23 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			ms.mulPose(new Vector3f(1, 0, 0).rotationDegrees(360 * t));
 			ms.translate(-.125f, -.125f, -.125f);
 
-			// Render the Block
 			if (launched instanceof ForBlockState) {
+				// Render the Block
+				BlockState state;
+				if (launched instanceof ForBelt) {
+					// Render a shaft instead of the belt
+					state = AllBlocks.SHAFT.getDefaultState();
+				} else {
+					state = ((ForBlockState) launched).state;
+				}
 				float scale = .3f;
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()
 					.getBlockRenderer()
-					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay,
+					.renderSingleBlock(state, ms, buffer, light, overlay,
 						VirtualEmptyModelData.INSTANCE);
-			}
-
-			// Render the item
-			if (launched instanceof ForEntity) {
+			} else if (launched instanceof ForEntity) {
+				// Render the item
 				float scale = 1.2f;
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()

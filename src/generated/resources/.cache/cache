@@ -5186,7 +5186,6 @@ ac265a674626e0e832330086fd18fe0be37fc327 data/create/recipes/weathered_copper_ti
 57b942386a15c874d1ca9cd6a8032c11a5599fc2 data/create/tags/blocks/fan_transparent.json
 10781e8cfcbb3486327aace3aa00e437fb44b331 data/create/tags/blocks/ore_override_stone.json
 557a29a61145b0f266760ef06256188a296739a7 data/create/tags/blocks/safe_nbt.json
-c9ac7e3e5ec18554e7184168d65e9b8e44ef5610 data/create/tags/blocks/sails.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json
 d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json

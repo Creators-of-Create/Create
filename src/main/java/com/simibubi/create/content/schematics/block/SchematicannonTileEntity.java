@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -612,6 +613,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;
+		if (AllBlocks.BELT.has(state))
+			return state.getValue(BeltBlock.PART) == BeltPart.MIDDLE;
 
 		return false;
 	}
@@ -687,13 +690,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	public static BlockState stripBeltIfNotLast(BlockState blockState) {
+		BeltPart part = blockState.getValue(BeltBlock.PART);
+		if (part == BeltPart.MIDDLE)
+			return Blocks.AIR.defaultBlockState();
+
 		// is highest belt?
 		boolean isLastSegment = false;
 		Direction facing = blockState.getValue(BeltBlock.HORIZONTAL_FACING);
 		BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
 		boolean positive = facing.getAxisDirection() == AxisDirection.POSITIVE;
-		boolean start = blockState.getValue(BeltBlock.PART) == BeltPart.START;
-		boolean end = blockState.getValue(BeltBlock.PART) == BeltPart.END;
+		boolean start = part == BeltPart.START;
+		boolean end = part == BeltPart.END;
 
 		switch (slope) {
 		case DOWNWARD:
@@ -702,17 +709,16 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		case UPWARD:
 			isLastSegment = end;
 			break;
-		case HORIZONTAL:
-		case VERTICAL:
 		default:
 			isLastSegment = positive && end || !positive && start;
 		}
-		if (!isLastSegment)
-			blockState = (blockState.getValue(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.defaultBlockState()
-				: AllBlocks.SHAFT.getDefaultState()
-					.setValue(AbstractShaftBlock.AXIS, facing.getClockWise()
-						.getAxis());
-		return blockState;
+		if (isLastSegment)
+			return blockState;
+
+		return AllBlocks.SHAFT.getDefaultState()
+			.setValue(AbstractShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
+				facing.getClockWise()
+					.getAxis());
 	}
 
 	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity tile) {
@@ -720,7 +726,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			blockState = stripBeltIfNotLast(blockState);
 			if (tile instanceof BeltTileEntity && AllBlocks.BELT.has(blockState))
 				launchBelt(target, blockState, ((BeltTileEntity) tile).beltLength);
-			else
+			else if (blockState != Blocks.AIR.defaultBlockState())
 				launchBlock(target, icon, blockState, null);
 		} else {
 			CompoundTag data = null;

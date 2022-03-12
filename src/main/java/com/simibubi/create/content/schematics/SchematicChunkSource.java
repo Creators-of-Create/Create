@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ChunkHolder;
@@ -41,7 +42,6 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class SchematicChunkSource extends ChunkSource {
 	private final Level fallbackWorld;
@@ -92,7 +92,7 @@ public class SchematicChunkSource extends ChunkSource {
 	public static class EmptierChunk extends LevelChunk {
 
 		private static final class DummyLevel extends Level {
-			RegistryAccess access;
+			private RegistryAccess access;
 
 			private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, DimensionType p_46452_,
 				Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_) {
@@ -204,7 +204,8 @@ public class SchematicChunkSource extends ChunkSource {
 		}
 
 		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null,
-			ObfuscationReflectionHelper.getPrivateValue(DimensionType.class, null, "f_63848_"), null, false, false, 0);
+			RegistryAccess.builtin().registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION),
+			null, false, false, 0);
 
 		public EmptierChunk(RegistryAccess registryAccess) {
 			super(DUMMY_LEVEL.withAccess(registryAccess), null);

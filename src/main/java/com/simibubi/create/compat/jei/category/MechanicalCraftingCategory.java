@@ -155,6 +155,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				modelViewStack.pushPose();
 				modelViewStack.mulPoseMatrix(matrixStack.last()
 					.pose());
+				RenderSystem.applyModelViewMatrix();
 				RenderSystem.enableDepthTest();
 				Minecraft minecraft = Minecraft.getInstance();
 				Font font = getFontRenderer(minecraft, ingredient);
@@ -163,6 +164,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				itemRenderer.renderGuiItemDecorations(font, ingredient, xPosition, yPosition, null);
 				RenderSystem.disableBlend();
 				modelViewStack.popPose();
+				RenderSystem.applyModelViewMatrix();
 			}
 
 			matrixStack.popPose();

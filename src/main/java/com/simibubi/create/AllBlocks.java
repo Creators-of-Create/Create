@@ -48,6 +48,7 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGe
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BlankSailBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
@@ -1125,7 +1126,8 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
-			.simpleItem()
+			.item(BlankSailBlockItem::new)
+			.build()
 			.register();
 
 	public static final DyedBlockList<SailBlock> DYED_SAILS = new DyedBlockList<>(colour -> {
@@ -1135,13 +1137,13 @@ public class AllBlocks {
 		String colourName = colour.getSerializedName();
 		return REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p, colour))
 			.initialProperties(SharedProperties::wooden)
-			.properties(BlockBehaviour.Properties::noOcclusion)
+			.properties(p -> p.sound(SoundType.SCAFFOLDING)
+				.noOcclusion())
 			.transform(axeOnly())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 				.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
 				.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
-			.tag(AllBlockTags.SAILS.tag)
 			.loot((p, b) -> p.dropOther(b, SAIL.get()))
 			.register();
 	});

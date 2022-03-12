@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.advancement;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -10,7 +11,6 @@ import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,7 +36,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 
 	@SafeVarargs
 	public final Instance<T> forEntries(@Nullable T... entries) {
-		return new Instance<>(this, entries == null ? null : Sets.newHashSet(entries));
+		return new Instance<>(this, entries == null ? null : createLinkedHashSet(entries));
 	}
 
 	public void trigger(ServerPlayer player, @Nullable T registryEntry) {
@@ -69,6 +69,12 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 
 	@Nullable
 	protected abstract String getKey(T value);
+
+	private static <T> LinkedHashSet<T> createLinkedHashSet(T[] elements) {
+		LinkedHashSet<T> set = new LinkedHashSet<>(elements.length);
+		Collections.addAll(set, elements);
+		return set;
+	}
 
 	public static class Instance<T> extends CriterionTriggerBase.Instance {
 
