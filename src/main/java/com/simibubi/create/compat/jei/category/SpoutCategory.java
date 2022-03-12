@@ -56,13 +56,13 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 					.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
 					.withSingleItemOutput(stack)
 					.build());
-				return;
+				continue;
 			}
 
 			LazyOptional<IFluidHandlerItem> capability =
 				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 			if (!capability.isPresent())
-				return;
+				continue;
 
 			for (FluidStack fluidStack : fluidStacks) {
 				ItemStack copy = stack.copy();

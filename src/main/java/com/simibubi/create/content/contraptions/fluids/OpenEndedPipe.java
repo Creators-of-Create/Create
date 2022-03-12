@@ -179,11 +179,8 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (fluid.isEmpty())
 			return false;
-		if (!FluidHelper.hasBlockState(fluid.getFluid())) {
-			if (!simulate)
-				applyEffects(fluid);
+		if (!FluidHelper.hasBlockState(fluid.getFluid())) 
 			return true;
-		}
 
 		if (!fluidState.isEmpty() && fluidState.getType() != fluid.getFluid()) {
 			FluidReactions.handlePipeSpillCollision(world, outputPos, fluid.getFluid(), fluidState);
@@ -272,6 +269,8 @@ public class OpenEndedPipe extends FlowSource {
 			int fill = super.fill(resource, action);
 			if (action.simulate())
 				return fill;
+			if (!resource.isEmpty())
+				applyEffects(resource);
 			if (getFluidAmount() == 1000 || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
 				if (provideFluidToSpace(containedFluidStack, false))
 					setFluid(FluidStack.EMPTY);

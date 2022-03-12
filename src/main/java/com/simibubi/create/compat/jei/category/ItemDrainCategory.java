@@ -51,13 +51,13 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 					.withFluidOutputs(fluidFromPotionItem)
 					.withSingleItemOutput(new ItemStack(Items.GLASS_BOTTLE))
 					.build());
-				return;
+				continue;
 			}
 
 			LazyOptional<IFluidHandlerItem> capability =
 				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 			if (!capability.isPresent())
-				return;
+				continue;
 
 			ItemStack copy = stack.copy();
 			capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
@@ -65,9 +65,9 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 			FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
 			ItemStack result = handler.getContainer();
 			if (extracted.isEmpty())
-				return;
+				continue;
 			if (result.isEmpty())
-				return;
+				continue;
 
 			Ingredient ingredient = Ingredient.of(stack);
 			ResourceLocation itemName = stack.getItem()
