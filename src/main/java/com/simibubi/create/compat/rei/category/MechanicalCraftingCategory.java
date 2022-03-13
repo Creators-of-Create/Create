@@ -11,8 +11,6 @@ import com.simibubi.create.compat.rei.category.animations.AnimatedCrafter;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
-
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
@@ -63,11 +61,11 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	private static int getWidth(CraftingRecipe recipe) {
-		return recipe instanceof ShapedRecipe ? ShapedRecipeUtil.WIDTH : 1;
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe)recipe).getWidth() : 1;
 	}
 
 	private static int getHeight(CraftingRecipe recipe) {
-		return recipe instanceof ShapedRecipe ? ShapedRecipeUtil.HEIGHT : 1;
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe)recipe).getHeight() : 1;
 	}
 
 	@Override
@@ -80,18 +78,18 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		Point offset = new Point(origin.getX() + getXPadding(recipe), origin.getY() + getYPadding(recipe));
 		CrafterIngredientRenderer renderer = new CrafterIngredientRenderer(recipe);
 
-		for (int row = 0; row < getHeight(recipe); row++)
-			for (int col = 0; col < getWidth(recipe); col++)
-				if (!recipe.getIngredients()
-						.get(row * getWidth(recipe) + col)
-						.isEmpty()) {
-					Matrix4f matrix4f = Matrix4f.createScaleMatrix(scale, scale, scale);
-					matrix4f.multiplyWithTranslation(offset.getX() + col * 19 * scale, offset.getY() + row * 19 * scale, 0);
-					widgets.add(Widgets.withTranslate(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, 0, 0), matrix4f));
-					Slot input = Widgets.createSlot(new Point((offset.getX() + col * 19 * scale) + 1, (offset.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(row * getWidth(recipe) + col));
-					ClientEntryStacks.setRenderer(input.getCurrentEntry(), renderer);
-					widgets.add(input);
-				}
+		for (int i = 0; i < recipe.getIngredients().size(); i++)
+			if (!recipe.getIngredients().get(i).isEmpty()) {
+				int row = i / getWidth(recipe);
+				int col = i % getWidth(recipe);
+
+				Matrix4f matrix4f = Matrix4f.createScaleMatrix(scale, scale, scale);
+				matrix4f.multiplyWithTranslation(offset.getX() + col * 19 * scale, offset.getY() + row * 19 * scale, 0);
+				widgets.add(Widgets.withTranslate(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, 0, 0), matrix4f));
+				Slot input = Widgets.createSlot(new Point((offset.getX() + col * 19 * scale) + 1, (offset.getY() + row * 19 * scale) + 1)).disableBackground().markInput().entries(display.getInputEntries().get(row * getWidth(recipe) + col));
+				ClientEntryStacks.setRenderer(input.getCurrentEntry(), renderer);
+				widgets.add(input);
+			}
 
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 133, origin.getY() + 80));
 		widgets.add(Widgets.createSlot(new Point(origin.getX() + 134, origin.getY() + 81)).disableBackground().markOutput().entries(display.getOutputEntries().get(0)));
@@ -127,17 +125,17 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
 
-		for (int row = 0; row < getHeight(recipe); row++)
-			for (int col = 0; col < getWidth(recipe); col++)
-				if (!recipe.getIngredients()
-					.get(row * getWidth(recipe) + col)
-					.isEmpty()) {
-					matrixStack.pushPose();
-					matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
-					matrixStack.scale(scale, scale, scale);
-					AllGuiTextures.JEI_SLOT.render(matrixStack, 0, 0);
-					matrixStack.popPose();
-				}
+		for (int i = 0; i < recipe.getIngredients().size(); i++)
+			if (!recipe.getIngredients().get(i).isEmpty()) {
+				int row = i / getWidth(recipe);
+				int col = i % getWidth(recipe);
+
+				matrixStack.pushPose();
+				matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
+				matrixStack.scale(scale, scale, scale);
+				AllGuiTextures.JEI_SLOT.render(matrixStack, 0, 0);
+				matrixStack.popPose();
+			}
 
 		matrixStack.popPose();
 
@@ -207,5 +205,4 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			}
 		}
 	}
-
 }
