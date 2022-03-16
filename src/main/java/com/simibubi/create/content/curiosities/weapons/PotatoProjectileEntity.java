@@ -37,6 +37,8 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 
+import java.util.ArrayList;
+
 public class PotatoProjectileEntity extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData {
 
 	protected PotatoCannonProjectileType type;
@@ -50,6 +52,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	protected float additionalDamageMult = 1;
 	protected float additionalKnockback = 0;
 	protected float recoveryChance = 0;
+	protected int numberOfPiercing = 0;
+	protected final ArrayList<Entity> ENTITY_STRUCK_LIST = new ArrayList<>();
 
 	public PotatoProjectileEntity(EntityType<? extends AbstractHurtingProjectile> type, Level world) {
 		super(type, world);
@@ -74,7 +78,9 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, cannon);
 		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, cannon);
 		int flame = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, cannon);
+		int piercing = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, cannon);
 		int recovery = EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.POTATO_RECOVERY.get(), cannon);
+		int extraShot = EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.MULTIPLITATO.get(), cannon);
 
 		if (power > 0)
 			additionalDamageMult = 1 + power * .2f;
@@ -82,7 +88,13 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			additionalKnockback = punch * .5f;
 		if (flame > 0)
 			setSecondsOnFire(100);
-		if (recovery > 0)
+		if (piercing > 0)
+			numberOfPiercing += piercing;
+		if (getProjectileType().getPiercing() > 0)
+			numberOfPiercing += getProjectileType().getPiercing();
+		if (recovery > 6)
+			recoveryChance = 1;
+		else if (recovery > 0)
 			recoveryChance = .125f + recovery * .125f;
 	}
 
@@ -92,6 +104,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		additionalDamageMult = nbt.getFloat("AdditionalDamage");
 		additionalKnockback = nbt.getFloat("AdditionalKnockback");
 		recoveryChance = nbt.getFloat("Recovery");
+		numberOfPiercing = nbt.getInt("NumberOfPiercing");
 		super.readAdditionalSaveData(nbt);
 	}
 
@@ -101,6 +114,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		nbt.putFloat("AdditionalDamage", additionalDamageMult);
 		nbt.putFloat("AdditionalKnockback", additionalKnockback);
 		nbt.putFloat("Recovery", recoveryChance);
+		nbt.putFloat("NumberOfPiercing", numberOfPiercing);
 		super.addAdditionalSaveData(nbt);
 	}
 
@@ -167,96 +181,136 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	@Override
 	protected void onHitEntity(EntityHitResult ray) {
-		super.onHitEntity(ray);
+		super.onHitEntity(ray); // Do the superclass method first
 
-		if (getStuckEntity() != null)
-			return;
+		if (getStuckEntity() != null) // If it's stuck on an entity
+			return; // Stop here
 
-		Vec3 hit = ray.getLocation();
-		Entity target = ray.getEntity();
-		PotatoCannonProjectileType projectileType = getProjectileType();
-		float damage = projectileType.getDamage() * additionalDamageMult;
-		float knockback = projectileType.getKnockback() + additionalKnockback;
-		Entity owner = this.getOwner();
+		Vec3 hit = ray.getLocation(); // Location of the hit
+		Entity target = ray.getEntity(); // Entity that got struck
+		PotatoCannonProjectileType projectileType = getProjectileType(); // Projectile that hit the entity
+		float damage = projectileType.getDamage() * additionalDamageMult; // Damage of the projectile
+		float knockback = projectileType.getKnockback() + additionalKnockback; // Knockback of the projectile
+		Entity owner = this.getOwner(); // Owner of the projectile
 
-		if (!target.isAlive())
-			return;
-		if (owner instanceof LivingEntity)
-			((LivingEntity) owner).setLastHurtMob(target);
-		if (target instanceof PotatoProjectileEntity && tickCount < 10 && target.tickCount < 10)
-			return;
+		if (!target.isAlive()) // If the target is not alive
+			return; // Stop here
+		if (owner instanceof LivingEntity) // If the owner is a living entity
+			((LivingEntity) owner).setLastHurtMob(target); // Set the last mob that the owner hurt
 
-		pop(hit);
-
-		if (target instanceof WitherBoss && ((WitherBoss) target).isPowered())
-			return;
-		if (projectileType.preEntityHit(ray))
-			return;
-
-		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
-		int k = target.getRemainingFireTicks();
-		if (this.isOnFire() && !targetIsEnderman)
-			target.setSecondsOnFire(5);
-
-		boolean onServer = !level.isClientSide;
-		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
-			target.setRemainingFireTicks(k);
-			kill();
-			return;
+		if (target instanceof PotatoProjectileEntity) { // If the struck entity is a potato projectile
+			/*  Condition :
+			 *  The projectile hasn't been loaded for 10 tick (0.5s) AND the struck projectile hasn't been loaded ofr 10 tick (0.5s)
+			 *  OR
+			 *  The owner of both projectile is the same
+			 */
+			if (tickCount < 10 && target.tickCount < 10 || owner == ((PotatoProjectileEntity) target).getOwner())
+				return; // Stop here
 		}
 
-		if (targetIsEnderman)
-			return;
+		boolean preShot = numberOfPiercing > 0 && !ENTITY_STRUCK_LIST.contains(target); // If it's not the last entity it can hit
+		boolean lastShot = numberOfPiercing == 0 && !ENTITY_STRUCK_LIST.contains(target); // If it's the last entity it can hit
 
-		if (!projectileType.onEntityHit(ray) && onServer)
-			if (random.nextDouble() <= recoveryChance)
-				recoverItem();
-
-		if (!(target instanceof LivingEntity)) {
-			playHitSound(level, position());
-			kill();
-			return;
+		if (target instanceof LivingEntity) { // If the target is a living entity
+			if (preShot) {
+				ENTITY_STRUCK_LIST.add(target); // Add the entity to the list of entity it cannot hit again anymore
+				numberOfPiercing--; // Remove one piercing level
+			}
+			else if (ENTITY_STRUCK_LIST.contains(target)) // If the entity was struck before
+				return; // Stop Here
 		}
 
-		LivingEntity livingentity = (LivingEntity) target;
+		if (lastShot) // If it's the last hit
+			pop(hit); // Pop that projectile
 
-		if (type.getReloadTicks() < 10)
+		if (target instanceof WitherBoss && ((WitherBoss) target).isPowered()) // If it's a wither boss that is in it's anti-projectile phase
+			return; // Stop Here
+
+		if (projectileType.preEntityHit(ray)) // MOST LIKELY means that it cannot hit itself
+			return;
+
+		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN; // Is the target an enderman?
+		int k = target.getRemainingFireTicks(); // The remaining fire tick on the struck entity
+
+		if (this.isOnFire() && !targetIsEnderman) // If the projectile is on fire AND the target is not an enderman
+			target.setSecondsOnFire(5); // Set the target on fire for 5 second
+
+		boolean onServer = !level.isClientSide; // Server Side
+		if (onServer && !target.hurt(causePotatoDamage(), damage)) { // (Server Side) If the target wasn't hurt by the projectile
+			target.setRemainingFireTicks(k); // Set the fire tick to itself
+			if (lastShot) // If it's the last shot
+				kill(); // Kill the projectile
+			return; // Stop here
+		}
+
+		if (targetIsEnderman) // If the target is an enderman
+			return; // Stop here
+
+		if (!projectileType.onEntityHit(ray) && onServer) // (Server Side) If the projectile didn't hit something
+			if (random.nextDouble() <= recoveryChance && lastShot) // If the random chance succeeded AND it's the last entity
+				recoverItem(); // Recover the item
+
+		if (!(target instanceof LivingEntity)) { // Kill any projectile if the target is not a living entity, doesn't care about piercing
+			playHitSound(level, position()); // Play a hit sound
+			kill(); // Kill the projectile
+			return; // Stop there
+		}
+
+		LivingEntity livingentity = (LivingEntity) target; // Turn the target to a living entity, a non-living entity will never reach this statement so down casting is safe
+
+		if (type.getReloadTicks() < 10) // If the reload time of the projectile is lesser than 10, get the invulnerability of the mob to reload time + 10
+										// Don't ask me WHY it works like this lmao
 			livingentity.invulnerableTime = type.getReloadTicks() + 10;
 
-		if (onServer && knockback > 0) {
-			Vec3 appliedMotion = this.getDeltaMovement()
-				.multiply(1.0D, 0.0D, 1.0D)
-				.normalize()
-				.scale(knockback * 0.6);
-			if (appliedMotion.lengthSqr() > 0.0D)
-				livingentity.push(appliedMotion.x, 0.1D, appliedMotion.z);
+		if (onServer && knockback > 0) { // (Server Side) If the knockback is higher than 0
+			Vec3 appliedMotion = this.getDeltaMovement() // Get the vector of the projectile
+				.multiply(1.0D, 0.0D, 1.0D) // Remove any vertical movement
+				.normalize() // Turn the vector so it's 1 length
+				.scale(knockback * 0.6); // Scale the vector depending of the knockback
+			if (appliedMotion.lengthSqr() > 0.0D) // If the vector length isn't 0
+				livingentity.push(appliedMotion.x, 0.1D, appliedMotion.z); // Push the entity, also give a small vertical jump
 		}
 
-		if (onServer && owner instanceof LivingEntity) {
+		if (onServer && owner instanceof LivingEntity) { // (Server Side) If the owner is a living entity
 			EnchantmentHelper.doPostHurtEffects(livingentity, owner);
 			EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingentity);
 		}
 
+		/*
+			Conditions
+			If the target is not the owner
+			AND the target is a player
+			AND the owner is a player too
+			AND that the projectile isn't silent
+		 */
 		if (livingentity != owner && livingentity instanceof Player && owner instanceof ServerPlayer
 			&& !this.isSilent()) {
 			((ServerPlayer) owner).connection
 				.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+			// Send a ping for the Arrow Hit Player event
 		}
 
-		if (onServer && owner instanceof ServerPlayer) {
-			ServerPlayer serverplayerentity = (ServerPlayer) owner;
+		if (onServer && owner instanceof ServerPlayer) { // (Server Side) If the owner is a player
+			ServerPlayer serverplayerentity = (ServerPlayer) owner; // Set the owner
+			/*
+				Conditions
+				If the entity is alive
+				AND the target is a Monster
+				OR
+				The target is a Player
+				AND the target is not the owner
+			 */
 			if (!target.isAlive() && target.getType()
-				.getCategory() == MobCategory.MONSTER
-				|| (target instanceof Player && target != owner))
-				AllTriggers.POTATO_KILL.trigger(serverplayerentity);
+					.getCategory() == MobCategory.MONSTER
+					|| (target instanceof Player && target != owner))
+					AllTriggers.POTATO_KILL.trigger(serverplayerentity); // What is this supposed to be?
 		}
 
-		if (type.isSticky() && target.isAlive()) {
-			setStuckEntity(target);
-		} else {
-			kill();
+		if (type.isSticky() && target.isAlive()) { // If the projectile is sticky and the target is alive
+			setStuckEntity(target); // Stick the entity, it won't care about piercing
 		}
-
+		else if (lastShot) // If it's the last entity
+			kill(); // Kill the projectile
 	}
 
 	private void recoverItem() {
@@ -289,14 +343,15 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			return false;
 		if (this.isInvulnerableTo(source))
 			return false;
-		pop(position());
-		kill();
+		if (numberOfPiercing == 0)
+			pop(position());
+			kill();
 		return true;
 	}
 
 	private void pop(Vec3 hit) {
-		if (!stack.isEmpty()) {
-			for (int i = 0; i < 7; i++) {
+		if (!stack.isEmpty()) { // If the projectile is not empty
+			for (int i = 0; i < 7; i++) { // Do it 7 time
 				Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, this.random, .25f);
 				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y, m.z);
 			}

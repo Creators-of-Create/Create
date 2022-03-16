@@ -26,14 +26,27 @@ public class PotatoCannonProjectileType {
 	private Set<IRegistryDelegate<Item>> items = new HashSet<>();
 
 	private int reloadTicks = 10;
+	private int maxFire = 1;
 	private int damage = 1;
-	private int split = 1;
+	private int cost = 1;
+	private int spray = 1;
+	private int piercing = 0;
+	private int split = 1; // Currently Unused, will be used for projectile that split when hitting an entity or after some time
+	private int splitDuration = 1; // Currently Unused, will be used to determine the time before the projectile split, ignored if "onlySplitOnHit" is true
+	private float accuracy = 100;
+	private float sprayAccuracy = 100;
 	private float knockback = 1;
 	private float drag = 0.99f;
 	private float velocityMultiplier = 1;
 	private float gravityMultiplier = 1;
 	private float soundPitch = 1;
 	private boolean sticky = false;
+	private boolean costOnce = false;
+	private boolean onlySplitOnHit = false; // Currently Unused, will be used to determined if it split ONLY when hit
+	private boolean onlySplitOnTime = false; // Currently Unused, will be used to determined if it split ONLY after the timer
+	private int renderType = 0;
+	private int spin_ = 0;
+	private int spriteAngle_ = 0;
 	private PotatoProjectileRenderMode renderMode = PotatoProjectileRenderMode.Billboard.INSTANCE;
 
 	private Predicate<EntityHitResult> preEntityHit = e -> false; // True if hit should be canceled
@@ -51,16 +64,44 @@ public class PotatoCannonProjectileType {
 		return reloadTicks;
 	}
 
+	public int getMaxFire() {
+		return maxFire;
+	}
+
 	public int getDamage() {
 		return damage;
+	}
+
+	public int getPiercing() {
+		return piercing;
+	}
+
+	public int getCost() {
+		return cost;
+	}
+
+	public int getSpray() {
+		return spray;
 	}
 
 	public int getSplit() {
 		return split;
 	}
 
+	public int getSplitDuration() {
+		return splitDuration;
+	}
+
 	public float getKnockback() {
 		return knockback;
+	}
+
+	public float getAccuracy() {
+		return accuracy;
+	}
+
+	public float getSprayAccuracy() {
+		return sprayAccuracy;
 	}
 
 	public float getDrag() {
@@ -83,6 +124,18 @@ public class PotatoCannonProjectileType {
 		return sticky;
 	}
 
+	public boolean onlyCostOnce() {
+		return costOnce;
+	}
+
+	public boolean onlySplitOnHit() {
+		return onlySplitOnHit;
+	}
+
+	public boolean onlySplitOnTime() {
+		return onlySplitOnTime;
+	}
+
 	public PotatoProjectileRenderMode getRenderMode() {
 		return renderMode;
 	}
@@ -90,7 +143,7 @@ public class PotatoCannonProjectileType {
 	public boolean preEntityHit(EntityHitResult ray) {
 		return preEntityHit.test(ray);
 	}
-	
+
 	public boolean onEntityHit(EntityHitResult ray) {
 		return onEntityHit.test(ray);
 	}
@@ -122,14 +175,38 @@ public class PotatoCannonProjectileType {
 			}
 
 			parseJsonPrimitive(object, "reload_ticks", JsonPrimitive::isNumber, primitive -> type.reloadTicks = primitive.getAsInt());
+			parseJsonPrimitive(object, "max_fire", JsonPrimitive::isNumber, primitive -> type.maxFire = primitive.getAsInt());
+			parseJsonPrimitive(object, "piercing", JsonPrimitive::isNumber, primitive -> type.piercing = primitive.getAsInt());
 			parseJsonPrimitive(object, "damage", JsonPrimitive::isNumber, primitive -> type.damage = primitive.getAsInt());
+			parseJsonPrimitive(object, "cost", JsonPrimitive::isNumber, primitive -> type.cost = primitive.getAsInt());
+			parseJsonPrimitive(object, "spray", JsonPrimitive::isNumber, primitive -> type.spray = primitive.getAsInt());
 			parseJsonPrimitive(object, "split", JsonPrimitive::isNumber, primitive -> type.split = primitive.getAsInt());
+			parseJsonPrimitive(object, "split_duration", JsonPrimitive::isNumber, primitive -> type.splitDuration = primitive.getAsInt());
+			parseJsonPrimitive(object, "accuracy", JsonPrimitive::isNumber, primitive -> type.accuracy = primitive.getAsFloat());
+			parseJsonPrimitive(object, "spray_accuracy", JsonPrimitive::isNumber, primitive -> type.sprayAccuracy = primitive.getAsFloat());
 			parseJsonPrimitive(object, "knockback", JsonPrimitive::isNumber, primitive -> type.knockback = primitive.getAsFloat());
 			parseJsonPrimitive(object, "drag", JsonPrimitive::isNumber, primitive -> type.drag = primitive.getAsFloat());
 			parseJsonPrimitive(object, "velocity_multiplier", JsonPrimitive::isNumber, primitive -> type.velocityMultiplier = primitive.getAsFloat());
 			parseJsonPrimitive(object, "gravity_multiplier", JsonPrimitive::isNumber, primitive -> type.gravityMultiplier = primitive.getAsFloat());
 			parseJsonPrimitive(object, "sound_pitch", JsonPrimitive::isNumber, primitive -> type.soundPitch = primitive.getAsFloat());
 			parseJsonPrimitive(object, "sticky", JsonPrimitive::isBoolean, primitive -> type.sticky = primitive.getAsBoolean());
+			parseJsonPrimitive(object, "cost_once", JsonPrimitive::isBoolean, primitive -> type.costOnce = primitive.getAsBoolean());
+			parseJsonPrimitive(object, "only_split_on_hit", JsonPrimitive::isBoolean, primitive -> type.onlySplitOnHit = primitive.getAsBoolean());
+			parseJsonPrimitive(object, "only_split_on_time", JsonPrimitive::isBoolean, primitive -> type.onlySplitOnTime = primitive.getAsBoolean());
+			parseJsonPrimitive(object, "render_type", JsonPrimitive::isNumber, primitive -> type.renderType = primitive.getAsInt());
+			parseJsonPrimitive(object, "spin", JsonPrimitive::isNumber, primitive -> type.spin_ = primitive.getAsInt());
+			parseJsonPrimitive(object, "spriteAngle", JsonPrimitive::isNumber, primitive -> type.spriteAngle_ = primitive.getAsInt());
+			switch (type.renderType) {
+				default:
+					type.renderMode = PotatoProjectileRenderMode.Billboard.INSTANCE;
+					break;
+				case 1:
+					type.renderMode = PotatoProjectileRenderMode.Tumble.INSTANCE;
+					break;
+				case 2:
+					type.renderMode = new PotatoProjectileRenderMode.TowardMotion(type.spriteAngle_, type.spin_);
+					break;
+			}
 		} catch (Exception e) {
 			//
 		}
@@ -152,14 +229,24 @@ public class PotatoCannonProjectileType {
 			buffer.writeResourceLocation(delegate.name());
 		}
 		buffer.writeInt(type.reloadTicks);
+		buffer.writeInt(type.maxFire);
+		buffer.writeInt(type.piercing);
 		buffer.writeInt(type.damage);
+		buffer.writeInt(type.cost);
+		buffer.writeInt(type.spray);
 		buffer.writeInt(type.split);
+		buffer.writeInt(type.splitDuration);
+		buffer.writeFloat(type.accuracy);
+		buffer.writeFloat(type.sprayAccuracy);
 		buffer.writeFloat(type.knockback);
 		buffer.writeFloat(type.drag);
 		buffer.writeFloat(type.velocityMultiplier);
 		buffer.writeFloat(type.gravityMultiplier);
 		buffer.writeFloat(type.soundPitch);
 		buffer.writeBoolean(type.sticky);
+		buffer.writeBoolean(type.costOnce);
+		buffer.writeBoolean(type.onlySplitOnHit);
+		buffer.writeBoolean(type.onlySplitOnTime);
 	}
 
 	public static PotatoCannonProjectileType fromBuffer(FriendlyByteBuf buffer) {
@@ -172,14 +259,24 @@ public class PotatoCannonProjectileType {
 			}
 		}
 		type.reloadTicks = buffer.readInt();
+		type.maxFire = buffer.readInt();
+		type.piercing = buffer.readInt();
 		type.damage = buffer.readInt();
+		type.cost = buffer.readInt();
+		type.spray = buffer.readInt();
 		type.split = buffer.readInt();
+		type.splitDuration = buffer.readInt();
+		type.accuracy = buffer.readFloat();
+		type.sprayAccuracy = buffer.readFloat();
 		type.knockback = buffer.readFloat();
 		type.drag = buffer.readFloat();
 		type.velocityMultiplier = buffer.readFloat();
 		type.gravityMultiplier = buffer.readFloat();
 		type.soundPitch = buffer.readFloat();
 		type.sticky = buffer.readBoolean();
+		type.costOnce = buffer.readBoolean();
+		type.onlySplitOnHit = buffer.readBoolean();
+		type.onlySplitOnTime = buffer.readBoolean();
 		return type;
 	}
 
@@ -198,13 +295,48 @@ public class PotatoCannonProjectileType {
 			return this;
 		}
 
+		public Builder numberOfShot(int maxFire) {
+			result.maxFire = maxFire;
+			return this;
+		}
+
 		public Builder damage(int damage) {
 			result.damage = damage;
 			return this;
 		}
 
+		public Builder piercing(int piercing) {
+			result.piercing = piercing;
+			return this;
+		}
+
+		public Builder cost(int cost) {
+			result.cost = cost;
+			return this;
+		}
+
+		public Builder sprayInto(int spray) {
+			result.spray = spray;
+			return this;
+		}
+
 		public Builder splitInto(int split) {
 			result.split = split;
+			return this;
+		}
+
+		public Builder splitTimer(int splitDuration) {
+			result.splitDuration = splitDuration;
+			return this;
+		}
+
+		public Builder accuracy(float accuracy) {
+			result.accuracy = accuracy;
+			return this;
+		}
+
+		public Builder sprayAccuracy(float sprayAccuracy) {
+			result.sprayAccuracy = sprayAccuracy;
 			return this;
 		}
 
@@ -235,6 +367,21 @@ public class PotatoCannonProjectileType {
 
 		public Builder sticky() {
 			result.sticky = true;
+			return this;
+		}
+
+		public Builder onlyCostOnce() {
+			result.costOnce = true;
+			return this;
+		}
+
+		public Builder onlySplitOnHit() {
+			result.onlySplitOnHit = true;
+			return this;
+		}
+
+		public Builder onlySplitOnTime() {
+			result.onlySplitOnTime = true;
 			return this;
 		}
 

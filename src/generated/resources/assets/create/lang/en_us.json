@@ -537,6 +537,7 @@
 
 	"enchantment.create.capacity": "Capacity",
 	"enchantment.create.potato_recovery": "Potato Recovery",
+  "enchantment.create.multiplitato": "Multiplitato",
 
 	"entity.create.contraption": "Contraption",
 	"entity.create.crafting_blueprint": "Crafting Blueprint",
@@ -777,6 +778,8 @@
 	"advancement.create.extendo_grip.desc": "Get hold of an Extendo Grip.",
 	"advancement.create.potato_cannon": "Fwoomp!",
 	"advancement.create.potato_cannon.desc": "Defeat an enemy with your Potato Cannon.",
+  "advancement.create.potato_cannon_piercing": "Pew!!",
+  "advancement.create.potato_cannon_piercing.desc": "Pierce 5 Enemy with a single shot from your Potato Cannon.",
 	"advancement.create.dual_extendo_grip": "Ultimate Boing-age",
 	"advancement.create.dual_extendo_grip.desc": "Dual wield Extendo Grips for super-human reach.",
 	"advancement.create.eob": "End of Beta",
@@ -1232,6 +1235,7 @@
 	"create.tooltip.speedRequirement.none": "None",
 	"create.tooltip.speedRequirement.medium": "Moderate",
 	"create.tooltip.speedRequirement.high": "Fast",
+  "create.tooltip.speedRequirement.overclocked": "Overclocked",
 	"create.tooltip.stressImpact": "Kinetic Stress Impact: %1$s",
 	"create.tooltip.stressImpact.low": "Low",
 	"create.tooltip.stressImpact.medium": "Moderate",
@@ -1299,6 +1303,12 @@
 	"create.potato_cannon.ammo.attack_damage": "%1$s Attack Damage",
 	"create.potato_cannon.ammo.reload_ticks": "%1$s Reload Ticks",
 	"create.potato_cannon.ammo.knockback": "%1$s Knockback",
+  "create.potato_cannon.ammo.piercing": "Pierce %1$s Mob",
+  "create.potato_cannon.ammo.min_ammo": "Min. Ammo Cost : %1$s",
+  "create.potato_cannon.ammo.max_ammo": "Max. Ammo Cost : %1$s",
+  "create.potato_cannon.ammo.recover": "%1$s Recover Chance",
+  "create.potato_cannon.ammo.extra_shot": "%1$s Bonus Shot Chance",
+  "create.potato_cannon.ammo.unlimited_ammo": "Unlimited Ammo",
 
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",
