@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
+import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -42,6 +45,9 @@ public interface IBogeyBlock extends IWrenchable {
 	@OnlyIn(Dist.CLIENT)
 	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
 		MultiBufferSource buffers, int light, int overlay);
+
+	@OnlyIn(Dist.CLIENT)
+	public BogeyInstance createInstance(MaterialManager materialManager, CarriageBogey bogey);
 
 	public default Direction getBogeyUpDirection() {
 		return Direction.UP;

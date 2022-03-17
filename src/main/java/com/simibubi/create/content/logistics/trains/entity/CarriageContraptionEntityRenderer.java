@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
@@ -33,6 +34,8 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		MultiBufferSource buffers, int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
+		if (Backend.isOn()) return;
+
 		Carriage carriage = entity.getCarriage();
 		if (carriage == null)
 			return;
@@ -40,8 +43,8 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		Vec3 position = entity.getPosition(partialTicks);
 
 		ms.pushPose();
-		carriage.bogeys.forEachWithContext((bogey, first) -> {
-			if (!first && !carriage.isOnTwoBogeys())
+		carriage.bogeys.forEach(bogey -> {
+			if (bogey == null)
 				return;
 
 			ms.pushPose();
@@ -52,7 +55,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				.rotateY(viewYRot + 90)
 				.rotateX(-viewXRot)
 				.rotateY(180)
-				.translate(0, 0, first ? 0 : -bogeySpacing)
+				.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing)
 				.rotateY(-180)
 				.rotateX(viewXRot)
 				.rotateY(-viewYRot - 90)
@@ -62,9 +65,9 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 			bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers,
 				getPackedLightCoords(entity, partialTicks), overlay);
-			bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, first);
+			bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, bogey.isLeading);
 			if (!carriage.isOnTwoBogeys())
-				bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, !first);
+				bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, !bogey.isLeading);
 
 			ms.popPose();
 		});

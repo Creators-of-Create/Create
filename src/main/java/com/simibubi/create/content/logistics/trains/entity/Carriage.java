@@ -63,6 +63,7 @@ public class Carriage {
 
 		updateContraptionAnchors();
 
+		bogey1.setLeading();
 		bogey1.carriage = this;
 		if (bogey2 != null)
 			bogey2.carriage = this;

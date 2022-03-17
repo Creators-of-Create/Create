@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.track;
 
 import java.util.EnumSet;
 
+import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -10,6 +11,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
+import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -36,7 +39,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<StandardBogeyTileEntity> {
 
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-	private boolean large;
+	private final boolean large;
 
 	public StandardBogeyBlock(Properties p_i48440_1_, boolean large) {
 		super(p_i48440_1_);
@@ -114,23 +117,30 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 				.light(light)
 				.renderInto(ms, vb);
 
-		if (!large) {
-			CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
+		if (large) {
+			renderLargeBogey(wheelAngle, ms, light, vb, air);
+		} else {
+			renderBogey(wheelAngle, ms, light, vb, air);
+		}
+	}
+
+	private void renderBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
+		CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
+			.light(light)
+			.renderInto(ms, vb);
+
+		for (int side : Iterate.positiveAndNegative) {
+			ms.pushPose();
+			CachedBufferer.partial(AllBlockPartials.SMALL_BOGEY_WHEELS, air)
+				.translate(0, 12 / 16f, side)
+				.rotateX(wheelAngle)
 				.light(light)
 				.renderInto(ms, vb);
-
-			for (int side : Iterate.positiveAndNegative) {
-				ms.pushPose();
-				CachedBufferer.partial(AllBlockPartials.SMALL_BOGEY_WHEELS, air)
-					.translate(0, 12 / 16f, side)
-					.rotateX(wheelAngle)
-					.light(light)
-					.renderInto(ms, vb);
-				ms.popPose();
-			}
-			return;
+			ms.popPose();
 		}
+	}
 
+	private void renderLargeBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
 		for (int i : Iterate.zeroAndOne)
 			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
 				.setValue(ShaftBlock.AXIS, Axis.X))
@@ -163,18 +173,23 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 			.light(light)
 			.renderInto(ms, vb);
 		ms.popPose();
+	}
 
+	@Override
+	public BogeyInstance createInstance(MaterialManager materialManager, CarriageBogey bogey) {
+		if (large) {
+			return new BogeyInstance.Drive(bogey, materialManager);
+		} else {
+			return new BogeyInstance.Frame(bogey, materialManager);
+		}
 	}
 
 	@Override
 	public BlockState rotate(BlockState pState, Rotation pRotation) {
-		switch (pRotation) {
-		case COUNTERCLOCKWISE_90:
-		case CLOCKWISE_90:
-			return pState.cycle(AXIS);
-		default:
-			return pState;
-		}
+		return switch (pRotation) {
+			case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> pState.cycle(AXIS);
+			default -> pState;
+		};
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class ContraptionGroup<P extends ContraptionProgram> extends InstancedMat
 	}
 
 	@Override
-	public void setup(P program) {
+    protected void setup(P program) {
 		contraption.setup(program);
 	}
 
