@@ -177,10 +177,11 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 			if (first && !te.signalState.isRedLight(renderTime))
 				continue;
-			if (!first && !te.signalState.isGreenLight(renderTime))
+			if (!first && !te.signalState.isGreenLight(renderTime) && !te.signalState.isYellowLight(renderTime))
 				continue;
 
 			boolean flip = first == invertTubes;
+			boolean yellow = te.signalState.isYellowLight(renderTime);
 
 			ms.pushPose();
 			ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
@@ -188,22 +189,29 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 			if (diff.lengthSqr() < 36 * 36) {
 				boolean vert = first ^ facing.getAxis()
 					.isHorizontal();
+				float longSide = yellow ? 1 : 4;
+				float longSideGlow = yellow ? 2 : 5.125f;
 
 				CachedBufferer.partial(AllBlockPartials.SIGNAL_WHITE_CUBE, blockState)
 					.light(0xf000f0)
 					.disableDiffuseMult()
-					.scale(vert ? 4 : 1, vert ? 1 : 4, 1)
+					.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
 					.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
 				CachedBufferer
-					.partial(first ? AllBlockPartials.SIGNAL_RED_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW, blockState)
+					.partial(
+						first ? AllBlockPartials.SIGNAL_RED_GLOW
+							: yellow ? AllBlockPartials.SIGNAL_YELLOW_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW,
+						blockState)
 					.light(0xf000f0)
 					.disableDiffuseMult()
-					.scale(vert ? 5.125f : 2, vert ? 2 : 5.125f, 2)
+					.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
 					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 			}
 
-			CachedBufferer.partial(first ? AllBlockPartials.SIGNAL_RED : AllBlockPartials.SIGNAL_WHITE, blockState)
+			CachedBufferer
+				.partial(first ? AllBlockPartials.SIGNAL_RED
+					: yellow ? AllBlockPartials.SIGNAL_YELLOW : AllBlockPartials.SIGNAL_WHITE, blockState)
 				.light(0xF000F0)
 				.disableDiffuseMult()
 				.scale(1 + 1 / 16f)

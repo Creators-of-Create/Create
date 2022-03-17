@@ -49,10 +49,10 @@ public class EdgePointStorage {
 		return pointsByType.computeIfAbsent(type, t -> new HashMap<>());
 	}
 
-	public void tick(TrackGraph graph) {
+	public void tick(TrackGraph graph, boolean preTrains) {
 		pointsByType.values()
 			.forEach(map -> map.values()
-				.forEach(p -> p.tick(graph)));
+				.forEach(p -> p.tick(graph, preTrains)));
 	}
 
 	public void transferAll(TrackGraph target, EdgePointStorage other) {

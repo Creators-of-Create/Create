@@ -239,7 +239,7 @@ public class CarriageSyncData {
 				TravellingPoint toApproach = pointsToApproach[index];
 
 				point.travel(graph, partial * f,
-					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b)), point.ignoreSignals(),
+					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b)), point.ignoreEdgePoints(),
 					point.ignoreTurns());
 
 				// could not pathfind to server location

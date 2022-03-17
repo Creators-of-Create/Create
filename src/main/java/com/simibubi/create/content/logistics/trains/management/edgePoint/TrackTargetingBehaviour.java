@@ -143,7 +143,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 				}
 				if (!otherPoint.canMerge())
 					return null;
-				otherPoint.tileAdded(getPos(), front);
+				otherPoint.tileAdded(tileEntity, front);
 				id = otherPoint.getId();
 				tileEntity.setChanged();
 				return (T) otherPoint;
@@ -158,7 +158,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 		point.setId(id);
 		point.setLocation(reverseEdge ? loc.edge : loc.edge.swap(), reverseEdge ? loc.position : length - loc.position);
-		point.tileAdded(getPos(), front);
+		point.tileAdded(tileEntity, front);
 		loc.graph.addPoint(edgePointType, point);
 		return point;
 	}

@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.trains;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +40,9 @@ public class GlobalRailwayManager {
 	public Map<UUID, SignalEdgeGroup> signalEdgeGroups;
 	public Map<UUID, Train> trains;
 	public TrackGraphSync sync;
+
+	private List<Train> movingTrains;
+	private List<Train> waitingTrains;
 
 	private RailwaySavedData savedData;
 
@@ -75,6 +80,8 @@ public class GlobalRailwayManager {
 		trains = savedData.getTrains();
 		trackNetworks = savedData.getTrackNetworks();
 		signalEdgeGroups = savedData.getSignalBlocks();
+		trains.values()
+			.forEach(movingTrains::add);
 	}
 
 	public void cleanUp() {
@@ -82,11 +89,26 @@ public class GlobalRailwayManager {
 		signalEdgeGroups = new HashMap<>();
 		trains = new HashMap<>();
 		sync = new TrackGraphSync();
+		movingTrains = new LinkedList<>();
+		waitingTrains = new LinkedList<>();
 	}
 
 	public void markTracksDirty() {
 		if (savedData != null)
 			savedData.setDirty();
+	}
+
+	public void addTrain(Train train) {
+		trains.put(train.id, train);
+		movingTrains.add(train);
+	}
+
+	public void removeTrain(UUID id) {
+		Train removed = trains.remove(id);
+		if (removed == null)
+			return;
+		movingTrains.remove(removed);
+		waitingTrains.remove(removed);
 	}
 
 	//
@@ -145,20 +167,49 @@ public class GlobalRailwayManager {
 			group.trains.clear();
 			group.reserved = null;
 		}
-
+		
 		for (TrackGraph graph : trackNetworks.values())
-			graph.tickPoints();
-		for (Train train : trains.values())
-			train.earlyTick(level);
-		for (Train train : trains.values())
-			train.tick(level);
+			graph.tickPoints(true);
 
-//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && AllKeys.altDown())
+		tickTrains(level);
+		
+		for (TrackGraph graph : trackNetworks.values())
+			graph.tickPoints(false);
+
+//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_K))
 //			trackNetworks.values()
-//				.forEach(TrackGraph::debugViewSignalData);
+//				.forEach(TrackGraph::debugViewReserved);
 //		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown())
 //			trackNetworks.values()
 //				.forEach(TrackGraph::debugViewNodes);
+	}
+
+	private void tickTrains(Level level) {
+		// keeping two lists ensures a tick order starting at longest waiting
+		for (Train train : waitingTrains)
+			train.earlyTick(level);
+		for (Train train : movingTrains)
+			train.earlyTick(level);
+		for (Train train : waitingTrains)
+			train.tick(level);
+		for (Train train : movingTrains)
+			train.tick(level);
+
+		for (Iterator<Train> iterator = waitingTrains.iterator(); iterator.hasNext();) {
+			Train train = iterator.next();
+			if (train.navigation.waitingForSignal != null)
+				continue;
+			movingTrains.add(train);
+			iterator.remove();
+		}
+
+		for (Iterator<Train> iterator = movingTrains.iterator(); iterator.hasNext();) {
+			Train train = iterator.next();
+			if (train.navigation.waitingForSignal == null)
+				continue;
+			waitingTrains.add(train);
+			iterator.remove();
+		}
 	}
 
 	public void clientTick() {

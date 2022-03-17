@@ -1,0 +1,39 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"textures": {
+		"2": "create:block/signal_glow_2",
+		"particle": "create:block/signal_glow_2"
+	},
+	"elements": [
+		{
+			"name": "tube3",
+			"from": [-3, -4.5, -3],
+			"to": [3, 4.5, 3],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [10, 7, 16, 16], "texture": "#2"},
+				"east": {"uv": [10, 7, 16, 16], "texture": "#2"},
+				"south": {"uv": [10, 7, 16, 16], "texture": "#2"},
+				"west": {"uv": [10, 7, 16, 16], "texture": "#2"},
+				"up": {"uv": [10, 0, 16, 6], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [10, 0, 16, 6], "rotation": 90, "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [17, 14, 13],
+			"color": 0,
+			"children": []
+		},
+		{
+			"name": "group",
+			"origin": [17, 14, 13],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

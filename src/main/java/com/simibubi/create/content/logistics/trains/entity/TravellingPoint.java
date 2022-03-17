@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -21,8 +21,7 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -53,7 +52,7 @@ public class TravellingPoint {
 		extends BiFunction<TrackGraph, Pair<Boolean, List<Entry<TrackNode, TrackEdge>>>, Entry<TrackNode, TrackEdge>> {
 	};
 
-	public static interface ISignalBoundaryListener extends BiConsumer<Double, Pair<SignalBoundary, Couple<UUID>>> {
+	public static interface IEdgePointListener extends BiPredicate<Double, Pair<TrackEdgePoint, Couple<TrackNode>>> {
 	};
 
 	public static interface ITurnListener extends BiConsumer<Double, TrackEdge> {
@@ -68,9 +67,8 @@ public class TravellingPoint {
 		this.position = position;
 	}
 
-	public ISignalBoundaryListener ignoreSignals() {
-		return (d, c) -> {
-		};
+	public IEdgePointListener ignoreEdgePoints() {
+		return (d, c) -> false;
 	}
 
 	public ITurnListener ignoreTurns() {
@@ -178,7 +176,7 @@ public class TravellingPoint {
 	}
 
 	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
-		ISignalBoundaryListener signalListener, ITurnListener turnListener) {
+		IEdgePointListener signalListener, ITurnListener turnListener) {
 		blocked = false;
 		double edgeLength = edge.getLength(node1, node2);
 		if (distance == 0)
@@ -193,7 +191,14 @@ public class TravellingPoint {
 
 		boolean forward = distance > 0;
 		double collectedDistance = forward ? -prevPos : -edgeLength + prevPos;
-		edgeTraversedFrom(graph, forward, signalListener, turnListener, prevPos, collectedDistance);
+
+		Double blockedLocation =
+			edgeTraversedFrom(graph, forward, signalListener, turnListener, prevPos, collectedDistance);
+		if (blockedLocation != null) {
+			position = blockedLocation.doubleValue();
+			traveled = position - prevPos;
+			return traveled;
+		}
 
 		if (forward) {
 			// Moving forward
@@ -233,9 +238,17 @@ public class TravellingPoint {
 				collectedDistance += edgeLength;
 				if (edge.isTurn())
 					turnListener.accept(collectedDistance, edge);
-				edgeTraversedFrom(graph, forward, signalListener, turnListener, 0, collectedDistance);
-				prevPos = 0;
 
+				blockedLocation = edgeTraversedFrom(graph, forward, signalListener, turnListener, 0, collectedDistance);
+
+				if (blockedLocation != null) {
+					traveled -= position;
+					position = blockedLocation.doubleValue();
+					traveled += position;
+					break;
+				}
+
+				prevPos = 0;
 				edgeLength = edge.getLength(node1, node2);
 			}
 
@@ -261,7 +274,7 @@ public class TravellingPoint {
 				}
 
 				if (validTargets.isEmpty()) {
-					traveled -= position;
+					traveled += position;
 					position = 0;
 					blocked = true;
 					break;
@@ -278,7 +291,15 @@ public class TravellingPoint {
 				edgeLength = edge.getLength(node1, node2);
 				position += edgeLength;
 
-				edgeTraversedFrom(graph, forward, signalListener, turnListener, edgeLength, collectedDistance);
+				blockedLocation =
+					edgeTraversedFrom(graph, forward, signalListener, turnListener, edgeLength, collectedDistance);
+
+				if (blockedLocation != null) {
+					traveled -= position;
+					position = blockedLocation.doubleValue();
+					traveled += position;
+					break;
+				}
 			}
 
 		}
@@ -286,42 +307,30 @@ public class TravellingPoint {
 		return traveled;
 	}
 
-	private void edgeTraversedFrom(TrackGraph graph, boolean forward, ISignalBoundaryListener signalListener,
+	private Double edgeTraversedFrom(TrackGraph graph, boolean forward, IEdgePointListener edgePointListener,
 		ITurnListener turnListener, double prevPos, double totalDistance) {
 		if (edge.isTurn())
 			turnListener.accept(Math.max(0, totalDistance), edge);
-		
-		EdgeData signalsOnEdge = edge.getEdgeData();
-		if (!signalsOnEdge.hasSignalBoundaries())
-			return;
 
+		EdgeData edgeData = edge.getEdgeData();
 		double from = forward ? prevPos : position;
 		double to = forward ? position : prevPos;
-		SignalBoundary nextBoundary = signalsOnEdge.next(EdgePointType.SIGNAL, node1, node2, edge, from);
-		List<SignalBoundary> discoveredBoundaries = null;
+		List<TrackEdgePoint> edgePoints = edgeData.getPoints();
 
-		while (nextBoundary != null) {
-			double d = nextBoundary.getLocationOn(node1, node2, edge);
-			if (d > to)
-				break;
-			if (discoveredBoundaries == null)
-				discoveredBoundaries = new ArrayList<>();
-			discoveredBoundaries.add(nextBoundary);
-			nextBoundary = signalsOnEdge.next(EdgePointType.SIGNAL, node1, node2, edge, d);
+		double length = edge.getLength(node1, node2);
+		for (int i = 0; i < edgePoints.size(); i++) {
+			int index = forward ? i : edgePoints.size() - i - 1;
+			TrackEdgePoint nextBoundary = edgePoints.get(index);
+			double locationOn = nextBoundary.getLocationOn(node1, node2, edge);
+			double distance = forward ? locationOn : length - locationOn;
+			if (forward ? (locationOn < from || locationOn >= to) : (locationOn <= from || locationOn > to))
+				continue;
+			Couple<TrackNode> nodes = Couple.create(node1, node2);
+			if (edgePointListener.test(totalDistance + distance, Pair.of(nextBoundary, forward ? nodes : nodes.swap())))
+				return locationOn;
 		}
 
-		if (discoveredBoundaries == null)
-			return;
-
-		for (int i = 0; i < discoveredBoundaries.size(); i++) {
-			int index = forward ? i : discoveredBoundaries.size() - i - 1;
-			nextBoundary = discoveredBoundaries.get(index);
-			double d = nextBoundary.getLocationOn(node1, node2, edge);
-			if (!forward)
-				d = edge.getLength(node1, node2) - d;
-			Couple<UUID> nodes = Couple.create(nextBoundary.getGroup(node1), nextBoundary.getGroup(node2));
-			signalListener.accept(totalDistance + d, Pair.of(nextBoundary, forward ? nodes : nodes.swap()));
-		}
+		return null;
 	}
 
 	public void reverse(TrackGraph graph) {

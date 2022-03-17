@@ -71,6 +71,14 @@ public class EdgeData {
 	}
 
 	@Nullable
+	public TrackEdgePoint next(TrackNode node1, TrackNode node2, TrackEdge edge, double minPosition) {
+		for (TrackEdgePoint point : points)
+			if (point.getLocationOn(node1, node2, edge) > minPosition)
+				return point;
+		return null;
+	}
+
+	@Nullable
 	public <T extends TrackEdgePoint> T get(EdgePointType<T> type, TrackNode node1, TrackNode node2, TrackEdge edge,
 		double exactPosition) {
 		T next = next(type, node1, node2, edge, exactPosition - .5f);

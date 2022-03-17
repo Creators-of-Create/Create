@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 116",
+	"_": "Missing Localizations: 119",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1424,6 +1424,10 @@
 	"create.train.relocate.valid": "UNLOCALIZED: Can relocate to here, Click to Confirm",
 	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to here",
 	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
+
+	"create.track_signal.cannot_change_mode": "UNLOCALIZED: Unable to switch mode of this Signal",
+	"create.track_signal.mode_change.entry_signal": "UNLOCALIZED: -> Allow passage if section unoccupied",
+	"create.track_signal.mode_change.cross_signal": "UNLOCALIZED: -> Allow passage if section fully traversable",
 
 	"create.contraption.controls.start_controlling": "UNLOCALIZED: Now controlling: %1$s",
 	"create.contraption.controls.stop_controlling": "UNLOCALIZED: Stopped controlling contraption",

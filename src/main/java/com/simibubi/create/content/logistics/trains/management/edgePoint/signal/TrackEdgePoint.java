@@ -18,6 +18,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class TrackEdgePoint {
 
@@ -59,7 +60,7 @@ public abstract class TrackEdgePoint {
 		behaviour.invalidateEdgePoint(migrationData);
 	}
 
-	public abstract void tileAdded(BlockPos tilePos, boolean front);
+	public abstract void tileAdded(BlockEntity tile, boolean front);
 
 	public abstract void tileRemoved(BlockPos tilePos, boolean front);
 
@@ -112,7 +113,7 @@ public abstract class TrackEdgePoint {
 		buffer.writeDouble(position);
 	}
 
-	public void tick(TrackGraph graph) {}
+	public void tick(TrackGraph graph, boolean preTrains) {}
 
 	protected void removeFromAllGraphs() {
 		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values())

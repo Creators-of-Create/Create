@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class SingleTileEdgePoint extends TrackEdgePoint {
 
@@ -14,8 +15,8 @@ public abstract class SingleTileEdgePoint extends TrackEdgePoint {
 	}
 
 	@Override
-	public void tileAdded(BlockPos tilePos, boolean front) {
-		this.tilePos = tilePos;
+	public void tileAdded(BlockEntity tile, boolean front) {
+		this.tilePos = tile.getBlockPos();
 	}
 
 	@Override

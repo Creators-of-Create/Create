@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.world.phys.Vec3;
+
 public class SignalPropagator {
 
 	public static void onSignalRemoved(TrackGraph graph, SignalBoundary signal) {
@@ -38,7 +41,7 @@ public class SignalPropagator {
 				SignalBoundary boundary = pair.getSecond();
 				boundary.queueUpdate(node1);
 				return false;
-			}, Predicates.alwaysFalse());
+			}, Predicates.alwaysFalse(), false);
 		}
 	}
 
@@ -50,7 +53,7 @@ public class SignalPropagator {
 			SignalBoundary boundary = pair.getSecond();
 			boundary.queueUpdate(node1);
 			return false;
-		}, Predicates.alwaysFalse());
+		}, Predicates.alwaysFalse(), false);
 	}
 
 	public static void propagateSignalGroup(TrackGraph graph, SignalBoundary signal, boolean front) {
@@ -82,11 +85,22 @@ public class SignalPropagator {
 			signalData.singleSignalGroup = groupId;
 			return true;
 
-		});
+		}, false);
+	}
+
+	public static Map<UUID, Boolean> collectChainedSignals(TrackGraph graph, SignalBoundary signal, boolean front) {
+		HashMap<UUID, Boolean> map = new HashMap<>();
+		walkSignals(graph, signal, front, pair -> {
+			SignalBoundary boundary = pair.getSecond();
+			map.put(boundary.id, !boundary.isPrimary(pair.getFirst()));
+			return false;
+		}, Predicates.alwaysFalse(), true);
+		return map;
 	}
 
 	public static void walkSignals(TrackGraph graph, SignalBoundary signal, boolean front,
-		Predicate<Pair<TrackNode, SignalBoundary>> boundaryCallback, Predicate<EdgeData> nonBoundaryCallback) {
+		Predicate<Pair<TrackNode, SignalBoundary>> boundaryCallback, Predicate<EdgeData> nonBoundaryCallback,
+		boolean forCollection) {
 
 		Couple<TrackNodeLocation> edgeLocation = signal.edgeLocation;
 		Couple<TrackNode> startNodes = edgeLocation.map(graph::locateNode);
@@ -101,7 +115,8 @@ public class SignalPropagator {
 		if (startEdge == null)
 			return;
 
-		Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge, oppositeEdge);
+		if (!forCollection)
+			Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge, oppositeEdge);
 
 		// Check for signal on the same edge
 		SignalBoundary immediateBoundary = startEdge.getEdgeData()
@@ -115,11 +130,12 @@ public class SignalPropagator {
 		// Search for any connected signals
 		List<Couple<TrackNode>> frontier = new ArrayList<>();
 		frontier.add(Couple.create(node2, node1));
-		walkSignals(graph, frontier, boundaryCallback, nonBoundaryCallback);
+		walkSignals(graph, frontier, boundaryCallback, nonBoundaryCallback, forCollection);
 	}
 
 	private static void walkSignals(TrackGraph graph, List<Couple<TrackNode>> frontier,
-		Predicate<Pair<TrackNode, SignalBoundary>> boundaryCallback, Predicate<EdgeData> nonBoundaryCallback) {
+		Predicate<Pair<TrackNode, SignalBoundary>> boundaryCallback, Predicate<EdgeData> nonBoundaryCallback,
+		boolean forCollection) {
 		Set<TrackEdge> visited = new HashSet<>();
 		while (!frontier.isEmpty()) {
 			Couple<TrackNode> couple = frontier.remove(0);
@@ -137,6 +153,16 @@ public class SignalPropagator {
 				// already checked this edge
 				if (!visited.add(edge))
 					continue;
+
+				// chain signal: check if reachable
+				if (forCollection) {
+					Vec3 currentDirection = graph.getConnectionsFrom(prevNode)
+						.get(currentNode)
+						.getDirection(prevNode, currentNode, false);
+					Vec3 newDirection = edge.getDirection(currentNode, nextNode, true);
+					if (currentDirection.dot(newDirection) < 3 / 4f)
+						continue;
+				}
 
 				TrackEdge oppositeEdge = graph.getConnectionsFrom(nextNode)
 					.get(currentNode);

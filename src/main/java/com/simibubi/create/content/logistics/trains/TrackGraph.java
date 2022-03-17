@@ -98,8 +98,8 @@ public class TrackGraph {
 		return removed;
 	}
 
-	public void tickPoints() {
-		edgePoints.tick(this);
+	public void tickPoints(boolean preTrains) {
+		edgePoints.tick(this, preTrains);
 	}
 
 	//
@@ -423,6 +423,129 @@ public class TrackGraph {
 		}
 
 		return graph;
+	}
+
+	public void debugViewReserved() {
+		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		if (cameraEntity == null)
+			return;
+
+		Set<UUID> reserved = new HashSet<>();
+		Set<UUID> occupied = new HashSet<>();
+
+		for (Train train : Create.RAILWAYS.trains.values()) {
+			reserved.addAll(train.reservedSignalBlocks);
+			occupied.addAll(train.occupiedSignalBlocks.keySet());
+		}
+
+		reserved.removeAll(occupied);
+
+		Vec3 camera = cameraEntity.getEyePosition();
+		for (Entry<TrackNodeLocation, TrackNode> nodeEntry : nodes.entrySet()) {
+			TrackNodeLocation nodeLocation = nodeEntry.getKey();
+			TrackNode node = nodeEntry.getValue();
+			if (nodeLocation == null)
+				continue;
+
+			Vec3 location = nodeLocation.getLocation();
+			if (location.distanceTo(camera) > 100)
+				continue;
+
+			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
+			if (map == null)
+				continue;
+
+			int hashCode = node.hashCode();
+			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
+				TrackNode other = entry.getKey();
+
+				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
+					continue;
+				Vec3 yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
+
+				TrackEdge edge = entry.getValue();
+				EdgeData signalData = edge.getEdgeData();
+				UUID singleGroup = signalData.singleSignalGroup;
+				SignalEdgeGroup signalEdgeGroup =
+					singleGroup == null ? null : Create.RAILWAYS.sided(null).signalEdgeGroups.get(singleGroup);
+
+				if (!edge.isTurn()) {
+					Vec3 p1 = edge.getPosition(node, other, 0);
+					Vec3 p2 = edge.getPosition(node, other, 1);
+
+					if (signalData.hasPoints()) {
+						double prev = 0;
+						double length = edge.getLength(node, other);
+						SignalBoundary prevBoundary = null;
+						SignalEdgeGroup group = null;
+
+						for (TrackEdgePoint trackEdgePoint : signalData.getPoints()) {
+							if (!(trackEdgePoint instanceof SignalBoundary boundary))
+								continue;
+
+							prevBoundary = boundary;
+							UUID groupId = boundary.getGroup(node);
+							group = Create.RAILWAYS.sided(null).signalEdgeGroups.get(groupId);
+							double start = prev + (prev == 0 ? 0 : 1 / 16f / length);
+							prev = (boundary.getLocationOn(node, other, edge) / length) - 1 / 16f / length;
+
+							if (group != null
+								&& (group.reserved != null || occupied.contains(groupId) || reserved.contains(groupId)))
+								CreateClient.OUTLINER
+									.showLine(Pair.of(boundary, edge), edge.getPosition(node, other, start)
+										.add(yOffset),
+										edge.getPosition(node, other, prev)
+											.add(yOffset))
+									.colored(occupied.contains(groupId) ? 0xF68989
+										: group.reserved != null ? 0xC5D8A4 : 0xF6E7D8)
+									.lineWidth(1 / 16f);
+
+						}
+
+						if (prevBoundary != null) {
+							UUID groupId = prevBoundary.getGroup(other);
+							SignalEdgeGroup lastGroup = Create.RAILWAYS.sided(null).signalEdgeGroups.get(groupId);
+							if (lastGroup != null && ((lastGroup.reserved != null || occupied.contains(groupId)
+								|| reserved.contains(groupId))))
+								CreateClient.OUTLINER
+									.showLine(edge, edge.getPosition(node, other, prev + 1 / 16f / length)
+										.add(yOffset), p2.add(yOffset))
+									.colored(occupied.contains(groupId) ? 0xF68989
+										: lastGroup.reserved != null ? 0xC5D8A4 : 0xF6E7D8)
+									.lineWidth(1 / 16f);
+							continue;
+						}
+					}
+
+					if (signalEdgeGroup == null || !(signalEdgeGroup.reserved != null || occupied.contains(singleGroup)
+						|| reserved.contains(singleGroup)))
+						continue;
+					CreateClient.OUTLINER.showLine(edge, p1.add(yOffset), p2.add(yOffset))
+						.colored(occupied.contains(singleGroup) ? 0xF68989
+							: signalEdgeGroup.reserved != null ? 0xC5D8A4 : 0xF6E7D8)
+						.lineWidth(1 / 16f);
+					continue;
+				}
+
+				if (signalEdgeGroup == null || !(signalEdgeGroup.reserved != null || occupied.contains(singleGroup)
+					|| reserved.contains(singleGroup)))
+					continue;
+
+				int color =
+					occupied.contains(singleGroup) ? 0xF68989 : signalEdgeGroup.reserved != null ? 0xC5D8A4 : 0xF6E7D8;
+				Vec3 previous = null;
+				BezierConnection turn = edge.getTurn();
+				for (int i = 0; i <= turn.getSegmentCount(); i++) {
+					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
+					if (previous != null)
+						CreateClient.OUTLINER
+							.showLine(Pair.of(edge, previous), previous.add(yOffset), current.add(yOffset))
+							.colored(color)
+							.lineWidth(1 / 16f);
+					previous = current;
+				}
+			}
+		}
 	}
 
 	public void debugViewSignalData() {

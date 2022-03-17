@@ -496,7 +496,7 @@ public class StationTileEntity extends SmartTileEntity {
 		}
 
 		train.collectInitiallyOccupiedSignalBlocks();
-		Create.RAILWAYS.trains.put(train.id, train);
+		Create.RAILWAYS.addTrain(train);
 		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, true));
 		clearException();
 	}

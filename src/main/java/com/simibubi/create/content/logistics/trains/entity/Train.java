@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,11 +24,12 @@ import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
-import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock.SignalType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
@@ -82,7 +84,8 @@ public class Train {
 	public List<Integer> carriageSpacing;
 
 	public boolean updateSignalBlocks;
-	public List<UUID> occupiedSignalBlocks;
+	public Map<UUID, UUID> occupiedSignalBlocks;
+	public Set<UUID> reservedSignalBlocks;
 
 	List<TrainMigration> migratingPoints;
 	public int migrationCooldown;
@@ -112,28 +115,35 @@ public class Train {
 		migratingPoints = new ArrayList<>();
 		currentStation = null;
 		manualSteer = SteerDirection.NONE;
-		occupiedSignalBlocks = new ArrayList<>();
+		occupiedSignalBlocks = new HashMap<>();
+		reservedSignalBlocks = new HashSet<>();
 	}
 
 	public void earlyTick(Level level) {
 		status.tick(level);
 		if (graph == null && !migratingPoints.isEmpty())
 			reattachToTracks(level);
+
+		addToSignalGroups(occupiedSignalBlocks.keySet());
+
 		if (graph == null)
 			return;
-
 		if (updateSignalBlocks) {
 			updateSignalBlocks = false;
 			collectInitiallyOccupiedSignalBlocks();
 		}
 
-		for (Iterator<UUID> iterator = occupiedSignalBlocks.iterator(); iterator.hasNext();) {
-			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(iterator.next());
-			if (signalEdgeGroup == null) {
+		addToSignalGroups(reservedSignalBlocks);
+	}
+
+	private void addToSignalGroups(Collection<UUID> groups) {
+		Map<UUID, SignalEdgeGroup> groupMap = Create.RAILWAYS.signalEdgeGroups;
+		for (Iterator<UUID> iterator = groups.iterator(); iterator.hasNext();) {
+			SignalEdgeGroup signalEdgeGroup = groupMap.get(iterator.next());
+			if (signalEdgeGroup == null)
 				iterator.remove();
-				continue;
-			}
-			signalEdgeGroup.trains.add(this);
+			else
+				signalEdgeGroup.trains.add(this);
 		}
 	}
 
@@ -212,6 +222,8 @@ public class Train {
 			if (index == 0) {
 				distance = actualDistance;
 				collideWithOtherTrains(level, carriage);
+				if (graph == null)
+					return;
 			}
 		}
 
@@ -226,23 +238,58 @@ public class Train {
 		updateNavigationTarget(distance);
 	}
 
-	public ISignalBoundaryListener frontSignalListener() {
+	public IEdgePointListener frontSignalListener() {
 		return (distance, couple) -> {
-			UUID groupId = couple.getSecond()
-				.getSecond();
-			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
-			SignalBoundary boundary = couple.getFirst();
-			if (signalEdgeGroup != null) {
-				signalEdgeGroup.reserved = boundary;
-				occupiedSignalBlocks.add(groupId);
+
+			if (couple.getFirst()instanceof GlobalStation station) {
+				if (!station.canApproachFrom(couple.getSecond()
+					.getSecond()) || navigation.destination != station)
+					return false;
+				speed = 0;
+				navigation.distanceToDestination = 0;
+				navigation.currentPath.clear();
+				arriveAt(navigation.destination);
+				navigation.destination = null;
+				return true;
 			}
+
+			if (!(couple.getFirst()instanceof SignalBoundary signal))
+				return false;
+			if (navigation.waitingForSignal != null && navigation.waitingForSignal.getFirst()
+				.equals(signal.id)) {
+				speed = 0;
+				navigation.distanceToSignal = 0;
+				return true;
+			}
+
+			UUID groupId = signal.getGroup(couple.getSecond()
+				.getSecond());
+			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
+			if (signalEdgeGroup == null)
+				return false;
+			signalEdgeGroup.reserved = signal;
+			occupy(groupId, signal.id);
+			return false;
+
 		};
 	}
 
-	public ISignalBoundaryListener backSignalListener() {
+	private boolean occupy(UUID groupId, @Nullable UUID boundaryId) {
+		reservedSignalBlocks.remove(groupId);
+		if (boundaryId != null && occupiedSignalBlocks.containsKey(groupId))
+			if (boundaryId.equals(occupiedSignalBlocks.get(groupId)))
+				return false;
+		return occupiedSignalBlocks.put(groupId, boundaryId) == null;
+	}
+
+	public IEdgePointListener backSignalListener() {
 		return (distance, couple) -> {
-			occupiedSignalBlocks.remove(couple.getSecond()
+			if (!(couple.getFirst()instanceof SignalBoundary signal))
+				return false;
+			UUID groupId = signal.getGroup(couple.getSecond()
 				.getFirst());
+			occupiedSignalBlocks.remove(groupId);
+			return false;
 		};
 	}
 
@@ -250,32 +297,43 @@ public class Train {
 		if (navigation.destination == null)
 			return;
 
-		boolean recalculate = navigation.distanceToDestination % 100 > 20;
-		boolean imminentRecalculate = navigation.distanceToDestination > 5;
+		Pair<UUID, Boolean> blockingSignal = navigation.waitingForSignal;
+		boolean fullRefresh = navigation.distanceToDestination > 100 && navigation.distanceToDestination % 100 > 20;
+		boolean signalRefresh = blockingSignal != null && navigation.distanceToSignal % 50 > 5;
+		boolean partialRefresh = navigation.distanceToDestination < 100 && navigation.distanceToDestination % 50 > 5;
+
 		double toSubstract = navigation.destinationBehindTrain ? -distance : distance;
-		navigation.distanceToDestination -= toSubstract;
-		boolean signalMode = navigation.waitingForSignal != null;
 		boolean navigatingManually = runtime.paused;
 
-		if (signalMode) {
+		navigation.distanceToDestination -= toSubstract;
+		if (blockingSignal != null) {
 			navigation.distanceToSignal -= toSubstract;
-			recalculate = navigation.distanceToSignal % 100 > 20;
+			signalRefresh &= navigation.distanceToSignal % 50 < 5;
 		}
 
-		if (recalculate && (signalMode ? navigation.distanceToSignal : navigation.distanceToDestination) % 100 <= 20
-			|| imminentRecalculate && navigation.distanceToDestination <= 5) {
-			if (signalMode) {
-				navigation.waitingForSignal = null;
-				return;
-			}
-			GlobalStation destination = navigation.destination;
-			if (!navigatingManually) {
-				GlobalStation preferredDestination = runtime.findNextStation();
-				if (preferredDestination != null)
-					destination = preferredDestination;
-			}
-			navigation.startNavigation(destination, navigatingManually ? -1 : Double.MAX_VALUE, false);
+		fullRefresh &= navigation.distanceToDestination % 100 <= 20;
+		partialRefresh &= navigation.distanceToDestination % 50 <= 5;
+
+		if (blockingSignal != null && navigation.ticksWaitingForSignal % 100 == 50) {
+			SignalBoundary signal = graph.getPoint(EdgePointType.SIGNAL, blockingSignal.getFirst());
+			fullRefresh |= signal != null && signal.types.get(blockingSignal.getSecond()) == SignalType.CROSS_SIGNAL;
 		}
+
+		if (signalRefresh)
+			navigation.waitingForSignal = null;
+		if (!fullRefresh && !partialRefresh)
+			return;
+		if (!reservedSignalBlocks.isEmpty())
+			return;
+
+		GlobalStation destination = navigation.destination;
+		if (!navigatingManually && fullRefresh) {
+			GlobalStation preferredDestination = runtime.findNextStation();
+			if (preferredDestination != null)
+				destination = preferredDestination;
+		}
+
+		navigation.startNavigation(destination, navigatingManually ? -1 : Double.MAX_VALUE, false);
 	}
 
 	private void tickDerailedSlowdown() {
@@ -439,7 +497,7 @@ public class Train {
 		if (currentStation != null)
 			currentStation.cancelReservation(this);
 
-		Create.RAILWAYS.trains.remove(id);
+		Create.RAILWAYS.removeTrain(id);
 		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
 		return true;
 	}
@@ -598,6 +656,7 @@ public class Train {
 
 	public void arriveAt(GlobalStation station) {
 		setCurrentStation(station);
+		reservedSignalBlocks.clear();
 		runtime.destinationReached();
 	}
 
@@ -645,6 +704,7 @@ public class Train {
 		EdgeData signalData = edge.getEdgeData();
 
 		occupiedSignalBlocks.clear();
+		reservedSignalBlocks.clear();
 
 		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position);
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.signalEdgeGroups;
@@ -664,7 +724,7 @@ public class Train {
 				if (prev != null) {
 					UUID group = prev.getGroup(node2);
 					if (Create.RAILWAYS.signalEdgeGroups.containsKey(group)) {
-						occupiedSignalBlocks.add(group);
+						occupy(group, null);
 						prevGroup.setValue(group);
 					}
 				}
@@ -672,26 +732,32 @@ public class Train {
 			} else {
 				UUID group = nextBoundary.getGroup(node1);
 				if (Create.RAILWAYS.signalEdgeGroups.containsKey(group)) {
-					occupiedSignalBlocks.add(group);
+					occupy(group, null);
 					prevGroup.setValue(group);
 				}
 			}
 
 		} else if (signalData.singleSignalGroup != null && allGroups.containsKey(signalData.singleSignalGroup)) {
-			occupiedSignalBlocks.add(signalData.singleSignalGroup);
+			occupy(signalData.singleSignalGroup, null);
 			prevGroup.setValue(signalData.singleSignalGroup);
 		}
 
 		forEachTravellingPointBackwards((tp, d) -> {
-			signalScout.travel(graph, d, signalScout.follow(tp), (distance, couple) -> couple.getSecond()
-				.forEach(id -> {
-					if (!Create.RAILWAYS.signalEdgeGroups.containsKey(id))
-						return;
-					if (id.equals(prevGroup.getValue()))
-						return;
-					occupiedSignalBlocks.add(id);
-					prevGroup.setValue(id);
-				}), signalScout.ignoreTurns());
+			signalScout.travel(graph, d, signalScout.follow(tp), (distance, couple) -> {
+				if (!(couple.getFirst()instanceof SignalBoundary signal))
+					return false;
+				couple.getSecond()
+					.map(signal::getGroup)
+					.forEach(id -> {
+						if (!Create.RAILWAYS.signalEdgeGroups.containsKey(id))
+							return;
+						if (id.equals(prevGroup.getValue()))
+							return;
+						occupy(id, null);
+						prevGroup.setValue(id);
+					});
+				return false;
+			}, signalScout.ignoreTurns());
 		});
 
 	}
@@ -740,7 +806,14 @@ public class Train {
 		tag.putBoolean("StillAssembling", heldForAssembly);
 		tag.putBoolean("Derailed", derailed);
 		tag.putBoolean("UpdateSignals", updateSignalBlocks);
-		tag.put("SignalBlocks", NBTHelper.writeCompoundList(occupiedSignalBlocks, uid -> {
+		tag.put("SignalBlocks", NBTHelper.writeCompoundList(occupiedSignalBlocks.entrySet(), e -> {
+			CompoundTag compoundTag = new CompoundTag();
+			compoundTag.putUUID("Id", e.getKey());
+			if (e.getValue() != null)
+				compoundTag.putUUID("Boundary", e.getValue());
+			return compoundTag;
+		}));
+		tag.put("ReservedSignalBlocks", NBTHelper.writeCompoundList(reservedSignalBlocks, uid -> {
 			CompoundTag compoundTag = new CompoundTag();
 			compoundTag.putUUID("Id", uid);
 			return compoundTag;
@@ -778,9 +851,10 @@ public class Train {
 		train.derailed = tag.getBoolean("Derailed");
 		train.updateSignalBlocks = tag.getBoolean("UpdateSignals");
 
-		NBTHelper.iterateCompoundList(tag.getList("SignalBlocks", Tag.TAG_COMPOUND),
-			c -> train.occupiedSignalBlocks.add(c.getUUID("Id")));
-
+		NBTHelper.iterateCompoundList(tag.getList("SignalBlocks", Tag.TAG_COMPOUND), c -> train.occupiedSignalBlocks
+			.put(c.getUUID("Id"), c.contains("Boundary") ? c.getUUID("Boundary") : null));
+		NBTHelper.iterateCompoundList(tag.getList("ReservedSignalBlocks", Tag.TAG_COMPOUND),
+			c -> train.reservedSignalBlocks.add(c.getUUID("Id")));
 		NBTHelper.iterateCompoundList(tag.getList("MigratingPoints", Tag.TAG_COMPOUND),
 			c -> train.migratingPoints.add(TrainMigration.read(c)));
 

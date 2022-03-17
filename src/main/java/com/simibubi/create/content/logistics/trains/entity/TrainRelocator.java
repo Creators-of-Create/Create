@@ -22,7 +22,7 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.content.logistics.trains.TrackNode;
-import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITurnListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
@@ -158,7 +158,7 @@ public class TrainRelocator {
 			return false;
 
 		TravellingPoint probe = new TravellingPoint(node1, node2, edge, graphLocation.position);
-		ISignalBoundaryListener ignoreSignals = probe.ignoreSignals();
+		IEdgePointListener ignoreSignals = probe.ignoreEdgePoints();
 		ITurnListener ignoreTurns = probe.ignoreTurns();
 		List<Pair<Couple<TrackNode>, Double>> recordedLocations = new ArrayList<>();
 		List<Vec3> recordedVecs = new ArrayList<>();
@@ -206,6 +206,7 @@ public class TrainRelocator {
 
 		train.leaveStation();
 		train.derailed = false;
+		train.heldForAssembly = false;
 		train.navigation.waitingForSignal = null;
 		train.occupiedSignalBlocks.clear();
 		train.graph = graph;
@@ -322,13 +323,12 @@ public class TrainRelocator {
 	@OnlyIn(Dist.CLIENT)
 	public static boolean carriageWrenched(Vec3 vec3, CarriageContraptionEntity entity) {
 		Train train = getTrainFromEntity(entity);
-		if (train != null && !train.heldForAssembly) {
-			relocatingOrigin = vec3;
-			relocatingTrain = train.id;
-			relocatingEntityId = entity.getId();
-			return true;
-		}
-		return false;
+		if (train == null)
+			return false;
+		relocatingOrigin = vec3;
+		relocatingTrain = train.id;
+		relocatingEntityId = entity.getId();
+		return true;
 	}
 
 	@OnlyIn(Dist.CLIENT)

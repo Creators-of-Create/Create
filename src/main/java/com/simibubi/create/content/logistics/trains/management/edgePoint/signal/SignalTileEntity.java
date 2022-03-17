@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock.SignalType;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -25,19 +26,23 @@ public class SignalTileEntity extends SmartTileEntity {
 	}
 
 	public static enum SignalState {
-		RED, GREEN, INVALID, TRAIN_ENTERING;
+		RED, YELLOW, GREEN, INVALID;
 
 		public boolean isRedLight(float renderTime) {
 			return this == RED || this == INVALID && renderTime % 40 < 3;
 		}
 
-		public boolean isGreenLight(float renderTime) {	
-			return this == GREEN || this == TRAIN_ENTERING;
+		public boolean isYellowLight(float renderTime) {
+			return this == YELLOW;
+		}
+
+		public boolean isGreenLight(float renderTime) {
+			return this == GREEN;
 		}
 	}
 
 	public TrackTargetingBehaviour<SignalBoundary> edgePoint;
-	
+
 	private SignalState state;
 	private OverlayState overlay;
 	private int switchToRedAfterTrainEntered;
@@ -67,7 +72,7 @@ public class SignalTileEntity extends SmartTileEntity {
 	public SignalBoundary getSignal() {
 		return edgePoint.getEdgePoint();
 	}
-	
+
 	public boolean isPowered() {
 		return state == SignalState.RED;
 	}
@@ -94,12 +99,23 @@ public class SignalTileEntity extends SmartTileEntity {
 		super.tick();
 		if (level.isClientSide)
 			return;
+
 		SignalBoundary boundary = getSignal();
 		if (boundary == null) {
 			enterState(SignalState.INVALID);
 			setOverlay(OverlayState.RENDER);
 			return;
 		}
+
+		getBlockState().getOptionalValue(SignalBlock.TYPE)
+			.ifPresent(stateType -> {
+				SignalType targetType = boundary.getTypeFor(worldPosition);
+				if (stateType != targetType) {
+					level.setBlock(worldPosition, getBlockState().setValue(SignalBlock.TYPE, targetType), 3);
+					refreshBlockState();
+				}
+			});
+
 		enterState(boundary.getStateFor(worldPosition));
 		setOverlay(boundary.getOverlayFor(worldPosition));
 	}
@@ -127,7 +143,7 @@ public class SignalTileEntity extends SmartTileEntity {
 		if (state == SignalState.RED && switchToRedAfterTrainEntered > 0)
 			return;
 		this.state = state;
-		switchToRedAfterTrainEntered = state == SignalState.GREEN ? 15 : 0;
+		switchToRedAfterTrainEntered = state == SignalState.GREEN || state == SignalState.YELLOW ? 15 : 0;
 		notifyUpdate();
 		scheduleBlockTick();
 	}

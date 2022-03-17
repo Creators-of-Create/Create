@@ -151,6 +151,9 @@ public class AllBlockPartials {
 		SIGNAL_RED_CUBE = block("track_signal/red_cube"),
 		SIGNAL_RED_GLOW = block("track_signal/red_glow"),
 		SIGNAL_RED = block("track_signal/red_tube"),
+		SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
+		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"),
+		SIGNAL_YELLOW = block("track_signal/yellow_tube"),
 
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),

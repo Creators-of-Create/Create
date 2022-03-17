@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.logistics.trains.TrackGraph;
-import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ISignalBoundaryListener;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -131,9 +131,9 @@ public class Carriage {
 				boolean atBack =
 					(type == LAST || type == BOTH) && !actuallyFirstWheel && (!actuallyFirstBogey || !onTwoBogeys);
 
-				ISignalBoundaryListener frontListener = train.frontSignalListener();
-				ISignalBoundaryListener backListener = train.backSignalListener();
-				ISignalBoundaryListener passiveListener = point.ignoreSignals();
+				IEdgePointListener frontListener = train.frontSignalListener();
+				IEdgePointListener backListener = train.backSignalListener();
+				IEdgePointListener passiveListener = point.ignoreEdgePoints();
 
 				toMove += correction + bogeyCorrection;
 				double moved =
