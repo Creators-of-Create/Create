@@ -34,7 +34,7 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 		if (signalState.isRedLight(renderTime))
 			CachedBufferer.partial(AllBlockPartials.SIGNAL_ON, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
-		else if (signalState.isGreenLight(renderTime))
+		else
 			CachedBufferer.partial(AllBlockPartials.SIGNAL_OFF, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

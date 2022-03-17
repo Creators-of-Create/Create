@@ -247,7 +247,7 @@ public class TrackPlacement {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
 				info.end1Extent = 0;
-				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6);
+				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6) / axis1.length();
 				if (hDistance < minHDistance)
 					return info.withMessage("too_steep");
 				if (hDistance > minHDistance) {

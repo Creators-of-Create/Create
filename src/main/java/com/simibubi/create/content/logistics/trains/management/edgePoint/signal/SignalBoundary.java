@@ -42,7 +42,7 @@ public class SignalBoundary extends TrackEdgePoint {
 		groups = Couple.create(null, null);
 		sidesToUpdate = Couple.create(true, true);
 		types = Couple.create(() -> SignalType.ENTRY_SIGNAL);
-		cachedStates = Couple.create(() -> SignalState.GREEN);
+		cachedStates = Couple.create(() -> SignalState.INVALID);
 	}
 
 	public void setGroup(TrackNode side, UUID groupId) {

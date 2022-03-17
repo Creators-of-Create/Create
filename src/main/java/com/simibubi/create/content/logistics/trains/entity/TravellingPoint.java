@@ -187,6 +187,15 @@ public class TravellingPoint {
 		double currentT = position / edgeLength;
 		double incrementT = edge.incrementT(node1, node2, currentT, distance);
 		position = incrementT * edgeLength;
+
+		// FIXME: using incrementT like this becomes inaccurate at medium-long distances
+		// travelling points would travel only 50m instead of 100m due to the low
+		// incrementT at their starting position (e.g. bezier turn)
+		// In an ideal scenario the amount added to position would iterate the traversed
+		// edges for context first
+		
+		// A workaround was added in TrackEdge::incrementT
+
 		List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
 
 		boolean forward = distance > 0;

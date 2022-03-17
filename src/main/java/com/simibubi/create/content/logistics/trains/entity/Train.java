@@ -123,16 +123,17 @@ public class Train {
 		status.tick(level);
 		if (graph == null && !migratingPoints.isEmpty())
 			reattachToTracks(level);
-
-		addToSignalGroups(occupiedSignalBlocks.keySet());
-
-		if (graph == null)
+		if (graph == null) {
+			addToSignalGroups(occupiedSignalBlocks.keySet());
 			return;
+		}
+		
 		if (updateSignalBlocks) {
 			updateSignalBlocks = false;
 			collectInitiallyOccupiedSignalBlocks();
 		}
 
+		addToSignalGroups(occupiedSignalBlocks.keySet());
 		addToSignalGroups(reservedSignalBlocks);
 	}
 

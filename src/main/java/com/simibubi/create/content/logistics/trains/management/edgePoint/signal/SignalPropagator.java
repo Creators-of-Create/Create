@@ -115,15 +115,16 @@ public class SignalPropagator {
 		if (startEdge == null)
 			return;
 
-		if (!forCollection)
+		if (!forCollection) {
+			notifyTrains(graph, startEdge, oppositeEdge);
 			Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge, oppositeEdge);
+		}
 
 		// Check for signal on the same edge
 		SignalBoundary immediateBoundary = startEdge.getEdgeData()
 			.next(EdgePointType.SIGNAL, node1, node2, startEdge, signal.getLocationOn(node1, node2, startEdge));
 		if (immediateBoundary != null) {
-			if (boundaryCallback.test(Pair.of(node1, immediateBoundary)))
-				notifyTrains(graph, startEdge, oppositeEdge);
+			boundaryCallback.test(Pair.of(node1, immediateBoundary));
 			return;
 		}
 

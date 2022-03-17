@@ -44,8 +44,9 @@ public class TrackEdge {
 	}
 
 	public double incrementT(TrackNode node1, TrackNode node2, double currentT, double distance) {
+		boolean tooFar = Math.abs(distance) > 5; 
 		distance = distance / getLength(node1, node2);
-		return isTurn() ? turn.incrementT(currentT, distance) : currentT + distance;
+		return !tooFar && isTurn() ? turn.incrementT(currentT, distance) : currentT + distance;
 	}
 
 	public Vec3 getPosition(TrackNode node1, TrackNode node2, double t) {
