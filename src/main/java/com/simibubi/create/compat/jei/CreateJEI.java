@@ -255,6 +255,7 @@ public class CreateJEI implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		ingredientManager = registration.getIngredientManager();
 		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
+
 		registration.addRecipes(ToolboxColoringRecipeMaker.createRecipes()
 				.collect(Collectors.toList()), VanillaRecipeCategoryUid.CRAFTING);
 	}
@@ -399,18 +400,18 @@ public class CreateJEI implements IModPlugin {
 
 	public static void consumeAllRecipes(Consumer<Recipe<?>> consumer) {
 		Minecraft.getInstance()
-				.getConnection()
-				.getRecipeManager()
-				.getRecipes()
-				.forEach(consumer);
+			.getConnection()
+			.getRecipeManager()
+			.getRecipes()
+			.forEach(consumer);
 	}
 
 	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
 		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
-				.getConnection()
-				.getRecipeManager()
-				.recipes
-				.get(type);
+			.getConnection()
+			.getRecipeManager()
+			.recipes
+			.get(type);
 		if (map != null) {
 			map.values().forEach(consumer);
 		}
