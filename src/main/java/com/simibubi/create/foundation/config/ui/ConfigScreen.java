@@ -34,7 +34,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	/*
 	 *
-	 * TO DO
+	 * TODO
 	 *
 	 * reduce number of packets sent to the server when saving a bunch of values
 	 *
@@ -42,7 +42,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	 *
 	 * tooltips are hidden underneath the scrollbar, if the bar is near the middle
 	 *
-	 * */
+	 */
 
 	public static final Map<String, TriConsumer<Screen, PoseStack, Float>> backgrounds = new HashMap<>();
 	public static final PhysicalFloat cogSpin = PhysicalFloat.create().withLimit(10f).withDrag(0.3).addForce(new Force.Static(.2f));
@@ -139,7 +139,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		}
 
 		float elapsedPartials = minecraft.getDeltaFrameTime();
-		CreateMainMenuScreen.panorama.render(elapsedPartials, 1);
+		CreateMainMenuScreen.PANORAMA.render(elapsedPartials, 1);
 
 		RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
 		RenderSystem.enableBlend();

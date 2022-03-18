@@ -7,7 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
-import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipes;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -34,7 +34,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -226,7 +225,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if (stack.isEmpty())
 				continue;
 
-			List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(stack.getItem());
+			List<MixingRecipe> list = PotionMixingRecipes.BY_ITEM.get(stack.getItem());
 			if (list == null)
 				continue;
 			for (MixingRecipe mixingRecipe : list)

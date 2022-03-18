@@ -9,6 +9,15 @@ import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
 import static com.simibubi.create.content.AllSections.MATERIALS;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
@@ -45,6 +54,7 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -100,7 +110,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
-		.tag(AllItemTags.BLAZE_BURNER_SPECIAL_FUEL.tag, AllItemTags.UPRIGHT_ON_BELT.tag)
+		.tag(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.tag, AllItemTags.UPRIGHT_ON_BELT.tag)
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
@@ -188,11 +198,11 @@ public class AllItems {
 		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
 		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag);
 
-	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre("osmium"),
-		CRUSHED_PLATINUM = compatCrushedOre("platinum"), CRUSHED_SILVER = compatCrushedOre("silver"),
-		CRUSHED_TIN = compatCrushedOre("tin"), CRUSHED_LEAD = compatCrushedOre("lead"),
-		CRUSHED_QUICKSILVER = compatCrushedOre("quicksilver"), CRUSHED_BAUXITE = compatCrushedOre("aluminum"),
-		CRUSHED_URANIUM = compatCrushedOre("uranium"), CRUSHED_NICKEL = compatCrushedOre("nickel");
+	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre(OSMIUM),
+		CRUSHED_PLATINUM = compatCrushedOre(PLATINUM), CRUSHED_SILVER = compatCrushedOre(SILVER),
+		CRUSHED_TIN = compatCrushedOre(TIN), CRUSHED_LEAD = compatCrushedOre(LEAD),
+		CRUSHED_QUICKSILVER = compatCrushedOre(QUICKSILVER), CRUSHED_BAUXITE = compatCrushedOre(ALUMINUM),
+		CRUSHED_URANIUM = compatCrushedOre(URANIUM), CRUSHED_NICKEL = compatCrushedOre(NICKEL);
 
 	// Kinetics
 
@@ -366,7 +376,8 @@ public class AllItems {
 			.register();
 	}
 
-	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(String metalName) {
+	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(CompatMetals metal) {
+		String metalName = metal.getName();
 		return REGISTRATE
 			.item("crushed_" + metalName + "_ore",
 				props -> new TagDependentIngredientItem(props, new ResourceLocation("forge", "ores/" + metalName)))

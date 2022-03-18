@@ -143,8 +143,6 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
-		event.addListener(PotionMixingRecipeManager.LISTENER);
-		event.addListener(FluidTransferRecipes.LISTENER);
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 		event.addListener(CustomFanNetworkManager.FAN_TYPE);
 		event.addListener(CustomFanNetworkManager.TRANSFORM_TYPE);

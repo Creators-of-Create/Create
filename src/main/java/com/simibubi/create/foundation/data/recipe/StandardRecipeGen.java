@@ -1,12 +1,14 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.Mods.EID;
-import static com.simibubi.create.foundation.data.recipe.Mods.IE;
-import static com.simibubi.create.foundation.data.recipe.Mods.INF;
-import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
-import static com.simibubi.create.foundation.data.recipe.Mods.MW;
-import static com.simibubi.create.foundation.data.recipe.Mods.SM;
-import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1023,15 +1025,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		CRUSHED_COPPER = blastCrushedMetal(() -> Items.COPPER_INGOT, AllItems.CRUSHED_COPPER::get),
 		CRUSHED_ZINC = blastCrushedMetal(AllItems.ZINC_INGOT::get, AllItems.CRUSHED_ZINC::get),
 
-		CRUSHED_OSMIUM = blastModdedCrushedMetal(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
-		CRUSHED_PLATINUM = blastModdedCrushedMetal(AllItems.CRUSHED_PLATINUM, "platinum", SM),
-		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, "silver", MW, TH, IE, SM, INF),
-		CRUSHED_TIN = blastModdedCrushedMetal(AllItems.CRUSHED_TIN, "tin", MEK, TH, MW, SM),
-		CRUSHED_LEAD = blastModdedCrushedMetal(AllItems.CRUSHED_LEAD, "lead", MEK, MW, TH, IE, SM, EID),
-		CRUSHED_QUICKSILVER = blastModdedCrushedMetal(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
-		CRUSHED_BAUXITE = blastModdedCrushedMetal(AllItems.CRUSHED_BAUXITE, "aluminum", IE, SM),
-		CRUSHED_URANIUM = blastModdedCrushedMetal(AllItems.CRUSHED_URANIUM, "uranium", MEK, IE, SM),
-		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, "nickel", TH, IE, SM),
+		CRUSHED_OSMIUM = blastModdedCrushedMetal(AllItems.CRUSHED_OSMIUM, OSMIUM),
+		CRUSHED_PLATINUM = blastModdedCrushedMetal(AllItems.CRUSHED_PLATINUM, PLATINUM),
+		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, SILVER),
+		CRUSHED_TIN = blastModdedCrushedMetal(AllItems.CRUSHED_TIN, TIN),
+		CRUSHED_LEAD = blastModdedCrushedMetal(AllItems.CRUSHED_LEAD, LEAD),
+		CRUSHED_QUICKSILVER = blastModdedCrushedMetal(AllItems.CRUSHED_QUICKSILVER, QUICKSILVER),
+		CRUSHED_BAUXITE = blastModdedCrushedMetal(AllItems.CRUSHED_BAUXITE, ALUMINUM),
+		CRUSHED_URANIUM = blastModdedCrushedMetal(AllItems.CRUSHED_URANIUM, URANIUM),
+		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, NICKEL),
 
 		ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_ore")
 			.viaCookingTag(() -> AllTags.forgeItemTag("ores/zinc"))
@@ -1089,8 +1091,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace();
 	}
 
-	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, String metalName, Mods... mods) {
-		for (Mods mod : mods) {
+	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
+		String metalName = metal.getName();
+		for (Mods mod : metal.getMods()) {
 			ResourceLocation ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();
 			create(ingot).withSuffix("_compat_" + modId)

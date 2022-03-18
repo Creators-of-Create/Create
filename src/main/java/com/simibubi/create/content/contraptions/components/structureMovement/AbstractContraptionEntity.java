@@ -51,7 +51,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -446,8 +445,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
 
-		discard();
-
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
 
@@ -463,6 +460,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			((AbstractContraptionEntity) entity).disassemble();
 		}
 
+		discard();
+		
 		ejectPassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
 		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(level, blockPosition());
@@ -551,8 +550,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
-			String srg = "f_146795_"; // removalReason
-			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
+			entity.removalReason = RemovalReason.UNLOADED_TO_CHUNK;
 
 			// Gather passengers into same chunk when saving
 			Vec3 prevVec = entity.position();
@@ -560,7 +558,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
-			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
+			entity.removalReason = null;
 		}
 
 		CompoundTag tag = super.saveWithoutId(nbt);

@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 
 public class AllTags {
@@ -81,7 +82,9 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true), FORGE("forge"), TIC("tconstruct")
+		MOD(Create.ID, false, true),
+		FORGE("forge"),
+		TIC("tconstruct")
 
 		;
 
@@ -108,7 +111,6 @@ public class AllTags {
 		FAN_TRANSPARENT,
 		ORE_OVERRIDE_STONE,
 		SAFE_NBT,
-		SAILS,
 		SEATS,
 		TOOLBOXES,
 		VALVE_HANDLES,
@@ -183,8 +185,8 @@ public class AllTags {
 
 	public enum AllItemTags {
 
-		BLAZE_BURNER_REGULAR_FUEL,
-		BLAZE_BURNER_SPECIAL_FUEL,
+		BLAZE_BURNER_FUEL_REGULAR(MOD, "blaze_burner_fuel/regular"),
+		BLAZE_BURNER_FUEL_SPECIAL(MOD, "blaze_burner_fuel/special"),
 		CREATE_INGOTS,
 		CRUSHED_ORES,
 		SANDPAPER,
@@ -255,7 +257,8 @@ public class AllTags {
 
 	public enum AllFluidTags {
 
-		NO_INFINITE_DRAINING(MOD, true, false),
+		BOTTOMLESS_ALLOW(MOD, "bottomless/allow"),
+		BOTTOMLESS_DENY(MOD, "bottomless/deny"),
 
 		HONEY(FORGE)
 
@@ -314,12 +317,10 @@ public class AllTags {
 				.addTag(child));
 		}
 
-		private static void loadClass() {}
-
 	}
 
 	public static void register() {
-		AllFluidTags.loadClass();
+		AllFluidTags.BOTTOMLESS_ALLOW.add(Fluids.WATER, Fluids.LAVA);
 
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);

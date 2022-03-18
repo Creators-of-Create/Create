@@ -12,15 +12,15 @@ public class TagDependentIngredientItem extends Item {
 
 	private ResourceLocation tag;
 
-	public TagDependentIngredientItem(Properties p_i48487_1_, ResourceLocation tag) {
-		super(p_i48487_1_);
+	public TagDependentIngredientItem(Properties properties, ResourceLocation tag) {
+		super(properties);
 		this.tag = tag;
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> list) {
 		if (!shouldHide())
-			super.fillItemCategory(p_150895_1_, p_150895_2_);
+			super.fillItemCategory(tab, list);
 	}
 
 	public boolean shouldHide() {

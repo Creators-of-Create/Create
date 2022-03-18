@@ -86,7 +86,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		public List<ItemStack> getOutputs() {
 			return outputs;
 		}
-		
+
 		public List<List<ItemStack>> getCondensedOutputs() {
 			List<List<ItemStack>> result = new ArrayList<>();
 			int index = 0;
@@ -104,6 +104,11 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 			return result;
 		}
 
+		@Override
+		public boolean isSpecial() {
+			return true;
+		}
+
 		public static List<CondensedBlockCuttingRecipe> condenseRecipes(List<Recipe<?>> stoneCuttingRecipes) {
 			List<CondensedBlockCuttingRecipe> condensed = new ArrayList<>();
 			Recipes: for (Recipe<?> recipe : stoneCuttingRecipes) {
@@ -119,11 +124,6 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 				condensed.add(cr);
 			}
 			return condensed;
-		}
-		
-		@Override
-		public boolean isSpecial() {
-			return true;
 		}
 
 	}

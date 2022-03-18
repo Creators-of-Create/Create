@@ -1,9 +1,9 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,53 +41,47 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		drain = new AnimatedItemDrain();
 	}
 
-	public static List<EmptyingRecipe> getRecipes(IIngredientManager ingredientManager) {
-		List<EmptyingRecipe> recipes = new ArrayList<>();
+	public static void consumeRecipes(Consumer<EmptyingRecipe> consumer, IIngredientManager ingredientManager) {
+		for (ItemStack stack : ingredientManager.getAllIngredients(VanillaTypes.ITEM)) {
+			if (stack.getItem() instanceof PotionItem) {
+				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
+				Ingredient potion = Ingredient.of(stack);
+				consumer.accept(new ProcessingRecipeBuilder<>(EmptyingRecipe::new, Create.asResource("potions"))
+					.withItemIngredients(potion)
+					.withFluidOutputs(fluidFromPotionItem)
+					.withSingleItemOutput(new ItemStack(Items.GLASS_BOTTLE))
+					.build());
+				continue;
+			}
 
-		ingredientManager.getAllIngredients(VanillaTypes.ITEM)
-			.stream()
-			.forEach(stack -> {
-				if (stack.getItem() instanceof PotionItem) {
-					FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-					Ingredient potion = Ingredient.of(stack);
-					recipes.add(new ProcessingRecipeBuilder<>(EmptyingRecipe::new, Create.asResource("potions"))
-						.withItemIngredients(potion)
-						.withFluidOutputs(fluidFromPotionItem)
-						.withSingleItemOutput(new ItemStack(Items.GLASS_BOTTLE))
+			LazyOptional<IFluidHandlerItem> capability =
+				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			if (!capability.isPresent())
+				continue;
+
+			ItemStack copy = stack.copy();
+			capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			IFluidHandlerItem handler = capability.orElse(null);
+			FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
+			ItemStack result = handler.getContainer();
+			if (extracted.isEmpty())
+				continue;
+			if (result.isEmpty())
+				continue;
+
+			Ingredient ingredient = Ingredient.of(stack);
+			ResourceLocation itemName = stack.getItem()
+				.getRegistryName();
+			ResourceLocation fluidName = extracted.getFluid()
+				.getRegistryName();
+
+			consumer.accept(new ProcessingRecipeBuilder<>(EmptyingRecipe::new,
+				Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"
+					+ fluidName.getNamespace() + "_" + fluidName.getPath())).withItemIngredients(ingredient)
+						.withFluidOutputs(extracted)
+						.withSingleItemOutput(result)
 						.build());
-					return;
-				}
-
-				LazyOptional<IFluidHandlerItem> capability =
-					stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-				if (!capability.isPresent())
-					return;
-
-				ItemStack copy = stack.copy();
-				capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-				IFluidHandlerItem handler = capability.orElse(null);
-				FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
-				ItemStack result = handler.getContainer();
-				if (extracted.isEmpty())
-					return;
-				if (result.isEmpty())
-					return;
-
-				Ingredient ingredient = Ingredient.of(stack);
-				ResourceLocation itemName = stack.getItem()
-					.getRegistryName();
-				ResourceLocation fluidName = extracted.getFluid()
-					.getRegistryName();
-
-				recipes.add(new ProcessingRecipeBuilder<>(EmptyingRecipe::new,
-					Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"
-						+ fluidName.getNamespace() + "_" + fluidName.getPath())).withItemIngredients(ingredient)
-							.withFluidOutputs(extracted)
-							.withSingleItemOutput(result)
-							.build());
-			});
-
-		return recipes;
+		}
 	}
 
 	@Override

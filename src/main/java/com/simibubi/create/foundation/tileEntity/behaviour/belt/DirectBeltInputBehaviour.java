@@ -30,7 +30,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
 
 	private InsertionCallback tryInsert;
 	private AvailabilityPredicate canInsert;
