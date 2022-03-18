@@ -1,9 +1,45 @@
 package com.simibubi.create.compat.jei;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
 import com.google.common.base.Predicates;
-import com.simibubi.create.*;
-import com.simibubi.create.compat.jei.category.*;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.compat.jei.category.CrushingCategory;
+import com.simibubi.create.compat.jei.category.CustomFanCategory;
+import com.simibubi.create.compat.jei.category.DeployingCategory;
+import com.simibubi.create.compat.jei.category.FanBlastingCategory;
+import com.simibubi.create.compat.jei.category.FanHauntingCategory;
+import com.simibubi.create.compat.jei.category.FanSmokingCategory;
+import com.simibubi.create.compat.jei.category.FanWashingCategory;
+import com.simibubi.create.compat.jei.category.ItemDrainCategory;
+import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
+import com.simibubi.create.compat.jei.category.MillingCategory;
+import com.simibubi.create.compat.jei.category.MixingCategory;
+import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
+import com.simibubi.create.compat.jei.category.PackingCategory;
+import com.simibubi.create.compat.jei.category.PolishingCategory;
+import com.simibubi.create.compat.jei.category.PressingCategory;
+import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
+import com.simibubi.create.compat.jei.category.SawingCategory;
+import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
+import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
@@ -24,7 +60,12 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.registration.*;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -37,161 +78,194 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.ModList;
 
-import javax.annotation.Nonnull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 @JeiPlugin
 @SuppressWarnings("unused")
 public class CreateJEI implements IModPlugin {
 
 	private static final ResourceLocation ID = Create.asResource("jei_plugin");
-
-	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
+	public IIngredientManager ingredientManager;
 	private final CreateRecipeCategory<?>
 
-		milling = register("milling", MillingCategory::new).addTypedRecipes(AllRecipeTypes.MILLING)
-		.catalyst(AllBlocks.MILLSTONE::get)
-		.build(),
+			milling = register("milling", MillingCategory::new).addTypedRecipes(AllRecipeTypes.MILLING)
+			.catalyst(AllBlocks.MILLSTONE::get)
+			.build(),
 
-	crushing = register("crushing", CrushingCategory::new).addTypedRecipes(AllRecipeTypes.CRUSHING)
-		.addTypedRecipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
-		.catalyst(AllBlocks.CRUSHING_WHEEL::get)
-		.build(),
+		crushing = register("crushing", CrushingCategory::new).addTypedRecipes(AllRecipeTypes.CRUSHING)
+				.addTypedRecipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
+				.catalyst(AllBlocks.CRUSHING_WHEEL::get)
+				.build(),
 
-	pressing = register("pressing", PressingCategory::new).addTypedRecipes(AllRecipeTypes.PRESSING)
-		.catalyst(AllBlocks.MECHANICAL_PRESS::get)
-		.build(),
+		pressing = register("pressing", PressingCategory::new).addTypedRecipes(AllRecipeTypes.PRESSING)
+				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
+				.build(),
 
-	washing = register("fan_washing", FanWashingCategory::new).addTypedRecipes(AllRecipeTypes.SPLASHING)
-		.catalystStack(ProcessingViaFanCategory.getFan("fan_washing"))
-		.build(),
+		washing = register("fan_washing", FanWashingCategory::new).addTypedRecipes(AllRecipeTypes.SPLASHING)
+				.catalystStack(ProcessingViaFanCategory.getFan("fan_washing"))
+				.build(),
 
-	smoking = register("fan_smoking", FanSmokingCategory::new).addTypedRecipes(() -> RecipeType.SMOKING)
-		.catalystStack(ProcessingViaFanCategory.getFan("fan_smoking"))
-		.build(),
+		smoking = register("fan_smoking", FanSmokingCategory::new).addTypedRecipes(() -> RecipeType.SMOKING)
+				.catalystStack(ProcessingViaFanCategory.getFan("fan_smoking"))
+				.build(),
 
-	blasting = register("fan_blasting", FanBlastingCategory::new)
-		.addTypedRecipesExcluding(() -> RecipeType.SMELTING, () -> RecipeType.BLASTING)
-		.addTypedRecipes(() -> RecipeType.BLASTING)
-		.removeRecipes(() -> RecipeType.SMOKING)
-		.catalystStack(ProcessingViaFanCategory.getFan("fan_blasting"))
-		.build(),
+		blasting = register("fan_blasting", FanBlastingCategory::new)
+				.addTypedRecipesExcluding(() -> RecipeType.SMELTING, () -> RecipeType.BLASTING)
+				.addTypedRecipes(() -> RecipeType.BLASTING)
+				.removeRecipes(() -> RecipeType.SMOKING)
+				.catalystStack(ProcessingViaFanCategory.getFan("fan_blasting"))
+				.build(),
 
-	custom_fan = register("custom_fan", CustomFanCategory::new).addTypedRecipes(AllRecipeTypes.CUSTOM_FAN)
-		.catalystStack(ProcessingViaFanCategory.getFan("custom_fan")).build(),
+		custom_fan = register("custom_fan", CustomFanCategory::new).addTypedRecipes(AllRecipeTypes.CUSTOM_FAN)
+				.catalystStack(ProcessingViaFanCategory.getFan("custom_fan")).build(),
 
-	haunting = register("fan_haunting", FanHauntingCategory::new).addTypedRecipes(AllRecipeTypes.HAUNTING)
-		.catalystStack(ProcessingViaFanCategory.getFan("fan_haunting")).build(),
+		haunting = register("fan_haunting", FanHauntingCategory::new).addTypedRecipes(AllRecipeTypes.HAUNTING)
+				.catalystStack(ProcessingViaFanCategory.getFan("fan_haunting")).build(),
 
-	mixing = register("mixing", MixingCategory::standard).addTypedRecipes(AllRecipeTypes.MIXING)
-		.catalyst(AllBlocks.MECHANICAL_MIXER::get)
-		.catalyst(AllBlocks.BASIN::get)
-		.build(),
+		mixing = register("mixing", MixingCategory::standard).addTypedRecipes(AllRecipeTypes.MIXING)
+				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
+				.catalyst(AllBlocks.BASIN::get)
+				.build(),
 
-	seqAssembly = register("sequenced_assembly", SequencedAssemblyCategory::new)
-		.addTypedRecipes(AllRecipeTypes.SEQUENCED_ASSEMBLY)
-		.build(),
+		seqAssembly = register("sequenced_assembly", SequencedAssemblyCategory::new)
+				.addTypedRecipes(AllRecipeTypes.SEQUENCED_ASSEMBLY)
+				.build(),
 
-	autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-		.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
-				.size() > 1 && !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.isManualRecipe(r),
-			BasinRecipe::convertShapeless)
-		.catalyst(AllBlocks.MECHANICAL_MIXER::get)
-		.catalyst(AllBlocks.BASIN::get)
-		.enableWhen(c -> c.allowShapelessInMixer)
-		.build(),
+		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
+				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
+								.size() > 1 && !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.isManualRecipe(r),
+						BasinRecipe::convertShapeless)
+				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
+				.catalyst(AllBlocks.BASIN::get)
+				.enableWhen(c -> c.allowShapelessInMixer)
+				.build(),
 
-	brewing = register("automatic_brewing", MixingCategory::autoBrewing)
-		.addRecipes(() -> PotionMixingRecipes.ALL)
-		.catalyst(AllBlocks.MECHANICAL_MIXER::get)
-		.catalyst(AllBlocks.BASIN::get)
-		.build(),
+		brewing = register("automatic_brewing", MixingCategory::autoBrewing)
+				.addRecipes(() -> PotionMixingRecipes.ALL)
+				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
+				.catalyst(AllBlocks.BASIN::get)
+				.build(),
 
-	sawing = register("sawing", SawingCategory::new).addTypedRecipes(AllRecipeTypes.CUTTING)
-		.catalyst(AllBlocks.MECHANICAL_SAW::get)
-		.build(),
+		sawing = register("sawing", SawingCategory::new).addTypedRecipes(AllRecipeTypes.CUTTING)
+				.catalyst(AllBlocks.MECHANICAL_SAW::get)
+				.build(),
 
-	blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
-		.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(
-			RecipeType.STONECUTTING, recipe -> AllRecipeTypes.isManualRecipe(recipe))))
-		.catalyst(AllBlocks.MECHANICAL_SAW::get)
-		.enableWhen(c -> c.allowStonecuttingOnSaw)
-		.build(),
+		blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
+				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(
+						RecipeType.STONECUTTING, recipe -> AllRecipeTypes.isManualRecipe(recipe))))
+				.catalyst(AllBlocks.MECHANICAL_SAW::get)
+				.enableWhen(c -> c.allowStonecuttingOnSaw)
+				.build(),
 
-	woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
-		.addRecipes(() -> CondensedBlockCuttingRecipe
-			.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(),
-				recipe -> AllRecipeTypes.isManualRecipe(recipe))))
-		.catalyst(AllBlocks.MECHANICAL_SAW::get)
-		.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
-			.isLoaded("druidcraft"))
-		.build(),
+		woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
+				.addRecipes(() -> CondensedBlockCuttingRecipe
+						.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(),
+								recipe -> AllRecipeTypes.isManualRecipe(recipe))))
+				.catalyst(AllBlocks.MECHANICAL_SAW::get)
+				.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
+						.isLoaded("druidcraft"))
+				.build(),
 
-	packing = register("packing", PackingCategory::standard).addTypedRecipes(AllRecipeTypes.COMPACTING)
-		.catalyst(AllBlocks.MECHANICAL_PRESS::get)
-		.catalyst(AllBlocks.BASIN::get)
-		.build(),
+		packing = register("packing", PackingCategory::standard).addTypedRecipes(AllRecipeTypes.COMPACTING)
+				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
+				.catalyst(AllBlocks.BASIN::get)
+				.build(),
 
-	autoSquare = register("automatic_packing", PackingCategory::autoSquare)
-		.addAllRecipesIf(
-			r -> (r instanceof CraftingRecipe) && !(r instanceof MechanicalCraftingRecipe)
-				&& MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.isManualRecipe(r),
-			BasinRecipe::convertShapeless)
-		.catalyst(AllBlocks.MECHANICAL_PRESS::get)
-		.catalyst(AllBlocks.BASIN::get)
-		.enableWhen(c -> c.allowShapedSquareInPress)
-		.build(),
+		autoSquare = register("automatic_packing", PackingCategory::autoSquare)
+				.addAllRecipesIf(
+						r -> (r instanceof CraftingRecipe) && !(r instanceof MechanicalCraftingRecipe)
+								&& MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.isManualRecipe(r),
+						BasinRecipe::convertShapeless)
+				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
+				.catalyst(AllBlocks.BASIN::get)
+				.enableWhen(c -> c.allowShapedSquareInPress)
+				.build(),
 
-	polishing = register("sandpaper_polishing", PolishingCategory::new).addTypedRecipes(AllRecipeTypes.SANDPAPER_POLISHING)
-		.catalyst(AllItems.SAND_PAPER::get)
-		.catalyst(AllItems.RED_SAND_PAPER::get)
-		.build(),
+		polishing = register("sandpaper_polishing", PolishingCategory::new).addTypedRecipes(AllRecipeTypes.SANDPAPER_POLISHING)
+				.catalyst(AllItems.SAND_PAPER::get)
+				.catalyst(AllItems.RED_SAND_PAPER::get)
+				.build(),
 
-	deploying = register("deploying", DeployingCategory::new)
-		.addTypedRecipes(AllRecipeTypes.DEPLOYING)
-		.addTypedRecipes(AllRecipeTypes.SANDPAPER_POLISHING::getType, DeployerApplicationRecipe::convert)
-		.catalyst(AllBlocks.DEPLOYER::get)
-		.catalyst(AllBlocks.DEPOT::get)
-		.catalyst(AllItems.BELT_CONNECTOR::get)
-		.build(),
+		deploying = register("deploying", DeployingCategory::new)
+				.addTypedRecipes(AllRecipeTypes.DEPLOYING)
+				.addTypedRecipes(AllRecipeTypes.SANDPAPER_POLISHING::getType, DeployerApplicationRecipe::convert)
+				.catalyst(AllBlocks.DEPLOYER::get)
+				.catalyst(AllBlocks.DEPOT::get)
+				.catalyst(AllItems.BELT_CONNECTOR::get)
+				.build(),
 
-	mysteryConversion = register("mystery_conversion", MysteriousItemConversionCategory::new)
-		.addRecipes(() -> MysteriousItemConversionCategory.RECIPES)
-		.build(),
+		mysteryConversion = register("mystery_conversion", MysteriousItemConversionCategory::new)
+				.addRecipes(() -> MysteriousItemConversionCategory.RECIPES)
+				.build(),
 
-	spoutFilling = register("spout_filling", SpoutCategory::new).addTypedRecipes(AllRecipeTypes.FILLING)
-		.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add, ingredientManager))
-		.catalyst(AllBlocks.SPOUT::get)
-		.build(),
+		spoutFilling = register("spout_filling", SpoutCategory::new).addTypedRecipes(AllRecipeTypes.FILLING)
+				.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add, ingredientManager))
+				.catalyst(AllBlocks.SPOUT::get)
+				.build(),
 
-	draining = register("draining", ItemDrainCategory::new)
-		.addRecipeListConsumer(recipes -> ItemDrainCategory.consumeRecipes(recipes::add, ingredientManager))
-		.addTypedRecipes(AllRecipeTypes.EMPTYING)
-		.catalyst(AllBlocks.ITEM_DRAIN::get)
-		.build(),
+		draining = register("draining", ItemDrainCategory::new)
+				.addRecipeListConsumer(recipes -> ItemDrainCategory.consumeRecipes(recipes::add, ingredientManager))
+				.addTypedRecipes(AllRecipeTypes.EMPTYING)
+				.catalyst(AllBlocks.ITEM_DRAIN::get)
+				.build(),
 
-	autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
-		.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
-			.size() == 1)
-		.addTypedRecipesIf(() -> RecipeType.CRAFTING, recipe -> recipe instanceof IShapedRecipe<?> && !AllRecipeTypes.isManualRecipe(recipe))
-		.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-		.enableWhen(c -> c.allowRegularCraftingInCrafter)
-		.build(),
+		autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
+				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>) && r.getIngredients()
+						.size() == 1)
+				.addTypedRecipesIf(() -> RecipeType.CRAFTING, recipe -> recipe instanceof IShapedRecipe<?> && !AllRecipeTypes.isManualRecipe(recipe))
+				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
+				.enableWhen(c -> c.allowRegularCraftingInCrafter)
+				.build(),
 
-	mechanicalCrafting = register("mechanical_crafting", MechanicalCraftingCategory::new)
-		.addTypedRecipes(AllRecipeTypes.MECHANICAL_CRAFTING)
-		.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-		.build();
+		mechanicalCrafting = register("mechanical_crafting", MechanicalCraftingCategory::new)
+				.addTypedRecipes(AllRecipeTypes.MECHANICAL_CRAFTING)
+				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
+				.build();
+
+	public static void consumeAllRecipes(Consumer<Recipe<?>> consumer) {
+		Minecraft.getInstance()
+				.getConnection()
+				.getRecipeManager()
+				.getRecipes()
+				.forEach(consumer);
+	}
+
+	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
+		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
+				.getConnection()
+				.getRecipeManager()
+				.recipes
+				.get(type);
+		if (map != null) {
+			map.values().forEach(consumer);
+		}
+	}
+
+	public static List<Recipe<?>> getTypedRecipes(RecipeType<?> type) {
+		List<Recipe<?>> recipes = new ArrayList<>();
+		consumeTypedRecipes(recipes::add, type);
+		return recipes;
+	}
+
+	public static List<Recipe<?>> getTypedRecipesExcluding(RecipeType<?> type, Predicate<Recipe<?>> exclusionPred) {
+		List<Recipe<?>> recipes = getTypedRecipes(type);
+		recipes.removeIf(exclusionPred);
+		return recipes;
+	}
+
+	public static boolean doInputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
+		if (recipe1.getIngredients().isEmpty() || recipe2.getIngredients().isEmpty()) {
+			return false;
+		}
+		ItemStack[] matchingStacks = recipe1.getIngredients()
+				.get(0)
+				.getItems();
+		if (matchingStacks.length == 0) {
+			return false;
+		}
+		return recipe2.getIngredients()
+				.get(0)
+				.test(matchingStacks[0]);
+	}
 
 	private <T extends Recipe<?>> CategoryBuilder<T> register(String name,
 															  Supplier<CreateRecipeCategory<T>> supplier) {
@@ -228,7 +302,7 @@ public class CreateJEI implements IModPlugin {
 		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
 
 		registration.addRecipes(ToolboxColoringRecipeMaker.createRecipes()
-			.collect(Collectors.toList()), VanillaRecipeCategoryUid.CRAFTING);
+				.collect(Collectors.toList()), VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@Override
@@ -247,8 +321,8 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {
-		private CreateRecipeCategory<T> category;
-		private List<Consumer<List<Recipe<?>>>> recipeListConsumers = new ArrayList<>();
+		private final CreateRecipeCategory<T> category;
+		private final List<Consumer<List<Recipe<?>>>> recipeListConsumers = new ArrayList<>();
 		private Predicate<CRecipes> pred;
 
 		public CategoryBuilder(String name, Supplier<CreateRecipeCategory<T>> category) {
@@ -336,7 +410,7 @@ public class CreateJEI implements IModPlugin {
 
 		public CategoryBuilder<T> catalyst(Supplier<ItemLike> supplier) {
 			return catalystStack(() -> new ItemStack(supplier.get()
-				.asItem()));
+					.asItem()));
 		}
 
 		public CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
@@ -346,7 +420,7 @@ public class CreateJEI implements IModPlugin {
 
 		public CategoryBuilder<T> enableWhen(Function<CRecipes, ConfigBool> configValue) {
 			pred = c -> configValue.apply(c)
-				.get();
+					.get();
 			return this;
 		}
 
@@ -367,54 +441,6 @@ public class CreateJEI implements IModPlugin {
 			return category;
 		}
 
-	}
-
-	public static void consumeAllRecipes(Consumer<Recipe<?>> consumer) {
-		Minecraft.getInstance()
-			.getConnection()
-			.getRecipeManager()
-			.getRecipes()
-			.forEach(consumer);
-	}
-
-	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
-		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
-			.getConnection()
-			.getRecipeManager()
-			.recipes
-			.get(type);
-		if (map != null) {
-			map.values().forEach(consumer);
-		}
-	}
-
-	public static List<Recipe<?>> getTypedRecipes(RecipeType<?> type) {
-		List<Recipe<?>> recipes = new ArrayList<>();
-		consumeTypedRecipes(recipes::add, type);
-		return recipes;
-	}
-
-	public static List<Recipe<?>> getTypedRecipesExcluding(RecipeType<?> type, Predicate<Recipe<?>> exclusionPred) {
-		List<Recipe<?>> recipes = getTypedRecipes(type);
-		recipes.removeIf(exclusionPred);
-		return recipes;
-	}
-
-	public static boolean doInputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
-		if (recipe1.getIngredients().isEmpty() || recipe2.getIngredients().isEmpty()) {
-			return false;
-		}
-		ItemStack[] matchingStacks = recipe1.getIngredients()
-			.get(0)
-			.getItems();
-		if (matchingStacks.length == 0) {
-			return false;
-		}
-		if (recipe2.getIngredients()
-			.get(0)
-			.test(matchingStacks[0]))
-			return true;
-		return false;
 	}
 
 }
