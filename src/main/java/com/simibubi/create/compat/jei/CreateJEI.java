@@ -83,13 +83,14 @@ import net.minecraftforge.fml.ModList;
 public class CreateJEI implements IModPlugin {
 
 	private static final ResourceLocation ID = Create.asResource("jei_plugin");
-	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
+
 	public IIngredientManager ingredientManager;
+	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private final CreateRecipeCategory<?>
 
-			milling = register("milling", MillingCategory::new).addTypedRecipes(AllRecipeTypes.MILLING)
-			.catalyst(AllBlocks.MILLSTONE::get)
-			.build(),
+		milling = register("milling", MillingCategory::new).addTypedRecipes(AllRecipeTypes.MILLING)
+				.catalyst(AllBlocks.MILLSTONE::get)
+				.build(),
 
 		crushing = register("crushing", CrushingCategory::new).addTypedRecipes(AllRecipeTypes.CRUSHING)
 				.addTypedRecipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
@@ -221,52 +222,6 @@ public class CreateJEI implements IModPlugin {
 				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 				.build();
 
-	public static void consumeAllRecipes(Consumer<Recipe<?>> consumer) {
-		Minecraft.getInstance()
-				.getConnection()
-				.getRecipeManager()
-				.getRecipes()
-				.forEach(consumer);
-	}
-
-	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
-		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
-				.getConnection()
-				.getRecipeManager()
-				.recipes
-				.get(type);
-		if (map != null) {
-			map.values().forEach(consumer);
-		}
-	}
-
-	public static List<Recipe<?>> getTypedRecipes(RecipeType<?> type) {
-		List<Recipe<?>> recipes = new ArrayList<>();
-		consumeTypedRecipes(recipes::add, type);
-		return recipes;
-	}
-
-	public static List<Recipe<?>> getTypedRecipesExcluding(RecipeType<?> type, Predicate<Recipe<?>> exclusionPred) {
-		List<Recipe<?>> recipes = getTypedRecipes(type);
-		recipes.removeIf(exclusionPred);
-		return recipes;
-	}
-
-	public static boolean doInputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
-		if (recipe1.getIngredients().isEmpty() || recipe2.getIngredients().isEmpty()) {
-			return false;
-		}
-		ItemStack[] matchingStacks = recipe1.getIngredients()
-				.get(0)
-				.getItems();
-		if (matchingStacks.length == 0) {
-			return false;
-		}
-		return recipe2.getIngredients()
-				.get(0)
-				.test(matchingStacks[0]);
-	}
-
 	private <T extends Recipe<?>> CategoryBuilder<T> register(String name,
 															  Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<T>(name, supplier);
@@ -300,7 +255,6 @@ public class CreateJEI implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		ingredientManager = registration.getIngredientManager();
 		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
-
 		registration.addRecipes(ToolboxColoringRecipeMaker.createRecipes()
 				.collect(Collectors.toList()), VanillaRecipeCategoryUid.CRAFTING);
 	}
@@ -321,8 +275,8 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {
-		private final CreateRecipeCategory<T> category;
-		private final List<Consumer<List<Recipe<?>>>> recipeListConsumers = new ArrayList<>();
+		private CreateRecipeCategory<T> category;
+		private List<Consumer<List<Recipe<?>>>> recipeListConsumers = new ArrayList<>();
 		private Predicate<CRecipes> pred;
 
 		public CategoryBuilder(String name, Supplier<CreateRecipeCategory<T>> category) {
@@ -441,6 +395,54 @@ public class CreateJEI implements IModPlugin {
 			return category;
 		}
 
+	}
+
+	public static void consumeAllRecipes(Consumer<Recipe<?>> consumer) {
+		Minecraft.getInstance()
+				.getConnection()
+				.getRecipeManager()
+				.getRecipes()
+				.forEach(consumer);
+	}
+
+	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
+		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
+				.getConnection()
+				.getRecipeManager()
+				.recipes
+				.get(type);
+		if (map != null) {
+			map.values().forEach(consumer);
+		}
+	}
+
+	public static List<Recipe<?>> getTypedRecipes(RecipeType<?> type) {
+		List<Recipe<?>> recipes = new ArrayList<>();
+		consumeTypedRecipes(recipes::add, type);
+		return recipes;
+	}
+
+	public static List<Recipe<?>> getTypedRecipesExcluding(RecipeType<?> type, Predicate<Recipe<?>> exclusionPred) {
+		List<Recipe<?>> recipes = getTypedRecipes(type);
+		recipes.removeIf(exclusionPred);
+		return recipes;
+	}
+
+	public static boolean doInputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
+		if (recipe1.getIngredients().isEmpty() || recipe2.getIngredients().isEmpty()) {
+			return false;
+		}
+		ItemStack[] matchingStacks = recipe1.getIngredients()
+				.get(0)
+				.getItems();
+		if (matchingStacks.length == 0) {
+			return false;
+		}
+		if (recipe2.getIngredients()
+				.get(0)
+				.test(matchingStacks[0]))
+			return true;
+		return false;
 	}
 
 }
