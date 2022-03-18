@@ -48,6 +48,17 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 	}
 
 	@Override
+	public boolean hasAnalogOutputSignal(BlockState pState) {
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+		return getTileEntityOptional(pLevel, pPos).map(ste -> ste.trainPresent ? 15 : 0)
+			.orElse(0);
+	}
+
+	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
 		super.fillItemCategory(pTab, pItems);
 		pItems.add(AllItems.SCHEDULE.asStack());
@@ -62,7 +73,7 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
 		if (AllItems.WRENCH.isIn(itemInHand))
 			return InteractionResult.PASS;
-		if (itemInHand.getItem() == Items.SPONGE) 
+		if (itemInHand.getItem() == Items.SPONGE)
 			Create.RAILWAYS.trains.clear();
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));

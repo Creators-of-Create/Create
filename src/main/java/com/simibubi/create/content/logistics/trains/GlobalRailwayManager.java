@@ -176,9 +176,9 @@ public class GlobalRailwayManager {
 		for (TrackGraph graph : trackNetworks.values())
 			graph.tickPoints(false);
 
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_K))
-			trackNetworks.values()
-				.forEach(TrackGraph::debugViewReserved);
+//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_K))
+//			trackNetworks.values()
+//				.forEach(TrackGraph::debugViewReserved);
 //		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown())
 //			trackNetworks.values()
 //				.forEach(TrackGraph::debugViewNodes);

@@ -18,7 +18,7 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	public BlockEntityType<? extends HauntedBellTileEntity> getTileEntityType() {
 		return AllTileEntities.HAUNTED_BELL.get();
 	}
-	
+
 	@Override
 	public Class<HauntedBellTileEntity> getTileEntityClass() {
 		return HauntedBellTileEntity.class;
@@ -31,8 +31,11 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (oldState.getBlock() != this)
-			withTileEntityDo(world, pos, HauntedBellTileEntity::startEffect);
+		if (oldState.getBlock() != this && !world.isClientSide)
+			withTileEntityDo(world, pos, hbte -> {
+				hbte.effectTicks = HauntedBellTileEntity.EFFECT_TICKS;
+				hbte.sendData();
+			});
 	}
 
 }

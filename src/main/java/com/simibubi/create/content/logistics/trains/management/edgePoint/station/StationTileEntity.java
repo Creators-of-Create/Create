@@ -164,7 +164,7 @@ public class StationTileEntity extends SmartTileEntity {
 			this.trainPresent = trainPresent;
 			this.trainCanDisassemble = canDisassemble;
 			this.trainBackwards = imminentTrain != null && imminentTrain.currentlyBackwards;
-			sendData();
+			notifyUpdate();
 		}
 	}
 
