@@ -81,7 +81,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		if (blockState == null)
 			return false;
 		Direction direction = blockState.getValue(CrushingWheelControllerBlock.FACING);
-		return direction == Direction.DOWN || direction.getOpposite() == side;
+		return direction == Direction.DOWN || direction == side;
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
 			// Output Items
 			if (facing != Direction.UP) {
-				Direction inputDir = facing.getOpposite();
+				Direction inputDir = facing;
 				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1f * offset : 0f, (-1f),
 					facing.getAxis() == Axis.Z ? 1f * offset : 0f);
 				DirectBeltInputBehaviour behaviour =
