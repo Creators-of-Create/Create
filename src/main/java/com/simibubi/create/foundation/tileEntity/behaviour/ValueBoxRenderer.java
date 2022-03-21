@@ -17,11 +17,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ValueBoxRenderer {
 
-	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light,
+		int overlay) {
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+			.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
@@ -41,7 +44,9 @@ public class ValueBoxRenderer {
 				return NUDGE;
 			if (block instanceof FenceBlock)
 				return NUDGE;
-			if (BlockTags.BUTTONS.contains(block))
+			if (ForgeRegistries.BLOCKS.getHolder(block)
+				.map(h -> h.containsTag(BlockTags.BUTTONS))
+				.orElse(false))
 				return NUDGE;
 			if (block == Blocks.END_ROD)
 				return NUDGE;

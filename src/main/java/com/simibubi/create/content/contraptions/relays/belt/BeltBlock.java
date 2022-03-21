@@ -82,6 +82,7 @@ import net.minecraftforge.client.IBlockRenderProperties;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
 
@@ -130,7 +131,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+		Player player) {
 		return AllItems.BELT_CONNECTOR.asStack();
 	}
 
@@ -249,7 +251,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
-		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
+		boolean isDye = ForgeRegistries.ITEMS.getHolder(heldItem.getItem())
+			.map(h -> h.containsTag(Tags.Items.DYES))
+			.orElse(false);
 		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
 			.getFirst()
 			.getFluid()
@@ -603,7 +607,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
 		@Override
-		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
+		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
+			int progress, BlockState blockState) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof BeltTileEntity belt) {
 				for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {

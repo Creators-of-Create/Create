@@ -38,8 +38,9 @@ public class ConfigDrivenDecorator extends PlacementModifier {
 
 	@Override
 	public Stream<BlockPos> getPositions(PlacementContext context, Random random, BlockPos pos) {
-		ConfigDrivenOreConfiguration config = (ConfigDrivenOreConfiguration) entry().getFeature()
-			.getFirst().config;
+		ConfigDrivenOreConfiguration config = (ConfigDrivenOreConfiguration) entry().configuredFeature.value()
+			.config();
+
 		float frequency = config.getFrequency();
 		int floored = Mth.floor(frequency);
 		int count = floored + (random.nextFloat() < frequency - floored ? 1 : 0);

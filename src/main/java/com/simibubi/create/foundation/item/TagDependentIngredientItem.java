@@ -1,18 +1,18 @@
 package com.simibubi.create.foundation.item;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITagManager;
 
 public class TagDependentIngredientItem extends Item {
 
-	private ResourceLocation tag;
+	private TagKey<Item> tag;
 
-	public TagDependentIngredientItem(Properties properties, ResourceLocation tag) {
+	public TagDependentIngredientItem(Properties properties, TagKey<Item> tag) {
 		super(properties);
 		this.tag = tag;
 	}
@@ -24,9 +24,10 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	public boolean shouldHide() {
-		Tag<?> tag = ItemTags.getAllTags()
-			.getTag(this.tag);
-		return tag == null || tag.getValues()
+		ITagManager<Item> tags = ForgeRegistries.ITEMS.tags();
+		if (tags == null || !tags.isKnownTagName(tag))
+			return false;
+		return tags.getTag(tag)
 			.isEmpty();
 	}
 

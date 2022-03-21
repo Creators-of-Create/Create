@@ -18,7 +18,7 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.SetTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -62,7 +62,7 @@ public class MechanicalCraftingRecipeBuilder {
 	/**
 	 * Adds a key to the recipe pattern.
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200469_1_, SetTag<Item> p_200469_2_) {
+	public MechanicalCraftingRecipeBuilder key(Character p_200469_1_, TagKey<Item> p_200469_2_) {
 		return this.key(p_200469_1_, Ingredient.of(p_200469_2_));
 	}
 

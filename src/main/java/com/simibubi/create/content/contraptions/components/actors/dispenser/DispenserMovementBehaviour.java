@@ -2,11 +2,9 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import java.util.HashMap;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.mixin.accessor.DispenserBlockAccessor;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
@@ -16,21 +14,24 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.Vec3;
 
 public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_PROJECTILE_DISPENSE_BEHAVIOURS = new HashMap<>();
-	private static final DispenserLookup BEHAVIOUR_LOOKUP = new DispenserLookup();
 	private static boolean spawneggsRegistered = false;
 
 	public static void gatherMovedDispenseItemBehaviours() {
 		IMovedDispenseItemBehaviour.init();
 	}
 
-	public static void registerMovedDispenseItemBehaviour(Item item, IMovedDispenseItemBehaviour movedDispenseItemBehaviour) {
+	public static void registerMovedDispenseItemBehaviour(Item item,
+		IMovedDispenseItemBehaviour movedDispenseItemBehaviour) {
 		MOVED_DISPENSE_ITEM_BEHAVIOURS.put(item, movedDispenseItemBehaviour);
+	}
+
+	public static DispenseItemBehavior getDispenseMethod(ItemStack itemstack) {
+		return ((DispenserBlockAccessor) Blocks.DISPENSER).create$callGetDispenseMethod(itemstack);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 
-				DispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getDispenseMethod(itemstack);
+				DispenseItemBehavior idispenseitembehavior = getDispenseMethod(itemstack);
 				if (idispenseitembehavior instanceof AbstractProjectileDispenseBehavior) { // Projectile behaviours can be converted most of the time
 					IMovedDispenseItemBehaviour iMovedDispenseItemBehaviour = MovedProjectileDispenserBehaviour.of((AbstractProjectileDispenseBehavior) idispenseitembehavior);
 					setItemStackAt(location, iMovedDispenseItemBehaviour.dispense(itemstack, context, pos), context);
@@ -85,15 +86,4 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 		}
 	}
 
-	@ParametersAreNonnullByDefault
-	@MethodsReturnNonnullByDefault
-	private static class DispenserLookup extends DispenserBlock {
-		protected DispenserLookup() {
-			super(BlockBehaviour.Properties.copy(Blocks.DISPENSER));
-		}
-
-		public DispenseItemBehavior getDispenseMethod(ItemStack itemStack) {
-			return super.getDispenseMethod(itemStack);
-		}
-	}
 }

@@ -24,7 +24,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
@@ -40,6 +39,7 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BlueprintOverlayRenderer {
 
@@ -280,8 +280,12 @@ public class BlueprintOverlayRenderer {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {
 						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						TagKey<Item> itag = ItemTags.getAllTags()
-							.getTag(inTag.tagName);
+						TagKey<Item> itag = ForgeRegistries.ITEMS.tags()
+							.getTagNames()
+							.filter(tk -> tk.location()
+								.equals(inTag.tagName))
+							.findAny()
+							.orElse(null);
 						if (itag != null)
 							return Ingredient.of(itag)
 								.getItems();

@@ -60,7 +60,6 @@ import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.food.FoodProperties;
@@ -308,7 +307,8 @@ public class AllItems {
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
-			.properties(p -> p.stacksTo(1).rarity(Rarity.UNCOMMON))
+			.properties(p -> p.stacksTo(1)
+				.rarity(Rarity.UNCOMMON))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
@@ -380,7 +380,7 @@ public class AllItems {
 		String metalName = metal.getName();
 		return REGISTRATE
 			.item("crushed_" + metalName + "_ore",
-				props -> new TagDependentIngredientItem(props, new ResourceLocation("forge", "ores/" + metalName)))
+				props -> new TagDependentIngredientItem(props, AllTags.forgeItemTag("ores/" + metalName)))
 			.tag(CRUSHED_ORES.tag)
 			.register();
 	}

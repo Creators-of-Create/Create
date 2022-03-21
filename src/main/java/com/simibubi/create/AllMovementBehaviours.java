@@ -57,7 +57,7 @@ public class AllMovementBehaviours {
 		addMovementBehaviour(Blocks.BELL, new BellMovementBehaviour());
 		addMovementBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
 
-		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
+		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours(); 
 		addMovementBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());
 		addMovementBehaviour(Blocks.DROPPER, new DropperMovementBehaviour());
 	}
