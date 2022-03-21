@@ -25,7 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -206,7 +206,8 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
+		int height) {
 		if (!active || empty)
 			return;
 
@@ -279,7 +280,7 @@ public class BlueprintOverlayRenderer {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {
 						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						Tag<Item> itag = ItemTags.getAllTags()
+						TagKey<Item> itag = ItemTags.getAllTags()
 							.getTag(inTag.tagName);
 						if (itag != null)
 							return Ingredient.of(itag)

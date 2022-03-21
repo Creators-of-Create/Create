@@ -8,13 +8,13 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.TagContainer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -82,7 +82,7 @@ public class SchematicChunkSource extends ChunkSource {
 	}
 
 	@Override
-	public void tick(BooleanSupplier pHasTimeLeft) {}
+	public void tick(BooleanSupplier p_202162_, boolean p_202163_) {}
 
 	@Override
 	public int getLoadedChunksCount() {
@@ -94,7 +94,7 @@ public class SchematicChunkSource extends ChunkSource {
 		private static final class DummyLevel extends Level {
 			private RegistryAccess access;
 
-			private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, DimensionType p_46452_,
+			private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, Holder<DimensionType> p_46452_,
 				Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_) {
 				super(p_46450_, p_46451_, p_46452_, p_46453_, p_46454_, p_46455_, p_46456_);
 			}
@@ -126,7 +126,7 @@ public class SchematicChunkSource extends ChunkSource {
 			}
 
 			@Override
-			public Biome getUncachedNoiseBiome(int pX, int pY, int pZ) {
+			public Holder<Biome> getUncachedNoiseBiome(int pX, int pY, int pZ) {
 				return null;
 			}
 
@@ -139,12 +139,12 @@ public class SchematicChunkSource extends ChunkSource {
 			public void sendBlockUpdated(BlockPos pPos, BlockState pOldState, BlockState pNewState, int pFlags) {}
 
 			@Override
-			public void playSound(Player pPlayer, double pX, double pY, double pZ, SoundEvent pSound, SoundSource pCategory,
-				float pVolume, float pPitch) {}
+			public void playSound(Player pPlayer, double pX, double pY, double pZ, SoundEvent pSound,
+				SoundSource pCategory, float pVolume, float pPitch) {}
 
 			@Override
-			public void playSound(Player pPlayer, Entity pEntity, SoundEvent pEvent, SoundSource pCategory, float pVolume,
-				float pPitch) {}
+			public void playSound(Player pPlayer, Entity pEntity, SoundEvent pEvent, SoundSource pCategory,
+				float pVolume, float pPitch) {}
 
 			@Override
 			public String gatherChunkSourceStats() {
@@ -183,11 +183,6 @@ public class SchematicChunkSource extends ChunkSource {
 			}
 
 			@Override
-			public TagContainer getTagManager() {
-				return null;
-			}
-
-			@Override
 			protected LevelEntityGetter<Entity> getEntities() {
 				return null;
 			}
@@ -203,9 +198,9 @@ public class SchematicChunkSource extends ChunkSource {
 			}
 		}
 
-		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null,
-			RegistryAccess.builtin().registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION),
-			null, false, false, 0);
+		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null, RegistryAccess.BUILTIN.get()
+			.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY)
+			.getHolderOrThrow(DimensionType.OVERWORLD_LOCATION), null, false, false, 0);
 
 		public EmptierChunk(RegistryAccess registryAccess) {
 			super(DUMMY_LEVEL.withAccess(registryAccess), null);

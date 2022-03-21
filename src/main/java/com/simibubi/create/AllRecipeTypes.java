@@ -1,8 +1,10 @@
 package com.simibubi.create;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
+import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
@@ -136,7 +138,13 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		});
 	}
 
-	public static boolean isManualRecipe(Recipe<?> recipe) {
+	public static final Set<ResourceLocation> RECIPE_DENY_SET =
+		ImmutableSet.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
+
+	public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
+		RecipeSerializer<?> serializer = recipe.getSerializer();
+		if (serializer != null && RECIPE_DENY_SET.contains(serializer.getRegistryName()))
+			return true;
 		return recipe.getId()
 			.getPath()
 			.endsWith("_manual_only");

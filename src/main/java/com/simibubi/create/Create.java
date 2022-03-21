@@ -31,7 +31,7 @@ import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
-import com.tterrag.registrate.util.NonNullLazyValue;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
@@ -57,7 +57,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4e";
+	public static final String VERSION = "0.4f";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -74,7 +74,7 @@ public class Create {
 	public static final ServerLagger LAGGER = new ServerLagger();
 	public static final Random RANDOM = new Random();
 
-	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
+	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
 	public Create() {
 		onCtor();

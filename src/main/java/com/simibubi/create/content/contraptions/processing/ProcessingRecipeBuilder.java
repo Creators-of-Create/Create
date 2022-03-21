@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -103,7 +103,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	// Datagen shortcuts
 
-	public ProcessingRecipeBuilder<T> require(Tag.Named<Item> tag) {
+	public ProcessingRecipeBuilder<T> require(TagKey<Item> tag) {
 		return require(Ingredient.of(tag));
 	}
 
@@ -120,7 +120,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return require(FluidIngredient.fromFluid(fluid, amount));
 	}
 
-	public ProcessingRecipeBuilder<T> require(Tag.Named<Fluid> fluidTag, int amount) {
+	public ProcessingRecipeBuilder<T> require(TagKey<Fluid> fluidTag, int amount) {
 		return require(FluidIngredient.fromTag(fluidTag, amount));
 	}
 

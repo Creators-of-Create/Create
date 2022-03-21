@@ -62,7 +62,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -370,7 +370,7 @@ public class AllItems {
 	}
 
 	@SafeVarargs
-	private static ItemEntry<Item> taggedIngredient(String name, Tag.Named<Item>... tags) {
+	private static ItemEntry<Item> taggedIngredient(String name, TagKey<Item>... tags) {
 		return REGISTRATE.item(name, Item::new)
 			.tag(tags)
 			.register();

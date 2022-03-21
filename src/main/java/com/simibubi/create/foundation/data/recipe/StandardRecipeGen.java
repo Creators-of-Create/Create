@@ -41,7 +41,7 @@ import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -1122,13 +1122,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	}
 
 	GeneratedRecipe metalCompacting(List<ItemProviderEntry<? extends ItemLike>> variants,
-		List<Supplier<Tag<Item>>> ingredients) {
+		List<Supplier<TagKey<Item>>> ingredients) {
 		GeneratedRecipe result = null;
 		for (int i = 0; i + 1 < variants.size(); i++) {
 			ItemProviderEntry<? extends ItemLike> currentEntry = variants.get(i);
 			ItemProviderEntry<? extends ItemLike> nextEntry = variants.get(i + 1);
-			Supplier<Tag<Item>> currentIngredient = ingredients.get(i);
-			Supplier<Tag<Item>> nextIngredient = ingredients.get(i + 1);
+			Supplier<TagKey<Item>> currentIngredient = ingredients.get(i);
+			Supplier<TagKey<Item>> nextIngredient = ingredients.get(i + 1);
 
 			result = create(nextEntry).withSuffix("_from_compacting")
 				.unlockedBy(currentEntry::get)
@@ -1197,7 +1197,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return this;
 		}
 
-		GeneratedRecipeBuilder unlockedByTag(Supplier<Tag<Item>> tag) {
+		GeneratedRecipeBuilder unlockedByTag(Supplier<TagKey<Item>> tag) {
 			this.unlockedBy = () -> ItemPredicate.Builder.item()
 				.of(tag.get())
 				.build();
@@ -1258,7 +1258,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return unlockedBy(item).viaCookingIngredient(() -> Ingredient.of(item.get()));
 		}
 
-		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<Tag<Item>> tag) {
+		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<TagKey<Item>> tag) {
 			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.of(tag.get()));
 		}
 

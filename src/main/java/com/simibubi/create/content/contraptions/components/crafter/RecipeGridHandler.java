@@ -166,7 +166,7 @@ public class RecipeGridHandler {
 			if (numItems > 9)
 				return false;
 		}
-		if (AllRecipeTypes.isManualRecipe(recipe))
+		if (AllRecipeTypes.shouldIgnoreInAutomation(recipe))
 			return false;
 		return true;
 	}
