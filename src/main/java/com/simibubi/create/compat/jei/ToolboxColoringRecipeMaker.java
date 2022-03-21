@@ -8,7 +8,7 @@ import com.simibubi.create.Create;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
@@ -32,7 +32,7 @@ public final class ToolboxColoringRecipeMaker {
 			.map(color -> {
 				DyeItem dye = DyeItem.byColor(color);
 				ItemStack dyeStack = new ItemStack(dye);
-				Tag<Item> colorTag = color.getTag();
+				TagKey<Item> colorTag = color.getTag();
 				Ingredient.Value dyeList = new Ingredient.ItemValue(dyeStack);
 				Ingredient.Value colorList = new Ingredient.TagValue(colorTag);
 				Stream<Ingredient.Value> colorIngredientStream = Stream.of(dyeList, colorList);

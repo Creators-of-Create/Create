@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -60,7 +60,7 @@ public enum AllPaletteStoneTypes {
 	
 	public NonNullSupplier<Block> baseBlock;
 	public PaletteBlockPattern[] variantTypes;
-	public Tag.Named<Item> materialTag;
+	public TagKey<Item> materialTag;
 
 	private AllPaletteStoneTypes(PaletteBlockPattern[] variantTypes,
 		Function<CreateRegistrate, NonNullSupplier<Block>> factory) {

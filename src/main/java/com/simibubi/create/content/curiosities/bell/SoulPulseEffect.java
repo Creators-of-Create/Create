@@ -119,7 +119,7 @@ public class SoulPulseEffect {
 				for (int z = 0; z < MAX_DISTANCE; z++) {
 					BlockPos candidate = new BlockPos(x, y, z);
 
-					int dist = (int) Math.round(Math.sqrt(candidate.distSqr(0, 0, 0, false)));
+					int dist = (int) Math.round(Math.sqrt(candidate.distSqr(BlockPos.ZERO)));
 					if (dist > MAX_DISTANCE)
 						continue;
 					if (dist <= 0)

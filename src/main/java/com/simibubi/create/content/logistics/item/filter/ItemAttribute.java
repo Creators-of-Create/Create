@@ -29,6 +29,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,6 +50,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public interface ItemAttribute {
 
@@ -131,14 +133,16 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isEdible),
-		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
+		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+			.isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		RENAMED(ItemStack::hasCustomHoverName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
-		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s).getType() != EquipmentSlot.Type.HAND),
+		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s)
+			.getType() != EquipmentSlot.Type.HAND),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		HAUNTABLE(InWorldProcessing::isHauntable),
@@ -167,7 +171,8 @@ public interface ItemAttribute {
 			return EnchantmentHelper.getEnchantments(s)
 				.entrySet()
 				.stream()
-				.anyMatch(e -> e.getKey().getMaxLevel() <= e.getValue());
+				.anyMatch(e -> e.getKey()
+					.getMaxLevel() <= e.getValue());
 		}
 
 		private StandardTraits(BiPredicate<ItemStack, Level> test) {
@@ -235,16 +240,19 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return stack.getItem()
-				.getTags()
-				.contains(tagName);
+			return ForgeRegistries.ITEMS.getHolder(stack.getItem())
+				.get()
+				.tags()
+				.anyMatch(t -> t.location()
+					.equals(tagName));
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			return stack.getItem()
-				.getTags()
-				.stream()
+			return ForgeRegistries.ITEMS.getHolder(stack.getItem())
+				.get()
+				.tags()
+				.map(TagKey::location)
 				.map(InTag::new)
 				.collect(Collectors.toList());
 		}

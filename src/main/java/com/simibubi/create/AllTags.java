@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,24 +34,24 @@ public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
-	public static <T> Tag.Named<T> tag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String namespace,
+	public static <T> TagKey<T> tag(Function<ResourceLocation, TagKey<T>> wrapperFactory, String namespace,
 		String path) {
 		return wrapperFactory.apply(new ResourceLocation(namespace, path));
 	}
 
-	public static <T> Tag.Named<T> forgeTag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String path) {
+	public static <T> TagKey<T> forgeTag(Function<ResourceLocation, TagKey<T>> wrapperFactory, String path) {
 		return tag(wrapperFactory, "forge", path);
 	}
 
-	public static Tag.Named<Block> forgeBlockTag(String path) {
+	public static TagKey<Block> forgeBlockTag(String path) {
 		return forgeTag(BlockTags::createOptional, path);
 	}
 
-	public static Tag.Named<Item> forgeItemTag(String path) {
+	public static TagKey<Item> forgeItemTag(String path) {
 		return forgeTag(ItemTags::createOptional, path);
 	}
 
-	public static Tag.Named<Fluid> forgeFluidTag(String path) {
+	public static TagKey<Fluid> forgeFluidTag(String path) {
 		return forgeTag(FluidTags::createOptional, path);
 	}
 
@@ -124,7 +124,7 @@ public class AllTags {
 
 		;
 
-		public final Tag.Named<Block> tag;
+		public final TagKey<Block> tag;
 
 		AllBlockTags() {
 			this(MOD);
@@ -167,7 +167,7 @@ public class AllTags {
 				.add(values));
 		}
 
-		public void includeIn(Tag.Named<Block> parent) {
+		public void includeIn(TagKey<Block> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
 		}
@@ -176,7 +176,7 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
-		public void includeAll(Tag.Named<Block> child) {
+		public void includeAll(TagKey<Block> child) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
 		}
@@ -200,7 +200,7 @@ public class AllTags {
 
 		;
 
-		public final Tag.Named<Item> tag;
+		public final TagKey<Item> tag;
 
 		AllItemTags() {
 			this(MOD);
@@ -239,7 +239,7 @@ public class AllTags {
 				.add(values));
 		}
 
-		public void includeIn(Tag.Named<Item> parent) {
+		public void includeIn(TagKey<Item> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
 		}
@@ -248,7 +248,7 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
-		public void includeAll(Tag.Named<Item> child) {
+		public void includeAll(TagKey<Item> child) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
 		}
@@ -264,7 +264,7 @@ public class AllTags {
 
 		;
 
-		public final Tag.Named<Fluid> tag;
+		public final TagKey<Fluid> tag;
 
 		AllFluidTags() {
 			this(MOD);
@@ -303,7 +303,7 @@ public class AllTags {
 				.add(values));
 		}
 
-		public void includeIn(Tag.Named<Fluid> parent) {
+		public void includeIn(TagKey<Fluid> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
 		}
@@ -312,7 +312,7 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
-		public void includeAll(Tag.Named<Fluid> child) {
+		public void includeAll(TagKey<Fluid> child) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
 		}

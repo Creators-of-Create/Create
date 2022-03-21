@@ -23,7 +23,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -90,9 +90,9 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		return true;
 	}
 
-	protected abstract Iterable<Tag.Named<Block>> getBlockTags();
+	protected abstract Iterable<TagKey<Block>> getBlockTags();
 
-	protected abstract Iterable<Tag.Named<Item>> getItemTags();
+	protected abstract Iterable<TagKey<Item>> getItemTags();
 
 	protected abstract B createBlock(Supplier<? extends Block> block);
 
@@ -121,12 +121,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<Tag.Named<Block>> getBlockTags() {
+		protected Iterable<TagKey<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.STAIRS);
 		}
 
 		@Override
-		protected Iterable<Tag.Named<Item>> getItemTags() {
+		protected Iterable<TagKey<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.STAIRS);
 		}
 
@@ -184,12 +184,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<Tag.Named<Block>> getBlockTags() {
+		protected Iterable<TagKey<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.SLABS);
 		}
 
 		@Override
-		protected Iterable<Tag.Named<Item>> getItemTags() {
+		protected Iterable<TagKey<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.SLABS);
 		}
 
@@ -242,12 +242,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<Tag.Named<Block>> getBlockTags() {
+		protected Iterable<TagKey<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.WALLS);
 		}
 
 		@Override
-		protected Iterable<Tag.Named<Item>> getItemTags() {
+		protected Iterable<TagKey<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.WALLS);
 		}
 

@@ -23,7 +23,6 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -55,9 +54,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		super(modid);
 	}
 
-	public static NonNullLazyValue<CreateRegistrate> lazy(String modid) {
-		return new NonNullLazyValue<>(
-			() -> new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
+	public static NonNullSupplier<CreateRegistrate> lazy(String modid) {
+		return NonNullSupplier
+			.lazy(() -> new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
 				.getModEventBus()));
 	}
 
@@ -187,7 +186,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(Supplier<ConnectedTextureBehaviour> behavior) {
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+		Supplier<ConnectedTextureBehaviour> behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 

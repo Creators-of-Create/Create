@@ -8,12 +8,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.TagContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -34,7 +34,7 @@ public class WrappedServerWorld extends ServerLevel {
 
 	public WrappedServerWorld(Level world) {
 		super(world.getServer(), Util.backgroundExecutor(), world.getServer().storageSource,
-			(ServerLevelData) world.getLevelData(), world.dimension(), world.dimensionType(),
+			(ServerLevelData) world.getLevelData(), world.dimension(), world.dimensionTypeRegistration(),
 			new DummyStatusListener(), ((ServerChunkCache) world.getChunkSource()).getGenerator(), world.isDebug(),
 			world.getBiomeManager().biomeZoomSeed, Collections.emptyList(), false);
 		this.world = world;
@@ -59,15 +59,14 @@ public class WrappedServerWorld extends ServerLevel {
 	public LevelTicks<Block> getBlockTicks() {
 		return super.getBlockTicks();
 	}
-	
+
 	@Override
 	public LevelTicks<Fluid> getFluidTicks() {
 		return super.getFluidTicks();
 	}
 
 	@Override
-	public void levelEvent(Player player, int type, BlockPos pos, int data) {
-	}
+	public void levelEvent(Player player, int type, BlockPos pos, int data) {}
 
 	@Override
 	public List<ServerPlayer> players() {
@@ -76,13 +75,11 @@ public class WrappedServerWorld extends ServerLevel {
 
 	@Override
 	public void playSound(Player player, double x, double y, double z, SoundEvent soundIn, SoundSource category,
-			float volume, float pitch) {
-	}
+		float volume, float pitch) {}
 
 	@Override
-	public void playSound(Player p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-			SoundSource p_217384_4_, float p_217384_5_, float p_217384_6_) {
-	}
+	public void playSound(Player p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_, SoundSource p_217384_4_,
+		float p_217384_5_, float p_217384_6_) {}
 
 	@Override
 	public Entity getEntity(int id) {
@@ -101,8 +98,7 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	@Override
-	public void setMapData(String mapId, MapItemSavedData mapDataIn) {
-	}
+	public void setMapData(String mapId, MapItemSavedData mapDataIn) {}
 
 	@Override
 	public int getFreeMapId() {
@@ -110,8 +106,7 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	@Override
-	public void destroyBlockProgress(int breakerId, BlockPos pos, int progress) {
-	}
+	public void destroyBlockProgress(int breakerId, BlockPos pos, int progress) {}
 
 	@Override
 	public RecipeManager getRecipeManager() {
@@ -119,12 +114,8 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	@Override
-	public TagContainer getTagManager() {
-		return world.getTagManager();
-	}
-
-	@Override
-	public Biome getUncachedNoiseBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
+	public Holder<Biome> getUncachedNoiseBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
 		return world.getUncachedNoiseBiome(p_225604_1_, p_225604_2_, p_225604_3_);
 	}
+
 }
