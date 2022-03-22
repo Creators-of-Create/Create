@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1557",
+	"_": "Missing Localizations: 1558",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "Composto Cromático",
 	"item.create.cinder_flour": "Farinha de Netherrack",
 	"item.create.copper_backtank": "Tanque Traseiro",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Pepita de Cobre",
 	"item.create.copper_sheet": "Chapa de Cobre",
 	"item.create.crafter_slot_cover": "Cobertura do slot de fabricador",

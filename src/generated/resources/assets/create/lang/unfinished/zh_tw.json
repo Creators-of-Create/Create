@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 392",
+	"_": "Missing Localizations: 393",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "異彩化合物",
 	"item.create.cinder_flour": "地獄麵粉",
 	"item.create.copper_backtank": "銅製後背包",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "銅粒",
 	"item.create.copper_sheet": "銅板",
 	"item.create.crafter_slot_cover": "合成器蓋板",

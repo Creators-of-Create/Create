@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1585",
+	"_": "Missing Localizations: 1586",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "Composé chromatique",
 	"item.create.cinder_flour": "Farine de braise",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Pépite de cuivre",
 	"item.create.copper_sheet": "Plaques de cuivre",
 	"item.create.crafter_slot_cover": "Couvercle",

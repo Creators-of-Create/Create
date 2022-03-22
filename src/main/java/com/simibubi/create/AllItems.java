@@ -40,6 +40,7 @@ import com.simibubi.create.content.curiosities.ShadowSteelItem;
 import com.simibubi.create.content.curiosities.TreeFertilizerItem;
 import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankItem;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankItem.CopperBacktankBlockItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
@@ -63,7 +64,6 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
@@ -243,13 +243,18 @@ public class AllItems {
 		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
 			.register();
 
+	// wrapped by COPPER_BACKTANK for block placement uses.
+	// must be registered as of 1.18.2
+	public static final ItemEntry<CopperBacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
+		.item("copper_backtank_placeable", p -> new CopperBacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
+		.model((c, p) -> p.getExistingFile(p.mcLoc("item/barrier")))
+		.register();
+
 	public static final ItemEntry<? extends CopperArmorItem>
 
-	COPPER_BACKTANK =
-		REGISTRATE
-			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
-			.register(),
+	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
+		.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+		.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
 			.register(),
