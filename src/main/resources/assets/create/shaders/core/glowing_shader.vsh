@@ -26,7 +26,7 @@ out vec4 normal;
 void main() {
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
 
-    vertexDistance = cylindrical_distance(ModelViewMat, IViewRotMat * Position);
+    vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, 1);
     vertexColor = Color;
     lightMapColor = texelFetch(Sampler2, UV2 / 16, 0);
     texCoord0 = UV0;
