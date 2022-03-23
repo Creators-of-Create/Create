@@ -186,6 +186,9 @@ public class SignalBoundary extends TrackEdgePoint {
 				invalid = true;
 				break;
 			}
+			if (otherSignal.blockEntities.get(sideOfOther)
+				.isEmpty())
+				continue;
 			SignalState otherState = otherSignal.cachedStates.get(sideOfOther);
 			allPathsFree &= otherState == SignalState.GREEN || otherState == SignalState.INVALID;
 			noPathsFree &= otherState == SignalState.RED;

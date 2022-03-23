@@ -1338,6 +1338,7 @@ public class AllBlocks {
 	public static final BlockEntry<SignalBlock> TRACK_SIGNAL = REGISTRATE.block("track_signal", SignalBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(state -> ConfiguredModel.builder()

@@ -36,6 +36,7 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		else
 			CachedBufferer.partial(AllBlockPartials.SIGNAL_OFF, blockState)
+				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
 		BlockPos pos = te.getBlockPos();
