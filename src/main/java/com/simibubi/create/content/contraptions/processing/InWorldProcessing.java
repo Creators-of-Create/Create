@@ -76,13 +76,9 @@ public class InWorldProcessing {
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
 
-				if (Type.valueOf(processing.getString("Type")) != type) {
-					boolean canProcess = type.canProcess(entity.getItem(), entity.level);
-					processing.putString("Type", type.name());
-					if (!canProcess)
-						processing.putInt("Time", -1);
-					return canProcess;
-				} else if (processing.getInt("Time") >= 0)
+				if (Type.valueOf(processing.getString("Type")) != type)
+					return type.canProcess(entity.getItem(), entity.level);
+				else if (processing.getInt("Time") >= 0)
 					return true;
 				else if (processing.getInt("Time") == -1)
 					return false;
@@ -296,8 +292,8 @@ public class InWorldProcessing {
 				}
 				if (entity.isOnFire()) {
 					entity.clearFire();
-					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL,
-						0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+						SoundSource.NEUTRAL, 0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
 				}
 			}
 
@@ -445,12 +441,10 @@ public class InWorldProcessing {
 		},
 		NONE {
 			@Override
-			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
-			}
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {}
 
 			@Override
-			public void affectEntity(Entity entity, Level level) {
-			}
+			public void affectEntity(Entity entity, Level level) {}
 
 			@Override
 			public boolean canProcess(ItemStack stack, Level level) {
@@ -473,14 +467,18 @@ public class InWorldProcessing {
 			if (block == Blocks.SOUL_FIRE
 				|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-					.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL).orElse(false))
+				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
+					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
+						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL)
+						.orElse(false))
 				return Type.HAUNTING;
-			if (block == Blocks.FIRE
-				|| BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
+			if (block == Blocks.FIRE || blockState.is(BlockTags.CAMPFIRES)
+				&& blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-					.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR).orElse(false)
+				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
+					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
+						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR)
+						.orElse(false)
 				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))

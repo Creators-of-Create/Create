@@ -5,7 +5,11 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
-    "CustomItemUseEffectsMixin"
+    "CustomItemUseEffectsMixin",
+    "accessor.AbstractProjectileDispenseBehaviorAccessor",
+    "accessor.DispenserBlockAccessor",
+    "accessor.FallingBlockEntityAccessor",
+    "accessor.LivingEntityAccessor"
   ],
   "client": [
     "DestroyProgressMixin",
@@ -13,7 +17,9 @@
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
     "ModelDataRefreshMixin",
-    "WindowResizeMixin"
+    "WindowResizeMixin",
+    "accessor.GameRendererAccessor",
+    "accessor.ParticleEngineAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

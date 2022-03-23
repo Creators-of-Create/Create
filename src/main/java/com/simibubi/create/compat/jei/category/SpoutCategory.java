@@ -1,9 +1,10 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
@@ -44,62 +45,55 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		spout = new AnimatedSpout();
 	}
 
-	public static List<FillingRecipe> getRecipes(IIngredientManager ingredientManager) {
-		List<FillingRecipe> recipes = new ArrayList<>();
+	public static void consumeRecipes(Consumer<FillingRecipe> consumer, IIngredientManager ingredientManager) {
+		Collection<FluidStack> fluidStacks = ingredientManager.getAllIngredients(VanillaTypes.FLUID);
+		for (ItemStack stack : ingredientManager.getAllIngredients(VanillaTypes.ITEM)) {
+			if (stack.getItem() instanceof PotionItem) {
+				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
+				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
+				consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
+					.withItemIngredients(bottle)
+					.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
+					.withSingleItemOutput(stack)
+					.build());
+				continue;
+			}
 
-		ingredientManager.getAllIngredients(VanillaTypes.ITEM)
-			.stream()
-			.forEach(stack -> {
-				if (stack.getItem() instanceof PotionItem) {
-					FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-					Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
-					recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
-						.withItemIngredients(bottle)
-						.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
-						.withSingleItemOutput(stack)
-						.build());
-					return;
-				}
+			LazyOptional<IFluidHandlerItem> capability =
+				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			if (!capability.isPresent())
+				continue;
 
-				LazyOptional<IFluidHandlerItem> capability =
-					stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-				if (!capability.isPresent())
-					return;
+			for (FluidStack fluidStack : fluidStacks) {
+				ItemStack copy = stack.copy();
+				copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+					.ifPresent(fhi -> {
+						if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
+							return;
+						FluidStack fluidCopy = fluidStack.copy();
+						fluidCopy.setAmount(1000);
+						fhi.fill(fluidCopy, FluidAction.EXECUTE);
+						ItemStack container = fhi.getContainer();
+						if (container.sameItem(copy))
+							return;
+						if (container.isEmpty())
+							return;
 
-				ingredientManager.getAllIngredients(VanillaTypes.FLUID)
-					.stream()
-					.forEach(fluidStack -> {
-						ItemStack copy = stack.copy();
-						copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-							.ifPresent(fhi -> {
-								if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
-									return;
-								FluidStack fluidCopy = fluidStack.copy();
-								fluidCopy.setAmount(1000);
-								fhi.fill(fluidCopy, FluidAction.EXECUTE);
-								ItemStack container = fhi.getContainer();
-								if (container.sameItem(copy))
-									return;
-								if (container.isEmpty())
-									return;
-
-								Ingredient bucket = Ingredient.of(stack);
-								ResourceLocation itemName = stack.getItem()
-									.getRegistryName();
-								ResourceLocation fluidName = fluidCopy.getFluid()
-									.getRegistryName();
-								recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new,
-									Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
-										+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
-											.withItemIngredients(bucket)
-											.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
-											.withSingleItemOutput(container)
-											.build());
-							});
+						Ingredient bucket = Ingredient.of(stack);
+						ResourceLocation itemName = stack.getItem()
+							.getRegistryName();
+						ResourceLocation fluidName = fluidCopy.getFluid()
+							.getRegistryName();
+						consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new,
+							Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
+								+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
+									.withItemIngredients(bucket)
+									.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
+									.withSingleItemOutput(container)
+									.build());
 					});
-			});
-
-		return recipes;
+			}
+		}
 	}
 
 	@Override

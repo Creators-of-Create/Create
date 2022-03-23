@@ -30,7 +30,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
 
 	private InsertionCallback tryInsert;
 	private AvailabilityPredicate canInsert;
@@ -70,6 +70,7 @@ public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 		return ItemHandlerHelper.insertItemStacked(lazy.orElse(null), inserted.stack.copy(), simulate);
 	}
 
+	// TODO: verify that this side is consistent across all calls
 	public boolean canInsertFromSide(Direction side) {
 		return canInsert.test(side);
 	}

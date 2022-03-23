@@ -96,7 +96,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 			return false;
 		BlockState checkState = level.getBlockState(worldPosition.below());
 
-		if (!checkState.is(AllBlockTags.FAN_HEATERS.tag))
+		if (!AllBlockTags.FAN_HEATERS.matches(checkState))
 			return false;
 
 		if (checkState.hasProperty(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.getValue(BlazeBurnerBlock.HEAT_LEVEL)

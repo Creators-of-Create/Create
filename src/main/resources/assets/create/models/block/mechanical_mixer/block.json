@@ -6,7 +6,7 @@
 		"2": "block/spruce_log_top",
 		"4": "create:block/mixer_base_side",
 		"11": "create:block/mechanical_press_top",
-		"particle": "block/stripped_spruce_log"
+		"particle": "create:block/mixer_base_side"
 	},
 	"elements": [
 		{

@@ -16,7 +16,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.random.WeightedEntry.Wrapper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,7 +35,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -90,17 +88,15 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return super.useOn(context);
 
 		BaseSpawner spawner = ((SpawnerBlockEntity) te).getSpawner();
-		SimpleWeightedRandomList<SpawnData> spawnPotentials =
-			ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45443_"); // spawnPotentials
 
-		List<SpawnData> possibleSpawns = spawnPotentials.unwrap()
+		List<SpawnData> possibleSpawns = spawner.spawnPotentials.unwrap()
 			.stream()
 			.map(Wrapper::getData)
 			.toList();
 
 		if (possibleSpawns.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
-			possibleSpawns.add(ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45444_")); // nextSpawnData
+			possibleSpawns.add(spawner.nextSpawnData);
 		}
 
 		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();

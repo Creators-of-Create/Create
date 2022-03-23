@@ -19,7 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class FunnelMovementBehaviour extends MovementBehaviour {
+public class FunnelMovementBehaviour implements MovementBehaviour {
 
 	private final boolean hasFilter;
 
@@ -47,7 +47,7 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		super.visitNewPosition(context, pos);
+		MovementBehaviour.super.visitNewPosition(context, pos);
 
 		if (context.state.getValue(FunnelBlock.EXTRACTING))
 			extract(context, pos);

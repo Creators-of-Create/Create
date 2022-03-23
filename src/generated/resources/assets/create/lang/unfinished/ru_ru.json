@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 493",
+	"_": "Missing Localizations: 494",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -578,6 +578,7 @@
 	"item.create.chromatic_compound": "Хроматический компаунд",
 	"item.create.cinder_flour": "Незераковая пыль",
 	"item.create.copper_backtank": "Медный баллон",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Кусочек меди",
 	"item.create.copper_sheet": "Медный лист",
 	"item.create.crafter_slot_cover": "Крышка на слот крафтера",

@@ -28,7 +28,7 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 
 		BlockPos.betweenClosedStream(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
 			.forEach(offset -> {
-				if (offset.distSqr(0, 0, 0, false) == BlockPos.ZERO.distSqr(1, 1, 0, false))
+				if (offset.distSqr(BlockPos.ZERO) == 2)
 					neighbours.add(worldPosition.offset(offset));
 			});
 		return neighbours;

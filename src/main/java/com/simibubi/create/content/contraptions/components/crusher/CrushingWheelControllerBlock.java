@@ -87,8 +87,8 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 			return;
 		if (te.crushingspeed == 0)
 			return;
-		if (entityIn instanceof ItemEntity)
-			((ItemEntity) entityIn).setPickUpDelay(10);
+//		if (entityIn instanceof ItemEntity)
+//			((ItemEntity) entityIn).setPickUpDelay(10);
 		CompoundTag data = entityIn.getPersistentData();
 		if (data.contains("BypassCrushingWheel")) {
 			if (pos.equals(NbtUtils.readBlockPos(data.getCompound("BypassCrushingWheel"))))

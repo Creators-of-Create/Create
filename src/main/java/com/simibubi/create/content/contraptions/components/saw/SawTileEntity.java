@@ -365,7 +365,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		return startedSearch.stream()
 			.filter(RecipeConditions.outputMatchesFilter(filtering))
 			.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
-			.filter(r -> !AllRecipeTypes.isManualRecipe(r))
+			.filter(r -> !AllRecipeTypes.shouldIgnoreInAutomation(r))
 			.collect(Collectors.toList());
 	}
 

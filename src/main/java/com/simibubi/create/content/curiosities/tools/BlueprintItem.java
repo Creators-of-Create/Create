@@ -13,6 +13,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -26,10 +27,9 @@ import net.minecraft.world.item.crafting.Ingredient.ItemValue;
 import net.minecraft.world.item.crafting.Ingredient.TagValue;
 import net.minecraft.world.item.crafting.Ingredient.Value;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.common.crafting.MultiItemValue;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlueprintItem extends Item {
@@ -79,12 +79,12 @@ public class BlueprintItem extends Item {
 			inv.setStackInSlot(i, ItemStack.EMPTY);
 		inv.setStackInSlot(9, recipe.getResultItem());
 
-		if (recipe instanceof ShapedRecipe) {
-			ShapedRecipe shapedRecipe = (ShapedRecipe) recipe;
-			for (int row = 0; row < shapedRecipe.getHeight(); row++)
-				for (int col = 0; col < shapedRecipe.getWidth(); col++)
+		if (recipe instanceof IShapedRecipe) {
+			IShapedRecipe<?> shapedRecipe = (IShapedRecipe<?>) recipe;
+			for (int row = 0; row < shapedRecipe.getRecipeHeight(); row++)
+				for (int col = 0; col < shapedRecipe.getRecipeWidth(); col++)
 					inv.setStackInSlot(row * 3 + col,
-							convertIngredientToFilter(ingredients.get(row * shapedRecipe.getWidth() + col)));
+							convertIngredientToFilter(ingredients.get(row * shapedRecipe.getRecipeWidth() + col)));
 		} else {
 			for (int i = 0; i < ingredients.size(); i++)
 				inv.setStackInSlot(i, convertIngredientToFilter(ingredients.get(i)));
@@ -92,8 +92,7 @@ public class BlueprintItem extends Item {
 	}
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
-		Ingredient.Value[] acceptedItems =
-				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "f_43902_"); // values
+		Ingredient.Value[] acceptedItems = ingredient.values;
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)
@@ -123,7 +122,7 @@ public class BlueprintItem extends Item {
 			filterItem.getOrCreateTag()
 					.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());
 			ListTag attributes = new ListTag();
-			ItemAttribute at = new ItemAttribute.InTag(resourcelocation);
+			ItemAttribute at = new ItemAttribute.InTag(ItemTags.create(resourcelocation));
 			CompoundTag compoundNBT = new CompoundTag();
 			at.serializeNBT(compoundNBT);
 			compoundNBT.putBoolean("Inverted", false);

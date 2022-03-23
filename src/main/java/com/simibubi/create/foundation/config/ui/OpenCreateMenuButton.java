@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 public class OpenCreateMenuButton extends Button {
 
-	public static ItemStack icon = AllItems.GOGGLES.asStack();
+	public static final ItemStack ICON = AllItems.GOGGLES.asStack();
 
 	public OpenCreateMenuButton(int x, int y) {
 		super(x, y, 20, 20, TextComponent.EMPTY, OpenCreateMenuButton::click);
@@ -40,7 +40,7 @@ public class OpenCreateMenuButton extends Button {
 		super.render(mstack, mouseX, mouseY, pticks);
 		if (!visible) 
 			return;
-		Minecraft.getInstance().getItemRenderer().renderGuiItem(icon, x + 2, y + 2);
+		Minecraft.getInstance().getItemRenderer().renderGuiItem(ICON, x + 2, y + 2);
 	}
 
 	public static void click(Button b) {

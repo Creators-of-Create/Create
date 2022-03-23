@@ -11,11 +11,11 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllPaletteStoneTypes {
 
@@ -57,10 +57,10 @@ public enum AllPaletteStoneTypes {
 
 	private Function<CreateRegistrate, NonNullSupplier<Block>> factory;
 	private PalettesVariantEntry variants;
-	
+
 	public NonNullSupplier<Block> baseBlock;
 	public PaletteBlockPattern[] variantTypes;
-	public Tag.Named<Item> materialTag;
+	public TagKey<Item> materialTag;
 
 	private AllPaletteStoneTypes(PaletteBlockPattern[] variantTypes,
 		Function<CreateRegistrate, NonNullSupplier<Block>> factory) {
@@ -81,7 +81,7 @@ public enum AllPaletteStoneTypes {
 			NonNullSupplier<Block> baseBlock = paletteStoneVariants.factory.apply(registrate);
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
-			paletteStoneVariants.materialTag = AllTags.tag(ItemTags::createOptional, Create.ID, "stone_types/" + id);
+			paletteStoneVariants.materialTag = AllTags.optionalTag(ForgeRegistries.ITEMS, Create.asResource("stone_types/" + id));
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}

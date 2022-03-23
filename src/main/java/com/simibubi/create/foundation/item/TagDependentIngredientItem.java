@@ -1,33 +1,31 @@
 package com.simibubi.create.foundation.item;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITagManager;
 
 public class TagDependentIngredientItem extends Item {
 
-	private ResourceLocation tag;
+	private TagKey<Item> tag;
 
-	public TagDependentIngredientItem(Properties p_i48487_1_, ResourceLocation tag) {
-		super(p_i48487_1_);
+	public TagDependentIngredientItem(Properties properties, TagKey<Item> tag) {
+		super(properties);
 		this.tag = tag;
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> list) {
 		if (!shouldHide())
-			super.fillItemCategory(p_150895_1_, p_150895_2_);
+			super.fillItemCategory(tab, list);
 	}
 
 	public boolean shouldHide() {
-		Tag<?> tag = ItemTags.getAllTags()
-			.getTag(this.tag);
-		return tag == null || tag.getValues()
-			.isEmpty();
+		ITagManager<Item> tagManager = ForgeRegistries.ITEMS.tags();
+		return !tagManager.isKnownTagName(tag) || tagManager.getTag(tag).isEmpty();
 	}
 
 }

@@ -20,8 +20,10 @@ import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBoxRenderer {
 
-	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light,
+		int overlay) {
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+			.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
@@ -31,20 +33,21 @@ public class ValueBoxRenderer {
 		itemRenderer.renderStatic(filter, TransformType.FIXED, light, overlay, ms, buffer, 0);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static float customZOffset(Item item) {
-		float NUDGE = -.1f;
+		float nudge = -.1f;
 		if (item instanceof FilterItem)
-			return NUDGE;
+			return nudge;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
 			if (block instanceof AbstractSimpleShaftBlock)
-				return NUDGE;
+				return nudge;
 			if (block instanceof FenceBlock)
-				return NUDGE;
-			if (BlockTags.BUTTONS.contains(block))
-				return NUDGE;
+				return nudge;
+			if (block.builtInRegistryHolder().is(BlockTags.BUTTONS))
+				return nudge;
 			if (block == Blocks.END_ROD)
-				return NUDGE;
+				return nudge;
 		}
 		return 0;
 	}

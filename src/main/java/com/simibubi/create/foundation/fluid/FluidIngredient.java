@@ -14,16 +14,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.SerializationTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class FluidIngredient implements Predicate<FluidStack> {
 
@@ -31,7 +31,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public List<FluidStack> matchingFluidStacks;
 
-	public static FluidIngredient fromTag(Tag.Named<Fluid> tag, int amount) {
+	public static FluidIngredient fromTag(TagKey<Fluid> tag, int amount) {
 		FluidTagIngredient ingredient = new FluidTagIngredient();
 		ingredient.tag = tag;
 		ingredient.amountRequired = amount;
@@ -198,8 +198,9 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public static class FluidTagIngredient extends FluidIngredient {
 
-		protected Tag<Fluid> tag;
+		protected TagKey<Fluid> tag;
 
+		@SuppressWarnings("deprecation")
 		@Override
 		protected boolean testInternal(FluidStack t) {
 			if (tag == null)
@@ -207,8 +208,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 					if (accepted.getFluid()
 						.isSame(t.getFluid()))
 						return true;
-			return t.getFluid()
-				.is(tag);
+			return t.getFluid().is(tag);
 		}
 
 		@Override
@@ -230,22 +230,20 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void readInternal(JsonObject json) {
-			ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
-			tag = SerializationTags.getInstance().getTagOrThrow(Registry.FLUID_REGISTRY, id, rl -> {
-				return new JsonSyntaxException("Unknown fluid tag '" + rl + "'");
-			});
+			ResourceLocation name = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
+			tag = FluidTags.create(name);
 		}
 
 		@Override
 		protected void writeInternal(JsonObject json) {
-			json.addProperty("fluidTag", SerializationTags.getInstance().getIdOrThrow(Registry.FLUID_REGISTRY, tag, () -> {
-				return new IllegalStateException("Unknown fluid tag");
-			}).toString());
+			json.addProperty("fluidTag", tag.location()
+				.toString());
 		}
 
 		@Override
 		protected List<FluidStack> determineMatchingFluidStacks() {
-			return tag.getValues()
+			return ForgeRegistries.FLUIDS.tags()
+				.getTag(tag)
 				.stream()
 				.map(f -> {
 					if (f instanceof FlowingFluid)

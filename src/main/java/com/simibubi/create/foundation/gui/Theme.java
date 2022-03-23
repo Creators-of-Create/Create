@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.utility.Couple;
 public class Theme {
 
 	private static final List<Theme> THEMES = new ArrayList<>();
-	private static final Theme BASE = addTheme(new Theme());
+	public static final Theme BASE = addTheme(new Theme());
 
 	public static Theme addTheme(@Nonnull Theme theme) {
 		THEMES.add(theme);
@@ -39,7 +39,7 @@ public class Theme {
 				.filter(Objects::nonNull)
 				.findFirst()
 				.map(holder -> holder.lookupKey == null ? holder : resolve(holder.lookupKey))
-				.orElse(ColorHolder.missing);
+				.orElse(ColorHolder.MISSING);
 	}
 
 	@Nonnull public static Couple<Color> p(@Nonnull Key key) {return p(key.get());}
@@ -144,40 +144,40 @@ public class Theme {
 
 	public static class Key {
 
-		public static Key BUTTON_IDLE = new Key();
-		public static Key BUTTON_HOVER = new Key();
-		public static Key BUTTON_CLICK = new Key();
-		public static Key BUTTON_DISABLE = new Key();
-		public static Key BUTTON_SUCCESS = new Key();
-		public static Key BUTTON_FAIL = new Key();
+		public static final Key BUTTON_IDLE = new Key();
+		public static final Key BUTTON_HOVER = new Key();
+		public static final Key BUTTON_CLICK = new Key();
+		public static final Key BUTTON_DISABLE = new Key();
+		public static final Key BUTTON_SUCCESS = new Key();
+		public static final Key BUTTON_FAIL = new Key();
 
-		public static Key TEXT = new Key();
-		public static Key TEXT_DARKER = new Key();
-		public static Key TEXT_ACCENT_STRONG = new Key();
-		public static Key TEXT_ACCENT_SLIGHT = new Key();
+		public static final Key TEXT = new Key();
+		public static final Key TEXT_DARKER = new Key();
+		public static final Key TEXT_ACCENT_STRONG = new Key();
+		public static final Key TEXT_ACCENT_SLIGHT = new Key();
 
-		public static Key STREAK = new Key();
-		public static Key VANILLA_TOOLTIP_BORDER = new Key();
-		public static Key VANILLA_TOOLTIP_BACKGROUND = new Key();
+		public static final Key STREAK = new Key();
+		public static final Key VANILLA_TOOLTIP_BORDER = new Key();
+		public static final Key VANILLA_TOOLTIP_BACKGROUND = new Key();
 
-		public static Key PONDER_BACKGROUND_TRANSPARENT = new Key();
-		public static Key PONDER_BACKGROUND_FLAT = new Key();
-		public static Key PONDER_IDLE = new Key();
-		public static Key PONDER_HOVER = new Key();
-		public static Key PONDER_HIGHLIGHT = new Key();
-		public static Key TEXT_WINDOW_BORDER = new Key();
-		public static Key PONDER_BACK_ARROW = new Key();
-		public static Key PONDER_PROGRESSBAR = new Key();
-		public static Key PONDER_MISSING_CREATE = new Key();
-		public static Key PONDER_MISSING_VANILLA = new Key();
+		public static final Key PONDER_BACKGROUND_TRANSPARENT = new Key();
+		public static final Key PONDER_BACKGROUND_FLAT = new Key();
+		public static final Key PONDER_IDLE = new Key();
+		public static final Key PONDER_HOVER = new Key();
+		public static final Key PONDER_HIGHLIGHT = new Key();
+		public static final Key TEXT_WINDOW_BORDER = new Key();
+		public static final Key PONDER_BACK_ARROW = new Key();
+		public static final Key PONDER_PROGRESSBAR = new Key();
+		public static final Key PONDER_MISSING_CREATE = new Key();
+		public static final Key PONDER_MISSING_VANILLA = new Key();
 
-		public static Key PONDER_BUTTON_IDLE = new Key();
-		public static Key PONDER_BUTTON_HOVER = new Key();
-		public static Key PONDER_BUTTON_CLICK = new Key();
-		public static Key PONDER_BUTTON_DISABLE = new Key();
+		public static final Key PONDER_BUTTON_IDLE = new Key();
+		public static final Key PONDER_BUTTON_HOVER = new Key();
+		public static final Key PONDER_BUTTON_CLICK = new Key();
+		public static final Key PONDER_BUTTON_DISABLE = new Key();
 
-		public static Key CONFIG_TITLE_A = new Key();
-		public static Key CONFIG_TITLE_B = new Key();
+		public static final Key CONFIG_TITLE_A = new Key();
+		public static final Key CONFIG_TITLE_B = new Key();
 
 		private static int index = 0;
 
@@ -198,7 +198,7 @@ public class Theme {
 
 	private static class ColorHolder {
 
-		private static final ColorHolder missing = ColorHolder.single(Color.BLACK);
+		private static final ColorHolder MISSING = ColorHolder.single(Color.BLACK);
 
 		private Couple<Color> colors;
 		private String lookupKey;

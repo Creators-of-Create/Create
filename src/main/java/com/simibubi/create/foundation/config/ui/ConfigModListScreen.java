@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -52,7 +54,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		list.children().addAll(allEntries);
 
 		goBack = new BoxWidget(width / 2 - listWidth / 2 - 30, height / 2 + 65, 20, 20).withPadding(2, 2)
-				.withCallback(this::onClose);
+				.withCallback(() -> ScreenOpener.open(parent));
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil()
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
@@ -61,16 +63,19 @@ public class ConfigModListScreen extends ConfigScreen {
 
 		search = new HintableTextFieldWidget(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
 		search.setResponder(this::updateFilter);
-		search.setHint("Search..");
+		search.setHint("Search...");
 		search.moveCursorToStart();
 		addRenderableWidget(search);
-
 	}
 
 	@Override
-	public void onClose() {
-		super.onClose();
-		ScreenOpener.open(parent);
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (super.keyPressed(keyCode, scanCode, modifiers))
+			return true;
+		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+			ScreenOpener.open(parent);
+		}
+		return false;
 	}
 
 	private void updateFilter(String search) {

@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IPlantable;
 
-public class HarvesterMovementBehaviour extends MovementBehaviour {
+public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {

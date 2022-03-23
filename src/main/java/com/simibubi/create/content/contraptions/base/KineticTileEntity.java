@@ -534,7 +534,7 @@ public class KineticTileEntity extends SmartTileEntity
 			.forEach(offset -> {
 				if (axis.choose(offset.getX(), offset.getY(), offset.getZ()) != 0)
 					return;
-				if (offset.distSqr(0, 0, 0, false) != BlockPos.ZERO.distSqr(1, 1, 0, false))
+				if (offset.distSqr(BlockPos.ZERO) != 2)
 					return;
 				neighbours.add(worldPosition.offset(offset));
 			});

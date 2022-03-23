@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.foundation.mixin.accessor.GameRendererAccessor;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -276,7 +277,7 @@ public class VecHelper {
 		}
 
 		// ----- adjust for fov -----
-		float fov = (float) mc.gameRenderer.getFov(ari, partialTicks, true);
+		float fov = (float) ((GameRendererAccessor) mc.gameRenderer).create$callGetFov(ari, partialTicks, true);
 
 		float half_height = (float) mc.getWindow()
 			.getGuiScaledHeight() / 2;

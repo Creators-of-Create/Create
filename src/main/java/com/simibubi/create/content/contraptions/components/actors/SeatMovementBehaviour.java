@@ -15,11 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.Vec3;
 
-public class SeatMovementBehaviour extends MovementBehaviour {
+public class SeatMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public void startMoving(MovementContext context) {
-		super.startMoving(context);
+		MovementBehaviour.super.startMoving(context);
 		int indexOf = context.contraption.getSeats()
 			.indexOf(context.localPos);
 		context.data.putInt("SeatIndex", indexOf);
@@ -27,8 +27,8 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		super.visitNewPosition(context, pos);
-
+		MovementBehaviour.super.visitNewPosition(context, pos);
+		
 		AbstractContraptionEntity contraptionEntity = context.contraption.entity;
 		if (contraptionEntity == null)
 			return;

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1389",
+	"_": "Missing Localizations: 1390",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -578,6 +578,7 @@
 	"item.create.chromatic_compound": "Composto cromatico",
 	"item.create.cinder_flour": "Cenere farinosa",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Pepita di rame",
 	"item.create.copper_sheet": "Lamiera di rame",
 	"item.create.crafter_slot_cover": "Rivestimento per slot da costruzione",

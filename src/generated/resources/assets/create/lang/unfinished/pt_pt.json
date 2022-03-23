@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1672",
+	"_": "Missing Localizations: 1673",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -578,6 +578,7 @@
 	"item.create.chromatic_compound": "Composto Cromático",
 	"item.create.cinder_flour": "Farinha de Netherrack",
 	"item.create.copper_backtank": "Tanque Traseiro",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Pepita de Cobre",
 	"item.create.copper_sheet": "Chapa de Cobre",
 	"item.create.crafter_slot_cover": "Cobertura do slot de fabricador",
@@ -669,7 +670,7 @@
 	"advancement.create.belt_funnel": "UNLOCALIZED: Funnels' Flappy Danglers",
 	"advancement.create.belt_funnel.desc": "Coloque um funil lateral em cima de uma esteira ou depósito para criar um tipo especial.",
 	"advancement.create.belt_funnel_kiss": "UNLOCALIZED: The Parrots and the Flaps",
-	"advancement.create.belt_funnel_kiss.desc": "UNLOCALIZED: Make two belt mounted funnels kiss.",
+	"advancement.create.belt_funnel_kiss.desc": "UNLOCALIZED: Make two Belt-mounted Funnels kiss.",
 	"advancement.create.fan": "Dobrador de ar mecânico",
 	"advancement.create.fan.desc": "Pegue uma carona no fluxo de ar provido pelo ventilador revestido.",
 	"advancement.create.fan_lava": "Aquecedor de espaço geotermal",

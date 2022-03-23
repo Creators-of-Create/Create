@@ -58,10 +58,10 @@ public class BeltInventory {
 			belt.setChanged();
 			belt.sendData();
 		}
-		
+
 		if (belt.getSpeed() == 0)
 			return;
-		
+
 		// Reverse item collection if belt just reversed
 		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
 			beltMovementPositive = !beltMovementPositive;
@@ -107,7 +107,7 @@ public class BeltInventory {
 			// Don't move if held by processing (client)
 			if (world.isClientSide && currentItem.locked)
 				continue;
-			
+
 			// Don't move if held by external components
 			if (currentItem.lockedExternally) {
 				currentItem.lockedExternally = false;
@@ -149,16 +149,16 @@ public class BeltInventory {
 				if (currentItem.locked)
 					continue;
 			}
-			
+
+			// Belt Funnels
+			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
+				continue;
+
 			if (noMovement)
 				continue;
 
 			// Belt Tunnels
 			if (BeltTunnelInteractionHandler.flapTunnelsAndCheckIfStuck(this, currentItem, nextOffset))
-				continue;
-
-			// Belt Funnels
-			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
 				continue;
 
 			// Horizontal Crushing Wheels
@@ -216,7 +216,8 @@ public class BeltInventory {
 		}
 	}
 
-	protected boolean handleBeltProcessingAndCheckIfRemoved(TransportedItemStack currentItem, float nextOffset, boolean noMovement) {
+	protected boolean handleBeltProcessingAndCheckIfRemoved(TransportedItemStack currentItem, float nextOffset,
+		boolean noMovement) {
 		int currentSegment = (int) currentItem.beltPosition;
 
 		// Continue processing if held
@@ -243,7 +244,7 @@ public class BeltInventory {
 			belt.sendData();
 			return false;
 		}
-		
+
 		if (noMovement)
 			return false;
 
@@ -314,8 +315,9 @@ public class BeltInventory {
 		if (inputBehaviour != null)
 			return Ending.INSERT;
 
-		if (BlockHelper.hasBlockSolidSide(world.getBlockState(nextPosition), world, nextPosition, belt.getMovementFacing()
-			.getOpposite()))
+		if (BlockHelper.hasBlockSolidSide(world.getBlockState(nextPosition), world, nextPosition,
+			belt.getMovementFacing()
+				.getOpposite()))
 			return Ending.BLOCKED;
 
 		return Ending.EJECT;
@@ -404,9 +406,11 @@ public class BeltInventory {
 		ItemStack ejected = stack.stack;
 		Vec3 outPos = BeltHelper.getVectorForOffset(belt, stack.beltPosition);
 		float movementSpeed = Math.max(Math.abs(belt.getBeltMovementSpeed()), 1 / 8f);
-		Vec3 outMotion = Vec3.atLowerCornerOf(belt.getBeltChainDirection()).scale(movementSpeed)
+		Vec3 outMotion = Vec3.atLowerCornerOf(belt.getBeltChainDirection())
+			.scale(movementSpeed)
 			.add(0, 1 / 8f, 0);
-		outPos = outPos.add(outMotion.normalize().scale(0.001));
+		outPos = outPos.add(outMotion.normalize()
+			.scale(0.001));
 		ItemEntity entity = new ItemEntity(belt.getLevel(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
 		entity.setDeltaMovement(outMotion);
 		entity.setDefaultPickUpDelay();
@@ -428,7 +432,7 @@ public class BeltInventory {
 			if (Math.abs(position - transported.beltPosition) >= maxDistanceToPosition)
 				continue;
 			TransportedResult result = processFunction.apply(transported);
-			if (result == null|| result.didntChangeFrom(stackBefore))
+			if (result == null || result.didntChangeFrom(stackBefore))
 				continue;
 
 			dirty = true;
@@ -449,5 +453,5 @@ public class BeltInventory {
 	public List<TransportedItemStack> getTransportedItems() {
 		return items;
 	}
-	
+
 }

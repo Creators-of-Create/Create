@@ -9,6 +9,15 @@ import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
 import static com.simibubi.create.content.AllSections.MATERIALS;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
@@ -31,6 +40,7 @@ import com.simibubi.create.content.curiosities.ShadowSteelItem;
 import com.simibubi.create.content.curiosities.TreeFertilizerItem;
 import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankItem;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankItem.CopperBacktankBlockItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
@@ -46,16 +56,15 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
@@ -101,7 +110,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
-		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.tag(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.tag, AllItemTags.UPRIGHT_ON_BELT.tag)
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
@@ -189,11 +198,11 @@ public class AllItems {
 		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
 		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag);
 
-	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre("osmium"),
-		CRUSHED_PLATINUM = compatCrushedOre("platinum"), CRUSHED_SILVER = compatCrushedOre("silver"),
-		CRUSHED_TIN = compatCrushedOre("tin"), CRUSHED_LEAD = compatCrushedOre("lead"),
-		CRUSHED_QUICKSILVER = compatCrushedOre("quicksilver"), CRUSHED_BAUXITE = compatCrushedOre("aluminum"),
-		CRUSHED_URANIUM = compatCrushedOre("uranium"), CRUSHED_NICKEL = compatCrushedOre("nickel");
+	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre(OSMIUM),
+		CRUSHED_PLATINUM = compatCrushedOre(PLATINUM), CRUSHED_SILVER = compatCrushedOre(SILVER),
+		CRUSHED_TIN = compatCrushedOre(TIN), CRUSHED_LEAD = compatCrushedOre(LEAD),
+		CRUSHED_QUICKSILVER = compatCrushedOre(QUICKSILVER), CRUSHED_BAUXITE = compatCrushedOre(ALUMINUM),
+		CRUSHED_URANIUM = compatCrushedOre(URANIUM), CRUSHED_NICKEL = compatCrushedOre(NICKEL);
 
 	// Kinetics
 
@@ -235,13 +244,18 @@ public class AllItems {
 		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
 			.register();
 
+	// wrapped by COPPER_BACKTANK for block placement uses.
+	// must be registered as of 1.18.2
+	public static final ItemEntry<CopperBacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
+		.item("copper_backtank_placeable", p -> new CopperBacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
+		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
+		.register();
+
 	public static final ItemEntry<? extends CopperArmorItem>
 
-	COPPER_BACKTANK =
-		REGISTRATE
-			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
-			.register(),
+	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
+		.model(AssetLookup.customGenericItemModel("_", "item"))
+		.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
 			.register(),
@@ -299,7 +313,8 @@ public class AllItems {
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
-			.properties(p -> p.stacksTo(1).rarity(Rarity.UNCOMMON))
+			.properties(p -> p.stacksTo(1)
+				.rarity(Rarity.UNCOMMON))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
@@ -365,16 +380,17 @@ public class AllItems {
 	}
 
 	@SafeVarargs
-	private static ItemEntry<Item> taggedIngredient(String name, Tag.Named<Item>... tags) {
+	private static ItemEntry<Item> taggedIngredient(String name, TagKey<Item>... tags) {
 		return REGISTRATE.item(name, Item::new)
 			.tag(tags)
 			.register();
 	}
 
-	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(String metalName) {
+	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(CompatMetals metal) {
+		String metalName = metal.getName();
 		return REGISTRATE
 			.item("crushed_" + metalName + "_ore",
-				props -> new TagDependentIngredientItem(props, new ResourceLocation("forge", "ores/" + metalName)))
+				props -> new TagDependentIngredientItem(props, AllTags.forgeItemTag("ores/" + metalName)))
 			.tag(CRUSHED_ORES.tag)
 			.register();
 	}

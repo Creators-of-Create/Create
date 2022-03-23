@@ -53,6 +53,7 @@ import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BlankSailBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
@@ -419,7 +420,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)
-		.initialProperties(SharedProperties.beltMaterial, MaterialColor.COLOR_GRAY)
+		.initialProperties(SharedProperties.BELT_MATERIAL, MaterialColor.COLOR_GRAY)
 		.properties(p -> p.sound(SoundType.WOOL))
 		.properties(p -> p.strength(0.8F))
 		.transform(axeOrPickaxe())
@@ -526,7 +527,8 @@ public class AllBlocks {
 
 	public static final BlockEntry<CrushingWheelControllerBlock> CRUSHING_WHEEL_CONTROLLER =
 		REGISTRATE.block("crushing_wheel_controller", CrushingWheelControllerBlock::new)
-			.initialProperties(() -> Blocks.AIR)
+			.initialProperties(SharedProperties.CRUSHING_WHEEL_CONTROLLER_MATERIAL)
+			.properties(p -> p.noOcclusion().noDrops().air())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(state -> ConfiguredModel.builder()
 					.modelFile(p.models()
@@ -969,7 +971,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<PulleyBlock.RopeBlock> ROPE = REGISTRATE.block("rope", PulleyBlock.RopeBlock::new)
-		.initialProperties(SharedProperties.beltMaterial, MaterialColor.COLOR_BROWN)
+		.initialProperties(SharedProperties.BELT_MATERIAL, MaterialColor.COLOR_BROWN)
 		.tag(AllBlockTags.BRITTLE.tag)
 		.properties(p -> p.sound(SoundType.WOOL))
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
@@ -1187,7 +1189,8 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
-			.simpleItem()
+			.item(BlankSailBlockItem::new)
+			.build()
 			.register();
 
 	public static final DyedBlockList<SailBlock> DYED_SAILS = new DyedBlockList<>(colour -> {
@@ -1197,13 +1200,13 @@ public class AllBlocks {
 		String colourName = colour.getSerializedName();
 		return REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p, colour))
 			.initialProperties(SharedProperties::wooden)
-			.properties(BlockBehaviour.Properties::noOcclusion)
+			.properties(p -> p.sound(SoundType.SCAFFOLDING)
+				.noOcclusion())
 			.transform(axeOnly())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 				.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
 				.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
-			.tag(AllBlockTags.SAILS.tag)
 			.loot((p, b) -> p.dropOther(b, SAIL.get()))
 			.register();
 	});

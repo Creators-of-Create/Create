@@ -60,7 +60,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -76,7 +75,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected Contraption contraption;
 	protected boolean initialized;
 	protected boolean prevPosInvalid;
-	private boolean ticking;
+	private boolean skipActorStop;
 
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
@@ -302,7 +301,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (!level.isClientSide)
 			contraption.stalled = false;
 
-		ticking = true;
+		skipActorStop = true;
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
 			MovementContext context = pair.right;
 			StructureBlockInfo blockInfo = pair.left;
@@ -339,7 +338,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			contraption.stop(level);
 			return;
 		}
-		ticking = false;
+		skipActorStop = false;
 
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
@@ -497,6 +496,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 
 		StructureTransform transform = makeStructureTransform();
+		
+		contraption.stop(level);
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
 
@@ -515,6 +516,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			((AbstractContraptionEntity) entity).disassemble();
 		}
 
+		skipActorStop = true;
 		discard();
 
 		ejectPassengers();
@@ -535,9 +537,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@Override
 	public void remove(RemovalReason p_146834_) {
-		if (!level.isClientSide && !isRemoved() && contraption != null)
-			if (!ticking)
-				contraption.stop(level);
+		if (!level.isClientSide && !isRemoved() && contraption != null && !skipActorStop)
+			contraption.stop(level);
 		if (contraption != null)
 			contraption.onEntityRemoved(this);
 		super.remove(p_146834_);
@@ -605,8 +606,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
-			String srg = "f_146795_"; // removalReason
-			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
+			entity.removalReason = RemovalReason.UNLOADED_TO_CHUNK;
 
 			// Gather passengers into same chunk when saving
 			Vec3 prevVec = entity.position();
@@ -614,7 +614,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
-			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
+			entity.removalReason = null;
 		}
 
 		CompoundTag tag = super.saveWithoutId(nbt);
