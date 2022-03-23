@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -354,14 +354,10 @@ public class BuiltinPotatoProjectileTypes {
 				if (!world.isEmptyBlock(placePos.below()))
 					y = Math.max(y, placePos.getY());
 
-				BlockState fallingState = block.get()
-					.defaultBlockState();
-				
-				FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, level);
-				fallingBlockEntity.setPos(placePos.getX() + 0.5, y, placePos.getZ() + 0.5);
-				fallingBlockEntity.time = 1;
-				fallingBlockEntity.blockState = fallingState;
-				world.addFreshEntity(fallingBlockEntity);
+				FallingBlockEntity falling = FallingBlockEntityAccessor.create$callInit(level, placePos.getX() + 0.5, y,
+					placePos.getZ() + 0.5, block.get().defaultBlockState());
+				falling.time = 1;
+				world.addFreshEntity(falling);
 			}
 
 			return true;

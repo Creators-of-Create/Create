@@ -7,8 +7,9 @@
   "mixins": [
     "CustomItemUseEffectsMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
-    "accessor.LivingEntityAccessor",
-    "accessor.DispenserBlockAccessor"
+    "accessor.DispenserBlockAccessor",
+    "accessor.FallingBlockEntityAccessor",
+    "accessor.LivingEntityAccessor"
   ],
   "client": [
     "DestroyProgressMixin",

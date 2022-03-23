@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_PROJECTILE_DISPENSE_BEHAVIOURS = new HashMap<>();
-	private static boolean spawneggsRegistered = false;
+	private static boolean spawnEggsRegistered = false;
 
 	public static void gatherMovedDispenseItemBehaviours() {
 		IMovedDispenseItemBehaviour.init();
@@ -36,35 +36,35 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 
 	@Override
 	protected void activate(MovementContext context, BlockPos pos) {
-		if (!spawneggsRegistered) {
-			spawneggsRegistered = true;
-			IMovedDispenseItemBehaviour.initSpawneggs();
+		if (!spawnEggsRegistered) {
+			spawnEggsRegistered = true;
+			IMovedDispenseItemBehaviour.initSpawnEggs();
 		}
-		
+
 		DispenseItemLocation location = getDispenseLocation(context);
 		if (location.isEmpty()) {
 			context.world.levelEvent(1001, pos, 0);
 		} else {
-			ItemStack itemstack = getItemStackAt(location, context);
+			ItemStack itemStack = getItemStackAt(location, context);
 			// Special dispense item behaviour for moving contraptions
-			if (MOVED_DISPENSE_ITEM_BEHAVIOURS.containsKey(itemstack.getItem())) {
-				setItemStackAt(location, MOVED_DISPENSE_ITEM_BEHAVIOURS.get(itemstack.getItem()).dispense(itemstack, context, pos), context);
+			if (MOVED_DISPENSE_ITEM_BEHAVIOURS.containsKey(itemStack.getItem())) {
+				setItemStackAt(location, MOVED_DISPENSE_ITEM_BEHAVIOURS.get(itemStack.getItem()).dispense(itemStack, context, pos), context);
 				return;
 			}
 
-			ItemStack backup = itemstack.copy();
+			ItemStack backup = itemStack.copy();
 			// If none is there, try vanilla registry
 			try {
-				if (MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.containsKey(itemstack.getItem())) {
-					setItemStackAt(location, MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.get(itemstack.getItem()).dispense(itemstack, context, pos), context);
+				if (MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.containsKey(itemStack.getItem())) {
+					setItemStackAt(location, MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.get(itemStack.getItem()).dispense(itemStack, context, pos), context);
 					return;
 				}
 
-				DispenseItemBehavior idispenseitembehavior = getDispenseMethod(itemstack);
-				if (idispenseitembehavior instanceof AbstractProjectileDispenseBehavior) { // Projectile behaviours can be converted most of the time
-					IMovedDispenseItemBehaviour iMovedDispenseItemBehaviour = MovedProjectileDispenserBehaviour.of((AbstractProjectileDispenseBehavior) idispenseitembehavior);
-					setItemStackAt(location, iMovedDispenseItemBehaviour.dispense(itemstack, context, pos), context);
-					MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.put(itemstack.getItem(), iMovedDispenseItemBehaviour); // buffer conversion if successful
+				DispenseItemBehavior behavior = getDispenseMethod(itemStack);
+				if (behavior instanceof AbstractProjectileDispenseBehavior) { // Projectile behaviours can be converted most of the time
+					IMovedDispenseItemBehaviour movedBehaviour = MovedProjectileDispenserBehaviour.of((AbstractProjectileDispenseBehavior) behavior);
+					setItemStackAt(location, movedBehaviour.dispense(itemStack, context, pos), context);
+					MOVED_PROJECTILE_DISPENSE_BEHAVIOURS.put(itemStack.getItem(), movedBehaviour); // buffer conversion if successful
 					return;
 				}
 
@@ -74,15 +74,15 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 				Direction clostestFacing = Direction.getNearest(facingVec.x, facingVec.y, facingVec.z);
 				ContraptionBlockSource blockSource = new ContraptionBlockSource(context, pos, clostestFacing);
 
-				if (idispenseitembehavior.getClass() != DefaultDispenseItemBehavior.class) { // There is a dispense item behaviour registered for the vanilla dispenser
-					setItemStackAt(location, idispenseitembehavior.dispense(blockSource, itemstack), context);
+				if (behavior.getClass() != DefaultDispenseItemBehavior.class) { // There is a dispense item behaviour registered for the vanilla dispenser
+					setItemStackAt(location, behavior.dispense(blockSource, itemStack), context);
 					return;
 				}
 			} catch (NullPointerException ignored) {
-				itemstack = backup; // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
+				itemStack = backup; // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
 			}
 
-			setItemStackAt(location, defaultBehaviour.dispense(itemstack, context, pos), context);  // the default: launch the item
+			setItemStackAt(location, DEFAULT_BEHAVIOUR.dispense(itemStack, context, pos), context);  // the default: launch the item
 		}
 	}
 

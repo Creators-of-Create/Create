@@ -253,7 +253,7 @@ public class AllItems {
 	public static final ItemEntry<? extends CopperArmorItem>
 
 	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
-		.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+		.model(AssetLookup.customGenericItemModel("_", "item"))
 		.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)

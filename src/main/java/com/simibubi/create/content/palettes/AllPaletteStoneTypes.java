@@ -3,7 +3,6 @@ package com.simibubi.create.content.palettes;
 import static com.simibubi.create.content.palettes.PaletteBlockPattern.STANDARD_RANGE;
 import static com.simibubi.create.content.palettes.PaletteBlockPattern.VANILLA_RANGE;
 
-import java.util.Collections;
 import java.util.function.Function;
 
 import com.simibubi.create.AllTags;
@@ -82,8 +81,7 @@ public enum AllPaletteStoneTypes {
 			NonNullSupplier<Block> baseBlock = paletteStoneVariants.factory.apply(registrate);
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
-			paletteStoneVariants.materialTag = AllTags.tag(r -> ForgeRegistries.ITEMS.tags()
-				.createOptionalTagKey(r, Collections.emptySet()), Create.ID, "stone_types/" + id);
+			paletteStoneVariants.materialTag = AllTags.optionalTag(ForgeRegistries.ITEMS, Create.asResource("stone_types/" + id));
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}

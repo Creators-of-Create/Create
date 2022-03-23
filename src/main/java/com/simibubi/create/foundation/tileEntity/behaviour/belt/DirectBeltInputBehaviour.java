@@ -70,6 +70,7 @@ public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 		return ItemHandlerHelper.insertItemStacked(lazy.orElse(null), inserted.stack.copy(), simulate);
 	}
 
+	// TODO: verify that this side is consistent across all calls
 	public boolean canInsertFromSide(Direction side) {
 		return canInsert.test(side);
 	}

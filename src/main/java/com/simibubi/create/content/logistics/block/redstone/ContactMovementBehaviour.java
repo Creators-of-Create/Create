@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.TickPriority;
 
-public class ContactMovementBehaviour extends MovementBehaviour {
+public class ContactMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {

@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ValueBoxRenderer {
 
@@ -34,22 +33,21 @@ public class ValueBoxRenderer {
 		itemRenderer.renderStatic(filter, TransformType.FIXED, light, overlay, ms, buffer, 0);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static float customZOffset(Item item) {
-		float NUDGE = -.1f;
+		float nudge = -.1f;
 		if (item instanceof FilterItem)
-			return NUDGE;
+			return nudge;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
 			if (block instanceof AbstractShaftBlock)
-				return NUDGE;
+				return nudge;
 			if (block instanceof FenceBlock)
-				return NUDGE;
-			if (ForgeRegistries.BLOCKS.getHolder(block)
-				.map(h -> h.containsTag(BlockTags.BUTTONS))
-				.orElse(false))
-				return NUDGE;
+				return nudge;
+			if (block.builtInRegistryHolder().is(BlockTags.BUTTONS))
+				return nudge;
 			if (block == Blocks.END_ROD)
-				return NUDGE;
+				return nudge;
 		}
 		return 0;
 	}

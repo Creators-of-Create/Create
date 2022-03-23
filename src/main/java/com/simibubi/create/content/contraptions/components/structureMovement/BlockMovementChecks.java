@@ -252,7 +252,7 @@ public class BlockMovementChecks {
 			return true;
 		if (block instanceof WoolCarpetBlock)
 			return true;
-		return AllBlockTags.BRITTLE.matches(block);
+		return AllBlockTags.BRITTLE.matches(state);
 	}
 
 	private static boolean isBlockAttachedTowardsFallback(BlockState state, Level world, BlockPos pos,

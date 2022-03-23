@@ -48,8 +48,6 @@ minecraft {
             arg '-mixin.config=flywheel.mixins.json'
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 create {
                     source sourceSets.main
@@ -67,8 +65,6 @@ minecraft {
             workingDirectory project.file('run/server')
             arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 create {
                     source sourceSets.main
@@ -80,8 +76,6 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
             mods {
                 create {

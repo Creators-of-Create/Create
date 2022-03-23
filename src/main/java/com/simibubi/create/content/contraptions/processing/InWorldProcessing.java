@@ -56,7 +56,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class InWorldProcessing {
 
@@ -473,9 +472,7 @@ public class InWorldProcessing {
 						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL)
 						.orElse(false))
 				return Type.HAUNTING;
-			if (block == Blocks.FIRE || ForgeRegistries.BLOCKS.getHolder(block)
-				.map(h -> h.containsTag(BlockTags.CAMPFIRES))
-				.orElse(false)
+			if (block == Blocks.FIRE || blockState.is(BlockTags.CAMPFIRES)
 				&& blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
 				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)

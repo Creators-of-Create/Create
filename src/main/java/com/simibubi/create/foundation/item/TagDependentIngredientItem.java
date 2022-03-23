@@ -24,11 +24,8 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	public boolean shouldHide() {
-		ITagManager<Item> tags = ForgeRegistries.ITEMS.tags();
-		if (tags == null || !tags.isKnownTagName(tag))
-			return false;
-		return tags.getTag(tag)
-			.isEmpty();
+		ITagManager<Item> tagManager = ForgeRegistries.ITEMS.tags();
+		return !tagManager.isKnownTagName(tag) || tagManager.getTag(tag).isEmpty();
 	}
 
 }

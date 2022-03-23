@@ -24,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class PortableStorageInterfaceMovement extends MovementBehaviour {
+public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	static final String _workingPos_ = "WorkingPos";
 	static final String _clientPrevPos_ = "ClientPrevPos";

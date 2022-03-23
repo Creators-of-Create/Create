@@ -14,10 +14,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -200,6 +200,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		protected TagKey<Fluid> tag;
 
+		@SuppressWarnings("deprecation")
 		@Override
 		protected boolean testInternal(FluidStack t) {
 			if (tag == null)
@@ -207,9 +208,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 					if (accepted.getFluid()
 						.isSame(t.getFluid()))
 						return true;
-			return ForgeRegistries.FLUIDS.getHolder(t.getFluid())
-				.map(h -> h.containsTag(tag))
-				.orElse(false);
+			return t.getFluid().is(tag);
 		}
 
 		@Override
@@ -231,8 +230,8 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void readInternal(JsonObject json) {
-			ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
-			tag = TagKey.create(Registry.FLUID_REGISTRY, resourcelocation);
+			ResourceLocation name = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
+			tag = FluidTags.create(name);
 		}
 
 		@Override

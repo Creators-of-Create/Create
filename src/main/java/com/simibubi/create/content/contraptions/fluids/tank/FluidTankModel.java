@@ -23,7 +23,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class FluidTankModel extends CTModel {
 
-	protected static ModelProperty<CullData> CULL_PROPERTY = new ModelProperty<>();
+	protected static final ModelProperty<CullData> CULL_PROPERTY = new ModelProperty<>();
 
 	public static FluidTankModel standard(BakedModel originalModel) {
 		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);

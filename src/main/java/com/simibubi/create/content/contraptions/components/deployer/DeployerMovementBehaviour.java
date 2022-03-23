@@ -47,7 +47,7 @@ import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.IItemHandler;
 
-public class DeployerMovementBehaviour extends MovementBehaviour {
+public class DeployerMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {

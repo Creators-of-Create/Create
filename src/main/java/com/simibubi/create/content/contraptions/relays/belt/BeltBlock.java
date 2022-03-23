@@ -82,7 +82,6 @@ import net.minecraftforge.client.IBlockRenderProperties;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
 
@@ -251,9 +250,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
-		boolean isDye = ForgeRegistries.ITEMS.getHolder(heldItem.getItem())
-			.map(h -> h.containsTag(Tags.Items.DYES))
-			.orElse(false);
+		boolean isDye = heldItem.is(Tags.Items.DYES);
 		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
 			.getFirst()
 			.getFluid()

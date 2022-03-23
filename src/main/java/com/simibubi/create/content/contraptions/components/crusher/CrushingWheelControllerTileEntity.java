@@ -145,20 +145,19 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
 			// Output Items
 			if (facing != Direction.UP) {
-				Direction inputDir = facing;
 				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1f * offset : 0f, (-1f),
 					facing.getAxis() == Axis.Z ? 1f * offset : 0f);
 				DirectBeltInputBehaviour behaviour =
 					TileEntityBehaviour.get(level, nextPos, DirectBeltInputBehaviour.TYPE);
 				if (behaviour != null) {
 					boolean changed = false;
-					if (!behaviour.canInsertFromSide(inputDir))
+					if (!behaviour.canInsertFromSide(facing))
 						return;
 					for (int slot = 0; slot < inventory.getSlots(); slot++) {
 						ItemStack stack = inventory.getStackInSlot(slot);
 						if (stack.isEmpty())
 							continue;
-						ItemStack remainder = behaviour.handleInsertion(stack, inputDir, false);
+						ItemStack remainder = behaviour.handleInsertion(stack, facing, false);
 						if (remainder.equals(stack, false))
 							continue;
 						inventory.setStackInSlot(slot, remainder);

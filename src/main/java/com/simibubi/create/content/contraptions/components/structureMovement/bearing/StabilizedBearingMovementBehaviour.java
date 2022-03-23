@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
+public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
