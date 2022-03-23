@@ -247,7 +247,7 @@ public class AllItems {
 	// must be registered as of 1.18.2
 	public static final ItemEntry<CopperBacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
 		.item("copper_backtank_placeable", p -> new CopperBacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
-		.model((c, p) -> p.getExistingFile(p.mcLoc("item/barrier")))
+		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 
 	public static final ItemEntry<? extends CopperArmorItem>

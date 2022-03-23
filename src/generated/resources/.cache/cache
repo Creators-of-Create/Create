@@ -1619,6 +1619,7 @@ dcb09deae110077bcddf090996b51cc66e9a7de3 assets/create/models/item/cogwheel.json
 7717e3b21cff39f497f07687c70c1fa40eaa756d assets/create/models/item/content_observer.json
 9dbd63c9e1b09a663fd4b83d76e3ab5967086167 assets/create/models/item/controller_rail.json
 10397036fc0bb1e18a767cfd7b19b10d805a83fe assets/create/models/item/copper_backtank.json
+3652f8f7b454940050f090ab32d38e04b93e14f8 assets/create/models/item/copper_backtank_placeable.json
 759bcb5fe7dfdd628716f9b4ff19a5ab00393381 assets/create/models/item/copper_casing.json
 751324b03f657f4166460eb10a64dae47cb97bd4 assets/create/models/item/copper_nugget.json
 177dafb51d70c55ec62036332868efed4e01f353 assets/create/models/item/copper_sheet.json
