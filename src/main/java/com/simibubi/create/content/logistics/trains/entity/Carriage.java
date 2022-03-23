@@ -25,7 +25,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -175,14 +174,10 @@ public class Carriage {
 		this.entity = new WeakReference<>(cce);
 	}
 
-	public ChunkPos getChunk() {
-		return new ChunkPos(new BlockPos(positionAnchor));
-	}
-
 	public void manageEntity(Level level) {
 		CarriageContraptionEntity entity = this.entity.get();
 		if (entity == null) {
-			if (CarriageEntityHandler.isActiveChunk(level, getChunk()))
+			if (CarriageEntityHandler.isActiveChunk(level, new BlockPos(positionAnchor)))
 				createEntity(level);
 		} else {
 			CarriageEntityHandler.validateCarriageEntity(entity);

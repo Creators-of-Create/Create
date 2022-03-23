@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityEvent;
 
@@ -22,7 +22,7 @@ public class CarriageEntityHandler {
 		Level level = entity.getLevel();
 		if (level.isClientSide)
 			return;
-		if (!isActiveChunk(level, newPos.chunk()))
+		if (!isActiveChunk(level, newPos.center()))
 			cce.leftTickingChunks = true;
 	}
 
@@ -32,13 +32,13 @@ public class CarriageEntityHandler {
 		Level level = entity.getLevel();
 		if (level.isClientSide)
 			return;
-		if (!isActiveChunk(level, entity.chunkPosition()))
+		if (!isActiveChunk(level, entity.blockPosition()))
 			entity.leftTickingChunks = true;
 	}
 
-	public static boolean isActiveChunk(Level level, ChunkPos chunk) {
+	public static boolean isActiveChunk(Level level, BlockPos pos) {
 		if (level instanceof ServerLevel serverLevel)
-			return serverLevel.isPositionEntityTicking(chunk);
+			return serverLevel.isPositionEntityTicking(pos);
 		return false;
 	}
 

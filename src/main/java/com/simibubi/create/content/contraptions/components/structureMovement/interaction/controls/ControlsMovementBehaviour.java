@@ -18,7 +18,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ControlsMovementBehaviour extends MovementBehaviour {
+public class ControlsMovementBehaviour implements MovementBehaviour {
 
 	// TODO: rendering the levers should be specific to Carriage Contraptions -
 	static class LeverAngles {
@@ -29,7 +29,7 @@ public class ControlsMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void tick(MovementContext context) {
-		super.tick(context);
+		MovementBehaviour.super.tick(context);
 		if (!context.world.isClientSide)
 			return;
 		if (!(context.temporaryData instanceof LeverAngles))
