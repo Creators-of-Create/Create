@@ -28,6 +28,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.foundation.collision.Matrix3d;
+import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -44,10 +45,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -267,7 +271,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	public final void tick() {
+	public void tick() {
 		if (contraption == null) {
 			discard();
 			return;
@@ -287,6 +291,40 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		contraption.onEntityTick(level);
 		tickContraption();
 		super.tick();
+
+		if (!(level instanceof ServerLevelAccessor sl))
+			return;
+
+		for (Entity entity : getPassengers()) {
+			if (entity instanceof Player)
+				continue;
+			if (entity.isAlwaysTicking())
+				continue;
+			if (sl.create$getEntityTickList()
+				.contains(entity))
+				continue;
+			positionRider(entity);
+		}
+	}
+
+	public void alignPassenger(Entity passenger) {
+		Vec3 motion = getContactPointMotion(passenger.getEyePosition());
+		if (Mth.equal(motion.length(), 0))
+			return;
+		if (passenger instanceof ArmorStand)
+			return;
+		if (!(passenger instanceof LivingEntity living))
+			return;
+		float angle = AngleHelper.deg(-Mth.atan2(motion.x, motion.z));
+		if (level.isClientSide) {
+			living.lerpTo(0, 0, 0, 0, 0, 0, false);
+			living.lerpHeadTo(0, 0);
+			living.setYRot(angle);
+			living.setXRot(0);
+			living.yBodyRot = angle;
+			living.yHeadRot = angle;
+		} else
+			living.setYRot(angle);
 	}
 
 	protected abstract void tickContraption();
@@ -496,7 +534,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 
 		StructureTransform transform = makeStructureTransform();
-		
+
 		contraption.stop(level);
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
@@ -561,9 +599,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	public void onRemovedFromWorld() {
 		super.onRemovedFromWorld();
-		if (level != null && level.isClientSide)
-			return;
-		getPassengers().forEach(Entity::discard);
 	}
 
 	@Override

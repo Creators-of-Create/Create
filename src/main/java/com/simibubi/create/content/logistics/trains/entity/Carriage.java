@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
@@ -160,18 +161,21 @@ public class Carriage {
 
 	public void createEntity(Level level) {
 		Entity entity = EntityType.loadEntityRecursive(serialisedEntity, level, e -> {
-			level.addFreshEntity(e);
+			e.moveTo(positionAnchor);
 			return e;
 		});
+
 		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
 
-		Vec3 pos = positionAnchor;
-		cce.setPos(pos);
-		cce.setCarriage(this);
 		cce.setGraph(train.graph == null ? null : train.graph.id);
+		cce.setCarriage(this);
 		cce.syncCarriage();
+
 		this.entity = new WeakReference<>(cce);
+
+		if (level instanceof ServerLevel sl)
+			sl.tryAddFreshEntityWithPassengers(entity);
 	}
 
 	public void manageEntity(Level level) {
@@ -196,11 +200,13 @@ public class Carriage {
 	}
 
 	private void removeAndSaveEntity(CarriageContraptionEntity entity) {
+		serialisedEntity = entity.serializeNBT();
+
 		for (Entity passenger : entity.getPassengers())
 			if (!(passenger instanceof Player))
-				passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
-		serialisedEntity = entity.serializeNBT();
+				passenger.discard();
 		entity.discard();
+
 		this.entity.clear();
 	}
 

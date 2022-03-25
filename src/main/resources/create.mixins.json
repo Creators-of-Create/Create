@@ -9,6 +9,7 @@
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
+    "accessor.ServerLevelAccessor",
     "accessor.LivingEntityAccessor"
   ],
   "client": [

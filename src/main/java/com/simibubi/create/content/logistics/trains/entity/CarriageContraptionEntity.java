@@ -125,8 +125,23 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		if (contraption instanceof CarriageContraption cc)
+			for (Entity entity : getPassengers()) {
+				BlockPos seatOf = cc.getSeatOf(entity.getUUID());
+				if (seatOf == null)
+					continue;
+				if (cc.conductorSeats.get(seatOf) == null)
+					continue;
+				alignPassenger(entity);
+			}
+	}
+
+	@Override
 	protected void tickContraption() {
-		if (!(contraption instanceof CarriageContraption))
+		if (!(contraption instanceof CarriageContraption cc))
 			return;
 		if (carriage == null) {
 			if (level.isClientSide) {
