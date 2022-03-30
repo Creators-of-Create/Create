@@ -42,10 +42,10 @@ public class EdgeInteractionHandler {
 		EdgeInteractionBehaviour behaviour = TileEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)
 			return;
+		if (behaviour.requiredItem.isPresent() && behaviour.requiredItem.get() != heldItem.getItem())
+			return;
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
-			return;
-		if (behaviour.requiredItem.orElse(heldItem.getItem()) != heldItem.getItem())
 			return;
 
 		Direction activatedDirection = getActivatedDirection(world, pos, ray.getDirection(), ray.getLocation(), behaviour);

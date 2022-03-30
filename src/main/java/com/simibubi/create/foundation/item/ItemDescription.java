@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
@@ -39,7 +39,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.block.Block;
 
 public class ItemDescription {
@@ -90,7 +89,7 @@ public class ItemDescription {
 		CKinetics config = AllConfigs.SERVER.kinetics;
 		Component rpmUnit = Lang.translate("generic.unit.rpm");
 
-		boolean hasGoggles = AllItems.GOGGLES.isIn(Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD));
+		boolean hasGoggles = GogglesItem.isWearingGoggles(Minecraft.getInstance().player);
 
 		SpeedLevel minimumRequiredSpeedLevel;
 		boolean showStressImpact;
@@ -102,13 +101,12 @@ public class ItemDescription {
 			showStressImpact = !((IRotate) block).hideStressImpact();
 		}
 
-		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
+		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE && minimumRequiredSpeedLevel != SpeedLevel.SLOW;
 		boolean hasStressImpact =
 			StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
 		if (hasSpeedRequirement) {
-			List<Component> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
 			MutableComponent level =
 				new TextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
@@ -118,7 +116,7 @@ public class ItemDescription {
 					.append(rpmUnit)
 					.append("+");
 			else
-				level.append(speedLevels.get(index));
+				level.append(Lang.translate("tooltip.speedRequirement." + Lang.asId(minimumRequiredSpeedLevel.name())));
 
 			list.add(Lang.translate("tooltip.speedRequirement")
 				.withStyle(GRAY));
@@ -126,19 +124,18 @@ public class ItemDescription {
 		}
 
 		if (hasStressImpact) {
-			List<Component> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double impact = BlockStressValues.getImpact(block);
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
 			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index)).withStyle(impactId.getAbsoluteColor());
+				new TextComponent(makeProgressBar(3, index + 1)).withStyle(impactId.getAbsoluteColor());
 
 			if (hasGoggles)
 				level.append(impact + "x ")
 					.append(rpmUnit);
 			else
-				level.append(stressLevels.get(index));
+				level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(impactId.name())));
 
 			list.add(Lang.translate("tooltip.stressImpact")
 				.withStyle(GRAY));
@@ -146,20 +143,18 @@ public class ItemDescription {
 		}
 
 		if (hasStressCapacity) {
-			List<Component> stressCapacityLevels =
-				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");
 			double capacity = BlockStressValues.getCapacity(block);
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
 			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index)).withStyle(impactId.getAbsoluteColor());
+				new TextComponent(makeProgressBar(3, index + 1)).withStyle(impactId.getAbsoluteColor());
 
 			if (hasGoggles)
 				level.append(capacity + "x ")
 					.append(rpmUnit);
 			else
-				level.append(stressCapacityLevels.get(index));
+				level.append(Lang.translate("tooltip.capacityProvided." + Lang.asId(impactId.name())));
 
 //			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 //				level +=
@@ -183,8 +178,8 @@ public class ItemDescription {
 
 	public static String makeProgressBar(int length, int filledLength) {
 		String bar = " ";
-		int emptySpaces = length - 1 - filledLength;
-		for (int i = 0; i <= filledLength; i++)
+		int emptySpaces = length - filledLength;
+		for (int i = 0; i < filledLength; i++)
 			bar += "\u2588";
 		for (int i = 0; i < emptySpaces; i++)
 			bar += "\u2592";

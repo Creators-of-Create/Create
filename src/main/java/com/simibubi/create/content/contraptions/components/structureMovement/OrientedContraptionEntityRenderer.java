@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
+
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 

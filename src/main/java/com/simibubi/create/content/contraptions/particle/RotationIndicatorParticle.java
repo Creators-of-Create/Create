@@ -88,7 +88,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 				double xSpeed, double ySpeed, double zSpeed) {
 			Minecraft mc = Minecraft.getInstance();
 			LocalPlayer player = mc.player;
-			boolean visible = worldIn != mc.level || player != null && GogglesItem.canSeeParticles(player);
+			boolean visible = worldIn != mc.level || player != null && GogglesItem.isWearingGoggles(player);
 			return new RotationIndicatorParticle(worldIn, x, y, z, data.color, data.radius1, data.radius2, data.speed,
 				data.getAxis(), data.lifeSpan, visible, this.spriteSet);
 		}
