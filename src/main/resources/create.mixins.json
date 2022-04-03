@@ -18,7 +18,7 @@
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
-    "WindowResizeMixin"
+    "WindowResizeMixin",
     "ModelDataRefreshMixin",
     "accessor.GameRendererAccessor",
     "accessor.ParticleEngineAccessor"
