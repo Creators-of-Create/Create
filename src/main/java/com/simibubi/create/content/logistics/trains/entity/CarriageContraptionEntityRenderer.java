@@ -1,13 +1,18 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
+import java.util.Objects;
+
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 
 public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer<CarriageContraptionEntity> {
@@ -34,24 +39,41 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		MultiBufferSource buffers, int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
-		if (Backend.isOn()) return;
-
 		Carriage carriage = entity.getCarriage();
 		if (carriage == null)
 			return;
 
+		boolean usingFlywheel = Backend.isOn();
+
 		Vec3 position = entity.getPosition(partialTicks);
 
-		ms.pushPose();
+		float viewYRot = entity.getViewYRot(partialTicks);
+		float viewXRot = entity.getViewXRot(partialTicks);
+		int bogeySpacing = carriage.bogeySpacing;
+
 		carriage.bogeys.forEach(bogey -> {
 			if (bogey == null)
 				return;
 
-			ms.pushPose();
-			float viewYRot = entity.getViewYRot(partialTicks);
-			float viewXRot = entity.getViewXRot(partialTicks);
-			int bogeySpacing = carriage.bogeySpacing;
-			TransformStack.cast(ms)
+			if (!usingFlywheel) {
+				ms.pushPose();
+				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
+
+				int light = getBogeyLightCoords(entity, bogey, partialTicks);
+				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light, overlay);
+
+				ms.popPose();
+			}
+
+			bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, bogey.isLeading);
+			if (!carriage.isOnTwoBogeys())
+				bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, !bogey.isLeading);
+
+		});
+	}
+
+	public static void translateBogey(PoseStack ms, CarriageBogey bogey, int bogeySpacing, float viewYRot, float viewXRot, float partialTicks) {
+		TransformStack.cast(ms)
 				.rotateY(viewYRot + 90)
 				.rotateX(-viewXRot)
 				.rotateY(180)
@@ -62,17 +84,13 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				.rotateY(bogey.yaw.getValue(partialTicks))
 				.rotateX(bogey.pitch.getValue(partialTicks))
 				.translate(0, .5f, 0);
+	}
 
-			bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers,
-				getPackedLightCoords(entity, partialTicks), overlay);
-			bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, bogey.isLeading);
-			if (!carriage.isOnTwoBogeys())
-				bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, !bogey.isLeading);
+	public static int getBogeyLightCoords(CarriageContraptionEntity entity, CarriageBogey bogey, float partialTicks) {
 
-			ms.popPose();
-		});
-		ms.popPose();
+		var lightPos = new BlockPos(Objects.requireNonNullElseGet(bogey.getAnchorPosition(), () -> entity.getLightProbePosition(partialTicks)));
 
+		return LightTexture.pack(entity.level.getBrightness(LightLayer.BLOCK, lightPos), entity.level.getBrightness(LightLayer.SKY, lightPos));
 	}
 
 }

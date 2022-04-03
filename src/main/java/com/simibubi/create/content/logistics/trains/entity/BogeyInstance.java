@@ -1,9 +1,12 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -12,7 +15,11 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 
 public sealed class BogeyInstance {
 
@@ -45,6 +52,20 @@ public sealed class BogeyInstance {
 					.centre()
 					.rotateZ(wheelAngle)
 					.unCentre();
+	}
+
+	public void updateLight(BlockAndTintGetter world, CarriageContraptionEntity entity) {
+		var lightPos = new BlockPos(getLightPos(entity));
+
+		updateLight(world.getBrightness(LightLayer.BLOCK, lightPos), world.getBrightness(LightLayer.SKY, lightPos));
+	}
+
+	private Vec3 getLightPos(CarriageContraptionEntity entity) {
+		if (bogey.getAnchorPosition() != null) {
+			return bogey.getAnchorPosition();
+		} else {
+			return entity.getLightProbePosition(AnimationTickHolder.getPartialTicks());
+		}
 	}
 
 	public void updateLight(int blockLight, int skyLight) {

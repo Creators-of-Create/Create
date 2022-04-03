@@ -58,17 +58,7 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 				ms.pushPose();
 				CarriageBogey bogey = instance.bogey;
 
-				TransformStack.cast(ms)
-						.rotateY(viewYRot + 90)
-						.rotateX(-viewXRot)
-						.rotateY(180)
-						.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing)
-						.rotateY(-180)
-						.rotateX(viewXRot)
-						.rotateY(-viewYRot - 90)
-						.rotateY(bogey.yaw.getValue(partialTicks))
-						.rotateX(bogey.pitch.getValue(partialTicks))
-						.translate(0, .5f, 0);
+				CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
 
 				instance.beginFrame(bogey.wheelAngle.getValue(partialTicks), ms);
 				ms.popPose();
@@ -82,13 +72,9 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 	public void updateLight() {
 		if (bogeys == null) return;
 
-		var pos = new BlockPos(entity.getLightProbePosition(AnimationTickHolder.getPartialTicks()));
-		int block = world.getBrightness(LightLayer.BLOCK, pos);
-		int sky = world.getBrightness(LightLayer.SKY, pos);
-
 		bogeys.forEach(instance -> {
 			if (instance != null)
-				instance.updateLight(block, sky);
+				instance.updateLight(world, entity);
 		});
 	}
 
