@@ -63,7 +63,7 @@ dependencies {
 
 //    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
 
-    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:0.1.0-interfacent+1.18-interfacent.${project.port_lib_hash}"))
+    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:0.2.0+1.18.2.${project.port_lib_hash}"))
     modImplementation(include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
     implementation(include('com.electronwill.night-config:core:3.6.0'))
@@ -72,7 +72,7 @@ dependencies {
     modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
-    modImplementation(include("io.github.tropheusj:milk-lib:0.1.6"))
+    modImplementation(include("io.github.tropheusj:milk-lib:0.3.0"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
 }
 
