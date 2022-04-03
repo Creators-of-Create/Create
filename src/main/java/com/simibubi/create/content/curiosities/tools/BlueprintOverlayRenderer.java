@@ -20,9 +20,16 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -104,12 +111,7 @@ public class BlueprintOverlayRenderer {
 		boolean firstPass = true;
 		boolean success = true;
 		Minecraft mc = Minecraft.getInstance();
-		ItemStackHandler playerInv = new ItemStackHandler(mc.player.getInventory()
-			.getContainerSize());
-		for (int i = 0; i < playerInv.getSlots(); i++)
-			playerInv.setStackInSlot(i, mc.player.getInventory()
-				.getItem(i)
-				.copy());
+		PlayerInventoryStorage playerInv = PlayerInventoryStorage.of(mc.player);
 
 		int amountCrafted = 0;
 		Optional<CraftingRecipe> recipe = Optional.empty();
@@ -121,74 +123,78 @@ public class BlueprintOverlayRenderer {
 		List<ItemStack> newlyMissing = new ArrayList<>();
 		boolean invalid = false;
 
-		do {
-			craftingGrid.clear();
-			newlyAdded.clear();
-			newlyMissing.clear();
+		try (Transaction t = TransferUtil.getTransaction()) {
+			do {
+				craftingGrid.clear();
+				newlyAdded.clear();
+				newlyMissing.clear();
 
-			Search: for (int i = 0; i < 9; i++) {
-				ItemStack requestedItem = items.getStackInSlot(i);
-				if (requestedItem.isEmpty()) {
-					craftingGrid.put(i, ItemStack.EMPTY);
-					continue;
-				}
-
-				for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-					if (!FilterItem.test(mc.level, playerInv.getStackInSlot(slot), requestedItem))
+				Search:
+				for (int i = 0; i < 9; i++) {
+					ItemStack requestedItem = items.getStackInSlot(i);
+					if (requestedItem.isEmpty()) {
+						craftingGrid.put(i, ItemStack.EMPTY);
 						continue;
-					ItemStack currentItem = playerInv.extractItem(slot, 1, false);
-					craftingGrid.put(i, currentItem);
-					newlyAdded.add(currentItem);
-					continue Search;
+					}
+
+					ResourceAmount<ItemVariant> resource = StorageUtil.findExtractableContent(
+							playerInv, v -> FilterItem.test(mc.level, v.toStack(), requestedItem), t);
+					if (resource != null) {
+						ItemStack currentItem = resource.resource().toStack(1);
+						craftingGrid.put(i, currentItem);
+						newlyAdded.add(currentItem);
+						continue Search;
+					}
+
+					success = false;
+					newlyMissing.add(requestedItem);
 				}
 
-				success = false;
-				newlyMissing.add(requestedItem);
-			}
-
-			if (success) {
-				CraftingContainer craftingInventory = new BlueprintCraftingInventory(craftingGrid);
-				if (!recipe.isPresent())
-					recipe = mc.level.getRecipeManager()
-						.getRecipeFor(RecipeType.CRAFTING, craftingInventory, mc.level);
-				ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.level))
-					.map(r -> r.assemble(craftingInventory))
-					.orElse(ItemStack.EMPTY);
-
-				if (resultFromRecipe.isEmpty()) {
+				if (success) {
+					CraftingContainer craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 					if (!recipe.isPresent())
-						invalid = true;
-					success = false;
-				} else if (resultFromRecipe.getCount() + amountCrafted > 64) {
-					success = false;
-				} else {
-					amountCrafted += resultFromRecipe.getCount();
-					if (result.isEmpty())
-						result = resultFromRecipe.copy();
-					else
-						result.grow(resultFromRecipe.getCount());
-					resultCraftable = true;
-					firstPass = false;
+						recipe = mc.level.getRecipeManager()
+								.getRecipeFor(RecipeType.CRAFTING, craftingInventory, mc.level);
+					ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.level))
+							.map(r -> r.assemble(craftingInventory))
+							.orElse(ItemStack.EMPTY);
+
+					if (resultFromRecipe.isEmpty()) {
+						if (!recipe.isPresent())
+							invalid = true;
+						success = false;
+					} else if (resultFromRecipe.getCount() + amountCrafted > 64) {
+						success = false;
+					} else {
+						amountCrafted += resultFromRecipe.getCount();
+						if (result.isEmpty())
+							result = resultFromRecipe.copy();
+						else
+							result.grow(resultFromRecipe.getCount());
+						resultCraftable = true;
+						firstPass = false;
+					}
 				}
-			}
 
-			if (success || firstPass) {
-				newlyAdded.forEach(s -> ItemHandlerHelper.insertItemStacked(availableItems, s, false));
-				newlyMissing.forEach(s -> ItemHandlerHelper.insertItemStacked(missingItems, s, false));
-			}
-
-			if (!success) {
-				if (firstPass) {
-					result = invalid ? ItemStack.EMPTY : items.getStackInSlot(9);
-					resultCraftable = false;
+				if (success || firstPass) {
+					newlyAdded.forEach(s -> availableItems.insert(ItemVariant.of(s), s.getCount(), t));
+					newlyMissing.forEach(s -> missingItems.insert(ItemVariant.of(s), s.getCount(), t));
 				}
-				break;
-			}
 
-			if (!sneak)
-				break;
+				if (!success) {
+					if (firstPass) {
+						result = invalid ? ItemStack.EMPTY : items.getStackInSlot(9);
+						resultCraftable = false;
+					}
+					break;
+				}
 
-		} while (success);
+				if (!sneak)
+					break;
+
+			} while (success);
+			t.commit();
+		}
 
 		for (int i = 0; i < 9; i++) {
 			ItemStack available = availableItems.getStackInSlot(i);

@@ -10,13 +10,8 @@ import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BucketItemAccessor;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
-
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
@@ -32,8 +27,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
@@ -74,17 +72,16 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 						.build());
 					return;
 				}
+				ItemStack copy = stack.copy();
 
-				LazyOptional<IFluidHandlerItem> capability =
-					TransferUtil.getFluidHandlerItem(stack);
-				if (!capability.isPresent())
+				ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
+				Storage<FluidVariant> handler = ctx.find(FluidStorage.ITEM);
+
+				if (handler == null)
 					return;
 
-				ItemStack copy = stack.copy();
-				capability = TransferUtil.getFluidHandlerItem(copy);
-				IFluidHandlerItem handler = capability.orElse(null);
-				FluidStack extracted = handler.drain(FluidConstants.BUCKET, false);
-				ItemStack result = handler.getContainer();
+				FluidStack extracted = TransferUtil.extractAnyFluid(handler, FluidConstants.BUCKET);
+				ItemStack result = ctx.getItemVariant().toStack((int) ctx.getAmount());
 				if (extracted.isEmpty())
 					return;
 				if (result.isEmpty())

@@ -9,11 +9,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -94,8 +94,7 @@ public class MountedFluidStorage {
 		if (te == null)
 			return;
 
-		IFluidHandler teHandler = TransferUtil.getFluidHandler(te)
-			.orElse(null);
+		Storage<FluidVariant> teHandler = TransferUtil.getFluidStorage(te);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;
 		SmartFluidTank smartTank = (SmartFluidTank) teHandler;
@@ -112,8 +111,7 @@ public class MountedFluidStorage {
 		if (tank instanceof CreativeSmartFluidTank)
 			return;
 
-		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
-		IFluidHandler teHandler = capability.orElse(null);
+		Storage<FluidVariant> teHandler = TransferUtil.getFluidStorage(te);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;
 
@@ -121,7 +119,7 @@ public class MountedFluidStorage {
 		inv.setFluid(tank.getFluid().copy());
 	}
 
-	public IFluidHandler getFluidHandler() {
+	public SmartFluidTank getFluidHandler() {
 		return tank;
 	}
 

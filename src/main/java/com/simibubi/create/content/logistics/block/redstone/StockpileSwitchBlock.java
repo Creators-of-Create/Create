@@ -130,10 +130,10 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 			BlockEntity te = context.getLevel()
 				.getBlockEntity(context.getClickedPos()
 					.relative(face));
-			if (te != null && (TransferUtil.getItemHandler(te)
-				.isPresent()
-				|| TransferUtil.getFluidHandler(te)
-					.isPresent()))
+			if (te != null && (TransferUtil.getItemStorage(te)
+				!= null
+				|| TransferUtil.getFluidStorage(te)
+					!= null))
 				if (preferredFacing == null)
 					preferredFacing = face;
 				else {

@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.List;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -10,10 +13,8 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
@@ -30,7 +31,6 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 	boolean isMoving;
 
 	private SmartFluidTank internalTank;
-	private LazyOptional<IFluidHandler> capability;
 	private FluidDrainingBehaviour drainer;
 	private FluidFillingBehaviour filler;
 	private HosePulleyFluidHandler handler;
@@ -44,7 +44,6 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 		internalTank = new SmartFluidTank((long) (FluidConstants.BUCKET * 1.5), this::onTankContentsChanged);
 		handler = new HosePulleyFluidHandler(internalTank, filler, drainer,
 			() -> worldPosition.below((int) Math.ceil(offset.getValue())), () -> !this.isMoving);
-		capability = LazyOptional.of(() -> handler);
 	}
 
 	@Override
@@ -91,8 +90,8 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 				isMoving = false;
 			}
 			if (isMoving) {
-				drainer.reset();
-				filler.reset();
+				drainer.reset(null);
+				filler.reset(null);
 			}
 		}
 
@@ -138,8 +137,8 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 			.getMaterial()
 			.isReplaceable()) {
 			isMoving = true;
-			drainer.reset();
-			filler.reset();
+			drainer.reset(null);
+			filler.reset(null);
 			return;
 		}
 
@@ -167,7 +166,6 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		capability.invalidate();
 	}
 
 	public float getMovementSpeed() {
@@ -183,9 +181,9 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 
 	@Nullable
 	@Override
-	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
-		if (direction == null || HosePulleyBlock.hasPipeTowards(level, worldPosition, getBlockState(), direction)) {
-			return capability.cast();
+	public Storage<FluidVariant> getFluidStorage(@Nullable Direction face) {
+		if (face == null || HosePulleyBlock.hasPipeTowards(level, worldPosition, getBlockState(), face)) {
+			return handler;
 		}
 		return null;
 	}

@@ -7,8 +7,13 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -58,9 +63,16 @@ public class SharedDepotBlockMethods {
 				1f + Create.RANDOM.nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
-		for (int i = 0; i < outputs.getSlots(); i++)
-			player.getInventory()
-				.placeItemBackInInventory(outputs.extractItem(i, 64, false));
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (StorageView<ItemVariant> view : outputs.iterable(t)) {
+				if (view.isResourceBlank()) continue;
+				ItemVariant var = view.getResource();
+				long extracted = view.extract(var, 64, t);
+				ItemStack stack = var.toStack((int) extracted);
+				player.getInventory().placeItemBackInInventory(stack);
+			}
+			t.commit();
+		}
 
 		if (!wasEmptyHanded && !shouldntPlaceItem) {
 			TransportedItemStack transported = new TransportedItemStack(heldItem);

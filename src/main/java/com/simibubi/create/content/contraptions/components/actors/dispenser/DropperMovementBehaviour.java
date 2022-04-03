@@ -8,6 +8,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerHelper;
@@ -56,19 +62,23 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 
 	private ArrayList<DispenseItemLocation> getUseableLocations(MovementContext context) {
 		ArrayList<DispenseItemLocation> useable = new ArrayList<>();
-		for (int slot = 0; slot < getInvSize(); slot++) {
-			DispenseItemLocation location = new DispenseItemLocation(true, slot);
-			ItemStack testStack = getItemStackAt(location, context);
-			if (testStack == null || testStack.isEmpty())
-				continue;
-			if (testStack.getMaxStackSize() == 1) {
-				location = new DispenseItemLocation(false, ItemHelper.findFirstMatchingSlotIndex(context.contraption.inventory, testStack::sameItem));
-				if (!getItemStackAt(location, context).isEmpty())
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (int slot = 0; slot < getInvSize(); slot++) {
+				DispenseItemLocation location = new DispenseItemLocation(slot);
+				ItemStack testStack = getItemStackAt(location, context);
+				if (testStack == null || testStack.isEmpty())
+					continue;
+				if (testStack.getMaxStackSize() == 1) {
+					ResourceAmount<ItemVariant> available = StorageUtil.findExtractableContent(context.contraption.inventory, v -> v.matches(testStack), t);
+					if (available != null) {
+						location = new DispenseItemLocation(available);
+						useable.add(location);
+					}
+				} else if (testStack.getCount() >= 2)
 					useable.add(location);
-			} else if (testStack.getCount() >= 2)
-				useable.add(location);
+			}
+			return useable;
 		}
-		return useable;
 	}
 
 	@Override
@@ -104,7 +114,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		if (location.isInternal()) {
 			return getStacks(context).get(location.getSlot());
 		} else {
-			return context.contraption.inventory.getStackInSlot(location.getSlot());
+			return location.getVariant().toStack(location.getCount());
 		}
 	}
 
@@ -112,7 +122,11 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		if (location.isInternal()) {
 			getStacks(context).set(location.getSlot(), stack);
 		} else {
-			context.contraption.inventory.setStackInSlot(location.getSlot(), stack);
+			try (Transaction t = TransferUtil.getTransaction()) {
+				context.contraption.inventory.extract(location.getVariant(), location.getCount(), t);
+				context.contraption.inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+				t.commit();
+			}
 		}
 	}
 

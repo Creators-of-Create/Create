@@ -1,50 +1,69 @@
 package com.simibubi.create.foundation.item;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public class ItemHandlerWrapper implements IItemHandlerModifiable {
+import java.util.Iterator;
 
-	protected IItemHandlerModifiable wrapped;
+public class ItemHandlerWrapper implements Storage<ItemVariant> {
 
-	public ItemHandlerWrapper(IItemHandlerModifiable wrapped) {
+	protected Storage<ItemVariant> wrapped;
+
+	public ItemHandlerWrapper(Storage<ItemVariant> wrapped) {
 		this.wrapped = wrapped;
 	}
 
 	@Override
-	public int getSlots() {
-		return wrapped.getSlots();
+	public boolean supportsInsertion() {
+		return wrapped.supportsInsertion();
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return wrapped.getStackInSlot(slot);
+	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+		return wrapped.insert(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		return wrapped.insertItem(slot, stack, simulate);
+	public long simulateInsert(ItemVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+		return wrapped.simulateInsert(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		return wrapped.extractItem(slot, amount, simulate);
+	public boolean supportsExtraction() {
+		return wrapped.supportsExtraction();
 	}
 
 	@Override
-	public int getSlotLimit(int slot) {
-		return wrapped.getSlotLimit(slot);
+	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+		return wrapped.extract(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
-		return wrapped.isItemValid(slot, stack);
+	public long simulateExtract(ItemVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+		return wrapped.simulateExtract(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
-		wrapped.setStackInSlot(slot, stack);
+	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+		return wrapped.iterator(transaction);
 	}
 
+	@Override
+	public Iterable<StorageView<ItemVariant>> iterable(TransactionContext transaction) {
+		return wrapped.iterable(transaction);
+	}
+
+	@Override
+	public @Nullable StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
+		return wrapped.exactView(transaction, resource);
+	}
+
+	@Override
+	public long getVersion() {
+		return wrapped.getVersion();
+	}
 }

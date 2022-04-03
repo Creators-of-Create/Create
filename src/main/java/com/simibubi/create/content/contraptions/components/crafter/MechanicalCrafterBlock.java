@@ -16,11 +16,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -191,15 +191,16 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 					return InteractionResult.SUCCESS;
 				}
 
-				LazyOptional<IItemHandler> capability =
-					TransferUtil.getItemHandler(crafter);
-				if (!capability.isPresent())
+				Storage<ItemVariant> capability = crafter.getItemStorage(null);
+				if (capability == null)
 					return InteractionResult.PASS;
-				ItemStack remainder =
-					ItemHandlerHelper.insertItem(capability.orElse(new ItemStackHandler()), heldItem.copy(), false);
-				if (remainder.getCount() != heldItem.getCount())
-					player.setItemInHand(handIn, remainder);
-				return InteractionResult.SUCCESS;
+				try (Transaction t = TransferUtil.getTransaction()) {
+					long inserted = capability.insert(ItemVariant.of(heldItem), heldItem.getCount(), t);
+					if (inserted != 0)
+						player.setItemInHand(handIn, ItemHandlerHelper.copyStackWithSize(heldItem, (int) (heldItem.getCount() - inserted)));
+					t.commit();
+					return InteractionResult.SUCCESS;
+				}
 			}
 
 			ItemStack inSlot = crafter.getInventory()
@@ -226,6 +227,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 				.placeItemBackInInventory(inSlot);
 			crafter.getInventory()
 				.setStackInSlot(0, ItemStack.EMPTY);
+			crafter.sendData();
 			return InteractionResult.SUCCESS;
 		}
 

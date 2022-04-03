@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -27,8 +35,6 @@ import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandl
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import me.alphamode.forgetags.Tags;
@@ -207,14 +213,17 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
-				IItemHandler handler = TransferUtil.getItemHandler(te)
-					.orElse(null);
+				Storage<ItemVariant> handler = te.getItemStorage(null);
 				if (handler == null)
 					return;
-				ItemStack remainder = handler.insertItem(0, itemEntity.getItem()
-					.copy(), false);
-				if (remainder.isEmpty())
-					itemEntity.discard();
+				ItemStack inEntity = itemEntity.getItem();
+				try (Transaction t = TransferUtil.getTransaction()) {
+					long inserted = handler.insert(ItemVariant.of(inEntity), inEntity.getCount(), t);
+					if (inEntity.getCount() == inserted) {
+						itemEntity.discard();
+					}
+					t.commit();
+				}
 			});
 			return;
 		}

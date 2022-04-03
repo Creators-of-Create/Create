@@ -148,11 +148,16 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	private boolean appliesTo(ItemStack input) {
 		if (ingredient.test(input))
 			return true;
-		return input.hasTag() && getTransitionalItem().getItem() == input.getItem() && input.getTag()
-			.contains("SequencedAssembly") && input.getTag()
-				.getCompound("SequencedAssembly")
-				.getString("id")
-				.equals(id.toString());
+		if (input.hasTag()) {
+			if (getTransitionalItem().getItem() == input.getItem()) {
+				if (input.getTag().contains("SequencedAssembly")) {
+					CompoundTag tag = input.getTag().getCompound("SequencedAssembly");
+					String id = tag.getString("id");
+					return id.equals(this.id.toString());
+				}
+			}
+		}
+		return false;
 	}
 
 	private SequencedRecipe<?> getNextRecipe(ItemStack input) {

@@ -29,8 +29,8 @@ repositories {
     maven { url = "https://aperlambda.github.io/maven" }
     maven { url = "https://ladysnake.jfrog.io/artifactory/mods" }
     maven { url = "https://maven.kotlindiscord.com/repository/terraformers/" }
-    maven { url = "https://maven.devos.community/releases/" }
-    maven { url = "https://maven.devos.community/snapshots/" }
+    maven { url = "https://mvn.devos.one/releases/" }
+    maven { url = "https://mvn.devos.one/snapshots/" }
     maven { url = "https://maven.terraformersmc.com/" }
     maven { url = "https://maven.cafeteria.dev" }
     maven { url = "https://jitpack.io/" }

@@ -16,11 +16,7 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
-
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -30,7 +26,12 @@ import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -66,9 +67,9 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 						return;
 					}
 
-					LazyOptional<IFluidHandlerItem> capability =
-							TransferUtil.getFluidHandlerItem(stack);
-					if (!capability.isPresent())
+					ContainerItemContext context = ContainerItemContext.withInitial(stack);
+					Storage<FluidVariant> storage = context.find(FluidStorage.ITEM);
+					if (storage == null)
 						return;
 
 					EntryRegistry.getInstance().getEntryStacks()
@@ -79,30 +80,33 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 								dev.architectury.fluid.FluidStack archStack = entryStack1.getValue();
 								FluidStack fluidStack = new FluidStack(archStack.getFluid(), archStack.getAmount(), archStack.getTag());
 								ItemStack copy = stack.copy();
-								TransferUtil.getFluidHandlerItem(copy)
-										.ifPresent(fhi -> {
-											if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
-												return;
-											FluidStack fluidCopy = fluidStack.copy();
-											fluidCopy.setAmount(FluidConstants.BUCKET);
-											fhi.fill(fluidCopy, false);
-											ItemStack container = fhi.getContainer();
-											if (container.sameItem(copy))
-												return;
-											if (container.isEmpty())
-												return;
+								ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
+								Storage<FluidVariant> fhi = ctx.find(FluidStorage.ITEM);
+								if (fhi != null) {
+									if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
+										return;
+									FluidStack fluidCopy = fluidStack.copy();
+									fluidCopy.setAmount(FluidConstants.BUCKET);
+									try (Transaction t = TransferUtil.getTransaction()) {
+										fhi.insert(fluidCopy.getType(), fluidCopy.getAmount(), t);
+										ItemStack container = ctx.getItemVariant().toStack((int) ctx.getAmount());
+										if (container.sameItem(copy))
+											return;
+										if (container.isEmpty())
+											return;
 
-											Ingredient bucket = Ingredient.of(stack);
-											ResourceLocation itemName = Registry.ITEM.getKey(stack.getItem());
-											ResourceLocation fluidName = Registry.FLUID.getKey(fluidCopy.getFluid());
-											recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new,
-													Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
-															+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
-													.withItemIngredients(bucket)
-													.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
-													.withSingleItemOutput(container)
-													.build());
-										});
+										Ingredient bucket = Ingredient.of(stack);
+										ResourceLocation itemName = Registry.ITEM.getKey(stack.getItem());
+										ResourceLocation fluidName = Registry.FLUID.getKey(fluidCopy.getFluid());
+										recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new,
+												Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
+														+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
+												.withItemIngredients(bucket)
+												.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
+												.withSingleItemOutput(container)
+												.build());
+									}
+								}
 							});
 				});
 

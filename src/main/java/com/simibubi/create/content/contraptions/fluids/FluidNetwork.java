@@ -19,11 +19,15 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -35,8 +39,8 @@ public class FluidNetwork {
 	Level world;
 	BlockFace start;
 
-	Supplier<LazyOptional<IFluidHandler>> sourceSupplier;
-	LazyOptional<IFluidHandler> source;
+	Supplier<Storage<FluidVariant>> sourceSupplier;
+	Storage<FluidVariant> source;
 	int transferSpeed;
 
 	int pauseBeforePropagation;
@@ -44,14 +48,14 @@ public class FluidNetwork {
 	Set<Pair<BlockFace, PipeConnection>> frontier;
 	Set<BlockPos> visited;
 	FluidStack fluid;
-	List<Pair<BlockFace, LazyOptional<IFluidHandler>>> targets;
+	List<Pair<BlockFace, Storage<FluidVariant>>> targets;
 	Map<BlockPos, WeakReference<FluidTransportBehaviour>> cache;
 
-	public FluidNetwork(Level world, BlockFace location, Supplier<LazyOptional<IFluidHandler>> sourceSupplier) {
+	public FluidNetwork(Level world, BlockFace location, Supplier<Storage<FluidVariant>> sourceSupplier) {
 		this.world = world;
 		this.start = location;
 		this.sourceSupplier = sourceSupplier;
-		this.source = LazyOptional.empty();
+		this.source = null;
 		this.fluid = FluidStack.EMPTY;
 		this.frontier = new HashSet<>();
 		this.visited = new HashSet<>();
@@ -160,18 +164,18 @@ public class FluidNetwork {
 
 //		drawDebugOutlines();
 
-		if (!source.isPresent())
+		if (source == null)
 			source = sourceSupplier.get();
-		if (!source.isPresent())
+		if (source == null)
 			return;
 
 		keepPortableFluidInterfaceEngaged();
 
 		if (targets.isEmpty())
 			return;
-		for (Pair<BlockFace, LazyOptional<IFluidHandler>> pair : targets) {
+		for (Pair<BlockFace, Storage<FluidVariant>> pair : targets) {
 			if (pair.getSecond()
-				.isPresent() && world.getGameTime() % 40 != 0)
+				!= null && world.getGameTime() % 40 != 0)
 				continue;
 			PipeConnection pipeConnection = get(pair.getFirst());
 			if (pipeConnection == null)
@@ -183,42 +187,31 @@ public class FluidNetwork {
 		}
 
 		long flowSpeed = transferSpeed;
-		for (boolean simulate : Iterate.trueAndFalse) {
+		try (Transaction t = TransferUtil.getTransaction()) {
 
-			IFluidHandler handler = source.orElse(null);
+			Storage<FluidVariant> handler = source;
 			if (handler == null)
 				return;
 
 			FluidStack transfer = FluidStack.EMPTY;
-			for (int i = 0; i < handler.getTanks(); i++) {
-				FluidStack contained = handler.getFluidInTank(i);
-				if (contained.isEmpty())
-					continue;
-				if (!contained.isFluidEqual(fluid))
-					continue;
-				FluidStack toExtract = FluidHelper.copyStackWithAmount(contained, flowSpeed);
-				transfer = handler.drain(toExtract, simulate);
-			}
+			long transferredAmount = 0;
+			try (Transaction test = t.openNested()) {
+				long extracted = handler.extract(fluid.getType(), flowSpeed, test);
+				if (extracted > 0) transfer = new FluidStack(fluid.getType(), extracted);
 
-			if (transfer.isEmpty()) {
-				FluidStack genericExtract = handler.drain(flowSpeed, simulate);
-				if (!genericExtract.isEmpty() && genericExtract.isFluidEqual(fluid))
-					transfer = genericExtract;
-			}
-
-			if (transfer.isEmpty())
-				return;
-			if (simulate)
+				if (transfer.isEmpty())
+					return;
 				flowSpeed = transfer.getAmount();
-
-			List<Pair<BlockFace, LazyOptional<IFluidHandler>>> availableOutputs = new ArrayList<>(targets);
+				test.abort();
+			}
+			List<Pair<BlockFace, Storage<FluidVariant>>> availableOutputs = new ArrayList<>(targets);
 			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {
 				long dividedTransfer = transfer.getAmount() / availableOutputs.size();
 				long remainder = transfer.getAmount() % availableOutputs.size();
 
-				for (Iterator<Pair<BlockFace, LazyOptional<IFluidHandler>>> iterator =
-					availableOutputs.iterator(); iterator.hasNext();) {
-					Pair<BlockFace, LazyOptional<IFluidHandler>> pair = iterator.next();
+				for (Iterator<Pair<BlockFace, Storage<FluidVariant>>> iterator =
+					 availableOutputs.iterator(); iterator.hasNext();) {
+					Pair<BlockFace, Storage<FluidVariant>> pair = iterator.next();
 					long toTransfer = dividedTransfer;
 					if (remainder > 0) {
 						toTransfer++;
@@ -227,8 +220,7 @@ public class FluidNetwork {
 
 					if (transfer.isEmpty())
 						break;
-					IFluidHandler targetHandler = pair.getSecond()
-						.orElse(null);
+					Storage<FluidVariant> targetHandler = pair.getSecond();
 					if (targetHandler == null) {
 						iterator.remove();
 						continue;
@@ -236,8 +228,9 @@ public class FluidNetwork {
 
 					FluidStack divided = transfer.copy();
 					divided.setAmount(toTransfer);
-					long fill = targetHandler.fill(divided, simulate);
+					long fill = targetHandler.insert(divided.getType(), divided.getAmount(), t);
 					transfer.setAmount(transfer.getAmount() - fill);
+					transferredAmount += fill;
 					if (fill < toTransfer)
 						iterator.remove();
 				}
@@ -246,6 +239,11 @@ public class FluidNetwork {
 
 			flowSpeed -= transfer.getAmount();
 			transfer = FluidStack.EMPTY;
+			try (Transaction extract = t.openNested()) {
+				handler.extract(fluid.getType(), transferredAmount, extract);
+				extract.commit();
+			}
+			t.commit();
 		}
 	}
 
@@ -264,7 +262,7 @@ public class FluidNetwork {
 //	}
 
 	private void keepPortableFluidInterfaceEngaged() {
-		IFluidHandler handler = source.orElse(null);
+		Storage<FluidVariant> handler = source;
 		if (!(handler instanceof InterfaceFluidHandler))
 			return;
 		if (frontier.isEmpty())

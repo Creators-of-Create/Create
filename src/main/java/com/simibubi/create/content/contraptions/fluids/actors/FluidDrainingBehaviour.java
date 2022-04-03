@@ -13,11 +13,17 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LiquidBlockAccessor;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -37,12 +43,49 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	// Execution
 	Set<BlockPos> validationSet;
 	PriorityQueue<BlockPosEntry> queue;
+	List<BlockPosEntry> queueList = new ObjectArrayList<>();
 	boolean isValid;
 
 	// Validation
 	List<BlockPosEntry> validationFrontier;
 	Set<BlockPos> validationVisited;
 	Set<BlockPos> newValidationSet;
+
+	SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
+		@Override
+		protected Data createSnapshot() {
+			return new Data(rootPos.immutable(), new ArrayList<>(validationFrontier), new HashSet<>(validationVisited),
+					new HashSet<>(newValidationSet), revalidateIn,
+					new BoundingBox(
+							affectedArea.minX(), affectedArea.minY(), affectedArea.minZ(),
+							affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ()
+					), new ObjectArrayList<>(queueList)
+			);
+		}
+
+		@Override
+		protected void readSnapshot(Data snapshot) {
+			validationFrontier = snapshot.validationFrontier;
+			validationVisited = snapshot.validationVisited;
+			newValidationSet = snapshot.newValidationSet;
+			revalidateIn = snapshot.revalidateIn;
+			affectedArea = snapshot.affectedArea;
+			queueList = snapshot.queueList;
+			rootPos = snapshot.rootPos;
+			queue = new ObjectHeapPriorityQueue<>(queueList, FluidDrainingBehaviour.this::comparePositions);
+		}
+	};
+
+	@Override
+	protected SnapshotParticipant<?> snapshotParticipant() {
+		return snapshotParticipant;
+	}
+
+	record Data(BlockPos rootPos, List<BlockPosEntry> validationFrontier,
+				Set<BlockPos> validationVisited, Set<BlockPos> newValidationSet,
+				int revalidateIn, BoundingBox affectedArea,
+				ObjectArrayList<BlockPosEntry> queueList) {
+	}
 
 	public FluidDrainingBehaviour(SmartTileEntity te) {
 		super(te);
@@ -54,17 +97,17 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	@Nullable
-	public boolean pullNext(BlockPos root, boolean simulate) {
+	public boolean pullNext(BlockPos root, TransactionContext ctx) {
 		if (!frontier.isEmpty())
 			return false;
 		if (!Objects.equals(root, rootPos)) {
-			rebuildContext(root);
+			rebuildContext(root, ctx);
 			return false;
 		}
 
 		if (counterpartActed) {
 			counterpartActed = false;
-			softReset(root);
+			softReset(root, ctx);
 			return false;
 		}
 
@@ -73,11 +116,12 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 		Level world = getWorld();
 		if (!queue.isEmpty() && !isValid) {
-			rebuildContext(root);
+			rebuildContext(root, ctx);
 			return false;
 		}
 
-		if (validationFrontier.isEmpty() && !queue.isEmpty() && !simulate && revalidateIn == 0)
+		snapshotParticipant.updateSnapshots(ctx);
+		if (validationFrontier.isEmpty() && !queue.isEmpty() && revalidateIn == 0)
 			revalidate(root);
 
 		while (!queue.isEmpty()) {
@@ -100,10 +144,11 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 					if (!tileEntity.isVirtual())
 						world.setBlock(currentPos, emptied, 2 | 16);
-					queue.dequeue();
+					BlockPosEntry e = queue.dequeue();
+					queueList.remove(e);
 					if (queue.isEmpty()) {
 						isValid = checkValid(world, rootPos);
-						reset();
+						reset(ctx);
 					}
 					continue;
 				}
@@ -120,35 +165,40 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				this.fluid = fluid;
 
 			if (!this.fluid.isSame(fluid)) {
-				queue.dequeue();
+				BlockPosEntry e = queue.dequeue();
+				queueList.remove(e);
 				if (queue.isEmpty()) {
 					isValid = checkValid(world, rootPos);
-					reset();
+					reset(ctx);
 				}
 				continue;
 			}
 
-			if (simulate)
-				return true;
+			Fluid finalFluid = fluid;
+			TransactionCallback.onSuccess(ctx, () -> {
+				playEffect(world, currentPos, finalFluid, true);
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
 
-			playEffect(world, currentPos, fluid, true);
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
+				if (infinite) {
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(finalFluid)), world, tileEntity.getBlockPos(), 8);
+				}
+			});
 
 			if (infinite) {
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(fluid)), world, tileEntity.getBlockPos(), 8);
 				return true;
 			}
 
 			if (!tileEntity.isVirtual())
-				world.setBlock(currentPos, emptied, 2 | 16);
+				TransactionCallback.setBlock(ctx, world, currentPos, emptied, 2 | 16);
 			affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 
-			queue.dequeue();
+			BlockPosEntry e = queue.dequeue();
+			queueList.remove(e);
 			if (queue.isEmpty()) {
 				isValid = checkValid(world, rootPos);
-				reset();
+				reset(ctx);
 			} else if (!validationSet.contains(currentPos)) {
-				reset();
+				reset(ctx);
 			}
 			return true;
 		}
@@ -157,13 +207,14 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			return false;
 
 		if (isValid)
-			rebuildContext(root);
+			rebuildContext(root, ctx);
 
 		return false;
 	}
 
-	protected void softReset(BlockPos root) {
+	protected void softReset(BlockPos root, TransactionContext ctx) {
 		queue.clear();
+		queueList.clear();
 		validationSet.clear();
 		newValidationSet.clear();
 		validationFrontier.clear();
@@ -172,7 +223,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		infinite = false;
 		setValidationTimer();
 		frontier.add(new BlockPosEntry(root, 0));
-		tileEntity.sendData();
+		TransactionCallback.onSuccess(ctx, tileEntity::sendData);
 	}
 
 	protected boolean checkValid(Level world, BlockPos root) {
@@ -235,8 +286,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		super.lazyTick();
 	}
 
-	public void rebuildContext(BlockPos root) {
-		reset();
+	public void rebuildContext(BlockPos root, TransactionContext ctx) {
+		reset(ctx);
 		rootPos = root;
 		affectedArea = BoundingBox.fromCorners(rootPos, rootPos);
 		if (isValid)
@@ -253,7 +304,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 	private void continueSearch() {
 		fluid = search(fluid, frontier, visited, (e, d) -> {
-			queue.enqueue(new BlockPosEntry(e, d));
+			BlockPosEntry entry = new BlockPosEntry(e, d);
+			queue.enqueue(entry);
+			queueList.add(entry);
 			validationSet.add(e);
 		}, false);
 
@@ -265,7 +318,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			while (true) {
 				BlockPos first = queue.first().pos;
 				if (canPullFluidsFrom(world.getBlockState(first), first) != FluidBlockType.SOURCE) {
-					queue.dequeue();
+					BlockPosEntry e = queue.dequeue();
+					queueList.remove(e);
 					continue;
 				}
 				break;
@@ -274,7 +328,10 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			frontier.clear();
 			visited.clear();
 			queue.clear();
-			queue.enqueue(new BlockPosEntry(firstValid, 0));
+			queueList.clear();
+			BlockPosEntry e = new BlockPosEntry(firstValid, 0);
+			queue.enqueue(e);
+			queueList.add(e);
 			tileEntity.sendData();
 			return;
 		}
@@ -292,7 +349,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		int maxBlocks = maxBlocks();
 		if (validationVisited.size() > maxBlocks && canDrainInfinitely(fluid)) {
 			if (!infinite)
-				reset();
+				reset(null);
 			validationFrontier.clear();
 			setLongValidationTimer();
 			return;
@@ -301,7 +358,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		if (!validationFrontier.isEmpty())
 			return;
 		if (infinite) {
-			reset();
+			reset(null);
 			return;
 		}
 
@@ -311,17 +368,19 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
+	public void reset(@Nullable TransactionContext ctx) {
+		super.reset(ctx);
 
 		fluid = null;
 		rootPos = null;
 		queue.clear();
+		queueList.clear();
 		validationSet.clear();
 		newValidationSet.clear();
 		validationFrontier.clear();
 		validationVisited.clear();
-		tileEntity.sendData();
+		if (ctx != null) TransactionCallback.onSuccess(ctx, tileEntity::sendData);
+		else tileEntity.sendData();
 	}
 
 	public static BehaviourType<FluidDrainingBehaviour> TYPE = new BehaviourType<>();
@@ -336,8 +395,15 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	public FluidStack getDrainableFluid(BlockPos rootPos) {
-		return fluid == null || isSearching() || !pullNext(rootPos, true) ? FluidStack.EMPTY
-			: new FluidStack(fluid, FluidConstants.BUCKET);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			if (fluid == null || isSearching() || !pullNext(rootPos, t)) {
+				return FluidStack.EMPTY;
+			} else if (fluid == null) { // fabric: we need to check again because null isn't allowed and search/pull can set to null
+				return FluidStack.EMPTY;
+			} else {
+				return new FluidStack(fluid, FluidConstants.BUCKET);
+			}
+		}
 	}
 
 }

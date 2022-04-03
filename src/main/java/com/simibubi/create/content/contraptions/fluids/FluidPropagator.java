@@ -209,8 +209,7 @@ public class FluidPropagator {
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
 		BlockEntity tileEntity = world.getBlockEntity(pos);
-		return tileEntity != null && TransferUtil.getFluidHandler(tileEntity, side)
-			.isPresent();
+		return tileEntity != null && TransferUtil.getFluidStorage(tileEntity, side) != null;
 	}
 
 	@Nullable

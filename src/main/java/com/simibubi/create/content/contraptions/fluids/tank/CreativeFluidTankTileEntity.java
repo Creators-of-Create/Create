@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -35,31 +37,26 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 
 		@Override
 		public long getFluidAmount() {
-			return getFluid().isEmpty() ? 0 : getTankCapacity(0);
+			return getFluid().isEmpty() ? 0 : getCapacity();
 		}
 
 		public void setContainedFluid(FluidStack fluidStack) {
-			fluid = fluidStack.copy();
+			FluidStack fluid = fluidStack.copy();
 			if (!fluidStack.isEmpty())
-				fluid.setAmount(getTankCapacity(0));
+				fluid.setAmount(getCapacity(fluid.getType()));
+			setFluid(fluid);
 			onContentsChanged();
 		}
 
 		@Override
-		public long fill(FluidStack resource, boolean sim) {
-			return resource.getAmount();
+		public long insert(FluidVariant insertedVariant, long maxAmount, TransactionContext transaction) {
+			return maxAmount;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean sim) {
-			return super.drain(resource, true);
+		public long extract(FluidVariant extractedVariant, long maxAmount, TransactionContext transaction) {
+			return maxAmount;
 		}
-
-		@Override
-		public FluidStack drain(long maxDrain, boolean sim) {
-			return super.drain(maxDrain, true);
-		}
-
 	}
 
 }

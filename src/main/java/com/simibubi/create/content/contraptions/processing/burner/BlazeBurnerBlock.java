@@ -15,8 +15,12 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
@@ -127,24 +131,26 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 
 		boolean doNotConsume = player.isCreative();
 		boolean forceOverflow = !(player instanceof FakeServerPlayer);
-
-		InteractionResultHolder<ItemStack> res =
-			tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);
-		ItemStack leftover = res.getObject();
-		if (!world.isClientSide && !doNotConsume && !leftover.isEmpty()) {
-			if (heldItem.isEmpty()) {
-				player.setItemInHand(hand, leftover);
-			} else if (!player.getInventory()
-				.add(leftover)) {
-				player.drop(leftover, false);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			InteractionResultHolder<ItemStack> res =
+					tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, t);
+			t.commit();
+			ItemStack leftover = res.getObject();
+			if (!world.isClientSide && !doNotConsume && !leftover.isEmpty()) {
+				if (heldItem.isEmpty()) {
+					player.setItemInHand(hand, leftover);
+				} else if (!player.getInventory()
+						.add(leftover)) {
+					player.drop(leftover, false);
+				}
 			}
-		}
 
-		return res.getResult() == InteractionResult.SUCCESS ? InteractionResult.SUCCESS : InteractionResult.PASS;
+			return res.getResult() == InteractionResult.SUCCESS ? InteractionResult.SUCCESS : InteractionResult.PASS;
+		}
 	}
 
 	public static InteractionResultHolder<ItemStack> tryInsert(BlockState state, Level world, BlockPos pos,
-		ItemStack stack, boolean doNotConsume, boolean forceOverflow, boolean simulate) {
+		ItemStack stack, boolean doNotConsume, boolean forceOverflow, TransactionContext ctx) {
 		if (!state.hasBlockEntity())
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
@@ -154,17 +160,16 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		BlazeBurnerTileEntity burnerTE = (BlazeBurnerTileEntity) te;
 
 		if (burnerTE.isCreativeFuel(stack)) {
-			if (!simulate)
-				burnerTE.applyCreativeFuel();
+			TransactionCallback.onSuccess(ctx, burnerTE::applyCreativeFuel);
 			return InteractionResultHolder.success(ItemStack.EMPTY);
 		}
-		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, simulate))
+		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, ctx))
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		if (!doNotConsume) {
 			ItemStack container = new ItemStack(stack.getItem().getCraftingRemainingItem());
-			if (!world.isClientSide && !simulate) {
-				stack.shrink(1);
+			if (!world.isClientSide) {
+				TransactionCallback.onSuccess(ctx, () -> stack.shrink(1));
 			}
 			if (!container.isEmpty()) {
 				return InteractionResultHolder.success(container);

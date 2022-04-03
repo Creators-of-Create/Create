@@ -1,7 +1,21 @@
 package com.simibubi.create.content.contraptions.components.millstone;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedStorageView;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -12,8 +26,6 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.CombinedInvWrapper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
@@ -38,7 +50,7 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 
 	public ItemStackHandler inputInv;
 	public ItemStackHandler outputInv;
-	public LazyOptional<IItemHandler> capability;
+	public MillstoneInventoryHandler capability;
 	public int timer;
 	private MillingRecipe lastRecipe;
 
@@ -46,7 +58,7 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 		super(type, pos, state);
 		inputInv = new ItemStackHandler(1);
 		outputInv = new ItemStackHandler(9);
-		capability = LazyOptional.of(MillstoneInventoryHandler::new);
+		capability = new MillstoneInventoryHandler();
 	}
 
 	@Override
@@ -118,7 +130,6 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		capability.invalidate();
 	}
 
 	private void process() {
@@ -134,8 +145,10 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
-		lastRecipe.rollResults()
-			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
+		try (Transaction t = TransferUtil.getTransaction()) {
+			lastRecipe.rollResults().forEach(stack -> outputInv.insert(ItemVariant.of(stack), stack.getCount(), t));
+			t.commit();
+		}
 		sendData();
 		setChanged();
 	}
@@ -178,8 +191,8 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return capability.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
+		return capability;
 	}
 
 	private boolean canProcess(ItemStack stack) {
@@ -193,35 +206,57 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 			.isPresent();
 	}
 
-	private class MillstoneInventoryHandler extends CombinedInvWrapper {
+	private class MillstoneInventoryHandler extends CombinedStorage<ItemVariant, ItemStackHandler> {
 
 		public MillstoneInventoryHandler() {
-			super(inputInv, outputInv);
+			super(List.of(inputInv, outputInv));
 		}
 
 		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			if (outputInv == getHandlerFromIndex(getIndexForSlot(slot)))
-				return false;
-			return canProcess(stack) && super.isItemValid(slot, stack);
+		public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+			if (canProcess(resource.toStack()))
+				return inputInv.insert(resource, maxAmount, transaction);
+			return 0;
 		}
 
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (outputInv == getHandlerFromIndex(getIndexForSlot(slot)))
-				return stack;
-			if (!isItemValid(slot, stack))
-				return stack;
-			return super.insertItem(slot, stack, simulate);
+		public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+			return outputInv.extract(resource, maxAmount, transaction);
 		}
 
 		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if (inputInv == getHandlerFromIndex(getIndexForSlot(slot)))
-				return ItemStack.EMPTY;
-			return super.extractItem(slot, amount, simulate);
+		public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+			return new MillstoneInventoryHandlerIterator(transaction);
 		}
 
+		private class MillstoneInventoryHandlerIterator implements Iterator<StorageView<ItemVariant>> {
+			private final TransactionContext ctx;
+			private boolean open = true;
+			private boolean output = true;
+			private Iterator<StorageView<ItemVariant>> wrapped;
+
+			public MillstoneInventoryHandlerIterator(TransactionContext ctx) {
+				this.ctx = ctx;
+				ctx.addCloseCallback((t, r) -> open = false);
+				wrapped = outputInv.iterator(ctx);
+			}
+
+			@Override
+			public boolean hasNext() {
+				return open && wrapped.hasNext();
+			}
+
+			@Override
+			public StorageView<ItemVariant> next() {
+				StorageView<ItemVariant> view = wrapped.next();
+				if (!output) view = new ViewOnlyWrappedStorageView<>(view);
+				if (output && !hasNext()) {
+					wrapped = inputInv.iterator(ctx);
+					output = false;
+				}
+				return view;
+			}
+		}
 	}
 
 }

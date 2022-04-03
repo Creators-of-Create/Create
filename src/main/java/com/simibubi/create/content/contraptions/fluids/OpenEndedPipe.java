@@ -5,8 +5,6 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
@@ -14,15 +12,18 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import io.github.tropheusj.milk.Milk;
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -104,8 +105,8 @@ public class OpenEndedPipe extends FlowSource {
 	}
 
 	@Override
-	public LazyOptional<IFluidHandler> provideHandler() {
-		return LazyOptional.of(() -> fluidHandler);
+	public Storage<FluidVariant> provideHandler() {
+		return fluidHandler;
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class OpenEndedPipe extends FlowSource {
 		return oep;
 	}
 
-	private FluidStack removeFluidFromSpace(boolean simulate) {
+	private FluidStack removeFluidFromSpace(TransactionContext ctx) {
 		FluidStack empty = FluidStack.EMPTY;
 		if (world == null)
 			return empty;
@@ -140,7 +141,7 @@ public class OpenEndedPipe extends FlowSource {
 		FluidState fluidState = state.getFluidState();
 		boolean waterlog = state.hasProperty(WATERLOGGED);
 
-		FluidStack drainBlock = VanillaFluidTargets.drainBlock(world, outputPos, state, simulate);
+		FluidStack drainBlock = VanillaFluidTargets.drainBlock(world, outputPos, state, ctx);
 		if (!drainBlock.isEmpty())
 			return drainBlock;
 
@@ -152,22 +153,19 @@ public class OpenEndedPipe extends FlowSource {
 
 		FluidStack stack = new FluidStack(fluidState.getType(), FluidConstants.BUCKET);
 
-		if (simulate)
-			return stack;
-
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5);
+		TransactionCallback.onSuccess(ctx, () -> AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5));
 
 		if (waterlog) {
-			world.setBlock(outputPos, state.setValue(WATERLOGGED, false), 3);
-			world.scheduleTick(outputPos, Fluids.WATER, 1);
+			TransactionCallback.setBlock(ctx, world, outputPos, state.setValue(WATERLOGGED, false), 3);
+			TransactionCallback.onSuccess(ctx, () -> world.scheduleTick(outputPos, Fluids.WATER, 1));
 			return stack;
 		}
-		world.setBlock(outputPos, fluidState.createLegacyBlock()
+		TransactionCallback.setBlock(ctx, world, outputPos, fluidState.createLegacyBlock()
 			.setValue(LiquidBlock.LEVEL, 14), 3);
 		return stack;
 	}
 
-	private boolean provideFluidToSpace(FluidStack fluid, boolean simulate) {
+	private boolean provideFluidToSpace(FluidStack fluid, TransactionContext ctx) {
 		if (world == null)
 			return false;
 		if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
@@ -183,8 +181,7 @@ public class OpenEndedPipe extends FlowSource {
 		if (fluid.isEmpty())
 			return false;
 		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_TAG)) { // fabric: milk logic is different
-			if (!simulate)
-				applyEffects(fluid);
+			TransactionCallback.onSuccess(ctx, () -> applyEffects(fluid));
 			return true;
 		}
 
@@ -197,8 +194,6 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (waterlog && fluid.getFluid() != Fluids.WATER)
 			return false;
-		if (simulate)
-			return true;
 
 		if (world.dimensionType()
 			.ultraWarm()
@@ -207,23 +202,23 @@ public class OpenEndedPipe extends FlowSource {
 			int i = outputPos.getX();
 			int j = outputPos.getY();
 			int k = outputPos.getZ();
-			world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
-				2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+			TransactionCallback.onSuccess(ctx, () -> world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
+					2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F));
 			return true;
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5);
+		TransactionCallback.onSuccess(ctx, () -> AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5));
 
 		if (waterlog) {
-			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), 3);
-			world.scheduleTick(outputPos, Fluids.WATER, 1);
+			TransactionCallback.setBlock(ctx, world, outputPos, state.setValue(WATERLOGGED, true), 3);
+			TransactionCallback.onSuccess(ctx, () -> world.scheduleTick(outputPos, Fluids.WATER, 1));
 			return true;
 		}
 
 		if (!AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get())
 			return true;
 
-		world.setBlock(outputPos, fluid.getFluid()
+		TransactionCallback.setBlock(ctx, world, outputPos, fluid.getFluid()
 			.defaultFluidState()
 			.createLegacyBlock(), 3);
 		return true;
@@ -253,84 +248,69 @@ public class OpenEndedPipe extends FlowSource {
 		}
 
 		@Override
-		public long fill(FluidStack resource, boolean sim) {
+		public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
 			// Never allow being filled when a source is attached
 			if (world == null)
 				return 0;
 			if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
 				return 0;
-			if (resource.isEmpty())
+			if (resource.isBlank())
 				return 0;
-			if (!provideFluidToSpace(resource, true))
+			FluidStack stack = new FluidStack(resource, 81);
+			updateSnapshots(transaction);
+			if (!provideFluidToSpace(stack, transaction))
 				return 0;
 
 			FluidStack containedFluidStack = getFluid();
-			if (!containedFluidStack.isEmpty() && !containedFluidStack.isFluidEqual(resource))
+			if (!containedFluidStack.isEmpty() && !containedFluidStack.canFill(resource))
 				setFluid(FluidStack.EMPTY);
 			if (wasPulling)
 				wasPulling = false;
-			if (canApplyEffects(resource))
-				resource = FluidHelper.copyStackWithAmount(resource, 81); // fabric: deplete fluids 81 times faster to account for larger amounts
 
-			long fill = super.fill(resource, sim);
-			if (sim)
-				return fill;
+			if (canApplyEffects(stack))
+				maxAmount = 81; // fabric: deplete fluids 81 times faster to account for larger amounts
+			long fill = super.insert(resource, maxAmount, transaction);
 			if (getFluidAmount() == FluidConstants.BUCKET || (!FluidHelper.hasBlockState(containedFluidStack.getFluid()) || containedFluidStack.getFluid().is(Milk.MILK_TAG))) // fabric: milk logic is different
-				if (provideFluidToSpace(containedFluidStack, false))
-					setFluid(FluidStack.EMPTY);
+				setFluid(FluidStack.EMPTY);
 			return fill;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean sim) {
-			return drainInner(resource.getAmount(), resource, sim);
-		}
-
-		@Override
-		public FluidStack drain(long maxDrain, boolean sim) {
-			return drainInner(maxDrain, null, sim);
-		}
-
-		private FluidStack drainInner(long amount, @Nullable FluidStack filter, boolean sim) {
-			FluidStack empty = FluidStack.EMPTY;
-			boolean filterPresent = filter != null;
-
+		public long extract(FluidVariant extractedVariant, long maxAmount, TransactionContext transaction) {
 			if (world == null)
-				return empty;
+				return 0;
 			if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
-				return empty;
-			if (amount == 0)
-				return empty;
-			if (amount > FluidConstants.BUCKET) {
-				amount = FluidConstants.BUCKET;
-				if (filterPresent)
-					filter = FluidHelper.copyStackWithAmount(filter, amount);
+				return 0;
+			if (maxAmount == 0)
+				return 0;
+			if (maxAmount > FluidConstants.BUCKET) {
+				maxAmount = FluidConstants.BUCKET;
 			}
 
 			if (!wasPulling)
 				wasPulling = true;
 
-			FluidStack drainedFromInternal = filterPresent ? super.drain(filter, sim) : super.drain(amount, sim);
-			if (!drainedFromInternal.isEmpty())
+			updateSnapshots(transaction);
+			long drainedFromInternal = super.extract(extractedVariant, maxAmount, transaction);
+			if (drainedFromInternal != 0)
 				return drainedFromInternal;
 
-			FluidStack drainedFromWorld = removeFluidFromSpace(sim);
+			FluidStack drainedFromWorld = removeFluidFromSpace(transaction);
 			if (drainedFromWorld.isEmpty())
-				return FluidStack.EMPTY;
-			if (filterPresent && !drainedFromWorld.isFluidEqual(filter))
-				return FluidStack.EMPTY;
+				return 0;
+			if (!drainedFromWorld.canFill(extractedVariant))
+				return 0;
 
-			long remainder = drainedFromWorld.getAmount() - amount;
-			drainedFromWorld.setAmount(amount);
+			long remainder = drainedFromWorld.getAmount() - maxAmount;
+			drainedFromWorld.setAmount(maxAmount);
 
-			if (!sim && remainder > 0) {
+			if (remainder > 0) {
 				if (!getFluid().isEmpty() && !getFluid().isFluidEqual(drainedFromWorld))
 					setFluid(FluidStack.EMPTY);
-				super.fill(FluidHelper.copyStackWithAmount(drainedFromWorld, remainder), false);
+				super.insert(drainedFromWorld.getType(), remainder, transaction);
 			}
-			return drainedFromWorld;
+			return drainedFromWorld.getAmount();
 		}
-
 	}
 
 	public interface IEffectHandler {

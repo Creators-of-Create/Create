@@ -17,15 +17,16 @@ import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue
 
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.FluidTileDataHandler;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -37,13 +38,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, FluidTransferable, CustomRenderBoundingBoxBlockEntity {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer, CustomRenderBoundingBoxBlockEntity, FluidTransferable {
 
 	private static final int MAX_SIZE = 3;
 
-	protected LazyOptional<IFluidHandler> fluidCapability;
 	protected boolean forceFluidLevelUpdate;
-	protected FluidTank tankInventory;
+	protected SmartFluidTank tankInventory;
+	protected FluidTank actualTank;
 	protected BlockPos controller;
 	protected BlockPos lastKnownPos;
 	protected boolean updateConnectivity;
@@ -62,7 +63,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		tankInventory = createInventory();
-		fluidCapability = LazyOptional.of(() -> tankInventory);
+		actualTank = tankInventory;
 		forceFluidLevelUpdate = true;
 		updateConnectivity = false;
 		window = true;
@@ -104,8 +105,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			updateConnectivity();
 		if (fluidLevel != null)
 			fluidLevel.tick();
-		if (isController() && !level.isClientSide)
-			FluidTileDataHandler.sendDataToClients((ServerLevel) level, this);
 	}
 
 	@Override
@@ -187,6 +186,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		FluidTankTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null || !controllerTE.window)
 			actualLuminosity = 0;
+		refreshBlockState();
 		BlockState state = getBlockState();
 		if (state.getValue(FluidTankBlock.LIGHT_LEVEL) != actualLuminosity) {
 			level.setBlock(worldPosition, state.setValue(FluidTankBlock.LIGHT_LEVEL, actualLuminosity), 22);
@@ -206,7 +206,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		tankInventory.setCapacity(blocks * getCapacityMultiplier());
 		long overflow = tankInventory.getFluidAmount() - tankInventory.getCapacity();
 		if (overflow > 0)
-			tankInventory.drain(overflow, false);
+			TransferUtil.extract(tankInventory, tankInventory.variant, overflow);
 		forceFluidLevelUpdate = true;
 	}
 
@@ -305,10 +305,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	private void refreshCapability() {
-		LazyOptional<IFluidHandler> oldCap = fluidCapability;
-		fluidCapability = LazyOptional.of(() -> isController() ? tankInventory
-			: getControllerTE() != null ? getControllerTE().tankInventory : new FluidTank(0));
-		oldCap.invalidate();
+		actualTank = isController() ? tankInventory
+				: getControllerTE() != null ? getControllerTE().tankInventory : new FluidTank(0);
 	}
 
 	@Override
@@ -338,7 +336,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (controllerTE == null)
 			return false;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			TransferUtil.getFluidHandler(controllerTE));
+			TransferUtil.getFluidStorage(controllerTE));
 	}
 
 	@Override
@@ -366,8 +364,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			height = compound.getInt("Height");
 			tankInventory.setCapacity(getTotalTankSize() * getCapacityMultiplier());
 			tankInventory.readFromNBT(compound.getCompound("TankContent"));
-			if (tankInventory.getSpace() < 0)
-				tankInventory.drain(-tankInventory.getSpace(), false);
+			if (tankInventory.getSpace() < 0) {
+				try (Transaction t = TransferUtil.getTransaction()) {
+					tankInventory.extract(tankInventory.variant, -tankInventory.getSpace(), t);
+					t.commit();
+				}
+			}
 		}
 
 		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
@@ -479,9 +481,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Nullable
 	@Override
-	public LazyOptional<IFluidHandler> getFluidHandler(@Nullable Direction direction) {
-		if (!fluidCapability.isPresent())
+	public Storage<FluidVariant> getFluidStorage(@Nullable Direction direction) {
+		if (actualTank == null)
 			refreshCapability();
-		return fluidCapability.cast();
+		return actualTank;
 	}
 }

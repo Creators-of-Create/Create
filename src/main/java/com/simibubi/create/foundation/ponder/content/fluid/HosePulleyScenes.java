@@ -13,9 +13,10 @@ import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -121,9 +122,7 @@ public class HosePulleyScenes {
 		}
 
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> TransferUtil.getFluidHandler(te)
-			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, FluidConstants.BUCKET / 10), false)));
+		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> TransferUtil.insert(te.getFluidStorage(null), FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET * 10));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		scene.idle(40);
@@ -219,9 +218,7 @@ public class HosePulleyScenes {
 		scene.world.showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world.showSectionAndMerge(pipes, Direction.WEST, hoselink);
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> TransferUtil.getFluidHandler(te)
-			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, FluidConstants.BUCKET / 10), false)));
+		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> TransferUtil.insert(te.getFluidStorage(null), FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		Vec3 surface = util.vector.topOf(1, 3, 1)

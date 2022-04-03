@@ -7,6 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +30,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
@@ -57,8 +61,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 			super(1, te, 1, false);
 			this.te = te;
 			forbidExtraction();
-			whenContentsChanged(slot -> {
-				if (getItem(slot).isEmpty())
+			whenContentsChanged(() -> {
+				if (handler.stacks[0].isEmpty()) // fabric: only has one slot, this is safe
 					return;
 				if (te.phase == Phase.IDLE)
 					te.checkCompletedRecipe(false);
@@ -66,17 +70,17 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 		}
 
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 			if (te.phase != Phase.IDLE)
-				return stack;
+				return 0;
 			if (te.covered)
-				return stack;
-			ItemStack insertItem = super.insertItem(slot, stack, simulate);
-			if (insertItem.getCount() != stack.getCount() && !simulate)
-				te.getLevel()
-					.playSound(null, te.getBlockPos(), SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f,
-						.5f);
-			return insertItem;
+				return 0;
+			long inserted = handler.insert(resource, maxAmount, transaction);
+			if (inserted != 0)
+				TransactionCallback.onSuccess(transaction, () -> te.getLevel()
+						.playSound(null, te.getBlockPos(), SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f,
+								.5f));
+			return inserted;
 		}
 
 	}
@@ -84,7 +88,6 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 	protected Inventory inventory;
 	protected GroupedItems groupedItems = new GroupedItems();
 	protected ConnectedInput input = new ConnectedInput();
-	protected LazyOptional<IItemHandler> invSupplier = LazyOptional.of(() -> input.getItemHandler(level, worldPosition));
 	protected boolean reRender;
 	protected Phase phase;
 	protected int countDown;
@@ -205,7 +208,6 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 
 	@Override
 	public void setRemoved() {
-		invSupplier.invalidate();
 		super.setRemoved();
 	}
 
@@ -508,15 +510,13 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return invSupplier.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return input.getItemHandler(level, worldPosition);
 	}
 
 	public void connectivityChanged() {
 		reRender = true;
 		sendData();
-		invSupplier.invalidate();
-		invSupplier = LazyOptional.of(() -> input.getItemHandler(level, worldPosition));
 	}
 
 	public Inventory getInventory() {

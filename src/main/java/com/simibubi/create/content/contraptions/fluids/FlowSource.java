@@ -5,17 +5,19 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class FlowSource {
-
-	private static final LazyOptional<IFluidHandler> EMPTY = LazyOptional.empty();
 
 	BlockFace location;
 
@@ -24,25 +26,13 @@ public abstract class FlowSource {
 	}
 
 	public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
-		IFluidHandler tank = provideHandler().orElse(null);
+		Storage<FluidVariant> tank = provideHandler();
 		if (tank == null)
 			return FluidStack.EMPTY;
-		FluidStack immediateFluid = tank.drain(1, true);
-		if (extractionPredicate.test(immediateFluid))
-			return immediateFluid;
-
-		for (int i = 0; i < tank.getTanks(); i++) {
-			FluidStack contained = tank.getFluidInTank(i);
-			if (contained.isEmpty())
-				continue;
-			if (!extractionPredicate.test(contained))
-				continue;
-			FluidStack toExtract = contained.copy();
-			toExtract.setAmount(1);
-			return tank.drain(toExtract, true);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			ResourceAmount<FluidVariant> resource = StorageUtil.findExtractableContent(tank, v -> extractionPredicate.test(new FluidStack(v, 1)), t);
+			return resource == null ? FluidStack.EMPTY : new FluidStack(resource.resource(), resource.amount());
 		}
-
-		return FluidStack.EMPTY;
 	}
 
 	// Layer III. PFIs need active attention to prevent them from disengaging early
@@ -54,28 +44,28 @@ public abstract class FlowSource {
 
 	public void whileFlowPresent(Level world, boolean pulling) {}
 
-	public LazyOptional<IFluidHandler> provideHandler() {
-		return EMPTY;
+	public Storage<FluidVariant> provideHandler() {
+		return null;
 	}
 
 	public static class FluidHandler extends FlowSource {
-		LazyOptional<IFluidHandler> fluidHandler;
+		Storage<FluidVariant> fluidHandler;
 
 		public FluidHandler(BlockFace location) {
 			super(location);
-			fluidHandler = EMPTY;
+			fluidHandler = null;
 		}
 
 		public void manageSource(Level world) {
-			if (fluidHandler.isPresent() && world.getGameTime() % 20 != 0)
+			if (fluidHandler != null && world.getGameTime() % 20 != 0)
 				return;
 			BlockEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
 			if (tileEntity != null)
-				fluidHandler = TransferUtil.getFluidHandler(tileEntity, location.getOppositeFace());
+				fluidHandler = TransferUtil.getFluidStorage(tileEntity, location.getOppositeFace());
 		}
 
 		@Override
-		public LazyOptional<IFluidHandler> provideHandler() {
+		public Storage<FluidVariant> provideHandler() {
 			return fluidHandler;
 		}
 

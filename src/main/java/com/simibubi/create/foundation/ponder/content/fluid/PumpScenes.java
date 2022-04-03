@@ -15,6 +15,8 @@ import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -182,8 +184,7 @@ public class PumpScenes {
 		Selection megapipe1 = util.select.fromTo(0, 3, 5, 1, 4, 2);
 		Selection megapipe2 = util.select.fromTo(3, 3, 1, 5, 6, 2);
 
-		scene.world.modifyTileEntity(util.grid.at(0, 1, 2), FluidTankTileEntity.class, te -> te.getTankInventory()
-			.drain(3000, false));
+		scene.world.modifyTileEntity(util.grid.at(0, 1, 2), FluidTankTileEntity.class, te -> TransferUtil.extractAnyFluid(te.getTankInventory(), FluidConstants.BUCKET * 3));
 
 		BlockPos east = pumpPos.east();
 		scene.world.setBlock(east, Blocks.AIR.defaultBlockState(), false);

@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
 	private static Random R = new Random();
+	public static final TransportedItemStack EMPTY = new TransportedItemStack(ItemStack.EMPTY);
 
 	public ItemStack stack;
 	public float beltPosition;

@@ -3,6 +3,9 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.foundation.item.SmartInventory;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.item.ItemStack;
 
 public class BasinInventory extends SmartInventory {
@@ -15,20 +18,27 @@ public class BasinInventory extends SmartInventory {
 	}
 
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		// Only insert if no other slot already has a stack of this item
-		for (int i = 0; i < getSlots(); i++)
-			if (i != slot && ItemHandlerHelper.canItemStacksStack(stack, inv.getStackInSlot(i)))
-				return stack;
-		return super.insertItem(slot, stack, simulate);
+		try (Transaction t = transaction.openNested()) {
+			long extracted = extract(resource, 1, t);
+			t.abort();
+			if (extracted != 0)
+				return 0;
+		}
+		return super.insert(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		ItemStack extractItem = super.extractItem(slot, amount, simulate);
-		if (!simulate && !extractItem.isEmpty())
-			te.notifyChangeOfContents();
-		return extractItem;
+	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+		long extracted = super.extract(resource, maxAmount, transaction);
+		if (extracted != 0) {
+			transaction.addOuterCloseCallback(r -> {
+				if (r.wasCommitted())
+					te.notifyChangeOfContents();
+			});
+		}
+		return extracted;
 	}
 
 }

@@ -4,13 +4,14 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStorageHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -35,7 +36,7 @@ public class GenericItemFilling {
 	 * @param fluidHandler The IFluidHandlerItem instance retrieved from the ItemStack.
 	 * @return If the IFluidHandlerItem is valid for the passed ItemStack.
 	 */
-	public static boolean isFluidHandlerValid(ItemStack stack, IFluidHandlerItem fluidHandler) {
+	public static boolean isFluidHandlerValid(ItemStack stack, Storage<FluidVariant> fluidHandler) {
 		// Not instanceof in case a correct subclass is made
 //		if (fluidHandler.getClass() == FluidBucketWrapper.class) {
 //			Item item = stack.getItem();
@@ -53,19 +54,12 @@ public class GenericItemFilling {
 		if (stack.getItem() == Items.MILK_BUCKET)
 			return false;
 
-		LazyOptional<IFluidHandlerItem> capability =
-			TransferUtil.getFluidHandlerItem(stack);
-		IFluidHandlerItem tank = capability.orElse(null);
+		Storage<FluidVariant> tank = FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
 		if (tank == null)
 			return false;
 		if (!isFluidHandlerValid(stack, tank))
 			return false;
-		for (int i = 0; i < tank.getTanks(); i++) {
-			if (tank.getFluidInTank(i)
-				.getAmount() < tank.getTankCapacity(i))
-				return true;
-		}
-		return false;
+		return tank.supportsInsertion();
 	}
 
 	public static long getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
@@ -74,9 +68,7 @@ public class GenericItemFilling {
 		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
 			return FluidConstants.BUCKET;
 
-		LazyOptional<IFluidHandlerItem> capability =
-			TransferUtil.getFluidHandlerItem(stack);
-		IFluidHandlerItem tank = capability.orElse(null);
+		Storage<FluidVariant> tank = FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
 		if (tank == null)
 			return -1;
 
@@ -91,7 +83,7 @@ public class GenericItemFilling {
 //			return FluidConstants.BUCKET;
 //		}
 
-		long filled = tank.fill(availableFluid, true);
+		long filled = tank.simulateInsert(availableFluid.getType(), availableFluid.getAmount(), null);
 		return filled == 0 ? -1 : filled;
 	}
 
@@ -123,16 +115,18 @@ public class GenericItemFilling {
 
 		ItemStack split = stack.copy();
 		split.setCount(1);
-		LazyOptional<IFluidHandlerItem> capability =
-				TransferUtil.getFluidHandlerItem(split);
-		IFluidHandlerItem tank = capability.orElse(null);
+		ContainerItemContext ctx = ContainerItemContext.withInitial(split);
+		Storage<FluidVariant> tank = FluidStorage.ITEM.find(split, ctx);
 		if (tank == null)
 			return ItemStack.EMPTY;
-		tank.fill(toFill, false);
-		ItemStack container = tank.getContainer()
-			.copy();
-		stack.shrink(1);
-		return container;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			tank.insert(toFill.getType(), toFill.getAmount(), t);
+			t.commit();
+
+			ItemStack container = ctx.getItemVariant().toStack((int) ctx.getAmount());
+			stack.shrink(1);
+			return container;
+		}
 	}
 
 }

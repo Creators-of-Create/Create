@@ -13,10 +13,11 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -64,10 +65,22 @@ public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 	}
 
 	private ItemStack defaultInsertionCallback(TransportedItemStack inserted, Direction side, boolean simulate) {
-		LazyOptional<IItemHandler> lazy = TransferUtil.getItemHandler(tileEntity, side);
-		if (!lazy.isPresent())
+		Storage<ItemVariant> storage = TransferUtil.getItemStorage(tileEntity, side);
+		if (storage == null)
 			return inserted.stack;
-		return ItemHandlerHelper.insertItemStacked(lazy.orElse(null), inserted.stack.copy(), simulate);
+
+		try (Transaction t = TransferUtil.getTransaction()) {
+			long trying = inserted.stack.getCount();
+			long successful = storage.insert(ItemVariant.of(inserted.stack), inserted.stack.getCount(), t);
+			if (trying == successful) {
+				if (!simulate) t.commit();
+				return ItemStack.EMPTY;
+			}
+			ItemStack stack = inserted.stack.copy();
+			stack.setCount((int) (trying - successful));
+			if (!simulate) t.commit();
+			return stack;
+		}
 	}
 
 	public boolean canInsertFromSide(Direction side) {

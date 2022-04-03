@@ -3,9 +3,12 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_HONEY;
 
 import com.simibubi.create.AllFluids;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
@@ -24,23 +27,20 @@ public class VanillaFluidTargets {
 		return false;
 	}
 
-	public static FluidStack drainBlock(Level level, BlockPos pos, BlockState state, boolean simulate) {
+	public static FluidStack drainBlock(Level level, BlockPos pos, BlockState state, TransactionContext ctx) {
 		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(LEVEL_HONEY) >= 5) {
-			if (!simulate)
-				level.setBlock(pos, state.setValue(LEVEL_HONEY, 0), 3);
+			TransactionCallback.setBlock(ctx, level, pos, state.setValue(LEVEL_HONEY, 0), 3);
 			return new FluidStack(AllFluids.HONEY.get()
 				.getSource(), FluidConstants.BOTTLE);
 		}
 
 		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
-			if (!simulate)
-				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
+			TransactionCallback.setBlock(ctx, level, pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.LAVA, FluidConstants.BUCKET);
 		}
 
 		if (state.getBlock() == Blocks.WATER_CAULDRON) {
-			if (!simulate)
-				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
+			TransactionCallback.setBlock(ctx, level, pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.WATER, FluidConstants.BUCKET);
 		}
 

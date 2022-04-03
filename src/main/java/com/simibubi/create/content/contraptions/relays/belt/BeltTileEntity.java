@@ -12,11 +12,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.client.renderer.LightTexture;
 
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +46,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
@@ -78,7 +80,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 
 	protected BlockPos controller;
 	protected BeltInventory inventory;
-	protected LazyOptional<IItemHandler> itemHandler;
+	protected Storage<ItemVariant> itemHandler;
 
 	public CompoundTag trackerUpdateTag;
 
@@ -92,7 +94,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	public BeltTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		controller = BlockPos.ZERO;
-		itemHandler = LazyOptional.empty();
+		itemHandler = null;
 		casing = CasingType.NONE;
 		color = Optional.empty();
 	}
@@ -171,7 +173,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	}
 
 	protected void initializeItemHandler() {
-		if (level.isClientSide || itemHandler.isPresent())
+		if (level.isClientSide || itemHandler != null)
 			return;
 		if (!level.isLoaded(controller))
 			return;
@@ -181,15 +183,14 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 		BeltInventory inventory = ((BeltTileEntity) te).getInventory();
 		if (inventory == null)
 			return;
-		IItemHandler handler = new ItemHandlerBeltSegment(inventory, index);
-		itemHandler = LazyOptional.of(() -> handler);
+		itemHandler = new ItemHandlerBeltSegment(inventory, index);
 	}
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
 		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
-			return itemHandler.cast();
+			return itemHandler;
 		}
 		return null;
 	}
@@ -197,7 +198,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		itemHandler.invalidate();
+		itemHandler = null;
 	}
 
 	@Override
@@ -531,7 +532,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	}
 
 	public void invalidateItemHandler() {
-		itemHandler.invalidate();
+		itemHandler = null;
 	}
 
 	public boolean shouldRenderNormally() {

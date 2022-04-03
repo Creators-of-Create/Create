@@ -7,13 +7,16 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.utility.Pair;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandlerItem;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Recipe;
@@ -32,17 +35,7 @@ public class EmptyingByBasin {
 			.isPresent())
 			return true;
 
-		LazyOptional<IFluidHandlerItem> capability =
-				TransferUtil.getFluidHandlerItem(stack);
-		IFluidHandlerItem tank = capability.orElse(null);
-		if (tank == null)
-			return false;
-		for (int i = 0; i < tank.getTanks(); i++) {
-			if (tank.getFluidInTank(i)
-				.getAmount() > 0)
-				return true;
-		}
-		return false;
+		return TransferUtil.getFluidContained(stack).isPresent();
 	}
 
 	public static Pair<FluidStack, ItemStack> emptyItem(Level world, ItemStack stack, boolean simulate) {
@@ -66,18 +59,20 @@ public class EmptyingByBasin {
 
 		ItemStack split = stack.copy();
 		split.setCount(1);
-		LazyOptional<IFluidHandlerItem> capability =
-			TransferUtil.getFluidHandlerItem(stack);
-		IFluidHandlerItem tank = capability.orElse(null);
+		ContainerItemContext ctx = ContainerItemContext.withInitial(stack);
+		Storage<FluidVariant> tank = FluidStorage.ITEM.find(stack, ctx);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
-		resultingFluid = tank.drain(FluidConstants.BUCKET, simulate);
-		resultingItem = tank.getContainer()
-			.copy();
-		if (!simulate)
-			stack.shrink(1);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			resultingFluid = TransferUtil.extractAnyFluid(tank, FluidConstants.BUCKET);
+			resultingItem = ctx.getItemVariant().toStack((int) ctx.getAmount());
+			if (!simulate) {
+				stack.shrink(1);
+				t.commit();
+			}
 
-		return Pair.of(resultingFluid, resultingItem);
+			return Pair.of(resultingFluid, resultingItem);
+		}
 	}
 
 }

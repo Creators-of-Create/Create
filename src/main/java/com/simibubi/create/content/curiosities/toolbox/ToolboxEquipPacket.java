@@ -3,9 +3,13 @@ package com.simibubi.create.content.curiosities.toolbox;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -78,12 +82,20 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
 				toolboxTileEntity.inventory.filters.get(slot))) {
 				toolboxTileEntity.inventory.inLimitedMode(inventory -> {
-					ItemStack remainder = ItemHandlerHelper.insertItemStacked(inventory, playerStack, false);
-					if (!remainder.isEmpty())
-						remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.getInventory()),
-							remainder, false);
-					if (remainder.getCount() != playerStack.getCount())
-						player.getInventory().setItem(hotbarSlot, remainder);
+					try (Transaction t = TransferUtil.getTransaction()) {
+						ItemVariant stack = ItemVariant.of(playerStack);
+						long count = playerStack.getCount();
+						long inserted = inventory.insert(stack, count, t);
+						if (inserted != count)
+							inserted += TransferUtil.insertToNotHotbar(player, stack, count - inserted);
+						long remainder = count - inserted;
+						if (remainder != count) {
+							t.commit();
+							ItemStack newStack = player.getSlot(hotbarSlot).get().copy();
+							newStack.setCount((int) remainder);
+							player.getInventory().setItem(hotbarSlot, newStack);
+						}
+					}
 				});
 			}
 

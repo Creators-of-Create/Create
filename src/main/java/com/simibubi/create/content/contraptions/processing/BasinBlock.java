@@ -16,11 +16,15 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -48,6 +52,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.List;
 
 public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
@@ -95,32 +101,35 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
-					.equals(Items.SPONGE)
-					&& !TransferUtil.getFluidHandler(te)
-						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, false))
-						.orElse(FluidStack.EMPTY)
-						.isEmpty()) {
-					return InteractionResult.SUCCESS;
+					.equals(Items.SPONGE)) {
+					Storage<FluidVariant> storage = TransferUtil.getFluidStorage(te);
+					if (storage != null && !TransferUtil.extractAnyFluid(storage, Long.MAX_VALUE).isEmpty()) {
+						return InteractionResult.SUCCESS;
+					}
 				}
 				return InteractionResult.PASS;
 			}
 
-			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
+			Storage<ItemVariant> inv = te.itemCapability == null ? new ItemStackHandler(1) : te.itemCapability;
 			boolean success = false;
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack stackInSlot = inv.getStackInSlot(slot);
-				if (stackInSlot.isEmpty())
-					continue;
-				player.getInventory()
-					.placeItemBackInInventory(stackInSlot);
-				inv.setStackInSlot(slot, ItemStack.EMPTY);
-				success = true;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (StorageView<ItemVariant> view : inv.iterable(t)) {
+					if (!view.isResourceBlank()) {
+						ItemVariant variant = view.getResource();
+						long extracted = view.extract(variant, view.getAmount(), t);
+						if (extracted != 0) {
+							ItemStack stack = variant.toStack((int) extracted);
+							player.getInventory().placeItemBackInInventory(stack);
+							success = true;
+						}
+					}
+				}
+				if (success)
+					worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+							1f + Create.RANDOM.nextFloat());
+				te.onEmptied();
+				return InteractionResult.SUCCESS;
 			}
-			if (success)
-				worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-					1f + Create.RANDOM.nextFloat());
-			te.onEmptied();
-			return InteractionResult.SUCCESS;
 		});
 	}
 
@@ -138,19 +147,22 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 			// Tossed items bypass the quarter-stack limit
 			te.inputInventory.withMaxStackSize(64);
-			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem()
-				.copy(), false);
-			te.inputInventory.withMaxStackSize(16);
+			ItemStack stack = itemEntity.getItem().copy();
+			try (Transaction t = TransferUtil.getTransaction()) {
+				long inserted = te.inputInventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+				te.inputInventory.withMaxStackSize(16);
 
-			if (insertItem.isEmpty()) {
-				itemEntity.discard();
-				if (!itemEntity.level.isClientSide)
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.level,
-						itemEntity.blockPosition(), 3);
-				return;
+				if (inserted == stack.getCount()) {
+					itemEntity.discard();
+					if (!itemEntity.level.isClientSide)
+						AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.level,
+								itemEntity.blockPosition(), 3);
+					return;
+				}
+
+				stack.setCount((int) (stack.getCount() - inserted));
+				itemEntity.setItem(stack);
 			}
-
-			itemEntity.setItem(insertItem);
 		});
 	}
 

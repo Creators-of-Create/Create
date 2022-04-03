@@ -15,8 +15,10 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -32,6 +34,8 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
 
 public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
@@ -66,9 +70,12 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		frontier = new ArrayList<>();
 	}
 
-	public void counterpartActed() {
+	public void counterpartActed(TransactionContext ctx) {
+		snapshotParticipant().updateSnapshots(ctx);
 		counterpartActed = true;
 	}
+
+	protected abstract SnapshotParticipant<?> snapshotParticipant();
 
 	protected int validationTimer() {
 		int maxBlocks = maxBlocks();
@@ -96,7 +103,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		return AllConfigs.SERVER.fluids.fillInfinite.get();
 	}
 
-	public void reset() {
+	public void reset(@Nullable TransactionContext ctx) {
 		if (affectedArea != null)
 			scheduleUpdatesInAffectedArea();
 		affectedArea = null;
@@ -108,7 +115,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void destroy() {
-		reset();
+		reset(null);
 		super.destroy();
 	}
 

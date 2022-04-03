@@ -8,12 +8,16 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
 
-public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItemHandler, InvManipulationBehaviour> {
+public class InvManipulationBehaviour extends CapManipulationBehaviourBase<ItemVariant, InvManipulationBehaviour> {
 
 	// Extra types available for multibehaviour
 	public static final BehaviourType<InvManipulationBehaviour>
@@ -41,8 +45,8 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	}
 
 	@Override
-	protected Class<IItemHandler> capability() {
-		return IItemHandler.class;
+	protected Class<ItemVariant> capability() {
+		return ItemVariant.class;
 	}
 
 	public ItemStack extract() {
@@ -63,7 +67,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 
 		if (getWorld().isClientSide)
 			return ItemStack.EMPTY;
-		IItemHandler inventory = targetCapability.orElse(null);
+		Storage<ItemVariant> inventory = targetCapability;
 		if (inventory == null)
 			return ItemStack.EMPTY;
 
@@ -76,7 +80,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 		return extractAmountOrThresh(inventory, test, amount, amountThreshold, false);
 	}
 
-	private static ItemStack extractAmountOrThresh(IItemHandler inventory, Predicate<ItemStack> test, int amount,
+	private static ItemStack extractAmountOrThresh(Storage<ItemVariant> inventory, Predicate<ItemStack> test, int amount,
 		Function<ItemStack, Integer> amountThreshold, boolean shouldSimulate) {
 		if (amount == -1)
 			return ItemHelper.extract(inventory, test, amountThreshold, shouldSimulate);
@@ -86,10 +90,17 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	public ItemStack insert(ItemStack stack) {
 		boolean shouldSimulate = simulateNext;
 		simulateNext = false;
-		IItemHandler inventory = targetCapability.orElse(null);
+		Storage<ItemVariant> inventory = targetCapability;
 		if (inventory == null)
 			return stack;
-		return ItemHandlerHelper.insertItemStacked(inventory, stack, shouldSimulate);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			long inserted = inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+			if (!shouldSimulate) t.commit();
+			long remainder = stack.getCount() - inserted;
+			stack = stack.copy();
+			stack.setCount((int) remainder);
+			return stack;
+		}
 	}
 
 	protected Predicate<ItemStack> getFilterTest(Predicate<ItemStack> customFilter) {

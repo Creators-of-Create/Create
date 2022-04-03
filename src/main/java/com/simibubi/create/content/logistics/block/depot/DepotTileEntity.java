@@ -2,13 +2,14 @@ package com.simibubi.create.content.logistics.block.depot;
 
 import java.util.List;
 
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 
 import net.minecraft.core.BlockPos;
@@ -32,7 +33,7 @@ public class DepotTileEntity extends SmartTileEntity implements ItemTransferable
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return depotBehaviour.lazyItemHandler.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
+		return depotBehaviour.itemHandler;
 	}
 }

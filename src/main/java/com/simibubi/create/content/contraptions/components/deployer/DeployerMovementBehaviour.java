@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -28,7 +32,6 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -116,7 +119,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
-			IItemHandler iItemHandler = context.contraption.inventory;
+			Storage<ItemVariant> iItemHandler = context.contraption.inventory;
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				int amountFound = ItemHelper
 						.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,

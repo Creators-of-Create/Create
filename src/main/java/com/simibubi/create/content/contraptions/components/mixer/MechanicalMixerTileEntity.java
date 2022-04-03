@@ -21,10 +21,13 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -215,22 +218,20 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
 			return matchingRecipes;
-		IItemHandler availableItems = TransferUtil.getItemHandler(basin.get())
-			.orElse(null);
+		Storage<ItemVariant> availableItems = basin.get().getItemStorage(null);
 		if (availableItems == null)
 			return matchingRecipes;
 
-		for (int i = 0; i < availableItems.getSlots(); i++) {
-			ItemStack stack = availableItems.getStackInSlot(i);
-			if (stack.isEmpty())
-				continue;
-
-			List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(stack.getItem());
-			if (list == null)
-				continue;
-			for (MixingRecipe mixingRecipe : list)
-				if (matchBasinRecipe(mixingRecipe))
-					matchingRecipes.add(mixingRecipe);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (StorageView<ItemVariant> view : availableItems.iterable(t)) {
+				if (view.isResourceBlank()) continue;
+				List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(view.getResource().getItem());
+				if (list == null)
+					continue;
+				for (MixingRecipe mixingRecipe : list)
+					if (matchBasinRecipe(mixingRecipe))
+						matchingRecipes.add(mixingRecipe);
+			}
 		}
 
 		return matchingRecipes;

@@ -2,6 +2,10 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.function.Supplier;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -65,9 +69,14 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 					}
 
 					ItemStack itemStack = player.getInventory().getItem(i);
-					ItemStack remainder = ItemHandlerHelper.insertItemStacked(toolbox.inventory, itemStack, false);
-					if (remainder.getCount() != itemStack.getCount())
-						player.getInventory().setItem(i, remainder);
+					try (Transaction t = TransferUtil.getTransaction()) {
+						long inserted = toolbox.inventory.insert(ItemVariant.of(itemStack), itemStack.getCount(), t);
+						t.commit();
+						ItemStack remainder = ItemHandlerHelper.copyStackWithSize(itemStack, (int) (itemStack.getCount() - inserted));
+						if (remainder.getCount() != itemStack.getCount())
+							player.getInventory().setItem(i, remainder);
+						t.commit();
+					}
 				}
 			});
 

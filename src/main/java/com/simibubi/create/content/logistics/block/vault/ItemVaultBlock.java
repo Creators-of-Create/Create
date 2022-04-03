@@ -160,9 +160,8 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
 		return getTileEntityOptional(pLevel, pPos)
-			.map(vte -> TransferUtil.getItemHandler(vte))
-			.map(lo -> lo.map(ItemHelper::calcRedstoneFromInventory)
-				.orElse(0))
+			.map(vte -> TransferUtil.getItemStorage(vte))
+			.map(ItemHelper::calcRedstoneFromInventory)
 			.orElse(0);
 	}
 

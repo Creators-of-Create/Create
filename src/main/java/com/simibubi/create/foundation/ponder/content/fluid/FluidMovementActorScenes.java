@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
@@ -43,8 +43,8 @@ public class FluidMovementActorScenes {
 		Class<FluidTankTileEntity> type = FluidTankTileEntity.class;
 		ItemStack bucket = AllFluids.CHOCOLATE.get().getBucket().getDefaultInstance();
 
-		scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
-			.ifPresent(ifh -> ifh.fill(FluidHelper.copyStackWithAmount(chocolate, FluidConstants.BUCKET * 10), false)));
+		scene.world.modifyTileEntity(st, type, te ->
+				TransferUtil.insert(te.getFluidStorage(null), chocolate.getType(), FluidConstants.BUCKET * 10));
 
 		BlockPos bearing = util.grid.at(5, 1, 2);
 		scene.world.showSection(util.select.position(bearing), Direction.DOWN);
@@ -135,17 +135,13 @@ public class FluidMovementActorScenes {
 				scene.overlay
 					.showControls(new InputWindowElement(util.vector.blockSurface(util.grid.at(5, 3, 2), Direction.WEST)
 						.add(0, 0.5, 0), Pointing.LEFT).withItem(bucket), 30);
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
-			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.fill(chocolate, false)));
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
-			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.fill(chocolate, false)));
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 
@@ -160,22 +156,17 @@ public class FluidMovementActorScenes {
 		scene.idle(30);
 
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.fill(chocolate, false)));
+			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 16; i++) {
-			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.fill(chocolate, false)));
+			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 
-		scene.world.modifyTileEntity(util.grid.at(2, 2, 3), type, te -> TransferUtil.getFluidHandler(te)
-			.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET * 8, false)));
+		scene.world.modifyTileEntity(util.grid.at(2, 2, 3), type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET * 8));
 		scene.idle(50);
 
 		scene.overlay.showText(120)

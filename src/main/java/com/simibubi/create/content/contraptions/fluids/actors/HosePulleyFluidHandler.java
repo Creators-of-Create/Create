@@ -2,94 +2,92 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.FluidState;
 
-public class HosePulleyFluidHandler implements IFluidHandler {
+public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 
 	// The dynamic interface
 
 	@Override
-	public long fill(FluidStack resource, boolean sim) {
-		if (!internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
+	public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+		StoragePreconditions.notBlankNotNegative(resource, maxAmount);
+		if (!internalTank.isEmpty() && !internalTank.getFluid().canFill(resource))
 			return 0;
-		if (resource.isEmpty() || !FluidHelper.hasBlockState(resource.getFluid()))
+		if (resource.isBlank() || !FluidHelper.hasBlockState(resource.getFluid()))
 			return 0;
 
-		long diff = resource.getAmount();
-		long totalAmountAfterFill = diff + internalTank.getFluidAmount();
-		FluidStack remaining = resource.copy();
-
-		if (predicate.get() && totalAmountAfterFill >= FluidConstants.BUCKET) {
-			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), sim)) {
-				drainer.counterpartActed();
-				remaining.shrink(FluidConstants.BUCKET);
-				diff -= FluidConstants.BUCKET;
+		long inserted = internalTank.insert(resource, maxAmount, transaction);
+		if (internalTank.amount >= FluidConstants.BUCKET && predicate.get()) {
+			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), transaction)) {
+				drainer.counterpartActed(transaction);
+				internalTank.extract(resource, FluidConstants.BUCKET, transaction);
 			}
 		}
-
-		if (sim)
-			return diff <= 0 ? resource.getAmount() : internalTank.fill(remaining, sim);
-		if (diff <= 0) {
-			internalTank.drain(-diff, false);
-			return resource.getAmount();
-		}
-
-		return internalTank.fill(remaining, sim);
+		return inserted;
 	}
 
 	@Override
-	public FluidStack getFluidInTank(int tank) {
-		if (internalTank.isEmpty())
-			return drainer.getDrainableFluid(rootPosGetter.get());
-		return internalTank.getFluidInTank(tank);
-	}
-
-	@Override
-	public FluidStack drain(FluidStack resource, boolean sim) {
-		return drainInternal(resource.getAmount(), resource, sim);
-	}
-
-	@Override
-	public FluidStack drain(long maxDrain, boolean sim) {
-		return drainInternal(maxDrain, null, sim);
-	}
-
-	private FluidStack drainInternal(long maxDrain, @Nullable FluidStack resource, boolean sim) {
-		if (resource != null && !internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
-			return FluidStack.EMPTY;
+	public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+		if (resource != null && !internalTank.isEmpty() && !internalTank.getFluid().canFill(resource))
+			return 0;
 		if (internalTank.getFluidAmount() >= FluidConstants.BUCKET)
-			return internalTank.drain(maxDrain, sim);
+			return internalTank.extract(resource, maxAmount, transaction);
 		BlockPos pos = rootPosGetter.get();
 		FluidStack returned = drainer.getDrainableFluid(pos);
-		if (!predicate.get() || !drainer.pullNext(pos, sim))
-			return internalTank.drain(maxDrain, sim);
+		if (!predicate.get() || !drainer.pullNext(pos, transaction))
+			return internalTank.extract(resource, maxAmount, transaction);
 
-		filler.counterpartActed();
+		filler.counterpartActed(transaction);
 		FluidStack leftover = returned.copy();
 		long available = FluidConstants.BUCKET + internalTank.getFluidAmount();
 		long drained;
 
 		if (!internalTank.isEmpty() && !internalTank.getFluid()
-			.isFluidEqual(returned) || returned.isEmpty())
-			return internalTank.drain(maxDrain, sim);
+				.isFluidEqual(returned) || returned.isEmpty())
+			return internalTank.extract(resource, maxAmount, transaction);
 
-		if (resource != null && !returned.isFluidEqual(resource))
-			return FluidStack.EMPTY;
+		if (resource != null && !returned.canFill(resource))
+			return 0;
 
-		drained = Math.min(maxDrain, available);
+		drained = Math.min(maxAmount, available);
 		returned.setAmount(drained);
 		leftover.setAmount(available - drained);
-		if (!sim && !leftover.isEmpty())
-			internalTank.setFluid(leftover);
-		return returned;
+		if (!leftover.isEmpty())
+			internalTank.setFluid(leftover, transaction);
+		return returned.getAmount();
+	}
+
+	@Override
+	public boolean isResourceBlank() {
+		return getResource().isBlank();
+	}
+
+	@Override
+	public FluidVariant getResource() {
+		if (!internalTank.isResourceBlank() || drainer.tileEntity.getLevel() == null) return internalTank.getResource();
+		FluidState state = drainer.tileEntity.getLevel().getFluidState(rootPosGetter.get());
+		return FluidVariant.of(state.getType());
+	}
+
+	@Override
+	public long getAmount() {
+		return Long.MAX_VALUE;
+	}
+
+	@Override
+	public long getCapacity() {
+		return Long.MAX_VALUE;
 	}
 
 	//
@@ -108,20 +106,4 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		this.rootPosGetter = rootPosGetter;
 		this.predicate = predicate;
 	}
-
-	@Override
-	public int getTanks() {
-		return internalTank.getTanks();
-	}
-
-	@Override
-	public long getTankCapacity(int tank) {
-		return internalTank.getTankCapacity(tank);
-	}
-
-	@Override
-	public boolean isFluidValid(int tank, FluidStack stack) {
-		return internalTank.isFluidValid(tank, stack);
-	}
-
 }

@@ -1,25 +1,28 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
+import net.fabricmc.fabric.impl.lookup.block.ServerWorldCache;
+
+import net.minecraft.core.Direction;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTileEntity implements ItemTransferable {
 
-	protected LazyOptional<IItemHandlerModifiable> capability;
+	protected InterfaceItemHandler capability;
 
 	public PortableItemInterfaceTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -28,66 +31,67 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
-//		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		InterfaceItemHandler handler = ((InterfaceItemHandler) capability.orElse(null));
-		handler.setWrapped(contraption.inventory);
-//		oldCap.invalidate();
+		capability.setWrapped(contraption.inventory);
 		super.startTransferringTo(contraption, distance);
 	}
 
 	@Override
 	protected void stopTransferring() {
-//		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		InterfaceItemHandler handler = ((InterfaceItemHandler) capability.orElse(null));
-		handler.setWrapped(new ItemStackHandler(0));
-//		oldCap.invalidate();
+		capability.setWrapped(Storage.empty());
 		super.stopTransferring();
 	}
 
-	private LazyOptional<IItemHandlerModifiable> createEmptyHandler() {
-		return LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
+	private InterfaceItemHandler createEmptyHandler() {
+		return new InterfaceItemHandler(Storage.empty());
 	}
 
 	@Override
 	protected void invalidateCapability() {
-		capability.invalidate();
+		capability.setWrapped(Storage.empty());
 	}
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return capability.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return capability;
 	}
 
 	class InterfaceItemHandler extends ItemHandlerWrapper {
 
-		public InterfaceItemHandler(IItemHandlerModifiable wrapped) {
+		public InterfaceItemHandler(Storage<ItemVariant> wrapped) {
 			super(wrapped);
 		}
 
 		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 			if (!canTransfer())
-				return ItemStack.EMPTY;
-			ItemStack extractItem = super.extractItem(slot, amount, simulate);
-			if (!simulate && !extractItem.isEmpty())
-				onContentTransferred();
-			return extractItem;
+				return 0;
+			long extracted = super.extract(resource, maxAmount, transaction);
+			if (extracted != 0) {
+				transaction.addOuterCloseCallback(result -> {
+					if (result.wasCommitted())
+						onContentTransferred();
+				});
+			}
+			return extracted;
 		}
 
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 			if (!canTransfer())
-				return stack;
-			ItemStack insertItem = super.insertItem(slot, stack, simulate);
-			if (!simulate && !ItemStackUtil.equals(insertItem, stack, false))
-				onContentTransferred();
-			return insertItem;
+				return 0;
+			long inserted = super.insert(resource, maxAmount, transaction);
+			if (inserted != 0) {
+				transaction.addOuterCloseCallback(result -> {
+					if (result.wasCommitted())
+						onContentTransferred();
+				});
+			}
+			return inserted;
 		}
 
-		private void setWrapped(IItemHandlerModifiable wrapped) {
+		private void setWrapped(Storage<ItemVariant> wrapped) {
 			this.wrapped = wrapped;
 		}
 	}
-
 }

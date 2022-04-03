@@ -6,8 +6,9 @@ import javax.annotation.Nullable;
 
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+
+import io.github.fabricators_of_create.porting_lib.extensions.Vector3fExtensions;
 import io.github.fabricators_of_create.porting_lib.util.GameRendererHelper;
-import io.github.fabricators_of_create.porting_lib.util.Vector3fHelper;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -238,7 +239,7 @@ public class VecHelper {
 
 				Vector3f bob_translation = new Vector3f((Mth.sin(f1 * (float) Math.PI) * f2 * 0.5F),
 					(-Math.abs(Mth.cos(f1 * (float) Math.PI) * f2)), 0.0f);
-				Vector3fHelper.setY(bob_translation, -bob_translation.y()); // this is weird but hey, if it works
+				((Vector3fExtensions) (Object) bob_translation).setY(-bob_translation.y()); // this is weird but hey, if it works
 				result3f.add(bob_translation);
 			}
 		}

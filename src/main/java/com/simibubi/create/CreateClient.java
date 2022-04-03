@@ -38,8 +38,6 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 import io.github.fabricators_of_create.porting_lib.event.OverlayRenderCallback;
 
 import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
-import io.github.fabricators_of_create.porting_lib.util.FluidHandlerData;
-import io.github.fabricators_of_create.porting_lib.util.FluidTileDataHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;

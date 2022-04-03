@@ -94,13 +94,13 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 				if (stack.isEmpty()) {
 					ItemStack copy = stackToInsert.copy();
 					copy.setCount(1);
-					ghostInventory.insertItem(i, copy, false);
+					ghostInventory.setStackInSlot(i, copy);
 					getSlot(i + 36).setChanged();
 					break;
 				}
 			}
 		} else {
-			ghostInventory.extractItem(index - 36, 1, false);
+			ghostInventory.setStackInSlot(index - 36, ItemStack.EMPTY);
 			getSlot(index).setChanged();
 		}
 		return ItemStack.EMPTY;

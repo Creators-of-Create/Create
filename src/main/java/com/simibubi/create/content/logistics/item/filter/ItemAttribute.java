@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -132,7 +136,7 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isEdible),
-		FLUID_CONTAINER(s -> TransferUtil.getFluidHandlerItem(s).isPresent()),
+		FLUID_CONTAINER(s -> ContainerItemContext.withInitial(s).find(FluidStorage.ITEM) != null),
 		ENCHANTED(ItemStack::isEnchanted),
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		RENAMED(ItemStack::hasCustomHoverName),

@@ -23,10 +23,11 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import io.github.tropheusj.milk.Milk;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -69,8 +70,7 @@ public class PipeScenes {
 		scene.idle(5);
 		scene.world.showSection(tank2, Direction.DOWN);
 		FluidStack content = new FluidStack(Fluids.LAVA, 10000);
-		scene.world.modifyTileEntity(util.grid.at(4, 1, 2), FluidTankTileEntity.class, te -> te.getTankInventory()
-			.fill(content, false));
+		scene.world.modifyTileEntity(util.grid.at(4, 1, 2), FluidTankTileEntity.class, te -> TransferUtil.insertFluid(te.getTankInventory(), content));
 		scene.idle(10);
 
 		for (int i = 4; i >= 1; i--) {
@@ -219,10 +219,9 @@ public class PipeScenes {
 		scene.world.setKineticSpeed(util.select.position(pumpPos), 64);
 		BlockPos drainPos = util.grid.at(1, 1, 2);
 		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class,
-			te -> te.getBehaviour(SmartFluidTankBehaviour.TYPE)
-				.allowInsertion()
-				.getPrimaryHandler()
-				.fill(new FluidStack(Fluids.WATER, 1500), false));
+			te -> TransferUtil.insert(te.getBehaviour(SmartFluidTankBehaviour.TYPE)
+							.allowInsertion()
+							.getPrimaryHandler(), FluidVariant.of(Fluids.WATER), (long) (FluidConstants.BUCKET * 1.5)));
 
 		scene.idle(50);
 		scene.overlay.showOutline(PonderPalette.MEDIUM, new Object(), drain, 40);
@@ -484,8 +483,7 @@ public class PipeScenes {
 		BlockPos smartPos = util.grid.at(3, 1, 1);
 
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.fill(new FluidStack(Milk.STILL_MILK, FluidConstants.BUCKET), false)));
+			te -> TransferUtil.insert(te.getFluidStorage(null), FluidVariant.of(Milk.STILL_MILK), FluidConstants.BUCKET));
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);
@@ -567,8 +565,7 @@ public class PipeScenes {
 		}
 		scene.idle(15);
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> TransferUtil.getFluidHandler(te)
-				.ifPresent(ifh -> ifh.fill(chocolate, false)));
+			te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 		scene.idle(10);
 
 		scene.overlay.showText(80)

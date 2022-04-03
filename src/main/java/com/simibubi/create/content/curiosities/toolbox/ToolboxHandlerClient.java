@@ -17,10 +17,13 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.fabricmc.fabric.api.entity.EntityPickInteractionAware;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -86,20 +89,21 @@ public class ToolboxHandlerClient {
 
 		for (ToolboxTileEntity toolboxTileEntity : toolboxes) {
 			ToolboxInventory inventory = toolboxTileEntity.inventory;
-			for (int comp = 0; comp < 8; comp++) {
-				ItemStack inSlot = inventory.takeFromCompartment(1, comp, true);
-				if (inSlot.isEmpty())
-					continue;
-				if (inSlot.getItem() != result.getItem())
-					continue;
-				if (!ItemStack.tagMatches(inSlot, result))
-					continue;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (int comp = 0; comp < 8; comp++) {
+					ItemStack inSlot = inventory.takeFromCompartment(1, comp, t);
+					if (inSlot.isEmpty())
+						continue;
+					if (inSlot.getItem() != result.getItem())
+						continue;
+					if (!ItemStack.tagMatches(inSlot, result))
+						continue;
 
-				AllPackets.channel.sendToServer(
-					new ToolboxEquipPacket(toolboxTileEntity.getBlockPos(), comp, player.getInventory().selected));
-				return true;
+					AllPackets.channel.sendToServer(
+							new ToolboxEquipPacket(toolboxTileEntity.getBlockPos(), comp, player.getInventory().selected));
+					return true;
+				}
 			}
-
 		}
 
 		return false;

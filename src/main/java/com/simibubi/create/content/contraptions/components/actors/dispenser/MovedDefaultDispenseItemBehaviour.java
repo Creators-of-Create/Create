@@ -1,8 +1,11 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -85,9 +88,12 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 
 	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context, BlockPos pos, Vec3 facing) {
 		consumedFrom.shrink(1);
-		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, output.copy(), false);
-		if (!remainder.isEmpty())
-			defaultInstance.dispenseStack(output, context, pos, facing);
-		return consumedFrom;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			long inserted = TransferUtil.insertItem(context.contraption.inventory, output.copy());
+			if (inserted != 0)
+				defaultInstance.dispenseStack(output, context, pos, facing);
+			t.commit();
+			return consumedFrom;
+		}
 	}
 }

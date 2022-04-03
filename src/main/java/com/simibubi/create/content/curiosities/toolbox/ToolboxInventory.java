@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.BlockItem;
@@ -90,7 +95,8 @@ public class ToolboxInventory extends ItemStackHandler {
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
+	public boolean isItemValid(int slot, ItemVariant var) {
+		ItemStack stack = var.toStack();
 		if (AllItemTags.TOOLBOXES.matches(stack))
 			return false;
 		if (stack.getItem() instanceof BlockItem) {
@@ -106,33 +112,42 @@ public class ToolboxInventory extends ItemStackHandler {
 		if (limitedMode && filter.isEmpty())
 			return false;
 		if (filter.isEmpty() || ToolboxInventory.canItemsShareCompartment(filter, stack))
-			return super.isItemValid(slot, stack);
+			return super.isItemValid(slot, var);
 		return false;
+	}
+
+	@Override
+	protected SnapshotData createSnapshot() {
+		SnapshotData d = super.createSnapshot();
+		return new ToolboxSnapshotData(d.stacks, new ArrayList<>(filters));
+	}
+
+	@Override
+	protected void readSnapshot(SnapshotData snapshot) {
+		super.readSnapshot(snapshot);
+		this.filters = ((ToolboxSnapshotData) snapshot).filters;
 	}
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
 		super.setStackInSlot(slot, stack);
-		int compartment = slot / STACKS_PER_COMPARTMENT;
-		if (!stack.isEmpty() && filters.get(compartment)
-			.isEmpty()) {
-			filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
-			te.sendData();
-		}
+		updateCompartmentFilters(slot, stack, null);
 	}
 
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		ItemStack insertItem = super.insertItem(slot, stack, simulate);
-		if (insertItem.getCount() != stack.getCount()) {
-			int compartment = slot / STACKS_PER_COMPARTMENT;
-			if (!stack.isEmpty() && filters.get(compartment)
+	protected void contentsChangedInternal(int slot, ItemStack newStack, TransactionContext ctx) {
+		super.contentsChangedInternal(slot, newStack, ctx);
+		updateCompartmentFilters(slot, newStack, ctx);
+	}
+
+	private void updateCompartmentFilters(int slot, ItemStack stack, @Nullable TransactionContext ctx) {
+		int compartment = slot / STACKS_PER_COMPARTMENT;
+		if (!stack.isEmpty() && filters.get(compartment)
 				.isEmpty()) {
-				filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
-				te.sendData();
-			}
+			filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
+			if (ctx != null) TransactionCallback.onSuccess(ctx, te::sendData);
+			else te.sendData();
 		}
-		return insertItem;
 	}
 
 	@Override
@@ -162,24 +177,40 @@ public class ToolboxInventory extends ItemStackHandler {
 		super.deserializeNBT(nbt);
 	}
 
-	public ItemStack distributeToCompartment(@Nonnull ItemStack stack, int compartment, boolean simulate) {
+	public ItemStack distributeToCompartment(@Nonnull ItemStack stack, int compartment, TransactionContext ctx) {
 		if (stack.isEmpty())
 			return stack;
 		if (filters.get(compartment)
 			.isEmpty())
 			return stack;
 
+		updateSnapshots(ctx);
+		int toInsert = stack.getCount();
+		int inserted = 0;
 		for (int i = STACKS_PER_COMPARTMENT - 1; i >= 0; i--) {
 			int slot = compartment * STACKS_PER_COMPARTMENT + i;
-			stack = insertItem(slot, stack, simulate);
-			if (stack.isEmpty())
-				return ItemStack.EMPTY;
+			ItemStack held = getStackInSlot(slot);
+			if (ItemHandlerHelper.canItemStacksStack(stack, held)) {
+				int room = held.getItem().getMaxStackSize() - held.getCount();
+				if (room > 0) {
+					int insert = Math.min(toInsert, room);
+					toInsert -= insert;
+					inserted += insert;
+					held = held.copy();
+					held.grow(insert);
+					contentsChangedInternal(slot, held, ctx);
+				}
+				if (toInsert == 0)
+					return ItemStack.EMPTY;
+			}
 		}
 
-		return stack;
+		ItemStack remainder = stack.copy();
+		remainder.setCount(toInsert - inserted);
+		return remainder;
 	}
 
-	public ItemStack takeFromCompartment(int amount, int compartment, boolean simulate) {
+	public ItemStack takeFromCompartment(int amount, int compartment, TransactionContext ctx) {
 		if (amount == 0)
 			return ItemStack.EMPTY;
 
@@ -188,7 +219,13 @@ public class ToolboxInventory extends ItemStackHandler {
 
 		for (int i = STACKS_PER_COMPARTMENT - 1; i >= 0; i--) {
 			int slot = compartment * STACKS_PER_COMPARTMENT + i;
-			ItemStack extracted = extractItem(slot, remaining, simulate);
+			ItemStack held = getStackInSlot(slot);
+			int canExtract = Math.min(remaining, held.getCount());
+			ItemStack extracted = held.copy();
+			extracted.setCount(canExtract);
+			held = held.copy();
+			held.shrink(canExtract);
+			contentsChangedInternal(slot, held, ctx);
 			remaining -= extracted.getCount();
 			if (!extracted.isEmpty())
 				lastValid = extracted;
@@ -216,4 +253,12 @@ public class ToolboxInventory extends ItemStackHandler {
 		return ItemHandlerHelper.canItemStacksStack(stack1, stack2);
 	}
 
+	public static class ToolboxSnapshotData extends SnapshotData {
+		public final List<ItemStack> filters;
+
+		public ToolboxSnapshotData(ItemStack[] stacks, List<ItemStack> filters) {
+			super(stacks);
+			this.filters = filters;
+		}
+	}
 }

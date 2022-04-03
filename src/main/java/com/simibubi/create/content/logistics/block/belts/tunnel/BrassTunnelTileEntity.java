@@ -11,6 +11,15 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.Level;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -32,7 +41,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
@@ -76,18 +84,23 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	private Set<BrassTunnelTileEntity> syncSet;
 
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
-	private LazyOptional<IItemHandler> beltCapability;
-	private LazyOptional<IItemHandler> tunnelCapability;
+	private BlockApiCache<Storage<ItemVariant>, Direction> beltCapabilityCache;
+	private BrassTunnelItemHandler tunnelCapability;
 
 	public BrassTunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		distributionTargets = Couple.create(ArrayList::new);
 		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
-		beltCapability = LazyOptional.empty();
-		tunnelCapability = LazyOptional.of(() -> new BrassTunnelItemHandler(this));
+		tunnelCapability = new BrassTunnelItemHandler(this);
 		previousOutputIndex = 0;
 		syncedOutputActive = false;
+	}
+
+	@Override
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		beltCapabilityCache = TransferUtil.getItemCache(level, worldPosition.below());
 	}
 
 	@Override
@@ -691,23 +704,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 
 	@Override
 	public void setRemoved() {
-		tunnelCapability.invalidate();
 		super.setRemoved();
 	}
 
 	@Override
-	@Nullable
-	public LazyOptional<IItemHandler> getItemHandler(Direction direction) {
-		return tunnelCapability.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return tunnelCapability;
 	}
 
-	public LazyOptional<IItemHandler> getBeltCapability() {
-		if (!beltCapability.isPresent()) {
-			BlockEntity tileEntity = level.getBlockEntity(worldPosition.below());
-			if (tileEntity != null && tileEntity instanceof ItemTransferable transferable)
-				beltCapability = TransferUtil.getItemHandler(tileEntity);
-		}
-		return beltCapability;
+	public Storage<ItemVariant> getBeltCapability() {
+		return beltCapabilityCache != null ? beltCapabilityCache.find(Direction.UP) : null;
 	}
 
 	public enum SelectionMode implements INamedIconOptions {

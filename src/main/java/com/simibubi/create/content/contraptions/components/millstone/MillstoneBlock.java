@@ -8,11 +8,12 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -59,7 +60,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 
 		withTileEntityDo(worldIn, pos, millstone -> {
 			boolean emptyOutput = true;
-			IItemHandlerModifiable inv = millstone.outputInv;
+			ItemStackHandler inv = millstone.outputInv;
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (!stackInSlot.isEmpty())
@@ -105,17 +106,17 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			return;
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;
-		LazyOptional<IItemHandler> capability = TransferUtil.getItemHandler(millstone);
-		if (!capability.isPresent())
+		Storage<ItemVariant> handler = millstone.getItemStorage(null);
+		if (handler == null)
 			return;
 
-		ItemStack remainder = capability.orElse(new ItemStackHandler())
-			.insertItem(0, itemEntity.getItem(), false);
-		if (remainder.isEmpty())
-			itemEntity.discard();
-		if (remainder.getCount() < itemEntity.getItem()
-			.getCount())
-			itemEntity.setItem(remainder);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			ItemStack inEntity = itemEntity.getItem();
+			long inserted = handler.insert(ItemVariant.of(inEntity), inEntity.getCount(), t);
+			if (inserted == inEntity.getCount())
+				itemEntity.discard();
+			else itemEntity.setItem(ItemHandlerHelper.copyStackWithSize(inEntity, (int) (inEntity.getCount() - inserted)));
+		}
 	}
 
 	@Override

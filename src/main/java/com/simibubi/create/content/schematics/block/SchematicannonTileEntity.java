@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
+import java.awt.Taskbar.State;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,15 +32,17 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.EmptyHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -89,7 +92,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	private boolean blockSkipped;
 
 	public BlockPos previousTarget;
-	public LinkedHashSet<LazyOptional<IItemHandler>> attachedInventories;
+	public LinkedHashSet<Storage<ItemVariant>> attachedInventories;
 	public List<LaunchedItem> flyingBlocks;
 	public MaterialChecklist checklist;
 
@@ -137,10 +140,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 			BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(facing));
 			if (tileEntity != null) {
-				LazyOptional<IItemHandler> capability =
-						TransferUtil.getItemHandler(tileEntity, facing.getOpposite());
-				if (capability.isPresent()) {
-					attachedInventories.add(capability);
+				Storage<ItemVariant> storage = TransferUtil.getItemStorage(tileEntity, facing.getOpposite());
+				if (storage != null && storage.supportsExtraction()) {
+					attachedInventories.add(storage);
 				}
 			}
 		}
@@ -384,27 +386,28 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		// Find item
 		List<ItemRequirement.StackRequirement> requiredItems = requirement.getRequiredItems();
 		if (!requirement.isEmpty()) {
-			for (ItemRequirement.StackRequirement required : requiredItems) {
-				if (!grabItemsFromAttachedInventories(required.item, required.usage, true)) {
-					if (skipMissing) {
-						statusMsg = "skipping";
-						blockSkipped = true;
-						if (missingItem != null) {
-							missingItem = null;
-							state = State.RUNNING;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (ItemRequirement.StackRequirement required : requiredItems) {
+					if (!grabItemsFromAttachedInventories(required.item, required.usage, t)) {
+						if (skipMissing) {
+							statusMsg = "skipping";
+							blockSkipped = true;
+							if (missingItem != null) {
+								missingItem = null;
+								state = State.RUNNING;
+							}
+							return;
 						}
+
+						missingItem = required.item;
+						state = State.PAUSED;
+						statusMsg = "missingBlock";
 						return;
 					}
-
-					missingItem = required.item;
-					state = State.PAUSED;
-					statusMsg = "missingBlock";
-					return;
 				}
-			}
 
-			for (ItemRequirement.StackRequirement required : requiredItems)
-				grabItemsFromAttachedInventories(required.item, required.usage, false);
+				t.commit();
+			}
 		}
 
 		// Success
@@ -478,36 +481,34 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
 	}
 
-	protected boolean grabItemsFromAttachedInventories(ItemStack required, ItemUseType usage, boolean simulate) {
+	protected boolean grabItemsFromAttachedInventories(ItemStack required, ItemUseType usage, TransactionContext transaction) {
 		if (hasCreativeCrate)
 			return true;
 
-		attachedInventories.removeIf(cap -> !cap.isPresent());
+//		attachedInventories.removeIf(cap -> !cap.isPresent()); // fabric - already cleared on neighbor update, not needed?
 
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				for (int slot = 0; slot < iItemHandler.getSlots(); slot++) {
-					ItemStack extractItem = iItemHandler.extractItem(slot, 1, true);
-					if (!ItemRequirement.validate(required, extractItem))
-						continue;
-					if (!extractItem.isDamageableItem())
-						continue;
+			for (Storage<ItemVariant> iItemHandler : attachedInventories) {
+				try (Transaction t = TransferUtil.getTransaction()) {
+					List<ItemStack> stacks = TransferUtil.getAllItems(iItemHandler);
+					for (ItemStack stack : stacks) {
+						if (!ItemRequirement.validate(required, stack))
+							continue;
+						if (!stack.isDamageableItem())
+							continue;
 
-					if (!simulate) {
-						ItemStack stack = iItemHandler.extractItem(slot, 1, false);
-						stack.setDamageValue(stack.getDamageValue() + 1);
-						if (stack.getDamageValue() <= stack.getMaxDamage()) {
-							if (iItemHandler.getStackInSlot(slot)
-								.isEmpty())
-								iItemHandler.insertItem(slot, stack, false);
-							else
-								ItemHandlerHelper.insertItem(iItemHandler, stack, false);
+						// fabric - can't modify directly, extract and re-insert
+						if (iItemHandler.extract(ItemVariant.of(stack), 1, t) == 1) {
+							stack.setDamageValue(stack.getDamageValue() + 1);
+							if (stack.getDamageValue() <= stack.getMaxDamage()) {
+								if (iItemHandler.insert(ItemVariant.of(stack), 1, t) == 1)
+									t.commit();
+							}
 						}
-					}
 
-					return true;
+						return true;
+					}
 				}
 			}
 		}
@@ -515,34 +516,20 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		// Find and remove
 		boolean success = false;
 		if (usage == ItemUseType.CONSUME) {
-			int amountFound = 0;
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				amountFound += ItemHelper
-					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-						required.getCount(), true)
-					.getCount();
+			long amountFound = 0;
+			ItemVariant variant = ItemVariant.of(required);
+			try (Transaction t = transaction.openNested()) {
+				for (Storage<ItemVariant> iItemHandler : attachedInventories) {
+					amountFound += iItemHandler.extract(variant, required.getCount(), t);
 
-				if (amountFound < required.getCount())
-					continue;
+					if (amountFound < required.getCount())
+						continue;
 
-				success = true;
-				break;
+					success = true;
+					break;
+				}
 			}
-		}
 
-		if (!simulate && success) {
-			int amountFound = 0;
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				amountFound += ItemHelper
-					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-						required.getCount(), false)
-					.getCount();
-				if (amountFound < required.getCount())
-					continue;
-				break;
-			}
 		}
 
 		return success;
@@ -651,9 +638,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		int BookOutput = 3;
 
 		ItemStack blueprint = inventory.getStackInSlot(0);
-		ItemStack paper = inventory.extractItem(BookInput, 1, true);
+		ItemStack paper = inventory.getStackInSlot(BookInput).copy();
+		paper.setCount(1);
 		boolean outputFull = inventory.getStackInSlot(BookOutput)
-			.getCount() == inventory.getSlotLimit(BookOutput);
+				.getCount() == inventory.getSlotLimit(BookOutput);
 
 		if (paper.isEmpty() || outputFull) {
 			if (bookPrintingProgress != 0)
@@ -676,10 +664,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 				updateChecklist();
 
 			dontUpdateChecklist = true;
-			inventory.extractItem(BookInput, 1, false);
+			try (Transaction t = TransferUtil.getTransaction()) {
+				inventory.extract(ItemVariant.of(paper), paper.getCount(), t);
+				t.commit();
+			}
 			ItemStack stack = checklist.createItem();
 			stack.setCount(inventory.getStackInSlot(BookOutput)
-				.getCount() + 1);
+					.getCount() + 1);
 			inventory.setStackInSlot(BookOutput, stack);
 			sendUpdate = true;
 			return;
@@ -792,17 +783,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 		checklist.gathered.clear();
 		findInventories();
-		for (LazyOptional<IItemHandler> cap : attachedInventories) {
-			if (!cap.isPresent())
-				continue;
-			IItemHandler inventory = cap.orElse(EmptyHandler.INSTANCE);
-			for (int slot = 0; slot < inventory.getSlots(); slot++) {
-				ItemStack stackInSlot = inventory.getStackInSlot(slot);
-				if (inventory.extractItem(slot, 1, true)
-					.isEmpty())
-					continue;
-				checklist.collect(stackInSlot);
-			}
+		for (Storage<ItemVariant> inventory : attachedInventories) {
+			List<ItemStack> contents = TransferUtil.getAllItems(inventory);
+			contents.forEach(checklist::collect);
 		}
 		sendUpdate = true;
 	}

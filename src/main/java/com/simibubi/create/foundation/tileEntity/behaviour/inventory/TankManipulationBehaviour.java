@@ -6,10 +6,17 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
 
-public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFluidHandler, TankManipulationBehaviour> {
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
+public class TankManipulationBehaviour extends CapManipulationBehaviourBase<FluidVariant, TankManipulationBehaviour> {
 
 	public static BehaviourType<TankManipulationBehaviour> OBSERVE = new BehaviourType<>();
 	private BehaviourType<TankManipulationBehaviour> behaviourType;
@@ -27,18 +34,22 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 	public FluidStack extractAny() {
 		if (!hasInventory())
 			return FluidStack.EMPTY;
-		IFluidHandler inventory = getInventory();
+		Storage<FluidVariant> inventory = getInventory();
 		Predicate<FluidStack> filterTest = getFilterTest(Predicates.alwaysTrue());
-		for (int i = 0; i < inventory.getTanks(); i++) {
-			FluidStack fluidInTank = inventory.getFluidInTank(i);
-			if (fluidInTank.isEmpty())
-				continue;
-			if (!filterTest.test(fluidInTank))
-				continue;
-			FluidStack drained =
-				inventory.drain(fluidInTank, simulateNext);
-			if (!drained.isEmpty())
-				return drained;
+
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (StorageView<FluidVariant> view : inventory.iterable(t)) {
+				if (!view.isResourceBlank()) {
+					FluidStack stack = new FluidStack(view);
+					if (!filterTest.test(stack))
+						continue;
+					long extracted = view.extract(view.getResource(), view.getAmount(), t);
+					if (extracted != 0) {
+						if (!simulateNext) t.commit();
+						return stack.setAmount(extracted);
+					}
+				}
+			}
 		}
 
 		return FluidStack.EMPTY;
@@ -53,8 +64,8 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 	}
 
 	@Override
-	protected Class<IFluidHandler> capability() {
-		return IFluidHandler.class;
+	protected Class<FluidVariant> capability() {
+		return FluidVariant.class;
 	}
 
 	@Override

@@ -3,9 +3,13 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -54,20 +58,23 @@ public class BeltCrusherInteractionHandler {
             CrushingWheelControllerTileEntity crusherTE = (CrushingWheelControllerTileEntity) te;
 
             ItemStack toInsert = currentItem.stack.copy();
+			try (Transaction t = TransferUtil.getTransaction()) {
+				long inserted = crusherTE.inventory.insert(ItemVariant.of(toInsert), toInsert.getCount(), t);
+				t.commit();
+				ItemStack remainder = ItemHandlerHelper.copyStackWithSize(toInsert, toInsert.getCount() - (int) inserted);
+				if (ItemStackUtil.equals(toInsert, remainder, false))
+					return true;
 
-            ItemStack remainder = ItemHandlerHelper.insertItemStacked(crusherTE.inventory, toInsert, false);
-			if (ItemStackUtil.equals(toInsert, remainder, false))
-                return true;
+				int notFilled = currentItem.stack.getCount() - toInsert.getCount();
+				if (!remainder.isEmpty()) {
+					remainder.grow(notFilled);
+				} else if (notFilled > 0)
+					remainder = ItemHandlerHelper.copyStackWithSize(currentItem.stack, notFilled);
 
-            int notFilled = currentItem.stack.getCount() - toInsert.getCount();
-            if (!remainder.isEmpty()) {
-                remainder.grow(notFilled);
-            } else if (notFilled > 0)
-                remainder = ItemHandlerHelper.copyStackWithSize(currentItem.stack, notFilled);
-
-            currentItem.stack = remainder;
-            beltInventory.belt.sendData();
-            return true;
+				currentItem.stack = remainder;
+				beltInventory.belt.sendData();
+				return true;
+			}
         }
 
         return false;

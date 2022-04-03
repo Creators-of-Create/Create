@@ -11,6 +11,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
@@ -31,7 +38,6 @@ import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
@@ -82,7 +88,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
-	private final LazyOptional<IItemHandler> invProvider;
 	private FilteringBehaviour filtering;
 
 	private ItemStack playEvent;
@@ -92,7 +97,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 		inventory = new ProcessingInventory(this::start).withSlotLimit(!AllConfigs.SERVER.recipes.bulkCutting.get());
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
-		invProvider = LazyOptional.of(() -> inventory);
 		playEvent = ItemStack.EMPTY;
 	}
 
@@ -258,14 +262,13 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 
 	@Override
 	public void setRemoved() {
-		invProvider.invalidate();
 		super.setRemoved();
 	}
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return direction == Direction.DOWN ? null : invProvider.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return face == Direction.DOWN ? null : inventory;
 	}
 
 	protected void spawnEventParticles(ItemStack stack) {
@@ -382,12 +385,15 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 			return;
 
 		inventory.clear();
-		ItemStack remainder = inventory.insertItem(0, entity.getItem()
-			.copy(), false);
-		if (remainder.isEmpty())
-			entity.discard();
-		else
-			entity.setItem(remainder);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			ItemStack contained = entity.getItem();
+			long inserted = inventory.insert(ItemVariant.of(contained), contained.getCount(), t);
+			if (contained.getCount() == inserted)
+				entity.discard();
+			else
+				entity.setItem(ItemHandlerHelper.copyStackWithSize(contained, (int) (contained.getCount() - inserted)));
+			t.commit();
+		}
 	}
 
 	public void start(ItemStack inserted) {

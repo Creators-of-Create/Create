@@ -6,11 +6,17 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -20,10 +26,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
@@ -59,7 +61,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 	protected boolean searchForEntity;
 
 	public ProcessingInventory inventory;
-	protected LazyOptional<IItemHandlerModifiable> handler = LazyOptional.of(() -> inventory);
 	private RecipeWrapper wrapper;
 	public float crushingspeed;
 
@@ -68,7 +69,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 		inventory = new ProcessingInventory(this::itemInserted) {
 
 			@Override
-			public boolean isItemValid(int slot, ItemStack stack) {
+			public boolean isItemValid(int slot, ItemVariant stack) {
 				return super.isItemValid(slot, stack) && processingEntity == null;
 			}
 
@@ -360,8 +361,8 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return handler.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return inventory;
 	}
 
 	public void clear() {

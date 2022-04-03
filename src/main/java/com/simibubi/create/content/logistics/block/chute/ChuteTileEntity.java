@@ -31,13 +31,14 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -51,6 +52,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -74,7 +76,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	ItemStack item;
 	InterpolatedValue itemPosition;
 	ChuteItemHandler itemHandler;
-	LazyOptional<IItemHandler> lazyHandler;
 	boolean canPickUpItems;
 
 	float bottomPullDistance;
@@ -84,21 +85,26 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	int airCurrentUpdateCooldown;
 	int entitySearchCooldown;
 
-	LazyOptional<IItemHandler> capAbove;
-	LazyOptional<IItemHandler> capBelow;
+	BlockApiCache<Storage<ItemVariant>, Direction> capAbove;
+	BlockApiCache<Storage<ItemVariant>, Direction> capBelow;
 
 	public ChuteTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		item = ItemStack.EMPTY;
 		itemPosition = new InterpolatedValue();
 		itemHandler = new ChuteItemHandler(this);
-		lazyHandler = LazyOptional.of(() -> itemHandler);
 		canPickUpItems = false;
-		capAbove = LazyOptional.empty();
-		capBelow = LazyOptional.empty();
+
 		bottomPullDistance = 0;
 		//		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;
+	}
+
+	@Override
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		capAbove = TransferUtil.getItemCache(level, worldPosition.above());
+		capBelow = TransferUtil.getItemCache(level, worldPosition.below());
 	}
 
 	@Override
@@ -277,7 +283,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	public void blockBelowChanged() {
 		updateAirFlow = true;
-		capBelow = LazyOptional.empty();
 	}
 
 	private void spawnParticles(float itemMotion) {
@@ -325,18 +330,16 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	private void handleInputFromAbove() {
-		if (!capAbove.isPresent())
-			capAbove = grabCapability(Direction.UP);
-		handleInput(capAbove.orElse(null), 1);
+		Storage<ItemVariant> storage = grabCapability(Direction.UP);
+		handleInput(storage, 1);
 	}
 
 	private void handleInputFromBelow() {
-		if (!capBelow.isPresent())
-			capBelow = grabCapability(Direction.DOWN);
-		handleInput(capBelow.orElse(null), 0);
+		Storage<ItemVariant> storage = grabCapability(Direction.DOWN);
+		handleInput(storage, 0);
 	}
 
-	private void handleInput(IItemHandler inv, float startLocation) {
+	private void handleInput(Storage<ItemVariant> inv, float startLocation) {
 		if (inv == null)
 			return;
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
@@ -357,19 +360,24 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (level == null || direction == null || !this.canOutputItems())
 			return false;
-		if (!capBelow.isPresent())
-			capBelow = grabCapability(Direction.DOWN);
-		if (capBelow.isPresent()) {
+			Storage<ItemVariant> below = grabCapability(Direction.DOWN);
+		if (below != null) {
 			if (level.isClientSide && !isVirtual())
 				return false;
-			ItemStack remainder = ItemHandlerHelper.insertItemStacked(capBelow.orElse(null), item, simulate);
-			ItemStack held = getItem();
-			if (!simulate)
-				setItem(remainder, itemPosition.get(0));
-			if (remainder.getCount() != held.getCount())
-				return true;
-			if (direction == Direction.DOWN)
-				return false;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				long inserted = below.insert(ItemVariant.of(item), item.getCount(), t);
+				if (inserted != 0 && !simulate) t.commit();
+				ItemStack held = getItem();
+				if (!simulate) {
+					ItemStack newStack = held.copy();
+					newStack.shrink((int) inserted);
+					setItem(newStack, itemPosition.get(0));
+				}
+				if (inserted != 0)
+					return true;
+				if (direction == Direction.DOWN)
+					return false;
+			}
 		}
 
 		if (targetChute != null) {
@@ -383,7 +391,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		// Diagonal chutes cannot drop items
 		if (direction.getAxis()
-			.isHorizontal())
+				.isHorizontal())
 			return false;
 
 		if (FunnelBlock.getFunnelFacing(level.getBlockState(worldPosition.below())) == Direction.DOWN)
@@ -393,7 +401,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (!simulate) {
 			Vec3 dropVec = VecHelper.getCenterOf(worldPosition)
-				.add(0, -12 / 16f, 0);
+					.add(0, -12 / 16f, 0);
 			ItemEntity dropped = new ItemEntity(level, dropVec.x, dropVec.y, dropVec.z, item.copy());
 			dropped.setDefaultPickUpDelay();
 			dropped.setDeltaMovement(0, -.25f, 0);
@@ -411,16 +419,19 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		if (AbstractChuteBlock.isOpenChute(getBlockState())) {
-			if (!capAbove.isPresent())
-				capAbove = grabCapability(Direction.UP);
-			if (capAbove.isPresent()) {
+			Storage<ItemVariant> above  = grabCapability(Direction.UP);
+			if (above != null) {
 				if (level.isClientSide && !isVirtual() && !ChuteBlock.isChute(stateAbove))
 					return false;
-				int countBefore = item.getCount();
-				ItemStack remainder = ItemHandlerHelper.insertItemStacked(capAbove.orElse(null), item, simulate);
-				if (!simulate)
-					item = remainder;
-				return countBefore != remainder.getCount();
+				try (Transaction t = TransferUtil.getTransaction()) {
+					long inserted = above.insert(ItemVariant.of(item), item.getCount(), t);
+					if (!simulate) {
+						item = item.copy();
+						item.shrink((int) inserted);
+						itemHandler.update();
+					}
+					return inserted != 0;
+				}
 			}
 		}
 
@@ -454,7 +465,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (!simulate) {
 			Vec3 dropVec = VecHelper.getCenterOf(worldPosition)
-				.add(0, 8 / 16f, 0);
+					.add(0, 8 / 16f, 0);
 			ItemEntity dropped = new ItemEntity(level, dropVec.x, dropVec.y, dropVec.z, item.copy());
 			dropped.setDefaultPickUpDelay();
 			dropped.setDeltaMovement(0, getItemMotion() * 2, 0);
@@ -484,18 +495,16 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return true;
 	}
 
-	private LazyOptional<IItemHandler> grabCapability(Direction side) {
-		BlockPos pos = this.worldPosition.relative(side);
+	private Storage<ItemVariant> grabCapability(Direction side) {
 		if (level == null)
-			return LazyOptional.empty();
-		BlockEntity te = level.getBlockEntity(pos);
-		if (te == null)
-			return LazyOptional.empty();
+			return null;
+		BlockApiCache<Storage<ItemVariant>, Direction> cache = side == Direction.UP ? capAbove : capBelow;
+		BlockEntity te = cache.getBlockEntity();
 		if (te instanceof ChuteTileEntity) {
 			if (side != Direction.DOWN || !(te instanceof SmartChuteTileEntity) || getItemMotion() > 0)
-				return LazyOptional.empty();
+				return null;
 		}
-		return TransferUtil.getItemHandler(te, side.getOpposite());
+		return cache.find(side.getOpposite());
 	}
 
 	public void setItem(ItemStack stack) {
@@ -505,6 +514,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public void setItem(ItemStack stack, float insertionPos) {
 		item = stack;
 		itemPosition.lastValue = itemPosition.value = insertionPos;
+		itemHandler.update();
 		if (!level.isClientSide)
 			notifyUpdate();
 	}
@@ -512,8 +522,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		if (lazyHandler != null)
-			lazyHandler.invalidate();
 	}
 
 	@Override
@@ -728,8 +736,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return lazyHandler.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return itemHandler;
 	}
 
 	public ItemStack getItem() {

@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
@@ -17,8 +19,8 @@ import net.minecraft.world.phys.Vec3;
 public class BeltHelper {
 
 	public static boolean isItemUpright(ItemStack stack) {
-		return TransferUtil.getFluidHandlerItem(stack)
-			.isPresent() || stack.is(AllItemTags.UPRIGHT_ON_BELT.tag);
+		return ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM) != null
+			|| stack.is(AllItemTags.UPRIGHT_ON_BELT.tag);
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {

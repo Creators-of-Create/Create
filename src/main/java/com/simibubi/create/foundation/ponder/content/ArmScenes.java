@@ -14,6 +14,8 @@ import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -350,8 +352,8 @@ public class ArmScenes {
 			BlockPos funnelPos = util.grid.at(5 - index % 3, 1 + index / 3, 2);
 			scene.world.flapFunnel(funnelPos, false);
 			scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, i == 3 ? ItemStack.EMPTY : sand, -1);
-			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct -> mct.getInventory()
-				.insertItem(0, sand.copy(), false));
+			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct ->
+					TransferUtil.insert(mct.getInventory(), ItemVariant.of(sand), sand.getCount()));
 			scene.idle(10);
 		}
 
@@ -370,8 +372,8 @@ public class ArmScenes {
 			BlockPos funnelPos = util.grid.at(3 + index % 3, 1 + index / 3, 2);
 			scene.world.flapFunnel(funnelPos, false);
 			scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, i == 4 ? ItemStack.EMPTY : sulphur, -1);
-			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct -> mct.getInventory()
-				.insertItem(0, sulphur.copy(), false));
+			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct ->
+					TransferUtil.insert(mct.getInventory(), ItemVariant.of(sulphur), sulphur.getCount()));
 			scene.idle(10);
 		}
 

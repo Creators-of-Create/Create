@@ -7,8 +7,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -102,25 +106,28 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AABB(pos));
 		ItemStack filter = getFilter(context);
 
-		for (ItemEntity item : items) {
-			if (!item.isAlive())
-				continue;
-			ItemStack toInsert = item.getItem();
-			if (!filter.isEmpty() && !FilterItem.test(context.world, toInsert, filter))
-				continue;
-			ItemStack remainder = ItemHandlerHelper.insertItemStacked(context.contraption.inventory, toInsert, false);
-			if (remainder.getCount() == toInsert.getCount())
-				continue;
-			if (remainder.isEmpty()) {
-				item.setItem(ItemStack.EMPTY);
-				item.discard();
-				continue;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (ItemEntity item : items) {
+				if (!item.isAlive())
+					continue;
+				ItemStack toInsert = item.getItem();
+				if (!filter.isEmpty() && !FilterItem.test(context.world, toInsert, filter))
+					continue;
+				long inserted = context.contraption.inventory.insert(ItemVariant.of(toInsert), toInsert.getCount(), t);
+				if (inserted == 0)
+					continue;
+				if (inserted == toInsert.getCount()) {
+					item.setItem(ItemStack.EMPTY);
+					item.discard();
+					continue;
+				}
+				ItemStack remainder = item.getItem().copy();
+				remainder.shrink((int) inserted);
+				item.setItem(remainder);
 			}
-
-			item.setItem(remainder);
 		}
 	}
-	
+
 	@Override
 	public boolean renderAsNormalTileEntity() {
 		return true;

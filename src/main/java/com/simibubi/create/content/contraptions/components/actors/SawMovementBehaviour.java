@@ -11,6 +11,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
 import net.fabricmc.api.EnvType;
@@ -72,9 +74,12 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	public void dropItemFromCutTree(MovementContext context, BlockPos pos, ItemStack stack) {
-		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
-		if (remainder.isEmpty())
+		long inserted = TransferUtil.insertItem(context.contraption.inventory, stack);
+		if (inserted == stack.getCount())
 			return;
+		long remaining = stack.getCount() - inserted;
+		ItemStack remainder = stack.copy();
+		remainder.setCount((int) remaining);
 
 		Level world = context.world;
 		Vec3 dropPos = VecHelper.getCenterOf(pos);

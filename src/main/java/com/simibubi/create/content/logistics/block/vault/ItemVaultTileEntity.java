@@ -9,13 +9,13 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import io.github.fabricators_of_create.porting_lib.transfer.item.CombinedInvWrapper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer, ItemTransferable {
 
-	protected LazyOptional<IItemHandler> itemCapability;
+	protected Storage<ItemVariant> itemCapability;
 
 	protected ItemStackHandler inventory;
 	protected BlockPos controller;
@@ -50,7 +50,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			}
 		};
 
-		itemCapability = LazyOptional.empty();
+		itemCapability = null;
 		radius = 1;
 		length = 1;
 	}
@@ -136,7 +136,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			getLevel().setBlock(worldPosition, state, 22);
 		}
 
-		itemCapability.invalidate();
+		itemCapability = null;
 		setChanged();
 		sendData();
 	}
@@ -148,7 +148,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		if (controller.equals(this.controller))
 			return;
 		this.controller = controller;
-		itemCapability.invalidate();
+		itemCapability = null;
 		setChanged();
 		sendData();
 	}
@@ -223,13 +223,13 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
 		initCapability();
-		return itemCapability.cast();
+		return itemCapability;
 	}
 
 	private void initCapability() {
-		if (itemCapability.isPresent())
+		if (itemCapability != null)
 			return;
 		if (!isController()) {
 			ItemVaultTileEntity controllerTE = getControllerTE();
@@ -241,7 +241,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		}
 
 		boolean alongZ = ItemVaultBlock.getVaultBlockAxis(getBlockState()) == Axis.Z;
-		IItemHandlerModifiable[] invs = new IItemHandlerModifiable[length * radius * radius];
+		ItemStackHandler[] invs = new ItemStackHandler[length * radius * radius];
 		for (int yOffset = 0; yOffset < length; yOffset++) {
 			for (int xOffset = 0; xOffset < radius; xOffset++) {
 				for (int zOffset = 0; zOffset < radius; zOffset++) {
@@ -255,8 +255,8 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			}
 		}
 
-		CombinedInvWrapper combinedInvWrapper = new CombinedInvWrapper(invs);
-		itemCapability = LazyOptional.of(() -> combinedInvWrapper);
+		CombinedStorage<ItemVariant, ItemStackHandler> combinedInvWrapper = new CombinedStorage<>(List.of(invs));
+		itemCapability = combinedInvWrapper;
 	}
 
 	public static int getMaxLength(int radius) {

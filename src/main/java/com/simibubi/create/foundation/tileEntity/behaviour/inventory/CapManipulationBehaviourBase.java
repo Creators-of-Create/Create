@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.BlockFace;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,7 +20,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	extends TileEntityBehaviour {
 
 	protected InterfaceProvider target;
-	protected LazyOptional<T> targetCapability;
+	protected Storage<T> targetCapability;
 	protected boolean simulateNext;
 	protected boolean bypassSided;
 	private boolean findNewNextTick;
@@ -28,7 +29,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		super(te);
 		setLazyTickRate(5);
 		this.target = target;
-		targetCapability = LazyOptional.empty();
+		targetCapability = null;
 		simulateNext = false;
 		bypassSided = false;
 	}
@@ -65,23 +66,23 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	}
 
 	public boolean hasInventory() {
-		return targetCapability.isPresent();
+		return targetCapability != null;
 	}
 
 	@Nullable
-	public T getInventory() {
-		return targetCapability.orElse(null);
+	public Storage<T> getInventory() {
+		return targetCapability;
 	}
 
-	protected void onHandlerInvalidated(LazyOptional<T> handler) {
+	protected void onHandlerInvalidated(Storage<T> handler) {
 		findNewNextTick = true;
-		targetCapability = LazyOptional.empty();
+		targetCapability = null;
 	}
 
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (!targetCapability.isPresent())
+		if (targetCapability == null)
 			findNewCapability();
 	}
 
@@ -109,7 +110,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 			.getOpposite();
 		BlockPos pos = targetBlockFace.getPos();
 
-		targetCapability = LazyOptional.empty();
+		targetCapability = null;
 
 		if (!world.isLoaded(pos))
 			return;
@@ -118,10 +119,8 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 			return;
 		Class<T> capability = capability();
 		targetCapability = bypassSided
-				? (LazyOptional<T>) TransferUtil.getHandler(invTE, null, capability)
-				: (LazyOptional<T>) TransferUtil.getHandler(invTE, targetBlockFace.getFace(), capability);																										// we can't support it.
-		if (targetCapability.isPresent())
-			targetCapability.addListener(this::onHandlerInvalidated);
+				? TransferUtil.getStorage(invTE, null, capability)
+				: TransferUtil.getStorage(invTE, targetBlockFace.getFace(), capability);
 	}
 
 	@FunctionalInterface

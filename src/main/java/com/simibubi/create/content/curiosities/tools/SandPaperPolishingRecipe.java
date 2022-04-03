@@ -61,7 +61,7 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 
 		public SandPaperInv(ItemStack stack) {
 			super(new ItemStackHandler(1));
-			inv.setStackInSlot(0, stack);
+			handler.setStackInSlot(0, stack);
 		}
 
 	}

@@ -12,15 +12,20 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -151,10 +156,9 @@ public class FluidTankConnectivityHandler {
 		BlockEntityType<?> type = te.getType();
 		Level world = te.getLevel();
 		BlockPos origin = te.getBlockPos();
-		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
-		FluidTank teTank = (FluidTank) capability.orElse(null);
-		FluidStack fluid = capability.map(ifh -> ifh.getFluidInTank(0))
-			.orElse(FluidStack.EMPTY);
+		Storage<FluidVariant> capability = te.getFluidStorage(null);
+		FluidTank teTank = (FluidTank) capability;
+		FluidStack fluid = TransferUtil.firstOrEmpty(teTank);
 
 		Search:
 
@@ -201,37 +205,40 @@ public class FluidTankConnectivityHandler {
 
 		boolean opaque = false;
 
-		for (int yOffset = 0; yOffset < height; yOffset++) {
-			for (int xOffset = 0; xOffset < width; xOffset++) {
-				for (int zOffset = 0; zOffset < width; zOffset++) {
-					BlockPos pos = origin.offset(xOffset, yOffset, zOffset);
-					FluidTankTileEntity tank = tankAt(type, world, pos);
-					if (tank == te)
-						continue;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (int yOffset = 0; yOffset < height; yOffset++) {
+				for (int xOffset = 0; xOffset < width; xOffset++) {
+					for (int zOffset = 0; zOffset < width; zOffset++) {
+						BlockPos pos = origin.offset(xOffset, yOffset, zOffset);
+						FluidTankTileEntity tank = tankAt(type, world, pos);
+						if (tank == te)
+							continue;
 
-					opaque |= !tank.window;
-					FluidTank tankTank = tank.tankInventory;
-					FluidStack fluidInTank = tankTank.getFluid();
-					if (!fluidInTank.isEmpty()) {
-						if (teTank.isEmpty() && teTank instanceof CreativeSmartFluidTank)
-							((CreativeSmartFluidTank) teTank).setContainedFluid(fluidInTank);
-						teTank.fill(fluidInTank, false);
+						opaque |= !tank.window;
+						SmartFluidTank tankTank = tank.tankInventory;
+						FluidStack fluidInTank = tankTank.getFluid();
+						if (!fluidInTank.isEmpty()) {
+							if (teTank.isEmpty() && teTank instanceof CreativeSmartFluidTank)
+								((CreativeSmartFluidTank) teTank).setContainedFluid(fluidInTank);
+							teTank.insert(fluidInTank.getType(), fluidInTank.getAmount(), t);
+						}
+						tankTank.setFluid(FluidStack.EMPTY, t);
+
+						splitTankAndInvalidate(tank, cache, false);
+						tank.setController(origin);
+						tank.updateConnectivity = false;
+						cache.put(pos, te);
+
+						BlockState state = world.getBlockState(pos);
+						if (!FluidTankBlock.isTank(state))
+							continue;
+						state = state.setValue(FluidTankBlock.BOTTOM, yOffset == 0);
+						state = state.setValue(FluidTankBlock.TOP, yOffset == height - 1);
+						world.setBlock(pos, state, 22);
 					}
-					tankTank.setFluid(FluidStack.EMPTY);
-
-					splitTankAndInvalidate(tank, cache, false);
-					tank.setController(origin);
-					tank.updateConnectivity = false;
-					cache.put(pos, te);
-
-					BlockState state = world.getBlockState(pos);
-					if (!FluidTankBlock.isTank(state))
-						continue;
-					state = state.setValue(FluidTankBlock.BOTTOM, yOffset == 0);
-					state = state.setValue(FluidTankBlock.TOP, yOffset == height - 1);
-					world.setBlock(pos, state, 22);
 				}
 			}
+			t.commit();
 		}
 
 		te.setWindows(!opaque);
@@ -262,45 +269,48 @@ public class FluidTankConnectivityHandler {
 			toDistribute.shrink(maxCapacity);
 		te.applyFluidTankSize(1);
 
-		for (int yOffset = 0; yOffset < height; yOffset++) {
-			for (int xOffset = 0; xOffset < width; xOffset++) {
-				for (int zOffset = 0; zOffset < width; zOffset++) {
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (int yOffset = 0; yOffset < height; yOffset++) {
+				for (int xOffset = 0; xOffset < width; xOffset++) {
+					for (int zOffset = 0; zOffset < width; zOffset++) {
 
-					BlockPos pos = origin.offset(xOffset, yOffset, zOffset);
-					FluidTankTileEntity tankAt = tankAt(te.getType(), world, pos);
-					if (tankAt == null)
-						continue;
-					if (!tankAt.getController()
-						.equals(origin))
-						continue;
-					FluidTankTileEntity controllerTE = tankAt.getControllerTE();
-					tankAt.window = controllerTE == null || controllerTE.window;
-					tankAt.removeController(true);
+						BlockPos pos = origin.offset(xOffset, yOffset, zOffset);
+						FluidTankTileEntity tankAt = tankAt(te.getType(), world, pos);
+						if (tankAt == null)
+							continue;
+						if (!tankAt.getController()
+								.equals(origin))
+							continue;
+						FluidTankTileEntity controllerTE = tankAt.getControllerTE();
+						tankAt.window = controllerTE == null || controllerTE.window;
+						tankAt.removeController(true);
 
-					if (!toDistribute.isEmpty() && tankAt != te) {
-						FluidStack copy = toDistribute.copy();
-						FluidTank tankInventory = tankAt.tankInventory;
-						if (tankInventory.isEmpty() && tankInventory instanceof CreativeSmartFluidTank)
-							((CreativeSmartFluidTank) tankInventory).setContainedFluid(toDistribute);
-						else {
-							long split = Math.min(maxCapacity, toDistribute.getAmount());
-							copy.setAmount(split);
-							toDistribute.shrink(split);
-							tankInventory.fill(copy, false);
+						if (!toDistribute.isEmpty() && tankAt != te) {
+							FluidStack copy = toDistribute.copy();
+							FluidTank tankInventory = tankAt.tankInventory;
+							if (tankInventory.isEmpty() && tankInventory instanceof CreativeSmartFluidTank)
+								((CreativeSmartFluidTank) tankInventory).setContainedFluid(toDistribute);
+							else {
+								long split = Math.min(maxCapacity, toDistribute.getAmount());
+								copy.setAmount(split);
+								toDistribute.shrink(split);
+								tankInventory.insert(copy.getType(), copy.getAmount(), t);
+							}
 						}
-					}
 
-					if (tryReconnect) {
-						frontier.add(tankAt);
-						tankAt.updateConnectivity = false;
+						if (tryReconnect) {
+							frontier.add(tankAt);
+							tankAt.updateConnectivity = false;
+						}
+						if (cache != null)
+							cache.put(pos, tankAt);
 					}
-					if (cache != null)
-						cache.put(pos, tankAt);
 				}
 			}
+			t.commit();
 		}
 
-		te.fluidCapability.invalidate();
+		te.actualTank = null;
 		if (tryReconnect)
 			formTanks(te.getType(), world, cache == null ? new TankSearchCache() : cache, frontier);
 	}

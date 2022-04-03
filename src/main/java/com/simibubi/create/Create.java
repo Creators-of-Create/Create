@@ -117,7 +117,6 @@ public class Create implements ModInitializer {
 		CommonEvents.register();
 		AllWorldFeatures.registerOreFeatures();
 
-		AllTileEntities.registerStorages();
 		AllPackets.channel.initServerListener();
 	}
 

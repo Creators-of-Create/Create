@@ -12,12 +12,12 @@ import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -132,12 +132,11 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (te == null)
 			return InteractionResult.FAIL;
 
-		LazyOptional<IFluidHandler> tankCapability = TransferUtil.getFluidHandler(te);
-		if (!tankCapability.isPresent())
+		Storage<FluidVariant> fluidTank = TransferUtil.getFluidStorage(te, ray.getDirection());
+		if (fluidTank == null)
 			return InteractionResult.PASS;
-		IFluidHandler fluidTank = tankCapability.orElse(null);
-		FluidStack prevFluidInTank = fluidTank.getFluidInTank(0)
-			.copy();
+
+		FluidStack prevFluidInTank = TransferUtil.firstCopyOrEmpty(fluidTank);
 
 		if (FluidHelper.tryEmptyItemIntoTE(world, player, hand, heldItem, te))
 			exchange = FluidExchange.ITEM_TO_TANK;
@@ -153,8 +152,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 		SoundEvent soundevent = null;
 		BlockState fluidState = null;
-		FluidStack fluidInTank = tankCapability.map(fh -> fh.getFluidInTank(0))
-			.orElse(FluidStack.EMPTY);
+		FluidStack fluidInTank = TransferUtil.firstOrEmpty(fluidTank);
 
 		if (exchange == FluidExchange.ITEM_TO_TANK) {
 			if (creative && !onClient) {
@@ -203,7 +201,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				if (controllerTE != null) {
 					if (fluidState != null && onClient) {
 						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
-						float level = (float) fluidInTank.getAmount() / fluidTank.getTankCapacity(0);
+						float level = (float) fluidInTank.getAmount() / TransferUtil.firstCapacity(fluidTank);
 
 						boolean reversed = FluidVariantRendering.fillsFromTop(fluidInTank.getType());
 						if (reversed)

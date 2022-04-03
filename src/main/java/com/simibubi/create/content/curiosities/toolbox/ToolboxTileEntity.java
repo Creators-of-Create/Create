@@ -10,6 +10,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -19,9 +27,7 @@ import com.simibubi.create.foundation.utility.ResetableLazy;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
@@ -55,7 +61,6 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	UUID uniqueId;
 	ToolboxInventory inventory;
-	LazyOptional<IItemHandler> inventoryProvider;
 	ResetableLazy<DyeColor> colorProvider;
 	protected int openCount;
 
@@ -67,7 +72,6 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		super(type, pos, state);
 		connectedPlayers = new HashMap<>();
 		inventory = new ToolboxInventory(this);
-		inventoryProvider = LazyOptional.of(() -> inventory);
 		colorProvider = ResetableLazy.of(() -> {
 			BlockState blockState = getBlockState();
 			if (blockState != null && blockState.getBlock() instanceof ToolboxBlock)
@@ -155,20 +159,25 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 					int amountToReplenish = targetAmount - count;
 
 					if (isOpenInContainer(player)) {
-						ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, true);
-						if (!extracted.isEmpty()) {
-							ToolboxHandler.unequip(player, hotbarSlot, false);
-							ToolboxHandler.syncData(player);
-							continue;
+						try (Transaction t = TransferUtil.getTransaction()) {
+							ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, t);
+							if (!extracted.isEmpty()) {
+								ToolboxHandler.unequip(player, hotbarSlot, false);
+								ToolboxHandler.syncData(player);
+								continue;
+							}
 						}
 					}
 
-					ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, false);
-					if (!extracted.isEmpty()) {
-						update = true;
-						ItemStack template = playerStack.isEmpty() ? extracted : playerStack;
-						playerInv.setItem(hotbarSlot,
-							ItemHandlerHelper.copyStackWithSize(template, count + extracted.getCount()));
+					try (Transaction t = TransferUtil.getTransaction()) {
+						ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, t);
+						if (!extracted.isEmpty()) {
+							update = true;
+							ItemStack template = playerStack.isEmpty() ? extracted : playerStack;
+							playerInv.setItem(hotbarSlot,
+									ItemHandlerHelper.copyStackWithSize(template, count + extracted.getCount()));
+							t.commit();
+						}
 					}
 				}
 
@@ -177,21 +186,27 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 					ItemStack toDistribute = ItemHandlerHelper.copyStackWithSize(playerStack, amountToDeposit);
 
 					if (isOpenInContainer(player)) {
-						int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, true)
-							.getCount();
-						if (deposited > 0) {
-							ToolboxHandler.unequip(player, hotbarSlot, true);
-							ToolboxHandler.syncData(player);
-							continue;
+						try (Transaction t = TransferUtil.getTransaction()) {
+							int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, t)
+									.getCount();
+							if (deposited > 0) {
+								ToolboxHandler.unequip(player, hotbarSlot, true);
+								ToolboxHandler.syncData(player);
+								continue;
+							}
 						}
+
 					}
 
-					int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, false)
-						.getCount();
-					if (deposited > 0) {
-						update = true;
-						playerInv.setItem(hotbarSlot,
-							ItemHandlerHelper.copyStackWithSize(playerStack, count - deposited));
+					try (Transaction t = TransferUtil.getTransaction()) {
+						int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, t)
+								.getCount();
+						if (deposited > 0) {
+							update = true;
+							playerInv.setItem(hotbarSlot,
+									ItemHandlerHelper.copyStackWithSize(playerStack, count - deposited));
+							t.commit();
+						}
 					}
 				}
 			}
@@ -252,10 +267,15 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		Inventory playerInv = player.getInventory();
 		ItemStack playerStack = playerInv.getItem(hotbarSlot);
 		ItemStack toInsert = ToolboxInventory.cleanItemNBT(playerStack.copy());
-		ItemStack remainder = inventory.distributeToCompartment(toInsert, slot, false);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			ItemStack remainder = inventory.distributeToCompartment(toInsert, slot, t);
 
-		if (remainder.getCount() != toInsert.getCount())
-			playerInv.setItem(hotbarSlot, remainder);
+			if (remainder.getCount() != toInsert.getCount())
+				playerInv.setItem(hotbarSlot, remainder);
+			t.commit();
+		}
+
+
 	}
 
 	private void tickAudio() {
@@ -279,8 +299,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		return inventoryProvider.cast();
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return inventory;
 	}
 
 	@Override

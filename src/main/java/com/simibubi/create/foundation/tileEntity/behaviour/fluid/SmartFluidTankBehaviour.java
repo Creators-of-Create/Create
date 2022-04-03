@@ -2,6 +2,12 @@ package com.simibubi.create.foundation.tileEntity.behaviour.fluid;
 
 import java.util.function.Consumer;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
@@ -12,8 +18,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +36,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	protected int syncCooldown;
 	protected boolean queuedSync;
 	protected TankSegment[] tanks;
-	protected LazyOptional<? extends IFluidHandler> capability;
+	protected InternalFluidHandler capability;
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;
 	protected Runnable fluidUpdateCallback;
@@ -49,13 +54,13 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		extractionAllowed = true;
 		behaviourType = type;
 		this.tanks = new TankSegment[tanks];
-		IFluidHandler[] handlers = new IFluidHandler[tanks];
+		Storage<FluidVariant>[] handlers = new Storage[tanks];
 		for (int i = 0; i < tanks; i++) {
 			TankSegment tankSegment = new TankSegment(tankCapacity);
 			this.tanks[i] = tankSegment;
 			handlers[i] = tankSegment.tank;
 		}
-		capability = LazyOptional.of(() -> new InternalFluidHandler(handlers, enforceVariety));
+		capability = new InternalFluidHandler(handlers, enforceVariety);
 		fluidUpdateCallback = () -> {
 		};
 	}
@@ -138,7 +143,6 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	@Override
 	public void remove() {
 		super.remove();
-		capability.invalidate();
 	}
 
 	public SmartFluidTank getPrimaryHandler() {
@@ -165,7 +169,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 			action.accept(tankSegment);
 	}
 
-	public LazyOptional<? extends IFluidHandler> getCapability() {
+	public Storage<FluidVariant> getCapability() {
 		return capability;
 	}
 
@@ -191,37 +195,29 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 	public class InternalFluidHandler extends CombinedTankWrapper {
 
-		public InternalFluidHandler(IFluidHandler[] handlers, boolean enforceVariety) {
+		public InternalFluidHandler(Storage<FluidVariant>[] handlers, boolean enforceVariety) {
 			super(handlers);
 			if (enforceVariety)
 				enforceVariety();
 		}
 
 		@Override
-		public long fill(FluidStack resource, boolean sim) {
+		public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
 			if (!insertionAllowed)
 				return 0;
-			return super.fill(resource, sim);
+			return super.insert(resource, maxAmount, transaction);
 		}
 
-		public long forceFill(FluidStack resource, boolean sim) {
-			return super.fill(resource, sim);
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean sim) {
-			if (!extractionAllowed)
-				return FluidStack.EMPTY;
-			return super.drain(resource, sim);
+		public long forceFill(FluidStack resource, TransactionContext ctx) {
+			return super.insert(resource.getType(), resource.getAmount(), ctx);
 		}
 
 		@Override
-		public FluidStack drain(long maxDrain, boolean sim) {
+		public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
 			if (!extractionAllowed)
-				return FluidStack.EMPTY;
-			return super.drain(maxDrain, sim);
+				return 0;
+			return super.extract(resource, maxAmount, transaction);
 		}
-
 	}
 
 	public class TankSegment {

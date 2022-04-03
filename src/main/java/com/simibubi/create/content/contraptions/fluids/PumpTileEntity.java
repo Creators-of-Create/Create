@@ -11,6 +11,10 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -23,8 +27,6 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
@@ -295,9 +297,9 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		// fluid handler endpoint
 		if (tileEntity != null) {
-			LazyOptional<IFluidHandler> capability =
-					TransferUtil.getFluidHandler(tileEntity, face.getOpposite());
-			if (capability.isPresent())
+			Storage<FluidVariant> capability =
+					TransferUtil.getFluidStorage(tileEntity, face.getOpposite());
+			if (capability != null)
 				return true;
 		}
 

@@ -72,10 +72,10 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 				canDetect = true;
 			else if (TileEntityBehaviour.get(tileEntity, FluidTransportBehaviour.TYPE) != null)
 				canDetect = true;
-			else if (tileEntity != null && (TransferUtil.getItemHandler(tileEntity)
-				.isPresent()
-				|| TransferUtil.getFluidHandler(tileEntity)
-					.isPresent()))
+			else if (tileEntity != null && (TransferUtil.getItemStorage(tileEntity)
+				!= null
+				|| TransferUtil.getFluidStorage(tileEntity)
+					!= null))
 				canDetect = true;
 			else if (tileEntity instanceof FunnelTileEntity)
 				canDetect = true;

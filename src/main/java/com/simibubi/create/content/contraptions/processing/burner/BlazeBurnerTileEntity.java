@@ -13,8 +13,10 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import io.github.fabricators_of_create.porting_lib.util.BurnUtil;
 
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -163,7 +165,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	 * @return true if the heater updated its burn time and an item should be
 	 *         consumed
 	 */
-	protected boolean tryUpdateFuel(ItemStack itemStack, boolean forceOverflow, boolean simulate) {
+	protected boolean tryUpdateFuel(ItemStack itemStack, boolean forceOverflow, TransactionContext ctx) {
 		if (isCreative)
 			return false;
 
@@ -174,7 +176,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = BurnUtil.getBurnTime(itemStack);
+			newBurnTime = FuelRegistry.INSTANCE.get(itemStack.getItem());
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 			else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {
@@ -196,20 +198,21 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = Mth.clamp(remainingBurnTime + newBurnTime, 0, MAX_HEAT_CAPACITY);
 		}
 
-		if (simulate)
-			return true;
+		FuelType finalNewFuel = newFuel;
+		int finalNewBurnTime = newBurnTime;
+		TransactionCallback.onSuccess(ctx, () -> {
+			activeFuel = finalNewFuel;
+			remainingBurnTime = finalNewBurnTime;
 
-		activeFuel = newFuel;
-		remainingBurnTime = newBurnTime;
-
-		if (level.isClientSide) {
-			HeatLevel level = getHeatLevelFromFuelType(activeFuel);
-			for (int i = 0; i < 20; i++)
-				spawnParticles(level, 1 + (.25 * (i / 4)));
-		} else {
-			playSound();
-			updateBlockState();
-		}
+			if (level.isClientSide) {
+				HeatLevel level = getHeatLevelFromFuelType(activeFuel);
+				for (int i = 0; i < 20; i++)
+					spawnParticles(level, 1 + (.25 * (i / 4)));
+			} else {
+				playSound();
+				updateBlockState();
+			}
+		});
 
 		return true;
 	}

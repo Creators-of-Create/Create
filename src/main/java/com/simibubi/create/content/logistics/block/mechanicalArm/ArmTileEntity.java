@@ -9,6 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity.SelectionMode;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -24,10 +25,13 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedAngle;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -241,14 +245,13 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			ArmInteractionPoint armInteractionPoint = inputs.get(i);
 			if (!armInteractionPoint.isStillValid(level))
 				continue;
-			for (int j = 0; j < armInteractionPoint.getSlotCount(level); j++) {
-				if (getDistributableAmount(armInteractionPoint, j) == 0)
-					continue;
 
-				selectIndex(true, i);
-				foundInput = true;
-				break InteractionPoints;
-			}
+			if (getDistributableAmount(armInteractionPoint) == 0)
+				continue;
+
+			selectIndex(true, i);
+			foundInput = true;
+			break InteractionPoints;
 		}
 		if (!foundInput && selectionMode.get() == SelectionMode.ROUND_ROBIN) {
 			// if we didn't find an input, but don't want to enforce round robin, reset the
@@ -275,18 +278,20 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (scanRange > outputs.size())
 			scanRange = outputs.size();
 
-		for (int i = startIndex; i < scanRange; i++) {
-			ArmInteractionPoint armInteractionPoint = outputs.get(i);
-			if (!armInteractionPoint.isStillValid(level))
-				continue;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (int i = startIndex; i < scanRange; i++) {
+				ArmInteractionPoint armInteractionPoint = outputs.get(i);
+				if (!armInteractionPoint.isStillValid(level))
+					continue;
 
-			ItemStack remainder = armInteractionPoint.insert(level, held, true);
-			if (ItemStackUtil.equals(remainder, heldItem, false))
-				continue;
+				ItemStack remainder = armInteractionPoint.insert(level, held, t);
+				if (ItemStackUtil.equals(remainder, heldItem, false))
+					continue;
 
-			selectIndex(false, i);
-			foundOutput = true;
-			break;
+				selectIndex(false, i);
+				foundOutput = true;
+				break;
+			}
 		}
 
 		if (!foundOutput && selectionMode.get() == SelectionMode.ROUND_ROBIN) {
@@ -313,18 +318,23 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		setChanged();
 	}
 
-	protected int getDistributableAmount(ArmInteractionPoint armInteractionPoint, int i) {
-		ItemStack stack = armInteractionPoint.extract(level, i, true);
-		ItemStack remainder = simulateInsertion(stack);
-		return stack.getCount() - remainder.getCount();
+	protected int getDistributableAmount(ArmInteractionPoint armInteractionPoint) {
+		try (Transaction t = TransferUtil.getTransaction()) {
+			ItemStack stack = armInteractionPoint.extract(level, t);
+			ItemStack remainder = simulateInsertion(stack);
+			return stack.getCount() - remainder.getCount();
+		}
 	}
 
 	protected void depositItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
 		if (armInteractionPoint != null) {
 			ItemStack toInsert = heldItem.copy();
-			ItemStack remainder = armInteractionPoint.insert(level, toInsert, false);
-			heldItem = remainder;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				ItemStack remainder = armInteractionPoint.insert(level, toInsert, t);
+				t.commit();
+				heldItem = remainder;
+			}
 		}
 		phase = heldItem.isEmpty() ? Phase.SEARCH_INPUTS : Phase.SEARCH_OUTPUTS;
 		chasedPointProgress = 0;
@@ -338,25 +348,26 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 	protected void collectItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		if (armInteractionPoint != null)
-			for (int i = 0; i < armInteractionPoint.getSlotCount(level); i++) {
-				int amountExtracted = getDistributableAmount(armInteractionPoint, i);
-				if (amountExtracted == 0)
-					continue;
+		if (armInteractionPoint != null) {
+			try (Transaction t = TransferUtil.getTransaction()) {
+				int amountExtracted = getDistributableAmount(armInteractionPoint);
+				if (amountExtracted != 0) {
+					ItemStack prevHeld = heldItem;
+					heldItem = armInteractionPoint.extract(level, amountExtracted, t);
+					phase = Phase.SEARCH_OUTPUTS;
+					chasedPointProgress = 0;
+					chasedPointIndex = -1;
+					sendData();
+					setChanged();
 
-				ItemStack prevHeld = heldItem;
-				heldItem = armInteractionPoint.extract(level, i, amountExtracted, false);
-				phase = Phase.SEARCH_OUTPUTS;
-				chasedPointProgress = 0;
-				chasedPointIndex = -1;
-				sendData();
-				setChanged();
-
-				if (!prevHeld.sameItem(heldItem))
-					level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
-							.5f + Create.RANDOM.nextFloat() * .25f);
-				return;
+					if (!prevHeld.sameItem(heldItem))
+						level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
+								.5f + Create.RANDOM.nextFloat() * .25f);
+					t.commit();
+					return;
+				}
 			}
+		}
 
 		phase = Phase.SEARCH_INPUTS;
 		chasedPointProgress = 0;
@@ -366,12 +377,14 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	private ItemStack simulateInsertion(ItemStack stack) {
-		for (ArmInteractionPoint armInteractionPoint : outputs) {
-			stack = armInteractionPoint.insert(level, stack, true);
-			if (stack.isEmpty())
-				break;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (ArmInteractionPoint armInteractionPoint : outputs) {
+				stack = armInteractionPoint.insert(level, stack, t);
+				if (stack.isEmpty())
+					break;
+			}
+			return stack;
 		}
-		return stack;
 	}
 
 	public void redstoneUpdate() {

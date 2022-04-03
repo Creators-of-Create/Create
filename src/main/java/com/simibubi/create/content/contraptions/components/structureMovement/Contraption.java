@@ -22,6 +22,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -67,11 +74,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.UniqueLinkedList;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.HashMapPaletteAccessor;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.CombinedInvWrapper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.StickinessUtil;
 
@@ -249,19 +252,19 @@ public abstract class Contraption {
 		}
 
 		// Gather itemhandlers of mounted storage
-		List<IItemHandlerModifiable> list = storage.values()
+		List<Storage<ItemVariant>> list = storage.values()
 			.stream()
 			.map(MountedStorage::getItemHandler)
 			.collect(Collectors.toList());
 		inventory =
-			new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+			new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 
-		List<IFluidHandler> fluidHandlers = fluidStorage.values()
+		List<Storage<FluidVariant>> fluidHandlers = fluidStorage.values()
 			.stream()
 			.map(MountedFluidStorage::getFluidHandler)
 			.collect(Collectors.toList());
 		fluidInventory = new CombinedTankWrapper(
-			Arrays.copyOf(fluidHandlers.toArray(), fluidHandlers.size(), IFluidHandler[].class));
+			Arrays.copyOf(fluidHandlers.toArray(), fluidHandlers.size(), Storage[].class));
 		gatherBBsOffThread();
 	}
 
@@ -744,12 +747,12 @@ public abstract class Contraption {
 				mfs.assignTileEntity(tank);
 			});
 
-		IItemHandlerModifiable[] handlers = new IItemHandlerModifiable[storage.size()];
+		Storage<ItemVariant>[] handlers = new Storage[storage.size()];
 		int index = 0;
 		for (MountedStorage mountedStorage : storage.values())
 			handlers[index++] = mountedStorage.getItemHandler();
 
-		IFluidHandler[] fluidHandlers = new IFluidHandler[fluidStorage.size()];
+		Storage<FluidVariant>[] fluidHandlers = new Storage[fluidStorage.size()];
 		index = 0;
 		for (MountedFluidStorage mountedStorage : fluidStorage.values())
 			fluidHandlers[index++] = mountedStorage.getFluidHandler();
@@ -1105,12 +1108,9 @@ public abstract class Contraption {
 					Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL, 512);
 		}
 
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			if (!inventory.isSlotExternal(i))
-				inventory.setStackInSlot(i, ItemStack.EMPTY);
-		}
-		for (int i = 0; i < fluidInventory.getTanks(); i++)
-			fluidInventory.drain(fluidInventory.getFluidInTank(i), false);
+
+		clearInternal(inventory);
+		TransferUtil.clearStorage(fluidInventory);
 
 		for (Pair<BlockPos, Direction> pair : superglue) {
 			BlockPos targetPos = transform.apply(pair.getKey());
@@ -1120,6 +1120,14 @@ public abstract class Contraption {
 			if (entity.onValidSurface()) {
 				if (!world.isClientSide)
 					world.addFreshEntity(entity);
+			}
+		}
+	}
+
+	private void clearInternal(ContraptionInvWrapper inv) {
+		for (Storage<ItemVariant> storage : inv.parts) {
+			if (!(storage instanceof ContraptionInvWrapper wrapper) || !wrapper.isExternal) {
+				TransferUtil.clearStorage(storage);
 			}
 		}
 	}
@@ -1331,23 +1339,16 @@ public abstract class Contraption {
 //		}
 //	}
 
-	public static class ContraptionInvWrapper extends CombinedInvWrapper {
+	public static class ContraptionInvWrapper extends CombinedStorage<ItemVariant, Storage<ItemVariant>> {
 		protected final boolean isExternal;
 
-		public ContraptionInvWrapper(boolean isExternal, IItemHandlerModifiable... itemHandler) {
-			super(itemHandler);
+		public ContraptionInvWrapper(boolean isExternal, Storage<ItemVariant>... itemHandler) {
+			super(List.of(itemHandler));
 			this.isExternal = isExternal;
 		}
 
-		public ContraptionInvWrapper(IItemHandlerModifiable... itemHandler) {
+		public ContraptionInvWrapper(Storage<ItemVariant>... itemHandler) {
 			this(false, itemHandler);
-		}
-
-		public boolean isSlotExternal(int slot) {
-			if (isExternal)
-				return true;
-			IItemHandlerModifiable handler = getHandlerFromIndex(getIndexForSlot(slot));
-			return handler instanceof ContraptionInvWrapper && ((ContraptionInvWrapper) handler).isSlotExternal(slot);
 		}
 	}
 }

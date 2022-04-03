@@ -124,7 +124,7 @@ public class ItemVaultConnectivityHandler {
 				te.getLevel()
 					.setBlock(te.getBlockPos(), state.setValue(ItemVaultBlock.LARGE, te.radius > 2), 22);
 
-			te.itemCapability.invalidate();
+			te.itemCapability = null;
 			te.setChanged();
 		}
 
@@ -257,7 +257,7 @@ public class ItemVaultConnectivityHandler {
 			}
 		}
 
-		te.itemCapability.invalidate();
+		te.itemCapability = null;
 		if (tryReconnect)
 			formVaults(te.getType(), world, cache == null ? new VaultSearchCache() : cache, frontier);
 	}

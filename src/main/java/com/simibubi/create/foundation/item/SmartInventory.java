@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.item;
 
+import java.util.Iterator;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
@@ -9,6 +10,10 @@ import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandle
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializable;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -31,7 +36,7 @@ public class SmartInventory extends RecipeWrapper
 		insertionAllowed = true;
 		extractionAllowed = true;
 		this.stackSize = stackSize;
-		wrapped = (SyncedStackHandler) inv;
+		wrapped = (SyncedStackHandler) this.handler;
 	}
 
 	public SmartInventory withMaxStackSize(int maxStackSize) {
@@ -40,8 +45,8 @@ public class SmartInventory extends RecipeWrapper
 		return this;
 	}
 
-	public SmartInventory whenContentsChanged(Consumer<Integer> updateCallback) {
-		((SyncedStackHandler) inv).whenContentsChange(updateCallback);
+	public SmartInventory whenContentsChanged(Runnable updateCallback) {
+		((SyncedStackHandler) this.handler).whenContentsChange(updateCallback);
 		return this;
 	}
 
@@ -65,53 +70,57 @@ public class SmartInventory extends RecipeWrapper
 		return this;
 	}
 
-	@Override
-	public int getSlots() {
-		return inv.getSlots();
-	}
+//	@Override
+//	public int getSlots() {
+//		return inv.getSlots();
+//	}
+
 
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		if (!insertionAllowed)
-			return stack;
-		return inv.insertItem(slot, stack, simulate);
+			return 0;
+		return handler.insert(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		if (!extractionAllowed)
-			return ItemStack.EMPTY;
+			return 0;
 		if (stackNonStackables) {
-			ItemStack extractItem = inv.extractItem(slot, amount, true);
-			if (!extractItem.isEmpty() && extractItem.getMaxStackSize() < extractItem.getCount())
-				amount = extractItem.getMaxStackSize();
+			try (Transaction t = transaction.openNested()) {
+				long extracted = handler.extract(resource, maxAmount, t);
+				t.abort();
+				if (extracted != 0 && resource.getItem().getMaxStackSize() < extracted)
+					maxAmount = resource.getItem().getMaxStackSize();
+			}
 		}
-		return inv.extractItem(slot, amount, simulate);
+		return handler.extract(resource, maxAmount, transaction);
 	}
 
-	@Override
-	public int getSlotLimit(int slot) {
-		return Math.min(inv.getSlotLimit(slot), stackSize);
-	}
+//	@Override
+//	public int getSlotLimit(int slot) {
+//		return Math.min(inv.getSlotLimit(slot), stackSize);
+//	}
 
-	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
-		return inv.isItemValid(slot, stack);
-	}
+//	@Override
+//	public boolean isItemValid(int slot, ItemStack stack) {
+//		return inv.isItemValid(slot, stack);
+//	}
 
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
-		inv.setStackInSlot(slot, stack);
-	}
+//	@Override
+//	public void setStackInSlot(int slot, ItemStack stack) {
+//		inv.setStackInSlot(slot, stack);
+//	}
 
 	@Override
 	public ItemStack getItem(int slot) {
 		return super.getItem(slot);
 	}
 
-	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
-		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
-	}
+//	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
+//		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
+//	}
 
 	@Override
 	public CompoundTag serializeNBT() {
@@ -124,7 +133,7 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	private SyncedStackHandler getInv() {
-		return (SyncedStackHandler) inv;
+		return (SyncedStackHandler) handler;
 	}
 
 	private static class SyncedStackHandler extends ItemStackHandler {
@@ -132,7 +141,7 @@ public class SmartInventory extends RecipeWrapper
 		private SyncedTileEntity te;
 		private boolean stackNonStackables;
 		private int stackSize;
-		private Consumer<Integer> updateCallback;
+		private Runnable updateCallback;
 
 		public SyncedStackHandler(int slots, SyncedTileEntity te, boolean stackNonStackables, int stackSize) {
 			super(slots);
@@ -142,10 +151,9 @@ public class SmartInventory extends RecipeWrapper
 		}
 
 		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
+		protected void onFinalCommit() {
 			if (updateCallback != null)
-				updateCallback.accept(slot);
+				updateCallback.run();
 			te.notifyUpdate();
 		}
 
@@ -154,7 +162,7 @@ public class SmartInventory extends RecipeWrapper
 			return Math.min(stackNonStackables ? 64 : super.getSlotLimit(slot), stackSize);
 		}
 
-		public void whenContentsChange(Consumer<Integer> updateCallback) {
+		public void whenContentsChange(Runnable updateCallback) {
 			this.updateCallback = updateCallback;
 		}
 
@@ -165,4 +173,8 @@ public class SmartInventory extends RecipeWrapper
 		return getItem(slot);
 	}
 
+	@Override
+	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+		return handler.iterator(transaction);
+	}
 }

@@ -3,10 +3,14 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -24,8 +28,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
@@ -34,6 +36,9 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +51,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ClipContext;
@@ -70,12 +76,24 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	protected List<ItemStack> overflowItems = new ArrayList<>();
 	protected FilteringBehaviour filtering;
 	protected boolean redstoneLocked;
-	private LazyOptional<IItemHandlerModifiable> invHandler;
+	private DeployerItemHandler invHandler;
 	private ListTag deferredInventoryList;
 
 	private LerpedFloat animatedOffset;
 
 	public BeltProcessingBehaviour processingBehaviour;
+
+	public SnapshotParticipant<List<ItemStack>> snapshotParticipant = new SnapshotParticipant<>() {
+		@Override
+		protected List<ItemStack> createSnapshot() {
+			return new ArrayList<>(overflowItems);
+		}
+
+		@Override
+		protected void readSnapshot(List<ItemStack> snapshot) {
+			overflowItems = snapshot;
+		}
+	};
 
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
@@ -127,7 +145,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 			Vec3 initialPos = VecHelper.getCenterOf(worldPosition.relative(getBlockState().getValue(FACING)));
 			player.setPos(initialPos.x, initialPos.y, initialPos.z);
 		}
-		invHandler = LazyOptional.of(this::createHandler);
+		invHandler = this.createHandler();
 	}
 
 	protected void onExtract(ItemStack stack) {
@@ -366,7 +384,7 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		}
 	}
 
-	private IItemHandlerModifiable createHandler() {
+	private DeployerItemHandler createHandler() {
 		return new DeployerItemHandler(this);
 	}
 
@@ -394,8 +412,6 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		if (invHandler != null)
-			invHandler.invalidate();
 	}
 
 	public void changeMode() {
@@ -406,10 +422,10 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 
 	@Nullable
 	@Override
-	public LazyOptional<IItemHandler> getItemHandler(@Nullable Direction direction) {
-		if(invHandler == null)
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		if (invHandler == null)
 			initHandler();
-		return invHandler == null ? null : invHandler.cast();
+		return invHandler;
 	}
 
 	@Override

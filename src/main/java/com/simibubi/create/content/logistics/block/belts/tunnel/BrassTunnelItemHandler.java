@@ -1,60 +1,49 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import net.minecraft.world.item.ItemStack;
-
-public class BrassTunnelItemHandler implements IItemHandler {
+public class BrassTunnelItemHandler extends ItemStackHandler {
 
 	private BrassTunnelTileEntity te;
 
 	public BrassTunnelItemHandler(BrassTunnelTileEntity te) {
+		super(1);
 		this.te = te;
+		stacks[0] = te.stackToDistribute;
 	}
 
 	@Override
-	public int getSlots() {
-		return 1;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return te.stackToDistribute;
-	}
-
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		if (!te.hasDistributionBehaviour()) {
-			LazyOptional<IItemHandler> beltCapability = te.getBeltCapability();
-			if (!beltCapability.isPresent())
-				return stack;
-			return beltCapability.orElse(null).insertItem(slot, stack, simulate);
+			Storage<ItemVariant> beltCapability = te.getBeltCapability();
+			if (beltCapability == null)
+				return 0;
+			return beltCapability.insert(resource, maxAmount, transaction);
 		}
 
 		if (!te.canTakeItems())
-			return stack;
-		if (!simulate)
-			te.setStackToDistribute(stack);
-		return ItemStack.EMPTY;
+			return 0;
+		return super.insert(resource, maxAmount, transaction);
 	}
 
 	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		LazyOptional<IItemHandler> beltCapability = te.getBeltCapability();
-		if (!beltCapability.isPresent())
-			return ItemStack.EMPTY;
-		return beltCapability.orElse(null).extractItem(slot, amount, simulate);
+	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+		Storage<ItemVariant> beltCapability = te.getBeltCapability();
+		if (beltCapability == null)
+			return 0;
+		return beltCapability.extract(resource, maxAmount, transaction);
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return te.stackToDistribute.isEmpty() ? 64 : te.stackToDistribute.getMaxStackSize();
+		return stacks[slot].isEmpty() ? 64 : stacks[slot].getMaxStackSize();
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
-		return true;
+	protected void onFinalCommit() {
+		te.setStackToDistribute(stacks[0]);
 	}
-
 }

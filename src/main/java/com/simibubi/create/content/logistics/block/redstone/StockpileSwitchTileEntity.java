@@ -8,10 +8,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandler;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -82,33 +87,35 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 				// Item inventory
-				IItemHandler inv = observedInventory.getInventory();
-				for (int slot = 0; slot < inv.getSlots(); slot++) {
-					ItemStack stackInSlot = inv.getStackInSlot(slot);
-					int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
-					int count = stackInSlot.getCount();
-					if (space == 0)
-						continue;
+				try (Transaction t = TransferUtil.getTransaction()) {
+					Storage<ItemVariant> inv = observedInventory.getInventory();
+					for (StorageView<ItemVariant> view : inv.iterable(t)) {
+						long space = Math.min(view.getCapacity(), view.getResource().getItem().getMaxStackSize());
+						long count = view.getAmount();
+						if (count == 0)
+							continue;
 
-					totalSpace += 1;
-					if (filtering.test(stackInSlot))
-						occupied += count * (1f / space);
+						totalSpace += 1;
+						if (filtering.test(view.getResource().toStack()))
+							occupied += count * (1f / space);
+					}
 				}
 			}
 
 			if (observedTank.hasInventory()) {
 				// Fluid inventory
-				IFluidHandler tank = observedTank.getInventory();
-				for (int slot = 0; slot < tank.getTanks(); slot++) {
-					FluidStack stackInSlot = tank.getFluidInTank(slot);
-					long space = tank.getTankCapacity(slot);
-					long count = stackInSlot.getAmount();
-					if (space == 0)
-						continue;
+				try (Transaction t = TransferUtil.getTransaction()) {
+					Storage<FluidVariant> tank = observedTank.getInventory();
+					for (StorageView<FluidVariant> view : tank.iterable(t)) {
+						long space = view.getCapacity();
+						long count = view.getAmount();
+						if (count == 0)
+							continue;
 
-					totalSpace += 1;
-					if (filtering.test(stackInSlot))
-						occupied += count * (1f / space);
+						totalSpace += 1;
+						if (filtering.test(new FluidStack(view)))
+							occupied += count * (1f / space);
+					}
 				}
 			}
 		} else {

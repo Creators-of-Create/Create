@@ -7,6 +7,11 @@ import java.util.Queue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -19,8 +24,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.IItemHandlerModifiable;
-import io.github.fabricators_of_create.porting_lib.transfer.item.InvWrapper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -161,7 +164,7 @@ public class MountedContraption extends Contraption {
 	public void addExtraInventories(Entity cart) {
 		if (!(cart instanceof Container))
 			return;
-		IItemHandlerModifiable handlerFromInv = new ContraptionInvWrapper(true, new InvWrapper((Container) cart));
+		Storage<ItemVariant> handlerFromInv = new ContraptionInvWrapper(true, InventoryStorage.of((Container) cart, null));
 		inventory = new ContraptionInvWrapper(handlerFromInv, inventory);
 	}
 

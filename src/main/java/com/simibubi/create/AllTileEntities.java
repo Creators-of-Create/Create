@@ -175,15 +175,7 @@ import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class AllTileEntities {
 
@@ -734,27 +726,4 @@ public class AllTileEntities {
 		.register();
 
 	public static void register() {}
-
-	public static void registerStorages() {
-		for (Field field : AllTileEntities.class.getDeclaredFields()) {
-			field.setAccessible(true);
-			if (Modifier.isStatic(field.getModifiers())) {
-				try {
-					Object obj = field.get(null);
-					if (obj instanceof BlockEntityEntry entry) {
-						BlockEntityType<?> bet = (BlockEntityType<?>) entry.get();
-						BlockEntity be = bet.create(BlockPos.ZERO, Blocks.AIR.defaultBlockState());
-						if (be instanceof FluidTransferable) {
-							TransferUtil.registerFluidStorage(bet);
-						}
-						if (be instanceof ItemTransferable) {
-							TransferUtil.registerItemStorage(bet);
-						}
-					}
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException("Failure during BlockEntity registration", e);
-				}
-			}
-		}
-	}
 }

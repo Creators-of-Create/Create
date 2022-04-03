@@ -1,21 +1,23 @@
 package com.simibubi.create.content.contraptions.goggles;
 
 import java.text.NumberFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.IFluidHandler;
-import io.github.fabricators_of_create.porting_lib.util.FluidHandlerData;
-import io.github.fabricators_of_create.porting_lib.util.FluidHandlerData.FluidTankData;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
 import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.MinecraftClientUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -46,59 +48,65 @@ public interface IHaveGoggleInformation {
 			.format(d).replace("\u00A0", " ");
 	}
 
-	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, LazyOptional<IFluidHandler> handler) {
+	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, Storage<FluidVariant> handler) {
 		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.goggles.fluid_container")));
 		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 		boolean simplify = AllConfigs.CLIENT.simplifyFluidUnit.get();
 		TranslatableComponent mb = Lang.translate(unit.getTranslationKey());
-		FluidHandlerData tank = FluidHandlerData.CURRENT;
-		if (tank == null || tank.getTanks() == 0)
+		if (handler == null)
 			return false;
 
 		Component indent = new TextComponent(spacing + " ");
 
 		boolean isEmpty = true;
-		for (int i = 0; i < tank.getTanks(); i++) {
-			FluidTankData data = tank.data[i];
-			String translationKey = FluidUtil.getTranslationKey(data.fluid());
-			long amount = data.amount();
+		try (Transaction t = TransferUtil.getTransaction()) {
+			boolean moreThan1Tank = false;
+			StorageView<FluidVariant> first = null;
+			for (Iterator<StorageView<FluidVariant>> iterator = handler.iterator(t); iterator.hasNext();) {
+				StorageView<FluidVariant> view = iterator.next();
+				if (!moreThan1Tank) first = view;
+				moreThan1Tank |= iterator.hasNext();
+				if (view.isResourceBlank()) continue;
+				String translationKey = FluidUtil.getTranslationKey(view.getResource().getFluid());
+				long amount = view.getAmount();
 
-			if (translationKey.isEmpty() || amount == 0)
-				continue;
+				if (translationKey.isEmpty() || amount == 0)
+					continue;
 
-			long tankCapacity = data.capacity();
-			Component fluidName = new TranslatableComponent(translationKey).withStyle(ChatFormatting.GRAY);
-			Component contained = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(amount, unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
-			Component slash = new TextComponent(" / ").withStyle(ChatFormatting.GRAY);
-			Component capacity = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(
-					tankCapacity, unit, simplify)).append(mb).withStyle(ChatFormatting.DARK_GRAY);
+				long tankCapacity = view.getCapacity();
+				Component fluidName = new TranslatableComponent(translationKey).withStyle(ChatFormatting.GRAY);
+				Component contained = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(amount, unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
+				Component slash = new TextComponent(" / ").withStyle(ChatFormatting.GRAY);
+				Component capacity = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(
+						tankCapacity, unit, simplify)).append(mb).withStyle(ChatFormatting.DARK_GRAY);
+
+				tooltip.add(indent.plainCopy()
+						.append(fluidName));
+				tooltip.add(indent.plainCopy()
+						.append(contained)
+						.append(slash)
+						.append(capacity));
+
+				isEmpty = false;
+			}
+
+			if (moreThan1Tank) {
+				if (isEmpty)
+					tooltip.remove(tooltip.size() - 1);
+				return true;
+			}
+
+			if (!isEmpty)
+				return true;
+
+			Component capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(ChatFormatting.GRAY);
+			Component amount = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(first.getCapacity(), unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
 
 			tooltip.add(indent.plainCopy()
-					.append(fluidName));
-			tooltip.add(indent.plainCopy()
-				.append(contained)
-				.append(slash)
-				.append(capacity));
-
-			isEmpty = false;
-		}
-
-		if (tank.getTanks() > 1) {
-			if (isEmpty)
-				tooltip.remove(tooltip.size() - 1);
+					.append(capacity)
+					.append(amount));
 			return true;
 		}
-
-		if (!isEmpty)
-			return true;
-
-		Component capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(ChatFormatting.GRAY);
-		Component amount = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(tank.data[0].capacity(), unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
-
-		tooltip.add(indent.plainCopy()
-				.append(capacity)
-				.append(amount));
-		return true;
 	}
 
 	class Format {

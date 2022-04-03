@@ -7,10 +7,14 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.config.AllConfigs;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -35,8 +39,13 @@ public abstract class MovementBehaviour {
 
 	public void dropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
-		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get())
-			remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get()) {
+			try (Transaction t = TransferUtil.getTransaction()) {
+				long inserted = context.contraption.inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+				remainder = stack.copy();
+				remainder.shrink((int) inserted);
+			}
+		}
 		else
 			remainder = stack;
 		if (remainder.isEmpty())
