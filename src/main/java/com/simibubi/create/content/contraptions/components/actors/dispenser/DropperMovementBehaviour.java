@@ -20,8 +20,8 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class DropperMovementBehaviour extends MovementBehaviour {
-	protected static final MovedDefaultDispenseItemBehaviour defaultBehaviour = new MovedDefaultDispenseItemBehaviour();
+public class DropperMovementBehaviour implements MovementBehaviour {
+	protected static final MovedDefaultDispenseItemBehaviour DEFAULT_BEHAVIOUR = new MovedDefaultDispenseItemBehaviour();
 	private static final Random RNG = new Random();
 
 	protected void activate(MovementContext context, BlockPos pos) {
@@ -29,7 +29,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		if (location.isEmpty()) {
 			context.world.levelEvent(1001, pos, 0);
 		} else {
-			setItemStackAt(location, defaultBehaviour.dispense(getItemStackAt(location, context), context, pos), context);
+			setItemStackAt(location, DEFAULT_BEHAVIOUR.dispense(getItemStackAt(location, context), context, pos), context);
 		}
 	}
 
@@ -91,7 +91,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void stopMoving(MovementContext context) {
-		super.stopMoving(context);
+		MovementBehaviour.super.stopMoving(context);
 		writeExtraData(context);
 	}
 

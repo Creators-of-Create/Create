@@ -11,15 +11,15 @@ body:
     -   type: textarea
         attributes:
             label: Screenshots and Videos
-            description: If applicable, add screenshots or videos to help explain your suggestion
+            description: If applicable, add screenshots or videos to help explain your suggestion.
         validations:
             required: false
     -   type: textarea
         attributes:
             label: Additional Context
-            description: Add any extra context about the suggestion here
+            description: Add any extra context about the suggestion here.
         validations:
             required: false
     -   type: markdown
         attributes:
-            value: "Thank you for taking the time to make this suggestion and to help improve Create"
+            value: "Thank you for taking the time to make this suggestion and help improve Create!"

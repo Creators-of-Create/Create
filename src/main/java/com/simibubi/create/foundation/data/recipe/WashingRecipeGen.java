@@ -1,12 +1,14 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.Mods.EID;
-import static com.simibubi.create.foundation.data.recipe.Mods.IE;
-import static com.simibubi.create.foundation.data.recipe.Mods.INF;
-import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
-import static com.simibubi.create.foundation.data.recipe.Mods.MW;
-import static com.simibubi.create.foundation.data.recipe.Mods.SM;
-import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
 import java.util.function.Supplier;
 
@@ -50,15 +52,15 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD, () -> Items.GOLD_NUGGET, () -> Items.QUARTZ, .5f),
 		CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON, () -> Items.IRON_NUGGET, () -> Items.REDSTONE, .125f),
 
-		CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
-		CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, "platinum", SM),
-		CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, "silver", TH, MW, IE, SM, INF),
-		CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, "tin", TH, MEK, MW, SM),
-		CRUSHED_LEAD = moddedCrushedOre(AllItems.CRUSHED_LEAD, "lead", MEK, TH, MW, IE, SM, EID),
-		CRUSHED_QUICKSILVER = moddedCrushedOre(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
-		CRUSHED_BAUXITE = moddedCrushedOre(AllItems.CRUSHED_BAUXITE, "aluminum", IE, SM),
-		CRUSHED_URANIUM = moddedCrushedOre(AllItems.CRUSHED_URANIUM, "uranium", MEK, IE, SM),
-		CRUSHED_NICKEL = moddedCrushedOre(AllItems.CRUSHED_NICKEL, "nickel", TH, IE, SM),
+		CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, OSMIUM),
+		CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, PLATINUM),
+		CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, SILVER),
+		CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, TIN),
+		CRUSHED_LEAD = moddedCrushedOre(AllItems.CRUSHED_LEAD, LEAD),
+		CRUSHED_QUICKSILVER = moddedCrushedOre(AllItems.CRUSHED_QUICKSILVER, QUICKSILVER),
+		CRUSHED_BAUXITE = moddedCrushedOre(AllItems.CRUSHED_BAUXITE, ALUMINUM),
+		CRUSHED_URANIUM = moddedCrushedOre(AllItems.CRUSHED_URANIUM, URANIUM),
+		CRUSHED_NICKEL = moddedCrushedOre(AllItems.CRUSHED_NICKEL, NICKEL),
 
 		ICE = convert(Blocks.ICE, Blocks.PACKED_ICE), MAGMA_BLOCK = convert(Blocks.MAGMA_BLOCK, Blocks.OBSIDIAN),
 
@@ -93,8 +95,9 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 			.output(secondaryChance, secondary.get(), 1));
 	}
 
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, String metalName, Mods... mods) {
-		for (Mods mod : mods) {
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
+		String metalName = metal.getName();
+		for (Mods mod : metal.getMods()) {
 			ResourceLocation nugget = mod.nuggetOf(metalName);
 			create(mod.getId() + "/" + crushed.getId()
 				.getPath(),
@@ -105,8 +108,8 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public WashingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public WashingRecipeGen(FabricDataGenerator dataGenerator) {
+		super(dataGenerator);
 	}
 
 	@Override

@@ -30,7 +30,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -71,8 +71,8 @@ public class PaletteBlockPattern {
 	private String[] textures;
 	private String id;
 	private boolean isTranslucent;
-	private Tag.Named<Block>[] blockTags;
-	private Tag.Named<Item>[] itemTags;
+	private TagKey<Block>[] blockTags;
+	private TagKey<Item>[] itemTags;
 	private Optional<Function<String, ConnectedTextureBehaviour>> ctFactory;
 
 	private IPatternBlockStateGenerator blockStateGenerator;
@@ -106,11 +106,11 @@ public class PaletteBlockPattern {
 		return isTranslucent;
 	}
 
-	public Tag.Named<Block>[] getBlockTags() {
+	public TagKey<Block>[] getBlockTags() {
 		return blockTags;
 	}
 
-	public Tag.Named<Item>[] getItemTags() {
+	public TagKey<Item>[] getItemTags() {
 		return itemTags;
 	}
 

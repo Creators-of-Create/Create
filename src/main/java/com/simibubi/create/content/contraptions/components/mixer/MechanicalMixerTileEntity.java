@@ -7,7 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
-import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipes;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -225,7 +225,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (StorageView<ItemVariant> view : availableItems.iterable(t)) {
 				if (view.isResourceBlank()) continue;
-				List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(view.getResource().getItem());
+				List<MixingRecipe> list = PotionMixingRecipes.BY_ITEM.get(view.getResource().getItem());
 				if (list == null)
 					continue;
 				for (MixingRecipe mixingRecipe : list)
@@ -242,7 +242,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return ((r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 				 && AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-				 && !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
+				 && !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(r)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 

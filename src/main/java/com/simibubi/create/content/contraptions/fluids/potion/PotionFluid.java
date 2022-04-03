@@ -27,20 +27,47 @@ import org.jetbrains.annotations.Nullable;
 
 public class PotionFluid extends VirtualFluid {
 
-	public enum BottleType {
-		REGULAR, SPLASH, LINGERING;
-	}
-
 	public PotionFluid(Properties properties) {
 		super(properties);
 	}
 
-	public static FluidStack withEffects(long amount, Potion potion, List<MobEffectInstance> customEffects) {
+	public static FluidStack of(long amount, Potion potion) {
 		FluidStack fluidStack = new FluidStack(AllFluids.POTION.get()
 				.getSource(), amount);
 		addPotionToFluidStack(fluidStack, potion);
+		return fluidStack;
+	}
+
+	public static FluidStack withEffects(int amount, Potion potion, List<MobEffectInstance> customEffects) {
+		FluidStack fluidStack = of(amount, potion);
 		appendEffects(fluidStack, customEffects);
 		return fluidStack;
+	}
+
+	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
+		ResourceLocation resourcelocation = ForgeRegistries.POTIONS.getKey(potion);
+		if (potion == Potions.EMPTY) {
+			fs.removeChildTag("Potion");
+			return fs;
+		}
+		fs.getOrCreateTag()
+			.putString("Potion", resourcelocation.toString());
+		return fs;
+	}
+
+	public static FluidStack appendEffects(FluidStack fs, Collection<MobEffectInstance> customEffects) {
+		if (customEffects.isEmpty())
+			return fs;
+		CompoundTag compoundnbt = fs.getOrCreateTag();
+		ListTag listnbt = compoundnbt.getList("CustomPotionEffects", 9);
+		for (MobEffectInstance effectinstance : customEffects)
+			listnbt.add(effectinstance.save(new CompoundTag()));
+		compoundnbt.put("CustomPotionEffects", listnbt);
+		return fs;
+	}
+
+	public enum BottleType {
+		REGULAR, SPLASH, LINGERING;
 	}
 
 	public static class PotionFluidAttributes extends FluidAttributes {
@@ -71,28 +98,6 @@ public class PotionFluid extends VirtualFluid {
 							.getDescriptionId() + ".effect.");
 		}
 
-	}
-
-	public static FluidStack  addPotionToFluidStack(FluidStack fs, Potion potion) {
-		ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
-		if (potion == Potions.EMPTY) {
-			fs.removeChildTag("Potion");
-			return fs;
-		}
-		fs.getOrCreateTag()
-				.putString("Potion", resourcelocation.toString());
-		return fs;
-	}
-
-	public static FluidStack appendEffects(FluidStack fs, Collection<MobEffectInstance> customEffects) {
-		if (customEffects.isEmpty())
-			return fs;
-		CompoundTag compoundnbt = fs.getOrCreateTag();
-		ListTag listnbt = compoundnbt.getList("CustomPotionEffects", 9);
-		for (MobEffectInstance effectinstance : customEffects)
-			listnbt.add(effectinstance.save(new CompoundTag()));
-		compoundnbt.put("CustomPotionEffects", listnbt);
-		return fs;
 	}
 
 }

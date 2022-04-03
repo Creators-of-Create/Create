@@ -21,23 +21,26 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class MovementBehaviour {
+public interface MovementBehaviour {
 
-	public boolean isActive(MovementContext context) {
+	default boolean isActive(MovementContext context) {
 		return true;
 	}
 
-	public void tick(MovementContext context) {}
+	default void tick(MovementContext context) {
+	}
 
-	public void startMoving(MovementContext context) {}
+	default void startMoving(MovementContext context) {
+	}
 
-	public void visitNewPosition(MovementContext context, BlockPos pos) {}
+	default void visitNewPosition(MovementContext context, BlockPos pos) {
+	}
 
-	public Vec3 getActiveAreaOffset(MovementContext context) {
+	default Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.ZERO;
 	}
 
-	public void dropItem(MovementContext context, ItemStack stack) {
+	default void dropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
 		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
@@ -58,32 +61,31 @@ public abstract class MovementBehaviour {
 		context.world.addFreshEntity(itemEntity);
 	}
 
-	public void stopMoving(MovementContext context) {
-
+	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
 	}
 
-	public void writeExtraData(MovementContext context) {
-
+	default void stopMoving(MovementContext context) {
 	}
 
-	public boolean renderAsNormalTileEntity() {
+	default void writeExtraData(MovementContext context) {
+	}
+
+	default boolean renderAsNormalTileEntity() {
 		return false;
 	}
 
-	public boolean hasSpecialInstancedRendering() {
+	default boolean hasSpecialInstancedRendering() {
 		return false;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-		ContraptionMatrices matrices, MultiBufferSource buffer) {}
+	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
+	}
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
 		return null;
-	}
-
-	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
 	}
 }

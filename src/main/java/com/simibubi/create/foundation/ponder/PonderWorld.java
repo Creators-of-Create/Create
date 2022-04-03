@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.mixin.accessor.ParticleEngineAccessor;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
@@ -64,7 +65,7 @@ public class PonderWorld extends SchematicWorld {
 	private Supplier<ClientLevel> asClientWorld = Suppliers.memoize(() -> WrappedClientWorld.of(this));
 
 	protected PonderWorldParticles particles;
-//	private final Map<ResourceLocation, ParticleProvider<?>> particleFactories;
+//	private final Map<ResourceLocation, ParticleProvider<?>> particleProviders;
 	private final Int2ObjectMap<ParticleProvider<?>> particleFactories;
 
 	int overrideLight;
@@ -77,11 +78,7 @@ public class PonderWorld extends SchematicWorld {
 		blockBreakingProgressions = new HashMap<>();
 		originalEntities = new ArrayList<>();
 		particles = new PonderWorldParticles(this);
-
-		// ParticleManager.factories - ATs don't seem to like this one
-		particleFactories = ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).port_lib$getProviders();
-//		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleEngine.class,
-//			Minecraft.getInstance().particleEngine, "f_107293_"); // providers
+		particleProviders = ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).create$getProviders();
 	}
 
 	public void createBackup() {
@@ -238,9 +235,9 @@ public class PonderWorld extends SchematicWorld {
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
 		int key = Registry.PARTICLE_TYPE.getId(data.getType());
-		ParticleProvider<T> iparticlefactory = (ParticleProvider<T>) particleFactories.get(key);
-		return iparticlefactory == null ? null
-			: iparticlefactory.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);
+		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(key);
+		return particleProvider == null ? null
+			: particleProvider.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);
 	}
 
 	@Override

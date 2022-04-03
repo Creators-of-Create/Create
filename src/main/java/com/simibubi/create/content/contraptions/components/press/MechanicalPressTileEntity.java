@@ -3,9 +3,7 @@ package com.simibubi.create.content.contraptions.components.press;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
@@ -37,7 +35,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -46,7 +43,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -347,18 +343,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		return AllRecipeTypes.PRESSING.find(pressingInv, level);
 	}
 
-	private static final Set<ResourceLocation> RECIPE_DENY_SET =
-		ImmutableSet.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
-
 	public static <C extends Container> boolean canCompress(Recipe<C> recipe) {
 		if (!(recipe instanceof CraftingRecipe) || !AllConfigs.SERVER.recipes.allowShapedSquareInPress.get())
 			return false;
-
-		RecipeSerializer<?> serializer = recipe.getSerializer();
-
-			if (serializer != null && RECIPE_DENY_SET.contains(Registry.RECIPE_SERIALIZER.getKey(serializer)))
-				return false;
-
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		return (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.matchAllIngredients(ingredients);
 	}
@@ -366,7 +353,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> recipe) {
 		return (recipe instanceof CraftingRecipe && !(recipe instanceof MechanicalCraftingRecipe)
-			&& canCompress(recipe) && !AllRecipeTypes.isManualRecipe(recipe))
+			&& canCompress(recipe) && !AllRecipeTypes.shouldIgnoreInAutomation(recipe))
 			|| recipe.getType() == AllRecipeTypes.COMPACTING.getType();
 	}
 

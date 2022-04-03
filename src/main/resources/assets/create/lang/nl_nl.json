@@ -405,7 +405,7 @@
 	"create.tooltip.speedRequirement": "Snelheid eis: %1$s",
 	"create.tooltip.speedRequirement.none": "Geen",
 	"create.tooltip.speedRequirement.medium": "Gemiddeld",
-	"create.tooltip.speedRequirement.high": "Snel",
+	"create.tooltip.speedRequirement.fast": "Snel",
 
 	"create.tooltip.stressImpact": "Stress Impact: %1$s",
 	"create.tooltip.stressImpact.low": "Laag",

@@ -18,6 +18,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -94,8 +95,7 @@ public class BlueprintItem extends Item {
 	}
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
-		Ingredient.Value[] acceptedItems =
-				((IngredientAccessor) ingredient).port_lib$getValues(); // values
+		Ingredient.Value[] acceptedItems = ingredient.values;
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)
@@ -125,7 +125,7 @@ public class BlueprintItem extends Item {
 			filterItem.getOrCreateTag()
 					.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());
 			ListTag attributes = new ListTag();
-			ItemAttribute at = new ItemAttribute.InTag(resourcelocation);
+			ItemAttribute at = new ItemAttribute.InTag(ItemTags.create(resourcelocation));
 			CompoundTag compoundNBT = new CompoundTag();
 			at.serializeNBT(compoundNBT);
 			compoundNBT.putBoolean("Inverted", false);

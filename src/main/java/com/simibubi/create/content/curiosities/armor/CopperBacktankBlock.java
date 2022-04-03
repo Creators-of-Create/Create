@@ -13,6 +13,7 @@ import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -63,7 +65,8 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		builder.add(BlockStateProperties.WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
-
+@Override
+	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
 	@Override
 	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;

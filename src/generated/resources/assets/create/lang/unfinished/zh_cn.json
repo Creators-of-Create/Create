@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 2",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "异彩化合物",
 	"item.create.cinder_flour": "下界面粉",
 	"item.create.copper_backtank": "铜制背罐",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "铜粒",
 	"item.create.copper_sheet": "铜板",
 	"item.create.crafter_slot_cover": "合成器盖板",
@@ -1231,8 +1232,9 @@
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "需求转速：%1$s",
 	"create.tooltip.speedRequirement.none": "无",
+	"create.tooltip.speedRequirement.slow": "UNLOCALIZED: Slow",
 	"create.tooltip.speedRequirement.medium": "适当",
-	"create.tooltip.speedRequirement.high": "快",
+	"create.tooltip.speedRequirement.fast": "快",
 	"create.tooltip.stressImpact": "应力影响：%1$s",
 	"create.tooltip.stressImpact.low": "低",
 	"create.tooltip.stressImpact.medium": "中",

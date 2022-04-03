@@ -14,7 +14,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -48,27 +48,27 @@ public abstract class CreateRecipeProvider extends FabricRecipesProvider {
 
 	protected static class I {
 
-		static Tag.Named<Item> redstone() {
+		static TagKey<Item> redstone() {
 			return Tags.Items.DUSTS_REDSTONE;
 		}
 
-		static Tag.Named<Item> planks() {
+		static TagKey<Item> planks() {
 			return ItemTags.PLANKS;
 		}
 
-		static Tag.Named<Item> woodSlab() {
+		static TagKey<Item> woodSlab() {
 			return ItemTags.WOODEN_SLABS;
 		}
 
-		static Tag.Named<Item> gold() {
+		static TagKey<Item> gold() {
 			return AllTags.forgeItemTag("ingots/gold");
 		}
 
-		static Tag.Named<Item> goldSheet() {
+		static TagKey<Item> goldSheet() {
 			return AllTags.forgeItemTag("plates/gold");
 		}
 
-		static Tag.Named<Item> stone() {
+		static TagKey<Item> stone() {
 			return Tags.Items.STONE;
 		}
 
@@ -92,27 +92,27 @@ public abstract class CreateRecipeProvider extends FabricRecipesProvider {
 			return AllBlocks.ANDESITE_CASING.get();
 		}
 
-		static Tag.Named<Item> brass() {
+		static TagKey<Item> brass() {
 			return AllTags.forgeItemTag("ingots/brass");
 		}
 
-		static Tag.Named<Item> brassSheet() {
+		static TagKey<Item> brassSheet() {
 			return AllTags.forgeItemTag("plates/brass");
 		}
 
-		static Tag.Named<Item> iron() {
+		static TagKey<Item> iron() {
 			return Tags.Items.INGOTS_IRON;
 		}
 
-		static Tag.Named<Item> ironNugget() {
+		static TagKey<Item> ironNugget() {
 			return AllTags.forgeItemTag("nuggets/iron");
 		}
 
-		static Tag.Named<Item> zinc() {
+		static TagKey<Item> zinc() {
 			return AllTags.forgeItemTag("ingots/zinc");
 		}
 
-		static Tag.Named<Item> ironSheet() {
+		static TagKey<Item> ironSheet() {
 			return AllTags.forgeItemTag("plates/iron");
 		}
 
@@ -132,11 +132,11 @@ public abstract class CreateRecipeProvider extends FabricRecipesProvider {
 			return Items.COPPER_BLOCK;
 		}
 
-		static Tag.Named<Item> brassBlock() {
+		static TagKey<Item> brassBlock() {
 			return AllTags.forgeItemTag("storage_blocks/brass");
 		}
 
-		static Tag.Named<Item> zincBlock() {
+		static TagKey<Item> zincBlock() {
 			return AllTags.forgeItemTag("storage_blocks/zinc");
 		}
 
@@ -144,19 +144,19 @@ public abstract class CreateRecipeProvider extends FabricRecipesProvider {
 			return Items.COPPER_INGOT;
 		}
 
-		static Tag.Named<Item> copperSheet() {
+		static TagKey<Item> copperSheet() {
 			return AllTags.forgeItemTag("plates/copper");
 		}
 
-		static Tag.Named<Item> copperNugget() {
+		static TagKey<Item> copperNugget() {
 			return AllTags.forgeItemTag("nuggets/copper");
 		}
 
-		static Tag.Named<Item> brassNugget() {
+		static TagKey<Item> brassNugget() {
 			return AllTags.forgeItemTag("nuggets/brass");
 		}
 
-		static Tag.Named<Item> zincNugget() {
+		static TagKey<Item> zincNugget() {
 			return AllTags.forgeItemTag("nuggets/zinc");
 		}
 

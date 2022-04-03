@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

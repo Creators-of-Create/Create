@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FluidTankModel extends CTModel {
 
+	protected static final ModelProperty<CullData> CULL_PROPERTY = new ModelProperty<>();
+
 	public static FluidTankModel standard(BakedModel originalModel) {
 		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);
 	}

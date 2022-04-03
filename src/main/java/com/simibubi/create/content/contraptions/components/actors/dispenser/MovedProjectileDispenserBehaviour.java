@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.mixin.accessor.AbstractProjectileDispenseBehaviorAccessor;
 
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.AbstractProjectileDispenseBehaviorAccessor;
 
@@ -48,51 +49,22 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 	}
 
 	public static MovedProjectileDispenserBehaviour of(AbstractProjectileDispenseBehavior vanillaBehaviour) {
+		AbstractProjectileDispenseBehaviorAccessor accessor = (AbstractProjectileDispenseBehaviorAccessor) vanillaBehaviour;
 		return new MovedProjectileDispenserBehaviour() {
 			@Override
 			protected Projectile getProjectileEntity(Level world, double x, double y, double z, ItemStack itemStack) {
-				try {
-					return ((AbstractProjectileDispenseBehaviorAccessor) vanillaBehaviour).port_lib$getProjectile(world, new SimplePos(x, y, z) , itemStack);
-				} catch (Throwable ignored) {
-				}
-				return null;
+				return accessor.create$callGetProjectile(world, new SimplePos(x, y, z), itemStack);
 			}
 
 			@Override
 			protected float getProjectileInaccuracy() {
-				try {
-					return ((AbstractProjectileDispenseBehaviorAccessor) vanillaBehaviour).port_lib$getUncertainty();
-				} catch (Throwable ignored) {
-				}
-				return super.getProjectileInaccuracy();
+				return accessor.create$callGetUncertainty();
 			}
 
 			@Override
 			protected float getProjectileVelocity() {
-				try {
-					return ((AbstractProjectileDispenseBehaviorAccessor) vanillaBehaviour).port_lib$getPower();
-				} catch (Throwable ignored) {
-				}
-				return super.getProjectileVelocity();
+				return accessor.create$callGetPower();
 			}
 		};
 	}
-
-//	private static Method getProjectileEntityLookup() {
-//		Method getProjectileEntity = MethodGetter.findMethod(AbstractProjectileDispenseBehavior.class, "getProjectileEntity", "method_12844", Level.class, Position.class, ItemStack.class); // getProjectile
-//		getProjectileEntity.setAccessible(true);
-//		return getProjectileEntity;
-//	}
-//
-//	private static Method getProjectileInaccuracyLookup() {
-//		Method getProjectileInaccuracy = MethodGetter.findMethod(AbstractProjectileDispenseBehavior.class, "getProjectileInaccuracy", "method_12845"); // getUncertainty
-//		getProjectileInaccuracy.setAccessible(true);
-//		return getProjectileInaccuracy;
-//	}
-//
-//	private static Method getProjectileVelocityLookup() {
-//		Method getProjectileVelocity = MethodGetter.findMethod(AbstractProjectileDispenseBehavior.class, "getProjectileVelocity", "method_12846"); // getPower
-//		getProjectileVelocity.setAccessible(true);
-//		return getProjectileVelocity;
-//	}
 }

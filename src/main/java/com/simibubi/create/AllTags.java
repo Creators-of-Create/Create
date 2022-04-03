@@ -4,7 +4,7 @@ import static com.simibubi.create.AllTags.NameSpace.FORGE;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
 
-import java.util.function.Function;
+import java.util.Collections;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -17,7 +17,7 @@ import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 public class AllTags {
@@ -33,25 +34,24 @@ public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
-	public static <T> Tag.Named<T> tag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String namespace,
-		String path) {
-		return wrapperFactory.apply(new ResourceLocation(namespace, path));
+	public static <T extends IForgeRegistryEntry<T>> TagKey<T> optionalTag(IForgeRegistry<T> registry, ResourceLocation id) {
+		return registry.tags().createOptionalTagKey(id, Collections.emptySet());
 	}
 
-	public static <T> Tag.Named<T> forgeTag(Function<ResourceLocation, Tag.Named<T>> wrapperFactory, String path) {
-		return tag(wrapperFactory, "c", path);
+	public static <T extends IForgeRegistryEntry<T>> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
+		return optionalTag(registry, new ResourceLocation("c", path));
 	}
 
-	public static Tag.Named<Block> forgeBlockTag(String path) {
-		return forgeTag(TagFactory.BLOCK::create, path);
+	public static TagKey<Block> forgeBlockTag(String path) {
+		return forgeTag(ForgeRegistries.BLOCKS, path);
 	}
 
-	public static Tag.Named<Item> forgeItemTag(String path) {
-		return forgeTag(TagFactory.ITEM::create, path);
+	public static TagKey<Item> forgeItemTag(String path) {
+		return forgeTag(ForgeRegistries.ITEMS, path);
 	}
 
-	public static Tag.Named<Fluid> forgeFluidTag(String path) {
-		return forgeTag(TagFactory.FLUID::create, path);
+	public static TagKey<Fluid> forgeFluidTag(String path) {
+		return forgeTag(ForgeRegistries.FLUIDS, path);
 	}
 
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOrPickaxe() {
@@ -72,7 +72,7 @@ public class AllTags {
 		return b -> {
 			for (String p : path)
 				b.tag(forgeBlockTag(p));
-			ItemBuilder<BlockItem,BlockBuilder<T,P>> item = b.item();
+			ItemBuilder<BlockItem, BlockBuilder<T, P>> item = b.item();
 			for (String p : path)
 				item.tag(forgeItemTag(p));
 			return item;
@@ -110,7 +110,6 @@ public class AllTags {
 		FAN_TRANSPARENT,
 		ORE_OVERRIDE_STONE,
 		SAFE_NBT,
-		SAILS,
 		SEATS,
 		TOOLBOXES,
 		VALVE_HANDLES,
@@ -118,13 +117,14 @@ public class AllTags {
 		WINDOWABLE,
 		WRENCH_PICKUP,
 
+		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
 
 		SLIMY_LOGS(TIC),
 
 		;
 
-		public final Tag.Named<Block> tag;
+		public final TagKey<Block> tag;
 
 		AllBlockTags() {
 			this(MOD);
@@ -146,21 +146,22 @@ public class AllTags {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
 			tag = TagFactory.BLOCK.create(id);
 //			if (optional) {
-//				tag = BlockTags.createOptional(id);
+//				tag = optionalTag(ForgeRegistries.BLOCKS, id);
 //			} else {
-//				tag = BlockTags.bind(id.toString());
+//				tag = BlockTags.create(id);
 //			}
 			if (alwaysDatagen) {
 				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		public boolean matches(Block block) {
-			return tag.contains(block);
+			return block.builtInRegistryHolder().is(tag);
 		}
 
 		public boolean matches(BlockState state) {
-			return matches(state.getBlock());
+			return state.is(tag);
 		}
 
 		public void add(Block... values) {
@@ -168,7 +169,7 @@ public class AllTags {
 				.add(values));
 		}
 
-		public void includeIn(Tag.Named<Block> parent) {
+		public void includeIn(TagKey<Block> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.Tag(parent)
 				.addTag(tag));
 		}
@@ -177,7 +178,7 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
-		public void includeAll(Tag.Named<Block> child) {
+		public void includeAll(TagKey<Block> child) {
 			// Minecraft tags need to be loaded
 			if(child.getName().getNamespace().equals("minecraft"))
 				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(child));
@@ -204,7 +205,7 @@ public class AllTags {
 
 		;
 
-		public final Tag.Named<Item> tag;
+		public final TagKey<Item> tag;
 
 		AllItemTags() {
 			this(MOD);
@@ -226,17 +227,22 @@ public class AllTags {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
 			tag = TagFactory.ITEM.create(id);
 //			if (optional) {
-//				tag = ItemTags.createOptional(id);
+//				tag = optionalTag(ForgeRegistries.ITEMS, id);
 //			} else {
-//				tag = ItemTags.bind(id.toString());
+//				tag = ItemTags.create(id);
 //			}
 			if (alwaysDatagen) {
 				REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
 			}
 		}
 
+		@SuppressWarnings("deprecation")
+		public boolean matches(Item item) {
+			return item.builtInRegistryHolder().is(tag);
+		}
+
 		public boolean matches(ItemStack stack) {
-			return tag.contains(stack.getItem());
+			return stack.is(tag);
 		}
 
 		public void add(Item... values) {
@@ -244,7 +250,7 @@ public class AllTags {
 				.add(values));
 		}
 
-		public void includeIn(Tag.Named<Item> parent) {
+		public void includeIn(TagKey<Item> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.Tag(parent)
 				.addTag(tag));
 		}
@@ -253,7 +259,7 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
-		public void includeAll(Tag.Named<Item> child) {
+		public void includeAll(TagKey<Item> child) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.Tag(tag)
 				.addTag(child));
 		}
@@ -269,7 +275,7 @@ public class AllTags {
 
 		;
 
-		public final Tag.Named<Fluid> tag;
+		public final TagKey<Fluid> tag;
 
 		AllFluidTags() {
 			this(MOD);
@@ -291,17 +297,22 @@ public class AllTags {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
 			tag = TagFactory.FLUID.create(id);
 //			if (optional) {
-//				tag = FluidTags.createOptional(id);
+//				tag = optionalTag(ForgeRegistries.FLUIDS, id);
 //			} else {
-//				tag = FluidTags.bind(id.toString());
+//				tag = FluidTags.create(id);
 //			}
 			if (alwaysDatagen) {
 				REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag));
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		public boolean matches(Fluid fluid) {
-			return fluid != null && fluid.is(tag);
+			return fluid.is(tag);
+		}
+
+		public boolean matches(FluidState state) {
+			return state.is(tag);
 		}
 
 		public void add(Fluid... values) {
@@ -309,7 +320,7 @@ public class AllTags {
 				.add(values));
 		}
 
-		public void includeIn(Tag.Named<Fluid> parent) {
+		public void includeIn(TagKey<Fluid> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.Tag(parent)
 				.addTag(tag));
 		}
@@ -318,7 +329,7 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
-		public void includeAll(Tag.Named<Fluid> child) {
+		public void includeAll(TagKey<Fluid> child) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.Tag(tag)
 				.addTag(child));
 		}

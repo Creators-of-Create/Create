@@ -155,17 +155,17 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
-		ItemStack heldItem = player.getItemInHand(handIn);
-		boolean isHand = heldItem.isEmpty() && handIn == InteractionHand.MAIN_HAND;
-
 		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (!(te instanceof MechanicalCrafterTileEntity))
+		if (!(te instanceof MechanicalCrafterTileEntity crafter))
 			return InteractionResult.PASS;
-		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
-		boolean wrenched = AllItems.WRENCH.isIn(heldItem);
+
+		ItemStack heldItem = player.getItemInHand(handIn);
 
 		if (AllBlocks.MECHANICAL_ARM.isIn(heldItem))
 			return InteractionResult.PASS;
+
+		boolean isHand = heldItem.isEmpty() && handIn == InteractionHand.MAIN_HAND;
+		boolean wrenched = AllItems.WRENCH.isIn(heldItem);
 
 		if (hit.getDirection() == state.getValue(HORIZONTAL_FACING)) {
 

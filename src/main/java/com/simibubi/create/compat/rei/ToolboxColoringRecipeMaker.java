@@ -15,7 +15,7 @@ import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.TagValu
 import me.alphamode.forgetags.DyeUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
@@ -39,7 +39,7 @@ public final class ToolboxColoringRecipeMaker {
 			.map(color -> {
 				DyeItem dye = DyeItem.byColor(color);
 				ItemStack dyeStack = new ItemStack(dye);
-				Tag<Item> colorTag = DyeUtil.getDyeTag(color);
+				TagKey<Item> colorTag = DyeUtil.getDyeTag(color);
 				Ingredient.Value dyeList = ItemValueAccessor.createItemValue(dyeStack);
 				Ingredient.Value colorList = TagValueAccessor.createTagValue(colorTag);
 				Stream<Ingredient.Value> colorIngredientStream = Stream.of(dyeList, colorList);

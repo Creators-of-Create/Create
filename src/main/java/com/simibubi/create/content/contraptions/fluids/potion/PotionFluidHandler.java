@@ -53,18 +53,25 @@ public class PotionFluidHandler {
 	public static FluidStack getFluidFromPotionItem(ItemStack stack) {
 		Potion potion = PotionUtils.getPotion(stack);
 		List<MobEffectInstance> list = PotionUtils.getCustomEffects(stack);
-		FluidStack fluid = PotionFluid.withEffects(FluidConstants.BOTTLE, potion, list);
-		BottleType bottleTypeFromItem = bottleTypeFromItem(stack);
+		BottleType bottleTypeFromItem = bottleTypeFromItem(stack.getItem());
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
-			return new FluidStack(Fluids.WATER, fluid.getAmount());
+			return new FluidStack(Fluids.WATER, 250);
+		FluidStack fluid = PotionFluid.withEffects(250, potion, list);
 		CompoundTag tagInfo = fluid.getTag();
 		NBTHelper.writeEnum(tagInfo, "Bottle", bottleTypeFromItem);
 		FluidVariant variant = FluidVariant.of(fluid.getFluid(), tagInfo);
 		return new FluidStack(variant, fluid.getAmount(), tagInfo);
 	}
 
-	public static BottleType bottleTypeFromItem(ItemStack stack) {
-		Item item = stack.getItem();
+	public static FluidStack getFluidFromPotion(Potion potion, BottleType bottleType, int amount) {
+		if (potion == Potions.WATER && bottleType == BottleType.REGULAR)
+			return new FluidStack(Fluids.WATER, amount);
+		FluidStack fluid = PotionFluid.of(amount, potion);
+		NBTHelper.writeEnum(fluid.getOrCreateTag(), "Bottle", bottleType);
+		return fluid;
+	}
+
+	public static BottleType bottleTypeFromItem(Item item) {
 		if (item == Items.LINGERING_POTION)
 			return BottleType.LINGERING;
 		if (item == Items.SPLASH_POTION)

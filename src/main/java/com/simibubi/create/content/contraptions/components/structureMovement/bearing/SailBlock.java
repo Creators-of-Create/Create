@@ -22,12 +22,14 @@ import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
@@ -62,6 +64,13 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 		super(properties);
 		this.frame = frame;
 		this.color = color;
+	}
+
+	@Override
+	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
+		if (frame || color == DyeColor.WHITE) {
+			super.fillItemCategory(tab, items);
+		}
 	}
 
 	@Override

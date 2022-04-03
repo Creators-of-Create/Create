@@ -5,8 +5,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.fabricmc.api.EnvType;

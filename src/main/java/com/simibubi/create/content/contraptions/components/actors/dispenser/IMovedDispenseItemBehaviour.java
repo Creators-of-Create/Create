@@ -35,7 +35,7 @@ import net.minecraft.world.phys.Vec3;
 
 public interface IMovedDispenseItemBehaviour {
 
-	static void initSpawneggs() {
+	static void initSpawnEggs() {
 		final IMovedDispenseItemBehaviour spawnEggDispenseBehaviour = new MovedDefaultDispenseItemBehaviour() {
 			@Override
 			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3 facing) {

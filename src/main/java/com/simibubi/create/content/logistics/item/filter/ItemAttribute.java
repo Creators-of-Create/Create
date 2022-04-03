@@ -60,7 +60,7 @@ public interface ItemAttribute {
 	static List<ItemAttribute> types = new ArrayList<>();
 
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
-	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
+	static ItemAttribute inTag = register(new InTag(ItemTags.LOGS));
 	static ItemAttribute inItemGroup = register(new InItemGroup(CreativeModeTab.TAB_MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
@@ -143,7 +143,8 @@ public interface ItemAttribute {
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
-		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s).getType() != EquipmentSlot.Type.HAND),
+		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s)
+			.getType() != EquipmentSlot.Type.HAND),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		HAUNTABLE(InWorldProcessing::isHauntable),
@@ -172,7 +173,8 @@ public interface ItemAttribute {
 			return EnchantmentHelper.getEnchantments(s)
 				.entrySet()
 				.stream()
-				.anyMatch(e -> e.getKey().getMaxLevel() <= e.getValue());
+				.anyMatch(e -> e.getKey()
+					.getMaxLevel() <= e.getValue());
 		}
 
 		private StandardTraits(BiPredicate<ItemStack, Level> test) {
@@ -232,33 +234,22 @@ public interface ItemAttribute {
 
 	public static class InTag implements ItemAttribute {
 
-		public ResourceLocation tagName;
+		public TagKey<Item> tag;
 
-		public InTag(ResourceLocation tagName) {
-			this.tagName = tagName;
+		public InTag(TagKey<Item> tag) {
+			this.tag = tag;
 		}
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			for (Map.Entry<ResourceLocation, Tag<Item>> entry : ItemTags.getAllTags().getAllTags().entrySet()) {
-				if (entry.getKey().equals(tagName)) {
-					if (entry.getValue().contains(stack.getItem())) {
-						return true;
-					}
-				}
-			}
-			return false;
+			return stack.is(tag);
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			List<ItemAttribute> attributes = new ArrayList<>();
-			for (Map.Entry<ResourceLocation, Tag<Item>> entry : ItemTags.getAllTags().getAllTags().entrySet()) {
-				if (entry.getValue().contains(stack.getItem())) {
-					attributes.add(new InTag(entry.getKey()));
-				}
-			}
-			return attributes;
+			return stack.getTags()
+				.map(InTag::new)
+				.collect(Collectors.toList());
 		}
 
 		@Override
@@ -268,18 +259,18 @@ public interface ItemAttribute {
 
 		@Override
 		public Object[] getTranslationParameters() {
-			return new Object[] { "#" + tagName.toString() };
+			return new Object[] { "#" + tag.location() };
 		}
 
 		@Override
 		public void writeNBT(CompoundTag nbt) {
-			nbt.putString("space", tagName.getNamespace());
-			nbt.putString("path", tagName.getPath());
+			nbt.putString("space", tag.location().getNamespace());
+			nbt.putString("path", tag.location().getPath());
 		}
 
 		@Override
 		public ItemAttribute readNBT(CompoundTag nbt) {
-			return new InTag(new ResourceLocation(nbt.getString("space"), nbt.getString("path")));
+			return new InTag(ItemTags.create(new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
 		}
 
 	}

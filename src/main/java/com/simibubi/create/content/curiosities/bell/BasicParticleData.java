@@ -13,7 +13,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -61,7 +60,7 @@ public abstract class BasicParticleData<T extends Particle> implements ParticleO
 
 	@Override
 	public String writeToString() {
-		return Registry.PARTICLE_TYPE.getKey(getType()).toString();
+		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString();
 	}
 
 	@Override

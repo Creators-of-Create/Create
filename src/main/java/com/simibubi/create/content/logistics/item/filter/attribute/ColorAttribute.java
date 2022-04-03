@@ -14,7 +14,6 @@ import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.FireworkStarItem;
@@ -77,7 +76,7 @@ public class ColorAttribute implements ItemAttribute {
 
 	@Override
 	public Object[] getTranslationParameters() {
-		return new Object[]{new TranslatableComponent(color.getName()).getContents()};
+		return new Object[] { I18n.get("color.minecraft." + color.getName()) };
 	}
 
 	@Override

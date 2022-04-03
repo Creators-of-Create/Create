@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.CampfireBlock;
 
-public class CampfireMovementBehaviour extends MovementBehaviour {
+public class CampfireMovementBehaviour implements MovementBehaviour {
 	@Override
 	public boolean renderAsNormalTileEntity() {
 		return true;

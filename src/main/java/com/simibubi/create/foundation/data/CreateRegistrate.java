@@ -54,9 +54,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		super(modid);
 	}
 
-	public static NonNullLazyValue<CreateRegistrate> lazy(String modid) {
-		return new NonNullLazyValue<>(
-			() -> new CreateRegistrate(modid));
+	public static NonNullSupplier<CreateRegistrate> lazy(String modid) {
+		return NonNullSupplier
+			.lazy(() -> new CreateRegistrate(modid));
 	}
 
 	/* Section Tracking */
@@ -185,7 +185,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 */
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(Supplier<ConnectedTextureBehaviour> behavior) {
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+		Supplier<ConnectedTextureBehaviour> behavior) {
 		return entry -> onClient(() -> () -> ClientMethods.registerCTBehviour(entry, behavior));
 	}
 

@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class PortableStorageInterfaceMovement extends MovementBehaviour {
+public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	static final String _workingPos_ = "WorkingPos";
 	static final String _clientPrevPos_ = "ClientPrevPos";

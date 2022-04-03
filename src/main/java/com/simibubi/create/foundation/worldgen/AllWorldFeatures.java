@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
@@ -33,8 +33,9 @@ public class AllWorldFeatures {
 
 	//
 
-	public static final ConfigDrivenFeatureEntry ZINC_ORE = register("zinc_ore", 12, 8, BiomeSelectors.foundInOverworld()).between(-63, 70)
-		.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
+	public static final ConfigDrivenFeatureEntry ZINC_ORE =
+		register("zinc_ore", 12, 8, BiomeSelectors.foundInOverworld()).between(-63, 70)
+			.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_OVERWORLD =
 		register("striated_ores_overworld", 32, 1 / 12f, BiomeSelectors.foundInOverworld()).between(-30, 70)
@@ -72,10 +73,12 @@ public class AllWorldFeatures {
 			.forEach(entry -> {
 				String id = Create.ID + "_" + entry.getKey()
 					.getPath();
-				ConfigDrivenFeatureEntry value = entry.getValue();
-				Pair<ConfiguredFeature<?, ?>, PlacedFeature> feature = value.getFeature();
-				Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, id, feature.getFirst());
-				Registry.register(BuiltinRegistries.PLACED_FEATURE, id, feature.getSecond());
+				ConfigDrivenFeatureEntry featureEntry = entry.getValue();
+				featureEntry.configuredFeature = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE, id,
+					featureEntry.factory.apply(featureEntry));
+				featureEntry.placedFeature =
+					BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, id, new PlacedFeature(
+						featureEntry.configuredFeature, ImmutableList.of(new ConfigDrivenDecorator(featureEntry.id))));
 			});
 	}
 
@@ -83,7 +86,10 @@ public class AllWorldFeatures {
 		Decoration decoStep = GenerationStep.Decoration.UNDERGROUND_ORES;
 		ENTRIES.entrySet()
 			.forEach(entry -> {
-				BiomeModifications.addFeature(entry.getValue().biomeFilter, decoStep, BuiltinRegistries.PLACED_FEATURE.getResourceKey(entry.getValue().getFeature().getSecond()).get());
+				// BiomeModifications.addFeature(entry.getValue().biomeFilter, decoStep, BuiltinRegistries.PLACED_FEATURE.getResourceKey(entry.getValue().getFeature().getSecond()).get());
+				ConfigDrivenFeatureEntry value = entry;
+				if (value.biomeFilter.test(event.getName(), event.getCategory()))
+					generation.addFeature(decoStep, value.placedFeature);
 			});
 	}
 

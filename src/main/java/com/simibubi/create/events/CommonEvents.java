@@ -35,8 +35,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
-import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
@@ -166,8 +164,6 @@ public class CommonEvents {
 	public static List<PreparableReloadListener> addReloadListeners(ServerResources dataPackRegistries) {
 		List<PreparableReloadListener> listeners = new ArrayList<>();
 		listeners.add(RecipeFinder.LISTENER);
-		listeners.add(PotionMixingRecipeManager.LISTENER);
-		listeners.add(FluidTransferRecipes.LISTENER);
 		listeners.add(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 		return listeners;
 	}

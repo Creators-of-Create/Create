@@ -1232,7 +1232,7 @@
 	"create.tooltip.speedRequirement": "必要な回転速度: %1$s",
 	"create.tooltip.speedRequirement.none": "無し",
 	"create.tooltip.speedRequirement.medium": "中速",
-	"create.tooltip.speedRequirement.high": "高速",
+	"create.tooltip.speedRequirement.fast": "高速",
 	"create.tooltip.stressImpact": "応力への影響: %1$s",
 	"create.tooltip.stressImpact.low": "低",
 	"create.tooltip.stressImpact.medium": "中",

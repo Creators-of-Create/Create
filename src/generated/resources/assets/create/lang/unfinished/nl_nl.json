@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1938",
+	"_": "Missing Localizations: 1940",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Koper klompje",
 	"item.create.copper_sheet": "UNLOCALIZED: Copper Sheet",
 	"item.create.crafter_slot_cover": "UNLOCALIZED: Crafter Slot Cover",
@@ -1231,8 +1232,9 @@
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Snelheid eis: %1$s",
 	"create.tooltip.speedRequirement.none": "Geen",
+	"create.tooltip.speedRequirement.slow": "UNLOCALIZED: Slow",
 	"create.tooltip.speedRequirement.medium": "Gemiddeld",
-	"create.tooltip.speedRequirement.high": "Snel",
+	"create.tooltip.speedRequirement.fast": "Snel",
 	"create.tooltip.stressImpact": "Stress Impact: %1$s",
 	"create.tooltip.stressImpact.low": "Laag",
 	"create.tooltip.stressImpact.medium": "Gemiddeld",

@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBehaviour {
-	private static final MovedDefaultDispenseItemBehaviour defaultInstance = new MovedDefaultDispenseItemBehaviour();
+	private static final MovedDefaultDispenseItemBehaviour DEFAULT_INSTANCE = new MovedDefaultDispenseItemBehaviour();
 
 	public static void doDispense(Level p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3 facing, BlockPos p_82486_4_, MovementContext context) {
 		double d0 = p_82486_4_.getX() + facing.x + .5;
@@ -91,7 +91,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		try (Transaction t = TransferUtil.getTransaction()) {
 			long inserted = TransferUtil.insertItem(context.contraption.inventory, output.copy());
 			if (inserted != 0)
-				defaultInstance.dispenseStack(output, context, pos, facing);
+				DEFAULT_INSTANCE.dispenseStack(output, context, pos, facing);
 			t.commit();
 			return consumedFrom;
 		}

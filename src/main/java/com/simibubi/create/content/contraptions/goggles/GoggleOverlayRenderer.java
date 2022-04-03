@@ -1,10 +1,8 @@
 package com.simibubi.create.content.contraptions.goggles;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,7 +32,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +40,8 @@ import net.minecraft.world.phys.HitResult;
 
 public class GoggleOverlayRenderer {
 
-	private static final List<Supplier<Boolean>> customGogglePredicates = new LinkedList<>();
+	public static final IIngameOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
+
 	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
 
 	public static int hoverTicks = 0;
@@ -70,7 +68,6 @@ public class GoggleOverlayRenderer {
 		Minecraft mc = Minecraft.getInstance();
 		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
-		ItemStack headSlot = mc.player.getItemBySlot(EquipmentSlot.HEAD);
 		BlockEntity te = world.getBlockEntity(pos);
 
 		if (lastHovered == null || lastHovered.equals(pos))
@@ -79,9 +76,7 @@ public class GoggleOverlayRenderer {
 			hoverTicks = 0;
 		lastHovered = pos;
 
-		boolean wearingGoggles = AllItems.GOGGLES.isIn(headSlot);
-		for (Supplier<Boolean> supplier : customGogglePredicates)
-			wearingGoggles |= supplier.get();
+		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
 
 		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
 		boolean hasHoveringInformation = te instanceof IHaveHoveringInformation;
@@ -195,14 +190,6 @@ public class GoggleOverlayRenderer {
 			.at(posX + 10, posY - 16, 450)
 			.render(poseStack);
 		poseStack.popPose();
-	}
-
-	/**
-	 * Use this method to add custom entry points to the goggles overlay, e.g. custom
-	 * armor, handheld alternatives, etc.
-	 */
-	public static void registerCustomGoggleCondition(Supplier<Boolean> condition) {
-		customGogglePredicates.add(condition);
 	}
 
 }

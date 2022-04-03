@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 373",
+	"_": "Missing Localizations: 375",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "Związek chromatyczny",
 	"item.create.cinder_flour": "Rozżarzona mąka",
 	"item.create.copper_backtank": "Miedziany zbiornik w plecaku",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Bryłka miedzi",
 	"item.create.copper_sheet": "Arkusz miedzi",
 	"item.create.crafter_slot_cover": "Przykrywka na slot stołu rzemieślniczego",
@@ -1231,8 +1232,9 @@
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Wymagana prędkość: %1$s",
 	"create.tooltip.speedRequirement.none": "Brak",
+	"create.tooltip.speedRequirement.slow": "UNLOCALIZED: Slow",
 	"create.tooltip.speedRequirement.medium": "Umiarkowana",
-	"create.tooltip.speedRequirement.high": "Wysoka",
+	"create.tooltip.speedRequirement.fast": "Wysoka",
 	"create.tooltip.stressImpact": "Wpływ na obciążenie: %1$s",
 	"create.tooltip.stressImpact.low": "Niski",
 	"create.tooltip.stressImpact.medium": "Umiarkowany",

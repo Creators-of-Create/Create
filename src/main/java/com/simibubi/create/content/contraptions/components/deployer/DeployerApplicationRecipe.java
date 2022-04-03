@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllBlocks;
@@ -74,17 +73,15 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 		return ingredients.get(0);
 	}
 
-	public static List<DeployerApplicationRecipe> convert(List<Recipe<?>> sandpaperRecipes) {
-		return sandpaperRecipes.stream()
-			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, new ResourceLocation(r.getId()
-				.getNamespace(),
-				r.getId()
-					.getPath() + "_using_deployer")).require(r.getIngredients()
+	public static DeployerApplicationRecipe convert(Recipe<?> sandpaperRecipe) {
+		return new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new,
+						new ResourceLocation(sandpaperRecipe.getId().getNamespace(),
+						sandpaperRecipe.getId().getPath() + "_using_deployer"))
+				.require(sandpaperRecipe.getIngredients()
 						.get(0))
-						.require(AllItemTags.SANDPAPER.tag)
-						.output(r.getResultItem())
-						.build())
-			.collect(Collectors.toList());
+				.require(AllItemTags.SANDPAPER.tag)
+				.output(sandpaperRecipe.getResultItem())
+				.build();
 	}
 
 	@Override

@@ -136,7 +136,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemStack getPickedStack(BlockState state, BlockGetter world, BlockPos pos, Player player, HitResult target) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter world, BlockPos pos,
+		Player player, HitResult target) {
 		return AllItems.BELT_CONNECTOR.asStack();
 	}
 
@@ -258,7 +259,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
-		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
+		boolean isDye = heldItem.is(Tags.Items.DYES);
 		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
 			.getFirst()
 			.getFluid()
@@ -612,7 +613,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
+	public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
+			int progress, BlockState blockState) {
 		BlockEntity blockEntity = level.getBlockEntity(pos);
 		if (blockEntity instanceof BeltTileEntity belt) {
 			for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {

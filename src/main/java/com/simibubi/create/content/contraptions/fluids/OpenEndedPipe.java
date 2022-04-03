@@ -180,10 +180,8 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (fluid.isEmpty())
 			return false;
-		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_TAG)) { // fabric: milk logic is different
-			TransactionCallback.onSuccess(ctx, () -> applyEffects(fluid));
+		if (!FluidHelper.hasBlockState(fluid.getFluid()) || Milk.isMilk(fluid.getFluid())) { // fabric: milk logic is different
 			return true;
-		}
 
 		if (!fluidState.isEmpty() && fluidState.getType() != fluid.getFluid()) {
 			FluidReactions.handlePipeSpillCollision(world, outputPos, fluid.getFluid(), fluidState);
@@ -270,6 +268,8 @@ public class OpenEndedPipe extends FlowSource {
 			if (canApplyEffects(stack))
 				maxAmount = 81; // fabric: deplete fluids 81 times faster to account for larger amounts
 			long fill = super.insert(resource, maxAmount, transaction);
+			if (!resource.isEmpty())
+				applyEffects(resource);
 			if (getFluidAmount() == FluidConstants.BUCKET || (!FluidHelper.hasBlockState(containedFluidStack.getFluid()) || containedFluidStack.getFluid().is(Milk.MILK_TAG))) // fabric: milk logic is different
 				setFluid(FluidStack.EMPTY);
 			return fill;

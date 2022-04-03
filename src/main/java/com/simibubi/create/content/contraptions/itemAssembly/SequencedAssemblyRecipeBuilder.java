@@ -16,7 +16,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -51,7 +51,7 @@ public class SequencedAssemblyRecipeBuilder {
 		return require(Ingredient.of(ingredient));
 	}
 
-	public SequencedAssemblyRecipeBuilder require(Tag.Named<Item> tag) {
+	public SequencedAssemblyRecipeBuilder require(TagKey<Item> tag) {
 		return require(Ingredient.of(tag));
 	}
 

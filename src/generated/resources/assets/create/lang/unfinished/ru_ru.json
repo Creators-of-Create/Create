@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 378",
+	"_": "Missing Localizations: 380",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "Хроматический компаунд",
 	"item.create.cinder_flour": "Незераковая пыль",
 	"item.create.copper_backtank": "Медный баллон",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Кусочек меди",
 	"item.create.copper_sheet": "Медный лист",
 	"item.create.crafter_slot_cover": "Крышка на слот крафтера",
@@ -1231,8 +1232,9 @@
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Требование к скорости: %1$s",
 	"create.tooltip.speedRequirement.none": "Нет",
+	"create.tooltip.speedRequirement.slow": "UNLOCALIZED: Slow",
 	"create.tooltip.speedRequirement.medium": "Умеренная",
-	"create.tooltip.speedRequirement.high": "Быстрая",
+	"create.tooltip.speedRequirement.fast": "Быстрая",
 	"create.tooltip.stressImpact": "Создаваемая нагрузка: %1$s",
 	"create.tooltip.stressImpact.low": "Низкая",
 	"create.tooltip.stressImpact.medium": "Средняя",

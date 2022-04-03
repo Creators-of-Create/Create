@@ -11,7 +11,7 @@ body:
     -   type: textarea
         attributes:
             label: Reproduction Steps
-            description: Tell us about the steps to reproduce the bug
+            description: Tell us about the steps to reproduce the bug.
             value: |
                 1.
                 2.
@@ -28,13 +28,13 @@ body:
     -   type: textarea
         attributes:
             label: Screenshots and Videos
-            description: If applicable, add screenshots or videos to help explain your problem
+            description: If applicable, add screenshots or videos to help explain your problem.
         validations:
             required: false
     -   type: input
         attributes:
             label: Crash Report or Log
-            description: If applicable, please add a **link** to the crash report or log that was created when this issue occured. You can upload the crash report to a site like Pastebin or GitHub Gist. Please **do not** paste the whole crash report in this issue
+            description: If applicable, please add a **link** to the crash report or log that was created when this issue occured. You can upload the crash report to a site like Pastebin or GitHub Gist. Please **do not** paste the whole crash report in this issue.
         validations:
             required: false
     -   type: input
@@ -49,6 +49,8 @@ body:
             label: Mod Version
             description: The version of the mod you were using when the bug occured
             options:
+                - "0.4.0f"
+                - "0.4.0e"
                 - "0.4.0d"
                 - "0.4.0c"
                 - "0.4.0b"
@@ -112,7 +114,7 @@ body:
     -   type: textarea
         attributes:
             label: Other Mods
-            description: Please list any other mods that were running when the crash happened
+            description: Please list any other mods that were running when the crash happened.
         validations:
             required: false
     -   type: textarea
@@ -123,4 +125,4 @@ body:
             required: false
     -   type: markdown
         attributes:
-            value: "Thank you for taking the time to make this bug report and to help improve Create"
+            value: "Thank you for taking the time to make this bug report and help improve Create!"

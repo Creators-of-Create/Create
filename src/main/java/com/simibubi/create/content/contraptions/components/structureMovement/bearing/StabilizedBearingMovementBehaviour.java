@@ -28,7 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
+public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	@Environment(EnvType.CLIENT)

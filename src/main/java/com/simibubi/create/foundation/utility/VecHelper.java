@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.foundation.mixin.accessor.GameRendererAccessor;
 
 import io.github.fabricators_of_create.porting_lib.extensions.Vector3fExtensions;
 import io.github.fabricators_of_create.porting_lib.util.GameRendererHelper;
@@ -245,7 +246,7 @@ public class VecHelper {
 		}
 
 		// ----- adjust for fov -----
-		float fov = (float) GameRendererHelper.getFOVModifier(mc.gameRenderer, ari, partialTicks, true);
+		float fov = (float) ((GameRendererAccessor) mc.gameRenderer).create$callGetFov(ari, partialTicks, true);
 
 		float half_height = (float) mc.getWindow()
 			.getGuiScaledHeight() / 2;

@@ -458,7 +458,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			}
 
 			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
-				dispatcher.renderLiquid(pos, world, builder, fluidState);
+				dispatcher.renderLiquid(pos, world, builder, state, fluidState);
 
 			poseStack.popPose();
 		});

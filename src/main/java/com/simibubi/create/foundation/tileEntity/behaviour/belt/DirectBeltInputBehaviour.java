@@ -83,6 +83,7 @@ public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 		}
 	}
 
+	// TODO: verify that this side is consistent across all calls
 	public boolean canInsertFromSide(Direction side) {
 		return canInsert.test(side);
 	}

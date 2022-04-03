@@ -220,6 +220,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {
+		if (fluid == null)
+			return false;
 		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get().test(fluid);
 	}
 

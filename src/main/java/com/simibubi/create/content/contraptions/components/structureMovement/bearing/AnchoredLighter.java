@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
 
 public class AnchoredLighter extends ContraptionLighter<Contraption> {
 

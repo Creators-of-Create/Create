@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
@@ -39,7 +38,6 @@ import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.BaseRailBlock;
@@ -78,7 +76,6 @@ public class BlockMovementChecks {
 	private static final List<BrittleCheck> BRITTLE_CHECKS = new ArrayList<>();
 	private static final List<AttachedCheck> ATTACHED_CHECKS = new ArrayList<>();
 	private static final List<NotSupportiveCheck> NOT_SUPPORTIVE_CHECKS = new ArrayList<>();
-	public static final ResourceLocation NON_MOVABLE = Create.asResource("non_movable");
 
 	// Registration
 	// Add new checks to the front instead of the end
@@ -197,7 +194,7 @@ public class BlockMovementChecks {
 			return true;
 		if (state.getDestroySpeed(world, pos) == -1)
 			return false;
-		if (FabricTags.NON_MOVABLE.contains(state.getBlock()))
+		if (AllBlockTags.RELOCATION_NOT_SUPPORTED.matches(state))
 			return false;
 		if (ContraptionMovementSetting.get(state.getBlock()) == ContraptionMovementSetting.UNMOVABLE)
 			return false;
@@ -258,7 +255,7 @@ public class BlockMovementChecks {
 			return true;
 		if (block instanceof WoolCarpetBlock)
 			return true;
-		return AllBlockTags.BRITTLE.tag.contains(block);
+		return AllBlockTags.BRITTLE.matches(state);
 	}
 
 	private static boolean isBlockAttachedTowardsFallback(BlockState state, Level world, BlockPos pos,

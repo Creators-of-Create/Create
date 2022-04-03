@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1323",
+	"_": "Missing Localizations: 1325",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,6 +567,7 @@
 	"item.create.chromatic_compound": "Chromatische Verbindung",
 	"item.create.cinder_flour": "Aschenmehl",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
 	"item.create.copper_nugget": "Kupferklumpen",
 	"item.create.copper_sheet": "Kupferblech",
 	"item.create.crafter_slot_cover": "Handwerkseinheit Slot Abdeckung",
@@ -1231,8 +1232,9 @@
 	"create.tooltip.keyCtrl": "Strg",
 	"create.tooltip.speedRequirement": "Geschwindigkeitsanforderung: %1$s",
 	"create.tooltip.speedRequirement.none": "Keine",
+	"create.tooltip.speedRequirement.slow": "UNLOCALIZED: Slow",
 	"create.tooltip.speedRequirement.medium": "Moderat",
-	"create.tooltip.speedRequirement.high": "Schnell",
+	"create.tooltip.speedRequirement.fast": "Schnell",
 	"create.tooltip.stressImpact": "Kinetische Belastungsauswirkung: %1$s",
 	"create.tooltip.stressImpact.low": "Niedrig",
 	"create.tooltip.stressImpact.medium": "Moderat",

@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
@@ -19,7 +18,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 
@@ -97,13 +95,8 @@ public class ToolboxInventory extends ItemStackHandler {
 	@Override
 	public boolean isItemValid(int slot, ItemVariant var) {
 		ItemStack stack = var.toStack();
-		if (AllItemTags.TOOLBOXES.matches(stack))
+		if (!stack.getItem().canFitInsideContainerItems())
 			return false;
-		if (stack.getItem() instanceof BlockItem) {
-			BlockItem blockItem = (BlockItem) stack.getItem();
-			if (blockItem.getBlock() instanceof ShulkerBoxBlock)
-				return false;
-		}
 
 		if (slot < 0 || slot >= getSlots())
 			return false;

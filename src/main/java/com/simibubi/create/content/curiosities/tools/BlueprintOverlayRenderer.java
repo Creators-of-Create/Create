@@ -34,8 +34,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -281,13 +279,20 @@ public class BlueprintOverlayRenderer {
 				ListTag attributes = tag.getList("MatchedAttributes", net.minecraft.nbt.Tag.TAG_COMPOUND);
 				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
-					if (fromNBT instanceof ItemAttribute.InTag) {
-						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						Tag<Item> itag = ItemTags.getAllTags()
-							.getTag(inTag.tagName);
-						if (itag != null)
-							return Ingredient.of(itag)
-								.getItems();
+					if (fromNBT instanceof ItemAttribute.InTag inTag) {
+						ITagManager<Item> tagManager = ForgeRegistries.ITEMS.tags();
+						if (tagManager.isKnownTagName(inTag.tag)) {
+							ITag<Item> taggedItems = tagManager.getTag(inTag.tag);
+							if (!taggedItems.isEmpty()) {
+								ItemStack[] stacks = new ItemStack[taggedItems.size()];
+								int i = 0;
+								for (Item item : taggedItems) {
+									stacks[i] = new ItemStack(item);
+									i++;
+								}
+								return stacks;
+							}
+						}
 					}
 				}
 			}

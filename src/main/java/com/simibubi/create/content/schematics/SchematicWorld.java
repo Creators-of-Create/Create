@@ -138,8 +138,9 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	@Override
-	public Biome getBiome(BlockPos pos) {
-		return BuiltinRegistries.BIOME.get(Biomes.PLAINS.location());
+	public Holder<Biome> getBiome(BlockPos pos) {
+		return ForgeRegistries.BIOMES.getHolder(Biomes.PLAINS.location())
+			.orElse(null);
 	}
 
 	@Override
@@ -168,8 +169,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	@Override
-	public <T extends Entity> List<T> getEntitiesOfClass(Class<T> arg0, AABB arg1,
-		Predicate<? super T> arg2) {
+	public <T extends Entity> List<T> getEntitiesOfClass(Class<T> arg0, AABB arg1, Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}
 

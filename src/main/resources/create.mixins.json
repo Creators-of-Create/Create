@@ -6,6 +6,10 @@
   "refmap": "create-refmap.json",
   "mixins": [
     "CustomItemUseEffectsMixin",
+    "accessor.AbstractProjectileDispenseBehaviorAccessor",
+    "accessor.DispenserBlockAccessor",
+    "accessor.FallingBlockEntityAccessor",
+    "accessor.LivingEntityAccessor",
     "fabric.AbstractMinecartMixin",
     "fabric.EntityMixin"
   ],
@@ -15,6 +19,9 @@
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
     "WindowResizeMixin"
+    "ModelDataRefreshMixin",
+    "accessor.GameRendererAccessor",
+    "accessor.ParticleEngineAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-public class BasinMovementBehaviour extends MovementBehaviour {
+public class BasinMovementBehaviour implements MovementBehaviour {
 	public Map<String, ItemStackHandler> getOrReadInventory(MovementContext context) {
 		Map<String, ItemStackHandler> map = new HashMap<>();
 		map.put("InputItems", new ItemStackHandler(9));
@@ -29,7 +29,7 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void tick(MovementContext context) {
-		super.tick(context);
+		MovementBehaviour.super.tick(context);
 		if (context.temporaryData == null || (boolean) context.temporaryData) {
 			Vec3 facingVec = context.rotation.apply(Vec3.atLowerCornerOf(Direction.UP.getNormal()));
 			facingVec.normalize();

@@ -70,7 +70,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	protected Contraption contraption;
 	protected boolean initialized;
 	protected boolean prevPosInvalid;
-	private boolean ticking;
+	private boolean skipActorStop;
 
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
@@ -228,7 +228,9 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 		}
 
-		collidingEntities.entrySet().removeIf(e -> e.getValue().incrementAndGet() > 3);
+		collidingEntities.entrySet()
+			.removeIf(e -> e.getValue()
+				.incrementAndGet() > 3);
 
 		xo = getX();
 		yo = getY();
@@ -254,7 +256,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		if (!level.isClientSide)
 			contraption.stalled = false;
 
-		ticking = true;
+		skipActorStop = true;
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
 			MovementContext context = pair.right;
 			StructureBlockInfo blockInfo = pair.left;
@@ -291,7 +293,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			contraption.stop(level);
 			return;
 		}
-		ticking = false;
+		skipActorStop = false;
 
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
@@ -448,10 +450,10 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 
 		StructureTransform transform = makeStructureTransform();
+
+		contraption.stop(level);
 		AllPackets.channel.sendToClientsTracking(
 			new ContraptionDisassemblyPacket(this.getId(), transform), this);
-
-		discard();
 
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
@@ -467,6 +469,9 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			entity.setPos(transformed.getX(), transformed.getY(), transformed.getZ());
 			((AbstractContraptionEntity) entity).disassemble();
 		}
+
+		skipActorStop = true;
+		discard();
 
 		ejectPassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
@@ -486,9 +491,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	public void remove(RemovalReason p_146834_) {
-		if (!level.isClientSide && !isRemoved() && contraption != null)
-			if (!ticking)
-				contraption.stop(level);
+		if (!level.isClientSide && !isRemoved() && contraption != null && !skipActorStop)
+			contraption.stop(level);
 		if (contraption != null)
 			contraption.onEntityRemoved(this);
 		super.remove(p_146834_);
@@ -555,9 +559,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
-//			String srg = "f_146795_"; // removalReason
-			((EntityAccessor)entity).port_lib$setRemovalReason(RemovalReason.UNLOADED_TO_CHUNK);
-//			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
+			entity.removalReason = RemovalReason.UNLOADED_TO_CHUNK;
 
 			// Gather passengers into same chunk when saving
 			Vec3 prevVec = entity.position();
@@ -565,8 +567,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
-			((EntityAccessor)entity).port_lib$setRemovalReason(null);
-//			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
+			entity.removalReason = null;
 		}
 
 		CompoundTag tag = super.saveWithoutId(nbt);

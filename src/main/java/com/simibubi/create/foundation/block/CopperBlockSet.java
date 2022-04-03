@@ -326,7 +326,7 @@ public class CopperBlockSet {
 					WeatheringCopperStairBlock block =
 						new WeatheringCopperStairBlock(state, Blocks.AIR.defaultBlockState(), p);
 					// WeatheringCopperStairBlock does not have a constructor that takes a Supplier,
-					// so reflection is the easiest solution
+					// so setting the field directly is the easiest solution
 					// todo: port
 //					ObfuscationReflectionHelper.setPrivateValue(StairBlock.class, block, defaultStateSupplier,
 //						"stateSupplier");

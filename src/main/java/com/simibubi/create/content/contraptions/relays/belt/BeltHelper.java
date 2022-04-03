@@ -20,7 +20,7 @@ public class BeltHelper {
 
 	public static boolean isItemUpright(ItemStack stack) {
 		return ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM) != null
-			|| stack.is(AllItemTags.UPRIGHT_ON_BELT.tag);
+			|| AllItemTags.UPRIGHT_ON_BELT.matches(stack);
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {

@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -10,7 +9,6 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
@@ -39,7 +37,8 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 	protected ConfigFloat frequency;
 
 	Function<ConfigDrivenFeatureEntry, ? extends ConfiguredFeature<?, ?>> factory;
-	Optional<Pair<ConfiguredFeature<?, ?>, PlacedFeature>> feature = Optional.empty();
+	Holder<ConfiguredFeature<?, ?>> configuredFeature;
+	Holder<PlacedFeature> placedFeature;
 
 	public ConfigDrivenFeatureEntry(String id, int clusterSize, float frequency) {
 		this.id = id;
@@ -81,25 +80,17 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 		return this;
 	}
 
-	public Pair<ConfiguredFeature<?, ?>, PlacedFeature> getFeature() {
-		if (!feature.isPresent()) {
-			ConfiguredFeature<?, ?> configured = factory.apply(this);
-			feature = Optional.of(Pair.of(configured, configured.placed(new ConfigDrivenDecorator(id))));
-		}
-		return feature.get();
-	}
-
 	private ConfiguredFeature<?, ?> layersFactory(ConfigDrivenFeatureEntry entry) {
 		ConfigDrivenOreConfiguration config = new ConfigDrivenOreConfiguration(ImmutableList.of(), 0, id);
 		LayeredOreFeature.LAYER_PATTERNS.put(Create.asResource(id), layers.stream()
 			.map(NonNullSupplier::get)
 			.toList());
-		return LayeredOreFeature.INSTANCE.configured(config);
+		return new ConfiguredFeature<>(LayeredOreFeature.INSTANCE, config);
 	}
 
 	private ConfiguredFeature<?, ?> standardFactory(ConfigDrivenFeatureEntry entry) {
 		ConfigDrivenOreConfiguration config = new ConfigDrivenOreConfiguration(createTarget(), 0, id);
-		return VanillaStyleOreFeature.INSTANCE.configured(config);
+		return new ConfiguredFeature<>(VanillaStyleOreFeature.INSTANCE, config);
 	}
 
 	private List<TargetBlockState> createTarget() {
