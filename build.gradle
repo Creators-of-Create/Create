@@ -65,9 +65,9 @@ dependencies {
 
     modImplementation(include("io.github.fabricators_of_create:Porting-Lib:0.2.0+1.18.2.${project.port_lib_hash}"))
     modImplementation(include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
-    modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}"))
-    implementation(include('com.electronwill.night-config:core:3.6.0'))
-    implementation(include('com.electronwill.night-config:toml:3.6.0'))
+    modImplementation(include("com.electronwill.night-config:core:3.6.3"))
+    modImplementation(include("com.electronwill.night-config:toml:3.6.3"))
+    modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}")) { transitive = false }
     modImplementation(include("com.tterrag.registrate:Registrate:${project.registrate_version}"))
     modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))

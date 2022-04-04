@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ParticleEngineAccessor;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -37,6 +36,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -65,8 +65,7 @@ public class PonderWorld extends SchematicWorld {
 	private Supplier<ClientLevel> asClientWorld = Suppliers.memoize(() -> WrappedClientWorld.of(this));
 
 	protected PonderWorldParticles particles;
-//	private final Map<ResourceLocation, ParticleProvider<?>> particleProviders;
-	private final Int2ObjectMap<ParticleProvider<?>> particleFactories;
+	private final Int2ObjectMap<ParticleProvider<?>> particleProviders;
 
 	int overrideLight;
 	Selection mask;

@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 
 import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 
+import io.github.fabricators_of_create.porting_lib.event.AddReloadListenersCallback;
 import io.github.fabricators_of_create.porting_lib.event.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.EntityReadExtraDataCallback;
 import io.github.fabricators_of_create.porting_lib.event.MinecartEvents;
@@ -54,7 +55,6 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import io.github.fabricators_of_create.porting_lib.event.BlockPlaceCallback;
-import io.github.fabricators_of_create.porting_lib.event.DataPackReloadCallback;
 import io.github.fabricators_of_create.porting_lib.event.FluidPlaceBlockCallback;
 import io.github.fabricators_of_create.porting_lib.event.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.MobEntitySetTargetCallback;
@@ -72,12 +72,10 @@ import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerResources;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.players.PlayerList;
@@ -161,11 +159,9 @@ public class CommonEvents {
 		AllCommands.register(dispatcher);
 	}
 
-	public static List<PreparableReloadListener> addReloadListeners(ServerResources dataPackRegistries) {
-		List<PreparableReloadListener> listeners = new ArrayList<>();
+	public static void addReloadListeners(List<PreparableReloadListener> listeners) {
 		listeners.add(RecipeFinder.LISTENER);
 		listeners.add(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
-		return listeners;
 	}
 
 	public static void onDatapackSync(PlayerList playerList, @javax.annotation.Nullable ServerPlayer player) {
@@ -247,7 +243,7 @@ public class CommonEvents {
 		// External Events
 
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-		DataPackReloadCallback.EVENT.register(CommonEvents::addReloadListeners);
+		AddReloadListenersCallback.EVENT.register(CommonEvents::addReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);

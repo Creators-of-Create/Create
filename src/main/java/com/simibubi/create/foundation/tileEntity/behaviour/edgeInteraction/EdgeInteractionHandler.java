@@ -37,10 +37,10 @@ public class EdgeInteractionHandler {
 		if (behaviour == null)
 			return InteractionResult.PASS;
 		if (behaviour.requiredItem.isPresent() && behaviour.requiredItem.get() != heldItem.getItem())
-			return;
+			return InteractionResult.PASS;
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
-			return;
+			return InteractionResult.PASS;
 
 		Direction activatedDirection = getActivatedDirection(world, pos, ray.getDirection(), ray.getLocation(), behaviour);
 		if (activatedDirection == null)

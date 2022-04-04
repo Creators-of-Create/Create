@@ -8,6 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
+
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BaseSpawnerAccessor;
 import io.github.fabricators_of_create.porting_lib.util.AbstractSpawnerHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -91,14 +93,14 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		BaseSpawner spawner = ((SpawnerBlockEntity) te).getSpawner();
 
-		List<SpawnData> possibleSpawns = spawner.spawnPotentials.unwrap()
+		List<SpawnData> possibleSpawns = ((BaseSpawnerAccessor) spawner).port_lib$getSpawnPotentials().unwrap()
 			.stream()
 			.map(Wrapper::getData)
 			.toList();
 
 		if (possibleSpawns.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
-			possibleSpawns.add(spawner.nextSpawnData);
+			possibleSpawns.add(((BaseSpawnerAccessor) spawner).port_lib$getNextSpawnData());
 		}
 
 		ResourceLocation blazeId = Registry.ENTITY_TYPE.getKey(EntityType.BLAZE);

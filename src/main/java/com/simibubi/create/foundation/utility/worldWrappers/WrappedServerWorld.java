@@ -5,12 +5,15 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.MinecraftServerAccessor;
 import io.github.fabricators_of_create.porting_lib.util.BiomeManagerHelper;
 import io.github.fabricators_of_create.porting_lib.util.MinecraftServerUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,7 +38,7 @@ public class WrappedServerWorld extends ServerLevel {
 	protected Level world;
 
 	public WrappedServerWorld(Level world) {
-		super(world.getServer(), Util.backgroundExecutor(), world.getServer().storageSource,
+		super(world.getServer(), Util.backgroundExecutor(), ((MinecraftServerAccessor) world.getServer()).port_lib$getStorageSource(),
 			(ServerLevelData) world.getLevelData(), world.dimension(), world.dimensionTypeRegistration(),
 			new DummyStatusListener(), ((ServerChunkCache) world.getChunkSource()).getGenerator(), world.isDebug(),
 				BiomeManagerHelper.getSeed(world.getBiomeManager()), Collections.emptyList(), false);

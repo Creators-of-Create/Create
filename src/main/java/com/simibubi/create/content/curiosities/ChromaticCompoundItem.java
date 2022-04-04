@@ -98,7 +98,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 		double y = entity.getY();
 		double yMotion = entity.getDeltaMovement().y;
 		int minHeight = world.getMinBuildHeight();
-		CompoundTag data = entity.getPersistentData();
+		CompoundTag data = EntityHelper.getExtraCustomData(entity);
 
 		// Convert to Shadow steel if in void
 		if (y < minHeight && y - yMotion < -10 + minHeight && config.enableShadowSteelRecipe.get()) {

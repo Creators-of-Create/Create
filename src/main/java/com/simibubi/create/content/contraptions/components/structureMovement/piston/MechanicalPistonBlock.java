@@ -10,11 +10,7 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.fabric.FabricTags;
 
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
-
-import me.alphamode.forgetags.Tags;
 import me.alphamode.forgetags.Tags.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

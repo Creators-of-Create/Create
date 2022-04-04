@@ -50,6 +50,7 @@ import com.simibubi.create.compat.rei.category.SawingCategory;
 import com.simibubi.create.compat.rei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.rei.category.SpoutCategory;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
@@ -65,6 +66,7 @@ import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import dev.architectury.fluid.FluidStack;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.RecipeManagerAccessor;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStack;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStackVisitor;
 import me.shedaniel.rei.api.client.gui.drag.DraggedAcceptorResult;
@@ -149,7 +151,7 @@ public class CreateREI implements REIClientPlugin {
 				.build(),
 
 			autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 					&& r.getIngredients()
 						.size() > 1
 					&& !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
@@ -182,8 +184,8 @@ public class CreateREI implements REIClientPlugin {
 					.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(),
 						recipe -> AllRecipeTypes.shouldIgnoreInAutomation(recipe))))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
-				.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
-					.isLoaded("druidcraft"))
+				.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
+						.isModLoaded("druidcraft"))
 				.build(),
 
 			packing = register("packing", PackingCategory::standard).addTypedRecipes(AllRecipeTypes.COMPACTING)
@@ -219,23 +221,23 @@ public class CreateREI implements REIClientPlugin {
 				.build(),
 
 			spoutFilling = register("spout_filling", SpoutCategory::new).addTypedRecipes(AllRecipeTypes.FILLING)
-				.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add, ingredientManager))
+//				.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add, ingredientManager))
 				.catalyst(AllBlocks.SPOUT::get)
 				.build(),
 
 			draining = register("draining", ItemDrainCategory::new)
-				.addRecipeListConsumer(recipes -> ItemDrainCategory.consumeRecipes(recipes::add, ingredientManager))
+//				.addRecipeListConsumer(recipes -> ItemDrainCategory.consumeRecipes(recipes::add, ingredientManager))
 				.addTypedRecipes(AllRecipeTypes.EMPTYING)
 				.catalyst(AllBlocks.ITEM_DRAIN::get)
 				.build(),
 
 			autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
-				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 					&& r.getIngredients()
 						.size() == 1
 					&& !AllRecipeTypes.shouldIgnoreInAutomation(r))
 				.addTypedRecipesIf(() -> RecipeType.CRAFTING,
-					recipe -> recipe instanceof IShapedRecipe<?> && !AllRecipeTypes.shouldIgnoreInAutomation(recipe))
+					recipe -> recipe instanceof ShapedRecipe && !AllRecipeTypes.shouldIgnoreInAutomation(recipe))
 				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 				.enableWhen(c -> c.allowRegularCraftingInCrafter)
 				.build(),
@@ -263,11 +265,11 @@ public class CreateREI implements REIClientPlugin {
 		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registry.addWorkstations(c.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, s.get()))));
 	}
 
-	@Override
-	public void registerCategories(IRecipeCategoryRegistration registration) {
-		loadCategories();
-		registration.addRecipeCategories(allCategories.toArray(IRecipeCategory[]::new));
-	}
+//	@Override
+//	public void registerCategories(IRecipeCategoryRegistration registration) {
+//		loadCategories();
+//		registration.addRecipeCategories(allCategories.toArray(IRecipeCategory[]::new));
+//	}
 
 	@Override
 	public void registerExclusionZones(ExclusionZones zones) {
@@ -433,9 +435,9 @@ public class CreateREI implements REIClientPlugin {
 	}
 
 	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
-		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
-			.getConnection()
-			.getRecipeManager().recipes.get(type);
+		Map<ResourceLocation, Recipe<?>> map = ((RecipeManagerAccessor) Minecraft.getInstance()
+				.getConnection()
+				.getRecipeManager()).port_lib$getRecipes().get(type);
 		if (map != null) {
 			map.values()
 				.forEach(consumer);

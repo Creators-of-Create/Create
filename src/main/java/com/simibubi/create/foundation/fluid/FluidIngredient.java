@@ -16,6 +16,7 @@ import com.google.gson.JsonSyntaxException;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -232,7 +233,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation name = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
-			tag = FluidTags.create(name);
+			tag = TagKey.create(Registry.FLUID_REGISTRY, name);
 		}
 
 		@Override
@@ -243,17 +244,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected List<FluidStack> determineMatchingFluidStacks() {
-			return ForgeRegistries.FLUIDS.tags()
-				.getTag(tag)
-				.stream()
-				.map(f -> {
-					if (f instanceof FlowingFluid)
-						return ((FlowingFluid) f).getSource();
-					return f;
-				})
-				.distinct()
-				.map(f -> new FluidStack(f, amountRequired))
-				.collect(Collectors.toList());
+			List<FluidStack> stacks = new ArrayList<>();
+			for (Holder<Fluid> holder : Registry.FLUID.getTagOrEmpty(tag)) {
+				Fluid f = holder.value();
+				if (f instanceof FlowingFluid flowing) f = flowing.getSource();
+				stacks.add(new FluidStack(f, amountRequired));
+			}
+			return stacks;
 		}
 
 	}

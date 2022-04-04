@@ -337,13 +337,12 @@ public abstract class ArmInteractionPoint {
 		@Override
 		protected ItemStack insert(Level world, ItemStack stack, TransactionContext ctx) {
 			ItemStack input = stack.copy();
-			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, simulate);
+			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, ctx);
 			ItemStack remainder = res.getObject();
 			if (input.isEmpty()) {
 				return remainder;
 			} else {
-				if (!simulate)
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), remainder);
+				TransactionCallback.onSuccess(ctx, () -> Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), remainder));
 				return input;
 			}
 		}

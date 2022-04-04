@@ -5,8 +5,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.mixin.accessor.AbstractProjectileDispenseBehaviorAccessor;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.AbstractProjectileDispenseBehaviorAccessor;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.world.entity.projectile.Projectile;

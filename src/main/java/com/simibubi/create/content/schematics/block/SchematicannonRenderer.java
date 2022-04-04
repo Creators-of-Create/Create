@@ -189,18 +189,17 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 //				Minecraft.getInstance()
 //					.getBlockRenderer()
 //					.renderSingleBlock(state, ms, buffer, light, overlay);
-				BlockState state = ((ForBlockState) launched).state;
 				BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 					.getBlockRenderer();
 				switch (state.getRenderShape()) {
-				case MODEL -> {
-					BakedModel model = dispatcher.getBlockModel(state);
-					model = DefaultLayerFilteringBakedModel.wrap(model);
-					model = FixedLightBakedModel.wrap(model, light);
-					dispatcher.getModelRenderer()
-						.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, ms, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)), false, new Random(), 42L, overlay);
-				}
-				case ENTITYBLOCK_ANIMATED -> ((BlockRenderDispatcherAccessor) dispatcher).getBlockEntityRenderer().renderByItem(new ItemStack(state.getBlock()), ItemTransforms.TransformType.NONE, ms, buffer, light, overlay);
+					case MODEL -> {
+						BakedModel model = dispatcher.getBlockModel(state);
+						model = DefaultLayerFilteringBakedModel.wrap(model);
+						model = FixedLightBakedModel.wrap(model, light);
+						dispatcher.getModelRenderer()
+								.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, ms, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)), false, new Random(), 42L, overlay);
+					}
+					case ENTITYBLOCK_ANIMATED -> ((BlockRenderDispatcherAccessor) dispatcher).getBlockEntityRenderer().renderByItem(new ItemStack(state.getBlock()), ItemTransforms.TransformType.NONE, ms, buffer, light, overlay);
 				}
 			} else if (launched instanceof ForEntity) {
 				// Render the item

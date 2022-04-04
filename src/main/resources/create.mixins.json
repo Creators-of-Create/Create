@@ -19,7 +19,6 @@
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
     "WindowResizeMixin",
-    "ModelDataRefreshMixin",
     "accessor.GameRendererAccessor",
     "accessor.ParticleEngineAccessor"
   ],

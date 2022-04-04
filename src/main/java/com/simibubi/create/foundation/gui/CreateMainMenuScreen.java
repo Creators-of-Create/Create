@@ -52,7 +52,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		this.parent = parent;
 		returnOnClose = true;
 		if (parent instanceof TitleScreen titleScreen)
-			vanillaPanorama = titleScreen.panorama;
+			vanillaPanorama = ((TitleScreenAccessor) titleScreen).port_lib$getPanorama();
 		else
 			vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	}

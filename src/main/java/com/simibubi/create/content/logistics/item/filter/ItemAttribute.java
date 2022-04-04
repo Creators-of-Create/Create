@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+
+import net.minecraft.tags.TagKey;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -270,7 +273,7 @@ public interface ItemAttribute {
 
 		@Override
 		public ItemAttribute readNBT(CompoundTag nbt) {
-			return new InTag(ItemTags.create(new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
+			return new InTag(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
 		}
 
 	}

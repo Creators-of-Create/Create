@@ -10,6 +10,9 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
 import com.simibubi.create.foundation.utility.WorldAttached;
+
+import io.github.fabricators_of_create.porting_lib.event.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.EntityEvents.Teleport.EntityTeleportEvent;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
 
@@ -393,10 +396,10 @@ public class BuiltinPotatoProjectileTypes {
 				double teleportZ = entityZ + (livingEntity.getRandom()
 					.nextDouble() - 0.5D) * teleportDiameter;
 
-//				EntityTeleportEvent.ChorusFruit event =
-					ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
-//				if (event.isCanceled())
-//					return false;
+				EntityTeleportEvent event = new EntityTeleportEvent(livingEntity, teleportX, teleportY, teleportZ);
+				EntityEvents.TELEPORT.invoker().onTeleport(event);
+				if (event.isCanceled())
+					return false;
 				if (livingEntity.randomTeleport(teleportX, teleportY, teleportZ, true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();

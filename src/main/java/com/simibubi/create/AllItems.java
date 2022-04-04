@@ -70,7 +70,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.tag.TagFactory;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -162,7 +162,7 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<Item> RAW_ZINC =
-		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), TagFactory.ITEM.create(new ResourceLocation("c", "raw_materials")));
+		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("c", "raw_materials")));
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),

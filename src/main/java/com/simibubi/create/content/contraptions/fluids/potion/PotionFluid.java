@@ -45,7 +45,7 @@ public class PotionFluid extends VirtualFluid {
 	}
 
 	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
-		ResourceLocation resourcelocation = ForgeRegistries.POTIONS.getKey(potion);
+		ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
 		if (potion == Potions.EMPTY) {
 			fs.removeChildTag("Potion");
 			return fs;

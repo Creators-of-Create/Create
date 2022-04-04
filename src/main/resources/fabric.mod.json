@@ -37,12 +37,17 @@
   "accessWidener": "create.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.13.1",
-    "fabric": ">=0.46.0",
-    "minecraft": ">=1.18.1",
+    "fabricloader": ">=0.13.3",
+    "fabric": ">=0.48.0",
+    "minecraft": ">=1.18.2",
     "registrate-fabric": "*",
     "flywheel": "*"
   },
+
+  "provides": [
+    "com_electronwill_night-config_core",
+    "com_electronwill_night-config_toml"
+  ],
 
   "custom": {
     "loom:injected_interfaces": {

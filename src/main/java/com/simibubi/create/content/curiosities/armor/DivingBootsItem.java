@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.EntityAccessor;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LivingEntityAccessor;
 import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
@@ -23,7 +25,7 @@ public class DivingBootsItem extends CopperArmorItem {
 			return;
 
 		Vec3 motion = entity.getDeltaMovement();
-		boolean isJumping = entity.jumping;
+		boolean isJumping = ((LivingEntityAccessor) entity).port_lib$isJumping();
 		entity.setOnGround(entity.isOnGround() || entity.verticalCollision);
 
 		if (isJumping && entity.isOnGround()) {

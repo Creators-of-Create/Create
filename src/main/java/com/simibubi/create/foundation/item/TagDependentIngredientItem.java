@@ -1,12 +1,11 @@
 package com.simibubi.create.foundation.item;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITagManager;
 
 public class TagDependentIngredientItem extends Item {
 
@@ -24,8 +23,9 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	public boolean shouldHide() {
-		ITagManager<Item> tagManager = ForgeRegistries.ITEMS.tags();
-		return !tagManager.isKnownTagName(tag) || tagManager.getTag(tag).isEmpty();
+		boolean tagMissing = !Registry.ITEM.isKnownTagName(this.tag);
+		boolean tagEmpty = tagMissing || !Registry.ITEM.getTagOrEmpty(this.tag).iterator().hasNext();
+		return tagMissing || tagEmpty;
 	}
 
 }

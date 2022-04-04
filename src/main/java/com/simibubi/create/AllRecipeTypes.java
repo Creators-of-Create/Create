@@ -138,7 +138,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 
 	public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
-		if (serializer != null && RECIPE_DENY_SET.contains(serializer.getRegistryName()))
+		if (serializer != null && RECIPE_DENY_SET.contains(Registry.RECIPE_SERIALIZER.getKey(serializer)))
 			return true;
 		return recipe.getId()
 			.getPath()

@@ -63,7 +63,7 @@ public class PotionFluidHandler {
 		return new FluidStack(variant, fluid.getAmount(), tagInfo);
 	}
 
-	public static FluidStack getFluidFromPotion(Potion potion, BottleType bottleType, int amount) {
+	public static FluidStack getFluidFromPotion(Potion potion, BottleType bottleType, long amount) {
 		if (potion == Potions.WATER && bottleType == BottleType.REGULAR)
 			return new FluidStack(Fluids.WATER, amount);
 		FluidStack fluid = PotionFluid.of(amount, potion);

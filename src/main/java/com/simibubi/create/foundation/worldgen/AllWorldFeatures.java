@@ -86,10 +86,12 @@ public class AllWorldFeatures {
 		Decoration decoStep = GenerationStep.Decoration.UNDERGROUND_ORES;
 		ENTRIES.entrySet()
 			.forEach(entry -> {
-				// BiomeModifications.addFeature(entry.getValue().biomeFilter, decoStep, BuiltinRegistries.PLACED_FEATURE.getResourceKey(entry.getValue().getFeature().getSecond()).get());
-				ConfigDrivenFeatureEntry value = entry;
-				if (value.biomeFilter.test(event.getName(), event.getCategory()))
-					generation.addFeature(decoStep, value.placedFeature);
+				ConfigDrivenFeatureEntry value = entry.getValue();
+				 BiomeModifications.addFeature(
+						 value.biomeFilter,
+						 decoStep,
+						 BuiltinRegistries.PLACED_FEATURE.getResourceKey(value.placedFeature.value()).get()
+				 );
 			});
 	}
 

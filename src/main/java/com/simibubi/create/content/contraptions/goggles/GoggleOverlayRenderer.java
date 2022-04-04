@@ -40,8 +40,6 @@ import net.minecraft.world.phys.HitResult;
 
 public class GoggleOverlayRenderer {
 
-	public static final IIngameOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
-
 	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
 
 	public static int hoverTicks = 0;

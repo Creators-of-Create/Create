@@ -11,11 +11,11 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllPaletteStoneTypes {
 
@@ -81,7 +81,7 @@ public enum AllPaletteStoneTypes {
 			NonNullSupplier<Block> baseBlock = paletteStoneVariants.factory.apply(registrate);
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
-			paletteStoneVariants.materialTag = AllTags.optionalTag(ForgeRegistries.ITEMS, Create.asResource("stone_types/" + id));
+			paletteStoneVariants.materialTag = AllTags.optionalTag(Registry.ITEM, Create.asResource("stone_types/" + id));
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}
