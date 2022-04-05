@@ -523,8 +523,8 @@ public abstract class ArmInteractionPoint {
 			inserter.simulate();
 			ItemStack insert = inserter.insert(stack);
 			if (insert.getCount() != stack.getCount()) {
+				inserter.insert(stack);
 				TransactionCallback.onSuccess(ctx, () -> {
-					inserter.insert(stack);
 					BlockEntity tileEntity = world.getBlockEntity(pos);
 					if (tileEntity instanceof FunnelTileEntity) {
 						FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;

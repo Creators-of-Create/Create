@@ -23,7 +23,6 @@ public class SmartInventory extends RecipeWrapper
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;
 	protected boolean stackNonStackables;
-	protected SyncedStackHandler wrapped;
 	protected int stackSize;
 
 	public SmartInventory(int slots, SyncedTileEntity te) {
@@ -36,12 +35,11 @@ public class SmartInventory extends RecipeWrapper
 		insertionAllowed = true;
 		extractionAllowed = true;
 		this.stackSize = stackSize;
-		wrapped = (SyncedStackHandler) this.handler;
 	}
 
 	public SmartInventory withMaxStackSize(int maxStackSize) {
 		stackSize = maxStackSize;
-		wrapped.stackSize = maxStackSize;
+		((SyncedStackHandler) handler).stackSize = maxStackSize;
 		return this;
 	}
 
@@ -70,12 +68,6 @@ public class SmartInventory extends RecipeWrapper
 		return this;
 	}
 
-//	@Override
-//	public int getSlots() {
-//		return inv.getSlots();
-//	}
-
-
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		if (!insertionAllowed)
@@ -98,29 +90,10 @@ public class SmartInventory extends RecipeWrapper
 		return handler.extract(resource, maxAmount, transaction);
 	}
 
-//	@Override
-//	public int getSlotLimit(int slot) {
-//		return Math.min(inv.getSlotLimit(slot), stackSize);
-//	}
-
-//	@Override
-//	public boolean isItemValid(int slot, ItemStack stack) {
-//		return inv.isItemValid(slot, stack);
-//	}
-
-//	@Override
-//	public void setStackInSlot(int slot, ItemStack stack) {
-//		inv.setStackInSlot(slot, stack);
-//	}
-
 	@Override
 	public ItemStack getItem(int slot) {
 		return super.getItem(slot);
 	}
-
-//	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
-//		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
-//	}
 
 	@Override
 	public CompoundTag serializeNBT() {

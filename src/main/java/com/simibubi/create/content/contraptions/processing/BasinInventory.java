@@ -30,15 +30,8 @@ public class BasinInventory extends SmartInventory {
 	}
 
 	@Override
-	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		long extracted = super.extract(resource, maxAmount, transaction);
-		if (extracted != 0) {
-			transaction.addOuterCloseCallback(r -> {
-				if (r.wasCommitted())
-					te.notifyChangeOfContents();
-			});
-		}
-		return extracted;
+	protected void onFinalCommit() {
+		super.onFinalCommit();
+		te.notifyChangeOfContents();
 	}
-
 }

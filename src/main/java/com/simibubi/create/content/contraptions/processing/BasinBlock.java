@@ -110,26 +110,16 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				return InteractionResult.PASS;
 			}
 
-			Storage<ItemVariant> inv = te.itemCapability == null ? new ItemStackHandler(1) : te.itemCapability;
-			boolean success = false;
-			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : inv.iterable(t)) {
-					if (!view.isResourceBlank()) {
-						ItemVariant variant = view.getResource();
-						long extracted = view.extract(variant, view.getAmount(), t);
-						if (extracted != 0) {
-							ItemStack stack = variant.toStack((int) extracted);
-							player.getInventory().placeItemBackInInventory(stack);
-							success = true;
-						}
-					}
-				}
-				if (success)
-					worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-							1f + Create.RANDOM.nextFloat());
-				te.onEmptied();
-				return InteractionResult.SUCCESS;
+			Storage<ItemVariant> inv = te.itemCapability;
+			if (inv == null) return InteractionResult.PASS;
+			List<ItemStack> extracted = TransferUtil.extractAllAsStacks(inv);
+			if (extracted.size() > 0) {
+				extracted.forEach(s -> player.getInventory().placeItemBackInInventory(s));
+				worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+						1f + Create.RANDOM.nextFloat());
 			}
+			te.onEmptied();
+			return InteractionResult.SUCCESS;
 		});
 	}
 
@@ -151,6 +141,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			try (Transaction t = TransferUtil.getTransaction()) {
 				long inserted = te.inputInventory.insert(ItemVariant.of(stack), stack.getCount(), t);
 				te.inputInventory.withMaxStackSize(16);
+				t.commit();
 
 				if (inserted == stack.getCount()) {
 					itemEntity.discard();

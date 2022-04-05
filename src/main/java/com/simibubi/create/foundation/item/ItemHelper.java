@@ -221,21 +221,23 @@ public class ItemHelper {
 					maxExtractionCount = Math.min(maxExtractionCount, maxExtractionCountForItem);
 				}
 
-				long extracted = view.extract(var, maxExtractionCount - extracting.getCount(), t);
-				ItemStack stack = var.toStack((int) extracted);
+				try (Transaction nested = t.openNested()) {
+					long extracted = view.extract(var, maxExtractionCount - extracting.getCount(), nested);
+					ItemStack stack = var.toStack((int) extracted);
 
-				if (!test.test(stack))
-					continue;
-				if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting))
-					continue;
+					if (!test.test(stack))
+						continue;
+					if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting))
+						continue;
+					nested.commit();
+					if (extracting.isEmpty())
+						extracting = stack.copy();
+					else
+						extracting.grow(stack.getCount());
 
-				if (extracting.isEmpty())
-					extracting = stack.copy();
-				else
-					extracting.grow(stack.getCount());
-
-				if (extracting.getCount() >= maxExtractionCount)
-					break;
+					if (extracting.getCount() >= maxExtractionCount)
+						break;
+				}
 			}
 			if (!simulate) t.commit();
 		}

@@ -94,11 +94,11 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					// Catalyst items are never consumed
 					if (stack.getItem().getCraftingRemainingItem() == stack.getItem())
 						continue Ingredients;
-					if (view.extract(var, 1, t) == 1) {
-						if (stack.getItem().hasCraftingRemainingItem())
-							recipeOutputItems.add(stack);
-						continue Ingredients;
-					}
+					long extracted = view.extract(var, 1, t);
+					if (extracted == 0) continue;
+					if (stack.getItem().hasCraftingRemainingItem())
+						recipeOutputItems.add(stack);
+					continue Ingredients;
 				}
 				// something wasn't found
 				return false;
@@ -131,6 +131,12 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 							.forEach(TankSegment::onFluidStackChanged);
 				});
 			}
+
+			if (recipe instanceof BasinRecipe) {
+				recipeOutputItems.addAll(((BasinRecipe) recipe).rollResults());
+				recipeOutputFluids.addAll(((BasinRecipe) recipe).getFluidResults());
+			} else
+				recipeOutputItems.add(recipe.getResultItem());
 
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, t))
 				return false;

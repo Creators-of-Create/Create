@@ -1,8 +1,10 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "upgrade_aquatic"
+      ]
     }
   ],
   "type": "minecraft:crafting_shapeless",

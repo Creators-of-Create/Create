@@ -23,6 +23,8 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllParticleTypes;
@@ -100,6 +102,22 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public static final int OUTPUT_ANIMATION_TIME = 10;
 	List<IntAttached<ItemStack>> visualizedOutputItems;
 	List<IntAttached<FluidStack>> visualizedOutputFluids;
+
+	SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
+		@Override
+		protected Data createSnapshot() {
+			return new Data(new ArrayList<>(spoutputBuffer), new ArrayList<>(spoutputFluidBuffer));
+		}
+
+		@Override
+		protected void readSnapshot(Data snapshot) {
+			spoutputBuffer = snapshot.spoutputBuffer;
+			spoutputFluidBuffer = snapshot.spoutputFluidBuffer;
+		}
+	};
+
+	record Data(List<ItemStack> spoutputBuffer, List<FluidStack> spoutputFluidBuffer) {
+	}
 
 	public BasinTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -297,6 +315,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return;
 
 		contentsChanged = false;
+		sendData();
 		getOperator().ifPresent(te -> te.basinChecker.scheduleUpdate());
 
 		for (Direction offset : Iterate.horizontalDirections) {
@@ -492,6 +511,7 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, ctx, targetTank))
 					return false;
 			}
 
+			snapshotParticipant.updateSnapshots(ctx);
 			for (ItemStack itemStack : outputItems) {
 				if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
 						.equals(itemStack.getItem()))
