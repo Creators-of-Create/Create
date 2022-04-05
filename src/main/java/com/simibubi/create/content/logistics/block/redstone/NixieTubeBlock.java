@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.Random;
+import java.util.function.BiConsumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -16,6 +17,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -78,7 +81,28 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;
+		if (world.isClientSide)
+			return InteractionResult.SUCCESS;
 
+		CompoundTag tag = heldItem.getTagElement("display");
+		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
+
+		walkNixies(world, pos, (currentPos, rowPosition) -> {
+			if (display)
+				withTileEntityDo(world, currentPos, te -> te.displayCustomText(tagElement, rowPosition));
+			if (dye != null)
+				world.setBlockAndUpdate(currentPos, withColor(state, dye));
+		});
+
+		return InteractionResult.SUCCESS;
+	}
+
+	public static void walkNixies(LevelAccessor world, BlockPos start, BiConsumer<BlockPos, Integer> callback) {
+		BlockState state = world.getBlockState(start);
+		if (!(state.getBlock() instanceof NixieTubeBlock))
+			return;
+
+		BlockPos currentPos = start;
 		Direction left = state.getValue(FACING)
 			.getOpposite();
 
@@ -89,10 +113,6 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 
 		Direction right = left.getOpposite();
 
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
-
-		BlockPos currentPos = pos;
 		while (true) {
 			BlockPos nextPos = currentPos.relative(left);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
@@ -104,20 +124,13 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 
 		while (true) {
 			final int rowPosition = index;
-
-			if (display)
-				withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
-			if (dye != null)
-				world.setBlockAndUpdate(currentPos, withColor(state, dye));
-
+			callback.accept(currentPos, rowPosition);
 			BlockPos nextPos = currentPos.relative(right);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
 			currentPos = nextPos;
 			index++;
 		}
-
-		return InteractionResult.SUCCESS;
 	}
 
 	@Override

@@ -16,6 +16,8 @@ import net.minecraft.network.chat.TextComponent;
 
 public abstract class AbstractSimiWidget extends AbstractWidget implements TickableGuiEventListener {
 
+	public static final int HEADER_RGB = 0x5391E1;
+	
 	protected float z;
 	protected boolean wasHovered = false;
 	protected List<Component> toolTip = new LinkedList<>();

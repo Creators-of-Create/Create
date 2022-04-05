@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.content.logistics.block.data.AllDataGathererBehaviours.assignDataBehaviourTE;
+
 import com.simibubi.create.content.contraptions.base.CutoutRotatingInstance;
 import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
@@ -143,6 +145,9 @@ import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
+import com.simibubi.create.content.logistics.block.data.DataGathererTileEntity;
+import com.simibubi.create.content.logistics.block.data.source.NixieTubeDataSource;
+import com.simibubi.create.content.logistics.block.data.target.NixieTubeDataTarget;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.depot.EjectorInstance;
@@ -171,6 +176,8 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.logistics.trains.IBogeyTileEntityRenderer;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationRenderer;
@@ -287,10 +294,10 @@ public class AllTileEntities {
 		.register();
 
 	public static final BlockEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
-			.tileEntity("hand_crank", HandCrankTileEntity::new)
-			.instance(() -> HandCrankInstance::new)
-			.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-			.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
+		.tileEntity("hand_crank", HandCrankTileEntity::new)
+		.instance(() -> HandCrankInstance::new)
+		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
+		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
@@ -503,19 +510,20 @@ public class AllTileEntities {
 			.renderer(() -> PortableStorageInterfaceRenderer::new)
 			.register();
 
-	public static final BlockEntityEntry<PortableFluidInterfaceTileEntity> PORTABLE_FLUID_INTERFACE = Create.registrate()
-		.tileEntity("portable_fluid_interface", PortableFluidInterfaceTileEntity::new)
-		.instance(() -> PSIInstance::new)
-		.validBlocks(AllBlocks.PORTABLE_FLUID_INTERFACE)
-		.renderer(() -> PortableStorageInterfaceRenderer::new)
-		.register();
-	
+	public static final BlockEntityEntry<PortableFluidInterfaceTileEntity> PORTABLE_FLUID_INTERFACE =
+		Create.registrate()
+			.tileEntity("portable_fluid_interface", PortableFluidInterfaceTileEntity::new)
+			.instance(() -> PSIInstance::new)
+			.validBlocks(AllBlocks.PORTABLE_FLUID_INTERFACE)
+			.renderer(() -> PortableStorageInterfaceRenderer::new)
+			.register();
+
 	public static final BlockEntityEntry<SteamEngineTileEntity> STEAM_ENGINE = Create.registrate()
 		.tileEntity("steam_engine", SteamEngineTileEntity::new)
 		.validBlocks(AllBlocks.STEAM_ENGINE)
 		.renderer(() -> SteamEngineRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PoweredShaftTileEntity> POWERED_SHAFT = Create.registrate()
 		.tileEntity("powered_shaft", PoweredShaftTileEntity::new)
 		.instance(() -> SingleRotatingInstance::new, false)
@@ -658,6 +666,13 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ORANGE_NIXIE_TUBE)
 		.validBlocks(AllBlocks.NIXIE_TUBES.toArray())
 		.renderer(() -> NixieTubeRenderer::new)
+		.onRegister(assignDataBehaviourTE(new NixieTubeDataTarget()))
+		.onRegister(assignDataBehaviourTE(new NixieTubeDataSource()))
+		.register();
+
+	public static final BlockEntityEntry<DataGathererTileEntity> DATA_GATHERER = Create.registrate()
+		.tileEntity("data_gatherer", DataGathererTileEntity::new)
+		.validBlocks(AllBlocks.DATA_GATHERER)
 		.register();
 
 	public static final BlockEntityEntry<StockpileSwitchTileEntity> STOCKPILE_SWITCH = Create.registrate()
@@ -706,20 +721,18 @@ public class AllTileEntities {
 		.renderer(() -> BrassDiodeRenderer::new)
 		.register();
 
-	public static final BlockEntityEntry<PulseRepeaterTileEntity> PULSE_REPEATER =
-		Create.registrate()
-			.tileEntity("pulse_repeater", PulseRepeaterTileEntity::new)
-			.instance(() -> BrassDiodeInstance::new, false)
-			.validBlocks(AllBlocks.PULSE_REPEATER)
-			.renderer(() -> BrassDiodeRenderer::new)
-			.register();
+	public static final BlockEntityEntry<PulseRepeaterTileEntity> PULSE_REPEATER = Create.registrate()
+		.tileEntity("pulse_repeater", PulseRepeaterTileEntity::new)
+		.instance(() -> BrassDiodeInstance::new, false)
+		.validBlocks(AllBlocks.PULSE_REPEATER)
+		.renderer(() -> BrassDiodeRenderer::new)
+		.register();
 
-	public static final BlockEntityEntry<LecternControllerTileEntity> LECTERN_CONTROLLER =
-		Create.registrate()
-			.tileEntity("lectern_controller", LecternControllerTileEntity::new)
-			.validBlocks(AllBlocks.LECTERN_CONTROLLER)
-			.renderer(() -> LecternControllerRenderer::new)
-			.register();
+	public static final BlockEntityEntry<LecternControllerTileEntity> LECTERN_CONTROLLER = Create.registrate()
+		.tileEntity("lectern_controller", LecternControllerTileEntity::new)
+		.validBlocks(AllBlocks.LECTERN_CONTROLLER)
+		.renderer(() -> LecternControllerRenderer::new)
+		.register();
 
 	// Curiosities
 	public static final BlockEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
@@ -766,7 +779,14 @@ public class AllTileEntities {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
+	public static final BlockEntityEntry<FlapDisplayTileEntity> FLAP_DISPLAY = Create.registrate()
+		.tileEntity("flap_display", FlapDisplayTileEntity::new)
+		.instance(() -> MechanicalCrafterInstance::new)
+		.renderer(() -> FlapDisplayRenderer::new)
+		.validBlocks(AllBlocks.FLAP_DISPLAY)
+		.register();
+
 	public static final BlockEntityEntry<SignalTileEntity> TRACK_SIGNAL = Create.registrate()
 		.tileEntity("track_signal", SignalTileEntity::new)
 		.renderer(() -> SignalRenderer::new)

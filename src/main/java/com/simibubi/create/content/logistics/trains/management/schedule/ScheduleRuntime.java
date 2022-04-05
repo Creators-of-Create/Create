@@ -1,18 +1,25 @@
 package com.simibubi.create.content.logistics.trains.management.schedule;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimedWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.FilteredDestination;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleDestination;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CTrains;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
 public class ScheduleRuntime {
@@ -34,6 +41,9 @@ public class ScheduleRuntime {
 	List<Integer> conditionProgress;
 	List<CompoundTag> conditionContext;
 
+	int ticksInTransit;
+	List<Integer> predictionTicks;
+
 	public ScheduleRuntime(Train train) {
 		this.train = train;
 		reset();
@@ -44,6 +54,14 @@ public class ScheduleRuntime {
 			return;
 		state = State.POST_TRANSIT;
 		conditionProgress.clear();
+
+		if (ticksInTransit > 0) {
+			int current = predictionTicks.get(currentEntry);
+			if (current > 0)
+				ticksInTransit = (current + ticksInTransit) / 2;
+			predictionTicks.set(currentEntry, ticksInTransit);
+		}
+
 		if (currentEntry >= schedule.entries.size())
 			return;
 		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).conditions;
@@ -67,8 +85,10 @@ public class ScheduleRuntime {
 			return;
 		if (train.derailed)
 			return;
-		if (train.navigation.destination != null)
+		if (train.navigation.destination != null) {
+			ticksInTransit++;
 			return;
+		}
 		if (currentEntry >= schedule.entries.size()) {
 			currentEntry = 0;
 			if (!schedule.cyclic)
@@ -97,8 +117,10 @@ public class ScheduleRuntime {
 			destinationReached();
 			return;
 		}
-		if (train.navigation.startNavigation(nextStation, Double.MAX_VALUE, false) != -1)
+		if (train.navigation.startNavigation(nextStation, Double.MAX_VALUE, false) != -1) {
 			state = State.IN_TRANSIT;
+			ticksInTransit = 0;
+		}
 	}
 
 	public void tickConditions(Level level) {
@@ -155,6 +177,8 @@ public class ScheduleRuntime {
 		paused = false;
 		isAutoSchedule = auto;
 		train.status.newSchedule();
+		predictionTicks = new ArrayList<>();
+		schedule.entries.forEach($ -> predictionTicks.add(-1));
 	}
 
 	public Schedule getSchedule() {
@@ -173,6 +197,121 @@ public class ScheduleRuntime {
 		state = State.PRE_TRANSIT;
 		conditionProgress = new ArrayList<>();
 		conditionContext = new ArrayList<>();
+		predictionTicks = new ArrayList<>();
+	}
+
+	public Collection<TrainDeparturePrediction> submitPredictions() {
+		Collection<TrainDeparturePrediction> predictions = new ArrayList<>();
+		int entryCount = schedule.entries.size();
+		int accumulatedTime = 0;
+		int current = currentEntry;
+
+		// Current
+		if (state == State.POST_TRANSIT || current >= entryCount) {
+			GlobalStation currentStation = train.getCurrentStation();
+			if (currentStation != null)
+				predictions.add(createPrediction(current, currentStation.name, 0));
+			int departureTime = estimateStayDuration(current);
+			if (departureTime == -1)
+				accumulatedTime = -1;
+
+		} else if (train.navigation.destination != null) {
+			CTrains conf = AllConfigs.SERVER.trains;
+			double speed = (conf.getTopSpeedMPT() + conf.getTurningTopSpeedMPT()) / 2;
+			int timeRemaining = (int) (train.navigation.distanceToDestination / speed) * 2;
+
+			if (predictionTicks.size() > current && train.navigation.distanceStartedAt != 0) {
+				float predictedTime = predictionTicks.get(current);
+				if (predictedTime > 0) {
+					predictedTime *=
+						Mth.clamp(train.navigation.distanceToDestination / train.navigation.distanceStartedAt, 0, 1);
+					timeRemaining = (timeRemaining + (int) predictedTime) / 2;
+				}
+			}
+
+			accumulatedTime += timeRemaining;
+			predictions.add(createPrediction(current, train.navigation.destination.name, accumulatedTime));
+
+			int departureTime = estimateStayDuration(current);
+			if (departureTime != -1)
+				accumulatedTime += departureTime;
+			if (departureTime == -1)
+				accumulatedTime = -1;
+
+		} else
+			predictForEntry(current, accumulatedTime, predictions);
+
+		// Upcoming
+		for (int i = 1; i < entryCount; i++) {
+			int index = (i + current) % entryCount;
+			if (index == 0 && !schedule.cyclic)
+				break;
+			accumulatedTime = predictForEntry(index, accumulatedTime, predictions);
+		}
+
+		return predictions;
+	}
+
+	private int predictForEntry(int index, int accumulatedTime, Collection<TrainDeparturePrediction> predictions) {
+		ScheduleEntry entry = schedule.entries.get(index);
+		if (!(entry.destination instanceof FilteredDestination filter))
+			return accumulatedTime;
+		if (predictionTicks.size() <= currentEntry)
+			return accumulatedTime;
+		if (accumulatedTime == -1) {
+			predictions.add(createPrediction(index, filter.nameFilter, accumulatedTime));
+			return -1;
+		}
+
+		int predictedTime = predictionTicks.get(index);
+		int departureTime = estimateStayDuration(index);
+
+		if (predictedTime == -1)
+			accumulatedTime = -1;
+		else {
+			accumulatedTime += predictedTime;
+			if (departureTime != -1)
+				accumulatedTime += departureTime;
+		}
+
+		predictions.add(createPrediction(index, filter.nameFilter, accumulatedTime));
+
+		if (departureTime == -1)
+			return -1;
+
+		return accumulatedTime;
+	}
+
+	private int estimateStayDuration(int index) {
+		if (index >= schedule.entries.size()) {
+			if (!schedule.cyclic)
+				return 100000;
+			index = 0;
+		}
+
+		ScheduleEntry scheduleEntry = schedule.entries.get(index);
+		for (List<ScheduleWaitCondition> list : scheduleEntry.conditions)
+			for (ScheduleWaitCondition condition : list)
+				if (condition instanceof TimedWaitCondition wait)
+					return wait.timeUnit.ticksPer * wait.value;
+
+		return 5; // TODO properly ask conditions for time prediction
+	}
+
+	private TrainDeparturePrediction createPrediction(int index, String destination, int time) {
+		if (++index >= schedule.entries.size()) {
+			if (!schedule.cyclic)
+				return new TrainDeparturePrediction(train, time, new TextComponent(" "), destination);
+			index %= schedule.entries.size();
+		}
+
+		ScheduleEntry scheduleEntry = schedule.entries.get(index);
+		if (!(scheduleEntry.destination instanceof FilteredDestination fd))
+			return new TrainDeparturePrediction(train, time, new TextComponent(" "), destination);
+
+		String station = fd.nameFilter.replaceAll("\\*", "")
+			.trim();
+		return new TrainDeparturePrediction(train, time, new TextComponent(station), destination);
 	}
 
 	public CompoundTag write() {
@@ -185,6 +324,7 @@ public class ScheduleRuntime {
 		NBTHelper.writeEnum(tag, "State", state);
 		tag.putIntArray("ConditionProgress", conditionProgress);
 		tag.put("ConditionContext", NBTHelper.writeCompoundList(conditionContext, CompoundTag::copy));
+		tag.putIntArray("TransitTimes", predictionTicks);
 		return tag;
 	}
 
@@ -199,6 +339,14 @@ public class ScheduleRuntime {
 		for (int i : tag.getIntArray("ConditionProgress"))
 			conditionProgress.add(i);
 		NBTHelper.iterateCompoundList(tag.getList("ConditionContext", Tag.TAG_COMPOUND), conditionContext::add);
+
+		int[] readTransits = tag.getIntArray("TransitTimes");
+		if (schedule != null) {
+			schedule.entries.forEach($ -> predictionTicks.add(-1));
+			if (readTransits.length == schedule.entries.size())
+				for (int i = 0; i < readTransits.length; i++)
+					predictionTicks.set(i, readTransits[i]);
+		}
 	}
 
 }

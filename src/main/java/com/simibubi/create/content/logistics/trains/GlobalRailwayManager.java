@@ -19,6 +19,7 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
+import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.foundation.networking.AllPackets;
 
@@ -91,6 +92,7 @@ public class GlobalRailwayManager {
 		sync = new TrackGraphSync();
 		movingTrains = new LinkedList<>();
 		waitingTrains = new LinkedList<>();
+		GlobalTrainDisplayData.statusByDestination.clear();
 	}
 
 	public void markTracksDirty() {
@@ -167,14 +169,18 @@ public class GlobalRailwayManager {
 			group.trains.clear();
 			group.reserved = null;
 		}
-		
+
 		for (TrackGraph graph : trackNetworks.values())
 			graph.tickPoints(true);
 
 		tickTrains(level);
-		
+
 		for (TrackGraph graph : trackNetworks.values())
 			graph.tickPoints(false);
+
+		GlobalTrainDisplayData.updateTick = level.getGameTime() % 100 == 0;
+		if (GlobalTrainDisplayData.updateTick)
+			GlobalTrainDisplayData.refresh();
 
 //		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_K))
 //			trackNetworks.values()

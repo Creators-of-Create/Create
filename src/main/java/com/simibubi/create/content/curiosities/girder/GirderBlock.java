@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileE
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -202,6 +203,8 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		else if (sideState.hasProperty(WallBlock.UP) && sideState.getValue(WallBlock.UP))
 			state = state.setValue(updateProperty, true);
 		else if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
+			state = state.setValue(updateProperty, true);
+		else if (sideState.getBlock() instanceof FlapDisplayBlock)
 			state = state.setValue(updateProperty, true);
 		else if (isFacingBracket(level, pos, d))
 			state = state.setValue(updateProperty, true);

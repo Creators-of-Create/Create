@@ -59,7 +59,7 @@ public enum AllGuiTextures implements ScreenElement {
 	TOOLBELT_MAIN_SLOT("widgets", 0, 97, 24, 24),
 	TOOLBELT_EMPTY_SLOT("widgets", 27, 98, 22, 22),
 	TOOLBELT_INACTIVE_SLOT("widgets", 52, 98, 22, 22),
-	
+
 	TOOLBELT_HOTBAR_OFF("widgets", 0, 130, 20, 24),
 	TOOLBELT_HOTBAR_ON("widgets", 20, 130, 20, 24),
 	TOOLBELT_SELECTED_OFF("widgets", 0, 155, 22, 22),
@@ -80,7 +80,12 @@ public enum AllGuiTextures implements ScreenElement {
 	PROJECTOR_FILTER("projector", 0, 36, 162, 22),
 	PROJECTOR_END("projector", 0, 58, 162, 22),
 	PROJECTOR_EMPTY("projector", 0, 80, 162, 22),
-	
+
+	DATA_GATHERER("data_gatherer", 235, 162),
+	DATA_AREA_START("data_gatherer", 0, 163, 2, 18),
+	DATA_AREA("data_gatherer", 3, 163, 1, 18),
+	DATA_AREA_END("data_gatherer", 5, 163, 2, 18),
+
 	SCHEDULE("schedule", 256, 226),
 	SCHEDULE_CARD_DARK("schedule", 5, 233, 1, 1),
 	SCHEDULE_CARD_MEDIUM("schedule", 6, 233, 1, 1),
@@ -109,7 +114,7 @@ public enum AllGuiTextures implements ScreenElement {
 	SCHEDULE_EDITOR_INACTIVE_SLOT("schedule_2", 0, 91, 18, 18),
 	SCHEDULE_EDITOR_SECOND_LINE("schedule_2", 20, 91, 124, 18),
 	SCHEDULE_EDITOR_DIVIDER("schedule_2", 145, 91, 4, 18),
-	
+
 	STATION("schedule_2", 0, 111, 200, 127),
 	STATION_ASSEMBLING("assemble", 200, 178),
 	STATION_TEXTBOX_TOP("assemble", 1, 179, 150, 18),

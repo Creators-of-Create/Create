@@ -7,6 +7,7 @@ import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.content.logistics.block.data.AllDataGathererBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -142,6 +143,18 @@ import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.block.chute.ChuteItem;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteBlock;
+import com.simibubi.create.content.logistics.block.data.DataGathererBlock;
+import com.simibubi.create.content.logistics.block.data.DataGathererBlockItem;
+import com.simibubi.create.content.logistics.block.data.source.AccumulatedItemCountDataSource;
+import com.simibubi.create.content.logistics.block.data.source.FillLevelDataSource;
+import com.simibubi.create.content.logistics.block.data.source.ItemCountDataSource;
+import com.simibubi.create.content.logistics.block.data.source.ItemListDataSource;
+import com.simibubi.create.content.logistics.block.data.source.ItemNameDataSource;
+import com.simibubi.create.content.logistics.block.data.source.ItemThoughputDataSource;
+import com.simibubi.create.content.logistics.block.data.source.StationSummaryDataSource;
+import com.simibubi.create.content.logistics.block.data.source.StopWatchDataSource;
+import com.simibubi.create.content.logistics.block.data.source.TimeOfDayDataSource;
+import com.simibubi.create.content.logistics.block.data.target.FlapDisplayDataTarget;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorItem;
@@ -175,6 +188,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
@@ -426,6 +440,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(new BeltGenerator()::generate)
 		.transform(BlockStressDefaults.setImpact(0))
+		.onRegister(assignDataBehaviour(new ItemNameDataSource(), "combine_item_names"))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
@@ -495,6 +510,8 @@ public class AllBlocks {
 		REGISTRATE.block("cuckoo_clock", CuckooClockBlock::regular)
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
+			.onRegister(assignDataBehaviour(new TimeOfDayDataSource(), "time_of_day"))
+			.onRegister(assignDataBehaviour(new StopWatchDataSource(), "stop_watch"))
 			.register();
 
 	public static final BlockEntry<CuckooClockBlock> MYSTERIOUS_CUCKOO_CLOCK =
@@ -528,7 +545,9 @@ public class AllBlocks {
 	public static final BlockEntry<CrushingWheelControllerBlock> CRUSHING_WHEEL_CONTROLLER =
 		REGISTRATE.block("crushing_wheel_controller", CrushingWheelControllerBlock::new)
 			.initialProperties(SharedProperties.CRUSHING_WHEEL_CONTROLLER_MATERIAL)
-			.properties(p -> p.noOcclusion().noDrops().air())
+			.properties(p -> p.noOcclusion()
+				.noDrops()
+				.air())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(state -> ConfiguredModel.builder()
 					.modelFile(p.models()
@@ -606,6 +625,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.onRegister(assignDataBehaviour(new ItemNameDataSource(), "combine_item_names"))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();
@@ -617,6 +637,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
 			.transform(BlockStressDefaults.setImpact(2.0))
+			.onRegister(assignDataBehaviour(new ItemNameDataSource(), "combine_item_names"))
 			.item(EjectorItem::new)
 			.transform(customItemModel())
 			.register();
@@ -1330,6 +1351,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
 			s -> s.getValue(StationBlock.ASSEMBLING) ? AssetLookup.partialBaseModel(c, p, "assembling")
 				: AssetLookup.partialBaseModel(c, p)))
+		.onRegister(assignDataBehaviour(new StationSummaryDataSource(), "station_summary"))
 		.lang("Train Station")
 		.item(TrackTargetingBlockItem::new)
 		.transform(customItemModel("_", "block"))
@@ -1430,11 +1452,13 @@ public class AllBlocks {
 	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
 		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
+			.onRegister(assignDataBehaviour(new AccumulatedItemCountDataSource(), "accumulate_items"))
 			.register();
 
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
+			.onRegister(assignDataBehaviour(new ItemThoughputDataSource(), "item_throughput"))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 
@@ -1443,6 +1467,8 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.onRegister(assignDataBehaviour(new ItemCountDataSource(), "count_items"))
+			.onRegister(assignDataBehaviour(new ItemListDataSource(), "list_items"))
 			.item()
 			.transform(customItemModel("_", "block"))
 			.register();
@@ -1453,6 +1479,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.get(),
 				AssetLookup.withIndicator(c, p, $ -> AssetLookup.standardModel(c, p), StockpileSwitchBlock.INDICATOR)))
+			.onRegister(assignDataBehaviour(new FillLevelDataSource(), "fill_level"))
 			.simpleItem()
 			.register();
 
@@ -1460,6 +1487,28 @@ public class AllBlocks {
 		REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
 			.transform(BuilderTransformers.crate("creative"))
 			.tag(AllBlockTags.SAFE_NBT.tag)
+			.register();
+
+	public static final BlockEntry<DataGathererBlock> DATA_GATHERER =
+		REGISTRATE.block("data_gatherer", DataGathererBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::translucent)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.item(DataGathererBlockItem::new)
+			.transform(customItemModel("_", "block"))
+			.register();
+
+	public static final BlockEntry<FlapDisplayBlock> FLAP_DISPLAY =
+		REGISTRATE.block("display_board", FlapDisplayBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(pickaxeOnly())
+			.transform(BlockStressDefaults.setImpact(0))
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(assignDataBehaviour(new FlapDisplayDataTarget()))
+			.lang("Display Board")
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<NixieTubeBlock> ORANGE_NIXIE_TUBE =

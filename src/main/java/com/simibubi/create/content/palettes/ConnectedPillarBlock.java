@@ -78,7 +78,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 		}
 		return state;
 	}
-	
+
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this)
@@ -87,14 +87,15 @@ public class ConnectedPillarBlock extends LayeredBlock {
 		if (!blockTicks.hasScheduledTick(pPos, this))
 			pLevel.scheduleTick(pPos, this, 1);
 	}
-	
+
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
 		if (pState.getBlock() != this)
 			return;
-		BlockPos belowPos = pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
+		BlockPos belowPos =
+			pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
-		if (!canConnect(pState, belowState)) 
+		if (!canConnect(pState, belowState))
 			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), 3);
 	}
 

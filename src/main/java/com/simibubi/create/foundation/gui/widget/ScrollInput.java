@@ -20,6 +20,7 @@ public class ScrollInput extends AbstractSimiWidget {
 	protected final Component scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
 	protected final Component shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
+	protected boolean inverted;
 
 	protected int min, max;
 	protected int shiftStep;
@@ -36,6 +37,11 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	public Function<StepContext, Integer> standardStep() {
 		return c -> c.shift ? shiftStep : 1;
+	}
+	
+	public ScrollInput inverted() {
+		inverted = true;
+		return this;
 	}
 
 	public ScrollInput withRange(int min, int max) {
@@ -91,6 +97,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+		if (inverted)
+			delta *= -1;
+		
 		StepContext context = new StepContext();
 		context.control = AllKeys.ctrlDown();
 		context.shift = AllKeys.shiftDown();
@@ -134,7 +143,7 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.plainCopy().withStyle(ChatFormatting.BLUE));
+		toolTip.add(title.plainCopy().withStyle(s -> s.withColor(HEADER_RGB)));
 		toolTip.add(scrollToModify.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 		toolTip.add(shiftScrollsFaster.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 	}

@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
+import com.simibubi.create.content.logistics.block.data.DataGathererBlock;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -145,8 +146,10 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (update)
 			scheduleBlockTick();
 
-		if (changed || update)
-			sendData();
+		if (changed || update) {
+			DataGathererBlock.notifyGatherers(level, worldPosition);
+			notifyUpdate();
+		}
 	}
 
 	protected void scheduleBlockTick() {

@@ -130,6 +130,11 @@ public class AllShapes {
 		NIXIE_TUBE_WALL = shape(5, 9, 0, 11, 15, 12).add(5, 1, 0, 11, 7, 12)
 			.forHorizontal(Direction.SOUTH),
 
+		FLAP_DISPLAY = shape(0, 0, 3, 16, 16, 13).forHorizontal(Direction.SOUTH),
+
+		DATA_GATHERER = shape(1, 0, 1, 15, 6, 15).add(3, 5, 3, 13, 9, 13)
+			.forDirectional(),
+
 		STEAM_ENGINE = shape(1, 0, 1, 15, 3, 15).add(3, 0, 3, 13, 15, 13)
 			.add(1, 5, 4, 15, 13, 12)
 			.forHorizontalAxis(),

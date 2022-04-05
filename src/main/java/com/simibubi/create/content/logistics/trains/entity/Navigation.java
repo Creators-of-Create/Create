@@ -50,6 +50,7 @@ public class Navigation {
 
 	public GlobalStation destination;
 	public double distanceToDestination;
+	public double distanceStartedAt;
 	public boolean destinationBehindTrain;
 	List<Couple<TrackNode>> currentPath;
 
@@ -135,7 +136,8 @@ public class Navigation {
 				MutableObject<Pair<UUID, Boolean>> trackingCrossSignal = new MutableObject<>(null);
 				waitingForChainedGroups.clear();
 
-				// Adding 50 to the distance due to unresolved inaccuracies in TravellingPoint::travel
+				// Adding 50 to the distance due to unresolved inaccuracies in
+				// TravellingPoint::travel
 				signalScout.travel(train.graph, (distanceToDestination + 50) * speedMod, controlSignalScout(),
 					(distance, couple) -> {
 						// > scanDistance and not following down a cross signal
@@ -358,7 +360,7 @@ public class Navigation {
 		distanceToDestination = distance;
 
 		if (noneFound) {
-			distanceToDestination = 0;
+			distanceToDestination = distanceStartedAt = 0;
 			currentPath = new ArrayList<>();
 			if (this.destination != null)
 				cancelNavigation();
@@ -370,6 +372,9 @@ public class Navigation {
 		train.reservedSignalBlocks.clear();
 		train.navigation.waitingForSignal = null;
 
+		if (this.destination == null && !simulate)
+			distanceStartedAt = distance;
+		
 		if (this.destination == destination)
 			return 0;
 
@@ -677,6 +682,7 @@ public class Navigation {
 			return tag;
 		tag.putUUID("Destination", destination.id);
 		tag.putDouble("DistanceToDestination", distanceToDestination);
+		tag.putDouble("DistanceStartedAt", distanceStartedAt);
 		tag.putBoolean("BehindTrain", destinationBehindTrain);
 		tag.put("Path", NBTHelper.writeCompoundList(currentPath, c -> {
 			CompoundTag nbt = new CompoundTag();
@@ -700,6 +706,7 @@ public class Navigation {
 		if (destination == null)
 			return;
 		distanceToDestination = tag.getDouble("DistanceToDestination");
+		distanceStartedAt = tag.getDouble("DistanceStartedAt");
 		destinationBehindTrain = tag.getBoolean("BehindTrain");
 		currentPath.clear();
 		NBTHelper.iterateCompoundList(tag.getList("Path", Tag.TAG_COMPOUND),

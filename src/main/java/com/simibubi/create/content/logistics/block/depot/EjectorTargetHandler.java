@@ -254,12 +254,12 @@ public class EjectorTargetHandler {
 			drawOutline(currentSelection);
 	}
 
-	private static void drawOutline(BlockPos selection) {
+	public static void drawOutline(BlockPos selection) {
 		Level world = Minecraft.getInstance().level;
-		if (currentSelection == null)
+		if (selection == null)
 			return;
 
-		BlockPos pos = currentSelection;
+		BlockPos pos = selection;
 		BlockState state = world.getBlockState(pos);
 		VoxelShape shape = state.getShape(world, pos);
 		AABB boundingBox = shape.isEmpty() ? new AABB(BlockPos.ZERO) : shape.bounds();
