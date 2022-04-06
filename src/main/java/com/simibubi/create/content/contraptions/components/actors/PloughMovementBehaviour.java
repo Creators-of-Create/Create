@@ -71,6 +71,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
+		if (state.isAir())
+			return false;
 		if (world.getBlockState(breakingPos.below())
 			.getBlock() instanceof FarmBlock)
 			return false;
