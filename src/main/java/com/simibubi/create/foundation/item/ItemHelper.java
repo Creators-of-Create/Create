@@ -173,13 +173,14 @@ public class ItemHelper {
 	public static ItemStack extract(Storage<ItemVariant> inv, Predicate<ItemStack> test, ExtractionCountMode mode, int amount,
 		boolean simulate) {
 		long extracted = 0;
-		ItemVariant variant = null;
+		ItemVariant extracting = null;
 		if (inv.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				for (StorageView<ItemVariant> view : inv.iterable(t)) {
 					if (view.isResourceBlank()) continue;
-					variant = variant == null ? view.getResource() : variant;
+					ItemVariant variant = extracting == null ? view.getResource() : extracting;
 					if (!test.test(variant.toStack())) continue;
+					if (extracting == null) extracting = variant;
 					long toExtract = Math.min(amount, view.getAmount());
 					long actualExtracted = view.extract(variant, toExtract, t);
 					if (actualExtracted == 0) continue;
@@ -193,9 +194,9 @@ public class ItemHelper {
 
 				// if the code reaches this point, we've extracted as much as possible, and it isn't enough.
 				if (mode == ExtractionCountMode.UPTO) { // we don't need to get exactly the amount requested
-					if (variant != null && extracted != 0) {
+					if (extracting != null && extracted != 0) {
 						if (!simulate) t.commit();
-						return variant.toStack((int) extracted);
+						return extracting.toStack((int) extracted);
 					}
 				}
 			}
