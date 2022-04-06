@@ -37,19 +37,21 @@
   "accessWidener": "create.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.13.3",
-    "fabric": ">=0.48.0",
-    "minecraft": ">=1.18.2",
-    "registrate-fabric": "*",
-    "flywheel": "*",
-    "com_electronwill_night-config_core" : "*",
-    "com_electronwill_night-config_toml": "*"
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=${fabric_version}",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=${java_version}",
+    "registrate-fabric": ">=${registrate_version}",
+    "flywheel": ">=${flywheel_version}",
+    "porting_lib": ">=${port_lib_version}",
+    "forge_tags": ">=${forge_tags_version}",
+    "forgeconfigapiport": ">=${forge_config_api_port_version}",
+    "reach-entity-attributes": ">=${reach_entity_attributes_version}",
+    "fake-player-api": ">=${fake_player_api_version}",
+    "milk": ">=${milk_lib_version}",
+    "com_electronwill_night-config_core" : ">=${night_config_core_version}",
+    "com_electronwill_night-config_toml": ">=${night_config_toml_version}"
   },
-
-  "provides": [
-    "com_electronwill_night-config_core",
-    "com_electronwill_night-config_toml"
-  ],
 
   "custom": {
     "loom:injected_interfaces": {

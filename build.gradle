@@ -55,22 +55,21 @@ dependencies {
     modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
     modImplementation("maven.modrinth:lazydfu:0.1.2")
+//    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
 
     // dependencies
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-//    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
-
-    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:0.2.0+1.18.2.${project.port_lib_hash}"))
+    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}+${project.minecraft_version}.${project.port_lib_hash}"))
     modImplementation(include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
-    modImplementation(include("com.electronwill.night-config:core:3.6.3"))
-    modImplementation(include("com.electronwill.night-config:toml:3.6.3"))
-    modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_version}")) { transitive = false }
+    modImplementation(include("com.electronwill.night-config:core:${project.night_config_core_version}"))
+    modImplementation(include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
+    modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}")) { transitive = false }
     modImplementation(include("com.tterrag.registrate:Registrate:${project.registrate_version}"))
     modImplementation(include("com.jozufozu.flywheel:Flywheel-Fabric:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
-    modImplementation(include("io.github.tropheusj:milk-lib:0.3.0"))
+    modImplementation(include("io.github.tropheusj:milk-lib:${project.milk_lib_version}"))
     implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
 }
 
@@ -79,10 +78,10 @@ task buildOrPublish {
     String mavenUser = System.getenv().MAVEN_USER
     if (mavenUser != null && !mavenUser.isEmpty()) {
         dependsOn(tasks.getByName("publish"))
-        println "prepared for publish"
+        println("prepared for publish")
     } else {
         dependsOn(tasks.getByName("build"))
-        println "prepared for build"
+        println("prepared for build")
     }
 }
 
@@ -114,17 +113,32 @@ loom {
 }
 
 processResources {
-    inputs.property 'version', project.version
+    Map<String, String> properties = new HashMap<>()
+    properties.put("version", project.version)
+    properties.put("loader_version", project.loader_version)
+    properties.put("fabric_version", project.fabric_version)
+    properties.put("minecraft_version", project.minecraft_version)
+    properties.put("java_version", sourceCompatibility)
+    properties.put("registrate_version", project.registrate_version)
+    properties.put("flywheel_version", project.flywheel_version)
+    properties.put("port_lib_version", "${project.port_lib_version}+${project.minecraft_version}.${project.port_lib_hash}")
+    properties.put("forge_tags_version", project.forge_tags_version)
+    properties.put("forge_config_api_port_version", project.forge_config_api_port_version)
+    properties.put("reach_entity_attributes_version", project.reach_entity_attributes_version)
+    properties.put("fake_player_api_version", project.fake_player_api_version)
+    properties.put("milk_lib_version", project.milk_lib_version)
+    properties.put("night_config_core_version", project.night_config_core_version)
+    properties.put("night_config_toml_version", project.night_config_toml_version)
 
-    filesMatching('fabric.mod.json') {
-        expand 'version': project.version
+    properties.forEach((k, v) -> inputs.property(k, v))
+
+    filesMatching("fabric.mod.json") {
+        expand properties
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = 'UTF-8'
-
-    it.options.release = 17
+    it.options.release = Integer.parseInt(sourceCompatibility)
 }
 
 java {
@@ -132,7 +146,7 @@ java {
 }
 
 jar {
-    from('LICENSE') {
+    from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
