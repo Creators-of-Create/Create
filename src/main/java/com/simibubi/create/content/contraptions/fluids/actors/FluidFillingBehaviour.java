@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionSuccessCallback;
 import it.unimi.dsi.fastutil.PriorityQueue;
@@ -213,15 +214,19 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			if (spaceType == SpaceType.FILLABLE) {
 				success = true;
 				BlockState blockState = world.getBlockState(currentPos);
+
+				if (!tileEntity.isVirtual())
+					((LevelExtensions) world).updateSnapshots(ctx);
+
 				if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && fluid.isSame(Fluids.WATER)) {
 					if (!tileEntity.isVirtual())
-						TransactionCallback.setBlock(ctx, world, currentPos,
+						world.setBlock(currentPos,
 								updatePostWaterlogging(blockState.setValue(BlockStateProperties.WATERLOGGED, true)),
 								2 | 16);
 				} else {
-					replaceBlock(world, currentPos, blockState, ctx);
+					replaceBlock(world, currentPos, blockState, blockState.hasBlockEntity() ? world.getBlockEntity(currentPos) : null, ctx);
 					if (!tileEntity.isVirtual())
-						TransactionCallback.setBlock(ctx, world, currentPos, FluidHelper.convertToStill(fluid)
+						world.setBlock(currentPos, FluidHelper.convertToStill(fluid)
 								.defaultFluidState()
 								.createLegacyBlock(), 2 | 16);
 				}
@@ -305,9 +310,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		return canBeReplacedByFluid(world, pos, blockState) ? SpaceType.FILLABLE : SpaceType.BLOCKING;
 	}
 
-	protected void replaceBlock(Level world, BlockPos pos, BlockState state, TransactionContext ctx) {
+	protected void replaceBlock(Level world, BlockPos pos, BlockState state, BlockEntity tileentity, TransactionContext ctx) {
 		TransactionCallback.onSuccess(ctx, () -> {
-			BlockEntity tileentity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 			Block.dropResources(state, world, pos, tileentity);
 		});
 	}

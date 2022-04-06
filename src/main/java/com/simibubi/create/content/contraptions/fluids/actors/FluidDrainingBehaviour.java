@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+
+import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LiquidBlockAccessor;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
@@ -188,8 +190,10 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				return true;
 			}
 
-			if (!tileEntity.isVirtual())
-				TransactionCallback.setBlock(ctx, world, currentPos, emptied, 2 | 16);
+			if (!tileEntity.isVirtual()) {
+				((LevelExtensions) world).updateSnapshots(ctx);
+				world.setBlock(currentPos, emptied, 2 | 16);
+			}
 			affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 
 			BlockPosEntry e = queue.dequeue();

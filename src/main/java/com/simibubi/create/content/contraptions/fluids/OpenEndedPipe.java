@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 
+import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
@@ -23,9 +25,11 @@ import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,9 +44,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -154,13 +161,13 @@ public class OpenEndedPipe extends FlowSource {
 		FluidStack stack = new FluidStack(fluidState.getType(), FluidConstants.BUCKET);
 
 		TransactionCallback.onSuccess(ctx, () -> AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5));
-
+		((LevelExtensions) world).updateSnapshots(ctx);
 		if (waterlog) {
-			TransactionCallback.setBlock(ctx, world, outputPos, state.setValue(WATERLOGGED, false), 3);
+			world.setBlock(outputPos, state.setValue(WATERLOGGED, false), 3);
 			TransactionCallback.onSuccess(ctx, () -> world.scheduleTick(outputPos, Fluids.WATER, 1));
 			return stack;
 		}
-		TransactionCallback.setBlock(ctx, world, outputPos, fluidState.createLegacyBlock()
+		world.setBlock(outputPos, fluidState.createLegacyBlock()
 			.setValue(LiquidBlock.LEVEL, 14), 3);
 		return stack;
 	}
@@ -183,6 +190,7 @@ public class OpenEndedPipe extends FlowSource {
 		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_FLUID_TAG)) // fabric: milk logic is different
 			return true;
 
+		((LevelExtensions) world).updateSnapshots(ctx);
 		if (!fluidState.isEmpty() && fluidState.getType() != fluid.getFluid()) {
 			FluidReactions.handlePipeSpillCollision(world, outputPos, fluid.getFluid(), fluidState);
 			return false;
@@ -208,7 +216,7 @@ public class OpenEndedPipe extends FlowSource {
 		TransactionCallback.onSuccess(ctx, () -> AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5));
 
 		if (waterlog) {
-			TransactionCallback.setBlock(ctx, world, outputPos, state.setValue(WATERLOGGED, true), 3);
+			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), 3);
 			TransactionCallback.onSuccess(ctx, () -> world.scheduleTick(outputPos, Fluids.WATER, 1));
 			return true;
 		}
@@ -216,7 +224,7 @@ public class OpenEndedPipe extends FlowSource {
 		if (!AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get())
 			return true;
 
-		TransactionCallback.setBlock(ctx, world, outputPos, fluid.getFluid()
+		world.setBlock(outputPos, fluid.getFluid()
 			.defaultFluidState()
 			.createLegacyBlock(), 3);
 		return true;
@@ -256,8 +264,10 @@ public class OpenEndedPipe extends FlowSource {
 				return 0;
 			FluidStack stack = new FluidStack(resource, 81);
 			updateSnapshots(transaction);
-			if (!provideFluidToSpace(stack, transaction))
-				return 0;
+			try (Transaction provideTest = transaction.openNested()) {
+				if (!provideFluidToSpace(stack, provideTest))
+					return 0;
+			}
 
 			FluidStack containedFluidStack = getFluid();
 			if (!containedFluidStack.isEmpty() && !containedFluidStack.canFill(resource))
@@ -269,9 +279,11 @@ public class OpenEndedPipe extends FlowSource {
 				maxAmount = 81; // fabric: deplete fluids 81 times faster to account for larger amounts
 			long fill = super.insert(resource, maxAmount, transaction);
 			if (!stack.isEmpty())
-				applyEffects(stack);
-			if (getFluidAmount() == FluidConstants.BUCKET || (!FluidHelper.hasBlockState(containedFluidStack.getFluid()) || containedFluidStack.getFluid().is(Milk.MILK_FLUID_TAG))) // fabric: milk logic is different
-				setFluid(FluidStack.EMPTY);
+				TransactionCallback.onSuccess(transaction, () -> applyEffects(stack));
+			if (getFluidAmount() == FluidConstants.BUCKET || (!FluidHelper.hasBlockState(containedFluidStack.getFluid()) || containedFluidStack.getFluid().is(Milk.MILK_FLUID_TAG))) { // fabric: milk logic is different
+				if (provideFluidToSpace(containedFluidStack, transaction))
+					setFluid(FluidStack.EMPTY);
+			}
 			return fill;
 		}
 
@@ -295,6 +307,7 @@ public class OpenEndedPipe extends FlowSource {
 			if (drainedFromInternal != 0)
 				return drainedFromInternal;
 
+			((LevelExtensions) world).updateSnapshots(transaction);
 			FluidStack drainedFromWorld = removeFluidFromSpace(transaction);
 			if (drainedFromWorld.isEmpty())
 				return 0;
@@ -310,6 +323,26 @@ public class OpenEndedPipe extends FlowSource {
 				super.insert(drainedFromWorld.getType(), remainder, transaction);
 			}
 			return drainedFromWorld.getAmount();
+		}
+
+		@Override
+		public boolean isResourceBlank() {
+			if (!super.isResourceBlank()) return false;
+			return getResource().isBlank();
+		}
+
+		@Override
+		public FluidVariant getResource() {
+			if (!super.isResourceBlank()) return super.getResource();
+			Fluid f = world.getFluidState(outputPos).getType();
+			return FluidVariant.of(f instanceof FlowingFluid flowing ? flowing.getSource() : f);
+		}
+
+		@Override
+		public long getAmount() {
+			long amount = super.getAmount();
+			if (amount != 0) return amount;
+			return isResourceBlank() ? FluidConstants.BUCKET : 0;
 		}
 	}
 

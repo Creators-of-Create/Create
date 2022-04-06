@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -444,7 +445,8 @@ public abstract class ArmInteractionPoint {
 					world.levelEvent(1010, pos, 0);
 					jukeboxTE.clearContent();
 				});
-				TransactionCallback.setBlock(ctx, world, pos, state.setValue(JukeboxBlock.HAS_RECORD, false), 2);
+				((LevelExtensions) world).updateSnapshots(ctx);
+				world.setBlock(pos, state.setValue(JukeboxBlock.HAS_RECORD, false), 2);
 			}
 			return itemstack;
 		}
