@@ -48,10 +48,13 @@
     "forgeconfigapiport": ">=${forge_config_api_port_version}",
     "reach-entity-attributes": ">=${reach_entity_attributes_version}",
     "fake-player-api": ">=${fake_player_api_version}",
-    "milk": ">=${milk_lib_version}",
-    "com_electronwill_night-config_core" : ">=${night_config_core_version}",
-    "com_electronwill_night-config_toml": ">=${night_config_toml_version}"
+    "milk": ">=${milk_lib_version}"
   },
+
+  "provides": [
+    "com_electronwill_night-config_core",
+    "com_electronwill_night-config_toml"
+  ],
 
   "custom": {
     "loom:injected_interfaces": {

@@ -55,6 +55,7 @@ dependencies {
     modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
     modImplementation("maven.modrinth:lazydfu:0.1.2")
+    modImplementation("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
 //    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
 
     // dependencies
