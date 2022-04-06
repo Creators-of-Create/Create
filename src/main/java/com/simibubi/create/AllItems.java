@@ -127,7 +127,7 @@ public class AllItems {
 		REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-	//		.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE)) // handled in AbstractFurnaceBlockEntityMixin, networking bad
+			.onRegister(i -> i.setBurnTime(Short.MAX_VALUE)) // fabric: furnaces are limited to Short values without Forge patches
 			.register();
 
 	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)

@@ -176,7 +176,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = FuelRegistry.INSTANCE.get(itemStack.getItem());
+			Integer value = FuelRegistry.INSTANCE.get(itemStack.getItem());
+			newBurnTime = value == null ? 0 : value;
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 			else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {
