@@ -51,6 +51,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -120,6 +121,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			}
 		}
 		passenger.startRiding(this, true);
+		if (passenger instanceof TamableAnimal ta)
+			ta.setInSittingPose(true);
 		if (level.isClientSide)
 			return;
 		contraption.getSeatMapping()
@@ -132,6 +135,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected void removePassenger(Entity passenger) {
 		Vec3 transformedVector = getPassengerPosition(passenger, 1);
 		super.removePassenger(passenger);
+		if (passenger instanceof TamableAnimal ta)
+			ta.setInSittingPose(false);
 		if (level.isClientSide)
 			return;
 		if (transformedVector != null)
@@ -150,7 +155,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		Vec3 transformedVector = getPassengerPosition(passenger, 1);
 		if (transformedVector == null)
 			return;
-		callback.accept(passenger, transformedVector.x, transformedVector.y, transformedVector.z);
+		callback.accept(passenger, transformedVector.x,
+			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) - 1 / 8f, transformedVector.z);
 	}
 
 	protected Vec3 getPassengerPosition(Entity passenger, float partialTicks) {

@@ -52,6 +52,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		SynchedEntityData.defineId(CarriageContraptionEntity.class, AllEntityDataSerializers.CARRIAGE_DATA);
 	private static final EntityDataAccessor<Optional<UUID>> TRACK_GRAPH =
 		SynchedEntityData.defineId(CarriageContraptionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Boolean> SCHEDULED =
+		SynchedEntityData.defineId(CarriageContraptionEntity.class, EntityDataSerializers.BOOLEAN);
 
 	public UUID trainId;
 	public int carriageIndex;
@@ -79,6 +81,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		super.defineSynchedData();
 		entityData.define(CARRIAGE_DATA, new CarriageSyncData());
 		entityData.define(TRACK_GRAPH, Optional.empty());
+		entityData.define(SCHEDULED, false);
 	}
 
 	public void syncCarriage() {
@@ -112,6 +115,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private CarriageSyncData getCarriageData() {
 		return entityData.get(CARRIAGE_DATA);
+	}
+	
+	public boolean hasSchedule() {
+		return entityData.get(SCHEDULED);
 	}
 
 	public static CarriageContraptionEntity create(Level world, CarriageContraption contraption) {
@@ -167,6 +174,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		CarriageSyncData carriageData = getCarriageData();
 
 		if (!level.isClientSide) {
+			entityData.set(SCHEDULED, carriage.train.runtime.getSchedule() != null);
 			if (tickCount % getType().updateInterval() == 0 && carriageData.isDirty()) {
 				entityData.set(CARRIAGE_DATA, null);
 				entityData.set(CARRIAGE_DATA, carriageData);
@@ -257,9 +265,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	public Couple<Boolean> checkConductors() {
 		Couple<Boolean> sides = Couple.create(false, false);
-
 		if (!(contraption instanceof CarriageContraption cc))
 			return sides;
+		
 		sides.setFirst(cc.blazeBurnerConductors.getFirst());
 		sides.setSecond(cc.blazeBurnerConductors.getSecond());
 

@@ -37,6 +37,7 @@ import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.management.schedule.TrainHatArmorLayer;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -352,6 +353,7 @@ public class ClientEvents {
 			EntityRenderDispatcher dispatcher = Minecraft.getInstance()
 				.getEntityRenderDispatcher();
 			CopperBacktankArmorLayer.registerOnAll(dispatcher);
+			TrainHatArmorLayer.registerOnAll(dispatcher);
 		}
 
 		@SubscribeEvent

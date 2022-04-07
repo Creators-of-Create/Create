@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -161,6 +162,8 @@ public class SeatBlock extends Block {
 		seat.setPos(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
 		world.addFreshEntity(seat);
 		entity.startRiding(seat, true);
+		if (entity instanceof TamableAnimal ta)
+			ta.setInSittingPose(true);
 	}
 
 	public DyeColor getColor() {
