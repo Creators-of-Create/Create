@@ -8,11 +8,6 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Couple;
 
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.phys.Vec3;
-
 public class CarriageContraptionInstance extends EntityInstance<CarriageContraptionEntity> implements DynamicInstance {
 
 	private final PoseStack ms = new PoseStack();

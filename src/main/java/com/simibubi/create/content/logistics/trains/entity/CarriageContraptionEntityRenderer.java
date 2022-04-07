@@ -43,8 +43,6 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		if (carriage == null)
 			return;
 
-		boolean usingFlywheel = Backend.isOn();
-
 		Vec3 position = entity.getPosition(partialTicks);
 
 		float viewYRot = entity.getViewYRot(partialTicks);
@@ -55,7 +53,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			if (bogey == null)
 				return;
 
-			if (!usingFlywheel) {
+			if (!Backend.isOn()) {
 				ms.pushPose();
 				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
 
