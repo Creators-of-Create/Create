@@ -39,7 +39,7 @@ public class FlapDisplaySection {
 		this.cycle = cycle;
 		this.hasGap = hasGap;
 		this.singleFlap = singleFlap;
-		this.spinning = new boolean[singleFlap ? 1 : (int) (width / FlapDisplaySection.MONOSPACE)];
+		this.spinning = new boolean[singleFlap ? 1 : Math.max(0, (int) (width / FlapDisplaySection.MONOSPACE))];
 		this.text = Strings.repeat(" ", spinning.length);
 		this.component = null;
 	}
@@ -95,7 +95,7 @@ public class FlapDisplaySection {
 			boolean continueSpin = Create.RANDOM.nextInt(increasingChance * max / 4) != 0;
 			continueSpin &= max > 5 || spinningTicks < 2;
 			spinning[i] &= continueSpin;
-			
+
 			if (i > 0 && Create.RANDOM.nextInt(3) > 0)
 				spinning[i - 1] &= continueSpin;
 			if (i < spinning.length - 1 && Create.RANDOM.nextInt(3) > 0)

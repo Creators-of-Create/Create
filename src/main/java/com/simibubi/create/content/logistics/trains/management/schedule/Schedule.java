@@ -66,10 +66,12 @@ public class Schedule {
 
 	public List<ScheduleEntry> entries;
 	public boolean cyclic;
+	public int savedProgress;
 
 	public Schedule() {
 		entries = new ArrayList<>();
 		cyclic = true;
+		savedProgress = 0;
 	}
 
 	public CompoundTag write() {
@@ -77,6 +79,8 @@ public class Schedule {
 		ListTag list = NBTHelper.writeCompoundList(entries, ScheduleEntry::write);
 		tag.put("Entries", list);
 		tag.putBoolean("Cyclic", cyclic);
+		if (savedProgress > 0)
+			tag.putInt("Progress", savedProgress);
 		return tag;
 	}
 
@@ -84,6 +88,8 @@ public class Schedule {
 		Schedule schedule = new Schedule();
 		schedule.entries = NBTHelper.readCompoundList(tag.getList("Entries", Tag.TAG_COMPOUND), ScheduleEntry::fromTag);
 		schedule.cyclic = tag.getBoolean("Cyclic");
+		if (tag.contains("Progress"))
+			schedule.savedProgress = tag.getInt("Progress");
 		return schedule;
 	}
 

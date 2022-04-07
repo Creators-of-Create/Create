@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ScheduleRuntime {
@@ -31,7 +33,7 @@ public class ScheduleRuntime {
 	Train train;
 	Schedule schedule;
 
-	boolean isAutoSchedule;
+	public boolean isAutoSchedule;
 	public boolean paused;
 	public int currentEntry;
 	public State state;
@@ -173,7 +175,7 @@ public class ScheduleRuntime {
 	public void setSchedule(Schedule schedule, boolean auto) {
 		reset();
 		this.schedule = schedule;
-		currentEntry = 0;
+		currentEntry = Mth.clamp(schedule.savedProgress, 0, schedule.entries.size() - 1);
 		paused = false;
 		isAutoSchedule = auto;
 		train.status.newSchedule();
@@ -186,6 +188,7 @@ public class ScheduleRuntime {
 	}
 
 	public void discardSchedule() {
+		train.navigation.cancelNavigation();
 		reset();
 	}
 
@@ -347,6 +350,22 @@ public class ScheduleRuntime {
 				for (int i = 0; i < readTransits.length; i++)
 					predictionTicks.set(i, readTransits[i]);
 		}
+	}
+
+	public ItemStack returnSchedule() {
+		if (schedule == null)
+			return ItemStack.EMPTY;
+		ItemStack stack = AllItems.SCHEDULE.asStack();
+		CompoundTag nbt = stack.getOrCreateTag();
+		schedule.savedProgress = currentEntry;
+		nbt.put("Schedule", schedule.write());
+		stack = isAutoSchedule ? ItemStack.EMPTY : stack;
+		discardSchedule();
+		return stack;
+	}
+	
+	public void setSchedulePresentClientside(boolean present) {
+		schedule = present ? new Schedule() : null;
 	}
 
 }

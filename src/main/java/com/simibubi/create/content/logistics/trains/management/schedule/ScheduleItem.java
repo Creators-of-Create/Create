@@ -100,11 +100,24 @@ public class ScheduleItem extends Item implements MenuProvider {
 				return InteractionResult.SUCCESS;
 			}
 
+			if (train.runtime.getSchedule() != null) {
+				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+				pPlayer.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
+				return InteractionResult.SUCCESS;
+			}
+
+			if (schedule.entries.isEmpty()) {
+				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+				pPlayer.displayClientMessage(Lang.translate("schedule.no_stops"), true);
+				return InteractionResult.SUCCESS;
+			}
+
 			train.runtime.setSchedule(schedule, false);
 			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
 			pPlayer.displayClientMessage(Lang.translate("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
-
+			pStack.shrink(1);
+			pPlayer.setItemInHand(pUsedHand, pStack.isEmpty() ? ItemStack.EMPTY : pStack);
 		}
 		return InteractionResult.SUCCESS;
 	}

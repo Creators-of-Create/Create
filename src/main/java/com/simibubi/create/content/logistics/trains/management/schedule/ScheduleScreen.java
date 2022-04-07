@@ -72,6 +72,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	private IconButton cyclicButton;
 	private Indicator cyclicIndicator;
 
+	private IconButton resetProgress;
+	private IconButton skipProgress;
+
 	private ScheduleDestination editingDestination;
 	private ScheduleWaitCondition editingCondition;
 	private SelectionScrollInput scrollInput;
@@ -112,6 +115,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			schedule.cyclic = !schedule.cyclic;
 			cyclicIndicator.state = schedule.cyclic ? State.ON : State.OFF;
 		});
+
 		List<Component> tip = cyclicButton.getToolTip();
 		tip.add(Lang.translate("schedule.loop"));
 		tip.add(Lang.translate("schedule.loop1")
@@ -120,6 +124,25 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			.withStyle(ChatFormatting.GRAY));
 
 		addRenderableWidget(cyclicButton);
+
+		resetProgress = new IconButton(leftPos + 45, topPos + 202, AllIcons.I_PRIORITY_VERY_HIGH);
+		resetProgress.withCallback(() -> {
+			schedule.savedProgress = 0;
+			resetProgress.active = false;
+		});
+		resetProgress.active = schedule.savedProgress > 0 && !schedule.entries.isEmpty();
+		resetProgress.setToolTip(Lang.translate("schedule.reset"));
+		addRenderableWidget(resetProgress);
+
+		skipProgress = new IconButton(leftPos + 63, topPos + 202, AllIcons.I_PRIORITY_LOW);
+		skipProgress.withCallback(() -> {
+			schedule.savedProgress++;
+			schedule.savedProgress %= schedule.entries.size();
+			resetProgress.active = schedule.savedProgress > 0;
+		});
+		skipProgress.active = schedule.entries.size() > 1;
+		skipProgress.setToolTip(Lang.translate("schedule.skip"));
+		addRenderableWidget(skipProgress);
 
 		stopEditing();
 		extraAreas = ImmutableList.of(new Rect2i(leftPos + bg.width, topPos + bg.height - 56, 48, 48));
@@ -134,6 +157,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		confirmButton.visible = false;
 		cyclicButton.visible = false;
 		cyclicIndicator.visible = false;
+		skipProgress.visible = false;
+		resetProgress.visible = false;
 		scrollInput = new SelectionScrollInput(leftPos + 56, topPos + 65, 143, 16);
 		scrollInputLabel = new Label(leftPos + 59, topPos + 69, new TextComponent("")).withShadow();
 		editorConfirm = new IconButton(leftPos + 56 + 168, topPos + 65 + 22, AllIcons.I_CONFIRM);
@@ -203,6 +228,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		confirmButton.visible = true;
 		cyclicButton.visible = true;
 		cyclicIndicator.visible = true;
+		skipProgress.visible = true;
+		resetProgress.visible = true;
 		if (editingCondition == null && editingDestination == null)
 			return;
 		removeWidget(scrollInput);
@@ -248,6 +275,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		scroll.tickChaser();
 		for (LerpedFloat lerpedFloat : horizontalScrolls)
 			lerpedFloat.tickChaser();
+
+		schedule.savedProgress =
+			schedule.entries.isEmpty() ? 0 : Mth.clamp(schedule.savedProgress, 0, schedule.entries.size() - 1);
+		resetProgress.active = schedule.savedProgress > 0;
+		skipProgress.active = schedule.entries.size() > 1;
 	}
 
 	@Override
@@ -275,6 +307,17 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		float scrollOffset = -scroll.getValue(partialTicks);
 
 		for (int i = 0; i <= entries.size(); i++) {
+			
+			if (schedule.savedProgress == i && !schedule.entries.isEmpty()) {
+				matrixStack.pushPose();
+				float expectedY = scrollOffset + topPos + yOffset + 4;
+				float actualY = Mth.clamp(expectedY, 49, 197);
+				matrixStack.translate(0, actualY, 0);
+				(expectedY == actualY ? AllGuiTextures.SCHEDULE_POINTER : AllGuiTextures.SCHEDULE_POINTER_OFFSCREEN)
+					.render(matrixStack, leftPos, 0);
+				matrixStack.popPose();
+			}
+
 			startStencil(matrixStack, leftPos + 16, topPos + 16, 220, 173);
 			matrixStack.pushPose();
 			matrixStack.translate(0, scrollOffset, 0);
@@ -431,7 +474,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		matrixStack.popPose();
 
 		if (xOffset + 16 > cardWidth - 26) {
-			TransformStack.cast(matrixStack).rotateZ(-90);
+			TransformStack.cast(matrixStack)
+				.rotateZ(-90);
 			Matrix4f m = matrixStack.last()
 				.pose();
 			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
@@ -854,7 +898,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
-			.GuiRenderBuilder>at(leftPos + AllGuiTextures.SCHEDULE.width, topPos + AllGuiTextures.SCHEDULE.height - 56, -200)
+			.GuiRenderBuilder>at(leftPos + AllGuiTextures.SCHEDULE.width, topPos + AllGuiTextures.SCHEDULE.height - 56,
+				-200)
 			.scale(3)
 			.render(matrixStack);
 		action(matrixStack, mouseX, mouseY, -1);

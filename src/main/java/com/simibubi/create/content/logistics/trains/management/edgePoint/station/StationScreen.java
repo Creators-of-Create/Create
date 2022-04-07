@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.gui.components.EditBox;
@@ -26,7 +27,7 @@ public class StationScreen extends AbstractStationScreen {
 	private EditBox trainNameBox;
 	private IconButton newTrainButton;
 	private IconButton disassembleTrainButton;
-	private IconButton openScheduleButton;
+	private IconButton dropScheduleButton;
 
 	private int leavingAnimation;
 	private LerpedFloat trainPosition;
@@ -69,20 +70,23 @@ public class StationScreen extends AbstractStationScreen {
 		};
 
 		newTrainButton = new WideIconButton(x + 84, y + 65, AllGuiTextures.I_NEW_TRAIN);
-		newTrainButton.setToolTip(new TextComponent("New Train"));
+		newTrainButton.setToolTip(Lang.translate("station.create_train"));
 		newTrainButton.withCallback(assemblyCallback);
 		addRenderableWidget(newTrainButton);
 
 		disassembleTrainButton = new WideIconButton(x + 94, y + 65, AllGuiTextures.I_DISASSEMBLE_TRAIN);
 		disassembleTrainButton.active = false;
 		disassembleTrainButton.visible = false;
+		disassembleTrainButton.setToolTip(Lang.translate("station.disassemble_train"));
 		disassembleTrainButton.withCallback(assemblyCallback);
 		addRenderableWidget(disassembleTrainButton);
 
-		openScheduleButton = new IconButton(x + 73, y + 65, AllIcons.I_VIEW_SCHEDULE);
-		openScheduleButton.active = false;
-		openScheduleButton.visible = false;
-		addRenderableWidget(openScheduleButton);
+		dropScheduleButton = new IconButton(x + 73, y + 65, AllIcons.I_VIEW_SCHEDULE);
+		dropScheduleButton.active = false;
+		dropScheduleButton.visible = false;
+		dropScheduleButton
+			.withCallback(() -> AllPackets.channel.sendToServer(StationEditPacket.dropSchedule(te.getBlockPos())));
+		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
 		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 20, 10, new TextComponent(""));
@@ -133,8 +137,8 @@ public class StationScreen extends AbstractStationScreen {
 				newTrainButton.visible = false;
 				disassembleTrainButton.active = false;
 				disassembleTrainButton.visible = true;
-				openScheduleButton.active = false;
-				openScheduleButton.visible = true;
+				dropScheduleButton.active = te.trainHasSchedule;
+				dropScheduleButton.visible = true;
 
 				trainNameBox.active = true;
 				trainNameBox.setValue(imminentTrain.name.getString());
@@ -164,8 +168,8 @@ public class StationScreen extends AbstractStationScreen {
 
 			displayedTrain = new WeakReference<>(null);
 			disassembleTrainButton.visible = false;
-			openScheduleButton.active = false;
-			openScheduleButton.visible = false;
+			dropScheduleButton.active = false;
+			dropScheduleButton.visible = false;
 			return;
 		}
 
@@ -176,7 +180,14 @@ public class StationScreen extends AbstractStationScreen {
 
 		boolean trainAtStation = trainPresent();
 		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble;
-		openScheduleButton.active = train.runtime.getSchedule() != null;
+		dropScheduleButton.active = te.trainHasSchedule;
+		
+		if (te.trainHasSchedule)
+			dropScheduleButton.setToolTip(
+				Lang.translate(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
+		else
+			dropScheduleButton.getToolTip()
+				.clear();
 
 		float f = trainAtStation ? 0 : (float) (train.navigation.distanceToDestination / 30f);
 		trainPosition.setValue(targetPos - (targetPos + trainIconWidth) * f);

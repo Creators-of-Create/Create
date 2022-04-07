@@ -69,7 +69,7 @@ public class DataGathererTileEntity extends SmartTileEntity {
 		BlockPos sourcePosition = getSourcePosition();
 		BlockPos targetPosition = getTargetPosition();
 
-		if (!level.isAreaLoaded(targetPosition, 1) || !level.isAreaLoaded(sourcePosition, 1))
+		if (!level.isLoaded(targetPosition) || !level.isLoaded(sourcePosition))
 			return;
 
 		DataGathererTarget target = AllDataGathererBehaviours.targetOf(level, targetPosition);

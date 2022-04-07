@@ -2,8 +2,11 @@ package com.simibubi.create.content.logistics.trains.management.display;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
@@ -12,7 +15,11 @@ import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -24,6 +31,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -61,7 +69,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 
 	@Override
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		return false;
+		return super.areStatesKineticallyEquivalent(oldState, newState);
 	}
 
 	@Override
@@ -111,6 +119,12 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
+
+		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+		if (placementHelper.matchesItem(heldItem))
+			return placementHelper.getOffset(player, world, state, pos, ray)
+				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+
 		FlapDisplayTileEntity flapTe = getTileEntity(world, pos);
 
 		if (flapTe == null)
@@ -191,7 +205,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
-					if (!level.isAreaLoaded(currentPos, 1))
+					if (!level.isLoaded(currentPos))
 						break;
 
 					BlockState other1 = currentPos.equals(pos) ? state : level.getBlockState(currentPos);
@@ -216,6 +230,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+		super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
 		if (pOldState.getBlock() == this)
 			return;
 		LevelTickAccess<Block> blockTicks = pLevel.getBlockTicks();
@@ -238,10 +253,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-		BlockState newState = updatedShapeInner(state, pDirection, pNeighborState, pLevel, pCurrentPos);
-		if (pLevel instanceof Level level)
-			KineticTileEntity.switchToBlockState(level, pCurrentPos, newState);
-		return newState;
+		return updatedShapeInner(state, pDirection, pNeighborState, pLevel, pCurrentPos);
 	}
 
 	private BlockState updatedShapeInner(BlockState state, Direction pDirection, BlockState pNeighborState,
@@ -294,6 +306,36 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			BlockState adjacent = pLevel.getBlockState(relative);
 			if (canConnect(pState, adjacent))
 				KineticTileEntity.switchToBlockState(pLevel, relative, updateColumn(pLevel, relative, adjacent, false));
+		}
+	}
+
+	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+
+	@MethodsReturnNonnullByDefault
+	private static class PlacementHelper implements IPlacementHelper {
+		@Override
+		public Predicate<ItemStack> getItemPredicate() {
+			return AllBlocks.FLAP_DISPLAY::isIn;
+		}
+
+		@Override
+		public Predicate<BlockState> getStatePredicate() {
+			return AllBlocks.FLAP_DISPLAY::has;
+		}
+
+		@Override
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
+			BlockHitResult ray) {
+			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(),
+				state.getValue(FlapDisplayBlock.HORIZONTAL_FACING)
+					.getAxis(),
+				dir -> world.getBlockState(pos.relative(dir))
+					.getMaterial()
+					.isReplaceable());
+
+			return directions.isEmpty() ? PlacementOffset.fail()
+				: PlacementOffset.success(pos.relative(directions.get(0)),
+					s -> s.setValue(HORIZONTAL_FACING, state.getValue(FlapDisplayBlock.HORIZONTAL_FACING)));
 		}
 	}
 

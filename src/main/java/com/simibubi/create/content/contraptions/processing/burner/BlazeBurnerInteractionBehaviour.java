@@ -28,9 +28,10 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
 		ItemStack itemInHand = player.getItemInHand(activeHand);
-		if (!AllItems.SCHEDULE.isIn(itemInHand))
-			return false;
+
 		if (!(contraptionEntity instanceof CarriageContraptionEntity carriageEntity))
+			return false;
+		if (activeHand == InteractionHand.OFF_HAND)
 			return false;
 		Contraption contraption = carriageEntity.getContraption();
 		if (!(contraption instanceof CarriageContraption carriageContraption))
@@ -44,26 +45,55 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 
 		Direction assemblyDirection = carriageContraption.getAssemblyDirection();
 		for (Direction direction : Iterate.directionsInAxis(assemblyDirection.getAxis())) {
-			if (carriageContraption.inControl(localPos, direction)) {
+			if (!carriageContraption.inControl(localPos, direction))
+				continue;
 
-				Schedule schedule = ScheduleItem.getSchedule(itemInHand);
-				if (schedule == null)
-					return false;
-				Train train = carriageEntity.getCarriage().train;
-				if (train == null)
-					return false;
-				if (train.heldForAssembly) {
-					player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
+			Train train = carriageEntity.getCarriage().train;
+			if (train == null)
+				return false;
+			if (player.level.isClientSide)
+				return true;
+
+			if (train.runtime.getSchedule() != null) {
+				if (!itemInHand.isEmpty()) {
 					AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+					player.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
 					return true;
 				}
 
-				train.runtime.setSchedule(schedule, false);
-				AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
-				player.displayClientMessage(Lang.translate("schedule.applied_to_train")
-					.withStyle(ChatFormatting.GREEN), true);
+				AllSoundEvents.playItemPickup(player);
+				player.displayClientMessage(Lang.translate(
+					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
+					true);
+				player.setItemInHand(activeHand, train.runtime.returnSchedule());
 				return true;
 			}
+
+			if (!AllItems.SCHEDULE.isIn(itemInHand))
+				return true;
+
+			Schedule schedule = ScheduleItem.getSchedule(itemInHand);
+			if (schedule == null)
+				return false;
+			if (train.heldForAssembly) {
+				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+				player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
+				return true;
+			}
+
+			if (schedule.entries.isEmpty()) {
+				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+				player.displayClientMessage(Lang.translate("schedule.no_stops"), true);
+				return true;
+			}
+
+			train.runtime.setSchedule(schedule, false);
+			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
+			player.displayClientMessage(Lang.translate("schedule.applied_to_train")
+				.withStyle(ChatFormatting.GREEN), true);
+			itemInHand.shrink(1);
+			player.setItemInHand(activeHand, itemInHand.isEmpty() ? ItemStack.EMPTY : itemInHand);
+			return true;
 		}
 
 		player.displayClientMessage(Lang.translate("schedule.non_controlling_seat"), true);

@@ -1383,9 +1383,15 @@
 	"create.schedule.loop": "Loop Forever",
 	"create.schedule.loop1": "Schedule starts over",
 	"create.schedule.loop2": "when completed",
+	"create.schedule.reset": "Reset Progress",
+	"create.schedule.skip": "Skip current Stop",
 	"create.schedule.train_still_assembling": "Confirm Train Assembly in the Station UI first",
 	"create.schedule.applied_to_train": "Train is now following this Schedule",
 	"create.schedule.non_controlling_seat": "Conductor needs to sit in front of a Controls block",
+	"create.schedule.remove_with_empty_hand": "Remove current Schedule with an Empty Hand",
+	"create.schedule.auto_removed_from_train": "Auto-Schedule discarded",
+	"create.schedule.removed_from_train": "Schedule retrieved from Train",
+	"create.schedule.no_stops": "This Schedule does not have any Stops yet",
 
 	"create.track.selection_cleared": "Selection Cleared",
 	"create.track.valid_connection": "Can Connect ✔",
@@ -1401,6 +1407,11 @@
 	"create.track.leave_slope_ascending": "Cannot leave this slope while ascending",
 	"create.track.leave_slope_descending": "Cannot leave this slope while descending",
 	"create.track.turn_90": "Can only turn up to 90 Degrees",
+
+	"create.station.create_train": "Create new Train",
+	"create.station.disassemble_train": "Disassemble Train",
+	"create.station.remove_schedule": "Retrieve Schedule",
+	"create.station.remove_auto_schedule": "Discard Auto-Schedule",
 
 	"create.train_assembly.too_many_bogeys": "Too many Bogeys attached: %1$s",
 	"create.train_assembly.frontmost_bogey_at_station": "Frontmost Bogey must be at Station Marker",

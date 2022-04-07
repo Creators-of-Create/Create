@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 553",
+	"_": "Missing Localizations: 563",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1384,9 +1384,15 @@
 	"create.schedule.loop": "UNLOCALIZED: Loop Forever",
 	"create.schedule.loop1": "UNLOCALIZED: Schedule starts over",
 	"create.schedule.loop2": "UNLOCALIZED: when completed",
+	"create.schedule.reset": "UNLOCALIZED: Reset Progress",
+	"create.schedule.skip": "UNLOCALIZED: Skip current Stop",
 	"create.schedule.train_still_assembling": "UNLOCALIZED: Confirm Train Assembly in the Station UI first",
 	"create.schedule.applied_to_train": "UNLOCALIZED: Train is now following this Schedule",
 	"create.schedule.non_controlling_seat": "UNLOCALIZED: Conductor needs to sit in front of a Controls block",
+	"create.schedule.remove_with_empty_hand": "UNLOCALIZED: Remove current Schedule with an Empty Hand",
+	"create.schedule.auto_removed_from_train": "UNLOCALIZED: Auto-Schedule discarded",
+	"create.schedule.removed_from_train": "UNLOCALIZED: Schedule retrieved from Train",
+	"create.schedule.no_stops": "UNLOCALIZED: This Schedule does not have any Stops yet",
 
 	"create.track.selection_cleared": "UNLOCALIZED: Selection Cleared",
 	"create.track.valid_connection": "UNLOCALIZED: Can Connect ✔",
@@ -1402,6 +1408,11 @@
 	"create.track.leave_slope_ascending": "UNLOCALIZED: Cannot leave this slope while ascending",
 	"create.track.leave_slope_descending": "UNLOCALIZED: Cannot leave this slope while descending",
 	"create.track.turn_90": "UNLOCALIZED: Can only turn up to 90 Degrees",
+
+	"create.station.create_train": "UNLOCALIZED: Create new Train",
+	"create.station.disassemble_train": "UNLOCALIZED: Disassemble Train",
+	"create.station.remove_schedule": "UNLOCALIZED: Retrieve Schedule",
+	"create.station.remove_auto_schedule": "UNLOCALIZED: Discard Auto-Schedule",
 
 	"create.train_assembly.too_many_bogeys": "UNLOCALIZED: Too many Bogeys attached: %1$s",
 	"create.train_assembly.frontmost_bogey_at_station": "UNLOCALIZED: Frontmost Bogey must be at Station Marker",

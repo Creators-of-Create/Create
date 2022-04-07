@@ -114,6 +114,8 @@ public enum AllGuiTextures implements ScreenElement {
 	SCHEDULE_EDITOR_INACTIVE_SLOT("schedule_2", 0, 91, 18, 18),
 	SCHEDULE_EDITOR_SECOND_LINE("schedule_2", 20, 91, 124, 18),
 	SCHEDULE_EDITOR_DIVIDER("schedule_2", 145, 91, 4, 18),
+	SCHEDULE_POINTER("schedule", 185, 239, 21, 16),
+	SCHEDULE_POINTER_OFFSCREEN("schedule", 171, 239, 13, 16),
 
 	STATION("schedule_2", 0, 111, 200, 127),
 	STATION_ASSEMBLING("assemble", 200, 178),

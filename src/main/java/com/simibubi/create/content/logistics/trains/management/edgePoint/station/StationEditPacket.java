@@ -4,18 +4,29 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class StationEditPacket extends TileEntityConfigurationPacket<StationTileEntity> {
 
+	boolean dropSchedule;
 	boolean assemblyMode;
 	Boolean tryAssemble;
 	String name;
+
+	public static StationEditPacket dropSchedule(BlockPos pos) {
+		StationEditPacket packet = new StationEditPacket(pos);
+		packet.dropSchedule = true;
+		return packet;
+	}
 
 	public static StationEditPacket tryAssemble(BlockPos pos) {
 		StationEditPacket packet = new StationEditPacket(pos);
@@ -47,6 +58,9 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 
 	@Override
 	protected void writeSettings(FriendlyByteBuf buffer) {
+		buffer.writeBoolean(dropSchedule);
+		if (dropSchedule)
+			return;
 		buffer.writeBoolean(tryAssemble != null);
 		if (tryAssemble != null) {
 			buffer.writeBoolean(tryAssemble);
@@ -58,6 +72,10 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 
 	@Override
 	protected void readSettings(FriendlyByteBuf buffer) {
+		if (buffer.readBoolean()) {
+			dropSchedule = true;
+			return;
+		}
 		name = "";
 		if (buffer.readBoolean()) {
 			tryAssemble = buffer.readBoolean();
@@ -72,6 +90,11 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 		Level level = te.getLevel();
 		BlockPos blockPos = te.getBlockPos();
 		BlockState blockState = level.getBlockState(blockPos);
+
+		if (dropSchedule) {
+			scheduleDropRequested(player, te);
+			return;
+		}
 
 		if (!name.isBlank()) {
 			GlobalStation station = te.getStation();
@@ -92,7 +115,7 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			if (tryAssemble)
 				te.assemble(player.getUUID());
 			else {
-				if (disassembleAndEnterMode(te))
+				if (disassembleAndEnterMode(player, te))
 					te.refreshAssemblyInfo();
 			}
 			return;
@@ -103,7 +126,7 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 		BlockState newState = blockState.cycle(StationBlock.ASSEMBLING);
 		Boolean nowAssembling = newState.getValue(StationBlock.ASSEMBLING);
 		if (nowAssembling) {
-			if (!disassembleAndEnterMode(te))
+			if (!disassembleAndEnterMode(player, te))
 				return;
 		} else {
 			te.cancelAssembly();
@@ -116,15 +139,44 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			te.refreshAssemblyInfo();
 	}
 
-	private boolean disassembleAndEnterMode(StationTileEntity te) {
+	private void scheduleDropRequested(ServerPlayer sender, StationTileEntity te) {
+		GlobalStation station = te.getStation();
+		if (station == null)
+			return;
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return;
+		ItemStack schedule = train.runtime.returnSchedule();
+		dropSchedule(sender, te, schedule);
+	}
+
+	private boolean disassembleAndEnterMode(ServerPlayer sender, StationTileEntity te) {
 		GlobalStation station = te.getStation();
 		if (station != null) {
 			Train train = station.getPresentTrain();
 			BlockPos trackPosition = te.edgePoint.getGlobalPosition();
+			ItemStack schedule = train == null ? ItemStack.EMPTY : train.runtime.returnSchedule();
 			if (train != null && !train.disassemble(te.getAssemblyDirection(), trackPosition.above()))
 				return false;
+			dropSchedule(sender, te, schedule);
 		}
 		return te.tryEnterAssemblyMode();
+	}
+
+	private void dropSchedule(ServerPlayer sender, StationTileEntity te, ItemStack schedule) {
+		if (schedule.isEmpty())
+			return;
+		if (sender.getMainHandItem()
+			.isEmpty()) {
+			sender.getInventory()
+				.placeItemBackInInventory(schedule);
+			return;
+		}
+		Vec3 v = VecHelper.getCenterOf(te.getBlockPos());
+		ItemEntity itemEntity = new ItemEntity(te.getLevel(), v.x, v.y, v.z, schedule);
+		itemEntity.setDeltaMovement(Vec3.ZERO);
+		te.getLevel()
+			.addFreshEntity(itemEntity);
 	}
 
 	@Override

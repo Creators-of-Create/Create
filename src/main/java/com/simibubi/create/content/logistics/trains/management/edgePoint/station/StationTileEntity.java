@@ -12,6 +12,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
@@ -28,11 +30,14 @@ import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
+import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -43,6 +48,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -50,6 +56,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
 
 public class StationTileEntity extends SmartTileEntity {
@@ -58,18 +69,24 @@ public class StationTileEntity extends SmartTileEntity {
 
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
+	protected IItemHandlerModifiable autoSchedule;
+	protected LazyOptional<IItemHandler> capability;
 
 	// for display
 	UUID imminentTrain;
 	boolean trainPresent;
 	boolean trainBackwards;
 	boolean trainCanDisassemble;
+	boolean trainHasSchedule;
+	boolean trainHasAutoSchedule;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		setLazyTickRate(20);
 		lastException = null;
 		failedCarriageIndex = -1;
+		autoSchedule = new StationInventory();
+		capability = LazyOptional.of(() -> autoSchedule);
 	}
 
 	@Override
@@ -85,6 +102,8 @@ public class StationTileEntity extends SmartTileEntity {
 		super.read(tag, clientPacket);
 		invalidateRenderBoundingBox();
 
+		autoSchedule.setStackInSlot(0, ItemStack.of(tag.getCompound("HeldItem")));
+
 		if (!clientPacket)
 			return;
 		if (!tag.contains("ImminentTrain")) {
@@ -96,15 +115,19 @@ public class StationTileEntity extends SmartTileEntity {
 		}
 
 		imminentTrain = tag.getUUID("ImminentTrain");
-		trainPresent = tag.getBoolean("TrainPresent");
-		trainCanDisassemble = tag.getBoolean("TrainCanDisassemble");
-		trainBackwards = tag.getBoolean("TrainBackwards");
+		trainPresent = tag.contains("TrainPresent");
+		trainCanDisassemble = tag.contains("TrainCanDisassemble");
+		trainBackwards = tag.contains("TrainBackwards");
+		trainHasSchedule = tag.contains("TrainHasSchedule");
+		trainHasAutoSchedule = tag.contains("TrainHasAutoSchedule");
 	}
 
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		AssemblyException.write(tag, lastException);
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
+		tag.put("HeldItem", autoSchedule.getStackInSlot(0)
+			.serializeNBT());
 		super.write(tag, clientPacket);
 
 		if (!clientPacket)
@@ -113,9 +136,17 @@ public class StationTileEntity extends SmartTileEntity {
 			return;
 
 		tag.putUUID("ImminentTrain", imminentTrain);
-		tag.putBoolean("TrainPresent", trainPresent);
-		tag.putBoolean("TrainCanDisassemble", trainCanDisassemble);
-		tag.putBoolean("TrainBackwards", trainBackwards);
+
+		if (trainPresent)
+			NBTHelper.putMarker(tag, "TrainPresent");
+		if (trainCanDisassemble)
+			NBTHelper.putMarker(tag, "TrainCanDisassemble");
+		if (trainBackwards)
+			NBTHelper.putMarker(tag, "TrainBackwards");
+		if (trainHasSchedule)
+			NBTHelper.putMarker(tag, "TrainHasSchedule");
+		if (trainHasAutoSchedule)
+			NBTHelper.putMarker(tag, "TrainHasAutoSchedule");
 	}
 
 	@Nullable
@@ -157,13 +188,24 @@ public class StationTileEntity extends SmartTileEntity {
 		boolean trainPresent = imminentTrain != null && imminentTrain.getCurrentStation() == station;
 		boolean canDisassemble = trainPresent && imminentTrain.canDisassemble();
 		UUID imminentID = imminentTrain != null ? imminentTrain.id : null;
+		boolean trainHasSchedule = trainPresent && imminentTrain.runtime.getSchedule() != null;
+		boolean trainHasAutoSchedule = trainHasSchedule && imminentTrain.runtime.isAutoSchedule;
+		boolean newlyArrived = this.trainPresent != trainPresent;
 
-		if (this.trainPresent != trainPresent || this.trainCanDisassemble != canDisassemble
-			|| !Objects.equals(imminentID, this.imminentTrain)) {
+		if (newlyArrived)
+			applyAutoSchedule();
+
+		if (newlyArrived || this.trainCanDisassemble != canDisassemble
+			|| !Objects.equals(imminentID, this.imminentTrain) || this.trainHasSchedule != trainHasSchedule
+			|| this.trainHasAutoSchedule != trainHasAutoSchedule) {
+
 			this.imminentTrain = imminentID;
 			this.trainPresent = trainPresent;
 			this.trainCanDisassemble = canDisassemble;
 			this.trainBackwards = imminentTrain != null && imminentTrain.currentlyBackwards;
+			this.trainHasSchedule = trainHasSchedule;
+			this.trainHasAutoSchedule = trainHasAutoSchedule;
+
 			notifyUpdate();
 		}
 	}
@@ -529,6 +571,53 @@ public class StationTileEntity extends SmartTileEntity {
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition, edgePoint.getGlobalPosition()).inflate(2);
+	}
+
+	public ItemStack getAutoSchedule() {
+		return autoSchedule.getStackInSlot(0);
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (isItemHandlerCap(cap))
+			return capability.cast();
+		return super.getCapability(cap, side);
+	}
+
+	private void applyAutoSchedule() {
+		ItemStack stack = getAutoSchedule();
+		if (!AllItems.SCHEDULE.isIn(stack))
+			return;
+		Schedule schedule = ScheduleItem.getSchedule(stack);
+		if (schedule == null || schedule.entries.isEmpty())
+			return;
+		GlobalStation station = getStation();
+		if (station == null)
+			return;
+		Train imminentTrain = station.getImminentTrain();
+		if (imminentTrain == null || imminentTrain.getCurrentStation() != station)
+			return;
+		imminentTrain.runtime.setSchedule(schedule, true);
+		AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 1, 1);
+	}
+
+	private class StationInventory extends ItemStackHandler {
+
+		public StationInventory() {
+			super(1);
+		}
+
+		@Override
+		protected void onContentsChanged(int slot) {
+			applyAutoSchedule();
+			sendData();
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			return super.isItemValid(slot, stack) && AllItems.SCHEDULE.isIn(stack);
+		}
+
 	}
 
 }

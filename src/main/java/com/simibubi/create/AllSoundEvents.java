@@ -261,6 +261,11 @@ public class AllSoundEvents {
 	public static SoundEntryProvider provider(DataGenerator generator) {
 		return new SoundEntryProvider(generator);
 	}
+	
+	public static void playItemPickup(Player player) {
+		player.level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+			1f + Create.RANDOM.nextFloat());
+	}
 
 //	@SubscribeEvent
 //	public static void cancelSubtitlesOfCompoundedSounds(PlaySoundEvent event) {
