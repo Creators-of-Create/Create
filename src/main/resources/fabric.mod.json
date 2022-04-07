@@ -51,11 +51,6 @@
     "milk": ">=${milk_lib_version}"
   },
 
-  "provides": [
-    "com_electronwill_night-config_core",
-    "com_electronwill_night-config_toml"
-  ],
-
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/class_1688": ["com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions"]
