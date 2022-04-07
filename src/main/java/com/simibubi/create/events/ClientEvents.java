@@ -212,7 +212,6 @@ public class ClientEvents {
 		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
 		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
-		// LightVolumeDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 

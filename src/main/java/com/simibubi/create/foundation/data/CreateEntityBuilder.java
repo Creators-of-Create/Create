@@ -42,7 +42,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	}
 
 	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory, boolean renderNormally) {
-		return instance(instanceFactory, be -> true);
+		return instance(instanceFactory, be -> renderNormally);
 	}
 
 	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory, NonNullPredicate<T> renderNormally) {

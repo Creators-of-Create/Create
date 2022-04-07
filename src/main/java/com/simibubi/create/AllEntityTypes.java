@@ -16,8 +16,10 @@ import com.simibubi.create.content.curiosities.weapons.PotatoProjectileEntity;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderer;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntityRenderer;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionInstance;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.utility.Lang;
+import com.tterrag.registrate.builders.EntityBuilder;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
@@ -33,15 +35,20 @@ import net.minecraft.world.entity.MobCategory;
 public class AllEntityTypes {
 
 	public static final EntityEntry<OrientedContraptionEntity> ORIENTED_CONTRAPTION = contraption("contraption",
-		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true);
+		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true)
+		.register();
 	public static final EntityEntry<ControlledContraptionEntity> CONTROLLED_CONTRAPTION =
 		contraption("stationary_contraption", ControlledContraptionEntity::new, () -> ContraptionEntityRenderer::new,
-			20, 40, false);
+			20, 40, false)
+		.register();
 	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
-		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false);
+		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false)
+		.register();
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
-			() -> CarriageContraptionEntityRenderer::new, 15, 3, true);
+			() -> CarriageContraptionEntityRenderer::new, 15, 3, true)
+		.instance(() -> CarriageContraptionInstance::new)
+		.register();
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 		register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new, MobCategory.MISC, 10,
@@ -61,11 +68,11 @@ public class AllEntityTypes {
 
 	//
 
-	private static <T extends Entity> EntityEntry<T> contraption(String name, EntityFactory<T> factory,
+	private static <T extends Entity> CreateEntityBuilder<T, ?> contraption(String name, EntityFactory<T> factory,
 		NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer, int range,
 		int updateFrequency, boolean sendVelocity) {
 		return register(name, factory, renderer, MobCategory.MISC, range, updateFrequency, sendVelocity, true,
-			AbstractContraptionEntity::build).register();
+			AbstractContraptionEntity::build);
 	}
 
 	private static <T extends Entity> CreateEntityBuilder<T, ?> register(String name, EntityFactory<T> factory,
