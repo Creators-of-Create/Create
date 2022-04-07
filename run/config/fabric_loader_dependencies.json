@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "overrides": {
+    "forgeconfigapiport": {
+      "-depends": {
+        "com_electronwill_night-config_core": "",
+        "com_electronwill_night-config_toml": ""
+      }
+    }
+  }
+}

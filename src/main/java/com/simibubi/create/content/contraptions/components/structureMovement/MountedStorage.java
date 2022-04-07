@@ -11,14 +11,15 @@ import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
@@ -101,15 +102,24 @@ public class MountedStorage {
 		}
 
 		// serialization not accessible -> fill into a serializable handler
-		if (teHandler.supportsExtraction() && teHandler.supportsInsertion()) {
+		if (teHandler instanceof InventoryStorage inv && teHandler.supportsInsertion() && teHandler.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
-				List<ItemStack> stacks = TransferUtil.getAllItems(teHandler);
-				if (TransferUtil.clearStorage(teHandler)) {
-					handler = new ItemStackHandler(stacks.toArray(ItemStack[]::new));
-					t.commit();
-					valid = true;
-					return;
+				List<SingleSlotStorage<ItemVariant>> slots = inv.getSlots();
+				ItemStack[] stacks = new ItemStack[slots.size()];
+				for (int i = 0; i < slots.size(); i++) {
+					SingleSlotStorage<ItemVariant> slot = slots.get(i);
+					if (slot.isResourceBlank()) {
+						stacks[i] = ItemStack.EMPTY;
+						continue;
+					}
+					long contained = slot.getAmount();
+					ItemVariant variant = slot.getResource();
+					long extracted = slot.extract(variant, contained, t);
+					if (extracted != contained) return; // can't extract it all for whatever reason - that's bad, give up
+					stacks[i] = variant.toStack((int) extracted);
 				}
+				handler = new ItemStackHandler(stacks);
+				valid = true;
 			}
 		}
 	}
@@ -135,7 +145,14 @@ if (te instanceof ChestBlockEntity) {
 		}
 
 		Storage<ItemVariant> teHandler = TransferUtil.getItemStorage(te);
-		StorageUtil.move(handler, teHandler, v -> true, Long.MAX_VALUE, null);
+		if (teHandler != null && teHandler.supportsInsertion()) {
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (ItemStack stack : handler.stacks) {
+					if (stack.isEmpty()) continue;
+					teHandler.insert(ItemVariant.of(stack), stack.getCount(), t);
+				}
+			}
+		}
 	}
 
 	public Storage<ItemVariant> getItemHandler() {
