@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
@@ -147,10 +148,16 @@ if (te instanceof ChestBlockEntity) {
 		Storage<ItemVariant> teHandler = TransferUtil.getItemStorage(te);
 		if (teHandler != null && teHandler.supportsInsertion()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
+				for (StorageView<ItemVariant> view : teHandler.iterable(t)) {
+					// we need to remove whatever is in there to fill with our modified contents
+					if (view.isResourceBlank()) continue;
+					view.extract(view.getResource(), view.getAmount(), t);
+				}
 				for (ItemStack stack : handler.stacks) {
 					if (stack.isEmpty()) continue;
 					teHandler.insert(ItemVariant.of(stack), stack.getCount(), t);
 				}
+				t.commit();
 			}
 		}
 	}
