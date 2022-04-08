@@ -585,7 +585,7 @@
 	"item.create.crushed_tin_ore": "분쇄된 주석 광석",
 	"item.create.crushed_uranium_ore": "분쇄된 우라늄 광석",
 	"item.create.crushed_zinc_ore": "분쇄된 아연 광석",
-	"item.create.debris_shield": "UNLOCALIZED: Debris Shield",
+	"item.create.debris_cover": "UNLOCALIZED: Debris Cover",
 	"item.create.diving_boots": "다이빙 부츠",
 	"item.create.diving_helmet": "다이빙 헬멧",
 	"item.create.dough": "반죽",
@@ -1257,15 +1257,15 @@
 	"create.weighted_ejector.targeting": "[%1$s,%2$s,%3$s]에다 투척합니다",
 	"create.weighted_ejector.stack_size": "투척하는 아이템의 수량",
 
-	"create.logistics.has_debris_shield": "UNLOCALIZED: Accepts Dropped Items",
+	"create.logistics.has_debris_cover": "UNLOCALIZED: Accepts Dropped Items",
 	"create.logistics.when_multiple_outputs_available": "여러 출력구가 있을 때",
 
 	"create.mechanical_arm.selection_mode.round_robin": "돌아가며 처리",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "돌아가며 처리(강제적)",
 	"create.mechanical_arm.selection_mode.prefer_first": "설정 순서 우선시",
 
-	"create.debris_shield.selection_mode.open": "UNLOCALIZED: Yes",
-	"create.debris_shield.selection_mode.shielded": "UNLOCALIZED: No",
+	"create.debris_cover.selection_mode.uncovered": "UNLOCALIZED: Yes",
+	"create.debris_cover.selection_mode.covered": "UNLOCALIZED: No",
 
 	"create.tunnel.selection_mode.split": "분할",
 	"create.tunnel.selection_mode.forced_split": "분할(강제적)",
@@ -1503,10 +1503,10 @@
 	"item.create.wrench.tooltip.control2": "웅크린 상태에서 우클릭",
 	"item.create.wrench.tooltip.action2": "_장치_를 _해체_하고 _즉시_ _보관함_으로 넣습니다.",
 
-	"item.create.debris_shield.tooltip": "UNLOCALIZED: DEBRIS SHIELD",
-	"item.create.debris_shield.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
-	"item.create.debris_shield.tooltip.condition1": "UNLOCALIZED: When Held",
-	"item.create.debris_shield.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
+	"item.create.debris_cover.tooltip": "UNLOCALIZED: DEBRIS COVER",
+	"item.create.debris_cover.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
+	"item.create.debris_cover.tooltip.condition1": "UNLOCALIZED: When Held",
+	"item.create.debris_cover.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
 
 	"block.create.nozzle.tooltip": "NOZZLE",
 	"block.create.nozzle.tooltip.summary": "선풍기 _앞_에 붙여 선풍기의 효과를 _전방향_으로 _확대_합니다.",

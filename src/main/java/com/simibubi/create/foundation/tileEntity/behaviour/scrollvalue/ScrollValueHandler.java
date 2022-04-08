@@ -48,7 +48,7 @@ public class ScrollValueHandler {
 			return false;
 		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return false;
-		if (scrolling.needsDebrisShield && !AllItems.DEBRIS_SHIELD.isIn(mc.player.getMainHandItem()))
+		if (scrolling.needsDebrisCover && !AllItems.DEBRIS_COVER.isIn(mc.player.getMainHandItem()))
 			return false;
 
 		passiveScrollDirection = (float) -delta;

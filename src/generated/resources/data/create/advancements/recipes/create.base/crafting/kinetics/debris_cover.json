@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/debris_shield"
+      "create:crafting/kinetics/debris_cover"
     ]
   },
   "criteria": {
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/debris_shield"
+        "recipe": "create:crafting/kinetics/debris_cover"
       }
     }
   },

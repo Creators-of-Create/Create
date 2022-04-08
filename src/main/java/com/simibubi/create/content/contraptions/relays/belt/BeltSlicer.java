@@ -9,7 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldHandler;
+import com.simibubi.create.content.contraptions.debrisCover.DebrisCoverHandler;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
@@ -245,7 +245,7 @@ public class BeltSlicer {
 		if (beltLength == BeltConnectorItem.maxLength())
 			return InteractionResult.FAIL;
 
-		DebrisShieldHandler.SelectionMode selectionMode = controllerTE.debrisShieldHandler.getShielded();
+		DebrisCoverHandler.SelectionMode selectionMode = controllerTE.debrisCoverHandler.getCovered();
 		BlockPos beltVector = new BlockPos(BeltHelper.getBeltVector(state));
 		BeltPart part = state.getValue(BeltBlock.PART);
 		Direction facing = state.getValue(BeltBlock.HORIZONTAL_FACING);
@@ -322,7 +322,7 @@ public class BeltSlicer {
 				BeltTileEntity segmentTE = BeltHelper.getSegmentTE(world, next);
 				if (segmentTE != null) {
 					segmentTE.color = controllerTE.color;
-					segmentTE.setShielded(selectionMode);
+					segmentTE.setCovered(selectionMode);
 				}
 				world.playSound(null, pos, SoundEvents.WOOL_PLACE,
 					player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.5F, 1F);
@@ -390,7 +390,7 @@ public class BeltSlicer {
 					for (BlockPos newBelt : newBeltChain) {
 						BeltTileEntity newBeltTE = BeltHelper.getSegmentTE(world, newBelt);
 						if (newBeltTE != null && newBeltTE != controllerTE)
-							newBeltTE.setShielded(selectionMode);
+							newBeltTE.setCovered(selectionMode);
 					}
 
 					break;

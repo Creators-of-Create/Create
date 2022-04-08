@@ -24,8 +24,8 @@ import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldHandler;
-import com.simibubi.create.content.contraptions.debrisShield.IDebrisShielded;
+import com.simibubi.create.content.contraptions.debrisCover.DebrisCoverHandler;
+import com.simibubi.create.content.contraptions.debrisCover.IDebrisCovered;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
@@ -70,7 +70,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded {
+public class BeltTileEntity extends KineticTileEntity implements IDebrisCovered {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -82,7 +82,7 @@ public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded
 	protected BlockPos controller;
 	protected BeltInventory inventory;
 	protected LazyOptional<IItemHandler> itemHandler;
-	protected DebrisShieldHandler<BeltTileEntity> debrisShieldHandler;
+	protected DebrisCoverHandler<BeltTileEntity> debrisCoverHandler;
 
 	public CompoundTag trackerUpdateTag;
 
@@ -109,8 +109,8 @@ public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
 
-		debrisShieldHandler = new DebrisShieldHandler<>(this);
-		debrisShieldHandler.addBehaviours(behaviours);
+		debrisCoverHandler = new DebrisCoverHandler<>(this);
+		debrisCoverHandler.addBehaviours(behaviours);
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded
 		if (isController())
 			compound.put("Inventory", getInventory().write());
 
-		debrisShieldHandler.write(compound);
+		debrisCoverHandler.write(compound);
 
 		super.write(compound, clientPacket);
 	}
@@ -259,7 +259,7 @@ public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded
 
 		CasingType casingBefore = casing;
 		casing = NBTHelper.readEnum(compound, "Casing", CasingType.class);
-		debrisShieldHandler.read(compound);
+		debrisCoverHandler.read(compound);
 
 		if (!clientPacket)
 			return;
@@ -556,21 +556,21 @@ public class BeltTileEntity extends KineticTileEntity implements IDebrisShielded
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
 	}
 
-	public boolean canBlockBeShielded(BlockState blockState) {
+	public boolean canBlockBeCovered(BlockState blockState) {
 		return AllBlocks.BELT.has(blockState);
 	}
 
-	public boolean isShielded() {
-		return debrisShieldHandler.isShielded();
+	public boolean isCovered() {
+		return debrisCoverHandler.isCovered();
 	}
 
-	public void setShielded(DebrisShieldHandler.SelectionMode mode) {
-		debrisShieldHandler.setShielded(mode);
+	public void setCovered(DebrisCoverHandler.SelectionMode mode) {
+		debrisCoverHandler.setCovered(mode);
 	}
 
 	@Override
-	public DebrisShieldHandler.SelectionMode toggleShielded() {
-		return debrisShieldHandler.toggle();
+	public DebrisCoverHandler.SelectionMode toggleCovered() {
+		return debrisCoverHandler.toggle();
 	}
 
 	public Iterable<BlockPos> getNeighbours() {

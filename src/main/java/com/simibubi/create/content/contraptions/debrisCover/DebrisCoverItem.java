@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.debrisShield;
+package com.simibubi.create.content.contraptions.debrisCover;
 
 import java.util.function.Consumer;
 
@@ -9,16 +9,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 
-public class DebrisShieldItem extends Item {
+public class DebrisCoverItem extends Item {
 
-	public DebrisShieldItem(Properties properties) {
+	public DebrisCoverItem(Properties properties) {
 		super(properties);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new DebrisShieldItemRenderer()));
+		consumer.accept(SimpleCustomRenderer.create(this, new DebrisCoverItemRenderer()));
 	}
 
 }

@@ -38,6 +38,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.DyeColor;
@@ -229,13 +230,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("GP")
 				.pattern(" S")),
 
-		DEBRIS_SHIELD = create(AllItems.DEBRIS_SHIELD).unlockedBy(I::andesite)
-			.viaShaped(b -> b.define('I', I.ironSheet())
-					.define('P', I.cog())
-					.define('S', Tags.Items.RODS_WOODEN)
-					.pattern(" I")
-					.pattern("IP")
-					.pattern(" S")),
+		DEBRIS_COVER = create(AllItems.DEBRIS_COVER).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('P', ItemTags.PLANKS)
+				.define('G', Tags.Items.GLASS_PANES)
+				.pattern(" P ")
+				.pattern("GGG")
+				.pattern("G G")),
 
 		FILTER = create(AllItems.FILTER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('S', ItemTags.WOOL)

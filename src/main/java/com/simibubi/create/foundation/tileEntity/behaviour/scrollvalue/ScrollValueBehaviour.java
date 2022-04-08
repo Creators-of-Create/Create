@@ -37,7 +37,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	Function<StepContext, Integer> step;
 	private Supplier<Boolean> isActive;
 	boolean needsWrench;
-	boolean needsDebrisShield;
+	boolean needsDebrisCover;
 
 	public ScrollValueBehaviour(Component label, SmartTileEntity te, ValueBoxTransform slot) {
 		super(te);
@@ -121,8 +121,8 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
-	public ScrollValueBehaviour requiresDebrisShield() {
-		this.needsDebrisShield = true;
+	public ScrollValueBehaviour requiresDebrisCover() {
+		this.needsDebrisCover = true;
 		return this;
 	}
 

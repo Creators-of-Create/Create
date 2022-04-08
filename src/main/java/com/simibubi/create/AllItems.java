@@ -21,7 +21,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
-import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldItem;
+import com.simibubi.create.content.contraptions.debrisCover.DebrisCoverItem;
 import com.simibubi.create.content.curiosities.BuildersTeaItem;
 import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
 import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
@@ -263,9 +263,9 @@ public class AllItems {
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
-	public static final ItemEntry<DebrisShieldItem> DEBRIS_SHIELD = REGISTRATE.item("debris_shield", DebrisShieldItem::new)
+	public static final ItemEntry<DebrisCoverItem> DEBRIS_COVER = REGISTRATE.item("debris_cover", DebrisCoverItem::new)
 		.properties(p -> p.stacksTo(1))
-		.model(AssetLookup.itemModelWithPartials())
+		.model(AssetLookup.existingItemModel())
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =

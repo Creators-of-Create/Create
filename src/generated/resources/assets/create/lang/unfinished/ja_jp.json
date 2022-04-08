@@ -585,7 +585,7 @@
 	"item.create.crushed_tin_ore": "砕いた錫鉱石",
 	"item.create.crushed_uranium_ore": "砕いたウラン鉱石",
 	"item.create.crushed_zinc_ore": "砕いた亜鉛鉱石",
-	"item.create.debris_shield": "UNLOCALIZED: Debris Shield",
+	"item.create.debris_cover": "UNLOCALIZED: Debris Cover",
 	"item.create.diving_boots": "潜水ブーツ",
 	"item.create.diving_helmet": "潜水ヘルメット",
 	"item.create.dough": "生地",
@@ -1257,15 +1257,15 @@
 	"create.weighted_ejector.targeting": "[%1$s,%2$s,%3$s]へ射出",
 	"create.weighted_ejector.stack_size": "射出スタック量",
 
-	"create.logistics.has_debris_shield": "UNLOCALIZED: Accepts Dropped Items",
+	"create.logistics.has_debris_cover": "UNLOCALIZED: Accepts Dropped Items",
 	"create.logistics.when_multiple_outputs_available": "複数の搬出先が利用できるとき:",
 
 	"create.mechanical_arm.selection_mode.round_robin": "順繰り分配",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "強制順繰り分配",
 	"create.mechanical_arm.selection_mode.prefer_first": "最初のターゲットを優先",
 
-	"create.debris_shield.selection_mode.open": "UNLOCALIZED: Yes",
-	"create.debris_shield.selection_mode.shielded": "UNLOCALIZED: No",
+	"create.debris_cover.selection_mode.uncovered": "UNLOCALIZED: Yes",
+	"create.debris_cover.selection_mode.covered": "UNLOCALIZED: No",
 
 	"create.tunnel.selection_mode.split": "スタック分割",
 	"create.tunnel.selection_mode.forced_split": "強制スタック分割",
@@ -1503,10 +1503,10 @@
 	"item.create.wrench.tooltip.control2": "スニークしながら右クリックしたとき",
 	"item.create.wrench.tooltip.action2": "_機械を分解_し、_インベントリ_に戻します。",
 
-	"item.create.debris_shield.tooltip": "UNLOCALIZED: DEBRIS SHIELD",
-	"item.create.debris_shield.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
-	"item.create.debris_shield.tooltip.condition1": "UNLOCALIZED: When Held",
-	"item.create.debris_shield.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
+	"item.create.debris_cover.tooltip": "UNLOCALIZED: DEBRIS COVER",
+	"item.create.debris_cover.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
+	"item.create.debris_cover.tooltip.condition1": "UNLOCALIZED: When Held",
+	"item.create.debris_cover.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
 
 	"block.create.nozzle.tooltip": "ノズル",
 	"block.create.nozzle.tooltip.summary": "_ケース入りファン_の前面に取り付けて、エンティティへの影響を_全方向_に分散します。",

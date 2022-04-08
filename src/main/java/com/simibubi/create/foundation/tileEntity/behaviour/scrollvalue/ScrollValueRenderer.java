@@ -41,7 +41,7 @@ public class ScrollValueRenderer {
 			return;
 		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return;
-		if (behaviour.needsDebrisShield && !AllItems.DEBRIS_SHIELD.isIn(mc.player.getMainHandItem()))
+		if (behaviour.needsDebrisCover && !AllItems.DEBRIS_COVER.isIn(mc.player.getMainHandItem()))
 			return;
 		boolean highlight = behaviour.testHit(target.getLocation());
 

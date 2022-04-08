@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.block.depot;
 
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.debrisShield.DebrisShieldHandler;
-import com.simibubi.create.content.contraptions.debrisShield.IDebrisShielded;
+import com.simibubi.create.content.contraptions.debrisCover.DebrisCoverHandler;
+import com.simibubi.create.content.contraptions.debrisCover.IDebrisCovered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -16,10 +16,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class DepotTileEntity extends SmartTileEntity implements IDebrisShielded {
+public class DepotTileEntity extends SmartTileEntity implements IDebrisCovered {
 
 	DepotBehaviour depotBehaviour;
-	private DebrisShieldHandler<DepotTileEntity> acceptDroppedItems;
+	private DebrisCoverHandler<DepotTileEntity> acceptDroppedItems;
 
 	public DepotTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -30,7 +30,7 @@ public class DepotTileEntity extends SmartTileEntity implements IDebrisShielded 
 		behaviours.add(depotBehaviour = new DepotBehaviour(this));
 		depotBehaviour.addSubBehaviours(behaviours);
 
-		acceptDroppedItems = new DebrisShieldHandler<>(this);
+		acceptDroppedItems = new DebrisCoverHandler<>(this);
 		acceptDroppedItems.addBehaviours(behaviours);
 	}
 
@@ -42,18 +42,18 @@ public class DepotTileEntity extends SmartTileEntity implements IDebrisShielded 
 	}
 
 	@Override
-	public DebrisShieldHandler.SelectionMode toggleShielded() {
+	public DebrisCoverHandler.SelectionMode toggleCovered() {
 		return acceptDroppedItems.toggle();
 	}
 
 	@Override
-	public void setShielded(DebrisShieldHandler.SelectionMode lockingState) {
-		acceptDroppedItems.setShielded(lockingState);
+	public void setCovered(DebrisCoverHandler.SelectionMode lockingState) {
+		acceptDroppedItems.setCovered(lockingState);
 	}
 
 	@Override
-	public boolean isShielded() {
-		return acceptDroppedItems.isShielded();
+	public boolean isCovered() {
+		return acceptDroppedItems.isCovered();
 	}
 
 	@Override

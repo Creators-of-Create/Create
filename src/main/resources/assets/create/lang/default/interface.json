@@ -489,15 +489,15 @@
 	"create.weighted_ejector.targeting": "Ejecting to [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Ejected Stack Size",
 
-  "create.logistics.has_debris_shield": "Accepts Dropped Items",
+  "create.logistics.has_debris_cover": "Accepts Dropped Items",
 	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
 
 	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Forced Round Robin",
 	"create.mechanical_arm.selection_mode.prefer_first": "Prefer First Target",
 
-  "create.debris_shield.selection_mode.open": "Yes",
-  "create.debris_shield.selection_mode.shielded": "No",
+  "create.debris_cover.selection_mode.uncovered": "Yes",
+  "create.debris_cover.selection_mode.covered": "No",
 
 	"create.tunnel.selection_mode.split": "Split",
 	"create.tunnel.selection_mode.forced_split": "Forced Split",

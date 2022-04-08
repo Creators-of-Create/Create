@@ -585,7 +585,7 @@
 	"item.create.crushed_tin_ore": "UNLOCALIZED: Crushed Tin Ore",
 	"item.create.crushed_uranium_ore": "UNLOCALIZED: Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "UNLOCALIZED: Crushed Zinc Ore",
-	"item.create.debris_shield": "UNLOCALIZED: Debris Shield",
+	"item.create.debris_cover": "UNLOCALIZED: Debris Cover",
 	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
 	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Deeg",
@@ -1257,15 +1257,15 @@
 	"create.weighted_ejector.targeting": "UNLOCALIZED: Ejecting to [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "UNLOCALIZED: Ejected Stack Size",
 
-	"create.logistics.has_debris_shield": "UNLOCALIZED: Accepts Dropped Items",
+	"create.logistics.has_debris_cover": "UNLOCALIZED: Accepts Dropped Items",
 	"create.logistics.when_multiple_outputs_available": "UNLOCALIZED: When Multiple Outputs Available",
 
 	"create.mechanical_arm.selection_mode.round_robin": "UNLOCALIZED: Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "UNLOCALIZED: Forced Round Robin",
 	"create.mechanical_arm.selection_mode.prefer_first": "UNLOCALIZED: Prefer First Target",
 
-	"create.debris_shield.selection_mode.open": "UNLOCALIZED: Yes",
-	"create.debris_shield.selection_mode.shielded": "UNLOCALIZED: No",
+	"create.debris_cover.selection_mode.uncovered": "UNLOCALIZED: Yes",
+	"create.debris_cover.selection_mode.covered": "UNLOCALIZED: No",
 
 	"create.tunnel.selection_mode.split": "UNLOCALIZED: Split",
 	"create.tunnel.selection_mode.forced_split": "UNLOCALIZED: Forced Split",
@@ -1503,10 +1503,10 @@
 	"item.create.wrench.tooltip.control2": "UNLOCALIZED: R-Click while Sneaking",
 	"item.create.wrench.tooltip.action2": "UNLOCALIZED: _Disassembles Kinetic components_ and places them back in _your inventory_.",
 
-	"item.create.debris_shield.tooltip": "UNLOCALIZED: DEBRIS SHIELD",
-	"item.create.debris_shield.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
-	"item.create.debris_shield.tooltip.condition1": "UNLOCALIZED: When Held",
-	"item.create.debris_shield.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
+	"item.create.debris_cover.tooltip": "UNLOCALIZED: DEBRIS COVER",
+	"item.create.debris_cover.tooltip.summary": "UNLOCALIZED: A tool which prevents broken blocks from getting caught in your machines while you're working near them.",
+	"item.create.debris_cover.tooltip.condition1": "UNLOCALIZED: When Held",
+	"item.create.debris_cover.tooltip.behaviour1": "UNLOCALIZED: Move the mouse over a _Mechanical Belt_, _Depot_ or _Weighted Ejector_ and scroll the mouse wheel to protect or unprotect it. Items dropped on a protected machine will not be picked up by the machine or move with it.",
 
 	"block.create.nozzle.tooltip": "UNLOCALIZED: NOZZLE",
 	"block.create.nozzle.tooltip.summary": "UNLOCALIZED: Attach to the front of an _Encased Fan_ to distribute its effect on Entities in _all directions_.",
