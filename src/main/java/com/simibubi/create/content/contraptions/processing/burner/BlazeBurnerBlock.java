@@ -162,13 +162,11 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		if (!doNotConsume) {
-			ItemStack container = stack.getContainerItem();
-			if (!world.isClientSide && !simulate) {
+			ItemStack container = stack.hasContainerItem() ? stack.getContainerItem() : ItemStack.EMPTY;
+			if (!world.isClientSide) {
 				stack.shrink(1);
 			}
-			if (!container.isEmpty()) {
-				return InteractionResultHolder.success(container);
-			}
+			return InteractionResultHolder.success(container);
 		}
 		return InteractionResultHolder.success(ItemStack.EMPTY);
 	}

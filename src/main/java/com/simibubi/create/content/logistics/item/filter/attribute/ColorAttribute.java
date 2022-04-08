@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.FireworkStarItem;
@@ -75,7 +75,7 @@ public class ColorAttribute implements ItemAttribute {
 
 	@Override
 	public Object[] getTranslationParameters() {
-		return new Object[]{new TranslatableComponent(color.getName()).getContents()};
+		return new Object[] { I18n.get("color.minecraft." + color.getName()) };
 	}
 
 	@Override

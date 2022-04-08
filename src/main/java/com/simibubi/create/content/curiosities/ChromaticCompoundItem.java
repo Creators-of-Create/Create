@@ -73,15 +73,12 @@ public class ChromaticCompoundItem extends Item {
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		double y = entity.getY();
-		double yMotion = entity.getDeltaMovement().y;
 		Level world = entity.level;
-		CompoundTag data = entity.getPersistentData();
 		CompoundTag itemData = entity.getItem()
 			.getOrCreateTag();
-
 		Vec3 positionVec = entity.position();
 		CRecipes config = AllConfigs.SERVER.recipes;
+
 		if (world.isClientSide) {
 			int light = itemData.getInt("CollectingLight");
 			if (world.random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
@@ -94,8 +91,13 @@ public class ChromaticCompoundItem extends Item {
 			return false;
 		}
 
+		double y = entity.getY();
+		double yMotion = entity.getDeltaMovement().y;
+		int minHeight = world.getMinBuildHeight();
+		CompoundTag data = entity.getPersistentData();
+
 		// Convert to Shadow steel if in void
-		if (y < 0 && y - yMotion < -10 && config.enableShadowSteelRecipe.get()) {
+		if (y < minHeight && y - yMotion < -10 + minHeight && config.enableShadowSteelRecipe.get()) {
 			ItemStack newStack = AllItems.SHADOW_STEEL.asStack();
 			newStack.setCount(stack.getCount());
 			data.putBoolean("JustCreated", true);

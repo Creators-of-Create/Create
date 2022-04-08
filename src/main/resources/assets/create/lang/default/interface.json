@@ -34,7 +34,7 @@
 	"create.recipe.fan_washing.fan": "Fan behind Flowing Water",
 	"create.recipe.fan_smoking": "Bulk Smoking",
 	"create.recipe.fan_smoking.fan": "Fan behind Fire",
-  	"create.recipe.fan_haunting": "Bulk Haunting",
+	"create.recipe.fan_haunting": "Bulk Haunting",
  	"create.recipe.fan_haunting.fan": "Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Bulk Blasting",
 	"create.recipe.fan_blasting.fan": "Fan behind Lava",
@@ -467,8 +467,9 @@
 
 	"create.tooltip.speedRequirement": "Speed Requirement: %1$s",
 	"create.tooltip.speedRequirement.none": "None",
+	"create.tooltip.speedRequirement.slow": "Slow",
 	"create.tooltip.speedRequirement.medium": "Moderate",
-	"create.tooltip.speedRequirement.high": "Fast",
+	"create.tooltip.speedRequirement.fast": "Fast",
 
 	"create.tooltip.stressImpact": "Kinetic Stress Impact: %1$s",
 	"create.tooltip.stressImpact.low": "Low",

@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class EdgeInteractionBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<EdgeInteractionBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<EdgeInteractionBehaviour> TYPE = new BehaviourType<>();
 	
 	ConnectionCallback connectionCallback;
 	ConnectivityPredicate connectivityPredicate;

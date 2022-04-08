@@ -623,7 +623,7 @@
 	"create.tooltip.speedRequirement": "Vitesse requise: %1$s",
 	"create.tooltip.speedRequirement.none": "Aucune",
 	"create.tooltip.speedRequirement.medium": "Modérée",
-	"create.tooltip.speedRequirement.high": "Rapide",
+	"create.tooltip.speedRequirement.fast": "Rapide",
 	"create.tooltip.stressImpact": "Impact du stress: %1$s",
 	"create.tooltip.stressImpact.low": "Faible",
 	"create.tooltip.stressImpact.medium": "Modéré",

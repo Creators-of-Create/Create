@@ -313,7 +313,11 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	protected int getDistributableAmount(ArmInteractionPoint armInteractionPoint, int i) {
 		ItemStack stack = armInteractionPoint.extract(level, i, true);
 		ItemStack remainder = simulateInsertion(stack);
-		return stack.getCount() - remainder.getCount();
+		if (stack.sameItem(remainder)) {
+			return stack.getCount() - remainder.getCount();
+		} else {
+			return stack.getCount();
+		}
 	}
 
 	protected void depositItem() {

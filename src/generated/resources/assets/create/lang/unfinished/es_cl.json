@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 524",
+	"_": "Missing Localizations: 525",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1252,8 +1252,9 @@
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Requqrimiento de Velocidad: %1$s",
 	"create.tooltip.speedRequirement.none": "Ninguno",
+	"create.tooltip.speedRequirement.slow": "UNLOCALIZED: Slow",
 	"create.tooltip.speedRequirement.medium": "Moderado",
-	"create.tooltip.speedRequirement.high": "Rápidp",
+	"create.tooltip.speedRequirement.fast": "Rápido",
 	"create.tooltip.stressImpact": "Impacto en el Estrés Cinético: %1$s",
 	"create.tooltip.stressImpact.low": "Bajo",
 	"create.tooltip.stressImpact.medium": "Moderado",

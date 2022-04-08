@@ -357,13 +357,7 @@ public class KineticTileEntity extends SmartTileEntity
 			return true;
 		IRotate def = (IRotate) state.getBlock();
 		SpeedLevel minimumRequiredSpeedLevel = def.getMinimumRequiredSpeedLevel();
-		if (minimumRequiredSpeedLevel == null)
-			return true;
-		if (minimumRequiredSpeedLevel == SpeedLevel.MEDIUM)
-			return Math.abs(getSpeed()) >= AllConfigs.SERVER.kinetics.mediumSpeed.get();
-		if (minimumRequiredSpeedLevel == SpeedLevel.FAST)
-			return Math.abs(getSpeed()) >= AllConfigs.SERVER.kinetics.fastSpeed.get();
-		return true;
+		return Math.abs(getSpeed()) >= minimumRequiredSpeedLevel.getSpeedValue();
 	}
 
 	public static void switchToBlockState(Level world, BlockPos pos, BlockState state) {

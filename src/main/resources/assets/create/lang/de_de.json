@@ -1148,7 +1148,7 @@
 	"create.tooltip.speedRequirement": "Geschwindigkeitsanforderung: %1$s",
 	"create.tooltip.speedRequirement.none": "Keine",
 	"create.tooltip.speedRequirement.medium": "Moderat",
-	"create.tooltip.speedRequirement.high": "Schnell",
+	"create.tooltip.speedRequirement.fast": "Schnell",
 	"create.tooltip.stressImpact": "Kinetische Belastungsauswirkung: %1$s",
 	"create.tooltip.stressImpact.low": "Niedrig",
 	"create.tooltip.stressImpact.medium": "Moderat",

@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Strings;
 import com.mojang.bridge.game.Language;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Couple;
@@ -25,7 +25,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -235,10 +234,10 @@ public class TooltipHelper {
 	public static boolean hasTooltip(ItemStack stack, Player player) {
 		checkLocale();
 
-		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemBySlot(EquipmentSlot.HEAD));
+		boolean hasGoggles = GogglesItem.isWearingGoggles(player);
 
-		if (hasGlasses != gogglesMode) {
-			gogglesMode = hasGlasses;
+		if (hasGoggles != gogglesMode) {
+			gogglesMode = hasGoggles;
 			cachedTooltips.clear();
 		}
 

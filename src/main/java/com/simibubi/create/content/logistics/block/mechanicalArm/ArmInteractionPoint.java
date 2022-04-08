@@ -42,7 +42,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -332,15 +332,15 @@ public abstract class ArmInteractionPoint {
 		@Override
 		protected ItemStack insert(Level world, ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
-			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, true)
-				.getObject()
-				.isEmpty()) {
-				return stack;
-			}
 			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, simulate);
-			return res.getResult() == InteractionResult.SUCCESS
-				? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1)
-				: stack;
+			ItemStack remainder = res.getObject();
+			if (input.isEmpty()) {
+				return remainder;
+			} else {
+				if (!simulate)
+					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), remainder);
+				return input;
+			}
 		}
 
 		@Override

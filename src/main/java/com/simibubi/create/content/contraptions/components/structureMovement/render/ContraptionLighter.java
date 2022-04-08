@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.components.structureMovement;
+package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
 import com.jozufozu.flywheel.light.GPULightVolume;
 import com.jozufozu.flywheel.light.LightListener;
@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.ListenerStatus;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
 import net.minecraft.world.level.LightLayer;
 

@@ -27,11 +27,10 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		super.onSpeedChanged(prevSpeed);
 		float speed = Math.abs(getSpeed());
 
-		color = speed == 0 ? 0x333333
-			: Color.mixColors(SpeedLevel.of(speed)
+		color = Color.mixColors(SpeedLevel.of(speed)
 				.getColor(), 0xffffff, .25f);
 		if (speed == 69)
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPEED_READ, level, worldPosition, 6, GogglesItem::canSeeParticles);
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPEED_READ, level, worldPosition, 6, GogglesItem::isWearingGoggles);
 
 		dialTarget = getDialTarget(speed);
 		setChanged();

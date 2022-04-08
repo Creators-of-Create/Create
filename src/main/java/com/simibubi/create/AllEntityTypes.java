@@ -2,7 +2,6 @@ package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntityRenderer;
@@ -10,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.gan
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity;
 import com.simibubi.create.content.curiosities.tools.BlueprintRenderer;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileEntity;
