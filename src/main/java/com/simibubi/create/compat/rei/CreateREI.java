@@ -221,12 +221,12 @@ public class CreateREI implements REIClientPlugin {
 				.build(),
 
 			spoutFilling = register("spout_filling", SpoutCategory::new).addTypedRecipes(AllRecipeTypes.FILLING)
-//				.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add, ingredientManager))
+				.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add))
 				.catalyst(AllBlocks.SPOUT::get)
 				.build(),
 
 			draining = register("draining", ItemDrainCategory::new)
-//				.addRecipeListConsumer(recipes -> ItemDrainCategory.consumeRecipes(recipes::add, ingredientManager))
+				.addRecipeListConsumer(recipes -> ItemDrainCategory.consumeRecipes(recipes::add))
 				.addTypedRecipes(AllRecipeTypes.EMPTYING)
 				.catalyst(AllBlocks.ITEM_DRAIN::get)
 				.build(),
@@ -260,16 +260,30 @@ public class CreateREI implements REIClientPlugin {
 
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
+		loadCategories();
 		allCategories.forEach(registry::add);
 		allCategories.forEach(createRecipeCategory -> registry.removePlusButton(createRecipeCategory.getCategoryIdentifier()));
 		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registry.addWorkstations(c.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, s.get()))));
 	}
 
-//	@Override
-//	public void registerCategories(IRecipeCategoryRegistration registration) {
-//		loadCategories();
-//		registration.addRecipeCategories(allCategories.toArray(IRecipeCategory[]::new));
-//	}
+	@Override
+	public void registerDisplays(DisplayRegistry registry) {
+		allCategories.forEach(c -> c.recipes.forEach(s -> {
+			for (Recipe<?> recipe : s.get()) {
+				registry.add(new CreateDisplay<>(recipe, c.getCategoryIdentifier()), recipe);
+			}
+		}));
+
+		List<CraftingRecipe> recipes = ToolboxColoringRecipeMaker.createRecipes().toList();
+		for (Object recipe : recipes) {
+			Collection<Display> displays = registry.tryFillDisplay(recipe);
+			for (Display display : displays) {
+				if (Objects.equals(display.getCategoryIdentifier(), BuiltinPlugin.CRAFTING)) {
+					registry.add(display, recipe);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void registerExclusionZones(ExclusionZones zones) {
@@ -436,8 +450,8 @@ public class CreateREI implements REIClientPlugin {
 
 	public static void consumeTypedRecipes(Consumer<Recipe<?>> consumer, RecipeType<?> type) {
 		Map<ResourceLocation, Recipe<?>> map = ((RecipeManagerAccessor) Minecraft.getInstance()
-				.getConnection()
-				.getRecipeManager()).port_lib$getRecipes().get(type);
+			.getConnection()
+			.getRecipeManager()).port_lib$getRecipes().get(type);
 		if (map != null) {
 			map.values()
 				.forEach(consumer);
