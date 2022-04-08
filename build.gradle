@@ -56,10 +56,6 @@ dependencies {
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
     runtimeOnly("maven.modrinth:lazydfu:0.1.2")
     modRuntimeOnly("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
-    modRuntimeOnly("maven.modrinth:iris:1.18.x-v1.2.2")
-    runtimeOnly("org.anarres:jcpp:1.4.14")
-    modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
-    runtimeOnly("org.joml:joml:1.10.2")
     modRuntimeOnly("maven.modrinth:lithium:mc1.18.2-0.7.9")
 //    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
 
