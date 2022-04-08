@@ -1,6 +1,5 @@
 package com.simibubi.create.events;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -225,10 +224,18 @@ public class CommonEvents {
 		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopping);
 		ServerWorldEvents.LOAD.register(CommonEvents::onLoadWorld);
 		ServerWorldEvents.UNLOAD.register(CommonEvents::onUnloadWorld);
-		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
-		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
-		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
+		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
+		EntityEvents.START_TRACKING_TAIL.register(CommonEvents::startTracking);
+		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
+		AddReloadListenersCallback.EVENT.register(CommonEvents::addReloadListeners);
+		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
+		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
+		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
+
+		// External Events
+
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
 		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
@@ -236,17 +243,9 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
 		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
-		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
-		// Fabric Biome API requires biomes to only be registered once
-		CommonEvents.onBiomeLoad();
-
-		// External Events
-
-		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-		AddReloadListenersCallback.EVENT.register(CommonEvents::addReloadListeners);
-		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
-		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
-		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
+		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
+		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
+		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
 		StartRidingCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
 		LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
