@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;

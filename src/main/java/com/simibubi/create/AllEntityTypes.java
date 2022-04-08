@@ -19,7 +19,6 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEn
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionInstance;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.utility.Lang;
-import com.tterrag.registrate.builders.EntityBuilder;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;

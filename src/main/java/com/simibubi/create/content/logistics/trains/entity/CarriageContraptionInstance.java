@@ -75,7 +75,12 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 	@Override
 	public void remove() {
-		bogeys.forEach(BogeyInstance::remove);
+		if (bogeys == null) return;
+		
+		bogeys.forEach(instance -> {
+			if (instance != null)
+				instance.remove();
+		});
 	}
 
 
