@@ -91,6 +91,7 @@ public class Train {
 	public int migrationCooldown;
 	public boolean derailed;
 
+	int tickOffset;
 	double[] stress;
 
 	public Train(UUID id, UUID owner, TrackGraph graph, List<Carriage> carriages, List<Integer> carriageSpacing,
@@ -117,6 +118,7 @@ public class Train {
 		manualSteer = SteerDirection.NONE;
 		occupiedSignalBlocks = new HashMap<>();
 		reservedSignalBlocks = new HashSet<>();
+		tickOffset = Create.RANDOM.nextInt(100);
 	}
 
 	public void earlyTick(Level level) {
@@ -761,6 +763,10 @@ public class Train {
 			}, signalScout.ignoreTurns());
 		});
 
+	}
+	
+	public boolean shouldCarriageSyncThisTick(long gameTicks, int updateInterval) {
+		return (gameTicks + tickOffset) % updateInterval == 0; 
 	}
 
 	public Couple<Couple<TrackNode>> getEndpointEdges() {

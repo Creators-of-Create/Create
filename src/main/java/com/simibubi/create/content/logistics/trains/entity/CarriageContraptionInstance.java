@@ -45,15 +45,16 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 		ms.pushPose();
 
 		TransformStack.cast(ms)
-				.translate(getInstancePosition(partialTicks))
-				.translate(0, -1.5 - 1 / 128f, 0);;
+			.translate(getInstancePosition(partialTicks));
 
 		for (BogeyInstance instance : bogeys) {
 			if (instance != null) {
 				ms.pushPose();
 				CarriageBogey bogey = instance.bogey;
 
-				CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
+				CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot,
+					partialTicks);
+				ms.translate(0, -1.5 - 1 / 128f, 0);
 
 				instance.beginFrame(bogey.wheelAngle.getValue(partialTicks), ms);
 				ms.popPose();

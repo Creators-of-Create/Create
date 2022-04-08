@@ -116,7 +116,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	private CarriageSyncData getCarriageData() {
 		return entityData.get(CARRIAGE_DATA);
 	}
-	
+
 	public boolean hasSchedule() {
 		return entityData.get(SCHEDULED);
 	}
@@ -175,7 +175,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (!level.isClientSide) {
 			entityData.set(SCHEDULED, carriage.train.runtime.getSchedule() != null);
-			if (tickCount % getType().updateInterval() == 0 && carriageData.isDirty()) {
+			boolean shouldCarriageSyncThisTick =
+				carriage.train.shouldCarriageSyncThisTick(level.getGameTime(), getType().updateInterval());
+			if (shouldCarriageSyncThisTick && carriageData.isDirty()) {
 				entityData.set(CARRIAGE_DATA, null);
 				entityData.set(CARRIAGE_DATA, carriageData);
 				carriageData.setDirty(false);
@@ -267,7 +269,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		Couple<Boolean> sides = Couple.create(false, false);
 		if (!(contraption instanceof CarriageContraption cc))
 			return sides;
-		
+
 		sides.setFirst(cc.blazeBurnerConductors.getFirst());
 		sides.setSecond(cc.blazeBurnerConductors.getSecond());
 
