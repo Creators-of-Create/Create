@@ -133,6 +133,7 @@ public class AllBlockPartials {
 		ENGINE_CONNECTOR = block("steam_engine/shaft_connector"), BOILER_GAUGE = block("steam_engine/gauge"),
 
 		SIGNAL_ON = block("track_signal/indicator_on"), SIGNAL_OFF = block("track_signal/indicator_off"),
+		DATA_GATHERER_TUBE = block("data_gatherer/tube"), DATA_GATHERER_GLOW = block("data_gatherer/glow"),
 
 		SIGNAL_PANEL = block("track_signal/panel"), SIGNAL_WHITE_CUBE = block("track_signal/white_cube"),
 		SIGNAL_WHITE_GLOW = block("track_signal/white_glow"), SIGNAL_WHITE = block("track_signal/white_tube"),
@@ -143,7 +144,7 @@ public class AllBlockPartials {
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),
 		CRAFTING_BLUEPRINT_3x3 = entity("crafting_blueprint_large"),
-		
+
 		TRAIN_HAT = entity("train_hat"),
 
 		COUPLING_ATTACHMENT = entity("minecart_coupling/attachment"), COUPLING_RING = entity("minecart_coupling/ring"),

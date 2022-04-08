@@ -45,7 +45,9 @@ import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -599,6 +601,13 @@ public class StationTileEntity extends SmartTileEntity {
 			return;
 		imminentTrain.runtime.setSchedule(schedule, true);
 		AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 1, 1);
+
+		if (!(level instanceof ServerLevel server))
+			return;
+		
+		Vec3 v = Vec3.atCenterOf(worldPosition);
+		server.sendParticles(ParticleTypes.HAPPY_VILLAGER, v.x, v.y, v.z, 8, 0.35, 0.05, 0.35, 1);
+		server.sendParticles(ParticleTypes.END_ROD, v.x, v.y + .25f, v.z, 10, 0.05, 1, 0.05, 0.005f);
 	}
 
 	private class StationInventory extends ItemStackHandler {

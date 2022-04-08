@@ -145,6 +145,7 @@ import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
+import com.simibubi.create.content.logistics.block.data.DataGathererRenderer;
 import com.simibubi.create.content.logistics.block.data.DataGathererTileEntity;
 import com.simibubi.create.content.logistics.block.data.source.NixieTubeDataSource;
 import com.simibubi.create.content.logistics.block.data.target.NixieTubeDataTarget;
@@ -673,6 +674,7 @@ public class AllTileEntities {
 	public static final BlockEntityEntry<DataGathererTileEntity> DATA_GATHERER = Create.registrate()
 		.tileEntity("data_gatherer", DataGathererTileEntity::new)
 		.validBlocks(AllBlocks.DATA_GATHERER)
+		.renderer(() -> DataGathererRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<StockpileSwitchTileEntity> STOCKPILE_SWITCH = Create.registrate()

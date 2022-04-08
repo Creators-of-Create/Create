@@ -1,8 +1,10 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.station;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
@@ -10,16 +12,23 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 
@@ -33,6 +42,10 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		TrackTargetingBehaviour<GlobalStation> target = te.edgePoint;
 		BlockPos targetPosition = target.getGlobalPosition();
 		Level level = te.getLevel();
+		ItemStack autoSchedule = te.getAutoSchedule();
+
+		if (!autoSchedule.isEmpty())
+			renderItem(autoSchedule, te, partialTicks, ms, buffer, light, overlay);
 
 		BlockState trackState = level.getBlockState(targetPosition);
 		Block block = trackState.getBlock();
@@ -90,6 +103,31 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 			ms.translate(0, 0, 1);
 			currentPos.move(direction);
 		}
+
+		ms.popPose();
+	}
+
+	public static void renderItem(ItemStack itemStack, StationTileEntity te, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light, int overlay) {
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+			.getItemRenderer();
+		TransformStack msr = TransformStack.cast(ms);
+
+		ms.pushPose();
+		msr.centre();
+
+		Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
+		if (renderViewEntity != null) {
+			Vec3 positionVec = renderViewEntity.position();
+			Vec3 vectorForOffset = Vec3.atCenterOf(te.getBlockPos());
+			Vec3 diff = vectorForOffset.subtract(positionVec);
+			float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
+			ms.mulPose(Vector3f.YP.rotation(yRot));
+		}
+
+		ms.translate(0, 3 / 32d, 2 / 16f);
+		ms.scale(.75f, .75f, .75f);
+		itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 0);
 
 		ms.popPose();
 	}

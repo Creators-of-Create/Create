@@ -6,6 +6,9 @@ import com.simibubi.create.content.logistics.block.data.source.DataGathererSourc
 import com.simibubi.create.content.logistics.block.data.target.DataGathererTarget;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +28,9 @@ public class DataGathererTileEntity extends SmartTileEntity {
 	public DataGathererTarget activeTarget;
 	public int targetLine;
 
+	public LerpedFloat glow;
+	private boolean sendPulse;
+	
 	public int refreshTicks;
 
 	public DataGathererTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -32,6 +38,9 @@ public class DataGathererTileEntity extends SmartTileEntity {
 		targetOffset = BlockPos.ZERO;
 		sourceConfig = new CompoundTag();
 		targetLine = 0;
+		glow = LerpedFloat.linear()
+			.startWithValue(0);
+		glow.chase(0, 0.5f, Chaser.EXP);
 	}
 
 	@Override
@@ -40,8 +49,11 @@ public class DataGathererTileEntity extends SmartTileEntity {
 
 		if (activeSource == null)
 			return;
-		if (level.isClientSide)
+		if (level.isClientSide) {
+			glow.tickChaser();
 			return;
+		}
+		
 		refreshTicks++;
 		if (refreshTicks < activeSource.getPassiveRefreshTicks())
 			return;
@@ -94,6 +106,8 @@ public class DataGathererTileEntity extends SmartTileEntity {
 
 		DataGathererContext context = new DataGathererContext(level, this);
 		activeSource.transferData(context, activeTarget, targetLine);
+		sendPulse = true;
+		sendData();
 	}
 
 	@Override
@@ -109,8 +123,12 @@ public class DataGathererTileEntity extends SmartTileEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 		writeGatheredData(tag, clientPacket);
-		if (clientPacket && activeTarget != null)
+		if (clientPacket && activeTarget != null) 
 			tag.putString("TargetType", activeTarget.id.toString());
+		if (clientPacket && sendPulse) {
+			sendPulse = false;
+			NBTHelper.putMarker(tag, "Pulse");
+		}
 	}
 
 	private void writeGatheredData(CompoundTag tag, boolean clientPacket) {
@@ -132,6 +150,8 @@ public class DataGathererTileEntity extends SmartTileEntity {
 
 		if (clientPacket && tag.contains("TargetType"))
 			activeTarget = AllDataGathererBehaviours.getTarget(new ResourceLocation(tag.getString("TargetType")));
+		if (clientPacket && tag.contains("Pulse"))
+			glow.setValue(2);
 
 		if (!tag.contains("Source"))
 			return;

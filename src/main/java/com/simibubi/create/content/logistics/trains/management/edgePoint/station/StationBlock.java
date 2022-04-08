@@ -80,7 +80,8 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 			if (pLevel.isClientSide)
 				return InteractionResult.SUCCESS;
 			pPlayer.getInventory()
-				.placeItemBackInInventory(autoSchedule);
+				.placeItemBackInInventory(autoSchedule.copy());
+			station.autoSchedule.setStackInSlot(0, ItemStack.EMPTY);
 			AllSoundEvents.playItemPickup(pPlayer);
 			return InteractionResult.SUCCESS;
 		});
