@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.DyeHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -74,9 +73,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		for (int j = 0; j < lines.size(); j++) {
 			List<FlapDisplaySection> line = lines.get(j)
 				.getSections();
-			int color = flapTe.colour[j] == null ? 0xFF_D3C6BA
-				: DyeHelper.DYE_TABLE.get(flapTe.colour[j])
-					.getFirst() | 0xFF_000000;
+			int color = flapTe.getLineColor(j);
 			ms.pushPose();
 
 			float w = 0;
@@ -116,7 +113,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	class FlapDisplayRenderOutput implements FormattedCharSink {
+	static class FlapDisplayRenderOutput implements FormattedCharSink {
 
 		final MultiBufferSource bufferSource;
 		final float r, g, b, a;
@@ -191,7 +188,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			if (section.renderCharsIndividually())
 				x += (standardWidth - glyphWidth) / 2f;
 
-			if (!(bakedglyph instanceof EmptyGlyph)) {
+			if (isNotEmpty(bakedglyph)) {
 				VertexConsumer vertexconsumer = bufferSource.getBuffer(renderTypeOf(bakedglyph));
 				bakedglyph.render(style.isItalic(), x, 0, pose, vertexconsumer, red, green, blue, a, light);
 			}
@@ -227,6 +224,10 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 
 		private RenderType renderTypeOf(BakedGlyph bakedglyph) {
 			return bakedglyph.renderType(Font.DisplayMode.NORMAL);
+		}
+
+		private boolean isNotEmpty(BakedGlyph bakedglyph) {
+			return !(bakedglyph instanceof EmptyGlyph);
 		}
 
 	}

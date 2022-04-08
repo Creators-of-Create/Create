@@ -26,7 +26,7 @@ public abstract class StatTrackingDataSource extends ScoreboardDataSource {
 		Level level = context.te()
 			.getLevel();
 		if (!(level instanceof ServerLevel sLevel))
-			return new ArrayList<IntAttached<MutableComponent>>().stream();
+			return Stream.empty();
 
 		String name = "create_auto_" + getObjectiveName();
 		Scoreboard scoreboard = level.getScoreboard();

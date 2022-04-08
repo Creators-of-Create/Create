@@ -20,14 +20,14 @@ public class ItemListDataSource extends ValueListDataSource {
 	protected Stream<IntAttached<MutableComponent>> provideEntries(DataGathererContext context, int maxRows) {
 		BlockEntity sourceTE = context.getSourceTE();
 		if (!(sourceTE instanceof ContentObserverTileEntity cote))
-			return new ArrayList<IntAttached<MutableComponent>>().stream();
+			return Stream.empty();
 
 		InvManipulationBehaviour invManipulationBehaviour = cote.getBehaviour(InvManipulationBehaviour.TYPE);
 		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
 		IItemHandler handler = invManipulationBehaviour.getInventory();
 
 		if (handler == null)
-			return new ArrayList<IntAttached<MutableComponent>>().stream();
+			return Stream.empty();
 
 		return new CountedItemStackList(handler, filteringBehaviour).getTopNames(maxRows);
 	}

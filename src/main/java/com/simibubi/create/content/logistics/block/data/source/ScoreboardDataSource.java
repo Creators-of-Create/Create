@@ -23,7 +23,7 @@ public class ScoreboardDataSource extends ValueListDataSource {
 		Level level = context.te()
 			.getLevel();
 		if (!(level instanceof ServerLevel sLevel))
-			return new ArrayList<IntAttached<MutableComponent>>().stream();
+			return Stream.empty();
 
 		String name = context.sourceConfig()
 			.getString("Objective");
@@ -50,7 +50,7 @@ public class ScoreboardDataSource extends ValueListDataSource {
 		return ImmutableList
 			.of(IntAttached.with(404, Lang.translate("data_source.scoreboard.objective_not_found", objective)));
 	}
-	
+
 	@Override
 	protected String getTranslationKey() {
 		return "scoreboard";

@@ -150,10 +150,9 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void registerOn(EntityRenderer<?> entityRenderer) {
-		if (!(entityRenderer instanceof LivingEntityRenderer))
+		if (!(entityRenderer instanceof LivingEntityRenderer<?, ?> livingRenderer))
 			return;
 
-		LivingEntityRenderer<?, ?> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
 		EntityModel<?> model = livingRenderer.getModel();
 
 		if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel))

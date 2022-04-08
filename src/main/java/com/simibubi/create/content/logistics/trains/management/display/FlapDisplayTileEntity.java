@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gson.JsonElement;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.DynamicComponent;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -154,7 +155,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		for (int i = 0; i < ySize * 2; i++)
 			lines.add(new FlapDisplayLayout(getMaxCharCount()));
 	}
-	
+
 	public int getMaxCharCount() {
 		return getMaxCharCount(0);
 	}
@@ -276,4 +277,9 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
+	public int getLineColor(int line) {
+		DyeColor color = colour[line];
+		return color == null ? 0xFF_D3C6BA : DyeHelper.DYE_TABLE.get(color)
+				.getFirst() | 0xFF_000000;
+	}
 }

@@ -32,7 +32,7 @@ public class PalettesVariantEntry {
 		for (PaletteBlockPattern pattern : paletteStoneVariants.variantTypes) {
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
 				registrate.block(pattern.createName(name), pattern.getBlockFactory())
-					.initialProperties(baseBlock::get)
+					.initialProperties(baseBlock)
 					.transform(pickaxeOnly())
 					.blockstate(pattern.getBlockStateGenerator()
 						.apply(pattern)
@@ -56,7 +56,7 @@ public class PalettesVariantEntry {
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
 
 			builder.recipe((c, p) -> {
-				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c::get);
+				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c);
 				pattern.addRecipes(baseBlock, c, p);
 			});
 

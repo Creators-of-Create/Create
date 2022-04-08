@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.item;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class CountedItemStackList {
 	public Stream<IntAttached<MutableComponent>> getTopNames(int limit) {
 		return items.values()
 			.stream()
-			.flatMap(s -> s.stream())
+			.flatMap(Collection::stream)
 			.sorted(IntAttached.comparator())
 			.limit(limit)
 			.map(entry -> IntAttached.with(entry.count(), entry.stack()
