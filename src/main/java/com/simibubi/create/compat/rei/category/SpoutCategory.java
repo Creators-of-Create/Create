@@ -1,8 +1,10 @@
 package com.simibubi.create.compat.rei.category;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -47,111 +49,63 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
-	public static List<FillingRecipe> getRecipes() {
-		List<FillingRecipe> recipes = new ArrayList<>();
-
+	public static void consumeRecipes(Consumer<FillingRecipe> consumer) {
+		List<EntryStack<dev.architectury.fluid.FluidStack>> fluidStacks = EntryRegistry.getInstance().getEntryStacks()
+				.filter(stack -> Objects.equals(stack.getType(), VanillaEntryTypes.FLUID))
+				.<EntryStack<dev.architectury.fluid.FluidStack>>map(EntryStack::cast)
+				.toList();
 		EntryRegistry.getInstance().getEntryStacks()
 				.filter(stack -> Objects.equals(stack.getType(), VanillaEntryTypes.ITEM))
 				.<EntryStack<ItemStack>>map(EntryStack::cast)
-				.toList()
-				.forEach(entryStack -> {
-					ItemStack stack = entryStack.getValue();
-					if (stack.getItem() instanceof PotionItem) {
-						FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-						Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
-						recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
-								.withItemIngredients(bottle)
-								.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
-								.withSingleItemOutput(stack)
-								.build());
+				.toList().forEach(entryStack -> {
+			ItemStack stack = entryStack.getValue();
+			if (stack.getItem() instanceof PotionItem) {
+				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
+				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
+				consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
+					.withItemIngredients(bottle)
+					.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
+					.withSingleItemOutput(stack)
+					.build());
+				return;
+			}
+
+			for (EntryStack<dev.architectury.fluid.FluidStack> fluidEntry: fluidStacks) {
+				FluidStack fluidStack = new FluidStack(fluidEntry.getValue().getFluid(), fluidEntry.getValue().getAmount(), fluidEntry.getValue().getTag());
+				ItemStack copy = stack.copy();
+				ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
+				Storage<FluidVariant> fhi = ctx.find(FluidStorage.ITEM);
+				if(fhi != null) {
+					if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
 						return;
+					FluidStack fluidCopy = fluidStack.copy();
+					fluidCopy.setAmount(FluidConstants.BUCKET);
+					try(Transaction t = TransferUtil.getTransaction()) {
+						fhi.insert(fluidCopy.getType(), fluidCopy.getAmount(), t);
+						t.commit();
 					}
+						ItemStack container = ctx.getItemVariant().toStack((int) ctx.getAmount());
+						if (container.sameItem(copy))
+							return;
+						if (container.isEmpty())
+							return;
 
-					ContainerItemContext context = ContainerItemContext.withInitial(stack);
-					Storage<FluidVariant> storage = context.find(FluidStorage.ITEM);
-					if (storage == null)
-						return;
-
-					EntryRegistry.getInstance().getEntryStacks()
-							.filter(stack1 -> Objects.equals(stack1.getType(), VanillaEntryTypes.FLUID))
-							.<EntryStack<dev.architectury.fluid.FluidStack>>map(EntryStack::cast)
-							.toList()
-							.forEach(entryStack1 -> {
-								dev.architectury.fluid.FluidStack archStack = entryStack1.getValue();
-								FluidStack fluidStack = new FluidStack(archStack.getFluid(), archStack.getAmount(), archStack.getTag());
-								ItemStack copy = stack.copy();
-								ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
-								Storage<FluidVariant> fhi = ctx.find(FluidStorage.ITEM);
-								if (fhi != null) {
-									if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
-										return;
-									FluidStack fluidCopy = fluidStack.copy();
-									fluidCopy.setAmount(FluidConstants.BUCKET);
-									try (Transaction t = TransferUtil.getTransaction()) {
-										fhi.insert(fluidCopy.getType(), fluidCopy.getAmount(), t);
-										ItemStack container = ctx.getItemVariant().toStack((int) ctx.getAmount());
-										if (container.sameItem(copy))
-											return;
-										if (container.isEmpty())
-											return;
-
-										Ingredient bucket = Ingredient.of(stack);
-										ResourceLocation itemName = Registry.ITEM.getKey(stack.getItem());
-										ResourceLocation fluidName = Registry.FLUID.getKey(fluidCopy.getFluid());
-										recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new,
-												Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
-														+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
-												.withItemIngredients(bucket)
-												.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
-												.withSingleItemOutput(container)
-												.build());
-									}
-								}
-							});
-				});
-
-		return recipes;
+						Ingredient bucket = Ingredient.of(stack);
+						ResourceLocation itemName = Registry.ITEM
+								.getKey(stack.getItem());
+						ResourceLocation fluidName = Registry.FLUID
+								.getKey(fluidCopy.getFluid());
+						consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new,
+								Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
+										+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))
+								.withItemIngredients(bucket)
+								.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
+								.withSingleItemOutput(container)
+								.build());
+					}
+			}
+		});
 	}
-
-//	@Override
-//	public Class<? extends FillingRecipe> getRecipeClass() {
-//		return FillingRecipe.class;
-//	}
-
-//	@Override
-//	public void setIngredients(FillingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setInputLists(VanillaTypes.FLUID, recipe.getFluidIngredients()
-//			.stream()
-//			.map(FluidIngredient::getMatchingFluidStacks)
-//			.collect(Collectors.toList()));
-//
-//		if (!recipe.getRollableResults()
-//			.isEmpty())
-//			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-//		if (!recipe.getFluidResults()
-//			.isEmpty())
-//			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
-//	}
-
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, FillingRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
-//		FluidIngredient fluidIngredient = recipe.getRequiredFluid();
-//		List<ItemStack> matchingIngredients = Arrays.asList(recipe.getIngredients()
-//			.get(0)
-//			.getItems());
-//
-//		fluidStacks.init(0, true, 27, 32);
-//		fluidStacks.set(0, withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()));
-//		itemStacks.init(0, true, 26, 50);
-//		itemStacks.set(0, matchingIngredients);
-//		itemStacks.init(1, false, 131, 50);
-//		itemStacks.set(1, recipe.getResultItem());
-//
-//		addFluidTooltip(fluidStacks, ImmutableList.of(fluidIngredient), Collections.emptyList());
-//	}
 
 	@Override
 	public List<Widget> setupDisplay(CreateDisplay<FillingRecipe> display, Rectangle bounds) {
@@ -182,17 +136,4 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		widgets.add(spout);
 		return widgets;
 	}
-
-//	@Override
-//	public void draw(FillingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-//		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 31);
-//		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 50);
-//		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
-//		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 57);
-//		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
-//		spout.withFluids(recipe.getRequiredFluid()
-//			.getMatchingFluidStacks())
-//			.draw(matrixStack, getDisplayWidth(null) / 2 - 13, 22);
-//	}
-
 }
