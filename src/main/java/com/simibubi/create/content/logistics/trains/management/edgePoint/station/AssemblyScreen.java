@@ -3,7 +3,9 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.statio
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -218,6 +220,11 @@ public class AssemblyScreen extends AbstractStationScreen {
 			train.icon = TrainIconType.byId(iconId);
 			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", !assemblyCompleted, iconId));
 		}
+	}
+	
+	@Override
+	protected PartialModel getFlag(float partialTicks) {
+		return AllBlockPartials.STATION_ASSEMBLE;
 	}
 
 }

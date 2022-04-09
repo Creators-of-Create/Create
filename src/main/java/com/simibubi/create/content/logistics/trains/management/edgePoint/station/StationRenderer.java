@@ -1,10 +1,12 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.station;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.Transform;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
@@ -56,6 +58,9 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 
 		if (!te.getBlockState()
 			.getValue(StationBlock.ASSEMBLING) || station == null || station.getPresentTrain() != null) {
+			renderFlag(
+				te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF, te,
+				partialTicks, ms, buffer, light, overlay);
 			ms.pushPose();
 			ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
 			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), 0xCC993B, ms, buffer,
@@ -63,6 +68,8 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 			ms.popPose();
 			return;
 		}
+
+		renderFlag(AllBlockPartials.STATION_ASSEMBLE, te, partialTicks, ms, buffer, light, overlay);
 
 		ITrackBlock track = (ITrackBlock) block;
 		Direction direction = te.assemblyDirection;
@@ -125,11 +132,40 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 			ms.mulPose(Vector3f.YP.rotation(yRot));
 		}
 
-		ms.translate(0, 3 / 32d, 2 / 16f);
+		ms.translate(0, 10 / 32d, 0);
 		ms.scale(.75f, .75f, .75f);
 		itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 0);
 
 		ms.popPose();
+	}
+
+	public static void renderFlag(PartialModel flag, StationTileEntity te, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light, int overlay) {
+		if (!te.resolveFlagAngle())
+			return;
+		SuperByteBuffer flagBB = CachedBufferer.partial(flag, te.getBlockState());
+		transformFlag(flagBB, te, partialTicks, te.flagYRot, te.flagFlipped);
+		flagBB.translate(0.5f / 16, 0, 0)
+			.rotateY(te.flagFlipped ? 0 : 180)
+			.translate(-0.5f / 16, 0, 0)
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+	}
+
+	public static void transformFlag(Transform<?> flag, StationTileEntity te, float partialTicks, int yRot,
+		boolean flipped) {
+		float value = te.flag.getValue(partialTicks);
+		float progress = (float) (Math.pow(Math.min(value * 5, 1), 2));
+		if (te.flag.getChaseTarget() > 0 && !te.flag.settled() && progress == 1) {
+			float wiggleProgress = (value - .2f) / .8f;
+			progress += (Math.sin(wiggleProgress * (2 * Mth.PI) * 4) / 8f) / Math.max(1, 8f * wiggleProgress);
+		}
+
+		flag.centre()
+			.rotateY(yRot)
+			.translate(1 / 64f, 4.5f / 16f, flipped ? 13.5f / 16f : 2.5f / 16f)
+			.unCentre()
+			.rotateX((flipped ? 1 : -1) * (progress * 60 + 300));
 	}
 
 	@Override

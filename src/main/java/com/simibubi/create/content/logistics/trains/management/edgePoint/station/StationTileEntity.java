@@ -39,6 +39,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -68,6 +70,7 @@ import net.minecraftforge.network.PacketDistributor;
 public class StationTileEntity extends SmartTileEntity {
 
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
+	public LerpedFloat flag;
 
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
@@ -82,6 +85,9 @@ public class StationTileEntity extends SmartTileEntity {
 	boolean trainHasSchedule;
 	boolean trainHasAutoSchedule;
 
+	int flagYRot = -1;
+	boolean flagFlipped;
+
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		setLazyTickRate(20);
@@ -89,6 +95,8 @@ public class StationTileEntity extends SmartTileEntity {
 		failedCarriageIndex = -1;
 		autoSchedule = new StationInventory();
 		capability = LazyOptional.of(() -> autoSchedule);
+		flag = LerpedFloat.linear()
+			.startWithValue(0);
 	}
 
 	@Override
@@ -179,8 +187,22 @@ public class StationTileEntity extends SmartTileEntity {
 			refreshAssemblyInfo();
 		super.tick();
 
-		if (level.isClientSide)
+		if (level.isClientSide) {
+			float currentTarget = flag.getChaseTarget();
+			if (currentTarget == 0 || flag.settled()) {
+				int target = trainPresent || isAssembling() ? 1 : 0;
+				if (target != currentTarget) {
+					flag.chase(target, 0.1f, Chaser.LINEAR);
+					if (target == 1)
+						AllSoundEvents.CONTRAPTION_ASSEMBLE.playAt(level, worldPosition, 1, 2, true);
+				}
+			}
+			boolean settled = flag.getValue() > .15f;
+			flag.tickChaser();
+			if (currentTarget == 0 && settled != flag.getValue() > .15f)
+				AllSoundEvents.CONTRAPTION_DISASSEMBLE.playAt(level, worldPosition, 0.75f, 1.5f, true);
 			return;
+		}
 
 		GlobalStation station = getStation();
 		if (station == null)
@@ -604,10 +626,40 @@ public class StationTileEntity extends SmartTileEntity {
 
 		if (!(level instanceof ServerLevel server))
 			return;
-		
+
 		Vec3 v = Vec3.atCenterOf(worldPosition);
 		server.sendParticles(ParticleTypes.HAPPY_VILLAGER, v.x, v.y, v.z, 8, 0.35, 0.05, 0.35, 1);
 		server.sendParticles(ParticleTypes.END_ROD, v.x, v.y + .25f, v.z, 10, 0.05, 1, 0.05, 0.005f);
+	}
+
+	public boolean resolveFlagAngle() {
+		if (flagYRot != -1)
+			return true;
+
+		BlockState target = edgePoint.getTrackBlockState();
+		if (!(target.getBlock()instanceof ITrackBlock def))
+			return false;
+
+		Vec3 axis = null;
+		BlockPos trackPos = edgePoint.getGlobalPosition();
+		for (Vec3 vec3 : def.getTrackAxes(level, trackPos, target))
+			axis = vec3.scale(edgePoint.getTargetDirection()
+				.getStep());
+		if (axis == null)
+			return false;
+
+		Direction nearest = Direction.getNearest(axis.x, 0, axis.z);
+		flagYRot = (int) (-nearest.toYRot() - 90);
+
+		Vec3 diff = Vec3.atLowerCornerOf(trackPos.subtract(worldPosition))
+			.multiply(1, 0, 1);
+		if (diff.lengthSqr() == 0)
+			return true;
+
+		flagFlipped = diff.dot(Vec3.atLowerCornerOf(nearest.getClockWise()
+			.getNormal())) > 0;
+
+		return true;
 	}
 
 	private class StationInventory extends ItemStackHandler {

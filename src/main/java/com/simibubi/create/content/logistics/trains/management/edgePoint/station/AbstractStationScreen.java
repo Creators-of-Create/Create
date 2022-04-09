@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.statio
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
@@ -15,7 +16,6 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
@@ -76,17 +76,26 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		background.render(ms, x, y, this);
 
 		ms.pushPose();
-		TransformStack.cast(ms)
-			.pushPose()
+		TransformStack msr = TransformStack.cast(ms);
+		msr.pushPose()
 			.translate(x + background.width + 4, y + background.height + 4, 100)
 			.scale(40)
 			.rotateX(-22)
 			.rotateY(63);
-		GuiGameElement.of(te.getBlockState()
-			.setValue(StationBlock.FACING, Direction.EAST))
+		GuiGameElement.of(te.getBlockState())
 			.render(ms);
+
+		if (te.resolveFlagAngle()) {
+			msr.translate(1 / 16f, -9 / 16f, -11 / 16f);
+			StationRenderer.transformFlag(msr, te, partialTicks, 180, false);
+			GuiGameElement.of(getFlag(partialTicks))
+				.render(ms);
+		}
+
 		ms.popPose();
 	}
+
+	protected abstract PartialModel getFlag(float partialTicks);
 
 	protected Train getImminent() {
 		return te.imminentTrain == null ? null : CreateClient.RAILWAYS.trains.get(te.imminentTrain);

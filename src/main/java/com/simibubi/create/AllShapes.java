@@ -118,10 +118,7 @@ public class AllShapes {
 		GIRDER_BEAM_SHAFT = shape(GIRDER_BEAM.get(Axis.X)).add(SIX_VOXEL_POLE.get(Axis.Z))
 			.forHorizontalAxis(),
 
-		STATION = shape(0, 0, 0, 16, 5, 16).add(2, 4, 0, 14, 16, 4)
-			.forHorizontal(NORTH),
-		CONTROLS = shape(0, 0, 4, 16, 4, 16).add(0, 0, 6, 16, 14, 16)
-			.forHorizontal(NORTH),
+		CONTROLS = shape(0, 0, 6, 16, 14, 16).forHorizontal(NORTH),
 
 		NIXIE_TUBE = shape(9, 0, 5, 15, 12, 11).add(1, 0, 5, 7, 12, 11)
 			.forHorizontalAxis(),
@@ -234,6 +231,8 @@ public class AllShapes {
 			.add(0, 6, 0, 16, 12, 16)
 			.build(),
 		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
+			.build(),
+		STATION = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 8, 15)
 			.build()
 
 	;

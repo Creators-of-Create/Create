@@ -15,11 +15,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -32,7 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class StationBlock extends HorizontalDirectionalBlock implements ITE<StationTileEntity> {
+public class StationBlock extends Block implements ITE<StationTileEntity> {
 
 	public static final BooleanProperty ASSEMBLING = BooleanProperty.create("assembling");
 
@@ -43,7 +41,7 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
-		super.createBlockStateDefinition(pBuilder.add(FACING, ASSEMBLING));
+		super.createBlockStateDefinition(pBuilder.add(ASSEMBLING));
 	}
 
 	@Override
@@ -59,8 +57,8 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
-		super.fillItemCategory(pTab, pItems);
 		pItems.add(AllItems.SCHEDULE.asStack());
+		super.fillItemCategory(pTab, pItems);
 	}
 
 	@Override
@@ -105,13 +103,8 @@ public class StationBlock extends HorizontalDirectionalBlock implements ITE<Stat
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-		return super.getStateForPlacement(pContext).setValue(FACING, pContext.getHorizontalDirection());
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-		return AllShapes.STATION.get(pState.getValue(FACING));
+		return AllShapes.STATION;
 	}
 
 	@Override

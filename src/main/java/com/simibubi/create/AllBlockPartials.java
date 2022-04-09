@@ -135,6 +135,9 @@ public class AllBlockPartials {
 		SIGNAL_ON = block("track_signal/indicator_on"), SIGNAL_OFF = block("track_signal/indicator_off"),
 		DATA_GATHERER_TUBE = block("data_gatherer/tube"), DATA_GATHERER_GLOW = block("data_gatherer/glow"),
 
+		STATION_ON = block("track_station/flag_on"), STATION_OFF = block("track_station/flag_off"),
+		STATION_ASSEMBLE = block("track_station/flag_assemble"),
+
 		SIGNAL_PANEL = block("track_signal/panel"), SIGNAL_WHITE_CUBE = block("track_signal/white_cube"),
 		SIGNAL_WHITE_GLOW = block("track_signal/white_glow"), SIGNAL_WHITE = block("track_signal/white_tube"),
 		SIGNAL_RED_CUBE = block("track_signal/red_cube"), SIGNAL_RED_GLOW = block("track_signal/red_glow"),

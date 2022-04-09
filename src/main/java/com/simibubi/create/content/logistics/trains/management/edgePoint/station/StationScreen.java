@@ -4,8 +4,10 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
@@ -181,7 +183,7 @@ public class StationScreen extends AbstractStationScreen {
 		boolean trainAtStation = trainPresent();
 		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble;
 		dropScheduleButton.active = te.trainHasSchedule;
-		
+
 		if (te.trainHasSchedule)
 			dropScheduleButton.setToolTip(
 				Lang.translate(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
@@ -320,6 +322,11 @@ public class StationScreen extends AbstractStationScreen {
 		if (!switchingToAssemblyMode && train != null)
 			AllPackets.channel
 				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), false, train.icon.getId()));
+	}
+
+	@Override
+	protected PartialModel getFlag(float partialTicks) {
+		return te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF;
 	}
 
 }

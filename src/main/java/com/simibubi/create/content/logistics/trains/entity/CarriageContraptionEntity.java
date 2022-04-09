@@ -137,6 +137,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (contraption instanceof CarriageContraption cc)
 			for (Entity entity : getPassengers()) {
+				if (entity instanceof Player)
+					continue;
 				BlockPos seatOf = cc.getSeatOf(entity.getUUID());
 				if (seatOf == null)
 					continue;
