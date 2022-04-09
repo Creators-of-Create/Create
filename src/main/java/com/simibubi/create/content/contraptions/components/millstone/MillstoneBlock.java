@@ -116,6 +116,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			if (inserted == inEntity.getCount())
 				itemEntity.discard();
 			else itemEntity.setItem(ItemHandlerHelper.copyStackWithSize(inEntity, (int) (inEntity.getCount() - inserted)));
+			t.commit();
 		}
 	}
 
