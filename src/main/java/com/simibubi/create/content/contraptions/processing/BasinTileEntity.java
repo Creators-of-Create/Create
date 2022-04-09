@@ -121,9 +121,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	public BasinTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		inputInventory = new BasinInventory(9, this);
+		inputInventory = new BasinInventory(9, this, false);
 		inputInventory.whenContentsChanged(() -> contentsChanged = true);
-		outputInventory = new BasinInventory(9, this).forbidInsertion()
+		outputInventory = new BasinInventory(9, this, true).forbidInsertion()
 			.withMaxStackSize(64);
 		areFluidsMoving = false;
 		itemCapability = new CombinedStorage<>(List.of(inputInventory, outputInventory));
