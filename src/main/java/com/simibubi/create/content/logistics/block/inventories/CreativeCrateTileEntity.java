@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.inventories;
 
 import java.util.List;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class CreativeCrateTileEntity extends CrateTileEntity {
+public class CreativeCrateTileEntity extends CrateTileEntity implements ItemTransferable {
 
 	public CreativeCrateTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
