@@ -47,6 +47,7 @@ public interface MovementBehaviour {
 				long inserted = context.contraption.inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
 				remainder = stack.copy();
 				remainder.shrink((int) inserted);
+				t.commit();
 			}
 		}
 		else

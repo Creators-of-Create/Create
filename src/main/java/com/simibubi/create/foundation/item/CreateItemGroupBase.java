@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.Block;
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	public CreateItemGroupBase(String id) {
-		super(ItemGroupUtil.getGroupCountSafe(), Create.ID + "." + id);
+		super(ItemGroupUtil.expandArrayAndGetId(), Create.ID + "." + id);
 	}
 
 	@Override
