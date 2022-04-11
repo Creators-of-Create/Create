@@ -112,7 +112,7 @@ public class DumpRailwaysCommand {
 							.replaceAll("_", " ")),
 					runtime.paused ? darkBlue : blue);
 				if (!runtime.paused && runtime.state != State.POST_TRANSIT) {
-					for (Component component : runtime.getSchedule().entries.get(runtime.currentEntry).destination
+					for (Component component : runtime.getSchedule().entries.get(runtime.currentEntry).instruction
 						.getTitleAs("destination")) {
 						chat.accept("   - " + component.getString(), blue);
 					}

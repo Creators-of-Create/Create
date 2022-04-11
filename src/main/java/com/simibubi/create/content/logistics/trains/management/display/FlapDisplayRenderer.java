@@ -234,7 +234,8 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partial(AllBlockPartials.SHAFTLESS_COGWHEEL, state);
+		return CachedBufferer.partialFacingVertical(AllBlockPartials.SHAFTLESS_COGWHEEL, state,
+			state.getValue(FlapDisplayBlock.HORIZONTAL_FACING));
 	}
 
 	@Override

@@ -321,7 +321,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		if (!(passenger instanceof LivingEntity living))
 			return;
+		float prevAngle = living.getYRot();
 		float angle = AngleHelper.deg(-Mth.atan2(motion.x, motion.z));
+		angle = AngleHelper.angleLerp(0.4f, prevAngle, angle);
 		if (level.isClientSide) {
 			living.lerpTo(0, 0, 0, 0, 0, 0, false);
 			living.lerpHeadTo(0, 0);

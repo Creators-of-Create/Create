@@ -1,11 +1,14 @@
 package com.simibubi.create.content.logistics.trains.management.schedule;
 
+import java.util.List;
+
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -13,6 +16,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -27,8 +32,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 public class ScheduleItem extends Item implements MenuProvider {
@@ -120,6 +128,29 @@ public class ScheduleItem extends Item implements MenuProvider {
 			pPlayer.setItemInHand(pUsedHand, pStack.isEmpty() ? ItemStack.EMPTY : pStack);
 		}
 		return InteractionResult.SUCCESS;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+		Schedule schedule = getSchedule(stack);
+		if (schedule == null || schedule.entries.isEmpty())
+			return;
+
+		MutableComponent caret = new TextComponent("> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent arrow = new TextComponent("-> ").withStyle(ChatFormatting.GRAY);
+
+		List<ScheduleEntry> entries = schedule.entries;
+		for (int i = 0; i < entries.size(); i++) {
+			boolean current = i == schedule.savedProgress && schedule.entries.size() > 1;
+			ScheduleEntry entry = entries.get(i);
+			if (!(entry.instruction instanceof DestinationInstruction destination))
+				continue;
+			ChatFormatting format = current ? ChatFormatting.YELLOW : ChatFormatting.GOLD;
+			MutableComponent prefix = current ? arrow : caret;
+			tooltip.add(prefix.copy()
+				.append(new TextComponent(destination.getFilter()).withStyle(format)));
+		}
 	}
 
 	public static Schedule getSchedule(ItemStack pStack) {

@@ -331,7 +331,7 @@ public class Train {
 
 		GlobalStation destination = navigation.destination;
 		if (!navigatingManually && fullRefresh) {
-			GlobalStation preferredDestination = runtime.findNextStation();
+			GlobalStation preferredDestination = runtime.startCurrentInstruction();
 			if (preferredDestination != null)
 				destination = preferredDestination;
 		}

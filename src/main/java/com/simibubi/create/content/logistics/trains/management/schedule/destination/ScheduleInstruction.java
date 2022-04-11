@@ -10,11 +10,13 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class ScheduleDestination implements IScheduleInput {
+public abstract class ScheduleInstruction implements IScheduleInput {
 
 	protected abstract void write(CompoundTag tag);
 
 	protected abstract void read(CompoundTag tag);
+	
+	public abstract boolean supportsConditions();
 
 	public final CompoundTag write() {
 		CompoundTag tag = new CompoundTag();
@@ -23,20 +25,20 @@ public abstract class ScheduleDestination implements IScheduleInput {
 		return tag;
 	}
 
-	public static ScheduleDestination fromTag(CompoundTag tag) {
+	public static ScheduleInstruction fromTag(CompoundTag tag) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Id"));
-		Supplier<? extends ScheduleDestination> supplier = null;
-		for (Pair<ResourceLocation, Supplier<? extends ScheduleDestination>> pair : Schedule.DESTINATION_TYPES)
+		Supplier<? extends ScheduleInstruction> supplier = null;
+		for (Pair<ResourceLocation, Supplier<? extends ScheduleInstruction>> pair : Schedule.INSTRUCTION_TYPES)
 			if (pair.getFirst()
 				.equals(location))
 				supplier = pair.getSecond();
 
 		if (supplier == null) {
-			Create.LOGGER.warn("Could not parse schedule destination type: " + location);
-			return null;
+			Create.LOGGER.warn("Could not parse schedule instruction type: " + location);
+			return new DestinationInstruction();
 		}
 
-		ScheduleDestination scheduleDestination = supplier.get();
+		ScheduleInstruction scheduleDestination = supplier.get();
 		scheduleDestination.read(tag);
 		return scheduleDestination;
 	}

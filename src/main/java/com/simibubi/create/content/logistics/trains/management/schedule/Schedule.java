@@ -13,10 +13,9 @@ import com.simibubi.create.content.logistics.trains.management.schedule.conditio
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationPoweredCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationUnloadedCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimeOfDayCondition;
-import com.simibubi.create.content.logistics.trains.management.schedule.destination.FilteredDestination;
-import com.simibubi.create.content.logistics.trains.management.schedule.destination.NearestDestination;
-import com.simibubi.create.content.logistics.trains.management.schedule.destination.RedstoneDestination;
-import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleDestination;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -29,15 +28,14 @@ import net.minecraft.resources.ResourceLocation;
 
 public class Schedule {
 
-	public static List<Pair<ResourceLocation, Supplier<? extends ScheduleDestination>>> DESTINATION_TYPES =
+	public static List<Pair<ResourceLocation, Supplier<? extends ScheduleInstruction>>> INSTRUCTION_TYPES =
 		new ArrayList<>();
 	public static List<Pair<ResourceLocation, Supplier<? extends ScheduleWaitCondition>>> CONDITION_TYPES =
 		new ArrayList<>();
 
 	static {
-		registerDestination("filtered", FilteredDestination::new);
-		registerDestination("nearest", NearestDestination::new);
-		registerDestination("redstone", RedstoneDestination::new);
+		registerInstruction("destination", DestinationInstruction::new);
+		registerInstruction("rename", ChangeTitleInstruction::new);
 		registerCondition("delay", ScheduledDelay::new);
 		registerCondition("time_of_day", TimeOfDayCondition::new);
 		registerCondition("fluid_threshold", FluidThresholdCondition::new);
@@ -47,8 +45,8 @@ public class Schedule {
 		registerCondition("powered", StationPoweredCondition::new);
 	}
 
-	private static void registerDestination(String name, Supplier<? extends ScheduleDestination> factory) {
-		DESTINATION_TYPES.add(Pair.of(Create.asResource(name), factory));
+	private static void registerInstruction(String name, Supplier<? extends ScheduleInstruction> factory) {
+		INSTRUCTION_TYPES.add(Pair.of(Create.asResource(name), factory));
 	}
 
 	private static void registerCondition(String name, Supplier<? extends ScheduleWaitCondition> factory) {
@@ -56,7 +54,7 @@ public class Schedule {
 	}
 
 	public static <T> List<? extends Component> getTypeOptions(List<Pair<ResourceLocation, T>> list) {
-		String langSection = list.equals(DESTINATION_TYPES) ? "destination." : "condition.";
+		String langSection = list.equals(INSTRUCTION_TYPES) ? "instruction." : "condition.";
 		return list.stream()
 			.map(Pair::getFirst)
 			.map(rl -> rl.getNamespace() + ".schedule." + langSection + rl.getPath())
