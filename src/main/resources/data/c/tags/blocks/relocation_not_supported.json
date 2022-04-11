@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "bitsandchisels:bits_block",
+      "required": false
+    }
+  ]
+}
