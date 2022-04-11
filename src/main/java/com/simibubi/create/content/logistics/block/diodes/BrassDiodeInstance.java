@@ -19,7 +19,7 @@ public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeTileEntity
 
         indicator = modelManager.defaultSolid()
                 .material(Materials.TRANSFORMED)
-                .getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
+                .getModel(AllBlockPartials.FLEXPEATER_INDICATOR).createInstance();
 
         indicator.loadIdentity()
 				.translate(getInstancePosition())
