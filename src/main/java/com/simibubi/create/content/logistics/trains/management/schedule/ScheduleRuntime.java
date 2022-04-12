@@ -332,21 +332,28 @@ public class ScheduleRuntime {
 	}
 
 	private TrainDeparturePrediction createPrediction(int index, String destination, String currentTitle, int time) {
-		if (index >= schedule.entries.size()) {
+		int size = schedule.entries.size();
+		if (index >= size) {
 			if (!schedule.cyclic)
 				return new TrainDeparturePrediction(train, time, new TextComponent(" "), destination);
-			index %= schedule.entries.size();
+			index %= size;
 		}
 
-		ScheduleEntry scheduleEntry = schedule.entries.get(index);
-		if (!(scheduleEntry.instruction instanceof DestinationInstruction instruction))
-			return null;
+		String text = currentTitle;
+		if (text.isBlank()) {
+			for (int i = 1; i < size; i++) {
+				int j = (index + i) % size;
+				ScheduleEntry scheduleEntry = schedule.entries.get(j);
+				if (!(scheduleEntry.instruction instanceof DestinationInstruction instruction))
+					continue;
+				text = instruction.getFilter()
+					.replaceAll("\\*", "")
+					.trim();
+				break;
+			}
+		}
 
-		return new TrainDeparturePrediction(train, time,
-			new TextComponent(currentTitle.isBlank() ? instruction.getFilter()
-				.replaceAll("\\*", "")
-				.trim() : currentTitle),
-			destination);
+		return new TrainDeparturePrediction(train, time, new TextComponent(text), destination);
 	}
 
 	public CompoundTag write() {
