@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import static net.minecraft.core.Direction.EAST;
 import static net.minecraft.core.Direction.NORTH;
 import static net.minecraft.core.Direction.SOUTH;
 import static net.minecraft.core.Direction.UP;
@@ -7,6 +8,7 @@ import static net.minecraft.core.Direction.UP;
 import java.util.function.BiFunction;
 
 import com.simibubi.create.content.logistics.block.chute.ChuteShapes;
+import com.simibubi.create.content.logistics.trains.track.TrackVoxelShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.core.Direction;
@@ -28,11 +30,12 @@ public class AllShapes {
 		CASING_13PX = shape(0, 0, 0, 16, 13, 16).forDirectional(),
 		CASING_12PX = shape(0, 0, 0, 16, 12, 16).forDirectional(),
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
-		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(), TRACK = shape(0, 0, 0, 16, 4, 16).forDirectional(),
+		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
+
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
 		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(), TEN_VOXEL_POLE = shape(3, 0, 3, 13, 16, 13).forAxis(),
 		FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14)
-			.forHorizontal(Direction.SOUTH),
+			.forHorizontal(SOUTH),
 		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 14, 16).forDirectional(),
 		PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14)
 			.add(2, 13, 2, 14, 16, 14)
@@ -87,19 +90,19 @@ public class AllShapes {
 			.add(5, 14, 4, 11, 15, 10)
 			.add(5, 15, 5, 11, 16, 9)
 			.add(5, 16, 6, 11, 17, 8)
-			.forHorizontal(Direction.SOUTH),
+			.forHorizontal(SOUTH),
 		SMART_FLUID_PIPE_WALL = shape(4, 0, 4, 12, 16, 12).add(3, 3, 3, 13, 13, 13)
 			.add(5, 5, 13, 11, 13, 14)
 			.add(5, 6, 14, 11, 12, 15)
 			.add(5, 7, 15, 11, 11, 16)
 			.add(5, 8, 16, 11, 10, 17)
-			.forHorizontal(Direction.SOUTH),
+			.forHorizontal(SOUTH),
 		SMART_FLUID_PIPE_CEILING = shape(4, 4, 0, 12, 12, 16).add(3, 3, 3, 13, 13, 13)
 			.add(5, 2, 3, 11, 3, 11)
 			.add(5, 1, 4, 11, 2, 10)
 			.add(5, 0, 5, 11, 1, 9)
 			.add(5, -1, 6, 11, 0, 8)
-			.forHorizontal(Direction.SOUTH),
+			.forHorizontal(SOUTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
 			.forDirectional(Direction.UP),
@@ -125,9 +128,9 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(9, 4, 5, 15, 16, 11).add(1, 4, 5, 7, 16, 11)
 			.forHorizontalAxis(),
 		NIXIE_TUBE_WALL = shape(5, 9, 0, 11, 15, 12).add(5, 1, 0, 11, 7, 12)
-			.forHorizontal(Direction.SOUTH),
+			.forHorizontal(SOUTH),
 
-		FLAP_DISPLAY = shape(0, 0, 3, 16, 16, 13).forHorizontal(Direction.SOUTH),
+		FLAP_DISPLAY = shape(0, 0, 3, 16, 16, 13).forHorizontal(SOUTH),
 
 		DATA_GATHERER = shape(1, 0, 1, 15, 6, 15).add(3, 5, 3, 13, 9, 13)
 			.forDirectional(),
@@ -140,7 +143,11 @@ public class AllShapes {
 			.forHorizontalAxis(),
 		STEAM_ENGINE_WALL = shape(1, 1, 0, 15, 15, 3).add(3, 3, 0, 13, 13, 15)
 			.add(1, 4, 5, 15, 12, 13)
-			.forHorizontal(Direction.SOUTH)
+			.forHorizontal(SOUTH),
+
+		TRACK_ORTHO = shape(TrackVoxelShapes.orthogonal()).forHorizontal(NORTH),
+		TRACK_ASC = shape(TrackVoxelShapes.ascending()).forHorizontal(SOUTH),
+		TRACK_DIAG = shape(TrackVoxelShapes.diagonal()).forHorizontal(SOUTH)
 
 	;
 
@@ -165,11 +172,19 @@ public class AllShapes {
 	// Static Block Shapes
 	public static final VoxelShape
 
-	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)
-		.add(2, 0, 2, 14, 2, 14)
-		.build(), BASIN_RAYTRACE_SHAPE =
-			shape(0, 2, 0, 16, 16, 16).add(2, 0, 2, 14, 2, 14)
-				.build(),
+	TRACK_CROSS = shape(TRACK_ORTHO.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
+		.build(),
+
+		TRACK_CROSS_DIAG = shape(TRACK_DIAG.get(SOUTH)).add(TRACK_DIAG.get(EAST))
+			.build(),
+
+		TRACK_FALLBACK = shape(0, 0, 0, 16, 4, 16).build(),
+
+		BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)
+			.add(2, 0, 2, 14, 2, 14)
+			.build(),
+		BASIN_RAYTRACE_SHAPE = shape(0, 2, 0, 16, 16, 16).add(2, 0, 2, 14, 2, 14)
+			.build(),
 		BASIN_COLLISION_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
 			.add(2, 0, 2, 14, 2, 14)
 			.build(),
@@ -240,7 +255,12 @@ public class AllShapes {
 	// More Shapers
 	public static final VoxelShaper
 
-	MECHANICAL_PISTON_HEAD = shape(PISTON_HEAD).forDirectional(), MECHANICAL_PISTON = CASING_12PX,
+	TRACK_CROSS_ORTHO_DIAG = shape(TRACK_DIAG.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
+		.forHorizontal(SOUTH), TRACK_CROSS_DIAG_ORTHO =
+			shape(TRACK_DIAG.get(SOUTH)).add(TRACK_ORTHO.get(SOUTH))
+				.forHorizontal(SOUTH),
+
+		MECHANICAL_PISTON_HEAD = shape(PISTON_HEAD).forDirectional(), MECHANICAL_PISTON = CASING_12PX,
 		MECHANICAL_PISTON_EXTENDED = shape(PISTON_EXTENDED).forDirectional(),
 		SMALL_GEAR = shape(SMALL_GEAR_SHAPE).add(SIX_VOXEL_POLE.get(Axis.Y))
 			.forAxis(),

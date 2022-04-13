@@ -19,6 +19,7 @@
     "HeavyBootsOnPlayerMixin",
     "ModelDataRefreshMixin",
     "WindowResizeMixin",
+    "GameRendererMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
     "accessor.ParticleEngineAccessor"

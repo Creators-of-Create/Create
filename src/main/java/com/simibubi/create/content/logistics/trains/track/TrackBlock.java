@@ -1,11 +1,18 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import static com.simibubi.create.AllShapes.TRACK_ASC;
+import static com.simibubi.create.AllShapes.TRACK_CROSS_DIAG_ORTHO;
+import static com.simibubi.create.AllShapes.TRACK_CROSS_ORTHO_DIAG;
+import static com.simibubi.create.AllShapes.TRACK_DIAG;
+import static com.simibubi.create.AllShapes.TRACK_ORTHO;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -25,6 +32,7 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation.Discovered
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -64,6 +72,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IBlockRenderProperties;
 
 public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock {
 
@@ -79,6 +88,11 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TURN));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+		consumer.accept(new ReducedDestroyEffects());
 	}
 
 	@Override
@@ -260,7 +274,48 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
-		return AllShapes.TRACK.get(Direction.UP);
+		return getFullShape(state);
+	}
+
+	@Override
+	public VoxelShape getInteractionShape(BlockState state, BlockGetter pLevel, BlockPos pPos) {
+		return getFullShape(state);
+	}
+
+	private VoxelShape getFullShape(BlockState state) {
+		switch (state.getValue(SHAPE)) {
+		case AE:
+			return TRACK_ASC.get(Direction.EAST);
+		case AW:
+			return TRACK_ASC.get(Direction.WEST);
+		case AN:
+			return TRACK_ASC.get(Direction.NORTH);
+		case AS:
+			return TRACK_ASC.get(Direction.SOUTH);
+		case CR_D:
+			return AllShapes.TRACK_CROSS_DIAG;
+		case CR_NDX:
+			return TRACK_CROSS_ORTHO_DIAG.get(Direction.SOUTH);
+		case CR_NDZ:
+			return TRACK_CROSS_DIAG_ORTHO.get(Direction.SOUTH);
+		case CR_O:
+			return AllShapes.TRACK_CROSS;
+		case CR_PDX:
+			return TRACK_CROSS_DIAG_ORTHO.get(Direction.EAST);
+		case CR_PDZ:
+			return TRACK_CROSS_ORTHO_DIAG.get(Direction.EAST);
+		case ND:
+			return TRACK_DIAG.get(Direction.SOUTH);
+		case PD:
+			return TRACK_DIAG.get(Direction.EAST);
+		case XO:
+			return TRACK_ORTHO.get(Direction.EAST);
+		case ZO:
+			return TRACK_ORTHO.get(Direction.SOUTH);
+		case NONE:
+		default:
+		}
+		return AllShapes.TRACK_FALLBACK;
 	}
 
 	@Override
@@ -296,7 +351,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			TrackRemoval.wrenched(context.getClickedPos());
 		return InteractionResult.SUCCESS;
 	}
-	
+
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
 		if (context.getLevel().isClientSide)
