@@ -6,19 +6,25 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleTileEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
+import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -39,6 +45,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	public static final BehaviourType<TrackTargetingBehaviour<?>> TYPE = new BehaviourType<>();
 
 	private BlockPos targetTrack;
+	private BezierTrackPointLocation targetBezier;
 	private AxisDirection targetDirection;
 	private UUID id;
 
@@ -62,6 +69,13 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		nbt.putBoolean("TargetDirection", targetDirection == AxisDirection.POSITIVE);
 		if (migrationData != null && !clientPacket)
 			nbt.put("Migrate", migrationData);
+		if (targetBezier != null) {
+			CompoundTag bezierNbt = new CompoundTag();
+			bezierNbt.putInt("Segment", targetBezier.segment());
+			bezierNbt.put("Key", NbtUtils.writeBlockPos(targetBezier.curveTarget()
+				.subtract(getPos())));
+			nbt.put("Bezier", bezierNbt);
+		}
 		super.write(nbt, clientPacket);
 	}
 
@@ -74,6 +88,12 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 			migrationData = nbt.getCompound("Migrate");
 		if (clientPacket)
 			edgePoint = null;
+		if (nbt.contains("Bezier")) {
+			CompoundTag bezierNbt = nbt.getCompound("Bezier");
+			BlockPos key = NbtUtils.readBlockPos(bezierNbt.getCompound("Key"));
+			targetBezier = new BezierTrackPointLocation(bezierNbt.contains("FromStack") ? key : key.offset(getPos()),
+				bezierNbt.getInt("Segment"));
+		}
 		super.read(nbt, clientPacket);
 	}
 
@@ -195,7 +215,13 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		return targetDirection;
 	}
 
+	public BezierTrackPointLocation getTargetBezier() {
+		return targetBezier;
+	}
+
 	public GraphLocation determineGraphLocation() {
+		if (targetBezier != null)
+			return determineBezierGraphLocation();
 		Level level = getWorld();
 		BlockPos pos = getGlobalPosition();
 		BlockState state = getTrackBlockState();
@@ -204,13 +230,57 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 				.get(0));
 	}
 
+	public GraphLocation determineBezierGraphLocation() {
+		Level level = getWorld();
+		BlockPos pos = getGlobalPosition();
+		BlockState state = getTrackBlockState();
+		if (!(state.getBlock() instanceof ITrackBlock track))
+			return null;
+		if (!(level.getBlockEntity(pos) instanceof TrackTileEntity trackTE))
+			return null;
+		BezierConnection bc = trackTE.getConnections()
+			.get(targetBezier.curveTarget());
+		if (bc == null || !bc.isPrimary())
+			return null;
+
+		TrackNodeLocation targetLoc = new TrackNodeLocation(bc.starts.getSecond());
+		for (DiscoveredLocation location : track.getConnected(level, pos, state, true, null)) {
+			TrackGraph graph = Create.RAILWAYS.sided(level)
+				.getGraph(level, location);
+			if (graph == null)
+				continue;
+			TrackNode targetNode = graph.locateNode(targetLoc);
+			if (targetNode == null)
+				continue;
+			TrackNode node = graph.locateNode(location);
+			TrackEdge edge = graph.getConnectionsFrom(node)
+				.get(targetNode);
+			if (edge == null)
+				continue;
+
+			GraphLocation graphLocation = new GraphLocation();
+			graphLocation.graph = graph;
+			graphLocation.edge = Couple.create(location, targetLoc);
+			graphLocation.position = (targetBezier.segment() + 1) / 2f;
+			if (targetDirection == AxisDirection.POSITIVE) {
+				graphLocation.edge = graphLocation.edge.swap();
+				graphLocation.position = edge.getLength(node, targetNode) - graphLocation.position;
+			}
+
+			return graphLocation;
+		}
+
+		return null;
+	}
+
 	public static enum RenderedTrackOverlayType {
 		STATION, SIGNAL, DUAL_SIGNAL;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction, int tintColor, PoseStack ms,
-		MultiBufferSource buffer, int light, int overlay, RenderedTrackOverlayType type) {
+	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction,
+		BezierTrackPointLocation bezier, int tintColor, PoseStack ms, MultiBufferSource buffer, int light, int overlay,
+		RenderedTrackOverlayType type) {
 		BlockState trackState = level.getBlockState(pos);
 		Block block = trackState.getBlock();
 		if (!(block instanceof ITrackBlock))
@@ -220,8 +290,8 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
 		ITrackBlock track = (ITrackBlock) block;
-		SuperByteBuffer sbb =
-			CachedBufferer.partial(track.prepareTrackOverlay(level, pos, trackState, direction, ms, type), trackState);
+		SuperByteBuffer sbb = CachedBufferer
+			.partial(track.prepareTrackOverlay(level, pos, trackState, bezier, direction, ms, type), trackState);
 		sbb.light(LevelRenderer.getLightColor(level, pos));
 		sbb.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 

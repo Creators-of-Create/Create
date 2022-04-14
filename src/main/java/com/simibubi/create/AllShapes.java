@@ -178,6 +178,8 @@ public class AllShapes {
 		TRACK_CROSS_DIAG = shape(TRACK_DIAG.get(SOUTH)).add(TRACK_DIAG.get(EAST))
 			.build(),
 
+		TRACK_COLLISION = shape(0, 0, 0, 16, 2, 16).build(),
+
 		TRACK_FALLBACK = shape(0, 0, 0, 16, 4, 16).build(),
 
 		BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)

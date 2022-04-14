@@ -49,11 +49,13 @@ import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.content.logistics.trains.TrackGraphSyncPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocationPacket;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.CurvedTrackSelectionPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroupPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationEditPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket.TrainEditReturnPacket;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEditPacket;
+import com.simibubi.create.content.logistics.trains.track.CurvedTrackDestroyPacket;
 import com.simibubi.create.content.logistics.trains.track.TrackRemovalPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
@@ -122,6 +124,8 @@ public enum AllPackets {
 	CONTROLS_INPUT(ControlsInputPacket.class, ControlsInputPacket::new, PLAY_TO_SERVER),
 	REMOVE_TRACKS(TrackRemovalPacket.class, TrackRemovalPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_DATA_GATHERER(DataGathererConfigurationPacket.class, DataGathererConfigurationPacket::new, PLAY_TO_SERVER),
+	DESTROY_CURVED_TRACK(CurvedTrackDestroyPacket.class, CurvedTrackDestroyPacket::new, PLAY_TO_SERVER),
+	SELECT_CURVED_TRACK(CurvedTrackSelectionPacket.class, CurvedTrackSelectionPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),

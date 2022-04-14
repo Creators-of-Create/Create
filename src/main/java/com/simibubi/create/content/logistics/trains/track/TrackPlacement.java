@@ -334,7 +334,7 @@ public class TrackPlacement {
 
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
-				if (stateAtPos.getBlock()instanceof ITrackBlock trackAtPos) {
+				if (stateAtPos.getBlock() instanceof ITrackBlock trackAtPos) {
 					toPlace = trackAtPos.overlay(level, offsetPos, stateAtPos, toPlace);
 					canPlace = true;
 				}
@@ -413,7 +413,8 @@ public class TrackPlacement {
 				.withStyle(ChatFormatting.GREEN), true);
 		else if (info.message != null)
 			player.displayClientMessage(Lang.translate(info.message)
-				.withStyle(ChatFormatting.RED), true);
+				.withStyle(info.message.equals("track.second_point") ? ChatFormatting.WHITE : ChatFormatting.RED),
+				true);
 
 		animation.chase(info.valid ? 1 : 0, 0.25, Chaser.EXP);
 		animation.tickChaser();

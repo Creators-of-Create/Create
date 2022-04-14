@@ -1412,6 +1412,8 @@
 	"create.track.leave_slope_ascending": "Cannot leave this slope while ascending",
 	"create.track.leave_slope_descending": "Cannot leave this slope while descending",
 	"create.track.turn_90": "Can only turn up to 90 Degrees",
+	"create.track.junction_start": "Cannot start connection from a Junction",
+	"create.track.turn_start": "Cannot start connection from a Turn",
 
 	"create.station.create_train": "Create new Train",
 	"create.station.disassemble_train": "Disassemble Train",

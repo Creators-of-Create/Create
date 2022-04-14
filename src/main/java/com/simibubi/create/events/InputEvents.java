@@ -4,6 +4,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
+import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 
@@ -60,6 +61,11 @@ public class InputEvents {
 	public static void onClickInput(ClickInputEvent event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
+		
+		if (CurvedTrackInteraction.onClickInput(event)) {
+			event.setCanceled(true);
+			return;
+		}
 
 		if (event.getKeyMapping() == Minecraft.getInstance().options.keyPickItem) {
 			if (ToolboxHandlerClient.onPickItem())

@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +46,14 @@ public class TrackBlockItem extends BlockItem {
 		Vec3 lookAngle = player.getLookAngle();
 
 		if (!isFoil(stack)) {
+			if (state.getBlock() instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
+				.size() > 1) {
+				if (!level.isClientSide)
+					player.displayClientMessage(Lang.translate("track.junction_start")
+						.withStyle(ChatFormatting.RED), true);
+				return InteractionResult.SUCCESS;
+			}
+
 			if (select(level, pos, lookAngle, stack))
 				return InteractionResult.SUCCESS;
 			return super.useOn(pContext);
@@ -81,7 +90,7 @@ public class TrackBlockItem extends BlockItem {
 		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		if (offhandItem.getItem()instanceof BlockItem blockItem) {
+		if (offhandItem.getItem() instanceof BlockItem blockItem) {
 			Block block = blockItem.getBlock();
 			if (block == null)
 				return InteractionResult.SUCCESS;

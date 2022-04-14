@@ -319,7 +319,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			if (schedule.savedProgress == i && !schedule.entries.isEmpty()) {
 				matrixStack.pushPose();
 				float expectedY = scrollOffset + topPos + yOffset + 4;
-				float actualY = Mth.clamp(expectedY, 49, 197);
+				float actualY = Mth.clamp(expectedY, topPos + 18, topPos + 170);
 				matrixStack.translate(0, actualY, 0);
 				(expectedY == actualY ? AllGuiTextures.SCHEDULE_POINTER : AllGuiTextures.SCHEDULE_POINTER_OFFSCREEN)
 					.render(matrixStack, leftPos, 0);

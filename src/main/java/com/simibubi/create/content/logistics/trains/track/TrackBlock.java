@@ -32,11 +32,14 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation.Discovered
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -68,6 +71,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraftforge.api.distmarker.Dist;
@@ -92,7 +96,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new ReducedDestroyEffects());
+		consumer.accept(new RenderProperties());
 	}
 
 	@Override
@@ -319,6 +323,17 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	}
 
 	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+		CollisionContext pContext) {
+		switch (pState.getValue(SHAPE)) {
+		case AE, AW, AN, AS:
+			return Shapes.empty();
+		default:
+			return AllShapes.TRACK_COLLISION;
+		}
+	}
+
+	@Override
 	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState state) {
 		if (!state.getValue(HAS_TURN))
 			return null;
@@ -419,24 +434,60 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state, AxisDirection direction,
-		PoseStack ms, RenderedTrackOverlayType type) {
-		Vec3 axis = state.getValue(SHAPE)
-			.getAxes()
-			.get(0);
-		Vec3 directionVec = axis.scale(direction.getStep())
-			.normalize();
-		Vec3 normal = getUpNormal(world, pos, state);
-		Vec3 angles = TrackRenderer.getModelAngles(normal, directionVec);
+	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
+		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack ms, RenderedTrackOverlayType type) {
+		TransformStack msr = TransformStack.cast(ms);
 
-		TransformStack.cast(ms)
-			.centre()
+		Vec3 axis = null;
+		Vec3 diff = null;
+		Vec3 normal = null;
+		Vec3 offset = null;
+
+		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackTileEntity trackTE) {
+			BezierConnection bc = trackTE.connections.get(bezierPoint.curveTarget());
+			if (bc != null) {
+				double length = Mth.floor(bc.getLength() * 2);
+				int seg = bezierPoint.segment() + 1;
+				double t = seg / length;
+				double tpre = (seg - 1) / length;
+				double tpost = (seg + 1) / length;
+
+				offset = bc.getPosition(t);
+				normal = bc.getNormal(t);
+				diff = bc.getPosition(tpost)
+					.subtract(bc.getPosition(tpre))
+					.normalize();
+
+				msr.translate(offset.subtract(Vec3.atBottomCenterOf(pos)));
+				msr.translate(0, -4 / 16f, 0);
+			}
+		}
+
+		if (normal == null) {
+			axis = state.getValue(SHAPE)
+				.getAxes()
+				.get(0);
+			diff = axis.scale(direction.getStep())
+				.normalize();
+			normal = getUpNormal(world, pos, state);
+		}
+
+		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
+
+		msr.centre()
 			.rotateYRadians(angles.y)
 			.rotateXRadians(angles.x)
-			.unCentre()
-			.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0)
-			.scale(type == RenderedTrackOverlayType.STATION ? 1 + 1 / 512f : 1);
+			.unCentre();
 
+		if (axis != null)
+			msr.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
+		else {
+			msr.translate(0, 4 / 16f, 0);
+			if (direction == AxisDirection.NEGATIVE)
+				msr.rotateCentered(Direction.UP, Mth.PI);
+		}
+
+		msr.scale(type == RenderedTrackOverlayType.STATION ? 1 + 1 / 512f : 1);
 		return type == RenderedTrackOverlayType.STATION ? AllBlockPartials.TRACK_STATION_OVERLAY
 			: type == RenderedTrackOverlayType.SIGNAL ? AllBlockPartials.TRACK_SIGNAL_OVERLAY
 				: AllBlockPartials.TRACK_SIGNAL_DUAL_OVERLAY;
@@ -446,6 +497,18 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public boolean trackEquals(BlockState state1, BlockState state2) {
 		return state1.getBlock() == this && state2.getBlock() == this
 			&& state1.setValue(HAS_TURN, false) == state2.setValue(HAS_TURN, false);
+	}
+
+	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
+		@Override
+		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
+			int progress, BlockState blockState) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof TrackTileEntity track)
+				for (BlockPos trackPos : track.connections.keySet())
+					renderer.destroyBlockProgress(trackPos.hashCode(), trackPos, progress);
+			return false;
+		}
 	}
 
 }

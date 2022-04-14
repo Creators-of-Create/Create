@@ -49,6 +49,13 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		return connections;
 	}
 
+	@Override
+	public void initialize() {
+		super.initialize();
+		if (!level.isClientSide && hasInteractableConnections())
+			registerToCurveInteraction();
+	}
+
 	private void validateConnections() {
 		Set<BlockPos> invalid = new HashSet<>();
 		for (Entry<BlockPos, BezierConnection> entry : connections.entrySet()) {
@@ -63,7 +70,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		}
 
 		connectionsValidated = true;
-		for (BlockPos blockPos : invalid) 
+		for (BlockPos blockPos : invalid)
 			removeConnection(blockPos);
 	}
 
@@ -117,6 +124,11 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		}
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+
+		if (hasInteractableConnections())
+			registerToCurveInteraction();
+		else
+			removeFromCurveInteraction();
 	}
 
 	@Override
@@ -134,6 +146,13 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			connections.putAll(track.connections);
 		connectionsValidated = false;
 		level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
+	}
+
+	public boolean hasInteractableConnections() {
+		for (BezierConnection connection : connections.values())
+			if (connection.isPrimary())
+				return true;
+		return false;
 	}
 
 	@Override
@@ -171,6 +190,33 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		}
 
 		connections = transformedConnections;
+	}
+
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		if (level.isClientSide)
+			removeFromCurveInteraction();
+	}
+
+	private void registerToCurveInteraction() {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerToCurveInteractionUnsafe);
+	}
+
+	private void removeFromCurveInteraction() {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void registerToCurveInteractionUnsafe() {
+		TrackBlockOutline.TRACKS_WITH_TURNS.get(level)
+			.put(worldPosition, this);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void removeFromCurveInteractionUnsafe() {
+		TrackBlockOutline.TRACKS_WITH_TURNS.get(level)
+			.remove(worldPosition);
 	}
 
 }

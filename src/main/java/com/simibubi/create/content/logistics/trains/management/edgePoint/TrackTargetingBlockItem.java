@@ -2,10 +2,16 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
+import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +25,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TrackTargetingBlockItem extends BlockItem {
 
@@ -45,8 +53,9 @@ public class TrackTargetingBlockItem extends BlockItem {
 			return InteractionResult.SUCCESS;
 		}
 
-		if (state.getBlock()instanceof ITrackBlock track) {
-			if (track.getTrackAxes(level, pos, state).size() > 1) {
+		if (state.getBlock() instanceof ITrackBlock track) {
+			if (track.getTrackAxes(level, pos, state)
+				.size() > 1) {
 				player.displayClientMessage(Lang.translate("track_target.no_junctions")
 					.withStyle(ChatFormatting.RED), true);
 				return InteractionResult.FAIL;
@@ -84,6 +93,9 @@ public class TrackTargetingBlockItem extends BlockItem {
 			return InteractionResult.FAIL;
 		}
 
+		if (tag.contains("Bezier"))
+			teTag.put("Bezier", tag.getCompound("Bezier"));
+
 		teTag.put("TargetTrack", NbtUtils.writeBlockPos(selectedPos.subtract(placedPos)));
 		tag.put("BlockEntityTag", teTag);
 
@@ -97,6 +109,20 @@ public class TrackTargetingBlockItem extends BlockItem {
 		player.displayClientMessage(Lang.translate("track_target.success")
 			.withStyle(ChatFormatting.GREEN), true);
 		return useOn;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public boolean useOnCurve(BezierPointSelection selection, ItemStack stack) {
+		Minecraft mc = Minecraft.getInstance();
+		LocalPlayer player = mc.player;
+		TrackTileEntity te = selection.te();
+		BezierTrackPointLocation loc = selection.loc();
+		boolean front = player.getLookAngle()
+			.dot(selection.direction()) < 0;
+
+		AllPackets.channel.sendToServer(new CurvedTrackSelectionPacket(te.getBlockPos(), loc.curveTarget(),
+			loc.segment(), front, player.getInventory().selected));
+		return true;
 	}
 
 	public static void clientTick() {

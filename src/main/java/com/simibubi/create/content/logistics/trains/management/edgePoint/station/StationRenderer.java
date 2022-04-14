@@ -63,8 +63,8 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 				partialTicks, ms, buffer, light, overlay);
 			ms.pushPose();
 			ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), 0xCC993B, ms, buffer,
-				light, overlay, RenderedTrackOverlayType.STATION);
+			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(),
+				0xCC993B, ms, buffer, light, overlay, RenderedTrackOverlayType.STATION);
 			ms.popPose();
 			return;
 		}

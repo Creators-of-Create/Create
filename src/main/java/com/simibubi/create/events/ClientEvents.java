@@ -38,6 +38,8 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRende
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.management.schedule.TrainHatArmorLayer;
+import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -159,6 +161,7 @@ public class ClientEvents {
 		TrackRemoval.clientTick();
 		TrainRelocator.clientTick();
 		DataGathererBlockItem.clientTick();
+		CurvedTrackInteraction.clientTick();
 	}
 
 	@SubscribeEvent
@@ -205,6 +208,7 @@ public class ClientEvents {
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
+		TrackBlockOutline.drawCurveSelection(ms, buffer);
 		TrackTargetingBlockItem.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
 		CarriageCouplingRenderer.renderAll(ms, buffer);

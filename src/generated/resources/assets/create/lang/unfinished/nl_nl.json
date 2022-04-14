@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2133",
+	"_": "Missing Localizations: 2135",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1413,6 +1413,8 @@
 	"create.track.leave_slope_ascending": "UNLOCALIZED: Cannot leave this slope while ascending",
 	"create.track.leave_slope_descending": "UNLOCALIZED: Cannot leave this slope while descending",
 	"create.track.turn_90": "UNLOCALIZED: Can only turn up to 90 Degrees",
+	"create.track.junction_start": "UNLOCALIZED: Cannot start connection from a Junction",
+	"create.track.turn_start": "UNLOCALIZED: Cannot start connection from a Turn",
 
 	"create.station.create_train": "UNLOCALIZED: Create new Train",
 	"create.station.disassemble_train": "UNLOCALIZED: Disassemble Train",

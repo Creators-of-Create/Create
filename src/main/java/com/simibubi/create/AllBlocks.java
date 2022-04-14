@@ -234,6 +234,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -1336,7 +1337,10 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackBlock::new)
-		.initialProperties(() -> Blocks.RAIL)
+		.initialProperties(Material.DECORATION)
+		.properties(p -> p.strength(0.8F)
+			.sound(SoundType.METAL)
+			.noOcclusion())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate(new TrackBlockStateGenerator()::generate)

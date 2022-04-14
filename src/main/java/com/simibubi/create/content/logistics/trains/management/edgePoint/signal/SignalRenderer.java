@@ -53,8 +53,8 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 
 		ms.pushPose();
 		ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-		TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), 0xd0cccc, ms, buffer, light,
-			overlay,
+		TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(),
+			0xd0cccc, ms, buffer, light, overlay,
 			overlayState == OverlayState.DUAL ? RenderedTrackOverlayType.DUAL_SIGNAL : RenderedTrackOverlayType.SIGNAL);
 		ms.popPose();
 

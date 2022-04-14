@@ -17,6 +17,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,6 +42,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	private double radius;
 	private double handleLength;
+
+	private AABB bounds;
 
 	public BezierConnection(Couple<BlockPos> positions, Couple<Vec3> starts, Couple<Vec3> axes, Couple<Vec3> normals,
 		boolean primary, boolean girder) {
@@ -148,6 +151,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		return currentT + distance / dx;
 
 	}
+	
+	public AABB getBounds() {
+		resolve();
+		return bounds;
+	}
 
 	public Vec3 getNormal(double t) {
 		resolve();
@@ -202,12 +210,15 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		stepLUT[0] = 1;
 		float combinedDistance = 0;
 
+		bounds = new AABB(end1, end2);
+
 		// determine step lut
 		{
 			Vec3 previous = end1;
 			for (int i = 0; i <= segments; i++) {
 				float t = i / (float) segments;
 				Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
+				bounds = bounds.minmax(new AABB(result, result));
 				if (i > 0) {
 					combinedDistance += result.distanceTo(previous) / length;
 					stepLUT[i] = (float) (t / combinedDistance);
@@ -215,6 +226,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				previous = result;
 			}
 		}
+
+		bounds = bounds.inflate(1.375f);
 	}
 
 	private void determineHandles(Vec3 end1, Vec3 end2, Vec3 axis1, Vec3 axis2) {
