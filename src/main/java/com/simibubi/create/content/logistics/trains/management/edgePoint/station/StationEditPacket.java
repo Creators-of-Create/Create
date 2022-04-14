@@ -102,12 +102,13 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			if (station != null && graphLocation != null) {
 				station.name = name;
 				Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
+				Create.RAILWAYS.markTracksDirty();
 			}
-			Create.RAILWAYS.markTracksDirty();
 		}
 
 		if (!(blockState.getBlock() instanceof StationBlock))
 			return;
+
 		Boolean isAssemblyMode = blockState.getValue(StationBlock.ASSEMBLING);
 		if (tryAssemble != null) {
 			if (!isAssemblyMode)
@@ -137,6 +138,25 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 
 		if (nowAssembling)
 			te.refreshAssemblyInfo();
+
+		GlobalStation station = te.getStation();
+		GraphLocation graphLocation = te.edgePoint.determineGraphLocation();
+		if (station != null && graphLocation != null) {
+			station.assembling = nowAssembling;
+			Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
+			Create.RAILWAYS.markTracksDirty();
+
+			if (nowAssembling)
+				for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
+					if (train.navigation.destination != station)
+						continue;
+					GlobalStation preferredDestination = train.runtime.startCurrentInstruction();
+					if (preferredDestination != null)
+						train.navigation.startNavigation(preferredDestination, Double.MAX_VALUE, false);
+					else
+						train.navigation.startNavigation(station, Double.MAX_VALUE, false);
+				}
+		}
 	}
 
 	private void scheduleDropRequested(ServerPlayer sender, StationTileEntity te) {

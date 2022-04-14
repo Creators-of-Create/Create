@@ -460,7 +460,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 				msr.translate(offset.subtract(Vec3.atBottomCenterOf(pos)));
 				msr.translate(0, -4 / 16f, 0);
-			}
+			} else
+				return null;
 		}
 
 		if (normal == null) {

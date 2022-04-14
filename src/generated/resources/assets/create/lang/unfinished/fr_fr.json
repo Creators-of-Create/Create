@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1782",
+	"_": "Missing Localizations: 1788",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1420,6 +1420,12 @@
 	"create.station.disassemble_train": "UNLOCALIZED: Disassemble Train",
 	"create.station.remove_schedule": "UNLOCALIZED: Retrieve Schedule",
 	"create.station.remove_auto_schedule": "UNLOCALIZED: Discard Auto-Schedule",
+	"create.station.no_assembly_diagonal": "UNLOCALIZED: Cannot build trains",
+	"create.station.no_assembly_diagonal_1": "UNLOCALIZED: on diagonal tracks",
+	"create.station.no_assembly_curve": "UNLOCALIZED: Cannot build trains",
+	"create.station.no_assembly_curve_1": "UNLOCALIZED: on curved tracks",
+	"create.station.train_not_aligned": "UNLOCALIZED: Cannot disassemble,",
+	"create.station.train_not_aligned_1": "UNLOCALIZED: not all carriages aligned",
 
 	"create.train_assembly.too_many_bogeys": "UNLOCALIZED: Too many Bogeys attached: %1$s",
 	"create.train_assembly.frontmost_bogey_at_station": "UNLOCALIZED: Frontmost Bogey must be at Station Marker",

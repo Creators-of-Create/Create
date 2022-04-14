@@ -68,6 +68,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 				.getSecond() == AxisDirection.POSITIVE;
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
 			stackTag.putBoolean("SelectedDirection", front);
+			stackTag.remove("Bezier");
 			player.displayClientMessage(Lang.translate("track_target.set"), true);
 			stack.setTag(stackTag);
 			return InteractionResult.SUCCESS;

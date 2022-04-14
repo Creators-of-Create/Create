@@ -138,6 +138,7 @@ public class StationTileEntity extends SmartTileEntity {
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
 		tag.put("HeldItem", autoSchedule.getStackInSlot(0)
 			.serializeNBT());
+
 		super.write(tag, clientPacket);
 
 		if (!clientPacket)
@@ -315,7 +316,7 @@ public class StationTileEntity extends SmartTileEntity {
 			}
 
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
-			if (potentialBogeyState.getBlock()instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
+			if (potentialBogeyState.getBlock() instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
 				bogeyTypes[bogeyIndex] = bogey;
 				bogeyLocations[bogeyIndex] = i;
 				bogeyIndex++;
@@ -637,7 +638,7 @@ public class StationTileEntity extends SmartTileEntity {
 			return true;
 
 		BlockState target = edgePoint.getTrackBlockState();
-		if (!(target.getBlock()instanceof ITrackBlock def))
+		if (!(target.getBlock() instanceof ITrackBlock def))
 			return false;
 
 		Vec3 axis = null;

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
@@ -20,16 +21,17 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -52,6 +55,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	private CompoundTag migrationData;
 	private EdgePointType<T> edgePointType;
 	private T edgePoint;
+	private boolean orthogonal;
 
 	public TrackTargetingBehaviour(SmartTileEntity te, EdgePointType<T> edgePointType) {
 		super(te);
@@ -60,12 +64,14 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		targetTrack = BlockPos.ZERO;
 		id = UUID.randomUUID();
 		migrationData = null;
+		orthogonal = false;
 	}
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
 		nbt.putUUID("Id", id);
 		nbt.put("TargetTrack", NbtUtils.writeBlockPos(targetTrack));
+		nbt.putBoolean("Ortho", orthogonal);
 		nbt.putBoolean("TargetDirection", targetDirection == AxisDirection.POSITIVE);
 		if (migrationData != null && !clientPacket)
 			nbt.put("Migrate", migrationData);
@@ -84,6 +90,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		id = nbt.getUUID("Id");
 		targetTrack = NbtUtils.readBlockPos(nbt.getCompound("TargetTrack"));
 		targetDirection = nbt.getBoolean("TargetDirection") ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
+		orthogonal = nbt.getBoolean("Ortho");
 		if (nbt.contains("Migrate"))
 			migrationData = nbt.getCompound("Migrate");
 		if (clientPacket)
@@ -150,6 +157,15 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		CompoundTag data = migrationData;
 		migrationData = null;
 
+		{
+			orthogonal = targetBezier == null;
+			Vec3 direction = edge.getDirection(node1, node2, true);
+			int nonZeroComponents = 0;
+			for (Axis axis : Iterate.axes)
+				nonZeroComponents += direction.get(axis) != 0 ? 1 : 0;
+			orthogonal &= nonZeroComponents <= 1;
+		}
+
 		EdgeData signalData = edge.getEdgeData();
 		if (signalData.hasPoints()) {
 			for (EdgePointType<?> otherType : EdgePointType.TYPES.values()) {
@@ -165,7 +181,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 					return null;
 				otherPoint.tileAdded(tileEntity, front);
 				id = otherPoint.getId();
-				tileEntity.setChanged();
+				tileEntity.notifyUpdate();
 				return (T) otherPoint;
 			}
 		}
@@ -180,6 +196,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		point.setLocation(reverseEdge ? loc.edge : loc.edge.swap(), reverseEdge ? loc.position : length - loc.position);
 		point.tileAdded(tileEntity, front);
 		loc.graph.addPoint(edgePointType, point);
+		tileEntity.sendData();
 		return point;
 	}
 
@@ -193,6 +210,14 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
+	}
+
+	public boolean isOnCurve() {
+		return targetBezier != null;
+	}
+
+	public boolean isOrthogonal() {
+		return orthogonal;
 	}
 
 	public boolean hasValidTrack() {
@@ -290,10 +315,11 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
 		ITrackBlock track = (ITrackBlock) block;
-		SuperByteBuffer sbb = CachedBufferer
-			.partial(track.prepareTrackOverlay(level, pos, trackState, bezier, direction, ms, type), trackState);
-		sbb.light(LevelRenderer.getLightColor(level, pos));
-		sbb.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+		PartialModel partial = track.prepareTrackOverlay(level, pos, trackState, bezier, direction, ms, type);
+		if (partial != null)
+			CachedBufferer.partial(partial, trackState)
+				.light(LevelRenderer.getLightColor(level, pos))
+				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
 		ms.popPose();
 	}

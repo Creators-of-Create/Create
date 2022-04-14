@@ -643,6 +643,12 @@
 	"create.station.disassemble_train": "Disassemble Train",
 	"create.station.remove_schedule": "Retrieve Schedule",
 	"create.station.remove_auto_schedule": "Discard Auto-Schedule",
+	"create.station.no_assembly_diagonal": "Cannot build trains",
+	"create.station.no_assembly_diagonal_1": "on diagonal tracks",
+	"create.station.no_assembly_curve": "Cannot build trains",
+	"create.station.no_assembly_curve_1": "on curved tracks",
+	"create.station.train_not_aligned": "Cannot disassemble,",
+	"create.station.train_not_aligned_1": "not all carriages aligned",
 
 	"create.train_assembly.too_many_bogeys": "Too many Bogeys attached: %1$s",
 	"create.train_assembly.frontmost_bogey_at_station": "Frontmost Bogey must be at Station Marker",

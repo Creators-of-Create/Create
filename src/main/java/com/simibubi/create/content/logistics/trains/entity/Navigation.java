@@ -374,7 +374,7 @@ public class Navigation {
 
 		if (this.destination == null && !simulate)
 			distanceStartedAt = distance;
-		
+
 		if (this.destination == destination)
 			return 0;
 
@@ -701,10 +701,13 @@ public class Navigation {
 	}
 
 	public void read(CompoundTag tag, TrackGraph graph) {
-		destination =
-			tag.contains("Destination") ? graph.getPoint(EdgePointType.STATION, tag.getUUID("Destination")) : null;
+		destination = graph != null && tag.contains("Destination")
+			? graph.getPoint(EdgePointType.STATION, tag.getUUID("Destination"))
+			: null;
+		
 		if (destination == null)
 			return;
+		
 		distanceToDestination = tag.getDouble("DistanceToDestination");
 		distanceStartedAt = tag.getDouble("DistanceStartedAt");
 		destinationBehindTrain = tag.getBoolean("BehindTrain");

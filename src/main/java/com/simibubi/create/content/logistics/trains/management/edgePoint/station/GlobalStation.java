@@ -10,11 +10,14 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class GlobalStation extends SingleTileEdgePoint {
 
 	public String name;
 	public WeakReference<Train> nearestTrain;
+	public boolean assembling;
 
 	public GlobalStation() {
 		name = "Track Station";
@@ -22,32 +25,49 @@ public class GlobalStation extends SingleTileEdgePoint {
 	}
 
 	@Override
+	public void tileAdded(BlockEntity tile, boolean front) {
+		super.tileAdded(tile, front);
+		BlockState state = tile.getBlockState();
+		assembling =
+			state != null && state.hasProperty(StationBlock.ASSEMBLING) && state.getValue(StationBlock.ASSEMBLING);
+	}
+
+	@Override
 	public void read(CompoundTag nbt, boolean migration) {
 		super.read(nbt, migration);
 		name = nbt.getString("Name");
+		assembling = nbt.getBoolean("Assembling");
 		nearestTrain = new WeakReference<Train>(null);
 	}
-	
+
 	@Override
 	public void read(FriendlyByteBuf buffer) {
 		super.read(buffer);
 		name = buffer.readUtf();
+		assembling = buffer.readBoolean();
 	}
 
 	@Override
 	public void write(CompoundTag nbt) {
 		super.write(nbt);
 		nbt.putString("Name", name);
+		nbt.putBoolean("Assembling", assembling);
 	}
-	
+
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		super.write(buffer);
 		buffer.writeUtf(name);
+		buffer.writeBoolean(assembling);
 	}
-	
+
 	public boolean canApproachFrom(TrackNode side) {
-		return isPrimary(side);
+		return isPrimary(side) && !assembling;
+	}
+
+	@Override
+	public boolean canNavigateVia(TrackNode side) {
+		return super.canNavigateVia(side) && !assembling;
 	}
 
 	public void reserveFor(Train train) {

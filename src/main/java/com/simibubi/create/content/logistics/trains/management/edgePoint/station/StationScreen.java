@@ -19,7 +19,9 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 
@@ -72,14 +74,12 @@ public class StationScreen extends AbstractStationScreen {
 		};
 
 		newTrainButton = new WideIconButton(x + 84, y + 65, AllGuiTextures.I_NEW_TRAIN);
-		newTrainButton.setToolTip(Lang.translate("station.create_train"));
 		newTrainButton.withCallback(assemblyCallback);
 		addRenderableWidget(newTrainButton);
 
 		disassembleTrainButton = new WideIconButton(x + 94, y + 65, AllGuiTextures.I_DISASSEMBLE_TRAIN);
 		disassembleTrainButton.active = false;
 		disassembleTrainButton.visible = false;
-		disassembleTrainButton.setToolTip(Lang.translate("station.disassemble_train"));
 		disassembleTrainButton.withCallback(assemblyCallback);
 		addRenderableWidget(disassembleTrainButton);
 
@@ -116,7 +116,12 @@ public class StationScreen extends AbstractStationScreen {
 				.length());
 			trainNameBox.setHighlightPos(trainNameBox.getCursorPosition());
 		}
+		
 		super.tick();
+
+		updateAssemblyTooltip(te.edgePoint.isOnCurve() ? "no_assembly_curve"
+			: !te.edgePoint.isOrthogonal() ? "no_assembly_diagonal"
+				: trainPresent() && !te.trainCanDisassemble ? "train_not_aligned" : null);
 	}
 
 	private void tickTrainDisplay() {
@@ -129,7 +134,7 @@ public class StationScreen extends AbstractStationScreen {
 			}
 
 			leavingAnimation = 0;
-			newTrainButton.active = true;
+			newTrainButton.active = te.edgePoint.isOrthogonal();
 			newTrainButton.visible = true;
 			Train imminentTrain = getImminent();
 
@@ -181,7 +186,7 @@ public class StationScreen extends AbstractStationScreen {
 		}
 
 		boolean trainAtStation = trainPresent();
-		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble;
+		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble && te.edgePoint.isOrthogonal();
 		dropScheduleButton.active = te.trainHasSchedule;
 
 		if (te.trainHasSchedule)
@@ -197,6 +202,22 @@ public class StationScreen extends AbstractStationScreen {
 
 	private int nameBoxX(String s, EditBox nameBox) {
 		return guiLeft + background.width / 2 - (Math.min(font.width(s), nameBox.getWidth()) + 10) / 2;
+	}
+
+	private void updateAssemblyTooltip(String key) {
+		if (key == null) {
+			disassembleTrainButton.setToolTip(Lang.translate("station.disassemble_train"));
+			newTrainButton.setToolTip(Lang.translate("station.create_train"));
+			return;
+		}
+		for (IconButton ib : new IconButton[] { disassembleTrainButton, newTrainButton }) {
+			List<Component> toolTip = ib.getToolTip();
+			toolTip.clear();
+			toolTip.add(Lang.translate("station." + key)
+				.withStyle(ChatFormatting.GRAY));
+			toolTip.add(Lang.translate("station." + key + "_1")
+				.withStyle(ChatFormatting.GRAY));
+		}
 	}
 
 	@Override
