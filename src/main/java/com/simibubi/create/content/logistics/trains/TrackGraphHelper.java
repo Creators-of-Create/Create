@@ -4,8 +4,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
+import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
@@ -16,10 +20,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrackGraphHelper {
 
+	@Nullable
 	public static GraphLocation getGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
 		Vec3 targetAxis) {
 		BlockState trackBlockState = level.getBlockState(pos);
-		if (!(trackBlockState.getBlock()instanceof ITrackBlock track))
+		if (!(trackBlockState.getBlock() instanceof ITrackBlock track))
 			return null;
 
 		Vec3 axis = targetAxis.scale(targetDirection.getStep());
@@ -121,6 +126,50 @@ public class TrackGraphHelper {
 		graphLocation.position = position;
 		graphLocation.graph = graph;
 		return graphLocation;
+	}
+
+	@Nullable
+	public static GraphLocation getBezierGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
+		BezierTrackPointLocation targetBezier) {
+		BlockState state = level.getBlockState(pos);
+
+		if (!(state.getBlock() instanceof ITrackBlock track))
+			return null;
+		if (!(level.getBlockEntity(pos) instanceof TrackTileEntity trackTE))
+			return null;
+		BezierConnection bc = trackTE.getConnections()
+			.get(targetBezier.curveTarget());
+		if (bc == null || !bc.isPrimary())
+			return null;
+
+		TrackNodeLocation targetLoc = new TrackNodeLocation(bc.starts.getSecond());
+		for (DiscoveredLocation location : track.getConnected(level, pos, state, true, null)) {
+			TrackGraph graph = Create.RAILWAYS.sided(level)
+				.getGraph(level, location);
+			if (graph == null)
+				continue;
+			TrackNode targetNode = graph.locateNode(targetLoc);
+			if (targetNode == null)
+				continue;
+			TrackNode node = graph.locateNode(location);
+			TrackEdge edge = graph.getConnectionsFrom(node)
+				.get(targetNode);
+			if (edge == null)
+				continue;
+
+			GraphLocation graphLocation = new GraphLocation();
+			graphLocation.graph = graph;
+			graphLocation.edge = Couple.create(location, targetLoc);
+			graphLocation.position = (targetBezier.segment() + 1) / 2f;
+			if (targetDirection == AxisDirection.POSITIVE) {
+				graphLocation.edge = graphLocation.edge.swap();
+				graphLocation.position = edge.getLength(node, targetNode) - graphLocation.position;
+			}
+
+			return graphLocation;
+		}
+
+		return null;
 	}
 
 }

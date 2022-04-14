@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1760",
+	"_": "Missing Localizations: 1762",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1442,6 +1442,8 @@
 	"create.track_target.missing": "UNLOCALIZED: Right-click the targeted train track first",
 	"create.track_target.too_far": "UNLOCALIZED: Targeted track is too far from here",
 	"create.track_target.no_junctions": "UNLOCALIZED: Targeted track cannot be an intersection",
+	"create.track_target.occupied": "UNLOCALIZED: Targeted track is occupied",
+	"create.track_target.invalid": "UNLOCALIZED: Cannot target this track here",
 
 	"create.train.unnamed": "UNLOCALIZED: Unnamed Train",
 	"create.train.cannot_relocate_moving": "UNLOCALIZED: Cannot relocate a moving Train",

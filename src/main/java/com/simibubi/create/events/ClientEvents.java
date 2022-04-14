@@ -36,7 +36,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionP
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingClient;
 import com.simibubi.create.content.logistics.trains.management.schedule.TrainHatArmorLayer;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
@@ -156,7 +156,7 @@ public class ClientEvents {
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
-		TrackTargetingBlockItem.clientTick();
+		TrackTargetingClient.clientTick();
 		TrackPlacement.clientTick();
 		TrackRemoval.clientTick();
 		TrainRelocator.clientTick();
@@ -209,7 +209,7 @@ public class ClientEvents {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
 		TrackBlockOutline.drawCurveSelection(ms, buffer);
-		TrackTargetingBlockItem.render(ms, buffer);
+		TrackTargetingClient.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
 		CarriageCouplingRenderer.renderAll(ms, buffer);
 		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);

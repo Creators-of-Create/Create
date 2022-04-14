@@ -1351,7 +1351,8 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<StationBlock> TRACK_STATION = REGISTRATE.block("track_station", StationBlock::new)
-		.initialProperties(SharedProperties::wooden)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 		.onRegister(assignDataBehaviour(new StationSummaryDataSource(), "station_summary"))
@@ -1387,6 +1388,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ControlsBlock> CONTROLS = REGISTRATE.block("controls", ControlsBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
 			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
 		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))

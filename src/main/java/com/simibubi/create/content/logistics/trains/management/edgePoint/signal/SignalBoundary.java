@@ -61,6 +61,11 @@ public class SignalBoundary extends TrackEdgePoint {
 	public void invalidate(LevelAccessor level) {
 		blockEntities.forEach(s -> s.forEach(pos -> invalidateAt(level, pos)));
 	}
+	
+	@Override
+	public boolean canCoexistWith(EdgePointType<?> otherType, boolean front) {
+		return otherType == getType();
+	}
 
 	@Override
 	public void tileAdded(BlockEntity tile, boolean front) {

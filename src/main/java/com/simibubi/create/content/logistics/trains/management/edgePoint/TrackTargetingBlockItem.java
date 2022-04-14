@@ -1,12 +1,23 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.List;
+import java.util.function.BiConsumer;
+
+import org.apache.commons.lang3.mutable.MutableObject;
+
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.TrackEdge;
+import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
+import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -50,27 +61,36 @@ public class TrackTargetingBlockItem extends BlockItem {
 				return InteractionResult.SUCCESS;
 			player.displayClientMessage(Lang.translate("track_target.clear"), true);
 			stack.setTag(null);
+			AllSoundEvents.CONTROLLER_CLICK.play(level, null, pos, 1, .5f);
 			return InteractionResult.SUCCESS;
 		}
 
 		if (state.getBlock() instanceof ITrackBlock track) {
-			if (track.getTrackAxes(level, pos, state)
-				.size() > 1) {
-				player.displayClientMessage(Lang.translate("track_target.no_junctions")
-					.withStyle(ChatFormatting.RED), true);
-				return InteractionResult.FAIL;
-			}
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
-			CompoundTag stackTag = stack.getOrCreateTag();
+
 			Vec3 lookAngle = player.getLookAngle();
 			boolean front = track.getNearestTrackAxis(level, pos, state, lookAngle)
 				.getSecond() == AxisDirection.POSITIVE;
+			EdgePointType<?> type = getType(stack);
+
+			MutableObject<OverlapResult> result = new MutableObject<>(null);
+			withGraphLocation(level, pos, front, null, type, (overlap, location) -> result.setValue(overlap));
+
+			if (result.getValue().feedback != null) {
+				player.displayClientMessage(Lang.translate(result.getValue().feedback)
+					.withStyle(ChatFormatting.RED), true);
+				AllSoundEvents.DENY.play(level, null, pos, .5f, 1);
+				return InteractionResult.FAIL;
+			}
+
+			CompoundTag stackTag = stack.getOrCreateTag();
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
 			stackTag.putBoolean("SelectedDirection", front);
 			stackTag.remove("Bezier");
 			player.displayClientMessage(Lang.translate("track_target.set"), true);
 			stack.setTag(stackTag);
+			AllSoundEvents.CONTROLLER_CLICK.play(level, null, pos, 1, 1);
 			return InteractionResult.SUCCESS;
 		}
 
@@ -112,6 +132,10 @@ public class TrackTargetingBlockItem extends BlockItem {
 		return useOn;
 	}
 
+	protected EdgePointType<?> getType(ItemStack stack) {
+		return AllBlocks.TRACK_SIGNAL.isIn(stack) ? EdgePointType.SIGNAL : EdgePointType.STATION;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public boolean useOnCurve(BezierPointSelection selection, ItemStack stack) {
 		Minecraft mc = Minecraft.getInstance();
@@ -126,12 +150,68 @@ public class TrackTargetingBlockItem extends BlockItem {
 		return true;
 	}
 
-	public static void clientTick() {
+	public static enum OverlapResult {
+
+		VALID,
+		OCCUPIED("track_target.occupied"),
+		JUNCTION("track_target.no_junctions"),
+		NO_TRACK("track_target.invalid");
+
+		public String feedback;
+
+		private OverlapResult() {}
+
+		private OverlapResult(String feedback) {
+			this.feedback = feedback;
+		}
 
 	}
 
-	public static void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
+	public static void withGraphLocation(Level level, BlockPos pos, boolean front,
+		BezierTrackPointLocation targetBezier, EdgePointType<?> type,
+		BiConsumer<OverlapResult, GraphLocation> callback) {
 
+		BlockState state = level.getBlockState(pos);
+
+		if (!(state.getBlock() instanceof ITrackBlock track)) {
+			callback.accept(OverlapResult.NO_TRACK, null);
+			return;
+		}
+
+		List<Vec3> trackAxes = track.getTrackAxes(level, pos, state);
+		if (targetBezier == null && trackAxes.size() > 1) {
+			callback.accept(OverlapResult.JUNCTION, null);
+			return;
+		}
+
+		AxisDirection targetDirection = front ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
+		GraphLocation location =
+			targetBezier != null ? TrackGraphHelper.getBezierGraphLocationAt(level, pos, targetDirection, targetBezier)
+				: TrackGraphHelper.getGraphLocationAt(level, pos, targetDirection, trackAxes.get(0));
+
+		if (location == null) {
+			callback.accept(OverlapResult.NO_TRACK, null);
+			return;
+		}
+
+		Couple<TrackNode> nodes = location.edge.map(location.graph::locateNode);
+		TrackEdge edge = location.graph.getConnection(nodes);
+		EdgeData edgeData = edge.getEdgeData();
+		double edgePosition = location.position;
+
+		for (TrackEdgePoint edgePoint : edgeData.getPoints()) {
+			double otherEdgePosition = edgePoint.getLocationOn(nodes.getFirst(), nodes.getSecond(), edge);
+			double distance = Math.abs(edgePosition - otherEdgePosition);
+			if (distance > .75)
+				continue;
+			if (edgePoint.canCoexistWith(type, front) && distance < .25)
+				continue;
+
+			callback.accept(OverlapResult.OCCUPIED, location);
+			return;
+		}
+
+		callback.accept(OverlapResult.VALID, location);
 	}
 
 }

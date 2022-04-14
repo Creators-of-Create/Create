@@ -45,7 +45,7 @@ public class TrackBlockOutline {
 	public static WorldAttached<Map<BlockPos, TrackTileEntity>> TRACKS_WITH_TURNS =
 		new WorldAttached<>(w -> new HashMap<>());
 
-	static BezierPointSelection result;
+	public static BezierPointSelection result;
 
 	public static void pickCurves() {
 		Minecraft mc = Minecraft.getInstance();

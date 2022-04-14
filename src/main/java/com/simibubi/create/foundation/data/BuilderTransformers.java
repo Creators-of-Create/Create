@@ -67,6 +67,7 @@ public class BuilderTransformers {
 
 	public static <B extends StandardBogeyBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> bogey() {
 		return b -> b.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 			.properties(p -> p.noOcclusion())
 			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
