@@ -1,7 +1,12 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -18,6 +23,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
@@ -369,12 +375,17 @@ public class TrackPlacement {
 
 	static LerpedFloat animation = LerpedFloat.linear()
 		.startWithValue(0);
+	static int lastLineCount = 0;
+
+	static BlockPos hintPos;
+	static Couple<List<BlockPos>> hints;
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientTick() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		ItemStack stack = player.getMainHandItem();
 		HitResult hitResult = Minecraft.getInstance().hitResult;
+
 		if (hitResult == null)
 			return;
 		if (hitResult.getType() != Type.BLOCK)
@@ -408,6 +419,7 @@ public class TrackPlacement {
 			return;
 
 		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack, false);
+
 		if (info.valid)
 			player.displayClientMessage(Lang.translate("track.valid_connection")
 				.withStyle(ChatFormatting.GREEN), true);
@@ -416,8 +428,37 @@ public class TrackPlacement {
 				.withStyle(info.message.equals("track.second_point") ? ChatFormatting.WHITE : ChatFormatting.RED),
 				true);
 
+		if (bhr.getDirection() == Direction.UP) {
+			if (!pos.equals(hintPos)) {
+				hints = Couple.create(ArrayList::new);
+				hintPos = pos;
+
+				for (int xOffset = -2; xOffset <= 2; xOffset++) {
+					for (int zOffset = -2; zOffset <= 2; zOffset++) {
+						BlockPos offset = pos.offset(xOffset, 0, zOffset);
+						PlacementInfo adjInfo =
+							tryConnect(level, offset, hitState, player.getLookAngle(), stack, false);
+						hints.get(adjInfo.valid)
+							.add(offset.below());
+					}
+				}
+			}
+
+			if (hints != null && !hints.either(Collection::isEmpty)) {
+				CreateClient.OUTLINER.showCluster("track_valid", hints.getFirst())
+					.withFaceTexture(AllSpecialTextures.THIN_CHECKERED)
+					.colored(0x95CD41)
+					.lineWidth(0);
+				CreateClient.OUTLINER.showCluster("track_invalid", hints.getSecond())
+					.withFaceTexture(AllSpecialTextures.THIN_CHECKERED)
+					.colored(0xEA5C2B)
+					.lineWidth(0);
+			}
+		}
+
 		animation.chase(info.valid ? 1 : 0, 0.25, Chaser.EXP);
 		animation.tickChaser();
+
 		if (!info.valid) {
 			info.end1Extent = 0;
 			info.end2Extent = 0;
@@ -506,6 +547,12 @@ public class TrackPlacement {
 			previous2 = rail2;
 		}
 
+		for (int i = segCount + 1; i <= lastLineCount; i++) {
+			CreateClient.OUTLINER.remove(Pair.of(key, i * 2));
+			CreateClient.OUTLINER.remove(Pair.of(key, i * 2 + 1));
+		}
+
+		lastLineCount = segCount;
 	}
 
 	@OnlyIn(Dist.CLIENT)
