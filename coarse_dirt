@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:coarse_dirt"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:dirt"
+    }
+  ],
+  "processingTime": 250
+}
