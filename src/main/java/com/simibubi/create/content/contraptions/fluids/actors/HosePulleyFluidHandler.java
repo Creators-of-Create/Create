@@ -13,6 +13,8 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
 public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
@@ -77,7 +79,10 @@ public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 	public FluidVariant getResource() {
 		if (!internalTank.isResourceBlank() || drainer.tileEntity.getLevel() == null) return internalTank.getResource();
 		FluidState state = drainer.tileEntity.getLevel().getFluidState(rootPosGetter.get());
-		return FluidVariant.of(state.getType());
+		Fluid f = state.getType();
+		if (f instanceof FlowingFluid flowing) f = flowing.getSource();
+		if (!f.isSource(state)) return FluidVariant.blank();
+		return FluidVariant.of(f);
 	}
 
 	@Override
