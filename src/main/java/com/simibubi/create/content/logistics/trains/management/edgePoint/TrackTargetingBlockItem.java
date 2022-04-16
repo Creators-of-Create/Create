@@ -108,13 +108,15 @@ public class TrackTargetingBlockItem extends BlockItem {
 		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.getMaterial()
 			.isReplaceable() ? 0 : 1);
 
-		if (!selectedPos.closerThan(placedPos, 16)) {
+		boolean bezier = tag.contains("Bezier");
+
+		if (!selectedPos.closerThan(placedPos, bezier ? 64 + 16 : 16)) {
 			player.displayClientMessage(Lang.translate("track_target.too_far")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;
 		}
 
-		if (tag.contains("Bezier"))
+		if (bezier)
 			teTag.put("Bezier", tag.getCompound("Bezier"));
 
 		teTag.put("TargetTrack", NbtUtils.writeBlockPos(selectedPos.subtract(placedPos)));

@@ -75,15 +75,21 @@ public class TrackPlacement {
 
 	static PlacementInfo cached;
 	static BlockPos hoveringPos;
+	static boolean hoveringMaxed;
+	static int hoveringAngle;
 	static ItemStack lastItem;
 
 	public static PlacementInfo tryConnect(Level level, BlockPos pos2, BlockState state2, Vec3 lookVec, ItemStack stack,
-		boolean girder) {
+		boolean girder, boolean maximiseTurn) {
+		int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
 
-		if (cached != null && pos2.equals(hoveringPos) && stack.equals(lastItem))
+		if (level.isClientSide && cached != null && pos2.equals(hoveringPos) && stack.equals(lastItem)
+			&& hoveringMaxed == maximiseTurn && lookAngle == hoveringAngle)
 			return cached;
 
 		PlacementInfo info = new PlacementInfo();
+		hoveringMaxed = maximiseTurn;
+		hoveringAngle = lookAngle;
 		hoveringPos = pos2;
 		lastItem = stack;
 		cached = info;
@@ -200,8 +206,8 @@ public class TrackPlacement {
 				// This is for standardising s curve sizes
 				if (t > targetT) {
 					int correction = (int) ((t - targetT) / axis1.length());
-					info.end1Extent = correction / 2 + (correction % 2);
-					info.end2Extent = correction / 2;
+					info.end1Extent = maximiseTurn ? 0 : correction / 2 + (correction % 2);
+					info.end2Extent = maximiseTurn ? 0 : correction / 2;
 				}
 			}
 		}
@@ -240,7 +246,7 @@ public class TrackPlacement {
 				return info.withMessage("too_sharp");
 
 			// This is for standardising curve sizes
-			if (turnSize > 2) {
+			if (turnSize > 2 && !maximiseTurn) {
 				info.end1Extent += turnSize - 2;
 				info.end2Extent += turnSize - 2;
 				turnSize = 2;
@@ -258,8 +264,8 @@ public class TrackPlacement {
 					return info.withMessage("too_steep");
 				if (hDistance > minHDistance) {
 					int correction = (int) (hDistance - minHDistance);
-					info.end1Extent = correction / 2 + (correction % 2);
-					info.end2Extent = correction / 2;
+					info.end1Extent = maximiseTurn ? 0 : correction / 2 + (correction % 2);
+					info.end2Extent = maximiseTurn ? 0 : correction / 2;
 				}
 
 				skipCurve = false;
@@ -302,8 +308,10 @@ public class TrackPlacement {
 				return info.withMessage("too_steep");
 
 			// This is for standardising curve sizes
-			ex1 += (turnSize - turnSizeToFitAscend) / axis1.length();
-			ex2 += (turnSize - turnSizeToFitAscend) / axis2.length();
+			if (!maximiseTurn) {
+				ex1 += (turnSize - turnSizeToFitAscend) / axis1.length();
+				ex2 += (turnSize - turnSizeToFitAscend) / axis2.length();
+			}
 			info.end1Extent = Mth.floor(ex1);
 			info.end2Extent = Mth.floor(ex2);
 			turnSize = turnSizeToFitAscend;
@@ -418,7 +426,8 @@ public class TrackPlacement {
 		if (!(hitState.getBlock() instanceof TrackBlock))
 			return;
 
-		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack, false);
+		boolean maxTurns = Minecraft.getInstance().options.keySprint.isDown();
+		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack, false, maxTurns);
 
 		if (info.valid)
 			player.displayClientMessage(Lang.translate("track.valid_connection")
@@ -437,7 +446,7 @@ public class TrackPlacement {
 					for (int zOffset = -2; zOffset <= 2; zOffset++) {
 						BlockPos offset = pos.offset(xOffset, 0, zOffset);
 						PlacementInfo adjInfo =
-							tryConnect(level, offset, hitState, player.getLookAngle(), stack, false);
+							tryConnect(level, offset, hitState, player.getLookAngle(), stack, false, maxTurns);
 						hints.get(adjInfo.valid)
 							.add(offset.below());
 					}

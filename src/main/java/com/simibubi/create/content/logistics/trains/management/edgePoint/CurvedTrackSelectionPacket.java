@@ -4,7 +4,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem.OverlapResult;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
@@ -56,12 +55,6 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 
 	@Override
 	protected void applySettings(ServerPlayer player, TrackTileEntity te) {
-		if (!te.getBlockPos()
-			.closerThan(player.blockPosition(), 48)) {
-			Create.LOGGER.warn(player.getScoreboardName() + " too far away from targeted track");
-			return;
-		}
-
 		if (player.getInventory().selected != slot)
 			return;
 		ItemStack stack = player.getInventory()
@@ -100,6 +93,11 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 		player.displayClientMessage(Lang.translate("track_target.set"), true);
 		stack.setTag(stackTag);
 		AllSoundEvents.CONTROLLER_CLICK.play(player.level, null, pos, 1, 1);
+	}
+
+	@Override
+	protected int maxRange() {
+		return 64;
 	}
 
 	@Override

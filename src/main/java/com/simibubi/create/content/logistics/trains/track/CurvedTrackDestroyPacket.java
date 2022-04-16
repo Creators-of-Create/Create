@@ -42,7 +42,7 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 	@Override
 	protected void applySettings(ServerPlayer player, TrackTileEntity te) {
 		if (!te.getBlockPos()
-			.closerThan(player.blockPosition(), 48)) {
+			.closerThan(player.blockPosition(), 128)) {
 			Create.LOGGER.warn(player.getScoreboardName() + " too far away from destroyed Curve track");
 			return;
 		}
@@ -63,6 +63,11 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 			(soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 	}
 
+	@Override
+	protected int maxRange() {
+		return 64;
+	}
+	
 	@Override
 	protected void applySettings(TrackTileEntity te) {}
 

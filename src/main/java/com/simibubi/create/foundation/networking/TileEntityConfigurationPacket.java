@@ -42,7 +42,7 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 				Level world = player.level;
 				if (world == null || !world.isLoaded(pos))
 					return;
-				if (!pos.closerThan(player.blockPosition(), 20))
+				if (!pos.closerThan(player.blockPosition(), maxRange()))
 					return;
 				BlockEntity tileEntity = world.getBlockEntity(pos);
 				if (tileEntity instanceof SyncedTileEntity) {
@@ -54,6 +54,10 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 		context.get()
 			.setPacketHandled(true);
 
+	}
+
+	protected int maxRange() {
+		return 20;
 	}
 
 	protected abstract void writeSettings(FriendlyByteBuf buffer);

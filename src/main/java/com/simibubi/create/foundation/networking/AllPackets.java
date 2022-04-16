@@ -56,6 +56,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket.TrainEditReturnPacket;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEditPacket;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackDestroyPacket;
+import com.simibubi.create.content.logistics.trains.track.PlaceExtendedCurvePacket;
 import com.simibubi.create.content.logistics.trains.track.TrackRemovalPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
@@ -126,6 +127,7 @@ public enum AllPackets {
 	CONFIGURE_DATA_GATHERER(DataGathererConfigurationPacket.class, DataGathererConfigurationPacket::new, PLAY_TO_SERVER),
 	DESTROY_CURVED_TRACK(CurvedTrackDestroyPacket.class, CurvedTrackDestroyPacket::new, PLAY_TO_SERVER),
 	SELECT_CURVED_TRACK(CurvedTrackSelectionPacket.class, CurvedTrackSelectionPacket::new, PLAY_TO_SERVER),
+	PLACE_CURVED_TRACK(PlaceExtendedCurvePacket.class, PlaceExtendedCurvePacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),

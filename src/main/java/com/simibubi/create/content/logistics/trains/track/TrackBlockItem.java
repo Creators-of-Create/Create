@@ -3,16 +3,19 @@ package com.simibubi.create.content.logistics.trains.track;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -25,7 +28,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber(Dist.CLIENT)
 public class TrackBlockItem extends BlockItem {
 
 	public TrackBlockItem(Block pBlock, Properties pProperties) {
@@ -67,6 +76,10 @@ public class TrackBlockItem extends BlockItem {
 		}
 
 		boolean placing = !(state.getBlock() instanceof ITrackBlock);
+		CompoundTag tag = stack.getTag();
+		boolean extend = tag.getBoolean("ExtendCurve");
+		tag.remove("ExtendCurve");
+
 		if (placing) {
 			if (!state.getMaterial()
 				.isReplaceable())
@@ -77,8 +90,8 @@ public class TrackBlockItem extends BlockItem {
 		}
 
 		ItemStack offhandItem = player.getOffhandItem();
-		PlacementInfo info =
-			TrackPlacement.tryConnect(level, pos, state, lookAngle, stack, AllBlocks.METAL_GIRDER.isIn(offhandItem));
+		boolean hasGirder = AllBlocks.METAL_GIRDER.isIn(offhandItem);
+		PlacementInfo info = TrackPlacement.tryConnect(level, pos, state, lookAngle, stack, hasGirder, extend);
 
 		if (info.message != null && !level.isClientSide)
 			player.displayClientMessage(Lang.translate(info.message), true);
@@ -87,7 +100,7 @@ public class TrackBlockItem extends BlockItem {
 
 		stack.setTag(null);
 
-		if (level.isClientSide)
+		if (level.isClientSide) 
 			return InteractionResult.SUCCESS;
 
 		if (offhandItem.getItem() instanceof BlockItem blockItem) {
@@ -135,6 +148,17 @@ public class TrackBlockItem extends BlockItem {
 		compoundTag.put("Normal", VecHelper.writeNBT(normal));
 		compoundTag.put("End", VecHelper.writeNBT(end));
 		return true;
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void sendExtenderPacket(PlayerInteractEvent.RightClickBlock event) {
+		ItemStack stack = event.getItemStack();
+		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
+			return;
+		if (Minecraft.getInstance().options.keySprint.isDown())
+			AllPackets.channel
+				.sendToServer(new PlaceExtendedCurvePacket(event.getHand() == InteractionHand.MAIN_HAND, true));
 	}
 
 	@Override
