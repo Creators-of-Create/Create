@@ -56,12 +56,16 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
 		@Override
 		protected Data createSnapshot() {
-			return new Data(rootPos.immutable(), new ArrayList<>(validationFrontier), new HashSet<>(validationVisited),
-					new HashSet<>(newValidationSet), revalidateIn,
-					new BoundingBox(
-							affectedArea.minX(), affectedArea.minY(), affectedArea.minZ(),
-							affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ()
-					), new ObjectArrayList<>(queueList)
+			FluidDrainingBehaviour b = FluidDrainingBehaviour.this;
+			BlockPos rootPos = b.rootPos == null ? null : b.rootPos.immutable();
+			BoundingBox box = b.affectedArea == null ? null : new BoundingBox(
+					affectedArea.minX(), affectedArea.minY(), affectedArea.minZ(),
+					affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ()
+			);
+
+			return new Data(
+					rootPos, new ArrayList<>(validationFrontier), new HashSet<>(validationVisited),
+					new HashSet<>(newValidationSet), revalidateIn, box, new ObjectArrayList<>(queueList)
 			);
 		}
 
