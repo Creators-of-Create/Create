@@ -54,10 +54,12 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
     modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
-    runtimeOnly("maven.modrinth:lazydfu:0.1.2")
-    modRuntimeOnly("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
+    modRuntimeOnly("maven.modrinth:lazydfu:0.1.2")
     modRuntimeOnly("maven.modrinth:lithium:mc1.18.2-0.7.9")
-//    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT")
+//    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
+    modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
+    modLocalRuntime("curse.maven:alloygery-573592:3762142") { transitive = false }
+//    modLocalRuntime("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
 
     // dependencies
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
