@@ -491,19 +491,21 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
 			for (Storage<ItemVariant> iItemHandler : attachedInventories) {
-				try (Transaction t = TransferUtil.getTransaction()) {
-					List<ItemStack> stacks = TransferUtil.getAllItems(iItemHandler);
-					for (ItemStack stack : stacks) {
+				try (Transaction t = transaction.openNested()) {
+					for (StorageView<ItemVariant> view : iItemHandler.iterable(t)) {
+						if (view.isResourceBlank()) continue;
+						ItemVariant variant = view.getResource();
+						ItemStack stack = variant.toStack();
 						if (!ItemRequirement.validate(required, stack))
 							continue;
 						if (!stack.isDamageableItem())
 							continue;
 
 						// fabric - can't modify directly, extract and re-insert
-						if (iItemHandler.extract(ItemVariant.of(stack), 1, t) == 1) {
+						if (iItemHandler.extract(variant, 1, t) == 1) {
 							stack.setDamageValue(stack.getDamageValue() + 1);
 							if (stack.getDamageValue() <= stack.getMaxDamage()) {
-								if (iItemHandler.insert(ItemVariant.of(stack), 1, t) == 1)
+								if (iItemHandler.insert(variant, 1, t) == 1)
 									t.commit();
 							}
 						}
@@ -516,7 +518,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 		// Find and remove
 		boolean success = false;
-		if (usage == ItemUseType.CONSUME) {
+		if (usage == ItemUseType.CONSUME && !required.isEmpty()) {
 			long amountFound = 0;
 			ItemVariant variant = ItemVariant.of(required);
 			try (Transaction t = transaction.openNested()) {
@@ -529,6 +531,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 					success = true;
 					break;
 				}
+				if (success) t.commit();
 			}
 
 		}

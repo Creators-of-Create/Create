@@ -275,7 +275,7 @@ public class ClientEvents {
 		return currentDensity;
 	}
 
-	public static void getFogColor(ColorData event) {
+	public static void getFogColor(ColorData event, float partialTicks) {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
