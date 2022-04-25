@@ -62,7 +62,7 @@ public interface IHaveGoggleInformation {
 		try (Transaction t = TransferUtil.getTransaction()) {
 			boolean moreThan1Tank = false;
 			StorageView<FluidVariant> first = null;
-			for (Iterator<StorageView<FluidVariant>> iterator = handler.iterator(t); iterator.hasNext();) {
+			for (Iterator<? extends StorageView<FluidVariant>> iterator = handler.iterator(t); iterator.hasNext();) {
 				StorageView<FluidVariant> view = iterator.next();
 				if (!moreThan1Tank) first = view;
 				moreThan1Tank |= iterator.hasNext();
