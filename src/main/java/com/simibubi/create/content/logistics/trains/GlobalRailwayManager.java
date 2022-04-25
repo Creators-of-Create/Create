@@ -13,23 +13,20 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.glfw.GLFW;
 
-import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -56,7 +53,14 @@ public class GlobalRailwayManager {
 			loadTrackData(serverPlayer.getServer());
 			trackNetworks.values()
 				.forEach(g -> sync.sendFullGraphTo(g, serverPlayer));
-			sync.sendEdgeGroups(signalEdgeGroups.keySet(), serverPlayer);
+			ArrayList<SignalEdgeGroup> asList = new ArrayList<>(signalEdgeGroups.values());
+			sync.sendEdgeGroups(asList.stream()
+				.map(g -> g.id)
+				.toList(),
+				asList.stream()
+					.map(g -> g.color)
+					.toList(),
+				serverPlayer);
 			for (Train train : trains.values())
 				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
 					new TrainPacket(train, true));
@@ -119,19 +123,32 @@ public class GlobalRailwayManager {
 		return trackNetworks.computeIfAbsent(graphID, uid -> new TrackGraph(graphID));
 	}
 
+	public void putGraphWithDefaultGroup(TrackGraph graph) {
+		SignalEdgeGroup group = new SignalEdgeGroup(graph.id);
+		signalEdgeGroups.put(graph.id, group);
+		sync.edgeGroupCreated(graph.id, group.color);
+		putGraph(graph);
+	}
+
 	public void putGraph(TrackGraph graph) {
 		trackNetworks.put(graph.id, graph);
 		markTracksDirty();
 	}
 
-	public void removeGraph(TrackGraph railGraph) {
-		trackNetworks.remove(railGraph.id);
+	public void removeGraphAndGroup(TrackGraph graph) {
+		signalEdgeGroups.remove(graph.id);
+		sync.edgeGroupRemoved(graph.id);
+		removeGraph(graph);
+	}
+
+	public void removeGraph(TrackGraph graph) {
+		trackNetworks.remove(graph.id);
 		markTracksDirty();
 	}
 
 	public void updateSplitGraph(TrackGraph graph) {
 		Set<TrackGraph> disconnected = graph.findDisconnectedGraphs(null);
-		disconnected.forEach(this::putGraph);
+		disconnected.forEach(this::putGraphWithDefaultGroup);
 		if (!disconnected.isEmpty()) {
 			sync.graphSplit(graph, disconnected);
 			markTracksDirty();
@@ -159,10 +176,7 @@ public class GlobalRailwayManager {
 	}
 
 	public void tick(Level level) {
-		ResourceLocation location2 = DimensionType.OVERWORLD_LOCATION.location();
-		ResourceLocation location = level.dimension()
-			.location();
-		if (!location.equals(location2))
+		if (level.dimension() != Level.OVERWORLD)
 			return;
 
 		for (SignalEdgeGroup group : signalEdgeGroups.values()) {
@@ -170,8 +184,10 @@ public class GlobalRailwayManager {
 			group.reserved = null;
 		}
 
-		for (TrackGraph graph : trackNetworks.values())
+		for (TrackGraph graph : trackNetworks.values()) {
 			graph.tickPoints(true);
+			graph.resolveIntersectingEdgeGroups(level);
+		}
 
 		tickTrains(level);
 
@@ -182,12 +198,12 @@ public class GlobalRailwayManager {
 		if (GlobalTrainDisplayData.updateTick)
 			GlobalTrainDisplayData.refresh();
 
-//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_K))
-//			trackNetworks.values()
-//				.forEach(TrackGraph::debugViewReserved);
+//		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && AllKeys.altDown())
+//			for (TrackGraph trackGraph : trackNetworks.values())
+//				TrackGraphVisualizer.debugViewSignalData(trackGraph);
 //		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && AllKeys.altDown())
-//			trackNetworks.values()
-//				.forEach(TrackGraph::debugViewNodes);
+//			for (TrackGraph trackGraph : trackNetworks.values())
+//				TrackGraphVisualizer.debugViewNodes(trackGraph);
 	}
 
 	private void tickTrains(Level level) {
@@ -218,13 +234,16 @@ public class GlobalRailwayManager {
 		}
 	}
 
+	public void tickSignalOverlay() {
+		if (!KineticDebugger.isActive())
+			for (TrackGraph trackGraph : trackNetworks.values())
+				TrackGraphVisualizer.visualiseSignalEdgeGroups(trackGraph);
+	}
+
 	public void clientTick() {
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_H) && !AllKeys.altDown())
-			trackNetworks.values()
-				.forEach(TrackGraph::debugViewSignalData);
-		if (AllKeys.isKeyDown(GLFW.GLFW_KEY_J) && !AllKeys.altDown())
-			trackNetworks.values()
-				.forEach(TrackGraph::debugViewNodes);
+		if (KineticDebugger.isActive())
+			for (TrackGraph trackGraph : trackNetworks.values())
+				TrackGraphVisualizer.debugViewGraph(trackGraph);
 	}
 
 	public GlobalRailwayManager sided(LevelAccessor level) {

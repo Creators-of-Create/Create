@@ -153,9 +153,9 @@ public class TravellingPoint {
 			Entry<TrackNode, TrackEdge> best = null;
 
 			for (Entry<TrackNode, TrackEdge> entry : validTargets) {
-				Vec3 trajectory = edge.getDirection(node1, node2, false);
+				Vec3 trajectory = edge.getDirection(false);
 				Vec3 entryTrajectory = entry.getValue()
-					.getDirection(node2, entry.getKey(), true);
+					.getDirection(true);
 				Vec3 normal = trajectory.cross(upNormal);
 				double dot = normal.dot(entryTrajectory);
 				double diff = Math.abs(direction.targetDot - dot);
@@ -178,14 +178,14 @@ public class TravellingPoint {
 	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
 		IEdgePointListener signalListener, ITurnListener turnListener) {
 		blocked = false;
-		double edgeLength = edge.getLength(node1, node2);
+		double edgeLength = edge.getLength();
 		if (distance == 0)
 			return 0;
 
 		double prevPos = position;
 		double traveled = distance;
 		double currentT = position / edgeLength;
-		double incrementT = edge.incrementT(node1, node2, currentT, distance);
+		double incrementT = edge.incrementT(currentT, distance);
 		position = incrementT * edgeLength;
 
 		// FIXME: using incrementT like this becomes inaccurate at medium-long distances
@@ -193,7 +193,7 @@ public class TravellingPoint {
 		// incrementT at their starting position (e.g. bezier turn)
 		// In an ideal scenario the amount added to position would iterate the traversed
 		// edges for context first
-		
+
 		// A workaround was added in TrackEdge::incrementT
 
 		List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
@@ -221,8 +221,8 @@ public class TravellingPoint {
 						continue;
 
 					TrackEdge newEdge = entry.getValue();
-					Vec3 currentDirection = edge.getDirection(node1, node2, false);
-					Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
+					Vec3 currentDirection = edge.getDirection(false);
+					Vec3 newDirection = newEdge.getDirection(true);
 					if (currentDirection.dot(newDirection) < 3 / 4f)
 						continue;
 
@@ -258,7 +258,7 @@ public class TravellingPoint {
 				}
 
 				prevPos = 0;
-				edgeLength = edge.getLength(node1, node2);
+				edgeLength = edge.getLength();
 			}
 
 		} else {
@@ -274,8 +274,8 @@ public class TravellingPoint {
 
 					TrackEdge newEdge = graph.getConnectionsFrom(newNode)
 						.get(node1);
-					Vec3 currentDirection = edge.getDirection(node1, node2, true);
-					Vec3 newDirection = newEdge.getDirection(newNode, node1, false);
+					Vec3 currentDirection = edge.getDirection(true);
+					Vec3 newDirection = newEdge.getDirection(false);
 					if (currentDirection.dot(newDirection) < 3 / 4f)
 						continue;
 
@@ -297,7 +297,7 @@ public class TravellingPoint {
 				edge = graph.getConnectionsFrom(node1)
 					.get(node2);
 				collectedDistance += edgeLength;
-				edgeLength = edge.getLength(node1, node2);
+				edgeLength = edge.getLength();
 				position += edgeLength;
 
 				blockedLocation =
@@ -326,11 +326,11 @@ public class TravellingPoint {
 		double to = forward ? position : prevPos;
 		List<TrackEdgePoint> edgePoints = edgeData.getPoints();
 
-		double length = edge.getLength(node1, node2);
+		double length = edge.getLength();
 		for (int i = 0; i < edgePoints.size(); i++) {
 			int index = forward ? i : edgePoints.size() - i - 1;
 			TrackEdgePoint nextBoundary = edgePoints.get(index);
-			double locationOn = nextBoundary.getLocationOn(node1, node2, edge);
+			double locationOn = nextBoundary.getLocationOn(edge);
 			double distance = forward ? locationOn : length - locationOn;
 			if (forward ? (locationOn < from || locationOn >= to) : (locationOn <= from || locationOn > to))
 				continue;
@@ -346,14 +346,14 @@ public class TravellingPoint {
 		TrackNode n = node1;
 		node1 = node2;
 		node2 = n;
-		position = edge.getLength(node1, node2) - position;
+		position = edge.getLength() - position;
 		edge = graph.getConnectionsFrom(node1)
 			.get(node2);
 	}
 
 	public Vec3 getPosition() {
-		double t = position / edge.getLength(node1, node2);
-		return edge.getPosition(node1, node2, t)
+		double t = position / edge.getLength();
+		return edge.getPosition(t)
 			.add(edge.getNormal(node1, node2, t)
 				.scale(1));
 	}

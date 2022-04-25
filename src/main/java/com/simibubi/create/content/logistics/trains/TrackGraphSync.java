@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.trains;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.EdgeGroupColor;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroupPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -87,16 +88,18 @@ public class TrackGraphSync {
 
 	//
 
-	public void sendEdgeGroups(Collection<UUID> ids, ServerPlayer player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new SignalEdgeGroupPacket(ids, true));
+	public void sendEdgeGroups(List<UUID> ids, List<EdgeGroupColor> colors, ServerPlayer player) {
+		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
+			new SignalEdgeGroupPacket(ids, colors, true));
 	}
 
-	public void edgeGroupCreated(UUID id) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(ImmutableList.of(id), true));
+	public void edgeGroupCreated(UUID id, EdgeGroupColor color) {
+		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
 	}
 
 	public void edgeGroupRemoved(UUID id) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(ImmutableList.of(id), false));
+		AllPackets.channel.send(PacketDistributor.ALL.noArg(),
+			new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
 	}
 
 	//

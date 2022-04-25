@@ -36,12 +36,21 @@ public class SignalPropagator {
 			UUID id = signal.groups.get(front);
 			if (Create.RAILWAYS.signalEdgeGroups.remove(id) != null)
 				Create.RAILWAYS.sync.edgeGroupRemoved(id);
+
 			walkSignals(graph, signal, front, pair -> {
 				TrackNode node1 = pair.getFirst();
 				SignalBoundary boundary = pair.getSecond();
 				boundary.queueUpdate(node1);
 				return false;
-			}, Predicates.alwaysFalse(), false);
+
+			}, signalData -> {
+				if (!signalData.hasSignalBoundaries()) {
+					signalData.setSingleSignalGroup(graph, EdgeData.passiveGroup);
+					return true;
+				}
+				return false;
+
+			}, false);
 		}
 	}
 
@@ -53,7 +62,15 @@ public class SignalPropagator {
 			SignalBoundary boundary = pair.getSecond();
 			boundary.queueUpdate(node1);
 			return false;
-		}, Predicates.alwaysFalse(), false);
+
+		}, signalData -> {
+			if (!signalData.hasSignalBoundaries()) {
+				signalData.setSingleSignalGroup(graph, EdgeData.passiveGroup);
+				return true;
+			}
+			return false;
+
+		}, false);
 	}
 
 	public static void propagateSignalGroup(TrackGraph graph, SignalBoundary signal, boolean front) {
@@ -63,8 +80,7 @@ public class SignalPropagator {
 		SignalEdgeGroup group = new SignalEdgeGroup(UUID.randomUUID());
 		UUID groupId = group.id;
 		globalGroups.put(groupId, group);
-		sync.edgeGroupCreated(groupId);
-		signal.groups.set(front, groupId);
+		signal.setGroup(front, groupId);
 		sync.pointAdded(graph, signal);
 
 		walkSignals(graph, signal, front, pair -> {
@@ -74,18 +90,22 @@ public class SignalPropagator {
 			if (currentGroup != null)
 				if (globalGroups.remove(currentGroup) != null)
 					sync.edgeGroupRemoved(currentGroup);
-			boundary.setGroup(node1, groupId);
+			boundary.setGroupAndUpdate(node1, groupId);
 			sync.pointAdded(graph, boundary);
 			return true;
 
 		}, signalData -> {
-			if (signalData.singleSignalGroup != null)
-				if (globalGroups.remove(signalData.singleSignalGroup) != null)
-					sync.edgeGroupRemoved(signalData.singleSignalGroup);
-			signalData.singleSignalGroup = groupId;
+			UUID singleSignalGroup = signalData.getSingleSignalGroup();
+			if (singleSignalGroup != null)
+				if (globalGroups.remove(singleSignalGroup) != null)
+					sync.edgeGroupRemoved(singleSignalGroup);
+			signalData.setSingleSignalGroup(graph, groupId);
 			return true;
 
 		}, false);
+		
+		group.resolveColor();
+		sync.edgeGroupCreated(groupId, group.color);
 	}
 
 	public static Map<UUID, Boolean> collectChainedSignals(TrackGraph graph, SignalBoundary signal, boolean front) {
@@ -117,14 +137,18 @@ public class SignalPropagator {
 
 		if (!forCollection) {
 			notifyTrains(graph, startEdge, oppositeEdge);
+			startEdge.getEdgeData()
+				.refreshIntersectingSignalGroups(graph);
 			Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge, oppositeEdge);
 		}
 
 		// Check for signal on the same edge
 		SignalBoundary immediateBoundary = startEdge.getEdgeData()
-			.next(EdgePointType.SIGNAL, node1, node2, startEdge, signal.getLocationOn(node1, node2, startEdge));
+			.next(EdgePointType.SIGNAL, signal.getLocationOn(startEdge));
 		if (immediateBoundary != null) {
-			boundaryCallback.test(Pair.of(node1, immediateBoundary));
+			if (boundaryCallback.test(Pair.of(node1, immediateBoundary)))
+				startEdge.getEdgeData()
+					.refreshIntersectingSignalGroups(graph);
 			return;
 		}
 
@@ -159,8 +183,8 @@ public class SignalPropagator {
 				if (forCollection) {
 					Vec3 currentDirection = graph.getConnectionsFrom(prevNode)
 						.get(currentNode)
-						.getDirection(prevNode, currentNode, false);
-					Vec3 newDirection = edge.getDirection(currentNode, nextNode, true);
+						.getDirection(false);
+					Vec3 newDirection = edge.getDirection(true);
 					if (currentDirection.dot(newDirection) < 3 / 4f)
 						continue;
 				}
@@ -175,20 +199,21 @@ public class SignalPropagator {
 
 					// no boundary- update group of edge
 					if (!signalData.hasSignalBoundaries()) {
-						if (!nonBoundaryCallback.test(signalData))
-							continue;
-						notifyTrains(graph, currentEdge);
-						Create.RAILWAYS.sync.edgeDataChanged(graph, currentNode, nextNode, edge, oppositeEdge);
+						if (nonBoundaryCallback.test(signalData)) {
+							notifyTrains(graph, currentEdge);
+							Create.RAILWAYS.sync.edgeDataChanged(graph, currentNode, nextNode, edge, oppositeEdge);
+						}
 						continue;
 					}
 
 					// other/own boundary found
-					SignalBoundary nextBoundary =
-						signalData.next(EdgePointType.SIGNAL, currentNode, nextNode, currentEdge, 0);
+					SignalBoundary nextBoundary = signalData.next(EdgePointType.SIGNAL, 0);
 					if (nextBoundary == null)
 						continue;
 					if (boundaryCallback.test(Pair.of(currentNode, nextBoundary))) {
 						notifyTrains(graph, edge, oppositeEdge);
+						currentEdge.getEdgeData()
+							.refreshIntersectingSignalGroups(graph);
 						Create.RAILWAYS.sync.edgeDataChanged(graph, currentNode, nextNode, edge, oppositeEdge);
 					}
 					continue EdgeWalk;

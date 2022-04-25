@@ -71,8 +71,8 @@ public abstract class TrackEdgePoint {
 		this.position = position;
 	}
 
-	public double getLocationOn(TrackNode node1, TrackNode node2, TrackEdge edge) {
-		return isPrimary(node1) ? edge.getLength(node1, node2) - position : position;
+	public double getLocationOn(TrackEdge edge) {
+		return isPrimary(edge.node1) ? edge.getLength() - position : position;
 	}
 
 	public boolean canNavigateVia(TrackNode side) {

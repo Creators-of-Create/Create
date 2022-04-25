@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint;
 
 import com.google.common.base.Objects;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
@@ -47,8 +48,12 @@ public class TrackTargetingClient {
 		BezierTrackPointLocation hoveredBezier = null;
 
 		ItemStack stack = player.getMainHandItem();
-		if (stack.getItem() instanceof TrackTargetingBlockItem ttbi)
+		if (stack.getItem()instanceof TrackTargetingBlockItem ttbi)
 			type = ttbi.getType(stack);
+
+		if (type == EdgePointType.SIGNAL)
+			Create.RAILWAYS.sided(null)
+				.tickSignalOverlay();
 
 		boolean alreadySelected = stack.hasTag() && stack.getTag()
 			.contains("SelectedPos");
@@ -78,7 +83,7 @@ public class TrackTargetingClient {
 					BlockHitResult blockHitResult = (BlockHitResult) hitResult;
 					BlockPos pos = blockHitResult.getBlockPos();
 					BlockState blockState = mc.level.getBlockState(pos);
-					if (blockState.getBlock() instanceof ITrackBlock track) {
+					if (blockState.getBlock()instanceof ITrackBlock track) {
 						direction = track.getNearestTrackAxis(mc.level, pos, blockState, lookAngle)
 							.getSecond() == AxisDirection.POSITIVE;
 						hovered = pos;

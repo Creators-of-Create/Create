@@ -27,8 +27,8 @@ public class TrainMigration {
 	public TrainMigration() {}
 
 	public TrainMigration(TravellingPoint point) {
-		double t = point.position / point.edge.getLength(point.node1, point.node2);
-		fallback = point.edge.getPosition(point.node1, point.node2, t);
+		double t = point.position / point.edge.getLength();
+		fallback = point.edge.getPosition(t);
 		curve = point.edge.isTurn();
 		positionOnOldEdge = point.position;
 		locations = Couple.create(point.node1.getLocation(), point.node2.getLocation());
@@ -71,7 +71,7 @@ public class TrainMigration {
 					continue;
 				TrackNode newNode2 = entry.getKey();
 				float radius = 1 / 64f;
-				Vec3 direction = edge.getDirection(newNode1, newNode2, true);
+				Vec3 direction = edge.getDirection(true);
 				if (!Mth.equal(direction.dot(prevDirection), 1))
 					continue;
 				Vec3 intersectSphere = VecHelper.intersectSphere(nodeVec, direction, fallback, radius);
@@ -80,7 +80,7 @@ public class TrainMigration {
 				if (!Mth.equal(direction.dot(intersectSphere.subtract(nodeVec)
 					.normalize()), 1))
 					continue;
-				double edgeLength = edge.getLength(newNode1, newNode2);
+				double edgeLength = edge.getLength();
 				double position = intersectSphere.distanceTo(nodeVec) - radius;
 				if (Double.isNaN(position))
 					continue;

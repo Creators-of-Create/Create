@@ -316,7 +316,7 @@ public class StationTileEntity extends SmartTileEntity {
 			}
 
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
-			if (potentialBogeyState.getBlock() instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
+			if (potentialBogeyState.getBlock()instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
 				bogeyTypes[bogeyIndex] = bogey;
 				bogeyLocations[bogeyIndex] = i;
 				bogeyIndex++;
@@ -449,7 +449,7 @@ public class StationTileEntity extends SmartTileEntity {
 						TrackNode otherNode = entry.getKey();
 						if (edge.isTurn())
 							continue;
-						Vec3 edgeDirection = edge.getDirection(node, otherNode, true);
+						Vec3 edgeDirection = edge.getDirection(true);
 						if (Mth.equal(edgeDirection.normalize()
 							.dot(directionVec), -1d))
 							secondNode = otherNode;
@@ -638,7 +638,7 @@ public class StationTileEntity extends SmartTileEntity {
 			return true;
 
 		BlockState target = edgePoint.getTrackBlockState();
-		if (!(target.getBlock() instanceof ITrackBlock def))
+		if (!(target.getBlock()instanceof ITrackBlock def))
 			return false;
 
 		Vec3 axis = null;

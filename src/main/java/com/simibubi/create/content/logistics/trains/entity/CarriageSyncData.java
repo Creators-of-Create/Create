@@ -239,8 +239,8 @@ public class CarriageSyncData {
 				TravellingPoint toApproach = pointsToApproach[index];
 
 				point.travel(graph, partial * f,
-					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b)), point.ignoreEdgePoints(),
-					point.ignoreTurns());
+					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b)),
+					point.ignoreEdgePoints(), point.ignoreTurns());
 
 				// could not pathfind to server location
 				if (!success.booleanValue()) {
@@ -284,8 +284,7 @@ public class CarriageSyncData {
 		TrackEdge targetEdge = graph.getConnectionsFrom(targetNode1)
 			.get(targetNode2);
 
-		double distanceToNode2 =
-			forward ? initialEdge.getLength(initialNode1, initialNode2) - current.position : current.position;
+		double distanceToNode2 = forward ? initialEdge.getLength() - current.position : current.position;
 
 		frontier.add(Pair.of(distanceToNode2, Pair.of(Couple.create(initialNode1, initialNode2), initialEdge)));
 
@@ -294,15 +293,12 @@ public class CarriageSyncData {
 			double distance = poll.getFirst();
 
 			Pair<Couple<TrackNode>, TrackEdge> currentEntry = poll.getSecond();
-			TrackNode node1 = currentEntry.getFirst()
-				.getFirst();
 			TrackNode node2 = currentEntry.getFirst()
 				.getSecond();
 			TrackEdge edge = currentEntry.getSecond();
 
 			if (edge == targetEdge)
-				return (float) (distance
-					- (forward ? edge.getLength(node1, node2) - target.position : target.position));
+				return (float) (distance - (forward ? edge.getLength() - target.position : target.position));
 
 			if (distance > maxDistance)
 				continue;
@@ -310,10 +306,9 @@ public class CarriageSyncData {
 			List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
 			Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node2);
 			for (Entry<TrackNode, TrackEdge> entry : connectionsFrom.entrySet()) {
-				TrackNode newNode = entry.getKey();
 				TrackEdge newEdge = entry.getValue();
-				Vec3 currentDirection = edge.getDirection(node1, node2, false);
-				Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
+				Vec3 currentDirection = edge.getDirection(false);
+				Vec3 newDirection = newEdge.getDirection(true);
 				if (currentDirection.dot(newDirection) < 3 / 4f)
 					continue;
 				if (!visited.add(entry.getValue()))
@@ -328,8 +323,7 @@ public class CarriageSyncData {
 				TrackNode newNode = entry.getKey();
 				TrackEdge newEdge = entry.getValue();
 				reachedVia.put(newEdge, Pair.of(validTargets.size() > 1, edge));
-				frontier.add(Pair.of(newEdge.getLength(node2, newNode) + distance,
-					Pair.of(Couple.create(node2, newNode), newEdge)));
+				frontier.add(Pair.of(newEdge.getLength() + distance, Pair.of(Couple.create(node2, newNode), newEdge)));
 			}
 		}
 

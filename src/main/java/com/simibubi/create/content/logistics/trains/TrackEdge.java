@@ -1,22 +1,33 @@
 package com.simibubi.create.content.logistics.trains;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class TrackEdge {
 
+	public TrackNode node1;
+	public TrackNode node2;
 	BezierConnection turn;
 	EdgeData edgeData;
 
-	public TrackEdge(BezierConnection turn) {
+	public TrackEdge(TrackNode node1, TrackNode node2, BezierConnection turn) {
+		this.edgeData = new EdgeData(this);
+		this.node1 = node1;
+		this.node2 = node2;
 		this.turn = turn;
-		this.edgeData = new EdgeData();
 	}
 
 	public boolean isTurn() {
@@ -31,27 +42,110 @@ public class TrackEdge {
 		return turn;
 	}
 
-	public Vec3 getDirection(TrackNode node1, TrackNode node2, boolean fromFirst) {
-		return getPosition(node1, node2, fromFirst ? 0.25f : 1)
-			.subtract(getPosition(node1, node2, fromFirst ? 0 : 0.75f))
+	public Vec3 getDirection(boolean fromFirst) {
+		return getPosition(fromFirst ? 0.25f : 1).subtract(getPosition(fromFirst ? 0 : 0.75f))
 			.normalize();
 	}
 
-	public double getLength(TrackNode node1, TrackNode node2) {
+	public double getLength() {
 		return isTurn() ? turn.getLength()
 			: node1.location.getLocation()
 				.distanceTo(node2.location.getLocation());
 	}
 
-	public double incrementT(TrackNode node1, TrackNode node2, double currentT, double distance) {
-		boolean tooFar = Math.abs(distance) > 5; 
-		distance = distance / getLength(node1, node2);
+	public double incrementT(double currentT, double distance) {
+		boolean tooFar = Math.abs(distance) > 5;
+		distance = distance / getLength();
 		return !tooFar && isTurn() ? turn.incrementT(currentT, distance) : currentT + distance;
 	}
 
-	public Vec3 getPosition(TrackNode node1, TrackNode node2, double t) {
+	public Vec3 getPosition(double t) {
 		return isTurn() ? turn.getPosition(Mth.clamp(t, 0, 1))
 			: VecHelper.lerp((float) t, node1.location.getLocation(), node2.location.getLocation());
+	}
+
+	public Collection<double[]> getIntersection(TrackNode node1, TrackNode node2, TrackEdge other, TrackNode other1,
+		TrackNode other2) {
+		Vec3 v1 = node1.location.getLocation();
+		Vec3 v2 = node2.location.getLocation();
+		Vec3 w1 = other1.location.getLocation();
+		Vec3 w2 = other2.location.getLocation();
+
+		if (v1.y != v2.y || v1.y != w1.y || v1.y != w2.y)
+			return Collections.emptyList();
+
+		if (!isTurn()) {
+			if (!other.isTurn())
+				return ImmutableList.of(VecHelper.intersectRanged(v1, w1, v2, w2, Axis.Y));
+			return other.getIntersection(other1, other2, this, node1, node2)
+				.stream()
+				.map(a -> new double[] { a[1], a[0] })
+				.toList();
+		}
+
+		AABB bb = turn.getBounds();
+
+		if (!other.isTurn()) {
+			if (!bb.intersects(w1, w2))
+				return Collections.emptyList();
+
+			Vec3 seg1 = v1;
+			Vec3 seg2 = null;
+			double t = 0;
+
+			Collection<double[]> intersections = new ArrayList<>();
+			for (int i = 0; i < turn.getSegmentCount(); i++) {
+				double tOffset = t;
+				t += .5;
+				seg2 = getPosition(t / getLength());
+				double[] intersection = VecHelper.intersectRanged(seg1, w1, seg2, w2, Axis.Y);
+				seg1 = seg2;
+				if (intersection == null)
+					continue;
+				intersection[0] += tOffset;
+				intersections.add(intersection);
+			}
+
+			return intersections;
+		}
+
+		if (!bb.intersects(other.turn.getBounds()))
+			return Collections.emptyList();
+
+		Vec3 seg1 = v1;
+		Vec3 seg2 = null;
+		double t = 0;
+
+		Collection<double[]> intersections = new ArrayList<>();
+		for (int i = 0; i < turn.getSegmentCount(); i++) {
+			double tOffset = t;
+			t += .5;
+			seg2 = getPosition(t / getLength());
+
+			Vec3 otherSeg1 = w1;
+			Vec3 otherSeg2 = null;
+			double u = 0;
+
+			for (int j = 0; j < other.turn.getSegmentCount(); j++) {
+				double uOffset = u;
+				u += .5;
+				otherSeg2 = other.getPosition(u / other.getLength());
+
+				double[] intersection = VecHelper.intersectRanged(seg1, otherSeg1, seg2, otherSeg2, Axis.Y);
+				otherSeg1 = otherSeg2;
+
+				if (intersection == null)
+					continue;
+
+				intersection[0] += tOffset;
+				intersection[1] += uOffset;
+				intersections.add(intersection);
+			}
+
+			seg1 = seg2;
+		}
+
+		return intersections;
 	}
 
 	public Vec3 getNormal(TrackNode node1, TrackNode node2, double t) {
@@ -65,7 +159,7 @@ public class TrackEdge {
 	}
 
 	public static TrackEdge read(FriendlyByteBuf buffer) {
-		return new TrackEdge(buffer.readBoolean() ? new BezierConnection(buffer) : null);
+		return new TrackEdge(null, null, buffer.readBoolean() ? new BezierConnection(buffer) : null);
 	}
 
 	public CompoundTag write() {
@@ -76,8 +170,8 @@ public class TrackEdge {
 
 	public static TrackEdge read(CompoundTag tag, TrackGraph graph) {
 		TrackEdge trackEdge =
-			new TrackEdge(tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
-		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), graph);
+			new TrackEdge(null, null, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
+		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), trackEdge, graph);
 		return trackEdge;
 	}
 

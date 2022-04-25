@@ -169,8 +169,14 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		for (Pair<Couple<Integer>, TrackEdge> pair : addedEdges) {
 			Couple<TrackNode> nodes = pair.getFirst()
 				.map(graph::getNode);
-			if (nodes.getFirst() != null && nodes.getSecond() != null)
-				graph.putConnection(nodes.getFirst(), nodes.getSecond(), pair.getSecond());
+			TrackNode node1 = nodes.getFirst();
+			TrackNode node2 = nodes.getSecond();
+			if (node1 != null && node2 != null) {
+				TrackEdge edge = pair.getSecond();
+				edge.node1 = node1;
+				edge.node2 = node2;
+				graph.putConnection(node1, node2, edge);
+			}
 		}
 
 		for (TrackEdgePoint edgePoint : addedEdgePoints)
@@ -203,13 +209,13 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 			if (edge == null)
 				continue;
 
-			EdgeData edgeData = new EdgeData();
+			EdgeData edgeData = new EdgeData(edge);
 			if (groupType == NULL_GROUP)
-				edgeData.singleSignalGroup = null;
+				edgeData.setSingleSignalGroup(null, null);
 			else if (groupType == PASSIVE_GROUP)
-				edgeData.singleSignalGroup = EdgeData.passiveGroup;
+				edgeData.setSingleSignalGroup(null, EdgeData.passiveGroup);
 			else
-				edgeData.singleSignalGroup = idList.get(0);
+				edgeData.setSingleSignalGroup(null, idList.get(0));
 
 			List<TrackEdgePoint> points = edgeData.getPoints();
 			edge.edgeData = edgeData;
@@ -232,9 +238,9 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		List<UUID> list = new ArrayList<>();
 		EdgeData edgeData = edge.getEdgeData();
 		int groupType = edgeData.hasSignalBoundaries() ? NULL_GROUP
-			: EdgeData.passiveGroup.equals(edgeData.singleSignalGroup) ? PASSIVE_GROUP : GROUP;
+			: EdgeData.passiveGroup.equals(edgeData.getSingleSignalGroup()) ? PASSIVE_GROUP : GROUP;
 		if (groupType == GROUP)
-			list.add(edgeData.singleSignalGroup);
+			list.add(edgeData.getSingleSignalGroup());
 		for (TrackEdgePoint point : edgeData.getPoints())
 			list.add(point.getId());
 		updatedEdgeData.put(key, Pair.of(groupType, list));

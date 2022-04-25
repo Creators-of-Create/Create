@@ -449,7 +449,7 @@ public class Navigation {
 					backTrack = reachedVia.get(edgeReached);
 				}
 
-				double position = edge.getLength(node1, node2) - destination.getLocationOn(node1, node2, edge);
+				double position = edge.getLength() - destination.getLocationOn(edge);
 				double distanceToDestination = distance - position;
 				results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath));
 				return true;
@@ -510,12 +510,7 @@ public class Navigation {
 				return false;
 
 			TrackEdge edge = currentEntry.getSecond();
-			TrackNode node1 = currentEntry.getFirst()
-				.getFirst();
-			TrackNode node2 = currentEntry.getFirst()
-				.getSecond();
-
-			double position = edge.getLength(node1, node2) - globalStation.getLocationOn(node1, node2, edge);
+			double position = edge.getLength() - globalStation.getLocationOn(edge);
 			if (distance - position < minDistance)
 				return false;
 			result.setValue(globalStation);
@@ -571,8 +566,7 @@ public class Navigation {
 		TrackNode initialNode2 = forward ? startingPoint.node2 : startingPoint.node1;
 		TrackEdge initialEdge = graph.getConnectionsFrom(initialNode1)
 			.get(initialNode2);
-		double distanceToNode2 = forward ? initialEdge.getLength(initialNode1, initialNode2) - startingPoint.position
-			: startingPoint.position;
+		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
 
@@ -597,8 +591,7 @@ public class Navigation {
 			EdgeData signalData = edge.getEdgeData();
 			if (signalData.hasPoints()) {
 				for (TrackEdgePoint point : signalData.getPoints()) {
-					if (node1 == initialNode1
-						&& point.getLocationOn(node1, node2, edge) < edge.getLength(node1, node2) - distanceToNode2)
+					if (node1 == initialNode1 && point.getLocationOn(edge) < edge.getLength() - distanceToNode2)
 						continue;
 					if (costRelevant && distance + penalty > maxCost)
 						continue Search;
@@ -624,10 +617,9 @@ public class Navigation {
 			List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
 			Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node2);
 			for (Entry<TrackNode, TrackEdge> connection : connectionsFrom.entrySet()) {
-				TrackNode newNode = connection.getKey();
 				TrackEdge newEdge = connection.getValue();
-				Vec3 currentDirection = edge.getDirection(node1, node2, false);
-				Vec3 newDirection = newEdge.getDirection(node2, newNode, true);
+				Vec3 currentDirection = edge.getDirection(false);
+				Vec3 newDirection = newEdge.getDirection(true);
 				if (currentDirection.dot(newDirection) < 3 / 4f)
 					continue;
 				validTargets.add(connection);
@@ -639,7 +631,7 @@ public class Navigation {
 			for (Entry<TrackNode, TrackEdge> target : validTargets) {
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
-				double newDistance = newEdge.getLength(node2, newNode) + distance;
+				double newDistance = newEdge.getLength() + distance;
 				int newPenalty = penalty;
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
 				frontier.add(new FrontierEntry(newDistance, newPenalty, node2, newNode, newEdge));
@@ -704,10 +696,10 @@ public class Navigation {
 		destination = graph != null && tag.contains("Destination")
 			? graph.getPoint(EdgePointType.STATION, tag.getUUID("Destination"))
 			: null;
-		
+
 		if (destination == null)
 			return;
-		
+
 		distanceToDestination = tag.getDouble("DistanceToDestination");
 		distanceStartedAt = tag.getDouble("DistanceStartedAt");
 		destinationBehindTrain = tag.getBoolean("BehindTrain");

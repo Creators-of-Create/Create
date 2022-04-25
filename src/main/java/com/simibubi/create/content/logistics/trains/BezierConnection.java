@@ -57,7 +57,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BezierConnection secondary() {
-		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), false, hasGirder);
+		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), !primary, hasGirder);
 	}
 
 	public BezierConnection(CompoundTag compound, BlockPos localTo) {

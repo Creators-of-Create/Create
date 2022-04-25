@@ -202,7 +202,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		double edgePosition = location.position;
 
 		for (TrackEdgePoint edgePoint : edgeData.getPoints()) {
-			double otherEdgePosition = edgePoint.getLocationOn(nodes.getFirst(), nodes.getSecond(), edge);
+			double otherEdgePosition = edgePoint.getLocationOn(edge);
 			double distance = Math.abs(edgePosition - otherEdgePosition);
 			if (distance > .75)
 				continue;

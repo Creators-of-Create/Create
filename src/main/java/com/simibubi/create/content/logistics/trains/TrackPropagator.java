@@ -32,7 +32,7 @@ public class TrackPropagator {
 	}
 
 	public static void onRailRemoved(LevelAccessor reader, BlockPos pos, BlockState state) {
-		if (!(state.getBlock()instanceof ITrackBlock track))
+		if (!(state.getBlock() instanceof ITrackBlock track))
 			return;
 
 		Collection<DiscoveredLocation> ends = track.getConnected(reader, pos, state, false, null);
@@ -51,7 +51,7 @@ public class TrackPropagator {
 				sync.nodeRemoved(foundGraph, removedNode);
 				if (!foundGraph.isEmpty())
 					continue;
-				manager.removeGraph(foundGraph);
+				manager.removeGraphAndGroup(foundGraph);
 				sync.graphRemoved(foundGraph);
 			}
 		}
@@ -79,7 +79,7 @@ public class TrackPropagator {
 	}
 
 	public static TrackGraph onRailAdded(LevelAccessor reader, BlockPos pos, BlockState state) {
-		if (!(state.getBlock()instanceof ITrackBlock track))
+		if (!(state.getBlock() instanceof ITrackBlock track))
 			return null;
 
 		// 1. Remove all immediately reachable node locations
@@ -124,7 +124,7 @@ public class TrackPropagator {
 			TrackGraph railGraph = iterator.next();
 			if (!railGraph.isEmpty() || connectedGraphs.size() == 1)
 				continue;
-			manager.removeGraph(railGraph);
+			manager.removeGraphAndGroup(railGraph);
 			sync.graphRemoved(railGraph);
 			iterator.remove();
 		}
@@ -136,7 +136,7 @@ public class TrackPropagator {
 					graph = other;
 				else {
 					other.transferAll(graph);
-					manager.removeGraph(other);
+					manager.removeGraphAndGroup(other);
 					sync.graphRemoved(other);
 				}
 		} else if (connectedGraphs.size() == 1) {
@@ -144,7 +144,7 @@ public class TrackPropagator {
 				.findFirst()
 				.get();
 		} else
-			manager.putGraph(graph = new TrackGraph());
+			manager.putGraphWithDefaultGroup(graph = new TrackGraph());
 
 		DiscoveredLocation startNode = null;
 
@@ -191,7 +191,7 @@ public class TrackPropagator {
 
 			if (isValidGraphNodeLocation(entry.currentNode, ends, first) && entry.currentNode != startNode) {
 				boolean nodeIsNew = graph.createNodeIfAbsent(entry.currentNode);
-				graph.connectNodes(parentNode, entry.currentNode, new TrackEdge(entry.currentNode.getTurn()));
+				graph.connectNodes(reader, parentNode, entry.currentNode, entry.currentNode.getTurn());
 				addedNodes.add(graph.locateNode(entry.currentNode));
 				parentNode = entry.currentNode;
 				if (!nodeIsNew)

@@ -24,7 +24,7 @@ public class TrackGraphHelper {
 	public static GraphLocation getGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
 		Vec3 targetAxis) {
 		BlockState trackBlockState = level.getBlockState(pos);
-		if (!(trackBlockState.getBlock() instanceof ITrackBlock track))
+		if (!(trackBlockState.getBlock()instanceof ITrackBlock track))
 			return null;
 
 		Vec3 axis = targetAxis.scale(targetDirection.getStep());
@@ -44,7 +44,7 @@ public class TrackGraphHelper {
 				for (Entry<TrackNode, TrackEdge> entry : connectionsFrom.entrySet()) {
 					TrackNode backNode = entry.getKey();
 					Vec3 direction = entry.getValue()
-						.getDirection(node, backNode, true);
+						.getDirection(true);
 					if (direction.scale(length)
 						.distanceToSqr(axis.scale(-1)) > 1 / 4096f)
 						continue;
@@ -133,9 +133,9 @@ public class TrackGraphHelper {
 		BezierTrackPointLocation targetBezier) {
 		BlockState state = level.getBlockState(pos);
 
-		if (!(state.getBlock() instanceof ITrackBlock track))
+		if (!(state.getBlock()instanceof ITrackBlock track))
 			return null;
-		if (!(level.getBlockEntity(pos) instanceof TrackTileEntity trackTE))
+		if (!(level.getBlockEntity(pos)instanceof TrackTileEntity trackTE))
 			return null;
 		BezierConnection bc = trackTE.getConnections()
 			.get(targetBezier.curveTarget());
@@ -163,7 +163,7 @@ public class TrackGraphHelper {
 			graphLocation.position = (targetBezier.segment() + 1) / 2f;
 			if (targetDirection == AxisDirection.POSITIVE) {
 				graphLocation.edge = graphLocation.edge.swap();
-				graphLocation.position = edge.getLength(node, targetNode) - graphLocation.position;
+				graphLocation.position = edge.getLength() - graphLocation.position;
 			}
 
 			return graphLocation;

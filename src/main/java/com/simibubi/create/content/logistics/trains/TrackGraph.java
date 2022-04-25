@@ -16,34 +16,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
-import org.lwjgl.glfw.GLFW;
-
-import com.simibubi.create.AllKeys;
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointManager;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointStorage;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackEdgeIntersection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
@@ -58,6 +52,9 @@ public class TrackGraph {
 	Map<Integer, TrackNode> nodesById;
 	Map<TrackNode, Map<TrackNode, TrackEdge>> connectionsByNode;
 	EdgePointStorage edgePoints;
+	Map<ResourceKey<Level>, TrackGraphBounds> bounds;
+
+	List<TrackEdge> deferredIntersectionUpdates;
 
 	public TrackGraph() {
 		this(UUID.randomUUID());
@@ -67,8 +64,10 @@ public class TrackGraph {
 		setId(graphID);
 		nodes = new HashMap<>();
 		nodesById = new HashMap<>();
+		bounds = new HashMap<>();
 		connectionsByNode = new IdentityHashMap<>();
 		edgePoints = new EdgePointStorage();
+		deferredIntersectionUpdates = new ArrayList<>();
 	}
 
 	//
@@ -104,6 +103,16 @@ public class TrackGraph {
 
 	//
 
+	public TrackGraphBounds getBounds(Level level) {
+		return bounds.computeIfAbsent(level.dimension(), dim -> new TrackGraphBounds(this, dim));
+	}
+
+	public void invalidateBounds() {
+		bounds.clear();
+	}
+
+	//
+
 	public Set<TrackNodeLocation> getNodes() {
 		return nodes.keySet();
 	}
@@ -125,6 +134,7 @@ public class TrackGraph {
 			return false;
 		TrackNode newNode = nodes.get(location);
 		Create.RAILWAYS.sync.nodeAdded(this, newNode);
+		invalidateBounds();
 		markDirty();
 		return true;
 	}
@@ -165,17 +175,30 @@ public class TrackGraph {
 		}
 
 		nodesById.remove(removed.netId);
+		invalidateBounds();
+
 		if (!connectionsByNode.containsKey(removed))
 			return true;
 
 		Map<TrackNode, TrackEdge> connections = connectionsByNode.remove(removed);
-		for (TrackEdge trackEdge : connections.values())
-			for (TrackEdgePoint point : trackEdge.getEdgeData()
-				.getPoints()) {
+		for (Entry<TrackNode, TrackEdge> entry : connections.entrySet()) {
+			TrackEdge trackEdge = entry.getValue();
+			EdgeData edgeData = trackEdge.getEdgeData();
+			for (TrackEdgePoint point : edgeData.getPoints()) {
 				if (level != null)
 					point.invalidate(level);
 				edgePoints.remove(point.getType(), point.getId());
 			}
+			if (level != null) {
+				TrackNode otherNode = entry.getKey();
+				for (TrackEdgeIntersection intersection : edgeData.getIntersections()) {
+					Couple<TrackNodeLocation> target = intersection.target;
+					TrackGraph graph = Create.RAILWAYS.getGraph(level, target.getFirst());
+					if (graph != null)
+						graph.removeIntersection(intersection, removed, otherNode);
+				}
+			}
+		}
 
 		for (TrackNode railNode : connections.keySet())
 			if (connectionsByNode.containsKey(railNode))
@@ -183,6 +206,29 @@ public class TrackGraph {
 					.remove(removed);
 
 		return true;
+	}
+
+	private void removeIntersection(TrackEdgeIntersection intersection, TrackNode targetNode1, TrackNode targetNode2) {
+		TrackNode node1 = locateNode(intersection.target.getFirst());
+		TrackNode node2 = locateNode(intersection.target.getSecond());
+		if (node1 == null || node2 == null)
+			return;
+
+		Map<TrackNode, TrackEdge> from1 = getConnectionsFrom(node1);
+		if (from1 != null) {
+			TrackEdge edge = from1.get(node2);
+			if (edge != null)
+				edge.getEdgeData()
+					.removeIntersection(this, intersection.id);
+		}
+
+		Map<TrackNode, TrackEdge> from2 = getConnectionsFrom(node2);
+		if (from2 != null) {
+			TrackEdge edge = from2.get(node1);
+			if (edge != null)
+				edge.getEdgeData()
+					.removeIntersection(this, intersection.id);
+		}
 	}
 
 	public static int nextNodeId() {
@@ -209,6 +255,7 @@ public class TrackGraph {
 		edgePoints.transferAll(toOther, toOther.edgePoints);
 		nodes.clear();
 		connectionsByNode.clear();
+		toOther.invalidateBounds();
 
 		Map<UUID, Train> trains = Create.RAILWAYS.trains;
 		for (Iterator<UUID> iterator = trains.keySet()
@@ -268,6 +315,7 @@ public class TrackGraph {
 
 	public void transfer(TrackNode node, TrackGraph target) {
 		target.addNode(node);
+		target.invalidateBounds();
 
 		TrackNodeLocation nodeLoc = node.getLocation();
 		Map<TrackNode, TrackEdge> connections = getConnectionsFrom(node);
@@ -298,6 +346,7 @@ public class TrackGraph {
 		nodes.remove(nodeLoc);
 		nodesById.remove(node.getNetId());
 		connectionsByNode.remove(node);
+		invalidateBounds();
 	}
 
 	public boolean isEmpty() {
@@ -312,16 +361,66 @@ public class TrackGraph {
 		return getConnectionsFrom(nodes.getFirst()).get(nodes.getSecond());
 	}
 
-	public void connectNodes(TrackNodeLocation location, TrackNodeLocation location2, TrackEdge edge) {
+	public void connectNodes(LevelAccessor reader, TrackNodeLocation location, TrackNodeLocation location2,
+		@Nullable BezierConnection turn) {
 		TrackNode node1 = nodes.get(location);
 		TrackNode node2 = nodes.get(location2);
-		TrackEdge edge2 = new TrackEdge(edge.turn != null ? edge.turn.secondary() : null);
+
+		boolean bezier = turn != null;
+		TrackEdge edge = new TrackEdge(node1, node2, turn);
+		TrackEdge edge2 = new TrackEdge(node2, node1, bezier ? turn.secondary() : null);
+
+		if (reader instanceof Level level) {
+			for (TrackGraph graph : Create.RAILWAYS.trackNetworks.values()) {
+				if (graph != this
+					&& !graph.getBounds(level).box.intersects(location.getLocation(), location2.getLocation()))
+					continue;
+
+				for (TrackNode otherNode1 : graph.nodes.values()) {
+					Map<TrackNode, TrackEdge> connections = graph.connectionsByNode.get(otherNode1);
+					if (connections == null)
+						continue;
+					for (Entry<TrackNode, TrackEdge> entry : connections.entrySet()) {
+						TrackNode otherNode2 = entry.getKey();
+						TrackEdge otherEdge = entry.getValue();
+
+						if (graph == this)
+							if (otherNode1 == node1 || otherNode2 == node1 || otherNode1 == node2
+								|| otherNode2 == node2)
+								continue;
+
+						if (edge == otherEdge)
+							continue;
+						if (!bezier && !otherEdge.isTurn())
+							continue;
+						if (otherEdge.isTurn() && otherEdge.turn.isPrimary())
+							continue;
+
+						Collection<double[]> intersections =
+							edge.getIntersection(node1, node2, otherEdge, otherNode1, otherNode2);
+
+						UUID id = UUID.randomUUID();
+						for (double[] intersection : intersections) {
+							double s = intersection[0];
+							double t = intersection[1];
+							edge.edgeData.addIntersection(this, id, s, otherNode1, otherNode2, t);
+							edge2.edgeData.addIntersection(this, id, edge.getLength() - s, otherNode1, otherNode2, t);
+							otherEdge.edgeData.addIntersection(graph, id, t, node1, node2, s);
+							TrackEdge otherEdge2 = graph.getConnection(Couple.create(otherNode2, otherNode1));
+							if (otherEdge2 != null)
+								otherEdge2.edgeData.addIntersection(graph, id, otherEdge.getLength() - t, node1, node2,
+									s);
+						}
+					}
+				}
+			}
+		}
 
 		putConnection(node1, node2, edge);
 		putConnection(node2, node1, edge2);
-
 		Create.RAILWAYS.sync.edgeAdded(this, node1, node2, edge);
 		Create.RAILWAYS.sync.edgeAdded(this, node2, node1, edge2);
+
 		markDirty();
 	}
 
@@ -341,6 +440,47 @@ public class TrackGraph {
 			.hasPoints())
 			return false;
 		return connections.put(node2, edge) == null;
+	}
+
+	public void deferIntersectionUpdate(TrackEdge edge) {
+		deferredIntersectionUpdates.add(edge);
+	}
+
+	public void resolveIntersectingEdgeGroups(Level level) {
+		for (TrackEdge edge : deferredIntersectionUpdates) {
+			if (!connectionsByNode.containsKey(edge.node1) || edge != connectionsByNode.get(edge.node1)
+				.get(edge.node2))
+				continue;
+			EdgeData edgeData = edge.getEdgeData();
+			for (TrackEdgeIntersection intersection : edgeData.getIntersections()) {
+				UUID groupId = edgeData.getGroupAtPosition(this, intersection.location);
+				Couple<TrackNodeLocation> target = intersection.target;
+				TrackGraph graph = Create.RAILWAYS.getGraph(level, target.getFirst());
+				if (graph == null)
+					continue;
+
+				TrackNode node1 = graph.locateNode(target.getFirst());
+				TrackNode node2 = graph.locateNode(target.getSecond());
+				Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node1);
+				if (connectionsFrom == null)
+					continue;
+				TrackEdge otherEdge = connectionsFrom.get(node2);
+				if (otherEdge == null)
+					continue;
+				UUID otherGroupId = otherEdge.getEdgeData()
+					.getGroupAtPosition(graph, intersection.targetLocation);
+
+				SignalEdgeGroup group = Create.RAILWAYS.signalEdgeGroups.get(groupId);
+				SignalEdgeGroup otherGroup = Create.RAILWAYS.signalEdgeGroups.get(otherGroupId);
+				if (group == null || otherGroup == null)
+					continue;
+
+				intersection.groupId = groupId;
+				group.putIntersection(intersection.id, otherGroupId);
+				otherGroup.putIntersection(intersection.id, groupId);
+			}
+		}
+		deferredIntersectionUpdates.clear();
 	}
 
 	public void markDirty() {
@@ -418,307 +558,13 @@ public class TrackGraph {
 			NBTHelper.iterateCompoundList(nodeTag.getList("Connections", Tag.TAG_COMPOUND), c -> {
 				TrackNode node2 = indexTracker.get(c.getInt("To"));
 				TrackEdge edge = TrackEdge.read(c.getCompound("EdgeData"), graph);
+				edge.node1 = node1;
+				edge.node2 = node2;
 				graph.putConnection(node1, node2, edge);
 			});
 		}
 
 		return graph;
-	}
-
-	public void debugViewReserved() {
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		if (cameraEntity == null)
-			return;
-
-		Set<UUID> reserved = new HashSet<>();
-		Set<UUID> occupied = new HashSet<>();
-
-		for (Train train : Create.RAILWAYS.trains.values()) {
-			reserved.addAll(train.reservedSignalBlocks);
-			occupied.addAll(train.occupiedSignalBlocks.keySet());
-		}
-
-		reserved.removeAll(occupied);
-
-		Vec3 camera = cameraEntity.getEyePosition();
-		for (Entry<TrackNodeLocation, TrackNode> nodeEntry : nodes.entrySet()) {
-			TrackNodeLocation nodeLocation = nodeEntry.getKey();
-			TrackNode node = nodeEntry.getValue();
-			if (nodeLocation == null)
-				continue;
-
-			Vec3 location = nodeLocation.getLocation();
-			if (location.distanceTo(camera) > 100)
-				continue;
-
-			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
-			if (map == null)
-				continue;
-
-			int hashCode = node.hashCode();
-			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
-				TrackNode other = entry.getKey();
-
-				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
-					continue;
-				Vec3 yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
-
-				TrackEdge edge = entry.getValue();
-				EdgeData signalData = edge.getEdgeData();
-				UUID singleGroup = signalData.singleSignalGroup;
-				SignalEdgeGroup signalEdgeGroup =
-					singleGroup == null ? null : Create.RAILWAYS.sided(null).signalEdgeGroups.get(singleGroup);
-
-				if (!edge.isTurn()) {
-					Vec3 p1 = edge.getPosition(node, other, 0);
-					Vec3 p2 = edge.getPosition(node, other, 1);
-
-					if (signalData.hasPoints()) {
-						double prev = 0;
-						double length = edge.getLength(node, other);
-						SignalBoundary prevBoundary = null;
-						SignalEdgeGroup group = null;
-
-						for (TrackEdgePoint trackEdgePoint : signalData.getPoints()) {
-							if (!(trackEdgePoint instanceof SignalBoundary boundary))
-								continue;
-
-							prevBoundary = boundary;
-							UUID groupId = boundary.getGroup(node);
-							group = Create.RAILWAYS.sided(null).signalEdgeGroups.get(groupId);
-							double start = prev + (prev == 0 ? 0 : 1 / 16f / length);
-							prev = (boundary.getLocationOn(node, other, edge) / length) - 1 / 16f / length;
-
-							if (group != null
-								&& (group.reserved != null || occupied.contains(groupId) || reserved.contains(groupId)))
-								CreateClient.OUTLINER
-									.showLine(Pair.of(boundary, edge), edge.getPosition(node, other, start)
-										.add(yOffset),
-										edge.getPosition(node, other, prev)
-											.add(yOffset))
-									.colored(occupied.contains(groupId) ? 0xF68989
-										: group.reserved != null ? 0xC5D8A4 : 0xF6E7D8)
-									.lineWidth(1 / 16f);
-
-						}
-
-						if (prevBoundary != null) {
-							UUID groupId = prevBoundary.getGroup(other);
-							SignalEdgeGroup lastGroup = Create.RAILWAYS.sided(null).signalEdgeGroups.get(groupId);
-							if (lastGroup != null && ((lastGroup.reserved != null || occupied.contains(groupId)
-								|| reserved.contains(groupId))))
-								CreateClient.OUTLINER
-									.showLine(edge, edge.getPosition(node, other, prev + 1 / 16f / length)
-										.add(yOffset), p2.add(yOffset))
-									.colored(occupied.contains(groupId) ? 0xF68989
-										: lastGroup.reserved != null ? 0xC5D8A4 : 0xF6E7D8)
-									.lineWidth(1 / 16f);
-							continue;
-						}
-					}
-
-					if (signalEdgeGroup == null || !(signalEdgeGroup.reserved != null || occupied.contains(singleGroup)
-						|| reserved.contains(singleGroup)))
-						continue;
-					CreateClient.OUTLINER.showLine(edge, p1.add(yOffset), p2.add(yOffset))
-						.colored(occupied.contains(singleGroup) ? 0xF68989
-							: signalEdgeGroup.reserved != null ? 0xC5D8A4 : 0xF6E7D8)
-						.lineWidth(1 / 16f);
-					continue;
-				}
-
-				if (signalEdgeGroup == null || !(signalEdgeGroup.reserved != null || occupied.contains(singleGroup)
-					|| reserved.contains(singleGroup)))
-					continue;
-
-				int color =
-					occupied.contains(singleGroup) ? 0xF68989 : signalEdgeGroup.reserved != null ? 0xC5D8A4 : 0xF6E7D8;
-				Vec3 previous = null;
-				BezierConnection turn = edge.getTurn();
-				for (int i = 0; i <= turn.getSegmentCount(); i++) {
-					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
-					if (previous != null)
-						CreateClient.OUTLINER
-							.showLine(Pair.of(edge, previous), previous.add(yOffset), current.add(yOffset))
-							.colored(color)
-							.lineWidth(1 / 16f);
-					previous = current;
-				}
-			}
-		}
-	}
-
-	public void debugViewSignalData() {
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		if (cameraEntity == null)
-			return;
-		Vec3 camera = cameraEntity.getEyePosition();
-		for (Entry<TrackNodeLocation, TrackNode> nodeEntry : nodes.entrySet()) {
-			TrackNodeLocation nodeLocation = nodeEntry.getKey();
-			TrackNode node = nodeEntry.getValue();
-			if (nodeLocation == null)
-				continue;
-
-			Vec3 location = nodeLocation.getLocation();
-			if (location.distanceTo(camera) > 50)
-				continue;
-
-			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
-			if (map == null)
-				continue;
-
-			int hashCode = node.hashCode();
-			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
-				TrackNode other = entry.getKey();
-
-				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
-					continue;
-				Vec3 yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
-
-				TrackEdge edge = entry.getValue();
-				EdgeData signalData = edge.getEdgeData();
-				UUID singleGroup = signalData.singleSignalGroup;
-				SignalEdgeGroup signalEdgeGroup =
-					singleGroup == null ? null : Create.RAILWAYS.sided(null).signalEdgeGroups.get(singleGroup);
-
-				if (!edge.isTurn()) {
-					Vec3 p1 = edge.getPosition(node, other, 0);
-					Vec3 p2 = edge.getPosition(node, other, 1);
-
-					if (signalData.hasPoints()) {
-						double prev = 0;
-						double length = edge.getLength(node, other);
-						SignalBoundary prevBoundary = null;
-						SignalEdgeGroup group = null;
-
-						for (TrackEdgePoint trackEdgePoint : signalData.getPoints()) {
-							if (trackEdgePoint instanceof GlobalStation) {
-								Vec3 v1 = edge
-									.getPosition(node, other,
-										(trackEdgePoint.getLocationOn(node, other, edge) / length))
-									.add(yOffset);
-								Vec3 v2 = v1.add(node.normal.scale(3 / 16f));
-								CreateClient.OUTLINER.showLine(trackEdgePoint.id, v1, v2)
-									.colored(Color.mixColors(Color.WHITE, color, 1))
-									.lineWidth(1 / 8f);
-								continue;
-							}
-							if (!(trackEdgePoint instanceof SignalBoundary boundary))
-								continue;
-
-							prevBoundary = boundary;
-							group = Create.RAILWAYS.sided(null).signalEdgeGroups.get(boundary.getGroup(node));
-
-							if (group != null)
-								CreateClient.OUTLINER
-									.showLine(Pair.of(boundary, edge),
-										edge.getPosition(node, other, prev + (prev == 0 ? 0 : 1 / 16f / length))
-											.add(yOffset),
-										edge.getPosition(node, other,
-											(prev = boundary.getLocationOn(node, other, edge) / length)
-												- 1 / 16f / length)
-											.add(yOffset))
-									.colored(group.color.getRGB())
-									.lineWidth(1 / 16f);
-
-						}
-
-						if (prevBoundary != null) {
-							group = Create.RAILWAYS.sided(null).signalEdgeGroups.get(prevBoundary.getGroup(other));
-							if (group != null)
-								CreateClient.OUTLINER
-									.showLine(edge, edge.getPosition(node, other, prev + 1 / 16f / length)
-										.add(yOffset), p2.add(yOffset))
-									.colored(group.color.getRGB())
-									.lineWidth(1 / 16f);
-							continue;
-						}
-					}
-
-					if (signalEdgeGroup == null)
-						continue;
-					CreateClient.OUTLINER.showLine(edge, p1.add(yOffset), p2.add(yOffset))
-						.colored(signalEdgeGroup.color.getRGB())
-						.lineWidth(1 / 16f);
-					continue;
-				}
-
-				if (signalEdgeGroup == null)
-					continue;
-
-				Vec3 previous = null;
-				BezierConnection turn = edge.getTurn();
-				for (int i = 0; i <= turn.getSegmentCount(); i++) {
-					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
-					if (previous != null)
-						CreateClient.OUTLINER
-							.showLine(Pair.of(edge, previous), previous.add(yOffset), current.add(yOffset))
-							.colored(signalEdgeGroup.color.getRGB())
-							.lineWidth(1 / 16f);
-					previous = current;
-				}
-			}
-		}
-	}
-
-	public void debugViewNodes() {
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		if (cameraEntity == null)
-			return;
-		Vec3 camera = cameraEntity.getEyePosition();
-		for (Entry<TrackNodeLocation, TrackNode> nodeEntry : nodes.entrySet()) {
-			TrackNodeLocation nodeLocation = nodeEntry.getKey();
-			TrackNode node = nodeEntry.getValue();
-			if (nodeLocation == null)
-				continue;
-
-			Vec3 location = nodeLocation.getLocation();
-			if (location.distanceTo(camera) > 50)
-				continue;
-
-			Vec3 yOffset = new Vec3(0, 3 / 16f, 0);
-			Vec3 v1 = location.add(yOffset);
-			Vec3 v2 = v1.add(node.normal.scale(3 / 16f));
-			CreateClient.OUTLINER.showLine(Integer.valueOf(node.netId), v1, v2)
-				.colored(Color.mixColors(Color.WHITE, color, 1))
-				.lineWidth(1 / 8f);
-
-			Map<TrackNode, TrackEdge> map = connectionsByNode.get(node);
-			if (map == null)
-				continue;
-
-			int hashCode = node.hashCode();
-			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
-				TrackNode other = entry.getKey();
-
-				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
-					continue;
-				yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
-
-				TrackEdge edge = entry.getValue();
-				if (!edge.isTurn()) {
-					CreateClient.OUTLINER.showLine(edge, edge.getPosition(node, other, 0)
-						.add(yOffset),
-						edge.getPosition(node, other, 1)
-							.add(yOffset))
-						.colored(color)
-						.lineWidth(1 / 16f);
-					continue;
-				}
-
-				Vec3 previous = null;
-				BezierConnection turn = edge.getTurn();
-				for (int i = 0; i <= turn.getSegmentCount(); i++) {
-					Vec3 current = edge.getPosition(node, other, i * 1f / turn.getSegmentCount());
-					if (previous != null)
-						CreateClient.OUTLINER
-							.showLine(Pair.of(edge, previous), previous.add(yOffset), current.add(yOffset))
-							.colored(color)
-							.lineWidth(1 / 16f);
-					previous = current;
-				}
-			}
-		}
 	}
 
 }

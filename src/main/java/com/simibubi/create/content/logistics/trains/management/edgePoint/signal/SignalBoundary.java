@@ -45,9 +45,32 @@ public class SignalBoundary extends TrackEdgePoint {
 		cachedStates = Couple.create(() -> SignalState.INVALID);
 	}
 
-	public void setGroup(TrackNode side, UUID groupId) {
-		boolean primary = isPrimary(side);
+	public void setGroup(boolean primary, UUID groupId) {
+		UUID previous = groups.get(primary);
+
 		groups.set(primary, groupId);
+
+		UUID opposite = groups.get(!primary);
+		Map<UUID, SignalEdgeGroup> signalEdgeGroups = Create.RAILWAYS.signalEdgeGroups;
+
+		if (opposite != null && signalEdgeGroups.containsKey(opposite)) {
+			SignalEdgeGroup oppositeGroup = signalEdgeGroups.get(opposite);
+			if (previous != null)
+				oppositeGroup.removeAdjacent(previous);
+			if (groupId != null)
+				oppositeGroup.putAdjacent(groupId);
+		}
+
+		if (groupId != null && signalEdgeGroups.containsKey(groupId)) {
+			SignalEdgeGroup group = signalEdgeGroups.get(groupId);
+			if (opposite != null)
+				group.putAdjacent(opposite);
+		}
+	}
+
+	public void setGroupAndUpdate(TrackNode side, UUID groupId) {
+		boolean primary = isPrimary(side);
+		setGroup(primary, groupId);
 		sidesToUpdate.set(primary, false);
 		chainedSignals.set(primary, null);
 	}
@@ -60,8 +83,12 @@ public class SignalBoundary extends TrackEdgePoint {
 	@Override
 	public void invalidate(LevelAccessor level) {
 		blockEntities.forEach(s -> s.forEach(pos -> invalidateAt(level, pos)));
+		groups.forEach(uuid -> {
+			if (Create.RAILWAYS.signalEdgeGroups.remove(uuid) != null)
+				Create.RAILWAYS.sync.edgeGroupRemoved(uuid);
+		});
 	}
-	
+
 	@Override
 	public boolean canCoexistWith(EdgePointType<?> otherType, boolean front) {
 		return otherType == getType();

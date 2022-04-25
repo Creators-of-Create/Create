@@ -149,13 +149,13 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		if (edge == null)
 			return null;
 
-		double length = edge.getLength(node1, node2);
+		double length = edge.getLength();
 		CompoundTag data = migrationData;
 		migrationData = null;
 
 		{
 			orthogonal = targetBezier == null;
-			Vec3 direction = edge.getDirection(node1, node2, true);
+			Vec3 direction = edge.getDirection(true);
 			int nonZeroComponents = 0;
 			for (Axis axis : Iterate.axes)
 				nonZeroComponents += direction.get(axis) != 0 ? 1 : 0;
@@ -165,7 +165,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		EdgeData signalData = edge.getEdgeData();
 		if (signalData.hasPoints()) {
 			for (EdgePointType<?> otherType : EdgePointType.TYPES.values()) {
-				TrackEdgePoint otherPoint = signalData.get(otherType, node1, node2, edge, loc.position);
+				TrackEdgePoint otherPoint = signalData.get(otherType, loc.position);
 				if (otherPoint == null)
 					continue;
 				if (otherType != edgePointType) {

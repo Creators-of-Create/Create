@@ -22,7 +22,7 @@ public class EdgePointManager {
 			TrackNode node2 = startNodes.get(!front);
 			TrackEdge startEdge = startEdges.get(front);
 			startEdge.getEdgeData()
-				.addPoint(node1, node2, startEdge, point);
+				.addPoint(graph, point);
 			Create.RAILWAYS.sync.edgeDataChanged(graph, node1, node2, startEdge);
 		}
 	}
@@ -37,7 +37,7 @@ public class EdgePointManager {
 			if (trackEdge == null)
 				return;
 			trackEdge.getEdgeData()
-				.removePoint(l1, l2, trackEdge, point);
+				.removePoint(graph, point);
 			Create.RAILWAYS.sync.edgeDataChanged(graph, l1, l2, trackEdge);
 		}, startNodes.swap());
 	}

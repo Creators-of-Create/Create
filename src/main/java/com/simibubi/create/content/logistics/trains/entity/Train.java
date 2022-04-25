@@ -129,7 +129,7 @@ public class Train {
 			addToSignalGroups(occupiedSignalBlocks.keySet());
 			return;
 		}
-		
+
 		if (updateSignalBlocks) {
 			updateSignalBlocks = false;
 			collectInitiallyOccupiedSignalBlocks();
@@ -714,15 +714,15 @@ public class Train {
 		MutableObject<UUID> prevGroup = new MutableObject<>(null);
 
 		if (signalData.hasSignalBoundaries()) {
-			SignalBoundary nextBoundary = signalData.next(EdgePointType.SIGNAL, node1, node2, edge, position);
+			SignalBoundary nextBoundary = signalData.next(EdgePointType.SIGNAL, position);
 			if (nextBoundary == null) {
 				double d = 0;
 				SignalBoundary prev = null;
-				SignalBoundary current = signalData.next(EdgePointType.SIGNAL, node1, node2, edge, 0);
+				SignalBoundary current = signalData.next(EdgePointType.SIGNAL, 0);
 				while (current != null) {
 					prev = current;
-					d = current.getLocationOn(node1, node2, edge);
-					current = signalData.next(EdgePointType.SIGNAL, node1, node2, edge, d);
+					d = current.getLocationOn(edge);
+					current = signalData.next(EdgePointType.SIGNAL, d);	
 				}
 				if (prev != null) {
 					UUID group = prev.getGroup(node2);
@@ -740,9 +740,12 @@ public class Train {
 				}
 			}
 
-		} else if (signalData.singleSignalGroup != null && allGroups.containsKey(signalData.singleSignalGroup)) {
-			occupy(signalData.singleSignalGroup, null);
-			prevGroup.setValue(signalData.singleSignalGroup);
+		} else {
+			UUID groupId = signalData.getEffectiveEdgeGroupId(graph);
+			if (allGroups.containsKey(groupId)) {
+				occupy(groupId, null);
+				prevGroup.setValue(groupId);
+			}
 		}
 
 		forEachTravellingPointBackwards((tp, d) -> {
@@ -764,9 +767,9 @@ public class Train {
 		});
 
 	}
-	
+
 	public boolean shouldCarriageSyncThisTick(long gameTicks, int updateInterval) {
-		return (gameTicks + tickOffset) % updateInterval == 0; 
+		return (gameTicks + tickOffset) % updateInterval == 0;
 	}
 
 	public Couple<Couple<TrackNode>> getEndpointEdges() {

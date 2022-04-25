@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -37,6 +39,7 @@ public class RailwaySavedData extends SavedData {
 		sd.signalEdgeGroups = new HashMap<>();
 		sd.trains = new HashMap<>();
 		Create.LOGGER.info("Loading Railway Information...");
+
 		NBTHelper.iterateCompoundList(nbt.getList("RailGraphs", Tag.TAG_COMPOUND), c -> {
 			TrackGraph graph = TrackGraph.read(c);
 			sd.trackNetworks.put(graph.id, graph);
@@ -49,13 +52,29 @@ public class RailwaySavedData extends SavedData {
 			SignalEdgeGroup group = SignalEdgeGroup.read(c);
 			sd.signalEdgeGroups.put(group.id, group);
 		});
+
+		for (TrackGraph graph : sd.trackNetworks.values()) {
+			for (SignalBoundary signal : graph.getPoints(EdgePointType.SIGNAL)) {
+				UUID groupId = signal.groups.getFirst();
+				UUID otherGroupId = signal.groups.getSecond();
+				if (groupId == null || otherGroupId == null)
+					continue;
+				SignalEdgeGroup group = sd.signalEdgeGroups.get(groupId);
+				SignalEdgeGroup otherGroup = sd.signalEdgeGroups.get(otherGroupId);
+				if (group == null || otherGroup == null)
+					continue;
+				group.putAdjacent(otherGroupId);
+				otherGroup.putAdjacent(groupId);
+			}
+		}
+
 		return sd;
 	}
 
 	public Map<UUID, TrackGraph> getTrackNetworks() {
 		return trackNetworks;
 	}
-	
+
 	public Map<UUID, Train> getTrains() {
 		return trains;
 	}
