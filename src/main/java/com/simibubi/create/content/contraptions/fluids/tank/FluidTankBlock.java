@@ -17,6 +17,7 @@ import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -203,7 +204,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
 						float level = (float) fluidInTank.getAmount() / TransferUtil.firstCapacity(fluidTank);
 
-						boolean reversed = FluidVariantRendering.fillsFromTop(fluidInTank.getType());
+						boolean reversed = FluidVariantAttributes.isLighterThanAir(fluidInTank.getType());
 						if (reversed)
 							level = 1 - level;
 

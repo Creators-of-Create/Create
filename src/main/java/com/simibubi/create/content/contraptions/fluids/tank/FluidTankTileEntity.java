@@ -25,6 +25,8 @@ import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
@@ -135,8 +137,10 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (!hasLevel())
 			return;
 
-		int luminosity = (int) (FluidUtil.getLuminosity(newFluidStack.getFluid()) / 1.2f);
-		boolean reversed = false; // FIXME: there's no way to get this server-side currently.
+		FluidVariantAttributeHandler handler = FluidVariantAttributes.getHandlerOrDefault(newFluidStack.getFluid());
+		FluidVariant variant = newFluidStack.getType();
+		int luminosity = (int) (handler.getLuminance(variant) / 1.2f);
+		boolean reversed = handler.isLighterThanAir(variant);
 		int maxY = (int) ((getFillState() * height) + 1);
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {

@@ -8,12 +8,12 @@ import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -48,7 +48,7 @@ public class FluidRenderer {
 
 		int color = FluidVariantRendering.getColor(fluidVariant);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, FluidUtil.getLuminosity(fluidVariant.getFluid()));
+		int luminosity = Math.max(blockLightIn, FluidVariantAttributes.getLuminance(fluidVariant));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
@@ -98,12 +98,12 @@ public class FluidRenderer {
 
 		int color = FluidVariantRendering.getColor(fluidVariant);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, FluidUtil.getLuminosity(fluidVariant.getFluid()));
+		int luminosity = Math.max(blockLightIn, FluidVariantAttributes.getLuminance(fluidVariant));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
-		if (FluidVariantRendering.fillsFromTop(fluidVariant))
+		if (FluidVariantAttributes.isLighterThanAir(fluidVariant))
 			TransformStack.cast(ms)
 				.translate(center)
 				.rotateX(180)
