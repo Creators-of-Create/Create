@@ -27,11 +27,12 @@ import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.GameRenderer;
@@ -73,7 +74,7 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 		FluidStack fluid = entry.getValue();
 
 		if (AllFluids.POTION.is(fluid.getFluid())) {
-			Component name = FluidVariantRendering.getName(variant);
+			Component name = FluidVariantAttributes.getName(variant);
 			if (tooltip.isEmpty())
 				tooltip.add(0, name);
 			else

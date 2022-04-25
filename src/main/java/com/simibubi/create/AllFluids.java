@@ -19,6 +19,8 @@ import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -49,20 +51,20 @@ public class AllFluids {
 	public static final FluidEntry<PotionFluid> POTION =
 			REGISTRATE.virtualFluid("potion", /*PotionFluidAttributes::new, */PotionFluid::new)
 					.lang(f -> "fluid.create.potion", "Potion")
-					.onRegister(flowing -> {
-						Fluid potion = flowing.getSource();
+					.onRegister(potion -> {
+						Fluid still = potion.getSource();
+						Fluid flowing = potion.getFlowing();
+						PotionFluidVariantAttributeHandler handler = new PotionFluidVariantAttributeHandler();
+						FluidVariantAttributes.register(still, handler);
+						FluidVariantAttributes.register(flowing, handler);
 						// evil. why do we need this like this only here.
-						EnvExecutor.runWhenOn(EnvType.CLIENT, new Supplier<Runnable>() {
-							@Environment(EnvType.CLIENT)
+						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> new Runnable() {
 							@Override
-							public Runnable get() {
-								return new Runnable() {
-									@Environment(EnvType.CLIENT)
-									@Override
-									public void run() {
-										FluidVariantRendering.register(potion, new PotionFluidVariantRenderHandler());
-									}
-								};
+							@Environment(EnvType.CLIENT)
+							public void run() {
+								PotionFluidVariantRenderHandler handler = new PotionFluidVariantRenderHandler();
+								FluidVariantRendering.register(still, handler);
+								FluidVariantRendering.register(flowing, handler);
 							}
 						});
 					})
@@ -71,27 +73,16 @@ public class AllFluids {
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang(f -> "fluid.create.tea", "Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
-			.onRegisterAfter(Item.class, flowing -> {
-				Fluid tea = flowing.getSource();
+			.onRegisterAfter(Item.class, tea -> {
+				Fluid still = tea.getSource();
+				Fluid flowing = tea.getFlowing();
 				FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
-						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(tea), FluidConstants.BOTTLE));
+						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(still), FluidConstants.BOTTLE));
 				FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
-						new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(AllItems.BUILDERS_TEA.get()), tea, FluidConstants.BOTTLE));
+						new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(AllItems.BUILDERS_TEA.get()), still, FluidConstants.BOTTLE));
 
-				// evil. why do we need this like this only here.
-				EnvExecutor.runWhenOn(EnvType.CLIENT, new Supplier<Runnable>() {
-					@Environment(EnvType.CLIENT)
-					@Override
-					public Runnable get() {
-						return new Runnable() {
-							@Environment(EnvType.CLIENT)
-							@Override
-							public void run() {
-								FluidVariantRendering.register(tea, new TeaFluidVariantRenderHandler());
-							}
-						};
-					}
-				});
+				FluidVariantAttributes.register(still, new TeaFluidVariantAttributeHandler());
+				FluidVariantAttributes.register(flowing, new TeaFluidVariantAttributeHandler());
 			})
 			.register();
 
@@ -196,19 +187,20 @@ public class AllFluids {
 		public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
 			return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
 		}
+	}
 
+	private static class PotionFluidVariantAttributeHandler implements FluidVariantAttributeHandler {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
 			List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
 			for (MobEffectInstance effect : list) {
 				return new TranslatableComponent(effect.getDescriptionId());
 			}
-			return FluidVariantRenderHandler.super.getName(fluidVariant);
+			return FluidVariantAttributeHandler.super.getName(fluidVariant);
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
-	private static class TeaFluidVariantRenderHandler implements FluidVariantRenderHandler {
+	private static class TeaFluidVariantAttributeHandler implements FluidVariantAttributeHandler {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
 			return new TranslatableComponent("fluid.create.tea");
