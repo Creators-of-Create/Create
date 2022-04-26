@@ -1,10 +1,11 @@
 //file:noinspection GroovyAssignabilityCheck
 //file:noinspection GroovyAccessibility
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
-    id 'maven-publish'
-    id 'io.github.juuxel.loom-quiltflower' version '1.+'
-    id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
+    id "fabric-loom" version "0.12-SNAPSHOT"
+    id "maven-publish"
+    id "io.github.juuxel.loom-quiltflower" version "1.+" // Quiltflower, a better decompiler
+    id "org.quiltmc.quilt-mappings-on-loom" version "4.2.+" // Quilt Mappings, for parameters and javadoc. Also hashed mojmap.
+    id "io.github.p03w.machete" version "1.+" // automatic jar compressing on build
 }
 
 sourceCompatibility = JavaVersion.VERSION_17

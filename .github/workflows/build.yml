@@ -1,5 +1,5 @@
 name: build
-on: [ push, pull_request ]
+on: [ pull_request, push ]
 
 jobs:
   build:
@@ -8,10 +8,11 @@ jobs:
         java: [ 17 ]
     runs-on: ubuntu-latest
     env:
-        PUBLISH_SUFFIX: snapshots
-        MAVEN_USER: ${{ secrets.MAVEN_USER }}
-        MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+      PUBLISH_SUFFIX: snapshots
+      MAVEN_USER: ${{ secrets.MAVEN_USER }}
+      MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
     steps:
+
       - name: checkout repository
         uses: actions/checkout@v2
 
@@ -19,6 +20,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/loom-cache
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
 
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
