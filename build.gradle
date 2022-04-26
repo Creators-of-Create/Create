@@ -92,7 +92,7 @@ task buildOrPublish {
 }
 
 machete {
-    keepOriginal = true
+    additionalTasks.add("publish")
 }
 
 loom {
