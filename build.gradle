@@ -91,6 +91,10 @@ task buildOrPublish {
     }
 }
 
+machete {
+    keepOriginal = true
+}
+
 loom {
     accessWidenerPath = file("src/main/resources/create.accesswidener")
     sourceSets {
