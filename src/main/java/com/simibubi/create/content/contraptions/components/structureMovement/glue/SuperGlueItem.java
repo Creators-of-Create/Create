@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -16,11 +17,33 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber
 public class SuperGlueItem extends Item {
+
+	@SubscribeEvent
+	public static void glueItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
+		if (event.getHitVec() != null) {
+			BlockState blockState = event.getWorld()
+				.getBlockState(event.getHitVec()
+					.getBlockPos());
+			if (blockState.getBlock()instanceof AbstractChassisBlock cb)
+				if (cb.getGlueableSide(blockState, event.getFace()) != null)
+					return;
+		}
+
+		if (event.getItemStack()
+			.getItem() instanceof SuperGlueItem)
+			event.setUseBlock(Result.DENY);
+	}
 
 	public SuperGlueItem(Properties properties) {
 		super(properties);
@@ -84,8 +107,8 @@ public class SuperGlueItem extends Item {
 			Vec3 motion = offset.normalize()
 				.scale(1 / 16f);
 			if (fullBlock)
-				offset = new Vec3(Mth.clamp(offset.x, -.5, .5), Mth.clamp(offset.y, -.5, .5),
-					Mth.clamp(offset.z, -.5, .5));
+				offset =
+					new Vec3(Mth.clamp(offset.x, -.5, .5), Mth.clamp(offset.y, -.5, .5), Mth.clamp(offset.z, -.5, .5));
 			Vec3 particlePos = facePos.add(offset);
 			world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), particlePos.x, particlePos.y,
 				particlePos.z, motion.x, motion.y, motion.z);

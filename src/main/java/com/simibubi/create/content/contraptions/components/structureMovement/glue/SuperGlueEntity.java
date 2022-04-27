@@ -181,7 +181,7 @@ public class SuperGlueEntity extends Entity
 		BlockPos pos2 = hangingPosition.relative(getFacingDirection().getOpposite());
 		if (level.isOutsideBuildHeight(pos2))
 			return false;
-		if (!level.isAreaLoaded(pos, 0) || !level.isAreaLoaded(pos2, 0))
+		if (!level.isLoaded(pos) || !level.isLoaded(pos2))
 			return true;
 		if (!isValidFace(level, pos2, getFacingDirection())
 			&& !isValidFace(level, pos, getFacingDirection().getOpposite()))

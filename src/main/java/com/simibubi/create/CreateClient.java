@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
@@ -54,6 +55,7 @@ public class CreateClient {
 	public static final ClientSchematicLoader SCHEMATIC_SENDER = new ClientSchematicLoader();
 	public static final SchematicHandler SCHEMATIC_HANDLER = new SchematicHandler();
 	public static final SchematicAndQuillHandler SCHEMATIC_AND_QUILL_HANDLER = new SchematicAndQuillHandler();
+	public static final SuperGlueSelectionHandler GLUE_HANDLER = new SuperGlueSelectionHandler();
 
 	public static final ZapperRenderHandler ZAPPER_RENDER_HANDLER = new ZapperRenderHandler();
 	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();

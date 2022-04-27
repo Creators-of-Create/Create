@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1479",
+	"_": "Missing Localizations: 1487",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1527,6 +1527,15 @@
 	"create.flap_display.cycles.shortened_numbers": "UNLOCALIZED:  ;K;M",
 	"create.flap_display.cycles.instant": "UNLOCALIZED:  ; ",
 	"create.flap_display.cycles.pixel": "UNLOCALIZED: █;▒",
+
+	"create.super_glue.too_far": "UNLOCALIZED: Selected area is too big",
+	"create.super_glue.cannot_reach": "UNLOCALIZED: Selected blocks must be connected",
+	"create.super_glue.click_to_confirm": "UNLOCALIZED: Click again to confirm",
+	"create.super_glue.click_to_discard": "UNLOCALIZED: Sneak-click to discard selection",
+	"create.super_glue.first_pos": "UNLOCALIZED: First position selected",
+	"create.super_glue.abort": "UNLOCALIZED: Selection discarded",
+	"create.super_glue.not_enough": "UNLOCALIZED: Not enough glue in inventory",
+	"create.super_glue.sucess": "UNLOCALIZED: Applying Glue...",
 
 	"create.gui.config.overlay1": "Ciao :)",
 	"create.gui.config.overlay2": "Questo overlay è di esempio",

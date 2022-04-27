@@ -24,6 +24,10 @@ public class Lang {
 		player.displayClientMessage(createTranslationTextComponent(key, args), true);
 	}
 
+	public static void sendStatus(Player player, int color, String key, Object... args) {
+		player.displayClientMessage(createTranslationTextComponent(key, args).withStyle(p -> p.withColor(color)), true);
+	}
+
 	public static List<Component> translatedOptions(String prefix, String... keys) {
 		List<Component> result = new ArrayList<>(keys.length);
 		for (String key : keys)
@@ -35,7 +39,7 @@ public class Lang {
 	public static String asId(String name) {
 		return name.toLowerCase(Locale.ROOT);
 	}
-	
+
 	public static String nonPluralId(String name) {
 		String asId = asId(name);
 		return asId.endsWith("s") ? asId.substring(0, asId.length() - 1) : asId;

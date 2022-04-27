@@ -59,15 +59,22 @@ public class InputEvents {
 
 	@SubscribeEvent
 	public static void onClickInput(ClickInputEvent event) {
-		if (Minecraft.getInstance().screen != null)
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.screen != null)
 			return;
-		
+
 		if (CurvedTrackInteraction.onClickInput(event)) {
 			event.setCanceled(true);
 			return;
 		}
 
-		if (event.getKeyMapping() == Minecraft.getInstance().options.keyPickItem) {
+		if (event.getKeyMapping() == mc.options.keyUse) {
+			if (CreateClient.GLUE_HANDLER.onMouseInput())
+				event.setCanceled(true);
+			return;
+		}
+
+		if (event.getKeyMapping() == mc.options.keyPickItem) {
 			if (ToolboxHandlerClient.onPickItem())
 				event.setCanceled(true);
 			return;
