@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
 
 public class CouplingHandler {
 
-	public static InteractionResult preventEntitiesFromMoutingOccupiedCart(Entity e, Entity mounting) {
+	public static InteractionResult preventEntitiesFromMoutingOccupiedCart(Entity e, Entity mounting, boolean isMounting) {
 		if (e instanceof AbstractMinecart cart) {
 			LazyOptional<MinecartController> optional = cart.lazyController();
 			if (!optional.isPresent())

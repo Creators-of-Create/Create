@@ -19,6 +19,7 @@ import io.github.fabricators_of_create.porting_lib.event.EntityReadExtraDataCall
 import io.github.fabricators_of_create.porting_lib.event.MinecartEvents;
 import io.github.fabricators_of_create.porting_lib.event.ProjectileImpactCallback;
 
+import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +60,6 @@ import io.github.fabricators_of_create.porting_lib.event.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.MobEntitySetTargetCallback;
 import io.github.fabricators_of_create.porting_lib.event.OnDatapackSyncCallback;
 import io.github.fabricators_of_create.porting_lib.event.ServerPlayerCreationCallback;
-import io.github.fabricators_of_create.porting_lib.event.StartRidingCallback;
 
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
@@ -247,7 +247,7 @@ public class CommonEvents {
 		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
-		StartRidingCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
+		MountEntityCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
 		LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
 		LivingEntityEvents.HURT.register(ExtendoGripItem::bufferLivingAttackEvent);
 		LivingEntityEvents.KNOCKBACK_STRENGTH.register(ExtendoGripItem::attacksByExtendoGripHaveMoreKnockback);
