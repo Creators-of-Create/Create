@@ -87,7 +87,7 @@ public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 
 	@Override
 	public long getAmount() {
-		return Long.MAX_VALUE;
+		return isResourceBlank() ? 0 : Long.MAX_VALUE;
 	}
 
 	@Override

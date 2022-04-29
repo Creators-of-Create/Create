@@ -40,8 +40,11 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 		super(typeIn, pos, state);
 		offset = LerpedFloat.linear()
 			.startWithValue(0);
-		isMoving = true;
-		internalTank = new SmartFluidTank((long) (FluidConstants.BUCKET * 1.5), this::onTankContentsChanged);
+		isMoving = true;					// fabric: we hold twice forge, due to differences in logic
+											// the handler refills from the world when stored > BUCKET, which could result in nearly 2 buckets worth.
+											// on forge, there's no risk of negative results with stored > capacity
+											// fabric does have this issue, so we can *not* allow it.
+		internalTank = new SmartFluidTank(FluidConstants.BUCKET * 3, this::onTankContentsChanged);
 		handler = new HosePulleyFluidHandler(internalTank, filler, drainer,
 			() -> worldPosition.below((int) Math.ceil(offset.getValue())), () -> !this.isMoving);
 	}
