@@ -28,6 +28,16 @@ Non-testers are invited to listen to [Tchaikovsky's violin concerto in D major](
 	<a href="https://github.com/Creators-of-Create/Create/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Creators-of-Create/Create?style=flat&color=900c3f" alt="License"></a>
 	<a href="https://discord.gg/hmaD7Se"><img src="https://img.shields.io/discord/620934202875183104?color=5865f2&label=Feedback%20%26%20Help&style=flat" alt="Discord"></a>
 	<a href="https://www.curseforge.com/minecraft/mc-mods/create"><img src="http://cf.way2muchnoise.eu/328085.svg" alt="CF"></a><br><br>
+    <a href="https://fabricmc.net/"><img
+        src="https://cdn.discordapp.com/attachments/705864145169416313/969716884117291008/fabric_supported.png"
+        alt="Supported on Fabric"
+        width="200"
+    ></a>
+    <a href="https://quiltmc.org/"><img
+        src="https://cdn.discordapp.com/attachments/705864145169416313/969716884482183208/quilt_supported.png"
+        alt="Supported on Quilt"
+        width="200"
+    ></a>
 </h1>
 
 Welcome to Create, a mod offering a variety of tools and blocks for Building, Decoration and Aesthetic Automation.
