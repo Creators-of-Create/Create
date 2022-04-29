@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -382,7 +381,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return new ClientboundAddEntityPacket(this, this == null ? 0 : getId());
+		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this, new ClientboundAddEntityPacket(this, getId()));
 	}
 
 	@Override

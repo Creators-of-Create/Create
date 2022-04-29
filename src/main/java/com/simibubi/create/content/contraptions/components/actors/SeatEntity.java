@@ -89,7 +89,7 @@ public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return new ClientboundAddEntityPacket(this);
+		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
 	}
 
 	public static class Render extends EntityRenderer<SeatEntity> {

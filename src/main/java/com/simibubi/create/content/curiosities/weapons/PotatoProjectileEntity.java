@@ -328,7 +328,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return new ClientboundAddEntityPacket(this);
+		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
 	}
 
 	@Override

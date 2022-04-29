@@ -454,7 +454,7 @@ public class SuperGlueEntity extends Entity
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return new ClientboundAddEntityPacket(this);
+		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
 	}
 
 	@Override

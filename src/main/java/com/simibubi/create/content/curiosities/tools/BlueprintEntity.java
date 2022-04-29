@@ -113,7 +113,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return new ClientboundAddEntityPacket(this, getId());
+		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this, new ClientboundAddEntityPacket(this, getId()));
 	}
 
 	@Override
