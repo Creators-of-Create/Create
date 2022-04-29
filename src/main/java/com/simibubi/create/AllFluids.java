@@ -7,6 +7,8 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.builders.FluidBuilder.RenderHandlerFactory;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.entry.FluidEntry;
@@ -14,6 +16,8 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -28,6 +32,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -37,7 +42,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.GLASS_BOTTLE;
@@ -100,16 +104,17 @@ public class AllFluids {
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
 					.build()
-					.onRegisterAfter(Item.class, flowing -> {
-						Fluid honey = flowing.getSource();
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, honey -> {
+						Fluid source = honey.getSource();
 						FluidStorage.combinedItemApiProvider(HONEY_BOTTLE).register(context ->
-								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(honey), FluidConstants.BOTTLE));
+								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(source), FluidConstants.BOTTLE));
 						FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
-								new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(HONEY_BOTTLE), honey, FluidConstants.BOTTLE));
-						FluidStorage.combinedItemApiProvider(honey.getBucket()).register(context ->
-								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(honey), FluidConstants.BUCKET));
+								new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(HONEY_BOTTLE), source, FluidConstants.BOTTLE));
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
-								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(honey.getBucket()), honey, FluidConstants.BUCKET));
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
 					})
 					.register();
 
@@ -123,12 +128,14 @@ public class AllFluids {
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
-					.onRegisterAfter(Item.class, flowing -> {
-						Fluid chocolate = flowing.getSource();
-						FluidStorage.combinedItemApiProvider(chocolate.getBucket()).register(context ->
-								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(chocolate), FluidConstants.BUCKET));
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, chocolate -> {
+						Fluid source = chocolate.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
-								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(chocolate.getBucket()), chocolate, FluidConstants.BUCKET));
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
 					})
 					.register();
 
