@@ -24,6 +24,8 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Objects;
+
 @Environment(EnvType.CLIENT)
 public class FluidRenderer {
 
@@ -92,7 +94,8 @@ public class FluidRenderer {
 	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
 		float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
 		FluidVariant fluidVariant = fluidStack.getType();
-		TextureAtlasSprite fluidTexture = FluidVariantRendering.getSprite(fluidVariant);
+		TextureAtlasSprite[] sprites = FluidVariantRendering.getSprites(fluidVariant);
+		TextureAtlasSprite fluidTexture = sprites != null ? sprites[0] : null;
 		if (fluidTexture == null)
 			return;
 
