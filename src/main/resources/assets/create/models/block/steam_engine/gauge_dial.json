@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "create:block/boiler_gauge"
+	},
+	"elements": [
+		{
+			"name": "GaugeDial",
+			"from": [15.75, 5.25, 5.75],
+			"to": [16.45, 6.25, 10.75],
+			"rotation": {"angle": 0, "axis": "x", "origin": [16.1, 5.75, 8.25]},
+			"faces": {
+				"north": {"uv": [0, 11, 1, 12], "rotation": 180, "texture": "#2"},
+				"east": {"uv": [0, 11, 5, 12], "rotation": 180, "texture": "#2"},
+				"south": {"uv": [4, 11, 5, 12], "rotation": 180, "texture": "#2"},
+				"west": {"uv": [5, 11, 0, 12], "rotation": 180, "texture": "#2"},
+				"up": {"uv": [0, 11, 5, 12], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [0, 11, 5, 12], "rotation": 270, "texture": "#2"}
+			}
+		}
+	]
+}

@@ -86,7 +86,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		msr.translate(te.width / 2f, 0.5, te.width / 2f);
 
 		float dialPivot = 5.75f / 16;
-		float progress = te.boiler.pressure.getValue(partialTicks);
+		float progress = te.boiler.gauge.getValue(partialTicks);
 
 		for (Direction d : Iterate.horizontalDirections) {
 			ms.pushPose();
@@ -96,7 +96,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 				.translate(te.width / 2f - 6 / 16f, 0, 0)
 				.light(light)
 				.renderInto(ms, vb);
-			CachedBufferer.partial(AllBlockPartials.GAUGE_DIAL, blockState)
+			CachedBufferer.partial(AllBlockPartials.BOILER_GAUGE_DIAL, blockState)
 				.rotateY(d.toYRot())
 				.unCentre()
 				.translate(te.width / 2f - 6 / 16f, 0, 0)

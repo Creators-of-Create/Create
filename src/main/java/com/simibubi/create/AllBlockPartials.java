@@ -131,6 +131,7 @@ public class AllBlockPartials {
 
 		ENGINE_PISTON = block("steam_engine/piston"), ENGINE_LINKAGE = block("steam_engine/linkage"),
 		ENGINE_CONNECTOR = block("steam_engine/shaft_connector"), BOILER_GAUGE = block("steam_engine/gauge"),
+		BOILER_GAUGE_DIAL = block("steam_engine/gauge_dial"),
 
 		SIGNAL_ON = block("track_signal/indicator_on"), SIGNAL_OFF = block("track_signal/indicator_off"),
 		DATA_GATHERER_TUBE = block("data_gatherer/tube"), DATA_GATHERER_GLOW = block("data_gatherer/glow"),

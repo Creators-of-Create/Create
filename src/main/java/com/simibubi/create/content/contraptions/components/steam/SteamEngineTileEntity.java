@@ -11,16 +11,17 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -31,7 +32,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class SteamEngineTileEntity extends SmartTileEntity {
+public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	public WeakReference<PoweredShaftTileEntity> target;
 	public WeakReference<FluidTankTileEntity> source;
@@ -67,12 +68,12 @@ public class SteamEngineTileEntity extends SmartTileEntity {
 		if (facing.getAxis() == Axis.Y)
 			facing = blockState.getValue(SteamEngineBlock.FACING);
 
-		int score = Math.max(0, tank.boiler.engineScore);
+		float efficiency = Mth.clamp(tank.boiler.getEngineEfficiency(tank.getTotalTankSize()), 0, 1);
 		int conveyedSpeedLevel =
-			verticalTarget ? score : (int) GeneratingKineticTileEntity.convertToDirection(score, facing);
+			efficiency == 0 ? 1 : verticalTarget ? 1 : (int) GeneratingKineticTileEntity.convertToDirection(1, facing);
 		if (targetAxis == Axis.Z)
 			conveyedSpeedLevel *= -1;
-		shaft.update(worldPosition, conveyedSpeedLevel);
+		shaft.update(worldPosition, conveyedSpeedLevel, efficiency);
 
 		if (!level.isClientSide)
 			return;
@@ -89,18 +90,19 @@ public class SteamEngineTileEntity extends SmartTileEntity {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().inflate(2);
 	}
 
 	public PoweredShaftTileEntity getShaft() {
 		PoweredShaftTileEntity shaft = target.get();
-		if (shaft == null || shaft.isRemoved()) {
+		if (shaft == null || shaft.isRemoved() || !shaft.canBePoweredBy(worldPosition)) {
 			if (shaft != null)
 				target = new WeakReference<>(null);
 			Direction facing = SteamEngineBlock.getFacing(getBlockState());
 			BlockEntity anyShaftAt = level.getBlockEntity(worldPosition.relative(facing, 2));
-			if (anyShaftAt instanceof PoweredShaftTileEntity ps)
+			if (anyShaftAt instanceof PoweredShaftTileEntity ps && ps.canBePoweredBy(worldPosition))
 				target = new WeakReference<>(shaft = ps);
 		}
 		return shaft;
@@ -127,6 +129,11 @@ public class SteamEngineTileEntity extends SmartTileEntity {
 	@OnlyIn(Dist.CLIENT)
 	private void spawnParticles() {
 		Float targetAngle = getTargetAngle();
+		PoweredShaftTileEntity ste = target.get();
+		if (ste == null)
+			return;
+		if (!ste.isPoweredBy(worldPosition) || ste.engineEfficiency == 0)
+			return;
 		if (targetAngle == null)
 			return;
 
@@ -191,6 +198,12 @@ public class SteamEngineTileEntity extends SmartTileEntity {
 		if (axis == Axis.X && facing == Direction.DOWN)
 			angle *= -1;
 		return angle;
+	}
+	
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		PoweredShaftTileEntity shaft = getShaft();
+		return shaft == null ? false : shaft.addToEngineTooltip(tooltip, isPlayerSneaking);
 	}
 
 }

@@ -59,7 +59,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	// For rendering purposes only
 	private LerpedFloat fluidLevel;
-	
+
 	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		tankInventory = createInventory();
@@ -235,14 +235,14 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			return;
 		te.setWindows(!te.window);
 	}
-	
+
 	public void updateBoilerTemperature() {
 		FluidTankTileEntity te = getControllerTE();
 		if (te == null)
 			return;
 		if (!te.boiler.isActive())
 			return;
-		te.boiler.needsTemperatureUpdate = true;
+		te.boiler.needsHeatLevelUpdate = true;
 	}
 
 	public void sendDataImmediately() {
@@ -361,7 +361,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		FluidTankTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null)
 			return false;
-		if (controllerTE.boiler.addToGoggleTooltip(tooltip, isPlayerSneaking))
+		if (controllerTE.boiler.addToGoggleTooltip(tooltip, isPlayerSneaking, controllerTE.getTotalTankSize()))
 			return true;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
 			controllerTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
@@ -395,8 +395,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			if (tankInventory.getSpace() < 0)
 				tankInventory.drain(-tankInventory.getSpace(), FluidAction.EXECUTE);
 		}
-		
-		boiler.read(compound.getCompound("Boiler"), tankInventory.getCapacity());
+
+		boiler.read(compound.getCompound("Boiler"), width * width * height);
 
 		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
 			fluidLevel = LerpedFloat.linear()

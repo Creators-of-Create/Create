@@ -122,8 +122,7 @@ public class AllTags {
 		WRENCH_PICKUP,
 
 		PASSIVE_BOILER_HEATERS,
-		ACTIVE_BOILER_HEATERS,
-
+		
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
 
@@ -358,7 +357,6 @@ public class AllTags {
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
 			Blocks.SOUL_CAMPFIRE);
 		AllBlockTags.FAN_HEATERS.includeIn(AllBlockTags.PASSIVE_BOILER_HEATERS);
-		AllBlockTags.ACTIVE_BOILER_HEATERS.add(Blocks.FURNACE, Blocks.BLAST_FURNACE, Blocks.SMOKER);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.RAILS);

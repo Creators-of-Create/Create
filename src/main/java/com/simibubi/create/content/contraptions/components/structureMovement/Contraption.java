@@ -28,10 +28,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
+import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
@@ -55,6 +57,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
@@ -64,6 +67,7 @@ import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ICoordinate;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -612,6 +616,8 @@ public abstract class Contraption {
 		BlockState blockstate = world.getBlockState(pos);
 		if (AllBlocks.REDSTONE_CONTACT.has(blockstate))
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
+		if (AllBlocks.POWERED_SHAFT.has(blockstate))
+			blockstate = BlockHelper.copyProperties(blockstate, AllBlocks.SHAFT.getDefaultState());
 		if (AllBlocks.CONTROLS.has(blockstate))
 			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
@@ -624,6 +630,8 @@ public abstract class Contraption {
 		}
 		CompoundTag compoundnbt = getTileEntityNBT(world, pos);
 		BlockEntity tileentity = world.getBlockEntity(pos);
+		if (tileentity instanceof PoweredShaftTileEntity)
+			tileentity = AllTileEntities.BRACKETED_KINETIC.create(pos, blockstate);
 		return Pair.of(new StructureBlockInfo(pos, blockstate, compoundnbt), tileentity);
 	}
 
@@ -985,7 +993,9 @@ public abstract class Contraption {
 					continue;
 				BlockState oldState = world.getBlockState(add);
 				Block blockIn = oldState.getBlock();
-				if (block.state.getBlock() != blockIn)
+				boolean blockMismatch = block.state.getBlock() != blockIn;
+				blockMismatch &= !AllBlocks.POWERED_SHAFT.is(blockIn) || !AllBlocks.SHAFT.has(block.state);
+				if (blockMismatch)
 					iterator.remove();
 				world.removeBlockEntity(add);
 				int flags = Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_KNOWN_SHAPE
@@ -1064,6 +1074,10 @@ public abstract class Contraption {
 				}
 
 				world.destroyBlock(targetPos, true);
+				
+				if (AllBlocks.SHAFT.has(state))
+					state = ShaftBlock.pickCorrectShaftType(state, world, targetPos);
+					
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();

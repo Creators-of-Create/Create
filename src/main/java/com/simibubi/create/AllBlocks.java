@@ -875,6 +875,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::copperMetal)
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.transform(BlockStressDefaults.setCapacity(1024.0))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -883,7 +884,6 @@ public class AllBlocks {
 		REGISTRATE.block("powered_shaft", PoweredShaftBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.transform(pickaxeOnly())
-			.transform(BlockStressDefaults.setCapacity(64.0))
 			.blockstate(BlockStateGen.axisBlockProvider(false))
 			.loot((lt, block) -> lt.dropOther(block, AllBlocks.SHAFT.get()))
 			.register();

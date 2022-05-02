@@ -7,8 +7,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -21,7 +21,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,34 +30,34 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 public class BoilerData {
 
 	static final int SAMPLE_RATE = 5;
-	public int gatheredSupply;
-	public float[] supplyOverTime = new float[10];
+
+	// pooled water supply
+	int gatheredSupply;
+	float[] supplyOverTime = new float[10];
 	int ticksUntilNextSample;
 	int currentIndex;
-	boolean needsTemperatureUpdate;
 
-	public float currentTemperature;
-	public float targetTemperature;
+	// heat score
+	public boolean needsHeatLevelUpdate;
+	public boolean passiveHeat;
+	public int activeHeat;
+
 	public float waterSupply;
-	public float steamUnits;
 	public int attachedEngines;
-	public int engineScore;
 
-	public LerpedFloat pressure = LerpedFloat.linear();
-
-	static final float MAX_ENGINE_USAGE = 32;
+	public LerpedFloat gauge = LerpedFloat.linear();
 
 	public void tick(FluidTankTileEntity controller) {
 		if (!isActive())
 			return;
 		if (controller.getLevel().isClientSide) {
-			pressure.tickChaser();
-			float current = pressure.getValue(1);
+			gauge.tickChaser();
+			float current = gauge.getValue(1);
 			if (current > 1 && Create.RANDOM.nextFloat() < 1 / 2f)
-				pressure.setValueNoUpdate(current + Math.min(-(current - 1) * Create.RANDOM.nextFloat(), 0));
+				gauge.setValueNoUpdate(current + Math.min(-(current - 1) * Create.RANDOM.nextFloat(), 0));
 			return;
 		}
-		if (needsTemperatureUpdate && updateTemperature(controller))
+		if (needsHeatLevelUpdate && updateTemperature(controller))
 			controller.notifyUpdate();
 		ticksUntilNextSample--;
 		if (ticksUntilNextSample > 0)
@@ -68,98 +67,107 @@ public class BoilerData {
 			return;
 
 		ticksUntilNextSample = SAMPLE_RATE;
-		waterSupply -= supplyOverTime[currentIndex];
+//		waterSupply -= supplyOverTime[currentIndex] / supplyOverTime.length;
 		supplyOverTime[currentIndex] = gatheredSupply / (float) SAMPLE_RATE;
-		waterSupply += supplyOverTime[currentIndex];
+		waterSupply = Math.max(waterSupply, supplyOverTime[currentIndex]);
 		currentIndex = (currentIndex + 1) % supplyOverTime.length;
 		gatheredSupply = 0;
 
 		if (currentIndex == 0) {
 			waterSupply = 0;
 			for (float i : supplyOverTime)
-				waterSupply += i;
-		}
-
-		currentTemperature = Mth.clamp(currentTemperature + Math.signum(targetTemperature - currentTemperature)
-			* (0.5f + (targetTemperature - currentTemperature) * .125f), 0, targetTemperature);
-
-		float steamPerTick = Math.min(waterSupply / 2, currentTemperature - 100);
-		steamUnits += steamPerTick;
-
-		float pressure = steamUnits / capacity;
-		float engineEfficiency = (float) (Math.max(0, pressure - 0.5) * 2);
-		float usagePerEngine = engineEfficiency * MAX_ENGINE_USAGE;
-		float consumedSteam = Math.min(steamUnits, attachedEngines * usagePerEngine);
-		float equilibrium = steamPerTick / (attachedEngines * MAX_ENGINE_USAGE * 2) + .5f;
-
-//		if (Math.abs(engineEfficiency - equilibrium) < 1 / 8f) // Anti-flicker at balance point
-//			engineEfficiency = equilibrium;
-
-		engineScore = Mth.floor(engineEfficiency * 8);
-		steamUnits -= consumedSteam;
-
-		if (steamUnits > capacity * 1.25f) {
-			Debug.debugChat("Boiler exploding: Bang. " + controller.getBlockPos());
-			steamUnits = 0;
+//				waterSupply += i;
+				waterSupply = Math.max(i, waterSupply);
 		}
 
 		controller.notifyUpdate();
 	}
 
+	public int getTheoreticalHeatLevel() {
+		return activeHeat;
+	}
+
+	public int getMaxHeatLevelForBoilerSize(int boilerSize) {
+		return boilerSize / 4;
+	}
+
+	public int getMaxHeatLevelForWaterSupply() {
+		return Math.min(activeHeat, (int) Math.min(18, Mth.ceil(waterSupply) / 20));
+	}
+
+	public boolean isPassive(int boilerSize) {
+		return passiveHeat || activeHeat != 0 && getActualHeat(boilerSize) == 0;
+	}
+
+	public float getEngineEfficiency(int boilerSize) {
+		if (isPassive(boilerSize))
+			return 1 / 16f / attachedEngines;
+		if (activeHeat == 0)
+			return 0;
+		int actualHeat = getActualHeat(boilerSize);
+		return attachedEngines <= actualHeat ? 1 : (float) actualHeat / attachedEngines;
+	}
+
+	private int getActualHeat(int boilerSize) {
+		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
+		int forWaterSupply = getMaxHeatLevelForWaterSupply();
+		int actualHeat = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
+		return actualHeat;
+	}
+
 	String spacing = "    ";
 	Component componentSpacing = new TextComponent(spacing);
 
-	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking, int boilerSize) {
 		if (!isActive())
 			return false;
 
-		float steamPerTick = Math.min(waterSupply / 2, currentTemperature - 100);
-		float equilibrium = steamPerTick / (attachedEngines * MAX_ENGINE_USAGE * 2) + .5f;
+		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
+		int forWaterSupply = getMaxHeatLevelForWaterSupply();
+		int actualHeat = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
 
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translate("gui.goggles.fluid_container")));
-		TranslatableComponent mb = Lang.translate("generic.unit.millibuckets");
+			.append(new TextComponent("Boiler Information:")));
 
-		Component engines = new TextComponent("Engines: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(attachedEngines + "").withStyle(ChatFormatting.GOLD));
-		Component power = new TextComponent("Temperature: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(currentTemperature) + "")
-				.withStyle(ChatFormatting.GOLD));
-		Component score = new TextComponent("Engine Efficiency: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(engineScore + "").withStyle(ChatFormatting.GOLD));
-		Component supply = new TextComponent("Water Supply: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(waterSupply)).append(mb)
-				.withStyle(ChatFormatting.GOLD));
-		Component steam = new TextComponent("Steam Volume: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(steamUnits)).append(mb)
-				.withStyle(ChatFormatting.GOLD));
+		Component h = new TextComponent("Heat: ").withStyle(ChatFormatting.GRAY)
+			.append(new TextComponent(IHaveGoggleInformation.format(activeHeat)).withStyle(ChatFormatting.GOLD));
+		Component w = new TextComponent(", Water: ").withStyle(ChatFormatting.GRAY)
+			.append(new TextComponent(IHaveGoggleInformation.format(forWaterSupply)).withStyle(ChatFormatting.GOLD));
+		Component s = new TextComponent(", Size: ").withStyle(ChatFormatting.GRAY)
+			.append(new TextComponent(IHaveGoggleInformation.format(forBoilerSize)).withStyle(ChatFormatting.GOLD));
 
-		int approachingPressure = (int) (equilibrium * 100);
-		int actualPressure =
-			(int) ((this.pressure.getChaseTarget() > 1 ? this.pressure.getChaseTarget() : this.pressure.getValue())
-				* 100);
-		MutableComponent pressure = new TextComponent("Pressure: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(actualPressure)).append(new TextComponent("%"))
-				.withStyle(ChatFormatting.GOLD));
-		if (actualPressure != approachingPressure)
-			pressure.append(new TextComponent(" >> ").append(
-				new TextComponent(IHaveGoggleInformation.format(approachingPressure)).append(new TextComponent("%"))
-					.withStyle(ChatFormatting.GREEN)));
+		TextComponent heatLevel = isPassive(boilerSize) ? new TextComponent("Passive")
+			: (activeHeat == 0 ? new TextComponent("No Heat")
+				: new TextComponent(IHaveGoggleInformation.format(actualHeat)));
+		MutableComponent heatLabel = heatLevel.withStyle(ChatFormatting.GREEN);
+		Component level = new TextComponent("Boiler Level: ").append(heatLabel);
 
-		Component indent = new TextComponent(spacing + " ");
+		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(actualHeat, attachedEngines)
+			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
+		Component capacity =
+			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
+				.withStyle(ChatFormatting.AQUA);
+		Component engines =
+			new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
 
+		Component indent = new TextComponent(spacing);
+		Component indent2 = new TextComponent(spacing + " ");
+
+		Component stats = indent.plainCopy()
+			.append(h)
+			.append(w)
+			.append(s);
+
+		if (activeHeat > 0)
+			tooltip.add(stats);
+		tooltip.add(new TextComponent("  -> ").append(level));
 		tooltip.add(indent.plainCopy()
+			.append(Lang.translate("tooltip.capacityProvided")
+				.withStyle(ChatFormatting.GRAY)));
+		tooltip.add(indent2.plainCopy()
+			.append(capacity)
 			.append(engines));
-		tooltip.add(indent.plainCopy()
-			.append(score));
-		tooltip.add(indent.plainCopy()
-			.append(power));
-		tooltip.add(indent.plainCopy()
-			.append(supply));
-		tooltip.add(indent.plainCopy()
-			.append(steam));
-		tooltip.add(indent.plainCopy()
-			.append(pressure));
+
 		return true;
 	}
 
@@ -190,29 +198,36 @@ public class BoilerData {
 			}
 		}
 
-		needsTemperatureUpdate = true;
+		needsHeatLevelUpdate = true;
 		return prev != attachedEngines;
 	}
 
 	public boolean updateTemperature(FluidTankTileEntity controller) {
 		BlockPos controllerPos = controller.getBlockPos();
 		Level level = controller.getLevel();
-		float prev = targetTemperature;
-		targetTemperature = 0;
-		needsTemperatureUpdate = false;
+		needsHeatLevelUpdate = false;
+
+		boolean prevPassive = passiveHeat;
+		int prevActive = activeHeat;
+		passiveHeat = false;
+		activeHeat = 0;
 
 		for (int xOffset = 0; xOffset < controller.width; xOffset++) {
 			for (int zOffset = 0; zOffset < controller.width; zOffset++) {
 				BlockPos pos = controllerPos.offset(xOffset, -1, zOffset);
 				BlockState blockState = level.getBlockState(pos);
-				targetTemperature += BoilerHeaters.getAddedHeatOf(blockState);
+				float heat = BoilerHeaters.getActiveHeatOf(blockState);
+				if (heat == 0) {
+					passiveHeat |= BoilerHeaters.canHeatPassively(blockState);
+					continue;
+				}
+				activeHeat += heat;
 			}
 		}
 
-		if (targetTemperature != 0)
-			targetTemperature += 100;
+		passiveHeat &= activeHeat == 0;
 
-		return prev != attachedEngines;
+		return prevActive != activeHeat || prevPassive != passiveHeat;
 	}
 
 	public boolean isActive() {
@@ -221,36 +236,35 @@ public class BoilerData {
 
 	public void clear() {
 		waterSupply = 0;
-		targetTemperature = 0;
+		activeHeat = 0;
+		passiveHeat = false;
 		attachedEngines = 0;
-		steamUnits = 0;
-		engineScore = 0;
 		Arrays.fill(supplyOverTime, 0);
 	}
 
 	public CompoundTag write() {
 		CompoundTag nbt = new CompoundTag();
 		nbt.putFloat("Supply", waterSupply);
-		nbt.putFloat("Temperature", currentTemperature);
-		nbt.putFloat("Power", targetTemperature);
-		nbt.putFloat("Pressure", steamUnits);
+		nbt.putInt("ActiveHeat", activeHeat);
+		nbt.putBoolean("PassiveHeat", passiveHeat);
 		nbt.putInt("Engines", attachedEngines);
-		nbt.putBoolean("Update", needsTemperatureUpdate);
-		nbt.putInt("Score", engineScore);
+		nbt.putBoolean("Update", needsHeatLevelUpdate);
 		return nbt;
 	}
 
-	public void read(CompoundTag nbt, int capacity) {
+	public void read(CompoundTag nbt, int boilerSize) {
 		waterSupply = nbt.getFloat("Supply");
-		currentTemperature = nbt.getFloat("Temperature");
-		targetTemperature = nbt.getFloat("Power");
-		steamUnits = nbt.getFloat("Pressure");
-		engineScore = nbt.getInt("Score");
+		activeHeat = nbt.getInt("ActiveHeat");
+		passiveHeat = nbt.getBoolean("PassiveHeat");
 		attachedEngines = nbt.getInt("Engines");
-		needsTemperatureUpdate = nbt.getBoolean("Update");
+		needsHeatLevelUpdate = nbt.getBoolean("Update");
 		Arrays.fill(supplyOverTime, (int) waterSupply);
-		if (capacity > 0)
-			pressure.chase(steamUnits / capacity, 0.125f, Chaser.EXP);
+
+		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
+		int forWaterSupply = getMaxHeatLevelForWaterSupply();
+		int actualHeat = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
+		float target = isPassive(boilerSize) ? 1 / 8f : forBoilerSize == 0 ? 0 : actualHeat / (forBoilerSize * 1f);
+		gauge.chase(target, 0.125f, Chaser.EXP);
 	}
 
 	public BoilerFluidHandler createHandler() {
@@ -283,11 +297,14 @@ public class BoilerData {
 		public int fill(FluidStack resource, FluidAction action) {
 			if (!isFluidValid(0, resource))
 				return 0;
-			if (targetTemperature == 0)
+			int maxAccepted = (int) ((passiveHeat ? 1 : activeHeat + 1) * 20) * SAMPLE_RATE;
+			if (maxAccepted == 0)
 				return 0;
-			int amount = resource.getAmount();
+			int amount = Math.min(maxAccepted - gatheredSupply, resource.getAmount());
 			if (action.execute())
 				gatheredSupply += amount;
+			if (action.simulate())
+				return Math.max(amount, 1);
 			return amount;
 		}
 

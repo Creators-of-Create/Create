@@ -13,6 +13,7 @@ import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -47,7 +48,11 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState stateForPlacement = super.getStateForPlacement(context);
-		if (PoweredShaftBlock.stillValid(stateForPlacement, context.getLevel(), context.getClickedPos()))
+		return pickCorrectShaftType(stateForPlacement, context.getLevel(), context.getClickedPos());
+	}
+
+	public static BlockState pickCorrectShaftType(BlockState stateForPlacement, Level level, BlockPos pos) {
+		if (PoweredShaftBlock.stillValid(stateForPlacement, level, pos))
 			return PoweredShaftBlock.getEquivalent(stateForPlacement);
 		return stateForPlacement;
 	}
@@ -129,5 +134,16 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 		public Predicate<BlockState> getStatePredicate() {
 			return AllBlocks.SHAFT::has;
 		}
+
+		@Override
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
+			BlockHitResult ray) {
+			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
+			if (offset.isSuccessful())
+				offset.withTransform(offset.getTransform()
+					.andThen(s -> ShaftBlock.pickCorrectShaftType(s, world, offset.getBlockPos())));
+			return offset;
+		}
+
 	}
 }
