@@ -257,8 +257,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 					groupedItems.grid.values()
 						.forEach(stack -> {
 							if (stack.getItem().hasCraftingRemainingItem())
-								containers.add(stack
-									.copy());
+								containers.add(stack.getItem().getCraftingRemainingItem()
+									.getDefaultInstance());
 						});
 
 					if (isVirtual())
