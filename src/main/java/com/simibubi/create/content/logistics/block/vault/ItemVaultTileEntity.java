@@ -39,6 +39,8 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	protected int length;
 	protected Axis axis;
 
+	protected boolean recalculateComparatorsNextTick = false;
+
 	public ItemVaultTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 
@@ -46,7 +48,11 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			@Override
 			protected void onContentsChanged(int slot) {
 				super.onContentsChanged(slot);
-				updateComparators();
+			}
+
+			@Override
+			protected void onFinalCommit() {
+				recalculateComparatorsNextTick = true;
 			}
 		};
 
@@ -68,6 +74,8 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	}
 
 	protected void updateComparators() {
+		recalculateComparatorsNextTick = false;
+
 		ItemVaultTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null)
 			return;
@@ -95,6 +103,9 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 
 		if (updateConnectivity)
 			updateConnectivity();
+
+		if (recalculateComparatorsNextTick)
+			updateComparators();
 	}
 
 	@Override
