@@ -47,9 +47,10 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 		BakedModel bracket;
 
 		public void putBracket(BlockState state) {
-			this.bracket = Minecraft.getInstance()
-				.getBlockRenderer()
-				.getBlockModel(state);
+			if (!state.isAir())
+				this.bracket = Minecraft.getInstance()
+						.getBlockRenderer()
+						.getBlockModel(state);
 		}
 
 		public BakedModel getBracket() {

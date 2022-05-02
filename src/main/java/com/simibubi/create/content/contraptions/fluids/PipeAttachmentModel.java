@@ -73,9 +73,10 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		}
 
 		public void putBracket(BlockState state) {
-			this.bracket = Minecraft.getInstance()
-				.getBlockRenderer()
-				.getBlockModel(state);
+			if (!state.isAir())
+				this.bracket = Minecraft.getInstance()
+						.getBlockRenderer()
+						.getBlockModel(state);
 		}
 
 		public BakedModel getBracket() {
