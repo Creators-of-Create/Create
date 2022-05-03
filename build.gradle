@@ -62,12 +62,14 @@ dependencies {
 
     // uncomment these to test
 
-    modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
-    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
-    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
+//    modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
+//    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
+//    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
+
 //    modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
 //    runtimeOnly('org.joml:joml:1.10.4') // for sodium
-//    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
+
+//    modLocalRuntime("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
 //    modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
 //    modLocalRuntime("curse.maven:alloygery-573592:3762142") { transitive = false }
 //    modLocalRuntime("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
