@@ -419,7 +419,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		if (AbstractChuteBlock.isOpenChute(getBlockState())) {
-			Storage<ItemVariant> above  = grabCapability(Direction.UP);
+			Storage<ItemVariant> above = grabCapability(Direction.UP);
 			if (above != null) {
 				if (level.isClientSide && !isVirtual() && !ChuteBlock.isChute(stateAbove))
 					return false;
@@ -429,6 +429,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 						item = item.copy();
 						item.shrink((int) inserted);
 						itemHandler.update();
+						sendData();
+						t.commit();
 					}
 					return inserted != 0;
 				}
