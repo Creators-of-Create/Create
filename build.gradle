@@ -36,6 +36,7 @@ repositories {
     maven { url = "https://maven.cafeteria.dev" }
     maven { url = "https://jitpack.io/" }
     maven { url = "https://maven.jamieswhiteshirt.com/libs-release" }
+    maven { url = "https://maven.gegy.dev" }
 }
 
 dependencies {
@@ -55,9 +56,15 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
     modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
-    modRuntimeOnly("maven.modrinth:lazydfu:0.1.2")
-    modRuntimeOnly("maven.modrinth:lithium:mc1.18.2-0.7.9")
+    modLocalRuntime("maven.modrinth:lazydfu:0.1.2")
+    modLocalRuntime("maven.modrinth:lithium:mc1.18.2-0.7.9")
+    modCompileOnly("maven.modrinth:sandwichable:1.2+1.18.2")
 
+    // uncomment these to test
+
+    modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
+    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
+    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
 //    modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
 //    runtimeOnly('org.joml:joml:1.10.4') // for sodium
 //    modImplementation("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"

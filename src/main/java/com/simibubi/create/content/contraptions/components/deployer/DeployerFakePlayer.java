@@ -57,6 +57,10 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 		connection = new FakePlayNetHandler(world.getServer(), this);
 	}
 
+	public void setSpawnedItemEffects(ItemStack spawnedItemEffects) {
+		this.spawnedItemEffects = spawnedItemEffects;
+	}
+
 	@Override
 	public OptionalInt openMenu(MenuProvider container) {
 		return OptionalInt.empty();

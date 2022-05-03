@@ -3,14 +3,10 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -31,7 +27,6 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.fabricmc.api.EnvType;
@@ -51,7 +46,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ClipContext;
@@ -161,6 +155,10 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	@Override
 	public void tick() {
 		super.tick();
+
+		if (!overflowItems.isEmpty()) {
+			overflowItems.removeIf(ItemStack::isEmpty);
+		}
 
 		if (getSpeed() == 0)
 			return;
@@ -500,5 +498,9 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 
 	public DeployerFakePlayer getPlayer() {
 		return player;
+	}
+
+	public List<ItemStack> getOverflowItems() {
+		return overflowItems;
 	}
 }

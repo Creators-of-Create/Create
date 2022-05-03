@@ -225,7 +225,7 @@ public class DeployerItemHandler extends SnapshotParticipant<ItemStack> implemen
 		}
 
 		private void update() {
-			this.stack = te.overflowItems.get(index);
+			this.stack = te.overflowItems.get(index).copy();
 			this.var = ItemVariant.of(stack);
 		}
 

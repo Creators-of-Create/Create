@@ -12,6 +12,7 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -24,6 +25,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import io.github.foundationgames.sandwichable.items.ItemsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -243,6 +245,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
 			boolean blockItem = itemRenderer.getModel(transported.stack, te.getLevel(), null, 0)
 				.isGui3d();
+			Boolean sandwich = Mods.SANDWICHABLE.runIfInstalled(() -> () -> transported.stack.is(ItemsRegistry.SANDWICH)).orElse(Boolean.FALSE);
+			if (sandwich)
+				blockItem = false;
 			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
 			Random r = new Random(transported.angle);
 
