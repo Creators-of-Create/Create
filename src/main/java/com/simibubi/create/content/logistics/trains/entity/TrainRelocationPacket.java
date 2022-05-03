@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -22,17 +23,25 @@ public class TrainRelocationPacket extends SimplePacketBase {
 	BlockPos pos;
 	Vec3 lookAngle;
 	int entityId;
+	private boolean direction;
+	private BezierTrackPointLocation hoveredBezier;
 
 	public TrainRelocationPacket(FriendlyByteBuf buffer) {
 		trainId = buffer.readUUID();
 		pos = buffer.readBlockPos();
 		lookAngle = VecHelper.read(buffer);
 		entityId = buffer.readInt();
+		direction = buffer.readBoolean();
+		if (buffer.readBoolean())
+			hoveredBezier = new BezierTrackPointLocation(buffer.readBlockPos(), buffer.readInt());
 	}
 
-	public TrainRelocationPacket(UUID trainId, BlockPos pos, Vec3 lookAngle, int entityId) {
+	public TrainRelocationPacket(UUID trainId, BlockPos pos, BezierTrackPointLocation hoveredBezier, boolean direction,
+		Vec3 lookAngle, int entityId) {
 		this.trainId = trainId;
 		this.pos = pos;
+		this.hoveredBezier = hoveredBezier;
+		this.direction = direction;
 		this.lookAngle = lookAngle;
 		this.entityId = entityId;
 	}
@@ -43,6 +52,12 @@ public class TrainRelocationPacket extends SimplePacketBase {
 		buffer.writeBlockPos(pos);
 		VecHelper.write(lookAngle, buffer);
 		buffer.writeInt(entityId);
+		buffer.writeBoolean(direction);
+		buffer.writeBoolean(hoveredBezier != null);
+		if (hoveredBezier != null) {
+			buffer.writeBlockPos(hoveredBezier.curveTarget());
+			buffer.writeInt(hoveredBezier.segment());
+		}
 	}
 
 	@Override
@@ -77,7 +92,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 				return;
 			}
 
-			if (TrainRelocator.relocate(train, sender.level, pos, lookAngle, false)) {
+			if (TrainRelocator.relocate(train, sender.level, pos, hoveredBezier, direction, lookAngle, false)) {
 				sender.displayClientMessage(Lang.translate("train.relocate.success")
 					.withStyle(ChatFormatting.GREEN), true);
 				train.syncTrackGraphChanges();

@@ -27,11 +27,16 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrackPaver {
 
-	public static void paveStraight(Level level, BlockPos startPos, Vec3 direction, int extent, Block block) {
+	public static int paveStraight(Level level, BlockPos startPos, Vec3 direction, int extent, Block block,
+		boolean simulate, Set<BlockPos> visited) {
+		int itemsNeeded = 0;
+
 		BlockState defaultBlockState = block.defaultBlockState();
-		if (defaultBlockState.hasProperty(SlabBlock.TYPE))
-			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
+		boolean slabLike = defaultBlockState.hasProperty(SlabBlock.TYPE);
 		boolean wallLike = isWallLike(defaultBlockState);
+
+		if (slabLike)
+			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
 
 		if (defaultBlockState.getBlock() instanceof GirderBlock)
 			for (Direction d : Iterate.horizontalDirections)
@@ -66,28 +71,27 @@ public class TrackPaver {
 		}
 
 		final BlockState state = defaultBlockState;
-		toPlaceOn.forEach(p -> placeBlockIfFree(level, p, state));
-	}
-
-	private static boolean isWallLike(BlockState defaultBlockState) {
-		return defaultBlockState.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(defaultBlockState);
-	}
-
-	private static void placeBlockIfFree(Level level, BlockPos pos, BlockState state) {
-		BlockState stateAtPos = level.getBlockState(pos);
-		if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.getMaterial()
-			.isReplaceable()) {
-			level.setBlock(pos, state, 3);
+		for (BlockPos p : toPlaceOn) {
+			if (!visited.add(p))
+				continue;
+			if (placeBlockIfFree(level, p, state, simulate))
+				itemsNeeded += slabLike ? 2 : 1;
 		}
+		visited.addAll(toPlaceOn);
+
+		return itemsNeeded;
 	}
 
-	public static void paveCurve(Level level, BezierConnection bc, Block block) {
+	public static int paveCurve(Level level, BezierConnection bc, Block block, boolean simulate,
+		Set<BlockPos> visited) {
+		int itemsNeeded = 0;
+
 		BlockState defaultBlockState = block.defaultBlockState();
-		boolean slab = defaultBlockState.hasProperty(SlabBlock.TYPE);
-		if (slab)
+		boolean slabLike = defaultBlockState.hasProperty(SlabBlock.TYPE);
+		if (slabLike)
 			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
 		if (isWallLike(defaultBlockState))
-			return;
+			return 0;
 
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
 		BlockPos tePosition = bc.tePositions.getFirst();
@@ -141,7 +145,7 @@ public class TrackPaver {
 		for (Entry<Pair<Integer, Integer>, Double> entry : yLevels.entrySet()) {
 			double yValue = entry.getValue();
 			int floor = Mth.floor(yValue);
-			boolean placeSlab = slab && yValue - floor >= .5;
+			boolean placeSlab = slabLike && yValue - floor >= .5;
 			BlockPos targetPos = new BlockPos(entry.getKey()
 				.getFirst(), floor,
 				entry.getKey()
@@ -150,10 +154,35 @@ public class TrackPaver {
 				.above(placeSlab ? 1 : 0);
 			BlockState stateToPlace =
 				placeSlab ? defaultBlockState.setValue(SlabBlock.TYPE, SlabType.BOTTOM) : defaultBlockState;
-			placeBlockIfFree(level, targetPos, stateToPlace);
-			if (placeSlab)
-				placeBlockIfFree(level, targetPos.below(), stateToPlace.setValue(SlabBlock.TYPE, SlabType.TOP));
+			if (!visited.add(targetPos))
+				continue;
+			if (placeBlockIfFree(level, targetPos, stateToPlace, simulate))
+				itemsNeeded += !placeSlab ? 2 : 1;
+			if (placeSlab) {
+				if (!visited.add(targetPos.below()))
+					continue;
+				BlockState topSlab = stateToPlace.setValue(SlabBlock.TYPE, SlabType.TOP);
+				if (placeBlockIfFree(level, targetPos.below(), topSlab, simulate))
+					itemsNeeded++;
+			}
 		}
+
+		return itemsNeeded;
+	}
+
+	private static boolean isWallLike(BlockState defaultBlockState) {
+		return defaultBlockState.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(defaultBlockState);
+	}
+
+	private static boolean placeBlockIfFree(Level level, BlockPos pos, BlockState state, boolean simulate) {
+		BlockState stateAtPos = level.getBlockState(pos);
+		if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.getMaterial()
+			.isReplaceable()) {
+			if (!simulate)
+				level.setBlock(pos, state, 3);
+			return true;
+		}
+		return false;
 	}
 
 }

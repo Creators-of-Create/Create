@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1770",
+	"_": "Missing Localizations: 1773",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1415,6 +1415,8 @@
 	"create.track.turn_90": "UNLOCALIZED: Can only turn up to 90 Degrees",
 	"create.track.junction_start": "UNLOCALIZED: Cannot start connection from a Junction",
 	"create.track.turn_start": "UNLOCALIZED: Cannot start connection from a Turn",
+	"create.track.not_enough_tracks": "UNLOCALIZED: Not holding enough tracks",
+	"create.track.not_enough_pavement": "UNLOCALIZED: Not holding enough pavement blocks",
 
 	"create.station.create_train": "UNLOCALIZED: Create new Train",
 	"create.station.disassemble_train": "UNLOCALIZED: Disassemble Train",
@@ -1435,6 +1437,7 @@
 	"create.train_assembly.nothing_attached": "UNLOCALIZED: No structure attached to Bogey %1$s",
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
+	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

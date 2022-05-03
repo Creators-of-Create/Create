@@ -1,10 +1,10 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -15,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +27,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,11 +53,13 @@ public class TrackBlockItem extends BlockItem {
 
 		if (player == null)
 			return super.useOn(pContext);
+		if (pContext.getHand() == InteractionHand.OFF_HAND)
+			return super.useOn(pContext);
 
 		Vec3 lookAngle = player.getLookAngle();
 
 		if (!isFoil(stack)) {
-			if (state.getBlock() instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
+			if (state.getBlock()instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
 				.size() > 1) {
 				if (!level.isClientSide)
 					player.displayClientMessage(Lang.translate("track.junction_start")
@@ -63,15 +67,18 @@ public class TrackBlockItem extends BlockItem {
 				return InteractionResult.SUCCESS;
 			}
 
-			if (select(level, pos, lookAngle, stack))
+			if (select(level, pos, lookAngle, stack)) {
+				level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 				return InteractionResult.SUCCESS;
+			}
 			return super.useOn(pContext);
 
 		} else if (player.isSteppingCarefully()) {
 			if (!level.isClientSide) {
 				player.displayClientMessage(Lang.translate("track.selection_cleared"), true);
 				stack.setTag(null);
-			}
+			} else
+				level.playSound(player, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 			return InteractionResult.SUCCESS;
 		}
 
@@ -91,35 +98,28 @@ public class TrackBlockItem extends BlockItem {
 
 		ItemStack offhandItem = player.getOffhandItem();
 		boolean hasGirder = AllBlocks.METAL_GIRDER.isIn(offhandItem);
-		PlacementInfo info = TrackPlacement.tryConnect(level, pos, state, lookAngle, stack, hasGirder, extend);
+		PlacementInfo info = TrackPlacement.tryConnect(level, player, pos, state, stack, hasGirder, extend);
 
 		if (info.message != null && !level.isClientSide)
 			player.displayClientMessage(Lang.translate(info.message), true);
-		if (!info.valid)
+		if (!info.valid) {
+			AllSoundEvents.DENY.playFrom(player, 1, 1);
 			return InteractionResult.FAIL;
+		}
 
-		stack.setTag(null);
-
-		if (level.isClientSide) 
+		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		if (offhandItem.getItem() instanceof BlockItem blockItem) {
-			Block block = blockItem.getBlock();
-			if (block == null)
-				return InteractionResult.SUCCESS;
-			if (block instanceof EntityBlock)
-				return InteractionResult.SUCCESS;
-
-			for (boolean first : Iterate.trueAndFalse) {
-				int extent = (first ? info.end1Extent : info.end2Extent) + (info.curve != null ? 1 : 0);
-				Vec3 axis = first ? info.axis1 : info.axis2;
-				BlockPos pavePos = first ? info.pos1 : info.pos2;
-				TrackPaver.paveStraight(level, pavePos.below(), axis, extent, block);
-			}
-
-			if (info.curve != null)
-				TrackPaver.paveCurve(level, info.curve, block);
+		stack = player.getMainHandItem();
+		if (AllBlocks.TRACK.isIn(stack)) {
+			stack.setTag(null);
+			player.setItemInHand(pContext.getHand(), stack);
 		}
+
+		SoundType soundtype = state.getSoundType();
+		if (soundtype != null)
+			level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS,
+				(soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 		return InteractionResult.SUCCESS;
 	}

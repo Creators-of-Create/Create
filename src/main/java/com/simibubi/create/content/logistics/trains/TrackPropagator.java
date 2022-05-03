@@ -32,7 +32,7 @@ public class TrackPropagator {
 	}
 
 	public static void onRailRemoved(LevelAccessor reader, BlockPos pos, BlockState state) {
-		if (!(state.getBlock() instanceof ITrackBlock track))
+		if (!(state.getBlock()instanceof ITrackBlock track))
 			return;
 
 		Collection<DiscoveredLocation> ends = track.getConnected(reader, pos, state, false, null);
@@ -79,7 +79,7 @@ public class TrackPropagator {
 	}
 
 	public static TrackGraph onRailAdded(LevelAccessor reader, BlockPos pos, BlockState state) {
-		if (!(state.getBlock() instanceof ITrackBlock track))
+		if (!(state.getBlock()instanceof ITrackBlock track))
 			return null;
 
 		// 1. Remove all immediately reachable node locations
@@ -236,6 +236,11 @@ public class TrackPropagator {
 			return true;
 		if (next.stream()
 			.anyMatch(DiscoveredLocation::connectedViaTurn))
+			return true;
+
+		Vec3 direction = location.direction;
+		if (direction != null && next.stream()
+			.anyMatch(dl -> dl.notInLineWith(direction)))
 			return true;
 
 		Vec3 vec = location.getLocation();

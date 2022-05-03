@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.trains.entity;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -26,6 +27,9 @@ import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdge
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITurnListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
+import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
@@ -58,6 +62,7 @@ public class TrainRelocator {
 	static int relocatingEntityId;
 
 	static BlockPos lastHoveredPos;
+	static BezierTrackPointLocation lastHoveredBezierSegment;
 	static Boolean lastHoveredResult;
 	static List<Vec3> toVisualise;
 
@@ -104,7 +109,9 @@ public class TrainRelocator {
 		HitResult hitResult = mc.hitResult;
 		if (!(hitResult instanceof BlockHitResult blockhit))
 			return null;
+
 		BlockPos blockPos = blockhit.getBlockPos();
+		BezierTrackPointLocation hoveredBezier = null;
 
 		if (simulate && toVisualise != null && lastHoveredResult != null) {
 			for (int i = 0; i < toVisualise.size() - 1; i++) {
@@ -117,10 +124,19 @@ public class TrainRelocator {
 			}
 		}
 
+		BezierPointSelection bezierSelection = TrackBlockOutline.result;
+		if (bezierSelection != null) {
+			blockPos = bezierSelection.te()
+				.getBlockPos();
+			hoveredBezier = bezierSelection.loc();
+		}
+
 		if (simulate) {
-			if (lastHoveredPos != null && lastHoveredPos.equals(blockPos))
+			if (lastHoveredPos != null && lastHoveredPos.equals(blockPos)
+				&& Objects.equals(lastHoveredBezierSegment, hoveredBezier))
 				return lastHoveredResult;
 			lastHoveredPos = blockPos;
+			lastHoveredBezierSegment = hoveredBezier;
 			toVisualise = null;
 		}
 
@@ -129,22 +145,27 @@ public class TrainRelocator {
 			return lastHoveredResult = null;
 
 		Vec3 lookAngle = mc.player.getLookAngle();
-		boolean result = relocate(relocating, mc.level, blockPos, lookAngle, true);
+		boolean direction = bezierSelection != null && lookAngle.dot(bezierSelection.direction()) < 0;
+		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
 		if (!simulate && result)
-			AllPackets.channel
-				.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, lookAngle, relocatingEntityId));
+			AllPackets.channel.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
+				direction, lookAngle, relocatingEntityId));
 
 		return lastHoveredResult = result;
 	}
 
-	public static boolean relocate(Train train, Level level, BlockPos pos, Vec3 lookAngle, boolean simulate) {
+	public static boolean relocate(Train train, Level level, BlockPos pos, BezierTrackPointLocation bezier,
+		boolean bezierDirection, Vec3 lookAngle, boolean simulate) {
 		BlockState blockState = level.getBlockState(pos);
 		if (!(blockState.getBlock()instanceof ITrackBlock track))
 			return false;
 
 		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(level, pos, blockState, lookAngle);
-		GraphLocation graphLocation =
-			TrackGraphHelper.getGraphLocationAt(level, pos, nearestTrackAxis.getSecond(), nearestTrackAxis.getFirst());
+		GraphLocation graphLocation = bezier != null
+			? TrackGraphHelper.getBezierGraphLocationAt(level, pos,
+				bezierDirection ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE, bezier)
+			: TrackGraphHelper.getGraphLocationAt(level, pos, nearestTrackAxis.getSecond(),
+				nearestTrackAxis.getFirst());
 
 		if (graphLocation == null)
 			return false;

@@ -66,7 +66,7 @@ public interface ITrackBlock {
 		TrackShape shape = state.getValue(TrackBlock.SHAPE);
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			addToListIfConnected(connectedTo, list, (d, b) -> axis.scale(b ? d : -d)
-				.add(center), b -> shape.getNormal(), null);
+				.add(center), b -> shape.getNormal(), axis, null);
 		});
 
 		return list;
@@ -74,12 +74,14 @@ public interface ITrackBlock {
 
 	public static void addToListIfConnected(@Nullable TrackNodeLocation fromEnd, Collection<DiscoveredLocation> list,
 		BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
-		BezierConnection viaTurn) {
+		Vec3 axis, BezierConnection viaTurn) {
 
 		DiscoveredLocation firstLocation = new DiscoveredLocation(offsetFactory.apply(0.5d, true)).viaTurn(viaTurn)
-			.withNormal(normalFactory.apply(true));
+			.withNormal(normalFactory.apply(true))
+			.withDirection(axis);
 		DiscoveredLocation secondLocation = new DiscoveredLocation(offsetFactory.apply(0.5d, false)).viaTurn(viaTurn)
-			.withNormal(normalFactory.apply(false));
+			.withNormal(normalFactory.apply(false))
+			.withDirection(axis);
 
 		boolean skipFirst = false;
 		boolean skipSecond = false;
@@ -106,7 +108,8 @@ public interface ITrackBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
-		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack transform, RenderedTrackOverlayType type);
+		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack transform,
+		RenderedTrackOverlayType type);
 
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,

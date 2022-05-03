@@ -50,9 +50,11 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -235,20 +237,39 @@ public class StationTileEntity extends SmartTileEntity {
 		}
 	}
 
-	public void trackClicked(Player player, ITrackBlock track, BlockState state, BlockPos pos) {
+	public boolean trackClicked(Player player, ITrackBlock track, BlockState state, BlockPos pos) {
 		refreshAssemblyInfo();
 		BoundingBox bb = assemblyAreas.get(level)
 			.get(worldPosition);
 		if (bb == null || !bb.isInside(pos))
-			return;
+			return false;
 
+		BlockPos up = new BlockPos(track.getUpNormal(level, pos, state));
 		int bogeyOffset = pos.distManhattan(edgePoint.getGlobalPosition()) - 1;
-		if (!isValidBogeyOffset(bogeyOffset))
-			return;
+		if (!isValidBogeyOffset(bogeyOffset)) {
 
-		Vec3 upNormal = track.getUpNormal(level, pos, state);
+			for (int i = -1; i <= 1; i++) {
+				BlockPos bogeyPos = pos.relative(assemblyDirection, i)
+					.offset(up);
+				BlockState blockState = level.getBlockState(bogeyPos);
+				if (blockState.getBlock()instanceof IBogeyBlock bogey) {
+					level.setBlock(bogeyPos, bogey.getRotatedBlockState(blockState, Direction.DOWN), 3);
+					bogey.playRotateSound(level, bogeyPos);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		BlockState bogeyAnchor = track.getBogeyAnchor(level, pos, state);
-		level.setBlock(pos.offset(new BlockPos(upNormal)), bogeyAnchor, 3);
+		level.setBlock(pos.offset(up), bogeyAnchor, 3);
+		player.displayClientMessage(Lang.translate("train_assembly.bogey_created"), true);
+		SoundType soundtype = bogeyAnchor.getBlock()
+			.getSoundType(state, level, pos, player);
+		level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
+			soundtype.getPitch() * 0.8F);
+		return true;
 	}
 
 	public boolean isAssembling() {

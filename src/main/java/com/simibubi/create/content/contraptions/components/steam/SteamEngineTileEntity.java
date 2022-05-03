@@ -91,10 +91,10 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().inflate(2);
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(2);
 	}
-
+	
 	public PoweredShaftTileEntity getShaft() {
 		PoweredShaftTileEntity shaft = target.get();
 		if (shaft == null || shaft.isRemoved() || !shaft.canBePoweredBy(worldPosition)) {

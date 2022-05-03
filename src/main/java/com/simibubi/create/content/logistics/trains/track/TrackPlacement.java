@@ -2,12 +2,15 @@ package com.simibubi.create.content.logistics.trains.track;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -31,9 +34,14 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,15 +50,22 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TrackPlacement {
 
-	static class PlacementInfo {
+	public static class PlacementInfo {
 		BezierConnection curve = null;
 		boolean valid = false;
 		int end1Extent = 0;
 		int end2Extent = 0;
 		String message = null;
+
+		public int requiredTracks = 0;
+		public boolean hasRequiredTracks = false;
+
+		public int requiredPavement = 0;
+		public boolean hasRequiredPavement = false;
 
 		// for visualisation
 		Vec3 end1;
@@ -73,14 +88,16 @@ public class TrackPlacement {
 		}
 	}
 
-	static PlacementInfo cached;
+	public static PlacementInfo cached;
+
 	static BlockPos hoveringPos;
 	static boolean hoveringMaxed;
 	static int hoveringAngle;
 	static ItemStack lastItem;
 
-	public static PlacementInfo tryConnect(Level level, BlockPos pos2, BlockState state2, Vec3 lookVec, ItemStack stack,
-		boolean girder, boolean maximiseTurn) {
+	public static PlacementInfo tryConnect(Level level, Player player, BlockPos pos2, BlockState state2,
+		ItemStack stack, boolean girder, boolean maximiseTurn) {
+		Vec3 lookVec = player.getLookAngle();
 		int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
 
 		if (level.isClientSide && cached != null && pos2.equals(hoveringPos) && stack.equals(lastItem)
@@ -329,18 +346,131 @@ public class TrackPlacement {
 
 		info.valid = true;
 
+		info.pos1 = pos1;
+		info.pos2 = pos2;
+		info.axis1 = axis1;
+		info.axis2 = axis2;
+
+		placeTracks(level, info, state1, state2, targetPos1, targetPos2, true);
+
+		ItemStack offhandItem = player.getOffhandItem()
+			.copy();
+		boolean shouldPave = offhandItem.getItem() instanceof BlockItem;
+		if (shouldPave) {
+			BlockItem paveItem = (BlockItem) offhandItem.getItem();
+			paveTracks(level, info, paveItem, true);
+			info.hasRequiredPavement = true;
+		}
+
+		info.hasRequiredTracks = true;
+
+		if (!player.isCreative()) {
+			for (boolean simulate : Iterate.trueAndFalse) {
+				if (level.isClientSide && !simulate)
+					break;
+
+				int tracks = info.requiredTracks;
+				int pavement = info.requiredPavement;
+				int foundTracks = 0;
+				int foundPavement = 0;
+
+				Inventory inv = player.getInventory();
+				int size = inv.items.size();
+				for (int j = 0; j <= size + 1; j++) {
+					int i = j;
+					boolean offhand = j == size + 1;
+					if (j == size)
+						i = inv.selected;
+					else if (offhand)
+						i = 0;
+					else if (j == inv.selected)
+						continue;
+
+					ItemStack stackInSlot = (offhand ? inv.offhand : inv.items).get(i);
+					boolean isTrack = AllBlocks.TRACK.isIn(stackInSlot);
+					if (!isTrack && (!shouldPave || offhandItem.getItem() != stackInSlot.getItem()))
+						continue;
+					if (isTrack ? foundTracks >= tracks : foundPavement >= pavement)
+						continue;
+
+					int count = stackInSlot.getCount();
+
+					if (!simulate) {
+						int remainingItems =
+							count - Math.min(isTrack ? tracks - foundTracks : pavement - foundPavement, count);
+						if (i == inv.selected)
+							stackInSlot.setTag(null);
+						ItemStack newItem = ItemHandlerHelper.copyStackWithSize(stackInSlot, remainingItems);
+						if (offhand)
+							player.setItemInHand(InteractionHand.OFF_HAND, newItem);
+						else
+							inv.setItem(i, newItem);
+					}
+
+					if (isTrack)
+						foundTracks += count;
+					else
+						foundPavement += count;
+				}
+
+				if (simulate && foundTracks < tracks) {
+					info.valid = false;
+					info.tooJumbly();
+					info.hasRequiredTracks = false;
+					return info.withMessage("not_enough_tracks");
+				}
+
+				if (simulate && foundPavement < pavement) {
+					info.valid = false;
+					info.tooJumbly();
+					info.hasRequiredPavement = false;
+					return info.withMessage("not_enough_pavement");
+				}
+			}
+		}
+
 		if (level.isClientSide())
 			return info;
+		if (shouldPave) {
+			BlockItem paveItem = (BlockItem) offhandItem.getItem();
+			paveTracks(level, info, paveItem, false);
+		}
+		return placeTracks(level, info, state1, state2, targetPos1, targetPos2, false);
+	}
+
+	private static void paveTracks(Level level, PlacementInfo info, BlockItem blockItem, boolean simulate) {
+		Block block = blockItem.getBlock();
+		info.requiredPavement = 0;
+		if (block == null || block instanceof EntityBlock)
+			return;
+
+		Set<BlockPos> visited = new HashSet<>();
+
+		for (boolean first : Iterate.trueAndFalse) {
+			int extent = (first ? info.end1Extent : info.end2Extent) + (info.curve != null ? 1 : 0);
+			Vec3 axis = first ? info.axis1 : info.axis2;
+			BlockPos pavePos = first ? info.pos1 : info.pos2;
+			info.requiredPavement +=
+				TrackPaver.paveStraight(level, pavePos.below(), axis, extent, block, simulate, visited);
+		}
+
+		if (info.curve != null)
+			info.requiredPavement += TrackPaver.paveCurve(level, info.curve, block, simulate, visited);
+	}
+
+	private static PlacementInfo placeTracks(Level level, PlacementInfo info, BlockState state1, BlockState state2,
+		BlockPos targetPos1, BlockPos targetPos2, boolean simulate) {
+		info.requiredTracks = 0;
 
 		for (boolean first : Iterate.trueAndFalse) {
 			int extent = first ? info.end1Extent : info.end2Extent;
-			Vec3 axis = first ? axis1 : axis2;
-			BlockPos pos = first ? pos1 : pos2;
+			Vec3 axis = first ? info.axis1 : info.axis2;
+			BlockPos pos = first ? info.pos1 : info.pos2;
 			BlockState state = first ? state1 : state2;
-			if (state.hasProperty(TrackBlock.HAS_TURN))
+			if (state.hasProperty(TrackBlock.HAS_TURN) && !simulate)
 				state = state.setValue(TrackBlock.HAS_TURN, false);
 
-			for (int i = 0; i < extent; i++) {
+			for (int i = 0; i < (info.curve != null ? extent + 1 : extent); i++) {
 				Vec3 offset = axis.scale(i);
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
@@ -348,7 +478,12 @@ public class TrackPlacement {
 
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
-				if (stateAtPos.getBlock() instanceof ITrackBlock trackAtPos) {
+				if (canPlace)
+					info.requiredTracks++;
+				if (simulate)
+					continue;
+
+				if (stateAtPos.getBlock()instanceof ITrackBlock trackAtPos) {
 					toPlace = trackAtPos.overlay(level, offsetPos, stateAtPos, toPlace);
 					canPlace = true;
 				}
@@ -358,24 +493,40 @@ public class TrackPlacement {
 			}
 		}
 
-		info.pos1 = pos1;
-		info.pos2 = pos2;
-		info.axis1 = axis1;
-		info.axis2 = axis2;
-
 		if (info.curve == null)
 			return info;
 
-		level.setBlock(targetPos1, state1.setValue(TrackBlock.HAS_TURN, true), 3);
-		level.setBlock(targetPos2, state2.setValue(TrackBlock.HAS_TURN, true), 3);
+		if (!simulate) {
+			BlockState stateAtPos = level.getBlockState(targetPos1);
+			level.setBlock(targetPos1,
+				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TURN, true),
+				3);
+
+			stateAtPos = level.getBlockState(targetPos2);
+			level.setBlock(targetPos2,
+				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_TURN, true),
+				3);
+		}
+
 		BlockEntity te1 = level.getBlockEntity(targetPos1);
 		BlockEntity te2 = level.getBlockEntity(targetPos2);
+		int requiredTracksForTurn = (info.curve.getSegmentCount() + 1) / 2;
 
-		if (!(te1 instanceof TrackTileEntity) || !(te2 instanceof TrackTileEntity))
+		if (!(te1 instanceof TrackTileEntity) || !(te2 instanceof TrackTileEntity)) {
+			info.requiredTracks += requiredTracksForTurn;
 			return info;
+		}
 
 		TrackTileEntity tte1 = (TrackTileEntity) te1;
 		TrackTileEntity tte2 = (TrackTileEntity) te2;
+
+		if (!tte1.getConnections()
+			.containsKey(tte2.getBlockPos()))
+			info.requiredTracks += requiredTracksForTurn;
+
+		if (simulate)
+			return info;
+
 		tte1.addConnection(info.curve);
 		tte2.addConnection(info.curve.secondary());
 		return info;
@@ -427,7 +578,9 @@ public class TrackPlacement {
 			return;
 
 		boolean maxTurns = Minecraft.getInstance().options.keySprint.isDown();
-		PlacementInfo info = tryConnect(level, pos, hitState, player.getLookAngle(), stack, false, maxTurns);
+		PlacementInfo info = tryConnect(level, player, pos, hitState, stack, false, maxTurns);
+		if (!player.isCreative() && (info.valid || !info.hasRequiredTracks || !info.hasRequiredPavement))
+			BlueprintOverlayRenderer.displayTrackRequirements(info, player.getOffhandItem());
 
 		if (info.valid)
 			player.displayClientMessage(Lang.translate("track.valid_connection")
@@ -445,8 +598,7 @@ public class TrackPlacement {
 				for (int xOffset = -2; xOffset <= 2; xOffset++) {
 					for (int zOffset = -2; zOffset <= 2; zOffset++) {
 						BlockPos offset = pos.offset(xOffset, 0, zOffset);
-						PlacementInfo adjInfo =
-							tryConnect(level, offset, hitState, player.getLookAngle(), stack, false, maxTurns);
+						PlacementInfo adjInfo = tryConnect(level, player, offset, hitState, stack, false, maxTurns);
 						hints.get(adjInfo.valid)
 							.add(offset.below());
 					}

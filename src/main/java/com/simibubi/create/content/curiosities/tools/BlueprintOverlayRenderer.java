@@ -9,12 +9,14 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintCraftingInventory;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -47,6 +49,7 @@ public class BlueprintOverlayRenderer {
 
 	static boolean active;
 	static boolean empty;
+	static boolean noOutput;
 	static boolean lastSneakState;
 	static BlueprintSection lastTargetedSection;
 
@@ -62,6 +65,8 @@ public class BlueprintOverlayRenderer {
 		boolean sneak = mc.player.isShiftKeyDown();
 		lastTargetedSection = null;
 		active = false;
+		noOutput = false;
+
 		if (mouseOver == null)
 			return;
 		if (mouseOver.getType() != Type.ENTITY)
@@ -83,6 +88,29 @@ public class BlueprintOverlayRenderer {
 
 		lastTargetedSection = sectionAt;
 		lastSneakState = sneak;
+	}
+
+	public static void displayTrackRequirements(PlacementInfo info, ItemStack pavementItem) {
+		if (active)
+			return;
+
+		active = true;
+		empty = false;
+		noOutput = true;
+		ingredients.clear();
+
+		int tracks = info.requiredTracks;
+		while (tracks > 0) {
+			ingredients.add(Pair.of(AllBlocks.TRACK.asStack(Math.min(64, tracks)), info.hasRequiredTracks));
+			tracks -= 64;
+		}
+
+		int pavement = info.requiredPavement;
+		while (pavement > 0) {
+			ingredients.add(Pair.of(ItemHandlerHelper.copyStackWithSize(pavementItem, Math.min(64, pavement)),
+				info.hasRequiredPavement));
+			pavement -= 64;
+		}
 	}
 
 	public static void rebuild(BlueprintSection sectionAt, boolean sneak) {
@@ -212,10 +240,13 @@ public class BlueprintOverlayRenderer {
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
-		int w = 30 + 21 * ingredients.size() + 21;
+		int w = 21 * ingredients.size();
+
+		if (!noOutput)
+			w += 51;
 
 		int x = (width - w) / 2;
-		int y = (int) (height / 3f * 2);
+		int y = (int) (height - 100);
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();
@@ -225,6 +256,9 @@ public class BlueprintOverlayRenderer {
 			drawItemStack(poseStack, mc, x, y, itemStack, count);
 			x += 21;
 		}
+
+		if (noOutput)
+			return;
 
 		x += 5;
 		RenderSystem.enableBlend();

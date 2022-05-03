@@ -60,6 +60,7 @@ public class Carriage {
 		this.serialisedEntity = new CompoundTag();
 		this.pointsInitialised = false;
 		this.rotationAnchors = Couple.create(null, null);
+		this.presentConductors = Couple.create(false, false);
 
 		updateContraptionAnchors();
 

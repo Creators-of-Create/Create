@@ -18,7 +18,6 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.gui.components.Widget;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -103,6 +102,10 @@ public class AssemblyScreen extends AbstractStationScreen {
 		tickTrainDisplay();
 		Train train = displayedTrain.get();
 		toggleAssemblyButton.active = te.bogeyCount > 0 || train != null;
+
+		if (train != null)
+			for (Carriage carriage : train.carriages)
+				carriage.updateConductors();
 	}
 
 	private void tickTrainDisplay() {
@@ -151,15 +154,21 @@ public class AssemblyScreen extends AbstractStationScreen {
 			TrainIconType icon = train.icon;
 			int offset = 0;
 			int position = background.width / 2 - getTrainIconWidth(train) / 2;
+			boolean frontConductor = false;
+			boolean backConductor = false;
 
 			List<Carriage> carriages = train.carriages;
-			for (int i = carriages.size() - 1; i > 0; i--) {
-				if (i == carriages.size() - 1 && train.doubleEnded) {
-					offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset + position, y + 20) + 1;
-					continue;
-				}
+			for (int i = carriages.size() - 1; i >= 0; i--) {
 				Carriage carriage = carriages.get(i);
-				offset += icon.render(carriage.bogeySpacing, ms, x + offset + position, y + 20) + 1;
+				frontConductor |= carriage.presentConductors.getFirst();
+				backConductor |= carriage.presentConductors.getSecond();
+
+				if (i == 0)
+					continue;
+				if (i == carriages.size() - 1 && train.doubleEnded)
+					offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset + position, y + 20) + 1;
+				else
+					offset += icon.render(carriage.bogeySpacing, ms, x + offset + position, y + 20) + 1;
 			}
 			offset += icon.render(TrainIconType.ENGINE, ms, x + offset + position, y + 20);
 
@@ -171,15 +180,18 @@ public class AssemblyScreen extends AbstractStationScreen {
 			TextComponent text = new TextComponent("Assembly Successful");
 			font.drawShadow(ms, text, x + 97 - font.width(text) / 2, y + 47, 0xC6C6C6);
 			font.drawShadow(ms,
-				new TextComponent("-> " + train.carriages.size() + " Carriages, " + train.getTotalLength() + "m"),
+				new TextComponent("-> " + train.carriages.size() + " Carriage(s), " + train.getTotalLength() + "m"),
 				x + 30, y + 67, 0xC6C6C6);
-			font.drawShadow(ms, new TextComponent("-> Fuel Type: NYI"), x + 30, y + 77, 0xC6C6C6);
 
-			font.drawShadow(ms, new TextComponent("-> " + (train.doubleEnded ? "Dual Powered" : "Single Powered")),
-				x + 30, y + 92, 0xC6C6C6);
 			font.drawShadow(ms,
-				new TextComponent((train.doubleEnded ? "(Navigates both ways)" : "(Navigates forward only)")), x + 30,
-				y + 102, 0xACC4BC);
+				new TextComponent("-> " + (frontConductor || backConductor ? "Drivers present" : "No drivers found")),
+				x + 30, y + 82, 0xC6C6C6);
+
+			font.drawShadow(ms, new TextComponent("-> " + (train.doubleEnded ? "Dual Controls" : "Single Controls")),
+				x + 30, y + 97, 0xC6C6C6);
+			font.drawShadow(ms,
+				new TextComponent((train.doubleEnded ? "(Navigates both ways)" : "(Navigates forward only)")), x + 35,
+				y + 107, 0xACC4BC);
 			return;
 		}
 
@@ -205,10 +217,12 @@ public class AssemblyScreen extends AbstractStationScreen {
 			new TextComponent(bogeyCount == 0 ? "No Bogeys" : bogeyCount + (bogeyCount == 1 ? " Bogey" : " Bogeys"));
 		font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A);
 
-		Component component =
-			new TextComponent("Right-click on highlighted Tracks to create bogeys. Use Wrench to cycle type."
-				+ "\n\nAttach structures to one or between two bogeys to form carriages.");
-		font.drawWordWrap(component, x + 30, y + 67, 134, 0x7A7A7A);
+		font.drawWordWrap(new TextComponent("Right-click on highlighted Tracks to create bogeys."), x + 28, y + 67, 134,
+			0x7A7A7A);
+		font.drawWordWrap(new TextComponent("Remove bogeys by breaking the block on top."), x + 28, y + 90, 134,
+			0x7A7A7A);
+		font.drawWordWrap(new TextComponent("Build carriages attached to one or two bogeys each."), x + 28, y + 113,
+			138, 0x7A7A7A);
 	}
 
 	@Override
@@ -221,7 +235,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", !assemblyCompleted, iconId));
 		}
 	}
-	
+
 	@Override
 	protected PartialModel getFlag(float partialTicks) {
 		return AllBlockPartials.STATION_ASSEMBLE;

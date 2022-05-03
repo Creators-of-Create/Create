@@ -71,7 +71,6 @@ public class InputEvents {
 		if (event.getKeyMapping() == mc.options.keyUse) {
 			if (CreateClient.GLUE_HANDLER.onMouseInput())
 				event.setCanceled(true);
-			return;
 		}
 
 		if (event.getKeyMapping() == mc.options.keyPickItem) {

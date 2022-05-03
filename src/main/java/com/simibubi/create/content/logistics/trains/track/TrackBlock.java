@@ -21,8 +21,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
@@ -49,14 +47,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -187,7 +183,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 					ITrackBlock.addToListIfConnected(connectedTo, list,
 						(d, b) -> axis.scale(b ? 0 : fromCenter ? -d : d)
 							.add(center),
-						b -> shape.getNormal(), null);
+						b -> shape.getNormal(), axis, null);
 		} else
 			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
 
@@ -202,7 +198,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
-			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get, bc));
+			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get, null,
+			bc));
 		return list;
 	}
 
@@ -227,29 +224,17 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
-		ItemStack itemInHand = player.getItemInHand(hand);
 
-		// debug remove all graphs
-		if (Blocks.SPONGE.asItem() == itemInHand.getItem()) {
-			Create.RAILWAYS.trackNetworks.clear();
-			CreateClient.RAILWAYS.trackNetworks.clear();
-			Create.RAILWAYS.signalEdgeGroups.clear();
-			CreateClient.RAILWAYS.signalEdgeGroups.clear();
+		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		}
-
-		if (itemInHand.isEmpty()) {
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-			for (Entry<BlockPos, BoundingBox> entry : StationTileEntity.assemblyAreas.get(world)
-				.entrySet()) {
-				if (!entry.getValue()
-					.isInside(pos))
-					continue;
-				if (world.getBlockEntity(entry.getKey()) instanceof StationTileEntity station)
-					station.trackClicked(player, this, state, pos);
-			}
-			return InteractionResult.SUCCESS;
+		for (Entry<BlockPos, BoundingBox> entry : StationTileEntity.assemblyAreas.get(world)
+			.entrySet()) {
+			if (!entry.getValue()
+				.isInside(pos))
+				continue;
+			if (world.getBlockEntity(entry.getKey())instanceof StationTileEntity station)
+				if (station.trackClicked(player, this, state, pos))
+					return InteractionResult.SUCCESS;
 		}
 
 		return InteractionResult.PASS;
@@ -263,7 +248,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 				BlockPos girderPos = pPos.below()
 					.offset(vec3.z * side, 0, vec3.x * side);
 				BlockState girderState = pLevel.getBlockState(girderPos);
-				if (girderState.getBlock() instanceof GirderBlock girderBlock
+				if (girderState.getBlock()instanceof GirderBlock girderBlock
 					&& !blockTicks.hasScheduledTick(girderPos, girderBlock))
 					pLevel.scheduleTick(girderPos, girderBlock, 1);
 			}
@@ -362,16 +347,16 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-		if (context.getLevel().isClientSide)
-			TrackRemoval.wrenched(context.getClickedPos());
+//		if (context.getLevel().isClientSide)
+//			TrackRemoval.wrenched(context.getClickedPos());
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-		if (context.getLevel().isClientSide)
-			TrackRemoval.sneakWrenched(context.getClickedPos());
-		return InteractionResult.SUCCESS;
+//		if (context.getLevel().isClientSide)
+//			TrackRemoval.sneakWrenched(context.getClickedPos());
+		return IWrenchable.super.onSneakWrenched(state, context);
 	}
 
 	@Override
@@ -443,7 +428,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		Vec3 normal = null;
 		Vec3 offset = null;
 
-		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackTileEntity trackTE) {
+		if (bezierPoint != null && world.getBlockEntity(pos)instanceof TrackTileEntity trackTE) {
 			BezierConnection bc = trackTE.connections.get(bezierPoint.curveTarget());
 			if (bc != null) {
 				double length = Mth.floor(bc.getLength() * 2);

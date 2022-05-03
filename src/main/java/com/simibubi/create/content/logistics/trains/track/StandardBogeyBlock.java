@@ -62,7 +62,7 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 
 	@Override
 	public double getWheelPointSpacing() {
-		return large ? .75f : 2;
+		return 2;
 	}
 
 	@Override

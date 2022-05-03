@@ -29,6 +29,8 @@ public class SignalEdgeGroup {
 	public Map<UUID, UUID> intersecting;
 	public Set<SignalEdgeGroup> intersectingResolved;
 	public Set<UUID> adjacent;
+	
+	public boolean fallbackGroup;
 
 	public SignalEdgeGroup(UUID id) {
 		this.id = id;
@@ -37,6 +39,11 @@ public class SignalEdgeGroup {
 		intersecting = new HashMap<>();
 		intersectingResolved = new HashSet<>();
 		color = EdgeGroupColor.getDefault();
+	}
+	
+	public SignalEdgeGroup asFallback() {
+		fallbackGroup = true;
+		return this;
 	}
 
 	public boolean isOccupiedUnless(Train train) {
@@ -129,6 +136,7 @@ public class SignalEdgeGroup {
 		group.color = NBTHelper.readEnum(tag, "Color", EdgeGroupColor.class);
 		NBTHelper.iterateCompoundList(tag.getList("Connected", Tag.TAG_COMPOUND),
 			nbt -> group.intersecting.put(nbt.getUUID("Key"), nbt.getUUID("Value")));
+		group.fallbackGroup = tag.getBoolean("Fallback");
 		return group;
 	}
 
@@ -142,6 +150,7 @@ public class SignalEdgeGroup {
 			nbt.putUUID("Value", e.getValue());
 			return nbt;
 		}));
+		tag.putBoolean("Fallback", fallbackGroup);
 		return tag;
 	}
 

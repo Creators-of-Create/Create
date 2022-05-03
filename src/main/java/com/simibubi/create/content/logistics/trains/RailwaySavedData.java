@@ -28,7 +28,11 @@ public class RailwaySavedData extends SavedData {
 		Create.LOGGER.info("Saving Railway Information...");
 		nbt.put("RailGraphs", NBTHelper.writeCompoundList(railways.trackNetworks.values(), TrackGraph::write));
 		nbt.put("SignalBlocks",
-			NBTHelper.writeCompoundList(railways.signalEdgeGroups.values(), SignalEdgeGroup::write));
+			NBTHelper.writeCompoundList(railways.signalEdgeGroups.values(), seg -> {
+				if (seg.fallbackGroup && !railways.trackNetworks.containsKey(seg.id))
+					return null;
+				return seg.write();
+			}));
 		nbt.put("Trains", NBTHelper.writeCompoundList(railways.trains.values(), Train::write));
 		return nbt;
 	}

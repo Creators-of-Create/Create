@@ -455,7 +455,7 @@ public class Navigation {
 				return true;
 			});
 
-			if (!train.doubleEnded)
+			if (!train.doubleEnded || !train.hasBackwardConductor())
 				break;
 		}
 
@@ -620,7 +620,7 @@ public class Navigation {
 				TrackEdge newEdge = connection.getValue();
 				Vec3 currentDirection = edge.getDirection(false);
 				Vec3 newDirection = newEdge.getDirection(true);
-				if (currentDirection.dot(newDirection) < 3 / 4f)
+				if (currentDirection.dot(newDirection) < 7 / 8f)
 					continue;
 				validTargets.add(connection);
 			}

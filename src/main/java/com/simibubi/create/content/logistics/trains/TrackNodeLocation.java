@@ -57,6 +57,7 @@ public class TrackNodeLocation extends Vec3i {
 
 		BezierConnection turn = null;
 		boolean forceNode = false;
+		Vec3 direction;
 		Vec3 normal;
 
 		public DiscoveredLocation(double p_121865_, double p_121866_, double p_121867_) {
@@ -73,14 +74,19 @@ public class TrackNodeLocation extends Vec3i {
 				forceNode();
 			return this;
 		}
-		
+
 		public DiscoveredLocation forceNode() {
 			forceNode = true;
 			return this;
 		}
-		
+
 		public DiscoveredLocation withNormal(Vec3 normal) {
 			this.normal = normal;
+			return this;
+		}
+
+		public DiscoveredLocation withDirection(Vec3 direction) {
+			this.direction = direction == null ? null : direction.normalize();
 			return this;
 		}
 
@@ -91,9 +97,14 @@ public class TrackNodeLocation extends Vec3i {
 		public BezierConnection getTurn() {
 			return turn;
 		}
-		
+
 		public boolean shouldForceNode() {
 			return forceNode;
+		}
+
+		public boolean notInLineWith(Vec3 direction) {
+			return this.direction != null
+				&& Math.max(direction.dot(this.direction), direction.dot(this.direction.scale(-1))) < 7 / 8f;
 		}
 
 	}

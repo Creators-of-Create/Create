@@ -125,7 +125,7 @@ public class GlobalRailwayManager {
 
 	public void putGraphWithDefaultGroup(TrackGraph graph) {
 		SignalEdgeGroup group = new SignalEdgeGroup(graph.id);
-		signalEdgeGroups.put(graph.id, group);
+		signalEdgeGroups.put(graph.id, group.asFallback());
 		sync.edgeGroupCreated(graph.id, group.color);
 		putGraph(graph);
 	}

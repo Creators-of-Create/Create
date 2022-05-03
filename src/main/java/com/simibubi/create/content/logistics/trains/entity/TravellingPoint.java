@@ -29,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class TravellingPoint {
@@ -179,7 +180,7 @@ public class TravellingPoint {
 		IEdgePointListener signalListener, ITurnListener turnListener) {
 		blocked = false;
 		double edgeLength = edge.getLength();
-		if (distance == 0)
+		if (Mth.equal(distance, 0))
 			return 0;
 
 		double prevPos = position;
@@ -223,7 +224,7 @@ public class TravellingPoint {
 					TrackEdge newEdge = entry.getValue();
 					Vec3 currentDirection = edge.getDirection(false);
 					Vec3 newDirection = newEdge.getDirection(true);
-					if (currentDirection.dot(newDirection) < 3 / 4f)
+					if (currentDirection.dot(newDirection) < 7 / 8f)
 						continue;
 
 					validTargets.add(entry);
@@ -276,14 +277,14 @@ public class TravellingPoint {
 						.get(node1);
 					Vec3 currentDirection = edge.getDirection(true);
 					Vec3 newDirection = newEdge.getDirection(false);
-					if (currentDirection.dot(newDirection) < 3 / 4f)
+					if (currentDirection.dot(newDirection) < 7 / 8f)
 						continue;
 
 					validTargets.add(entry);
 				}
 
 				if (validTargets.isEmpty()) {
-					traveled += position;
+					traveled -= position;
 					position = 0;
 					blocked = true;
 					break;
