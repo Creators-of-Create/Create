@@ -71,7 +71,6 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 					ItemStack itemStack = player.getInventory().getItem(i);
 					try (Transaction t = TransferUtil.getTransaction()) {
 						long inserted = toolbox.inventory.insert(ItemVariant.of(itemStack), itemStack.getCount(), t);
-						t.commit();
 						ItemStack remainder = ItemHandlerHelper.copyStackWithSize(itemStack, (int) (itemStack.getCount() - inserted));
 						if (remainder.getCount() != itemStack.getCount())
 							player.getInventory().setItem(i, remainder);
