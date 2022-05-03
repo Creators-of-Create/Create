@@ -31,6 +31,9 @@ public class BoilerData {
 
 	static final int SAMPLE_RATE = 5;
 
+	private static final int waterSupplyPerLevel = 10;
+	private static final float passiveEngineEfficiency = 1 / 32f;
+
 	// pooled water supply
 	int gatheredSupply;
 	float[] supplyOverTime = new float[10];
@@ -67,7 +70,6 @@ public class BoilerData {
 			return;
 
 		ticksUntilNextSample = SAMPLE_RATE;
-//		waterSupply -= supplyOverTime[currentIndex] / supplyOverTime.length;
 		supplyOverTime[currentIndex] = gatheredSupply / (float) SAMPLE_RATE;
 		waterSupply = Math.max(waterSupply, supplyOverTime[currentIndex]);
 		currentIndex = (currentIndex + 1) % supplyOverTime.length;
@@ -76,7 +78,6 @@ public class BoilerData {
 		if (currentIndex == 0) {
 			waterSupply = 0;
 			for (float i : supplyOverTime)
-//				waterSupply += i;
 				waterSupply = Math.max(i, waterSupply);
 		}
 
@@ -92,16 +93,16 @@ public class BoilerData {
 	}
 
 	public int getMaxHeatLevelForWaterSupply() {
-		return Math.min(activeHeat, (int) Math.min(18, Mth.ceil(waterSupply) / 20));
+		return (int) Math.min(18, Mth.ceil(waterSupply) / waterSupplyPerLevel);
 	}
 
 	public boolean isPassive(int boilerSize) {
-		return passiveHeat || activeHeat != 0 && getActualHeat(boilerSize) == 0;
+		return passiveHeat && getMaxHeatLevelForBoilerSize(boilerSize) > 0 && getMaxHeatLevelForWaterSupply() > 0;
 	}
 
 	public float getEngineEfficiency(int boilerSize) {
 		if (isPassive(boilerSize))
-			return 1 / 16f / attachedEngines;
+			return passiveEngineEfficiency / attachedEngines;
 		if (activeHeat == 0)
 			return 0;
 		int actualHeat = getActualHeat(boilerSize);
@@ -126,21 +127,15 @@ public class BoilerData {
 		int forWaterSupply = getMaxHeatLevelForWaterSupply();
 		int actualHeat = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
 
-		tooltip.add(componentSpacing.plainCopy()
-			.append(new TextComponent("Boiler Information:")));
-
-		Component h = new TextComponent("Heat: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(activeHeat)).withStyle(ChatFormatting.GOLD));
-		Component w = new TextComponent(", Water: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(forWaterSupply)).withStyle(ChatFormatting.GOLD));
-		Component s = new TextComponent(", Size: ").withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(IHaveGoggleInformation.format(forBoilerSize)).withStyle(ChatFormatting.GOLD));
-
 		TextComponent heatLevel = isPassive(boilerSize) ? new TextComponent("Passive")
-			: (activeHeat == 0 ? new TextComponent("No Heat")
-				: new TextComponent(IHaveGoggleInformation.format(actualHeat)));
-		MutableComponent heatLabel = heatLevel.withStyle(ChatFormatting.GREEN);
-		Component level = new TextComponent("Boiler Level: ").append(heatLabel);
+			: (actualHeat == 0 ? new TextComponent("Idle")
+				: new TextComponent("Lvl " + IHaveGoggleInformation.format(actualHeat)));
+		tooltip.add(componentSpacing.plainCopy()
+			.append(new TextComponent("Boiler Status:  ").append(heatLevel.withStyle(ChatFormatting.GREEN))));
+
+		Component h = levelComponent("Temperature:  ", "No heat", passiveHeat ? -1 : activeHeat);
+		Component w = levelComponent("Water supply:  ", "Too slow", forWaterSupply);
+		Component s = levelComponent("Boiler size:     ", "Too small", forBoilerSize);
 
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(actualHeat, attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
@@ -153,14 +148,14 @@ public class BoilerData {
 		Component indent = new TextComponent(spacing);
 		Component indent2 = new TextComponent(spacing + " ");
 
-		Component stats = indent.plainCopy()
-			.append(h)
-			.append(w)
-			.append(s);
+		tooltip.add(indent.plainCopy()
+			.append(w));
+		tooltip.add(indent.plainCopy()
+			.append(h));
+		tooltip.add(indent.plainCopy()
+			.append(s));
 
-		if (activeHeat > 0)
-			tooltip.add(stats);
-		tooltip.add(new TextComponent("  -> ").append(level));
+		tooltip.add(indent);
 		tooltip.add(indent.plainCopy()
 			.append(Lang.translate("tooltip.capacityProvided")
 				.withStyle(ChatFormatting.GRAY)));
@@ -169,6 +164,14 @@ public class BoilerData {
 			.append(engines));
 
 		return true;
+	}
+
+	private MutableComponent levelComponent(String text, String whenZero, int level) {
+		return new TextComponent(text).withStyle(ChatFormatting.GRAY)
+			.append(level == 0 ? new TextComponent(whenZero).withStyle(ChatFormatting.RED)
+				: new TextComponent(
+					level == -1 ? "Passive" : level == 18 ? "Max" : "Lvl " + IHaveGoggleInformation.format(level))
+						.withStyle(ChatFormatting.GOLD));
 	}
 
 	public boolean evaluate(FluidTankTileEntity controller) {
@@ -297,14 +300,9 @@ public class BoilerData {
 		public int fill(FluidStack resource, FluidAction action) {
 			if (!isFluidValid(0, resource))
 				return 0;
-			int maxAccepted = (int) ((passiveHeat ? 1 : activeHeat + 1) * 20) * SAMPLE_RATE;
-			if (maxAccepted == 0)
-				return 0;
-			int amount = Math.min(maxAccepted - gatheredSupply, resource.getAmount());
+			int amount = resource.getAmount();
 			if (action.execute())
 				gatheredSupply += amount;
-			if (action.simulate())
-				return Math.max(amount, 1);
 			return amount;
 		}
 

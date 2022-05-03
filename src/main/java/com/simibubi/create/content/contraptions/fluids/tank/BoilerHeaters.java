@@ -10,8 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BoilerHeaters { // API?
 
 	public static boolean canHeatPassively(BlockState state) {
-		if (AllBlocks.BLAZE_BURNER.has(state) && state.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE) 
-			return true;
+		if (AllBlocks.BLAZE_BURNER.has(state))
+			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE;
 		if (AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state))
 			return true;
 		return false;
