@@ -8,6 +8,7 @@ import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
@@ -68,12 +69,14 @@ public class InputEvents {
 			return;
 		}
 
-		if (event.getKeyMapping() == mc.options.keyUse) {
-			if (CreateClient.GLUE_HANDLER.onMouseInput())
+		KeyMapping key = event.getKeyMapping();
+
+		if (key == mc.options.keyUse || key == mc.options.keyAttack) {
+			if (CreateClient.GLUE_HANDLER.onMouseInput(key == mc.options.keyAttack))
 				event.setCanceled(true);
 		}
 
-		if (event.getKeyMapping() == mc.options.keyPickItem) {
+		if (key == mc.options.keyPickItem) {
 			if (ToolboxHandlerClient.onPickItem())
 				event.setCanceled(true);
 			return;

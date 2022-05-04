@@ -122,7 +122,6 @@ public class CommonEvents {
 		LinkedControllerServerHandler.tick(world);
 		ControlsServerHandler.tick(world);
 		Create.RAILWAYS.tick(world);
-		Create.GLUE_QUEUE.tick(world);
 	}
 
 	@SubscribeEvent

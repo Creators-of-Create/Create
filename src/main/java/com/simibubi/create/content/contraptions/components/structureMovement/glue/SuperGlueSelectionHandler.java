@@ -1,41 +1,52 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.base.Objects;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
+import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 
 public class SuperGlueSelectionHandler {
 
-	private static final int SUCCESS = 0x68c586;
+	private static final int PASSIVE = 0x4D9162;
+	private static final int HIGHLIGHT = 0x68c586;
 	private static final int FAIL = 0xc5b548;
 
 	private Object clusterOutlineSlot = new Object();
 	private Object bbOutlineSlot = new Object();
+	private int clusterCooldown;
 
 	private BlockPos firstPos;
 	private BlockPos hoveredPos;
 	private Set<BlockPos> currentCluster;
 	private int glueRequired;
+
+	private SuperGlueEntity selected;
+	private BlockPos soundSourceForRemoval;
 
 	public void tick() {
 		Minecraft mc = Minecraft.getInstance();
@@ -47,6 +58,51 @@ public class SuperGlueSelectionHandler {
 			if (firstPos != null)
 				discard();
 			return;
+		}
+
+		if (clusterCooldown > 0) {
+			if (clusterCooldown == 25)
+				player.displayClientMessage(TextComponent.EMPTY, true);
+			CreateClient.OUTLINER.keep(clusterOutlineSlot);
+			clusterCooldown--;
+		}
+
+		AABB scanArea = player.getBoundingBox()
+			.inflate(32, 16, 32);
+
+		List<SuperGlueEntity> glueNearby = mc.level.getEntitiesOfClass(SuperGlueEntity.class, scanArea);
+
+		selected = null;
+		if (firstPos == null) {
+			double range = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+				.getValue() + 1;
+			Vec3 traceOrigin = RaycastHelper.getTraceOrigin(player);
+			Vec3 traceTarget = RaycastHelper.getTraceTarget(player, range, traceOrigin);
+
+			double bestDistance = Double.MAX_VALUE;
+			for (SuperGlueEntity glueEntity : glueNearby) {
+				Optional<Vec3> clip = glueEntity.getBoundingBox()
+					.clip(traceOrigin, traceTarget);
+				if (clip.isEmpty())
+					continue;
+				Vec3 vec3 = clip.get();
+				double distanceToSqr = vec3.distanceToSqr(traceOrigin);
+				if (distanceToSqr > bestDistance)
+					continue;
+				selected = glueEntity;
+				soundSourceForRemoval = new BlockPos(vec3);
+				bestDistance = distanceToSqr;
+			}
+
+			for (SuperGlueEntity glueEntity : glueNearby) {
+				boolean h = clusterCooldown == 0 && glueEntity == selected;
+				AllSpecialTextures faceTex = h ? AllSpecialTextures.GLUE : null;
+				CreateClient.OUTLINER.showAABB(glueEntity, glueEntity.getBoundingBox())
+					.colored(h ? HIGHLIGHT : PASSIVE)
+					.withFaceTextures(faceTex, faceTex)
+					.disableNormals()
+					.lineWidth(h ? 1 / 16f : 1 / 64f);
+			}
 		}
 
 		HitResult hitResult = mc.hitResult;
@@ -83,33 +139,29 @@ public class SuperGlueSelectionHandler {
 				else if (cancel)
 					Lang.sendStatus(player, FAIL, "super_glue.click_to_discard");
 				else
-					Lang.sendStatus(player, SUCCESS, "super_glue.click_to_confirm");
+					Lang.sendStatus(player, HIGHLIGHT, "super_glue.click_to_confirm");
+
+				if (currentSelectionBox != null)
+					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
+						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
+						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
+						.disableNormals()
+						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
-					.colored(canReach && canAfford && !cancel ? SUCCESS : FAIL)
-					.withFaceTextures(AllSpecialTextures.CHECKERED, AllSpecialTextures.HIGHLIGHT_CHECKERED)
-					.lineWidth(1 / 16f);
-			}
-			if (currentSelectionBox != null) {
-				OutlineParams params =
-					firstPos == null ? CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
-						: CreateClient.OUTLINER.chaseAABB(bbOutlineSlot, currentSelectionBox);
-				params.colored(0x111111)
+					.colored(0x4D9162)
 					.disableNormals()
-					.lineWidth(1 / 128f);
+					.lineWidth(1 / 64f);
 			}
+
 			return;
 		}
 
 		hoveredPos = hovered;
 
-		Pair<Set<BlockPos>, List<BlockFace>> pair =
-			SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos);
-
-		currentCluster = pair == null ? null : pair.getFirst();
-		glueRequired = pair == null ? 0
-			: pair.getSecond()
-				.size();
+		Set<BlockPos> cluster = SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos, true);
+		currentCluster = cluster;
+		glueRequired = 1;
 	}
 
 	private boolean isGlue(ItemStack stack) {
@@ -120,13 +172,22 @@ public class SuperGlueSelectionHandler {
 		return firstPos == null || hoveredPos == null ? null : new AABB(firstPos, hoveredPos).expandTowards(1, 1, 1);
 	}
 
-	public boolean onMouseInput() {
+	public boolean onMouseInput(boolean attack) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		ClientLevel level = mc.level;
 
 		if (!isGlue(player.getMainHandItem()))
 			return false;
+
+		if (attack) {
+			if (selected == null)
+				return false;
+			AllPackets.channel.sendToServer(new SuperGlueRemovalPacket(selected.getId(), soundSourceForRemoval));
+			selected = null;
+			clusterCooldown = 0;
+			return true;
+		}
 
 		if (player.isSteppingCarefully()) {
 			if (firstPos != null) {
@@ -139,7 +200,9 @@ public class SuperGlueSelectionHandler {
 		if (hoveredPos == null)
 			return false;
 
+		Direction face = null;
 		if (mc.hitResult instanceof BlockHitResult bhr) {
+			face = bhr.getDirection();
 			BlockState blockState = level.getBlockState(hoveredPos);
 			if (blockState.getBlock()instanceof AbstractChassisBlock cb)
 				if (cb.getGlueableSide(blockState, bhr.getDirection()) != null)
@@ -158,7 +221,11 @@ public class SuperGlueSelectionHandler {
 		}
 
 		firstPos = hoveredPos;
+		if (face != null)
+			SuperGlueItem.spawnParticles(level, firstPos, face, true);
 		Lang.sendStatus(player, "super_glue.first_pos");
+		AllSoundEvents.SLIME_ADDED.playAt(level, firstPos, 0.5F, 0.85F, false);
+		level.playSound(player, firstPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 		return true;
 	}
 
@@ -167,13 +234,25 @@ public class SuperGlueSelectionHandler {
 		currentCluster = null;
 		firstPos = null;
 		Lang.sendStatus(player, "super_glue.abort");
+		clusterCooldown = 0;
 	}
 
 	public void confirm() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		AllPackets.channel.sendToServer(new SuperGlueSelectionPacket(firstPos, hoveredPos));
+		AllSoundEvents.SLIME_ADDED.playAt(player.level, hoveredPos, 0.5F, 0.95F, false);
+		player.level.playSound(player, hoveredPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
+
+		if (currentCluster != null)
+			CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
+				.colored(0xB5F2C6)
+				.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.HIGHLIGHT_CHECKERED)
+				.disableNormals()
+				.lineWidth(1 / 24f);
+
 		discard();
 		Lang.sendStatus(player, "super_glue.sucess");
+		clusterCooldown = 40;
 	}
 
 }

@@ -11,7 +11,6 @@ import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueQueue;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.data.AllDataGathererBehaviours;
@@ -77,7 +76,6 @@ public class Create {
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
-	public static final GlueQueue GLUE_QUEUE = new GlueQueue();
 	public static final Random RANDOM = new Random();
 
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);

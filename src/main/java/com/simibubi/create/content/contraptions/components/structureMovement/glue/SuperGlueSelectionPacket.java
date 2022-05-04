@@ -1,17 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkEvent.Context;
@@ -50,19 +47,19 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 			if (!to.closerThan(from, 25))
 				return;
 
-			Pair<Set<BlockPos>, List<BlockFace>> group =
-				SuperGlueSelectionHelper.searchGlueGroup(player.level, from, to);
+			Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level, from, to, false);
 			if (group == null)
 				return;
-			if (!group.getFirst()
-				.contains(to))
+			if (!group.contains(to))
 				return;
-			List<BlockFace> glue = group.getSecond();
-			if (!SuperGlueSelectionHelper.collectGlueFromInventory(player, glue.size(), true))
+			if (!SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, true))
 				return;
-			
-			SuperGlueSelectionHelper.collectGlueFromInventory(player, glue.size(), false);
-			Create.GLUE_QUEUE.add(player.level, glue);
+
+			AABB bb = SuperGlueEntity.span(from, to);
+			SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, false);
+			SuperGlueEntity entity = new SuperGlueEntity(player.level, bb);
+			player.level.addFreshEntity(entity);
+			entity.spawnParticles();
 		});
 		ctx.setPacketHandled(true);
 	}

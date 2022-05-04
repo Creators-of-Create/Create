@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
@@ -34,25 +33,20 @@ import net.minecraft.world.entity.MobCategory;
 public class AllEntityTypes {
 
 	public static final EntityEntry<OrientedContraptionEntity> ORIENTED_CONTRAPTION = contraption("contraption",
-		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true)
-		.register();
+		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true).register();
 	public static final EntityEntry<ControlledContraptionEntity> CONTROLLED_CONTRAPTION =
 		contraption("stationary_contraption", ControlledContraptionEntity::new, () -> ContraptionEntityRenderer::new,
-			20, 40, false)
-		.register();
+			20, 40, false).register();
 	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
-		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false)
-		.register();
+		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false).register();
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
-			() -> CarriageContraptionEntityRenderer::new, 15, 3, true)
-		.instance(() -> CarriageContraptionInstance::new)
-		.register();
+			() -> CarriageContraptionEntityRenderer::new, 15, 3, true).instance(() -> CarriageContraptionInstance::new)
+				.register();
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 		register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new, MobCategory.MISC, 10,
-			Integer.MAX_VALUE, false, true, SuperGlueEntity::build).instance(() -> GlueInstance::new, false)
-				.register();
+			Integer.MAX_VALUE, false, true, SuperGlueEntity::build).register();
 
 	public static final EntityEntry<BlueprintEntity> CRAFTING_BLUEPRINT =
 		register("crafting_blueprint", BlueprintEntity::new, () -> BlueprintRenderer::new, MobCategory.MISC, 10,

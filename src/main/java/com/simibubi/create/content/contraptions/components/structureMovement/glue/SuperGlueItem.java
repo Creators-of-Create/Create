@@ -7,15 +7,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -50,46 +46,16 @@ public class SuperGlueItem extends Item {
 	}
 
 	@Override
+	public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+		return false;
+	}
+
+	@Override
 	public boolean canBeDepleted() {
 		return true;
 	}
 
-	@Override
-	public InteractionResult useOn(UseOnContext context) {
-		BlockPos blockpos = context.getClickedPos();
-		Direction direction = context.getClickedFace();
-		BlockPos blockpos1 = blockpos.relative(direction);
-		Player playerentity = context.getPlayer();
-		ItemStack itemstack = context.getItemInHand();
-
-		if (playerentity == null || !this.canPlace(playerentity, direction, itemstack, blockpos1))
-			return InteractionResult.FAIL;
-
-		Level world = context.getLevel();
-		SuperGlueEntity entity = new SuperGlueEntity(world, blockpos1, direction);
-		CompoundTag compoundnbt = itemstack.getTag();
-		if (compoundnbt != null)
-			EntityType.updateCustomEntityTag(world, playerentity, entity, compoundnbt);
-
-		if (!entity.onValidSurface())
-			return InteractionResult.FAIL;
-
-		if (!world.isClientSide) {
-			entity.playPlaceSound();
-			world.addFreshEntity(entity);
-		}
-		itemstack.hurtAndBreak(1, playerentity, SuperGlueItem::onBroken);
-
-		return InteractionResult.SUCCESS;
-	}
-
-	public static void onBroken(Player player) {
-
-	}
-
-	protected boolean canPlace(Player entity, Direction facing, ItemStack stack, BlockPos pos) {
-		return !entity.level.isOutsideBuildHeight(pos) && entity.mayUseItemAt(pos, facing, stack);
-	}
+	public static void onBroken(Player player) {}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void spawnParticles(Level world, BlockPos pos, Direction direction, boolean fullBlock) {

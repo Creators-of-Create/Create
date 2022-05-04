@@ -92,19 +92,19 @@ public class CloneCommand {
 		List<SuperGlueEntity> glue = world.getEntitiesOfClass(SuperGlueEntity.class, AABB.of(sourceArea));
 		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
 
-		for (SuperGlueEntity g : glue) {
-			BlockPos pos = g.getHangingPosition();
-			Direction direction = g.getFacingDirection();
-			newGlue.add(Pair.of(pos.offset(diffToTarget), direction));
-		}
-
-		for (Pair<BlockPos, Direction> p : newGlue) {
-			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
-			if (g.onValidSurface()) {
-				world.addFreshEntity(g);
-				gluePastes++;
-			}
-		}
+//		for (SuperGlueEntity g : glue) {TODO
+//			BlockPos pos = g.getHangingPosition();
+//			Direction direction = g.getFacingDirection();
+//			newGlue.add(Pair.of(pos.offset(diffToTarget), direction));
+//		}
+//
+//		for (Pair<BlockPos, Direction> p : newGlue) {
+//			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
+//			if (g.onValidSurface()) {
+//				world.addFreshEntity(g);
+//				gluePastes++;
+//			}
+//		}
 		return gluePastes;
 	}
 
