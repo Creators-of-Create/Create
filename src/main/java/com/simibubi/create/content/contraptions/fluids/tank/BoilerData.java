@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import joptsimple.internal.Strings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -125,19 +126,23 @@ public class BoilerData {
 
 		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
 		int forWaterSupply = getMaxHeatLevelForWaterSupply();
-		int actualHeat = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
+		int boilerLevel = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
+
+		int minValue = Math.min(passiveHeat ? 1 : activeHeat, Math.min(forWaterSupply, forBoilerSize));
+		int maxValue = Math.max(passiveHeat ? 1 : activeHeat, Math.max(forWaterSupply, forBoilerSize));
 
 		TextComponent heatLevel = isPassive(boilerSize) ? new TextComponent("Passive")
-			: (actualHeat == 0 ? new TextComponent("Idle")
-				: new TextComponent("Lvl " + IHaveGoggleInformation.format(actualHeat)));
+			: (boilerLevel == 0 ? new TextComponent("Idle")
+				: boilerLevel == 18 ? new TextComponent("Max")
+					: new TextComponent("Lvl " + IHaveGoggleInformation.format(boilerLevel)));
 		tooltip.add(componentSpacing.plainCopy()
 			.append(new TextComponent("Boiler Status:  ").append(heatLevel.withStyle(ChatFormatting.GREEN))));
 
-		Component h = levelComponent("Temperature:  ", "No heat", passiveHeat ? -1 : activeHeat);
-		Component w = levelComponent("Water supply:  ", "Too slow", forWaterSupply);
-		Component s = levelComponent("Boiler size:     ", "Too small", forBoilerSize);
+		Component h = levelComponent("Heat ...... ", passiveHeat ? 1 : activeHeat, minValue, maxValue);
+		Component w = levelComponent("Water ... ", forWaterSupply, minValue, maxValue);
+		Component s = levelComponent("Size ....... ", forBoilerSize, minValue, maxValue);
 
-		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(actualHeat, attachedEngines)
+		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 		Component capacity =
 			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
@@ -148,12 +153,12 @@ public class BoilerData {
 		Component indent = new TextComponent(spacing);
 		Component indent2 = new TextComponent(spacing + " ");
 
-		tooltip.add(indent.plainCopy()
-			.append(w));
-		tooltip.add(indent.plainCopy()
-			.append(h));
-		tooltip.add(indent.plainCopy()
+		tooltip.add(indent2.plainCopy()
 			.append(s));
+		tooltip.add(indent2.plainCopy()
+			.append(w));
+		tooltip.add(indent2.plainCopy()
+			.append(h));
 
 		tooltip.add(indent);
 		tooltip.add(indent.plainCopy()
@@ -166,12 +171,24 @@ public class BoilerData {
 		return true;
 	}
 
-	private MutableComponent levelComponent(String text, String whenZero, int level) {
-		return new TextComponent(text).withStyle(ChatFormatting.GRAY)
-			.append(level == 0 ? new TextComponent(whenZero).withStyle(ChatFormatting.RED)
-				: new TextComponent(
-					level == -1 ? "Passive" : level == 18 ? "Max" : "Lvl " + IHaveGoggleInformation.format(level))
-						.withStyle(ChatFormatting.GOLD));
+	private MutableComponent levelComponent(String text, int level, int min, int max) {
+		int indexOf = text.indexOf(".");
+		String label = text.substring(0, indexOf);
+		String dots = text.substring(indexOf);
+		MutableComponent c = new TextComponent(label).withStyle(ChatFormatting.GRAY)
+			.append(new TextComponent(dots).withStyle(ChatFormatting.DARK_GRAY));
+
+		c.append(bars(Math.max(0, min - 1), ChatFormatting.DARK_GREEN));
+		c.append(bars(min > 0 ? 1 : 0, ChatFormatting.GREEN));
+		c.append(bars(Math.max(0, level - min), ChatFormatting.DARK_GREEN));
+		c.append(bars(Math.max(0, max - level), ChatFormatting.DARK_RED));
+		c.append(bars(Math.max(0, 18 - max), ChatFormatting.DARK_GRAY));
+
+		return c;
+	}
+
+	private MutableComponent bars(int level, ChatFormatting format) {
+		return new TextComponent(Strings.repeat('|', level)).withStyle(format);
 	}
 
 	public boolean evaluate(FluidTankTileEntity controller) {
