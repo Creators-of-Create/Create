@@ -1,6 +1,8 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 
@@ -16,11 +18,13 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 
 	private BlockPos targetPos;
 	private BlockPos soundSource;
+	private boolean wrench;
 
-	public CurvedTrackDestroyPacket(BlockPos pos, BlockPos targetPos, BlockPos soundSource) {
+	public CurvedTrackDestroyPacket(BlockPos pos, BlockPos targetPos, BlockPos soundSource, boolean wrench) {
 		super(pos);
 		this.targetPos = targetPos;
 		this.soundSource = soundSource;
+		this.wrench = wrench;
 	}
 
 	public CurvedTrackDestroyPacket(FriendlyByteBuf buffer) {
@@ -31,12 +35,14 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 	protected void writeSettings(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(targetPos);
 		buffer.writeBlockPos(soundSource);
+		buffer.writeBoolean(wrench);
 	}
 
 	@Override
 	protected void readSettings(FriendlyByteBuf buffer) {
 		targetPos = buffer.readBlockPos();
 		soundSource = buffer.readBlockPos();
+		wrench = buffer.readBoolean();
 	}
 
 	@Override
@@ -48,13 +54,25 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 		}
 
 		Level level = te.getLevel();
+		BezierConnection bezierConnection = te.getConnections()
+			.get(targetPos);
+
 		te.removeConnection(targetPos);
-		if (level.getBlockEntity(targetPos) instanceof TrackTileEntity other)
+		if (level.getBlockEntity(targetPos)instanceof TrackTileEntity other)
 			other.removeConnection(pos);
 
 		BlockState blockState = te.getBlockState();
 		TrackPropagator.onRailRemoved(level, pos, blockState);
 
+		if (wrench) {
+			AllSoundEvents.WRENCH_REMOVE.playOnServer(player.level, soundSource, 1,
+				Create.RANDOM.nextFloat() * .5f + .5f);
+			if (!player.isCreative() && bezierConnection != null) 
+				bezierConnection.addItemsToPlayer(player);
+		} else if (!player.isCreative() && bezierConnection != null)
+			bezierConnection.spawnItems(level);
+
+		bezierConnection.spawnDestroyParticles(level);
 		SoundType soundtype = blockState.getSoundType(level, pos, player);
 		if (soundtype == null)
 			return;
@@ -67,7 +85,7 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 	protected int maxRange() {
 		return 64;
 	}
-	
+
 	@Override
 	protected void applySettings(TrackTileEntity te) {}
 

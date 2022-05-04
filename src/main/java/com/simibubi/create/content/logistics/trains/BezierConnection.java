@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -12,11 +13,19 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -57,7 +66,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BezierConnection secondary() {
-		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), !primary, hasGirder);
+		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), !primary,
+			hasGirder);
 	}
 
 	public BezierConnection(CompoundTag compound, BlockPos localTo) {
@@ -151,7 +161,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		return currentT + distance / dx;
 
 	}
-	
+
 	public AABB getBounds() {
 		resolve();
 		return bounds;
@@ -284,6 +294,62 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			.scale(-1)
 			.add(0, 3 / 16f, 0);
 		return new Bezierator(this, offset);
+	}
+
+	public void addItemsToPlayer(Player player) {
+		Inventory inv = player.getInventory();
+		int tracks = (getSegmentCount() + 1) / 2;
+		while (tracks > 0) {
+			inv.placeItemBackInInventory(AllBlocks.TRACK.asStack(Math.min(64, tracks)));
+			tracks -= 64;
+		}
+		int girders = hasGirder ? ((getSegmentCount() + 1) / 2) * 2 : 0;
+		while (girders > 0) {
+			inv.placeItemBackInInventory(AllBlocks.METAL_GIRDER.asStack(Math.min(64, girders)));
+			girders -= 64;
+		}
+	}
+
+	public void spawnItems(Level level) {
+		if (!level.getGameRules()
+			.getBoolean(GameRules.RULE_DOBLOCKDROPS))
+			return;
+		Vec3 origin = Vec3.atLowerCornerOf(tePositions.getFirst());
+		for (Segment segment : this) {
+			if (segment.index % 2 != 0 || segment.index == getSegmentCount())
+				continue;
+			Vec3 v = VecHelper.offsetRandomly(segment.position, level.random, .125f)
+				.add(origin);
+			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, AllBlocks.TRACK.asStack());
+			entity.setDefaultPickUpDelay();
+			level.addFreshEntity(entity);
+			if (!hasGirder)
+				continue;
+			for (int i = 0; i < 2; i++) {
+				entity = new ItemEntity(level, v.x, v.y, v.z, AllBlocks.METAL_GIRDER.asStack());
+				entity.setDefaultPickUpDelay();
+				level.addFreshEntity(entity);
+			}
+		}
+	}
+
+	public void spawnDestroyParticles(Level level) {
+		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.TRACK.getDefaultState());
+		BlockParticleOption girderData =
+			new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.METAL_GIRDER.getDefaultState());
+		if (!(level instanceof ServerLevel slevel))
+			return;
+		Vec3 origin = Vec3.atLowerCornerOf(tePositions.getFirst());
+		for (Segment segment : this) {
+			for (int offset : Iterate.positiveAndNegative) {
+				Vec3 v = segment.position.add(segment.normal.scale(14 / 16f * offset))
+					.add(origin);
+				slevel.sendParticles(data, v.x, v.y, v.z, 1, 0, 0, 0, 0);
+				if (!hasGirder)
+					continue;
+				slevel.sendParticles(girderData, v.x, v.y - .5f, v.z, 1, 0, 0, 0, 0);
+			}
+		}
 	}
 
 	public static class Segment {

@@ -36,6 +36,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 
 	Map<BlockPos, BezierConnection> connections;
 	boolean connectionsValidated;
+	boolean cancelDrops;
 
 	public TrackTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -86,7 +87,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		if (!connections.isEmpty())
 			return;
 
-		BlockState blockState = getBlockState();
+		BlockState blockState = level.getBlockState(worldPosition);
 		if (blockState.hasProperty(TrackBlock.HAS_TURN))
 			level.setBlockAndUpdate(worldPosition, blockState.setValue(TrackBlock.HAS_TURN, false));
 		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
@@ -99,6 +100,10 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 				return;
 			TrackTileEntity other = (TrackTileEntity) blockEntity;
 			other.removeConnection(bezierConnection.tePositions.getFirst());
+
+			if (!cancelDrops)
+				bezierConnection.spawnItems(level);
+			bezierConnection.spawnDestroyParticles(level);
 		}
 		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
 	}

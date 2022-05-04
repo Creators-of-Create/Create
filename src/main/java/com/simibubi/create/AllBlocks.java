@@ -1344,6 +1344,7 @@ public class AllBlocks {
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate(new TrackBlockStateGenerator()::generate)
+		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
 		.lang("Train Track")
 		.item(TrackBlockItem::new)
 		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))

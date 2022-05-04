@@ -5259,6 +5259,7 @@ d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/items/toolboxes.json
 6eec92869baa44d3ac53aec6a7a92c15147b59f0 data/forge/tags/blocks/ores/zinc.json
 9fc688d8fac1033c7b8f4b8de1138e56d2faf527 data/forge/tags/blocks/ores_in_ground/deepslate.json
 d5ea262a0f5fb210612d22521818e26cf08e591a data/forge/tags/blocks/ores_in_ground/stone.json
+ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/forge/tags/blocks/relocation_not_supported.json
 66065a698fca917446a0fb766593dbcc77fabeac data/forge/tags/blocks/storage_blocks.json
 ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/blocks/storage_blocks/brass.json
 823d05187626797205381d4620a84abda3bc8f89 data/forge/tags/blocks/storage_blocks/raw_zinc.json

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -17,6 +18,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,6 +39,9 @@ public class CurvedTrackInteraction {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		ClientLevel level = mc.level;
+		
+		if (!player.getAbilities().mayBuild)
+			return;
 
 		if (mc.options.keyAttack.isDown() && result != null) {
 			breakPos = result.te()
@@ -70,7 +75,7 @@ public class CurvedTrackInteraction {
 
 			if (breakProgress >= 1) {
 				AllPackets.channel.sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
-					.curveTarget(), new BlockPos(result.vec())));
+					.curveTarget(), new BlockPos(result.vec()), false));
 				resetBreakProgress();
 			}
 
@@ -111,13 +116,24 @@ public class CurvedTrackInteraction {
 
 		if (event.isUseItem()) {
 			ItemStack heldItem = player.getMainHandItem();
+			Item item = heldItem.getItem();
 			if (AllBlocks.TRACK.isIn(heldItem)) {
 				player.displayClientMessage(Lang.translate("track.turn_start")
 					.withStyle(ChatFormatting.RED), true);
 				player.swing(InteractionHand.MAIN_HAND);
 				return true;
 			}
-			if (heldItem.getItem() instanceof TrackTargetingBlockItem ttbi && ttbi.useOnCurve(result, heldItem)) {
+			if (item instanceof TrackTargetingBlockItem ttbi && ttbi.useOnCurve(result, heldItem)) {
+				player.swing(InteractionHand.MAIN_HAND);
+				return true;
+			}
+			if (AllItems.WRENCH.isIn(heldItem) && player.isSteppingCarefully()) {
+				AllPackets.channel.sendToServer(new CurvedTrackDestroyPacket(result.te()
+					.getBlockPos(),
+					result.loc()
+						.curveTarget(),
+					new BlockPos(result.vec()), true));
+				resetBreakProgress();
 				player.swing(InteractionHand.MAIN_HAND);
 				return true;
 			}

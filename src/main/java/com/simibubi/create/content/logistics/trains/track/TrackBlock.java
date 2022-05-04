@@ -347,15 +347,22 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-//		if (context.getLevel().isClientSide)
-//			TrackRemoval.wrenched(context.getClickedPos());
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-//		if (context.getLevel().isClientSide)
-//			TrackRemoval.sneakWrenched(context.getClickedPos());
+		Player player = context.getPlayer();
+		Level level = context.getLevel();
+		if (!level.isClientSide && !player.isCreative() && state.getValue(HAS_TURN)) {
+			BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
+			if (blockEntity instanceof TrackTileEntity trackTE) {
+				trackTE.cancelDrops = true;
+				trackTE.connections.values()
+					.forEach(bc -> bc.addItemsToPlayer(player));
+			}
+		}
+
 		return IWrenchable.super.onSneakWrenched(state, context);
 	}
 
@@ -492,7 +499,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof TrackTileEntity track)
 				for (BlockPos trackPos : track.connections.keySet())
-					renderer.destroyBlockProgress(trackPos.hashCode(), trackPos, progress);
+					renderer.destroyBlockProgress(pos.hashCode(), trackPos, progress);
 			return false;
 		}
 	}

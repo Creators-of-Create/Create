@@ -90,8 +90,11 @@ public class TrackPaver {
 		boolean slabLike = defaultBlockState.hasProperty(SlabBlock.TYPE);
 		if (slabLike)
 			defaultBlockState = defaultBlockState.setValue(SlabBlock.TYPE, SlabType.DOUBLE);
-		if (isWallLike(defaultBlockState))
+		if (isWallLike(defaultBlockState)) {
+			if (AllBlocks.METAL_GIRDER.has(defaultBlockState))
+				return ((bc.getSegmentCount() + 1) / 2) * 2;
 			return 0;
+		}
 
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
 		BlockPos tePosition = bc.tePositions.getFirst();
