@@ -35,7 +35,7 @@ import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
-import io.github.fabricators_of_create.porting_lib.event.OverlayRenderCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 
 import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;

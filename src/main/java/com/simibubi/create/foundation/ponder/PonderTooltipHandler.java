@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import io.github.fabricators_of_create.porting_lib.event.RenderTooltipBorderColorCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
 import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;

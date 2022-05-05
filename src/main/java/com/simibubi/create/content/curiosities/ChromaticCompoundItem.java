@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities;
 
 import java.util.Random;
 
+import io.github.fabricators_of_create.porting_lib.block.LightEmissiveBlock;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -218,7 +220,9 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 
 	public boolean checkLight(ItemStack stack, ItemEntity entity, Level world, CompoundTag itemData, Vec3 positionVec,
 		BlockPos randomOffset, BlockState state) {
-		if (state.getLightEmission() == 0)
+		if(state.getBlock() instanceof LightEmissiveBlock lightEmissiveBlock && lightEmissiveBlock.getLightEmission(state, world, randomOffset) == 0)
+			return false;
+		else if (state.getLightEmission() == 0)
 			return false;
 		if (state.getDestroySpeed(world, randomOffset) == -1)
 			return false;

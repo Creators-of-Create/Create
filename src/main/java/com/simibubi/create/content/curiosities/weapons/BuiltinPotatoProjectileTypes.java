@@ -11,8 +11,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
-import io.github.fabricators_of_create.porting_lib.event.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.event.EntityEvents.Teleport.EntityTeleportEvent;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents.Teleport.EntityTeleportEvent;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
 
