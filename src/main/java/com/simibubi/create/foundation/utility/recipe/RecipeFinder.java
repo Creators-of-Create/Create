@@ -14,6 +14,7 @@ import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.Create;
 
 import io.github.fabricators_of_create.porting_lib.util.IdentifiableResourceManagerReloadListener;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -61,7 +62,7 @@ public class RecipeFinder {
 		return list;
 	}
 
-	public static final ResourceManagerReloadListener LISTENER = new IdentifiableResourceManagerReloadListener() {
+	public static final IdentifiableResourceReloadListener LISTENER = new IdentifiableResourceManagerReloadListener() {
 		@Override
 		public ResourceLocation getFabricId() {
 			return Create.asResource("recipe_finder");
