@@ -216,7 +216,6 @@
 	"block.create.flywheel": "飛輪",
 	"block.create.framed_glass": "邊框玻璃",
 	"block.create.framed_glass_pane": "邊框玻璃片",
-	"block.create.furnace_engine": "熔煉引擎",
 	"block.create.gantry_carriage": "門式起重機",
 	"block.create.gantry_shaft": "門式起重機滑道",
 	"block.create.gearbox": "齒輪箱",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "鼓風機的轉速對加工的速度沒有影響，只影響氣流的吹拂距離",
 	"create.ponder.fan_processing.text_8": "而那些放置在置物台或者傳送帶上的物品，鼓風機也是可以處理的",
 
-	"create.ponder.fan_source.header": "使用鼓風機來產生動能",
-	"create.ponder.fan_source.text_1": "如鼓風機的扇葉向下朝著熱源放置，鼓風機可以藉此產生動能",
-	"create.ponder.fan_source.text_2": "當鼓風機接受紅石訊號後，它便會向外供給動能",
-
 	"create.ponder.fluid_pipe_flow.header": "始用銅製管道來移動液體",
 	"create.ponder.fluid_pipe_flow.text_1": "液體管可以連接兩個或更多的液體來源與目標",
 	"create.ponder.fluid_pipe_flow.text_2": "使用扳手可以在一段直管線上開窗戶",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "但是，在生存模式你不能直接存入、取出液體",
 	"create.ponder.fluid_tank_storage.text_5": "你可以用作業盆、分液池或液體灌注器和管線網路互動",
 
-	"create.ponder.flywheel.header": "使用飛輪來產生動能",
-	"create.ponder.flywheel.text_1": "飛輪和熔爐引擎必須配套使用，方可產生動能",
-	"create.ponder.flywheel.text_2": "如此產生的動能具有非常大的應力值",
-	"create.ponder.flywheel.text_3": "使用高爐會使得引擎的效率翻倍",
-
 	"create.ponder.funnel_compat.header": "漏斗的相容性",
 	"create.ponder.funnel_compat.text_1": "漏斗可以與一些其他組件互動",
 	"create.ponder.funnel_compat.text_2": "動力鋸",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "漏斗無法將物品傳輸到非開放式的物品欄中",
 	"create.ponder.funnel_transfer.text_2": "溜槽和智慧溜槽更適用於這樣的場景",
 	"create.ponder.funnel_transfer.text_3": "水平傳輸也是如此，也許傳送帶更方便快捷",
-
-	"create.ponder.furnace_engine.header": "使用熔爐引擎生產動能",
-	"create.ponder.furnace_engine.text_1": "熔爐引擎會在與其相連熔爐工作時生產動能",
-	"create.ponder.furnace_engine.text_2": "如此產生的動能具有非常大的應力值",
-	"create.ponder.furnace_engine.text_3": "使用高爐會使得引擎的效率翻倍",
 
 	"create.ponder.gantry_carriage.header": "使用起重機取物器",
 	"create.ponder.gantry_carriage.text_1": "起重機取物器可以被放置在起重機杆上，並且可以沿著起重機杆運動",

@@ -216,7 +216,6 @@
 	"block.create.flywheel": "Koło zamachowe",
 	"block.create.framed_glass": "Oprawione okno",
 	"block.create.framed_glass_pane": "Oprawiona szyba",
-	"block.create.furnace_engine": "Silnik spalinowy",
 	"block.create.gantry_carriage": "Przenośnik suwnicowy",
 	"block.create.gantry_shaft": "Suwnica",
 	"block.create.gearbox": "Przekładnia",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "Prędkość wiatraka nie wpływa na szybkość obróbki, a jedynie na jego zasięg!",
 	"create.ponder.fan_processing.text_8": "Przepływ powietrza działa również na przedmioty na taśmociągach lub składnicach",
 
-	"create.ponder.fan_source.header": "Generowanie siły obrotowej z użyciem izolowanych wiatraków",
-	"create.ponder.fan_source.text_1": "Wiatraki skierowane w stronę źródła ciepła generują siłę obrotową",
-	"create.ponder.fan_source.text_2": "Po zasileniu, wiatraki zaczną przesyłać siłę do przylegających komponentów",
-
 	"create.ponder.fluid_pipe_flow.header": "Transport cieczy z użyciem rur",
 	"create.ponder.fluid_pipe_flow.text_1": "Rury mogą połączyć dwa lub więcej bloków przechowujących ciecze",
 	"create.ponder.fluid_pipe_flow.text_2": "Używając klucza, prosta rura może mieć w sobie okienko",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "W trybie przetrwania ciecze nie mogą być dodane lub zabrane manualnie",
 	"create.ponder.fluid_tank_storage.text_5": "Można użyć tygli, odpływów lub napełniaczy aby opróżnić lub napełnić przedmioty mogące przechowywać ciecze",
 
-	"create.ponder.flywheel.header": "Generowanie siły obrotowej z użyciem koła zamachowego",
-	"create.ponder.flywheel.text_1": "Koła zamachowe są wymagane, aby generować siłę obrotową przy pomocy silnika spalinowego",
-	"create.ponder.flywheel.text_2": "Wyprodukowana w ten sposób siła ma bardzo dużą odporność na obciążenie",
-	"create.ponder.flywheel.text_3": "Używając pieca hutniczego efektywność silnika spalinowego wzrośnie dwukrotnie",
-
 	"create.ponder.funnel_compat.header": "Kompatybilność lejków",
 	"create.ponder.funnel_compat.text_1": "Lejki działają też z wieloma innymi komponentami",
 	"create.ponder.funnel_compat.text_2": "Pionowe piły",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "Lejki nie mogą bezpośrednio transportować pomiędzy zamkniętymi pojemnikami",
 	"create.ponder.funnel_transfer.text_2": "Zsypy lub inteligentne zsypy mogą bardziej się do tego nadawać",
 	"create.ponder.funnel_transfer.text_3": "To samo tyczy się transportu poziomego. Taśmociąg może tutaj pomóc",
-
-	"create.ponder.furnace_engine.header": "Generowanie siły obrotowej z użyciem silnika spalinowego",
-	"create.ponder.furnace_engine.text_1": "Silniki spalinowe generują siłę obrotową, gdy podłączonym do niego piec jest aktywny",
-	"create.ponder.furnace_engine.text_2": "Wyprodukowana w ten sposób siła ma bardzo dużą odporność na obciążenie",
-	"create.ponder.furnace_engine.text_3": "Używając pieca hutniczego efektywność silnika spalinowego wzrośnie dwukrotnie",
 
 	"create.ponder.gantry_carriage.header": "Używanie przenośników suwnicowych",
 	"create.ponder.gantry_carriage.text_1": "Przenośnik suwnicowy może być zamontowany i przesuwany po suwnicy",

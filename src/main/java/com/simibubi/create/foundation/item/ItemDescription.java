@@ -24,8 +24,6 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
-import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.block.BlockStressValues;
@@ -101,27 +99,28 @@ public class ItemDescription {
 			showStressImpact = !((IRotate) block).hideStressImpact();
 		}
 
-		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE && minimumRequiredSpeedLevel != SpeedLevel.SLOW;
+//		boolean hasSpeedRequirement =
+//			minimumRequiredSpeedLevel != SpeedLevel.NONE && minimumRequiredSpeedLevel != SpeedLevel.SLOW;
 		boolean hasStressImpact =
 			StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
-		if (hasSpeedRequirement) {
-			int index = minimumRequiredSpeedLevel.ordinal();
-			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
-
-			if (hasGoggles)
-				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue()))
-					.append(rpmUnit)
-					.append("+");
-			else
-				level.append(Lang.translate("tooltip.speedRequirement." + Lang.asId(minimumRequiredSpeedLevel.name())));
-
-			list.add(Lang.translate("tooltip.speedRequirement")
-				.withStyle(GRAY));
-			list.add(level);
-		}
+//		if (hasSpeedRequirement) {
+//			int index = minimumRequiredSpeedLevel.ordinal();
+//			MutableComponent level =
+//				new TextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
+//
+//			if (hasGoggles)
+//				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue()))
+//					.append(rpmUnit)
+//					.append("+");
+//			else
+//				level.append(Lang.translate("tooltip.speedRequirement." + Lang.asId(minimumRequiredSpeedLevel.name())));
+//
+//			list.add(Lang.translate("tooltip.speedRequirement")
+//				.withStyle(GRAY));
+//			list.add(level);
+//		}
 
 		if (hasStressImpact) {
 			double impact = BlockStressValues.getImpact(block);
@@ -144,11 +143,13 @@ public class ItemDescription {
 
 		if (hasStressCapacity) {
 			double capacity = BlockStressValues.getCapacity(block);
-			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
-				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
+			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
+				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
+			StressImpact opposite = StressImpact.values()[2 - impactId.ordinal()];
+
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
 			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index + 1)).withStyle(impactId.getAbsoluteColor());
+				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(opposite.getAbsoluteColor());
 
 			if (hasGoggles)
 				level.append(capacity + "x ")
@@ -305,15 +306,6 @@ public class ItemDescription {
 			int baseSpeed = AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get();
 			int speedmod = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
 			value = (speedmod + baseSpeed) + "-" + (baseSpeed + (speedmod * 3));
-		}
-
-		else if (block instanceof EncasedFanBlock)
-			value = AllConfigs.SERVER.kinetics.generatingFanSpeed.get()
-				.toString();
-
-		else if (block instanceof FurnaceEngineBlock) {
-			int baseSpeed = AllConfigs.SERVER.kinetics.furnaceEngineSpeed.get();
-			value = baseSpeed + "-" + (baseSpeed * 2);
 		}
 
 		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM)

@@ -105,7 +105,6 @@
     "create:mechanical_crafter",
     "create:sequenced_gearshift",
     "create:flywheel",
-    "create:furnace_engine",
     "create:rotation_speed_controller",
     "create:mechanical_arm",
     "create:track",

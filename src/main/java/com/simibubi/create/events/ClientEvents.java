@@ -12,7 +12,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
@@ -251,7 +251,7 @@ public class ClientEvents {
 
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof SteamEngineBlock) {
 				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
 				if (!kineticStats.isEmpty()) {
 					event.getToolTip()

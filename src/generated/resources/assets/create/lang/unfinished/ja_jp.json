@@ -216,7 +216,6 @@
 	"block.create.flywheel": "弾み車",
 	"block.create.framed_glass": "ガラス窓",
 	"block.create.framed_glass_pane": "ガラス板窓",
-	"block.create.furnace_engine": "かまどエンジン",
 	"block.create.gantry_carriage": "ガントリーキャリッジ",
 	"block.create.gantry_shaft": "ガントリーシャフト",
 	"block.create.gearbox": "ギアボックス",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "ファンの速度は処理速度とは関係がなく、範囲のみが変わります",
 	"create.ponder.fan_processing.text_8": "ファンでの加工は、デポやベルト上のアイテムにも行われます",
 
-	"create.ponder.fan_source.header": "ケース入りファンによる回転力の生成",
-	"create.ponder.fan_source.text_1": "ファンを熱源に向けて設置すると、回転力を生成できます",
-	"create.ponder.fan_source.text_2": "レッドストーン信号を受けると、回転力が生成されます",
-
 	"create.ponder.fluid_pipe_flow.header": "銅パイプを使った液体の移動",
 	"create.ponder.fluid_pipe_flow.text_1": "液体パイプは2つ以上の液体源と輸送先を繋ぐことができます",
 	"create.ponder.fluid_pipe_flow.text_2": "レンチを使うと、まっすぐなパイプに窓を付けられます",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "しかし、サバイバルモードでは手動で液体を出し入れできません。",
 	"create.ponder.fluid_tank_storage.text_5": "鉢、アイテム排液口、アイテム注液口などを使えばアイテムから液体を出し入れできます。",
 
-	"create.ponder.flywheel.header": "弾み車による回転力の生成",
-	"create.ponder.flywheel.text_1": "かまどエンジンで回転力を生成するには、弾み車が必要です",
-	"create.ponder.flywheel.text_2": "これによって生成される回転力は、非常に大きな応力許容量を持っています",
-	"create.ponder.flywheel.text_3": "溶鉱炉を使うと、エンジンの効率が2倍になります",
-
 	"create.ponder.funnel_compat.header": "ファンネルの互換性",
 	"create.ponder.funnel_compat.text_1": "ファンネルは、他のいくつかの機械とも相性が良いです",
 	"create.ponder.funnel_compat.text_2": "上向きのメカニカルソー",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "ファンネルでは、閉じた収納ブロック間を直接運搬することはできません",
 	"create.ponder.funnel_transfer.text_2": "この様な場合は、シュートやスマートシュートの方が適しています",
 	"create.ponder.funnel_transfer.text_3": "また水平方向の運搬も同様で、この場合メカニカルベルトの方が適しています",
-
-	"create.ponder.furnace_engine.header": "かまどエンジンによる回転力の生成",
-	"create.ponder.furnace_engine.text_1": "かまどエンジンは、取り付けたかまどの稼働中に回転力を生成します",
-	"create.ponder.furnace_engine.text_2": "この回転力は、非常に大きな応力許容量を持っています",
-	"create.ponder.furnace_engine.text_3": "溶鉱炉を使うと、エンジンの効率が2倍になります",
 
 	"create.ponder.gantry_carriage.header": "ガントリーキャリッジの使い方",
 	"create.ponder.gantry_carriage.text_1": "ガントリーキャリッジは、ガントリーシャフトに取り付けてスライドできます",

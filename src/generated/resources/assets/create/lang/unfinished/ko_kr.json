@@ -216,7 +216,6 @@
 	"block.create.flywheel": "플라이휠",
 	"block.create.framed_glass": "큰 유리",
 	"block.create.framed_glass_pane": "큰 유리판",
-	"block.create.furnace_engine": "화로 엔진",
 	"block.create.gantry_carriage": "갠트리 운반대",
 	"block.create.gantry_shaft": "갠트리 축",
 	"block.create.gearbox": "기어박스",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "선풍기의 속도는 가공 속도와 관련이 없습니다!",
 	"create.ponder.fan_processing.text_8": "선풍기 가공은 벨트나 아이템 거치대의 아이템에도 적용됩니다.",
 
-	"create.ponder.fan_source.header": "선풍기를 이용해 동력 생산하기",
-	"create.ponder.fan_source.text_1": "열원을 향한 선풍기는 동력을 제공합니다.",
-	"create.ponder.fan_source.text_2": "레드스톤 신호를 받으면, 동력을 제공하기 시작합니다.",
-
 	"create.ponder.fluid_pipe_flow.header": "파이프로 액체 옮기기",
 	"create.ponder.fluid_pipe_flow.text_1": "파이프는 한 종류의 액체만 옮깁니다.",
 	"create.ponder.fluid_pipe_flow.text_2": "렌치를 이용하여 직선 파이프에 창문을 달 수 있습니다.",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "그러나 서바이벌 모드에서는 액체를 직접 빼내고 넣을 순 없습니다.",
 	"create.ponder.fluid_tank_storage.text_5": "대야, 아이템 배수구, 주입기를 통해 액체를 빼내거나 채울 수 있습니다.",
 
-	"create.ponder.flywheel.header": "플라이휠로 동력 생산하기",
-	"create.ponder.flywheel.text_1": "플라이휠로 동력을 생산하기 위해선, 화로 엔진이 필요합니다.",
-	"create.ponder.flywheel.text_2": "플라이휠은 피로도 용량이 매우 높습니다.",
-	"create.ponder.flywheel.text_3": "용광로를 사용하면 동력 속도가 2배가 됩니다.",
-
 	"create.ponder.funnel_compat.header": "퍼널 호환성",
 	"create.ponder.funnel_compat.text_1": "퍼널은 다른 장치들 위에 설치할 수 있습니다.",
 	"create.ponder.funnel_compat.text_2": "세로 톱",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "퍼널는 아이템을 보관함에서 다른 보관함로 옮깁니다.",
 	"create.ponder.funnel_transfer.text_2": "슈트나 스마트 슈트가 이런 목적에 더 적합합니다.",
 	"create.ponder.funnel_transfer.text_3": "수평 방향으로는 벨트가 적합합니다.",
-
-	"create.ponder.furnace_engine.header": "화로 엔진을 이용해 동력 생산하기",
-	"create.ponder.furnace_engine.text_1": "화로 엔진은 부착된 화로가 타오를 때 동력을 생산합니다.",
-	"create.ponder.furnace_engine.text_2": "제공되는 피로도 용량이 매우 높습니다.",
-	"create.ponder.furnace_engine.text_3": "용광로를 사용하면 동력 속도가 2배가 됩니다.",
 
 	"create.ponder.gantry_carriage.header": "갠트리 운반대 사용하기",
 	"create.ponder.gantry_carriage.text_1": "갠트리 운반대는 갠트리 축 위에서 움직입니다.",

@@ -216,7 +216,6 @@
 	"block.create.flywheel": "Volante de Inercia",
 	"block.create.framed_glass": "Vidrio Enmarcado",
 	"block.create.framed_glass_pane": "Panel de Vidrio Enmarcado",
-	"block.create.furnace_engine": "Horno Motor",
 	"block.create.gantry_carriage": "Carruaje de Grúa",
 	"block.create.gantry_shaft": "Eje de Grúa",
 	"block.create.gearbox": "Caja de Engranajes",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "La velocidad del ventilador NO afecta la velocidad de procesamiento, solo su rango",
 	"create.ponder.fan_processing.text_8": "El Procesamiento por Ventilador también se puede aplicar a objetos en depósitos y cintas",
 
-	"create.ponder.fan_source.header": "Generando Fuerza Rotacional usando Ventiladores",
-	"create.ponder.fan_source.text_1": "Los Ventiladores orientados hacia abajo hacia una Fuente de Calor pueden proporcionar Fuerza Rotacional",
-	"create.ponder.fan_source.text_2": "Al dalre una señal de Redstone, los Ventiladores empezarán a generar",
-
 	"create.ponder.fluid_pipe_flow.header": "Moviendo fluidos usando Tuberías de Cobre",
 	"create.ponder.fluid_pipe_flow.text_1": "Las tuberías de fluidos pueden conectar dos o más fuentes de fluidos y objetivos",
 	"create.ponder.fluid_pipe_flow.text_2": "Con una llave, se puede añadir una ventana a un segmento de tubería recto",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "Sin embargo, en el modo Supervivencia, los Fluidos no se pueden agregar ni tomar manualmente",
 	"create.ponder.fluid_tank_storage.text_5": "Puedes usar tóneles, drenajes y surtidores para drenar o llenar objetos contenedores de líquido",
 
-	"create.ponder.flywheel.header": "Generando Fuerza Rotacional usando el Volante de Inercia",
-	"create.ponder.flywheel.text_1": "El Volante de Inercia es necesario para Generar Energía al usar el Horno Motor",
-	"create.ponder.flywheel.text_2": "La fuerza de rotación proporcionada tiene una capacidad de estrés muy grande",
-	"create.ponder.flywheel.text_3": "El uso de un alto horno duplicará la eficiencia del motor.",
-
 	"create.ponder.funnel_compat.header": "Compatibilidad de Ingresos",
 	"create.ponder.funnel_compat.text_1": "Los ingresos también deberían interactuar bien con un puñado de otros componentes.",
 	"create.ponder.funnel_compat.text_2": "Sierras Verticales",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "Los Ingresos nunca pueden transferir directamente entre inventarios cerrados.",
 	"create.ponder.funnel_transfer.text_2": "Los tolvoganes o tolvoganes inteligentes podrían ser más adecuados para tales fines.",
 	"create.ponder.funnel_transfer.text_3": "Lo mismo se aplica al movimiento horizontal. Una cinta mecánica debería ayudar aquí.",
-
-	"create.ponder.furnace_engine.header": "Generando Fuerza rotacional usando el Horno Motor",
-	"create.ponder.furnace_engine.text_1": "Los Horno Motores generan fuerza rotacional mientras su horno adjunto está en funcionamiento",
-	"create.ponder.furnace_engine.text_2": "La fuerza rotacional proporcionada tiene una capacidad de tensión muy grande",
-	"create.ponder.furnace_engine.text_3": "El uso de un Alto Horno duplicará la eficiencia del motor.",
 
 	"create.ponder.gantry_carriage.header": "Usando Carruajes de Grúa",
 	"create.ponder.gantry_carriage.text_1": "Los Carruajes de Grúa pueden montarse y deslizarse sobre los Ejes de Grúa.",

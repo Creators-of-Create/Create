@@ -37,9 +37,6 @@ import com.simibubi.create.content.contraptions.components.fan.NozzleTileEntity;
 import com.simibubi.create.content.contraptions.components.flywheel.FlyWheelInstance;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineInstance;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineRenderer;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineTileEntity;
 import com.simibubi.create.content.contraptions.components.millstone.MillStoneCogInstance;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneRenderer;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneTileEntity;
@@ -537,13 +534,6 @@ public class AllTileEntities {
 		.instance(() -> FlyWheelInstance::new, false)
 		.validBlocks(AllBlocks.FLYWHEEL)
 		.renderer(() -> FlywheelRenderer::new)
-		.register();
-
-	public static final BlockEntityEntry<FurnaceEngineTileEntity> FURNACE_ENGINE = Create.registrate()
-		.tileEntity("furnace_engine", FurnaceEngineTileEntity::new)
-		.instance(() -> EngineInstance::new, false)
-		.validBlocks(AllBlocks.FURNACE_ENGINE)
-		.renderer(() -> EngineRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MillstoneTileEntity> MILLSTONE = Create.registrate()

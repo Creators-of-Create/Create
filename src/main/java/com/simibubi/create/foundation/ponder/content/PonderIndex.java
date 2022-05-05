@@ -65,8 +65,7 @@ public class PonderIndex {
 
 		HELPER.forComponents(AllBlocks.ENCASED_FAN)
 			.addStoryBoard("fan/direction", FanScenes::direction, PonderTag.KINETIC_APPLIANCES)
-			.addStoryBoard("fan/processing", FanScenes::processing)
-			.addStoryBoard("fan/source", FanScenes::source, PonderTag.KINETIC_SOURCES);
+			.addStoryBoard("fan/processing", FanScenes::processing);
 
 		HELPER.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
 			PonderTag.KINETIC_SOURCES);
@@ -84,10 +83,6 @@ public class PonderIndex {
 		HELPER.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
-		HELPER.forComponents(AllBlocks.FURNACE_ENGINE)
-			.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
-		HELPER.forComponents(AllBlocks.FLYWHEEL)
-			.addStoryBoard("furnace_engine", KineticsScenes::flywheel);
 		HELPER.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
 			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
@@ -328,10 +323,8 @@ public class PonderIndex {
 			.add(AllBlocks.HAND_CRANK)
 			.add(AllBlocks.COPPER_VALVE_HANDLE)
 			.add(AllBlocks.WATER_WHEEL)
-			.add(AllBlocks.ENCASED_FAN)
 			.add(AllBlocks.WINDMILL_BEARING)
-			.add(AllBlocks.FURNACE_ENGINE)
-			.add(AllBlocks.FLYWHEEL)
+			.add(AllBlocks.STEAM_ENGINE)
 			.add(AllBlocks.CREATIVE_MOTOR);
 
 		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_APPLIANCES)

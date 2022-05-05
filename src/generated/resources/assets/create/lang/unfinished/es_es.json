@@ -216,7 +216,6 @@
 	"block.create.flywheel": "Rueda de inercia",
 	"block.create.framed_glass": "Cristal enmarcado",
 	"block.create.framed_glass_pane": "Panel de cristal enmarcado",
-	"block.create.furnace_engine": "Motor de horno",
 	"block.create.gantry_carriage": "Carro de grúa",
 	"block.create.gantry_shaft": "Eje de grúa",
 	"block.create.gearbox": "Caja de transmisión",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "La velocidad del ventilador NO afecta a la velocidad de procesamiento, sólo a su rango",
 	"create.ponder.fan_processing.text_8": "El procesamiento del ventilador también puede aplicarse a los objetos de los depósitos y las cintas mecánicas",
 
-	"create.ponder.fan_source.header": "Generar fuerza rotacional mediante ventiladores revestidos",
-	"create.ponder.fan_source.text_1": "Los ventiladores orientados hacia una fuente de calor pueden proporcionar fuerza rotacional",
-	"create.ponder.fan_source.text_2": "Cuando se les da una señal de redstone, los ventiladores comenzarán a proporcionar fuerza",
-
 	"create.ponder.fluid_pipe_flow.header": "Transportar fluidos mediante tuberías de cobre",
 	"create.ponder.fluid_pipe_flow.text_1": "Las tuberías de fluidos pueden conectar dos o más fuentes y objetivos de fluidos",
 	"create.ponder.fluid_pipe_flow.text_2": "Utilizando una llave, se puede dar a un segmento de tubo recto una ventana",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "Sin embargo, en el Modo Supervivencia no se pueden añadir o tomar fluidos manualmente",
 	"create.ponder.fluid_tank_storage.text_5": "Puede utilizar cuencas, drenadores de objetos y tuberías para vaciar o llenar objetos que contengan líquido",
 
-	"create.ponder.flywheel.header": "Generar fuerza rotacional con la rueda de inercia",
-	"create.ponder.flywheel.text_1": "Las ruedas de inercia son necesarias para generar fuerza rotacional con el motor de horno",
-	"create.ponder.flywheel.text_2": "La fuerza rotacional proporcionada tiene una capacidad de estrés muy grande",
-	"create.ponder.flywheel.text_3": "El uso de un alto horno duplicará la eficiencia del motor",
-
 	"create.ponder.funnel_compat.header": "Compatibilidades con el embudo",
 	"create.ponder.funnel_compat.text_1": "Los embudos deberían interactuar bien con un puñado de otros componentes",
 	"create.ponder.funnel_compat.text_2": "Sierras verticales",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "Los embudos no pueden transferir nunca entre inventarios cerrados directamente",
 	"create.ponder.funnel_transfer.text_2": "Los ductos o los ductos inteligentes podrían ser más adecuados para estos fines",
 	"create.ponder.funnel_transfer.text_3": "Lo mismo se aplica para el movimiento horizontal. Una cinta mecánica debería ayudar aquí",
-
-	"create.ponder.furnace_engine.header": "Generar fuerza rotacional con el motor de horno",
-	"create.ponder.furnace_engine.text_1": "Los motores de horno generan fuerza rotacional mientras su horno adjunto está funcionando",
-	"create.ponder.furnace_engine.text_2": "La fuerza rotacional proporcionada tiene una capacidad de estrés muy grande",
-	"create.ponder.furnace_engine.text_3": "El uso de un alto horno duplicará la eficiencia del motor",
 
 	"create.ponder.gantry_carriage.header": "Usar carros de grúa",
 	"create.ponder.gantry_carriage.text_1": "Los carros de grúa pueden montarse y deslizarse a lo largo de un eje de grúa",

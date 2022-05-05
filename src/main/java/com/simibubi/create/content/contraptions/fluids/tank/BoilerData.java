@@ -90,7 +90,7 @@ public class BoilerData {
 	}
 
 	public int getMaxHeatLevelForBoilerSize(int boilerSize) {
-		return boilerSize / 4;
+		return (int) Math.min(18, boilerSize / 4);
 	}
 
 	public int getMaxHeatLevelForWaterSupply() {
@@ -182,7 +182,7 @@ public class BoilerData {
 		c.append(bars(min > 0 ? 1 : 0, ChatFormatting.GREEN));
 		c.append(bars(Math.max(0, level - min), ChatFormatting.DARK_GREEN));
 		c.append(bars(Math.max(0, max - level), ChatFormatting.DARK_RED));
-		c.append(bars(Math.max(0, 18 - max), ChatFormatting.DARK_GRAY));
+		c.append(bars(Math.max(0, Math.min(18 - max, ((max / 5 + 1) * 5) - max)), ChatFormatting.DARK_GRAY));
 
 		return c;
 	}

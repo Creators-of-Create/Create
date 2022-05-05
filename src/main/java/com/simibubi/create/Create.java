@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.data.AllDataGathererBehaviours;
@@ -102,7 +101,6 @@ public class Create {
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		AllConfigs.register(modLoadingContext);
-		FurnaceEngineInteractions.registerDefaults();
 		BlockSpoutingBehaviour.register();
 
 		ForgeMod.enableMilkFluid();

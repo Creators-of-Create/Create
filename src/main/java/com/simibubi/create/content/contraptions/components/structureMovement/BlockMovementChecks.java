@@ -11,7 +11,6 @@ import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
@@ -321,9 +320,6 @@ public class BlockMovementChecks {
 				.getOpposite();
 		if (block instanceof NozzleBlock)
 			return direction == state.getValue(NozzleBlock.FACING)
-				.getOpposite();
-		if (block instanceof EngineBlock)
-			return direction == state.getValue(EngineBlock.FACING)
 				.getOpposite();
 		if (block instanceof BellBlock) {
 			BellAttachType attachment = state.getValue(BlockStateProperties.BELL_ATTACHMENT);

@@ -329,11 +329,6 @@ public class AllAdvancements implements DataProvider {
 			.addCriterion("0", AllTriggers.FLYWHEEL.instance())
 			.save(t, id + ":flywheel");
 
-		Advancement overstress_flywheel =
-			advancement("overstress_flywheel", AllBlocks.FURNACE_ENGINE.get(), TaskType.CHALLENGE).parent(flywheel)
-				.addCriterion("0", AllTriggers.OVERSTRESS_FLYWHEEL.instance())
-				.save(t, id + ":overstress_flywheel");
-
 		Advancement clockwork_bearing =
 			advancement("clockwork_bearing", AllBlocks.CLOCKWORK_BEARING.get(), TaskType.NORMAL)
 				.parent(brass_casing)

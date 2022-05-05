@@ -10,7 +10,7 @@ public class RemoveTileEntityPacket extends TileEntityDataPacket<SyncedTileEntit
 	public RemoveTileEntityPacket(BlockPos pos) {
 		super(pos);
 	}
-	
+
 	public RemoveTileEntityPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
@@ -20,7 +20,13 @@ public class RemoveTileEntityPacket extends TileEntityDataPacket<SyncedTileEntit
 
 	@Override
 	protected void handlePacket(SyncedTileEntity tile) {
-		tile.setRemoved();
+		if (!tile.hasLevel()) {
+			tile.setRemoved();
+			return;
+		}
+
+		tile.getLevel()
+			.removeBlockEntity(tilePos);
 	}
 
 }

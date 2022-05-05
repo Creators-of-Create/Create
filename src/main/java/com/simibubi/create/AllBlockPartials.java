@@ -50,16 +50,11 @@ public class AllBlockPartials {
 		DEPLOYER_HAND_HOLDING = block("deployer/hand_holding"), ANALOG_LEVER_HANDLE = block("analog_lever/handle"),
 		ANALOG_LEVER_INDICATOR = block("analog_lever/indicator"), FUNNEL_FLAP = block("funnel/flap"),
 		BELT_FUNNEL_FLAP = block("belt_funnel/flap"), BELT_TUNNEL_FLAP = block("belt_tunnel/flap"),
-		FLEXPEATER_INDICATOR = block("diodes/indicator"), FLYWHEEL = block("flywheel/wheel"),
-		FLYWHEEL_UPPER_ROTATING = block("flywheel/upper_rotating_connector"),
+		FLEXPEATER_INDICATOR = block("diodes/indicator"),
 
-		FLYWHEEL_LOWER_ROTATING = block("flywheel/lower_rotating_connector"),
-		FLYWHEEL_UPPER_SLIDING = block("flywheel/upper_sliding_connector"),
-		FLYWHEEL_LOWER_SLIDING = block("flywheel/lower_sliding_connector"),
-		FURNACE_GENERATOR_FRAME = block("furnace_engine/frame"), CUCKOO_MINUTE_HAND = block("cuckoo_clock/minute_hand"),
-		CUCKOO_HOUR_HAND = block("cuckoo_clock/hour_hand"), CUCKOO_LEFT_DOOR = block("cuckoo_clock/left_door"),
-		CUCKOO_RIGHT_DOOR = block("cuckoo_clock/right_door"), CUCKOO_PIG = block("cuckoo_clock/pig"),
-		CUCKOO_CREEPER = block("cuckoo_clock/creeper"),
+		CUCKOO_MINUTE_HAND = block("cuckoo_clock/minute_hand"), CUCKOO_HOUR_HAND = block("cuckoo_clock/hour_hand"),
+		CUCKOO_LEFT_DOOR = block("cuckoo_clock/left_door"), CUCKOO_RIGHT_DOOR = block("cuckoo_clock/right_door"),
+		CUCKOO_PIG = block("cuckoo_clock/pig"), CUCKOO_CREEPER = block("cuckoo_clock/creeper"),
 
 		GANTRY_COGS = block("gantry_carriage/wheels"),
 
@@ -89,9 +84,6 @@ public class AllBlockPartials {
 		ARM_LOWER_BODY = block("mechanical_arm/lower_body"), ARM_UPPER_BODY = block("mechanical_arm/upper_body"),
 		ARM_HEAD = block("mechanical_arm/head"), ARM_CLAW_BASE = block("mechanical_arm/claw_base"),
 		ARM_CLAW_GRIP = block("mechanical_arm/claw_grip"),
-
-		FLAG_SHORT_IN = block("mechanical_arm/flag/short_in"), FLAG_SHORT_OUT = block("mechanical_arm/flag/short_out"),
-		FLAG_LONG_IN = block("mechanical_arm/flag/long_in"), FLAG_LONG_OUT = block("mechanical_arm/flag/long_out"),
 
 		MECHANICAL_PUMP_ARROW = block("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = block("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = block("fluid_pipe/casing"), FLUID_VALVE_POINTER = block("fluid_valve/pointer"),

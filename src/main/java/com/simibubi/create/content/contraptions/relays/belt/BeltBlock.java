@@ -489,10 +489,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 					belt.getInventory()
 						.ejectAll();
 
-				belt.setRemoved();
 				hasPulley = belt.hasPulley();
 			}
 
+			world.removeBlockEntity(currentPos);
 			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()
 				.setValue(BlockStateProperties.AXIS, getRotationAxis(currentState));
 			world.setBlock(currentPos, hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), 3);

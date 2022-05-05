@@ -216,7 +216,6 @@
 	"block.create.flywheel": "飞轮",
 	"block.create.framed_glass": "边框玻璃",
 	"block.create.framed_glass_pane": "边框玻璃板",
-	"block.create.furnace_engine": "熔炉引擎",
 	"block.create.gantry_carriage": "起重机取物器",
 	"block.create.gantry_shaft": "起重机杆",
 	"block.create.gearbox": "十字齿轮箱",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "鼓风机的转速对加工的速度没有影响，只影响气流的吹拂距离",
 	"create.ponder.fan_processing.text_8": "而那些放置在置物台或者传送带上的物品，鼓风机也是可以处理的",
 
-	"create.ponder.fan_source.header": "使用鼓风机来产生旋转力",
-	"create.ponder.fan_source.text_1": "如鼓风机的扇叶向下朝着热源放置，鼓风机可以借此产生旋转力",
-	"create.ponder.fan_source.text_2": "当鼓风机接受红石信号后，它便会向外供给旋转力",
-
 	"create.ponder.fluid_pipe_flow.header": "使用管道运输流体",
 	"create.ponder.fluid_pipe_flow.text_1": "流体管道可以用于连接两个或多个流体容器",
 	"create.ponder.fluid_pipe_flow.text_2": "使用扳手，可以为直管道安装观察窗",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "在生存模式中，无法直接用容器向储罐中存入流体，或是取出流体",
 	"create.ponder.fluid_tank_storage.text_5": "要装满/倒空流体容器，可以使用工作盆，分液池或注液器。",
 
-	"create.ponder.flywheel.header": "使用飞轮来产生旋转力",
-	"create.ponder.flywheel.text_1": "飞轮和熔炉引擎必须配套使用，方可产生旋转力",
-	"create.ponder.flywheel.text_2": "如此产生的旋转力具有非常大的应力值",
-	"create.ponder.flywheel.text_3": "使用高炉会使得引擎的效率翻倍",
-
 	"create.ponder.funnel_compat.header": "漏斗的兼容性",
 	"create.ponder.funnel_compat.text_1": "漏斗可以与一些其他组件互动",
 	"create.ponder.funnel_compat.text_2": "动力锯",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "漏斗无法将物品传输到非开放式的物品栏中",
 	"create.ponder.funnel_transfer.text_2": "溜槽和智能溜槽更适用于这样的场景",
 	"create.ponder.funnel_transfer.text_3": "水平传输也是如此，也许传送带更方便快捷",
-
-	"create.ponder.furnace_engine.header": "使用熔炉引擎生产旋转力",
-	"create.ponder.furnace_engine.text_1": "熔炉引擎会在与其相连熔炉工作时生产旋转力",
-	"create.ponder.furnace_engine.text_2": "如此产生的旋转力具有非常大的应力值",
-	"create.ponder.furnace_engine.text_3": "使用高炉会使得引擎的效率翻倍",
 
 	"create.ponder.gantry_carriage.header": "使用起重机取物器",
 	"create.ponder.gantry_carriage.text_1": "起重机取物器可以被放置在起重机杆上，并且可以沿着起重机杆运动",

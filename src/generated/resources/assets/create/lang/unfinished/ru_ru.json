@@ -216,7 +216,6 @@
 	"block.create.flywheel": "Маховик",
 	"block.create.framed_glass": "Обрамлённое стекло",
 	"block.create.framed_glass_pane": "Обрамлённая стеклянная панель",
-	"block.create.furnace_engine": "Печной двигатель",
 	"block.create.gantry_carriage": "Шасси портального крана",
 	"block.create.gantry_shaft": "Вал портального крана",
 	"block.create.gearbox": "Коробка передач",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "Скорость вентилятора НЕ влияет на скорость обработки, а только на дальность",
 	"create.ponder.fan_processing.text_8": "Обработка Вентиляторами может быть применена к предметам на конвейерах или депо",
 
-	"create.ponder.fan_source.header": "Генерации силы вращения Вентиляторами в корпусе",
-	"create.ponder.fan_source.text_1": "Вентиляторы направленные вниз на источник тепла могут создавать силу вращения",
-	"create.ponder.fan_source.text_2": "При сигнале редстоуна Вентилятор начнёт отдавать энергию",
-
 	"create.ponder.fluid_pipe_flow.header": "Перемещении жидкостей при помощи медных труб.",
 	"create.ponder.fluid_pipe_flow.text_1": "Жидкостные трубы могут соединять два или более источников и потребителей жидкости",
 	"create.ponder.fluid_pipe_flow.text_2": "При помощи гаечного ключа можно создать окно прямому отрезку трубы",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "Однако в режиме выживания жидкость нельзя добавлять или извлекать вручную",
 	"create.ponder.fluid_tank_storage.text_5": "Вы можете использовать чаши, предметные осушители и дозаторы для опустошения или наполнения содерж. жидкость предметов",
 
-	"create.ponder.flywheel.header": "Генерации силы вращения Маховиком",
-	"create.ponder.flywheel.text_1": "Маховики необходимы для генерации силы вращения при помощи Печных двигателей",
-	"create.ponder.flywheel.text_2": "Отдаваемая сила вращения имеет очень значительную устойчивость к нагрузкам",
-	"create.ponder.flywheel.text_3": "Использование Плавильной печи удвоит эффективность двигателя",
-
 	"create.ponder.funnel_compat.header": "Совместимости Воронок",
 	"create.ponder.funnel_compat.text_1": "Воронки должны хорошо взаимодействовать с многими компонентами:",
 	"create.ponder.funnel_compat.text_2": "Вертикальные пилы",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "Воронки не могут перемещать предметы напрямую между закрытыми инвентарями",
 	"create.ponder.funnel_transfer.text_2": "Желоба или Умные желоба могут лучше подходить для этих целей",
 	"create.ponder.funnel_transfer.text_3": "То же касается и горизонтального перемещения. Механический ремень должен здесь помочь",
-
-	"create.ponder.furnace_engine.header": "Генерации силы вращения Печными двигателями",
-	"create.ponder.furnace_engine.text_1": "Печные двигатели создают силу вращения пока присоединённая к ним печь работает",
-	"create.ponder.furnace_engine.text_2": "Создаваемая сила вращения имеет очень высокую устойчивость к нагрузкам",
-	"create.ponder.furnace_engine.text_3": "Использование Плавильной печи удвоит эффективность Двигателя",
 
 	"create.ponder.gantry_carriage.header": "Использовании шасси портального крана",
 	"create.ponder.gantry_carriage.text_1": "Шасси портального крана могут прикрепляться и двигаться вдоль Вала портального крана",

@@ -216,7 +216,6 @@
 	"block.create.flywheel": "Volant",
 	"block.create.framed_glass": "Sticlă Înrămată",
 	"block.create.framed_glass_pane": "Geam Înrămat",
-	"block.create.furnace_engine": "Motor De Cuptor",
 	"block.create.gantry_carriage": "Cărucior Portal",
 	"block.create.gantry_shaft": "Rotor Portal",
 	"block.create.gearbox": "Cutie De Viteze",
@@ -2146,10 +2145,6 @@
 	"create.ponder.fan_processing.text_7": "Viteza Ventilatorului NU afectează viteza procesării, doar raza sa",
 	"create.ponder.fan_processing.text_8": "De asemenea, Procesarea Cu Ventilator poate fi aplicată la Obiecte pe Depoturi și Benzi",
 
-	"create.ponder.fan_source.header": "Generarea Forței Rotaționale folosind Ventilatoare Încapsulate",
-	"create.ponder.fan_source.text_1": "Ventilatoarele cu fața în jos într-o sursă de căldură pot oferi Forță De Rotație",
-	"create.ponder.fan_source.text_2": "Când îi este dat un Semnal Redstone, Ventilatoarele vor începe să ofere putere",
-
 	"create.ponder.fluid_pipe_flow.header": "Mișcarea Fluidelor folosind Conducte De Cupru",
 	"create.ponder.fluid_pipe_flow.text_1": "Conductele De Fluid pot conecta două sau mai multe surse și ținte",
 	"create.ponder.fluid_pipe_flow.text_2": "Folosind o Cheie, unui segment de conductă dreaptă poate fi dat o fereastră",
@@ -2179,11 +2174,6 @@
 	"create.ponder.fluid_tank_storage.text_4": "Totuși, în modul de Supraviețuire Fluidele nu pot fi adăugate sau luate manual",
 	"create.ponder.fluid_tank_storage.text_5": "Poți folosi Bazine, Scurgeri De Obiecte și Duze pentru a scurge sau a umple obiecte care conțin fluid",
 
-	"create.ponder.flywheel.header": "Generarea Forței de Rotație folosind Volantul",
-	"create.ponder.flywheel.text_1": "Volantele sunt necesare pentru generarea forței rotaționale cu Motorul De Cuptor",
-	"create.ponder.flywheel.text_2": "Forța De Rotație oferită are o capacitate de stres foarte mare",
-	"create.ponder.flywheel.text_3": "Folsind un Furnal eficiența Motorului va fi dublată",
-
 	"create.ponder.funnel_compat.header": "Compatibilitatea Pâlniilor",
 	"create.ponder.funnel_compat.text_1": "Pâlniile ar trebui să interacționeze frumos de asemenea cu o varietate de alte componente.",
 	"create.ponder.funnel_compat.text_2": "Ferăstraie Verticale",
@@ -2207,11 +2197,6 @@
 	"create.ponder.funnel_transfer.text_1": "Pâlniile nu pot niciodată să transfere între inventare închise direct.",
 	"create.ponder.funnel_transfer.text_2": "Toboganele sau Toboganele deștepte ar putea să fie mai potrivite pentru astfel de scopuri.",
 	"create.ponder.funnel_transfer.text_3": "Același lucru se aplică pentru mișcare orizontală. O bandă mecanică ar trebui să ajute aici.",
-
-	"create.ponder.furnace_engine.header": "Generarea Forței De Rotație folosind Motorul De Cuptor",
-	"create.ponder.furnace_engine.text_1": "Motoarele de cuptor generează Forță De Rotație în timp ce Cuptorul lor atașat funcționează",
-	"create.ponder.furnace_engine.text_2": "Forța De Rotație oferită are o capacitate de stres foarte mare",
-	"create.ponder.furnace_engine.text_3": "Folosind un Furnal eficiența Motorului va fi dublată",
 
 	"create.ponder.gantry_carriage.header": "Folosirea Cărucioarelor Portale",
 	"create.ponder.gantry_carriage.text_1": "Cărucioarele Portale pot monta și aluneca de-a lungul unui Rotor Portal.",

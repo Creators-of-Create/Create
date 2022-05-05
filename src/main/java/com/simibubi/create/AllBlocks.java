@@ -43,8 +43,6 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerMovi
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
-import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
@@ -473,7 +471,6 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(axeOrPickaxe())
-		.transform(BlockStressDefaults.setCapacity(16.0))
 		.transform(BlockStressDefaults.setImpact(2.0))
 		.item()
 		.transform(customItemModel())
@@ -1290,21 +1287,10 @@ public class AllBlocks {
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(axeOrPickaxe())
 		.transform(BlockStressDefaults.setNoImpact())
-		.blockstate(new FlywheelGenerator()::generate)
+		.blockstate(BlockStateGen.axisBlockProvider(true))
 		.item()
 		.transform(customItemModel())
 		.register();
-
-	public static final BlockEntry<FurnaceEngineBlock> FURNACE_ENGINE =
-		REGISTRATE.block("furnace_engine", FurnaceEngineBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.transform(pickaxeOnly())
-			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate(BlockStateGen.horizontalBlockProvider(true))
-			.transform(BlockStressDefaults.setCapacity(1024.0))
-			.item()
-			.transform(customItemModel())
-			.register();
 
 	public static final BlockEntry<SpeedControllerBlock> ROTATION_SPEED_CONTROLLER =
 		REGISTRATE.block("rotation_speed_controller", SpeedControllerBlock::new)

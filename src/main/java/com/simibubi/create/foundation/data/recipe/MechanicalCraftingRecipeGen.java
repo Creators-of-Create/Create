@@ -62,15 +62,6 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.patternLine("LRSSS")
 				.patternLine("CC   ")),
 
-		FURNACE_ENGINE = create(AllBlocks.FURNACE_ENGINE::get).returns(1)
-			.recipe(b -> b.key('P', Ingredient.of(I.brassSheet()))
-				.key('B', Ingredient.of(I.brass()))
-				.key('I', Ingredient.of(Blocks.PISTON, Blocks.STICKY_PISTON))
-				.key('C', I.brassCasing())
-				.patternLine("PPB")
-				.patternLine("PCI")
-				.patternLine("PPB")),
-
 		FLYWHEEL = create(AllBlocks.FLYWHEEL::get).returns(1)
 			.recipe(b -> b.key('B', Ingredient.of(I.brass()))
 				.key('C', I.brassCasing())
