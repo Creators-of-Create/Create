@@ -2,8 +2,11 @@ package com.simibubi.create.content.logistics.trains.management.schedule;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -16,6 +19,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
+import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimedWaitCondition.TimeUnit;
@@ -33,6 +41,7 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -53,6 +62,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.GuiUtils;
 
 public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContainer> {
@@ -83,6 +93,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	private Consumer<Boolean> onEditorClose;
 	private List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets;
 	private List<Integer> editorDividers;
+
+	private DestinationSuggestions destinationSuggestions;
 
 	public ScheduleScreen(ScheduleContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
@@ -225,6 +237,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			addRenderableWidget(editorDelete);
 	}
 
+	private void onDestinationEdited(String text) {
+		if (destinationSuggestions != null)
+			destinationSuggestions.updateCommandInfo();
+	}
+
 	protected void stopEditing() {
 		confirmButton.visible = true;
 		cyclicButton.visible = true;
@@ -234,6 +251,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 		if (editingCondition == null && editingDestination == null)
 			return;
+
+		destinationSuggestions = null;
 
 		removeWidget(scrollInput);
 		removeWidget(scrollInputLabel);
@@ -259,6 +278,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	}
 
 	protected void updateEditorSubwidgets(IScheduleInput field) {
+		destinationSuggestions = null;
 		menu.targetSlotActive = field.needsSlot();
 		editorSubWidgets.forEach(p -> removeWidget(p.getFirst()));
 		editorSubWidgets.clear();
@@ -268,6 +288,17 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 		if (editorSubWidgets.isEmpty())
 			editorDividers = null;
+
+		if (field instanceof DestinationInstruction) {
+			EditBox destinationBox = (EditBox) editorSubWidgets.get(0)
+				.getFirst();
+			destinationSuggestions = new DestinationSuggestions(this.minecraft, this, destinationBox, this.font,
+				getViableStations(field), topPos + 33);
+			destinationSuggestions.setAllowSuggestions(true);
+			destinationSuggestions.updateCommandInfo();
+			destinationBox.setResponder(this::onDestinationEdited);
+		}
+
 		editorSubWidgets.forEach(pair -> {
 			GuiEventListener e = pair.getFirst();
 			if (e instanceof AbstractSimiWidget)
@@ -277,12 +308,51 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		});
 	}
 
+	private List<IntAttached<String>> getViableStations(IScheduleInput field) {
+		GlobalRailwayManager railwayManager = Create.RAILWAYS.sided(null);
+		Set<TrackGraph> viableGraphs = new HashSet<>(railwayManager.trackNetworks.values());
+
+		for (ScheduleEntry entry : schedule.entries) {
+			if (!(entry.instruction instanceof DestinationInstruction destination))
+				continue;
+			if (destination == field)
+				continue;
+			String filter = destination.getFilter()
+				.replace("*", ".*");
+			if (filter.isBlank())
+				continue;
+			Graphs: for (Iterator<TrackGraph> iterator = viableGraphs.iterator(); iterator.hasNext();) {
+				TrackGraph trackGraph = iterator.next();
+				for (GlobalStation station : trackGraph.getPoints(EdgePointType.STATION)) {
+					if (station.name.matches(filter))
+						continue Graphs;
+				}
+				iterator.remove();
+			}
+		}
+
+		Vec3 position = minecraft.player.position();
+		Set<String> visited = new HashSet<>();
+
+		return viableGraphs.stream()
+			.flatMap(g -> g.getPoints(EdgePointType.STATION)
+				.stream())
+			.filter(station -> station.tilePos != null)
+			.filter(station -> visited.add(station.name))
+			.map(station -> IntAttached.with((int) Vec3.atBottomCenterOf(station.tilePos)
+				.distanceTo(position), station.name))
+			.toList();
+	}
+
 	@Override
 	protected void containerTick() {
 		super.containerTick();
 		scroll.tickChaser();
 		for (LerpedFloat lerpedFloat : horizontalScrolls)
 			lerpedFloat.tickChaser();
+
+		if (destinationSuggestions != null)
+			destinationSuggestions.tick();
 
 		schedule.savedProgress =
 			schedule.entries.isEmpty() ? 0 : Mth.clamp(schedule.savedProgress, 0, schedule.entries.size() - 1);
@@ -813,6 +883,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+		if (destinationSuggestions != null
+			&& destinationSuggestions.mouseClicked((int) pMouseX, (int) pMouseY, pButton))
+			return true;
 		if (editorConfirm != null && editorConfirm.isMouseOver(pMouseX, pMouseY) && onEditorClose != null) {
 			onEditorClose.accept(true);
 			stopEditing();
@@ -831,6 +904,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+		if (destinationSuggestions != null && destinationSuggestions.keyPressed(pKeyCode, pScanCode, pModifiers))
+			return true;
 		if (editingCondition == null && editingDestination == null)
 			return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
@@ -846,6 +921,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	@Override
 	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+		if (destinationSuggestions != null && destinationSuggestions.mouseScrolled(Mth.clamp(pDelta, -1.0D, 1.0D)))
+			return true;
 		if (editingCondition != null || editingDestination != null)
 			return super.mouseScrolled(pMouseX, pMouseY, pDelta);
 
@@ -910,7 +987,15 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	@Override
 	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		if (destinationSuggestions != null) {
+			matrixStack.pushPose();
+			matrixStack.translate(0, 0, 500);
+			destinationSuggestions.render(matrixStack, mouseX, mouseY);
+			matrixStack.popPose();
+		}
+
 		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(leftPos + AllGuiTextures.SCHEDULE.width, topPos + AllGuiTextures.SCHEDULE.height - 56,
 				-200)

@@ -197,34 +197,36 @@ public class TrackPlacement {
 
 		if (parallel) {
 			double[] sTest = VecHelper.intersect(end1, end2, normedAxis1, cross2, Axis.Y);
-			double t = Math.abs(sTest[0]);
-			double u = Math.abs(sTest[1]);
+			if (sTest != null) {
+				double t = Math.abs(sTest[0]);
+				double u = Math.abs(sTest[1]);
 
-			skipCurve = Mth.equal(u, 0);
+				skipCurve = Mth.equal(u, 0);
 
-			if (!skipCurve && sTest[0] < 0)
-				return info.withMessage("perpendicular")
-					.tooJumbly();
+				if (!skipCurve && sTest[0] < 0)
+					return info.withMessage("perpendicular")
+						.tooJumbly();
 
-			if (skipCurve) {
-				dist = VecHelper.getCenterOf(pos1)
-					.distanceTo(VecHelper.getCenterOf(pos2));
-				info.end1Extent = (int) Math.round((dist + 1) / axis1.length());
+				if (skipCurve) {
+					dist = VecHelper.getCenterOf(pos1)
+						.distanceTo(VecHelper.getCenterOf(pos2));
+					info.end1Extent = (int) Math.round((dist + 1) / axis1.length());
 
-			} else {
-				if (!Mth.equal(ascend, 0))
-					return info.withMessage("ascending_s_curve");
+				} else {
+					if (!Mth.equal(ascend, 0))
+						return info.withMessage("ascending_s_curve");
 
-				double targetT = u <= 1 ? 3 : u * 2;
+					double targetT = u <= 1 ? 3 : u * 2;
 
-				if (t < targetT)
-					return info.withMessage("too_sharp");
+					if (t < targetT)
+						return info.withMessage("too_sharp");
 
-				// This is for standardising s curve sizes
-				if (t > targetT) {
-					int correction = (int) ((t - targetT) / axis1.length());
-					info.end1Extent = maximiseTurn ? 0 : correction / 2 + (correction % 2);
-					info.end2Extent = maximiseTurn ? 0 : correction / 2;
+					// This is for standardising s curve sizes
+					if (t > targetT) {
+						int correction = (int) ((t - targetT) / axis1.length());
+						info.end1Extent = maximiseTurn ? 0 : correction / 2 + (correction % 2);
+						info.end2Extent = maximiseTurn ? 0 : correction / 2;
+					}
 				}
 			}
 		}

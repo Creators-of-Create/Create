@@ -45,6 +45,8 @@ public class GlobalStation extends SingleTileEdgePoint {
 		super.read(buffer);
 		name = buffer.readUtf();
 		assembling = buffer.readBoolean();
+		if (buffer.readBoolean())
+			tilePos = buffer.readBlockPos();
 	}
 
 	@Override
@@ -59,6 +61,9 @@ public class GlobalStation extends SingleTileEdgePoint {
 		super.write(buffer);
 		buffer.writeUtf(name);
 		buffer.writeBoolean(assembling);
+		buffer.writeBoolean(tilePos != null);
+		if (tilePos != null)
+			buffer.writeBlockPos(tilePos);
 	}
 
 	public boolean canApproachFrom(TrackNode side) {
