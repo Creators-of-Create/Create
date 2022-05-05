@@ -10,9 +10,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -100,7 +102,7 @@ public class PotatoProjectileTypeManager {
 		AllPackets.channel.sendToClients(new SyncPacket(), players);
 	}
 
-	public static class ReloadListener extends SimpleJsonResourceReloadListener {
+	public static class ReloadListener extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
 
 		private static final Gson GSON = new Gson();
 
@@ -127,6 +129,10 @@ public class PotatoProjectileTypeManager {
 			fillItemMap();
 		}
 
+		@Override
+		public ResourceLocation getFabricId() {
+			return Create.asResource("potato_cannon_projectile_types");
+		}
 	}
 
 	public static class SyncPacket extends SimplePacketBase {
