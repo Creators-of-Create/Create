@@ -96,7 +96,8 @@ public abstract class ArmInteractionPoint {
 
 	public static void addPoint(ArmInteractionPoint instance, Supplier<ArmInteractionPoint> factory) {
 		if (POINTS.containsKey(instance))
-			Create.LOGGER.warn("Point for " + instance.getClass().getSimpleName() + " was overridden");
+			Create.LOGGER.warn("Point for " + instance.getClass()
+				.getSimpleName() + " was overridden");
 		POINTS.put(instance, factory);
 	}
 
@@ -223,7 +224,8 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 1, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 1, .5f);
 		}
 
 	}
@@ -232,12 +234,14 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 14 / 16f, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 14 / 16f, .5f);
 		}
 
 		@Override
 		protected boolean isValid(BlockGetter reader, BlockPos pos, BlockState state) {
-			return AllBlocks.DEPOT.has(state) || AllBlocks.WEIGHTED_EJECTOR.has(state);
+			return AllBlocks.DEPOT.has(state) || AllBlocks.WEIGHTED_EJECTOR.has(state)
+				|| AllBlocks.TRACK_STATION.has(state);
 		}
 
 	}
@@ -274,7 +278,8 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 13 / 16f, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 13 / 16f, .5f);
 		}
 
 		@Override
@@ -305,8 +310,8 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return super.getInteractionPositionVector()
-				.add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal()).scale(.65f));
+			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal())
+				.scale(.65f));
 		}
 
 	}
@@ -326,7 +331,8 @@ public abstract class ArmInteractionPoint {
 		@Override
 		protected ItemStack insert(Level world, ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
-			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, simulate);
+			InteractionResultHolder<ItemStack> res =
+				BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, simulate);
 			ItemStack remainder = res.getObject();
 			if (input.isEmpty()) {
 				return remainder;
@@ -370,8 +376,8 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return super.getInteractionPositionVector()
-				.add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal()).scale(.5f));
+			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal())
+				.scale(.5f));
 		}
 
 	}
@@ -486,7 +492,8 @@ public abstract class ArmInteractionPoint {
 		protected Vec3 getInteractionPositionVector() {
 			return VecHelper.getCenterOf(pos)
 				.add(Vec3.atLowerCornerOf(FunnelBlock.getFunnelFacing(state)
-					.getNormal()).scale(-.15f));
+					.getNormal())
+					.scale(-.15f));
 		}
 
 		@Override
@@ -510,7 +517,8 @@ public abstract class ArmInteractionPoint {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 			InvManipulationBehaviour inserter = TileEntityBehaviour.get(world, pos, InvManipulationBehaviour.TYPE);
 			BlockState state = world.getBlockState(pos);
-			if (state.getOptionalValue(BlockStateProperties.POWERED).orElse(false))
+			if (state.getOptionalValue(BlockStateProperties.POWERED)
+				.orElse(false))
 				return stack;
 			if (inserter == null)
 				return stack;
@@ -535,7 +543,8 @@ public abstract class ArmInteractionPoint {
 		protected boolean isValid(BlockGetter reader, BlockPos pos, BlockState state) {
 			return state.getBlock() instanceof AbstractFunnelBlock
 				&& !(state.hasProperty(FunnelBlock.EXTRACTING) && state.getValue(FunnelBlock.EXTRACTING))
-				&& !(state.hasProperty(BeltFunnelBlock.SHAPE) && state.getValue(BeltFunnelBlock.SHAPE) == Shape.PUSHING);
+				&& !(state.hasProperty(BeltFunnelBlock.SHAPE)
+					&& state.getValue(BeltFunnelBlock.SHAPE) == Shape.PUSHING);
 		}
 
 		@Override

@@ -249,7 +249,7 @@ public class AllShapes {
 			.build(),
 		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
 			.build(),
-		STATION = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 8, 15)
+		STATION = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 13, 15)
 			.build()
 
 	;

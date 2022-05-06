@@ -16,6 +16,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
+import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -64,9 +65,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
 
 public class StationTileEntity extends SmartTileEntity {
@@ -76,8 +74,7 @@ public class StationTileEntity extends SmartTileEntity {
 
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
-	protected IItemHandlerModifiable autoSchedule;
-	protected LazyOptional<IItemHandler> capability;
+	protected DepotBehaviour depotBehaviour;
 
 	// for display
 	UUID imminentTrain;
@@ -95,16 +92,16 @@ public class StationTileEntity extends SmartTileEntity {
 		setLazyTickRate(20);
 		lastException = null;
 		failedCarriageIndex = -1;
-		autoSchedule = new StationInventory();
-		capability = LazyOptional.of(() -> autoSchedule);
 		flag = LerpedFloat.linear()
 			.startWithValue(0);
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.STATION);
-		behaviours.add(edgePoint);
+		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.STATION));
+		behaviours.add(depotBehaviour = new DepotBehaviour(this).onlyAccepts(AllItems.SCHEDULE::isIn)
+			.withCallback(s -> applyAutoSchedule()));
+		depotBehaviour.addSubBehaviours(behaviours);
 	}
 
 	@Override
@@ -113,8 +110,6 @@ public class StationTileEntity extends SmartTileEntity {
 		failedCarriageIndex = tag.getInt("FailedCarriageIndex");
 		super.read(tag, clientPacket);
 		invalidateRenderBoundingBox();
-
-		autoSchedule.setStackInSlot(0, ItemStack.of(tag.getCompound("HeldItem")));
 
 		if (!clientPacket)
 			return;
@@ -138,8 +133,6 @@ public class StationTileEntity extends SmartTileEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		AssemblyException.write(tag, lastException);
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
-		tag.put("HeldItem", autoSchedule.getStackInSlot(0)
-			.serializeNBT());
 
 		super.write(tag, clientPacket);
 
@@ -620,13 +613,13 @@ public class StationTileEntity extends SmartTileEntity {
 	}
 
 	public ItemStack getAutoSchedule() {
-		return autoSchedule.getStackInSlot(0);
+		return depotBehaviour.getHeldItemStack();
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (isItemHandlerCap(cap))
-			return capability.cast();
+			return depotBehaviour.getItemCapability(cap, side);
 		return super.getCapability(cap, side);
 	}
 
@@ -649,7 +642,7 @@ public class StationTileEntity extends SmartTileEntity {
 		if (!(level instanceof ServerLevel server))
 			return;
 
-		Vec3 v = Vec3.atCenterOf(worldPosition);
+		Vec3 v = Vec3.atBottomCenterOf(worldPosition.above());
 		server.sendParticles(ParticleTypes.HAPPY_VILLAGER, v.x, v.y, v.z, 8, 0.35, 0.05, 0.35, 1);
 		server.sendParticles(ParticleTypes.END_ROD, v.x, v.y + .25f, v.z, 10, 0.05, 1, 0.05, 0.005f);
 	}
@@ -682,25 +675,6 @@ public class StationTileEntity extends SmartTileEntity {
 			.getNormal())) > 0;
 
 		return true;
-	}
-
-	private class StationInventory extends ItemStackHandler {
-
-		public StationInventory() {
-			super(1);
-		}
-
-		@Override
-		protected void onContentsChanged(int slot) {
-			applyAutoSchedule();
-			sendData();
-		}
-
-		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			return super.isItemValid(slot, stack) && AllItems.SCHEDULE.isIn(stack);
-		}
-
 	}
 
 }

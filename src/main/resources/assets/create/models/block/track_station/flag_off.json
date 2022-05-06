@@ -1,43 +1,43 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
 	"textures": {
-		"2": "create:block/indicator/0",
-		"6": "create:block/bogey/frame",
-		"particle": "create:block/signal_box",
-		"1_0": "create:block/signal_box"
+		"0": "create:block/station",
+		"1": "create:block/indicator/0",
+		"particle": "create:block/station"
 	},
 	"elements": [
 		{
-			"from": [0, 1, -1],
-			"to": [1, 13, 1],
-			"faces": {
-				"north": {"uv": [3.5, 7, 4, 13], "texture": "#6"},
-				"east": {"uv": [4.5, 7, 3.5, 13], "texture": "#6"},
-				"south": {"uv": [4, 7, 4.5, 13], "texture": "#6"},
-				"west": {"uv": [3.5, 7, 4.5, 13], "texture": "#6"},
-				"up": {"uv": [3.5, 7.5, 4.5, 7], "rotation": 90, "texture": "#6"}
-			}
-		},
-		{
+			"name": "Flag Pole",
 			"from": [0, -1, -1],
-			"to": [1, 1, 1],
+			"to": [1, 13, 1],
+			"rotation": {"angle": 0, "axis": "x", "origin": [14, 0, 0]},
 			"faces": {
-				"north": {"uv": [4, 7, 3.5, 8], "texture": "#6"},
-				"east": {"uv": [4.5, 7, 3.5, 8], "texture": "#6"},
-				"south": {"uv": [4.5, 7, 4, 8], "texture": "#6"},
-				"west": {"uv": [4.5, 7, 3.5, 8], "texture": "#6"},
-				"down": {"uv": [3.5, 8, 4.5, 7.5], "rotation": 270, "texture": "#6"}
+				"north": {"uv": [0.5, 1, 7.5, 1.5], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0.5, 0.5, 7.5, 1.5], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [0.5, 0.5, 7.5, 1], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [0.5, 0.5, 7.5, 1.5], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [7.5, 0.5, 7, 1.5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [1, 0.5, 0.5, 1.5], "texture": "#0"}
 			}
 		},
 		{
-			"from": [0.5, 9, -7],
-			"to": [0.5, 13, 0],
+			"name": "Flag",
+			"from": [0.5, 9, -6.5],
+			"to": [0.5, 13, -0.5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [14, 0, 0]},
 			"faces": {
-				"east": {"uv": [0, 0, 4, 7], "rotation": 90, "texture": "#2"},
-				"west": {"uv": [0, 0, 4, 7], "rotation": 270, "texture": "#2"},
-				"down": {"uv": [0, 14, 4, 14], "rotation": 270, "texture": "#1_0"}
+				"east": {"uv": [0, 0, 4, 6], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [0, 0, 4, 6], "rotation": 90, "texture": "#1"}
 			}
+		}
+	],
+	"display": {},
+	"groups": [
+		{
+			"name": "Flag",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
 		}
 	]
 }

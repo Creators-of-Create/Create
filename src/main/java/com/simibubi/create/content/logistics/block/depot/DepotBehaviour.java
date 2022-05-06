@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.depot;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -51,6 +52,8 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	Supplier<Integer> maxStackSize;
 	Supplier<Boolean> canAcceptItems;
 	Predicate<Direction> canFunnelsPullFrom;
+	Consumer<ItemStack> onHeldInserted;
+	Predicate<ItemStack> acceptedItems;
 	boolean allowMerge;
 
 	public DepotBehaviour(SmartTileEntity te) {
@@ -58,6 +61,9 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		maxStackSize = () -> 64;
 		canAcceptItems = () -> true;
 		canFunnelsPullFrom = $ -> true;
+		acceptedItems = $ -> true;
+		onHeldInserted = $ -> {
+		};
 		incoming = new ArrayList<>();
 		itemHandler = new DepotItemHandler(this);
 		lazyItemHandler = LazyOptional.of(() -> itemHandler);
@@ -70,6 +76,16 @@ public class DepotBehaviour extends TileEntityBehaviour {
 
 	public void enableMerging() {
 		allowMerge = true;
+	}
+	
+	public DepotBehaviour withCallback(Consumer<ItemStack> changeListener) {
+		onHeldInserted = changeListener;
+		return this;
+	}
+	
+	public DepotBehaviour onlyAccepts(Predicate<ItemStack> filter) {
+		acceptedItems = filter;
+		return this;
 	}
 
 	@Override
@@ -245,6 +261,8 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	public ItemStack insert(TransportedItemStack heldItem, boolean simulate) {
 		if (!canAcceptItems.get())
 			return heldItem.stack;
+		if (!acceptedItems.test(heldItem.stack))
+			return heldItem.stack;
 
 		if (canMergeItems()) {
 			int remainingSpace = getRemainingSpace();
@@ -285,6 +303,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 					AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos());
 			}
 			this.heldItem = heldItem;
+			onHeldInserted.accept(heldItem.stack);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -383,6 +402,10 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
+	}
+
+	public boolean isItemValid(ItemStack stack) {
+		return acceptedItems.test(stack);
 	}
 
 }

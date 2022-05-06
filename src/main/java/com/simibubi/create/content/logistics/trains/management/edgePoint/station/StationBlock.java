@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.logistics.block.depot.SharedDepotBlockMethods;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
@@ -12,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -62,6 +64,17 @@ public class StationBlock extends Block implements ITE<StationTileEntity> {
 	}
 
 	@Override
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		SharedDepotBlockMethods.onReplaced(state, worldIn, pos, newState, isMoving);
+	}
+
+	@Override
+	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
+		SharedDepotBlockMethods.onLanded(worldIn, entityIn);
+	}
+	
+	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
 
@@ -79,7 +92,8 @@ public class StationBlock extends Block implements ITE<StationTileEntity> {
 				return InteractionResult.SUCCESS;
 			pPlayer.getInventory()
 				.placeItemBackInInventory(autoSchedule.copy());
-			station.autoSchedule.setStackInSlot(0, ItemStack.EMPTY);
+			station.depotBehaviour.removeHeldItem();
+			station.notifyUpdate();
 			AllSoundEvents.playItemPickup(pPlayer);
 			return InteractionResult.SUCCESS;
 		});
