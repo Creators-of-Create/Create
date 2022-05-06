@@ -816,6 +816,7 @@
 	"death.attack.create.potato_cannon.item": "%1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 	"death.attack.create.cuckoo_clock_explosion.player": "%1$s was blown up by tampered cuckoo clock",
+	"death.attack.create.run_over": "%1$s was run over by %2$s",
 
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",

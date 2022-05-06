@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2142",
+	"_": "Missing Localizations: 2143",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -817,6 +817,7 @@
 	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
 	"death.attack.create.cuckoo_clock_explosion.player": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
+	"death.attack.create.run_over": "UNLOCALIZED: %1$s was run over by %2$s",
 
 	"create.block.deployer.damage_source_name": "UNLOCALIZED: a rogue Deployer",
 	"create.block.cart_assembler.invalid": "UNLOCALIZED: Place your Cart Assembler on a rail block",

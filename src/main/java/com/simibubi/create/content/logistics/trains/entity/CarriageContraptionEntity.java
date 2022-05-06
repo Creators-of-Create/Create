@@ -308,6 +308,13 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		train.navigation.waitingForSignal = null;
 		return true;
 	}
+	
+	@Override
+	public Component getDisplayName() {
+		if (carriage == null)
+			return Lang.translate("train");
+		return carriage.train.name;
+	}
 
 	double navDistanceTotal = 0;
 
