@@ -77,12 +77,15 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 	@Override
 	public void remove() {
 		if (bogeys == null) return;
-		
+
 		bogeys.forEach(instance -> {
 			if (instance != null)
 				instance.remove();
 		});
 	}
 
-
+	@Override
+	public boolean decreaseFramerateWithDistance() {
+		return false;
+	}
 }
