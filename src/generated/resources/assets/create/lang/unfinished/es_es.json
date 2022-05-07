@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 224",
+	"_": "Missing Localizations: 225",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1585,6 +1585,7 @@
 	"create.subtitle.cranking": "Manivela gira",
 	"create.subtitle.wrench_remove": "Componente se rompe",
 	"create.subtitle.sanding_short": "Lijando",
+	"create.subtitle.whistle": "UNLOCALIZED: Whistling",
 	"create.subtitle.cogs": "Engranajes retumban",
 	"create.subtitle.slime_added": "Pegamento chapotea",
 	"create.subtitle.wrench_rotate": "Llave inglesa usada",

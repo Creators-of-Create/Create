@@ -359,6 +359,12 @@
     ],
     "subtitle": "create.subtitle.slime_added"
   },
+  "whistle": {
+    "sounds": [
+      "create:whistle"
+    ],
+    "subtitle": "create.subtitle.whistle"
+  },
   "worldshaper_place": {
     "sounds": [
       {

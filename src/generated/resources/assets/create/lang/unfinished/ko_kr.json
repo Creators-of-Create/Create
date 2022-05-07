@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 219",
+	"_": "Missing Localizations: 220",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1585,6 +1585,7 @@
 	"create.subtitle.cranking": "크랭크가 돌아감",
 	"create.subtitle.wrench_remove": "장치가 부숴짐",
 	"create.subtitle.sanding_short": "사포를 사용함",
+	"create.subtitle.whistle": "UNLOCALIZED: Whistling",
 	"create.subtitle.cogs": "톱니바퀴가 돌아감",
 	"create.subtitle.slime_added": "슬라임이 철퍽거림",
 	"create.subtitle.wrench_rotate": "렌치를 사용함",

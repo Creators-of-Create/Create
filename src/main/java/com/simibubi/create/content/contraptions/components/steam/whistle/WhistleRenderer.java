@@ -7,11 +7,13 @@ import com.simibubi.create.content.contraptions.components.steam.whistle.Whistle
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WhistleRenderer extends SafeTileEntityRenderer<WhistleTileEntity> {
@@ -31,7 +33,12 @@ public class WhistleRenderer extends SafeTileEntityRenderer<WhistleTileEntity> {
 		PartialModel mouth = size == WhistleSize.LARGE ? AllBlockPartials.WHISTLE_MOUTH_LARGE
 			: size == WhistleSize.MEDIUM ? AllBlockPartials.WHISTLE_MOUTH_MEDIUM : AllBlockPartials.WHISTLE_MOUTH_SMALL;
 
-		float offset = 0;
+		float offset = te.animation.getValue(partialTicks);
+		if (te.animation.getChaseTarget() > 0 && te.animation.getValue() > 0.5f) {
+			float wiggleProgress = (AnimationTickHolder.getTicks(te.getLevel()) + partialTicks) / 8f;
+			offset -= Math.sin(wiggleProgress * (2 * Mth.PI) * (4 - size.ordinal())) / 16f;
+		}
+
 		CachedBufferer.partial(mouth, blockState)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(direction))

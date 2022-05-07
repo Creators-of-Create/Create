@@ -223,6 +223,10 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		WHISTLE = create("whistle").subtitle("Whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+			
 		HAUNTED_BELL_CONVERT = create("haunted_bell_convert").subtitle("Haunted Bell awakens")
 			.category(SoundSource.BLOCKS)
 			.build(),

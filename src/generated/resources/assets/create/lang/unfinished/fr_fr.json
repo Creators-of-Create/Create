@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1793",
+	"_": "Missing Localizations: 1794",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1585,6 +1585,7 @@
 	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
 	"create.subtitle.wrench_remove": "UNLOCALIZED: Component breaks",
 	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
+	"create.subtitle.whistle": "UNLOCALIZED: Whistling",
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Bruit de slime",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",

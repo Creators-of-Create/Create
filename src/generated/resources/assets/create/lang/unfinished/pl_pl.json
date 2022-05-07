@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 592",
+	"_": "Missing Localizations: 593",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1585,6 +1585,7 @@
 	"create.subtitle.cranking": "Ręczna korba obraca się",
 	"create.subtitle.wrench_remove": "Komponent niszczy się",
 	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
+	"create.subtitle.whistle": "UNLOCALIZED: Whistling",
 	"create.subtitle.cogs": "Koła zębate terkoczą",
 	"create.subtitle.slime_added": "Szlam plaska",
 	"create.subtitle.wrench_rotate": "Klucz skrzypi",

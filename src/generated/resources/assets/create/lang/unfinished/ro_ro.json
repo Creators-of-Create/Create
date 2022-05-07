@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 220",
+	"_": "Missing Localizations: 221",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1585,6 +1585,7 @@
 	"create.subtitle.cranking": "Manivelă se rotește",
 	"create.subtitle.wrench_remove": "Component se sparge",
 	"create.subtitle.sanding_short": "Sunete de șlefuit",
+	"create.subtitle.whistle": "UNLOCALIZED: Whistling",
 	"create.subtitle.cogs": "Roți Dințate vuie",
 	"create.subtitle.slime_added": "Mâzgă zdrobește",
 	"create.subtitle.wrench_rotate": "Cheie folosită",
