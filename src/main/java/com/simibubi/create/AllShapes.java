@@ -147,7 +147,10 @@ public class AllShapes {
 
 		TRACK_ORTHO = shape(TrackVoxelShapes.orthogonal()).forHorizontal(NORTH),
 		TRACK_ASC = shape(TrackVoxelShapes.ascending()).forHorizontal(SOUTH),
-		TRACK_DIAG = shape(TrackVoxelShapes.diagonal()).forHorizontal(SOUTH)
+		TRACK_DIAG = shape(TrackVoxelShapes.diagonal()).forHorizontal(SOUTH),
+
+		WHISTLE_BASE = shape(1, 0, 1, 15, 3, 15).add(5, 0, 5, 11, 8, 11)
+			.forDirectional(UP)
 
 	;
 
@@ -165,7 +168,10 @@ public class AllShapes {
 		LOGISTICS_TABLE_SLOPE = shape(0, 10, 10.667, 16, 14, 15).add(0, 12, 6.333, 16, 16, 10.667)
 			.add(0, 14, 2, 16, 18, 6.333)
 			.build(),
-		TANK_BOTTOM_LID = shape(0, 0, 0, 16, 4, 16).build(), TANK_TOP_LID = shape(0, 12, 0, 16, 16, 16).build()
+		TANK_BOTTOM_LID = shape(0, 0, 0, 16, 4, 16).build(), TANK_TOP_LID = shape(0, 12, 0, 16, 16, 16).build(),
+
+		WHISTLE_SMALL = shape(4, 3, 4, 12, 16, 12).build(), WHISTLE_MEDIUM = shape(3, 3, 3, 13, 16, 13).build(),
+		WHISTLE_LARGE = shape(2, 3, 2, 14, 16, 14).build()
 
 	;
 
@@ -250,7 +256,24 @@ public class AllShapes {
 		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
 			.build(),
 		STATION = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 13, 15)
-			.build()
+			.build(),
+
+		WHISTLE_SMALL_FLOOR = shape(WHISTLE_SMALL).add(WHISTLE_BASE.get(UP))
+			.build(),
+		WHISTLE_MEDIUM_FLOOR = shape(WHISTLE_MEDIUM).add(WHISTLE_BASE.get(UP))
+			.build(),
+		WHISTLE_LARGE_FLOOR = shape(WHISTLE_LARGE).add(WHISTLE_BASE.get(UP))
+			.build(),
+
+		WHISTLE_EXTENDER_SMALL = shape(4, 0, 4, 12, 10, 12).build(),
+		WHISTLE_EXTENDER_MEDIUM = shape(3, 0, 3, 13, 10, 13).build(),
+		WHISTLE_EXTENDER_LARGE = shape(2, 0, 2, 14, 10, 14).build(),
+		WHISTLE_EXTENDER_SMALL_DOUBLE = shape(4, 0, 4, 12, 18, 12).build(),
+		WHISTLE_EXTENDER_MEDIUM_DOUBLE = shape(3, 0, 3, 13, 18, 13).build(),
+		WHISTLE_EXTENDER_LARGE_DOUBLE = shape(2, 0, 2, 14, 18, 14).build(),
+		WHISTLE_EXTENDER_SMALL_DOUBLE_CONNECTED = shape(4, 0, 4, 12, 16, 12).build(),
+		WHISTLE_EXTENDER_MEDIUM_DOUBLE_CONNECTED = shape(3, 0, 3, 13, 16, 13).build(),
+		WHISTLE_EXTENDER_LARGE_DOUBLE_CONNECTED = shape(2, 0, 2, 14, 16, 14).build()
 
 	;
 
@@ -275,7 +298,14 @@ public class AllShapes {
 			.forHorizontal(SOUTH),
 		SCHEMATICS_TABLE = shape(4, 0, 4, 12, 12, 12).add(0, 11, 2, 16, 14, 14)
 			.forDirectional(SOUTH),
-		CHUTE_SLOPE = shape(ChuteShapes.createSlope()).forHorizontal(SOUTH)
+		CHUTE_SLOPE = shape(ChuteShapes.createSlope()).forHorizontal(SOUTH),
+
+		WHISTLE_SMALL_WALL = shape(WHISTLE_SMALL).add(WHISTLE_BASE.get(NORTH))
+			.forHorizontal(SOUTH),
+		WHISTLE_MEDIUM_WALL = shape(WHISTLE_MEDIUM).add(WHISTLE_BASE.get(NORTH))
+			.forHorizontal(SOUTH),
+		WHISTLE_LARGE_WALL = shape(WHISTLE_LARGE).add(WHISTLE_BASE.get(NORTH))
+			.forHorizontal(SOUTH)
 
 	;
 

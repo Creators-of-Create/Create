@@ -52,6 +52,9 @@ import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleGenerator;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BlankSailBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
@@ -875,6 +878,21 @@ public class AllBlocks {
 			.transform(BlockStressDefaults.setCapacity(1024.0))
 			.item()
 			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<WhistleBlock> STEAM_WHISTLE = REGISTRATE.block("steam_whistle", WhistleBlock::new)
+		.initialProperties(SharedProperties::copperMetal)
+		.transform(pickaxeOnly())
+		.blockstate(new WhistleGenerator()::generate)
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<WhistleExtenderBlock> STEAM_WHISTLE_EXTENSION =
+		REGISTRATE.block("steam_whistle_extension", WhistleExtenderBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.transform(pickaxeOnly())
+			.blockstate(BlockStateGen.whistleExtender())
 			.register();
 
 	public static final BlockEntry<PoweredShaftBlock> POWERED_SHAFT =

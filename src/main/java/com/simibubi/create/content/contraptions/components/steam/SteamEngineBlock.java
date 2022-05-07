@@ -8,8 +8,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
@@ -98,7 +96,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
-		updateAttachedTank(pState, pLevel, pPos);
+		FluidTankBlock.updateBoilerState(pState, pLevel, pPos.relative(getFacing(pState).getOpposite()));
 		BlockPos shaftPos = getShaftPos(pState, pPos);
 		BlockState shaftState = pLevel.getBlockState(shaftPos);
 		if (isShaftValid(pState, shaftState))
@@ -109,26 +107,11 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
 		if (pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity()))
 			pLevel.removeBlockEntity(pPos);
-		updateAttachedTank(pState, pLevel, pPos);
-
+		FluidTankBlock.updateBoilerState(pState, pLevel, pPos.relative(getFacing(pState).getOpposite()));
 		BlockPos shaftPos = getShaftPos(pState, pPos);
 		BlockState shaftState = pLevel.getBlockState(shaftPos);
 		if (AllBlocks.POWERED_SHAFT.has(shaftState))
 			pLevel.scheduleTick(shaftPos, shaftState.getBlock(), 1);
-	}
-
-	private void updateAttachedTank(BlockState pState, Level pLevel, BlockPos pPos) {
-		BlockPos tankPos = pPos.relative(getFacing(pState).getOpposite());
-		BlockState tankState = pLevel.getBlockState(tankPos);
-		if (!FluidTankBlock.isTank(tankState))
-			return;
-		FluidTankTileEntity tankTE = FluidTankConnectivityHandler.anyTankAt(pLevel, tankPos);
-		if (tankTE == null)
-			return;
-		FluidTankTileEntity controllerTE = tankTE.getControllerTE();
-		if (controllerTE == null)
-			return;
-		controllerTE.updateBoilerState();
 	}
 
 	@Override

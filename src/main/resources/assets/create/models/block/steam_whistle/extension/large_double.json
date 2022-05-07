@@ -1,0 +1,47 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"particle": "create:block/whistle_particle"
+	},
+	"elements": [
+		{
+			"name": "Whistle large Extension",
+			"from": [3, 0, 3],
+			"to": [13, 8, 13],
+			"faces": {
+				"north": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"east": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"south": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"west": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Whistle large Extension",
+			"from": [3, 8, 3],
+			"to": [13, 16, 13],
+			"faces": {
+				"north": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"east": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"south": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"west": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"}
+			}
+		}
+	],
+	"display": {},
+	"groups": [
+		{
+			"name": "Whistle Large",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Extension",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0, 1]
+				}
+			]
+		}
+	]
+}

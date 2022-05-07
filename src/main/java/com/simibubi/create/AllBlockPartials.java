@@ -137,6 +137,10 @@ public class AllBlockPartials {
 		SIGNAL_RED = block("track_signal/red_tube"), SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
 		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"), SIGNAL_YELLOW = block("track_signal/yellow_tube"),
 
+		WHISTLE_MOUTH_LARGE = block("steam_whistle/large_mouth"),
+		WHISTLE_MOUTH_MEDIUM = block("steam_whistle/medium_mouth"),
+		WHISTLE_MOUTH_SMALL = block("steam_whistle/small_mouth"),
+		
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),
 		CRAFTING_BLUEPRINT_3x3 = entity("crafting_blueprint_large"),

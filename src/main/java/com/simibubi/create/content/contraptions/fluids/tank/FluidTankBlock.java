@@ -329,5 +329,18 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
 			.orElse(0);
 	}
+	
+	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
+		BlockState tankState = pLevel.getBlockState(tankPos);
+		if (!FluidTankBlock.isTank(tankState))
+			return;
+		FluidTankTileEntity tankTE = FluidTankConnectivityHandler.anyTankAt(pLevel, tankPos);
+		if (tankTE == null)
+			return;
+		FluidTankTileEntity controllerTE = tankTE.getControllerTE();
+		if (controllerTE == null)
+			return;
+		controllerTE.updateBoilerState();
+	}
 
 }

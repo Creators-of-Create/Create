@@ -13,7 +13,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock.WhistleExtenderShape;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
@@ -36,8 +40,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.RailShape;
+import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.ModelFile.ExistingModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 
 public class BlockStateGen {
@@ -336,6 +342,41 @@ public class BlockStateGen {
 						.condition(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), !flatPass)
 						.end();
 				}
+		};
+	}
+
+	public static <P extends WhistleExtenderBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> whistleExtender() {
+		return (c, p) -> {
+			BlockModelProvider models = p.models();
+			String basePath = "block/steam_whistle/extension/";
+			MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
+
+			for (WhistleSize size : WhistleSize.values()) {
+				String basePathSize = basePath + size.getSerializedName() + "_";
+				ExistingModelFile topRim = models.getExistingFile(Create.asResource(basePathSize + "top_rim"));
+				ExistingModelFile single = models.getExistingFile(Create.asResource(basePathSize + "single"));
+				ExistingModelFile double_ = models.getExistingFile(Create.asResource(basePathSize + "double"));
+
+				builder.part()
+					.modelFile(topRim)
+					.addModel()
+					.condition(WhistleExtenderBlock.SIZE, size)
+					.condition(WhistleExtenderBlock.SHAPE, WhistleExtenderShape.DOUBLE)
+					.end()
+					.part()
+					.modelFile(single)
+					.addModel()
+					.condition(WhistleExtenderBlock.SIZE, size)
+					.condition(WhistleExtenderBlock.SHAPE, WhistleExtenderShape.SINGLE)
+					.end()
+					.part()
+					.modelFile(double_)
+					.addModel()
+					.condition(WhistleExtenderBlock.SIZE, size)
+					.condition(WhistleExtenderBlock.SHAPE, WhistleExtenderShape.DOUBLE,
+						WhistleExtenderShape.DOUBLE_CONNECTED)
+					.end();
+			}
 		};
 	}
 

@@ -73,6 +73,8 @@
     "create:spout",
     "create:portable_fluid_interface",
     "create:steam_engine",
+    "create:steam_whistle",
+    "create:steam_whistle_extension",
     "create:powered_shaft",
     "create:mechanical_piston",
     "create:sticky_mechanical_piston",

@@ -1,0 +1,71 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"particle": "create:block/whistle"
+	},
+	"elements": [
+		{
+			"name": "Centre",
+			"from": [7, 6, 4.5],
+			"to": [9, 12, 5],
+			"faces": {
+				"north": {"uv": [1.75, 8, 2.25, 9.5], "texture": "#0"},
+				"up": {"uv": [13.75, 14.5, 14.25, 15], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Back",
+			"from": [7, 5, 6],
+			"to": [9, 12, 11.5],
+			"faces": {
+				"north": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"},
+				"south": {"uv": [1.75, 10, 2.25, 11.75], "texture": "#0"},
+				"up": {"uv": [13.75, 12.75, 14.25, 14.75], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Left",
+			"from": [4.5, 5, 4.5],
+			"to": [7, 12, 11.5],
+			"faces": {
+				"north": {"uv": [2.25, 8, 2.75, 9.75], "texture": "#0"},
+				"east": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"},
+				"south": {"uv": [1.25, 10, 1.75, 11.75], "texture": "#0"},
+				"west": {"uv": [1.25, 10, 2.75, 11.75], "texture": "#0"},
+				"up": {"uv": [14.25, 13.25, 14.75, 14.75], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Right",
+			"from": [9, 5, 4.5],
+			"to": [11.5, 12, 11.5],
+			"faces": {
+				"north": {"uv": [1.25, 8, 1.75, 9.75], "texture": "#0"},
+				"east": {"uv": [1.25, 10, 2.75, 11.75], "texture": "#0"},
+				"south": {"uv": [2.25, 10, 2.75, 11.75], "texture": "#0"},
+				"west": {"uv": [5.5, 1.5, 5, 2], "texture": "#0"},
+				"up": {"uv": [13.25, 13.25, 13.75, 14.75], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 1.5, 5.5, 2], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Whistle Small",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Whistle Small Mouth",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0, 1, 2, 3]
+				}
+			]
+		}
+	]
+}

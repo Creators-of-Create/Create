@@ -54,6 +54,8 @@ import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineRenderer;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineTileEntity;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleRenderer;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
@@ -520,6 +522,12 @@ public class AllTileEntities {
 		.tileEntity("steam_engine", SteamEngineTileEntity::new)
 		.validBlocks(AllBlocks.STEAM_ENGINE)
 		.renderer(() -> SteamEngineRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<WhistleTileEntity> STEAM_WHISTLE = Create.registrate()
+		.tileEntity("steam_whistle", WhistleTileEntity::new)
+		.validBlocks(AllBlocks.STEAM_WHISTLE)
+		.renderer(() -> WhistleRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PoweredShaftTileEntity> POWERED_SHAFT = Create.registrate()

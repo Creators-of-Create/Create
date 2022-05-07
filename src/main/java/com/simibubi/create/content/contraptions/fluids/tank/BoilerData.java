@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -48,6 +49,7 @@ public class BoilerData {
 
 	public float waterSupply;
 	public int attachedEngines;
+	public int attachedWhistles;
 
 	public LerpedFloat gauge = LerpedFloat.linear();
 
@@ -142,14 +144,6 @@ public class BoilerData {
 		Component w = levelComponent("Water ... ", forWaterSupply, minValue, maxValue);
 		Component s = levelComponent("Size ....... ", forBoilerSize, minValue, maxValue);
 
-		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
-			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
-		Component capacity =
-			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
-				.withStyle(ChatFormatting.AQUA);
-		Component engines =
-			new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
-
 		Component indent = new TextComponent(spacing);
 		Component indent2 = new TextComponent(spacing + " ");
 
@@ -159,6 +153,17 @@ public class BoilerData {
 			.append(w));
 		tooltip.add(indent2.plainCopy()
 			.append(h));
+		
+		if (attachedEngines == 0)
+			return true;
+		
+		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
+			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
+		Component capacity =
+			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
+				.withStyle(ChatFormatting.AQUA);
+		Component engines =
+			new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
 
 		tooltip.add(indent);
 		tooltip.add(indent.plainCopy()
@@ -194,8 +199,10 @@ public class BoilerData {
 	public boolean evaluate(FluidTankTileEntity controller) {
 		BlockPos controllerPos = controller.getBlockPos();
 		Level level = controller.getLevel();
-		int prev = attachedEngines;
+		int prevEngines = attachedEngines;
+		int prevWhistles = attachedWhistles;
 		attachedEngines = 0;
+		attachedWhistles = 0;
 
 		for (int yOffset = 0; yOffset < controller.height; yOffset++) {
 			for (int xOffset = 0; xOffset < controller.width; xOffset++) {
@@ -206,20 +213,21 @@ public class BoilerData {
 					if (!FluidTankBlock.isTank(blockState))
 						continue;
 					for (Direction d : Iterate.directions) {
-						BlockPos enginePos = pos.relative(d);
-						BlockState engineState = level.getBlockState(enginePos);
-						if (!AllBlocks.STEAM_ENGINE.has(engineState))
-							continue;
-						if (SteamEngineBlock.getFacing(engineState) != d)
-							continue;
-						attachedEngines++;
+						BlockPos attachedPos = pos.relative(d);
+						BlockState attachedState = level.getBlockState(attachedPos);
+						if (AllBlocks.STEAM_ENGINE.has(attachedState) && SteamEngineBlock.getFacing(attachedState) == d)
+							attachedEngines++;
+						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
+							&& WhistleBlock.getAttachedDirection(attachedState)
+								.getOpposite() == d)
+							attachedWhistles++;
 					}
 				}
 			}
 		}
 
 		needsHeatLevelUpdate = true;
-		return prev != attachedEngines;
+		return prevEngines != attachedEngines || prevWhistles != attachedWhistles;
 	}
 
 	public boolean updateTemperature(FluidTankTileEntity controller) {
@@ -251,7 +259,7 @@ public class BoilerData {
 	}
 
 	public boolean isActive() {
-		return attachedEngines > 0;
+		return attachedEngines > 0 || attachedWhistles > 0;
 	}
 
 	public void clear() {
@@ -268,6 +276,7 @@ public class BoilerData {
 		nbt.putInt("ActiveHeat", activeHeat);
 		nbt.putBoolean("PassiveHeat", passiveHeat);
 		nbt.putInt("Engines", attachedEngines);
+		nbt.putInt("Whistles", attachedWhistles);
 		nbt.putBoolean("Update", needsHeatLevelUpdate);
 		return nbt;
 	}
@@ -277,6 +286,7 @@ public class BoilerData {
 		activeHeat = nbt.getInt("ActiveHeat");
 		passiveHeat = nbt.getBoolean("PassiveHeat");
 		attachedEngines = nbt.getInt("Engines");
+		attachedWhistles = nbt.getInt("Whistles");
 		needsHeatLevelUpdate = nbt.getBoolean("Update");
 		Arrays.fill(supplyOverTime, (int) waterSupply);
 

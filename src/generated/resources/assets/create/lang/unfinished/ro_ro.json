@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 218",
+	"_": "Missing Localizations: 220",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -483,6 +483,8 @@
 	"block.create.spruce_window": "Sticlă De Molid",
 	"block.create.spruce_window_pane": "Geam De Molid",
 	"block.create.steam_engine": "UNLOCALIZED: Steam Engine",
+	"block.create.steam_whistle": "UNLOCALIZED: Steam Whistle",
+	"block.create.steam_whistle_extension": "UNLOCALIZED: Steam Whistle Extension",
 	"block.create.sticker": "Abțipild",
 	"block.create.sticky_mechanical_piston": "Piston Mecanic Lipicios",
 	"block.create.stockpile_switch": "Comutator De Depozitare",
