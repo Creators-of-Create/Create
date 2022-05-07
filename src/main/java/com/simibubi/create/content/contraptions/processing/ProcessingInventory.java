@@ -1,12 +1,14 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.Iterator;
 import java.util.function.Consumer;
 
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedIterator;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +36,9 @@ public class ProcessingInventory extends ItemStackHandler {
 	}
 
 	public void clear() {
-		TransferUtil.clearStorage(this);
+		for (int i = 0; i < stacks.length; i++) {
+			stacks[i] = ItemStack.EMPTY;
+		}
 		remainingTime = 0;
 		recipeDuration = 0;
 		appliedRecipe = false;
@@ -84,4 +88,9 @@ public class ProcessingInventory extends ItemStackHandler {
 		return slot == 0 && isEmpty();
 	}
 
+	@Override
+	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+		Iterator<StorageView<ItemVariant>> base = super.iterator(transaction);
+		return new ViewOnlyWrappedIterator<>(base);
+	}
 }

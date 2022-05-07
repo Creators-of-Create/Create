@@ -8,9 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import io.github.fabricators_of_create.porting_lib.render.FixedLightBakedModel;
-import io.github.fabricators_of_create.porting_lib.render.TranslucentBakedModel;
 
+import io.github.fabricators_of_create.porting_lib.render.virtual.FixedLightBakedModel;
+import io.github.fabricators_of_create.porting_lib.render.virtual.TranslucentBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
