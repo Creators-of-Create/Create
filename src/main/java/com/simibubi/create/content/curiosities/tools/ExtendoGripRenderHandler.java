@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback.RenderHandEvent;
 import io.github.fabricators_of_create.porting_lib.util.FirstPersonRendererHelper;
 

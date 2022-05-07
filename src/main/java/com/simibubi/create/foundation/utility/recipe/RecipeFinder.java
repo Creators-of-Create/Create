@@ -11,6 +11,12 @@ import javax.annotation.Nullable;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import com.simibubi.create.Create;
+
+import io.github.fabricators_of_create.porting_lib.util.IdentifiableResourceManagerReloadListener;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -19,19 +25,19 @@ import net.minecraft.world.level.Level;
  * Utility for searching through a world's recipe collection. Non-dynamic
  * conditions can be split off into an initial search for caching intermediate
  * results.
- * 
+ *
  * @author simibubi
  *
  */
 public class RecipeFinder {
-	
+
 	private static Cache<Object, List<Recipe<?>>> cachedSearches = CacheBuilder.newBuilder().build();
 
 	/**
 	 * Find all IRecipes matching the condition predicate. If this search is made
 	 * more than once, using the same object instance as the cacheKey will retrieve
 	 * the cached result from the first time.
-	 * 
+	 *
 	 * @param cacheKey   (can be null to prevent the caching)
 	 * @param world
 	 * @param conditions
@@ -56,8 +62,16 @@ public class RecipeFinder {
 		return list;
 	}
 
-	public static final ResourceManagerReloadListener LISTENER = resourceManager -> {
-		cachedSearches.invalidateAll();
+	public static final IdentifiableResourceReloadListener LISTENER = new IdentifiableResourceManagerReloadListener() {
+		@Override
+		public ResourceLocation getFabricId() {
+			return Create.asResource("recipe_finder");
+		}
+
+		@Override
+		public void onResourceManagerReload(ResourceManager resourceManager) {
+			cachedSearches.invalidateAll();
+		}
 	};
 
 }
