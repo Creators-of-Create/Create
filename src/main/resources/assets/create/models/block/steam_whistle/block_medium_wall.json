@@ -23,8 +23,8 @@
 		},
 		{
 			"name": "Pipe Medium",
-			"from": [5, 5, 5],
-			"to": [11, 11, 13],
+			"from": [5, 3, 5],
+			"to": [11, 9, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [7.5, 1, 10.5, 4], "rotation": 180, "texture": "#1"},

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 225",
+	"_": "Missing Localizations: 227",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1591,9 +1591,11 @@
 	"create.subtitle.wrench_rotate": "Llave inglesa usada",
 	"create.subtitle.potato_hit": "Impacto de vegetal",
 	"create.subtitle.saw_activate_wood": "Sierra mecánica activada",
+	"create.subtitle.whistle_high": "UNLOCALIZED: Whistling",
 	"create.subtitle.haunted_bell_convert": "Campana maldita se despierta",
 	"create.subtitle.deny": "Pitido denegante",
 	"create.subtitle.controller_click": "",
+	"create.subtitle.whistle_low": "UNLOCALIZED: Whistling",
 	"create.subtitle.schematicannon_launch_block": "Esquematicañón dispara",
 	"create.subtitle.copper_armor_equip": "Equipo de buceo tintinea",
 	"create.subtitle.controller_take": "Atril vaciándose",

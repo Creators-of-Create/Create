@@ -67,7 +67,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("Direction", movementDirection);
-		if (enginePos != null) {
+		if (enginePos != null && capacityKey != null) {
 			compound.put("EnginePos", NbtUtils.writeBlockPos(enginePos));
 			compound.putFloat("EnginePower", engineEfficiency);
 			compound.putString("EngineType", capacityKey.getRegistryName().toString());

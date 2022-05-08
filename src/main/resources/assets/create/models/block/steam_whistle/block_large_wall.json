@@ -23,8 +23,8 @@
 		},
 		{
 			"name": "Pipe Large",
-			"from": [4, 5, 4],
-			"to": [12, 13, 13],
+			"from": [4, 3, 4],
+			"to": [12, 11, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [7, 0.5, 11, 4.5], "rotation": 180, "texture": "#1"},

@@ -17,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -58,7 +58,12 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 		return AllBlocks.SHAFT.asStack();
 	}
 	
-	public static boolean stillValid(BlockState pState, LevelAccessor pLevel, BlockPos pPos) {
+	@Override
+	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+		return stillValid(pState, pLevel, pPos);
+	}
+	
+	public static boolean stillValid(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == pState.getValue(AXIS))
 				continue;

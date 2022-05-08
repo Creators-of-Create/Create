@@ -223,10 +223,22 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		WHISTLE_HIGH = create("whistle_high").subtitle("Whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
 		WHISTLE = create("whistle").subtitle("Whistling")
 			.category(SoundSource.RECORDS)
 			.build(),
-			
+
+		WHISTLE_LOW = create("whistle_low").subtitle("Whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_CHIFF = create("chiff").noSubtitle()
+			.category(SoundSource.RECORDS)
+			.build(),
+
 		HAUNTED_BELL_CONVERT = create("haunted_bell_convert").subtitle("Haunted Bell awakens")
 			.category(SoundSource.BLOCKS)
 			.build(),
@@ -265,7 +277,7 @@ public class AllSoundEvents {
 	public static SoundEntryProvider provider(DataGenerator generator) {
 		return new SoundEntryProvider(generator);
 	}
-	
+
 	public static void playItemPickup(Player player) {
 		player.level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 			1f + Create.RANDOM.nextFloat());
@@ -463,8 +475,8 @@ public class AllSoundEvents {
 		private List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 		private List<Pair<SoundEvent, Couple<Float>>> compiledEvents;
 
-		public WrappedSoundEntry(ResourceLocation id, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
-			SoundSource category) {
+		public WrappedSoundEntry(ResourceLocation id, String subtitle,
+			List<Pair<SoundEvent, Couple<Float>>> wrappedEvents, SoundSource category) {
 			super(id, subtitle, category);
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
@@ -539,7 +551,8 @@ public class AllSoundEvents {
 		protected List<ResourceLocation> variants;
 		protected SoundEvent event;
 
-		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, SoundSource category) {
+		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle,
+			SoundSource category) {
 			super(id, subtitle, category);
 			this.variants = variants;
 		}

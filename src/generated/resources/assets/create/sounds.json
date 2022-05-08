@@ -8,6 +8,12 @@
     ],
     "subtitle": "create.subtitle.blaze_munch"
   },
+  "chiff": {
+    "sounds": [
+      "create:chiff"
+    ],
+    "subtitle": "create.subtitle.chiff"
+  },
   "cogs": {
     "sounds": [
       "create:cogs"
@@ -364,6 +370,18 @@
       "create:whistle"
     ],
     "subtitle": "create.subtitle.whistle"
+  },
+  "whistle_high": {
+    "sounds": [
+      "create:whistle_high"
+    ],
+    "subtitle": "create.subtitle.whistle_high"
+  },
+  "whistle_low": {
+    "sounds": [
+      "create:whistle_low"
+    ],
+    "subtitle": "create.subtitle.whistle_low"
   },
   "worldshaper_place": {
     "sounds": [

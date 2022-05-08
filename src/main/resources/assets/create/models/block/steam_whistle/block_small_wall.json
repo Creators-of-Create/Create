@@ -23,8 +23,8 @@
 		},
 		{
 			"name": "Pipe Small",
-			"from": [6, 6, 6],
-			"to": [10, 10, 13],
+			"from": [6, 3, 6],
+			"to": [10, 7, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [8, 1.5, 10, 3.5], "rotation": 180, "texture": "#1"},

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -13,9 +14,14 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 
 	private boolean active;
 	private int keepAlive;
+	private WhistleSize size;
 
-	public WhistleSoundInstance(BlockPos worldPosition) {
-		super(AllSoundEvents.WHISTLE.getMainEvent(), SoundSource.RECORDS);
+	public WhistleSoundInstance(WhistleSize size, BlockPos worldPosition) {
+		super(
+			(size == WhistleSize.SMALL ? AllSoundEvents.WHISTLE_HIGH
+				: size == WhistleSize.MEDIUM ? AllSoundEvents.WHISTLE : AllSoundEvents.WHISTLE_LOW).getMainEvent(),
+			SoundSource.RECORDS);
+		this.size = size;
 		looping = true;
 		active = true;
 		volume = 0.05f;
@@ -25,6 +31,10 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 		x = v.x;
 		y = v.y;
 		z = v.z;
+	}
+
+	public WhistleSize getOctave() {
+		return size;
 	}
 
 	public void fadeOut() {
@@ -42,7 +52,7 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 	@Override
 	public void tick() {
 		Vec3 eyePosition = Minecraft.getInstance().cameraEntity.getEyePosition();
-		float maxVolume = (float) Mth.clamp((30 - eyePosition.distanceTo(new Vec3(x, y, z))) / 30, 0, 1);
+		float maxVolume = (float) Mth.clamp((30 - eyePosition.distanceTo(new Vec3(x, y, z))) / 30, 0, .75f);
 		if (active) {
 			volume = Math.min(1, volume + .25f);
 			volume = Math.min(volume, maxVolume);
@@ -50,6 +60,7 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 			if (keepAlive == 0)
 				fadeOut();
 			return;
+
 		}
 		volume = Math.max(0, volume - .25f);
 		volume = Math.min(volume, maxVolume);

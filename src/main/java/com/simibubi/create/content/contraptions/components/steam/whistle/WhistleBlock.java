@@ -15,6 +15,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -121,14 +125,24 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 		if (!base.hasProperty(SIZE))
 			return;
 		WhistleSize size = base.getValue(SIZE);
+		SoundType soundtype = base.getSoundType();
 		BlockPos currentPos = pPos.above();
-		for (int i = 1; i <= 12; i++) {
+
+		for (int i = 1; i <= 6; i++) {
 			BlockState blockState = pLevel.getBlockState(currentPos);
+			float pVolume = (soundtype.getVolume() + 1.0F) / 2.0F;
+			SoundEvent growSound = SoundEvents.NOTE_BLOCK_XYLOPHONE;
+			SoundEvent hitSound = soundtype.getHitSound();
 
 			if (AllBlocks.STEAM_WHISTLE_EXTENSION.has(blockState)) {
 				if (blockState.getValue(WhistleExtenderBlock.SHAPE) == WhistleExtenderShape.SINGLE) {
 					pLevel.setBlock(currentPos,
 						blockState.setValue(WhistleExtenderBlock.SHAPE, WhistleExtenderShape.DOUBLE), 3);
+					if (soundtype != null) {
+						float pPitch = (float) Math.pow(2, -(i * 2) / 12.0);
+						pLevel.playSound(null, currentPos, growSound, SoundSource.BLOCKS, pVolume / 4f, pPitch);
+						pLevel.playSound(null, currentPos, hitSound, SoundSource.BLOCKS, pVolume, pPitch);
+					}
 					return;
 				}
 				currentPos = currentPos.above();
@@ -141,6 +155,11 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 
 			pLevel.setBlock(currentPos, AllBlocks.STEAM_WHISTLE_EXTENSION.getDefaultState()
 				.setValue(SIZE, size), 3);
+			if (soundtype != null) {
+				float pPitch = (float) Math.pow(2, -(i * 2 - 1) / 12.0);
+				pLevel.playSound(null, currentPos, growSound, SoundSource.BLOCKS, pVolume / 4f, pPitch);
+				pLevel.playSound(null, currentPos, hitSound, SoundSource.BLOCKS, pVolume, pPitch);
+			}
 			return;
 		}
 	}
