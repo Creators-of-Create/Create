@@ -41,6 +41,8 @@ import net.minecraft.world.ticks.LevelTicks;
 
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
+	public static final BehaviourType<FluidFillingBehaviour> TYPE = new BehaviourType<>();
+
 	PriorityQueue<BlockPosEntry> queue;
 
 	List<BlockPosEntry> infinityCheckFrontier;
@@ -297,8 +299,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		infinityCheckFrontier.clear();
 		infinityCheckVisited.clear();
 	}
-
-	public static BehaviourType<FluidFillingBehaviour> TYPE = new BehaviourType<>();
 
 	@Override
 	public BehaviourType<?> getType() {

@@ -23,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinkable {
 
-	public static BehaviourType<LinkBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<LinkBehaviour> TYPE = new BehaviourType<>();
 
 	enum Mode {
 		TRANSMIT, RECEIVE

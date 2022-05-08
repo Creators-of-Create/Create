@@ -89,9 +89,6 @@ public class AllBlockPartials {
 		ARM_HEAD = block("mechanical_arm/head"), ARM_CLAW_BASE = block("mechanical_arm/claw_base"),
 		ARM_CLAW_GRIP = block("mechanical_arm/claw_grip"),
 
-		FLAG_SHORT_IN = block("mechanical_arm/flag/short_in"), FLAG_SHORT_OUT = block("mechanical_arm/flag/short_out"),
-		FLAG_LONG_IN = block("mechanical_arm/flag/long_in"), FLAG_LONG_OUT = block("mechanical_arm/flag/long_out"),
-
 		MECHANICAL_PUMP_ARROW = block("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = block("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = block("fluid_pipe/casing"), FLUID_VALVE_POINTER = block("fluid_valve/pointer"),
 
