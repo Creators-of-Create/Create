@@ -237,8 +237,6 @@ public class FluidNetwork {
 
 			}
 
-			flowSpeed -= transfer.getAmount();
-			transfer = FluidStack.EMPTY;
 			try (Transaction extract = t.openNested()) {
 				handler.extract(fluid.getType(), transferredAmount, extract);
 				extract.commit();

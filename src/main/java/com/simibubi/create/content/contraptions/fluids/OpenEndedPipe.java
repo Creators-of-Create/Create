@@ -307,7 +307,6 @@ public class OpenEndedPipe extends FlowSource {
 			if (drainedFromInternal != 0)
 				return drainedFromInternal;
 
-			((LevelExtensions) world).updateSnapshots(transaction);
 			FluidStack drainedFromWorld = removeFluidFromSpace(transaction);
 			if (drainedFromWorld.isEmpty())
 				return 0;
@@ -334,8 +333,10 @@ public class OpenEndedPipe extends FlowSource {
 		@Override
 		public FluidVariant getResource() {
 			if (!super.isResourceBlank()) return super.getResource();
-			Fluid f = world.getFluidState(outputPos).getType();
-			return FluidVariant.of(f instanceof FlowingFluid flowing ? flowing.getSource() : f);
+			try (Transaction t = TransferUtil.getTransaction()) {
+				FluidStack stack = removeFluidFromSpace(t);
+				return stack.getType();
+			}
 		}
 
 		@Override
