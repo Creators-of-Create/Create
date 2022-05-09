@@ -1,13 +1,14 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
-import com.simibubi.create.AllSoundEvents;
+import static com.simibubi.create.AllSoundEvents.WHISTLE;
+import static com.simibubi.create.AllSoundEvents.WHISTLE_HIGH;
+import static com.simibubi.create.AllSoundEvents.WHISTLE_LOW;
+
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class WhistleSoundInstance extends AbstractTickableSoundInstance {
@@ -17,10 +18,8 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 	private WhistleSize size;
 
 	public WhistleSoundInstance(WhistleSize size, BlockPos worldPosition) {
-		super(
-			(size == WhistleSize.SMALL ? AllSoundEvents.WHISTLE_HIGH
-				: size == WhistleSize.MEDIUM ? AllSoundEvents.WHISTLE : AllSoundEvents.WHISTLE_LOW).getMainEvent(),
-			SoundSource.RECORDS);
+		super((size == WhistleSize.SMALL ? WHISTLE_HIGH : size == WhistleSize.MEDIUM ? WHISTLE : WHISTLE_LOW)
+			.getMainEvent(), SoundSource.RECORDS);
 		this.size = size;
 		looping = true;
 		active = true;
@@ -51,11 +50,8 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 
 	@Override
 	public void tick() {
-		Vec3 eyePosition = Minecraft.getInstance().cameraEntity.getEyePosition();
-		float maxVolume = (float) Mth.clamp((30 - eyePosition.distanceTo(new Vec3(x, y, z))) / 30, 0, .75f);
 		if (active) {
 			volume = Math.min(1, volume + .25f);
-			volume = Math.min(volume, maxVolume);
 			keepAlive--;
 			if (keepAlive == 0)
 				fadeOut();
@@ -63,7 +59,6 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 
 		}
 		volume = Math.max(0, volume - .25f);
-		volume = Math.min(volume, maxVolume);
 		if (volume == 0)
 			stop();
 	}

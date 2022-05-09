@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
@@ -26,6 +28,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -70,6 +73,20 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			return true;
 		}
 		return false;
+	}
+
+	public static List<SuperGlueEntity> collectCropped(Level level, AABB bb) {
+		List<SuperGlueEntity> glue = new ArrayList<>();
+		for (SuperGlueEntity glueEntity : level.getEntitiesOfClass(SuperGlueEntity.class, bb)) {
+			AABB glueBox = glueEntity.getBoundingBox();
+			AABB intersect = bb.intersect(glueBox);
+			if (intersect.getXsize() * intersect.getYsize() * intersect.getZsize() == 0)
+				continue;
+			if (Mth.equal(intersect.getSize(), 1))
+				continue;
+			glue.add(new SuperGlueEntity(level, intersect));
+		}
+		return glue;
 	}
 
 	public SuperGlueEntity(EntityType<?> type, Level world) {
@@ -148,10 +165,11 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public void setPos(double x, double y, double z) {
+		AABB bb = getBoundingBox();
 		setPosRaw(x, y, z);
-		getBoundingBox().move(getBoundingBox().getCenter()
-			.scale(-1)
-			.add(x, y, z));
+		Vec3 center = bb.getCenter();
+		setBoundingBox(bb.move(-center.x, -bb.minY, -center.z)
+			.move(x, y, z));
 	}
 
 	@Override

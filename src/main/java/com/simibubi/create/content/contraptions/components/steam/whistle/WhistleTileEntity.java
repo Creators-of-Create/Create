@@ -25,6 +25,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -123,13 +124,15 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 		float f = (float) Math.pow(2, -pitch / 12.0);
 		boolean particle = level.getGameTime() % 8 == 0;
+		Vec3 eyePosition = Minecraft.getInstance().cameraEntity.getEyePosition();
+		float maxVolume = (float) Mth.clamp((64 - eyePosition.distanceTo(Vec3.atCenterOf(worldPosition))) / 64, 0, 1);
 
 		if (soundInstance == null || soundInstance.isStopped() || soundInstance.getOctave() != size) {
 			Minecraft.getInstance()
 				.getSoundManager()
 				.play(soundInstance = new WhistleSoundInstance(size, worldPosition));
-			AllSoundEvents.WHISTLE_CHIFF.playAt(level, worldPosition, 0.25f, size == WhistleSize.SMALL ? f + .75f : f,
-				true);
+			AllSoundEvents.WHISTLE_CHIFF.playAt(level, worldPosition, maxVolume * .175f,
+				size == WhistleSize.SMALL ? f + .75f : f, false);
 			particle = true;
 		}
 

@@ -10,13 +10,19 @@
   },
   "chiff": {
     "sounds": [
-      "create:chiff"
+      {
+        "name": "create:chiff",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.chiff"
   },
   "cogs": {
     "sounds": [
-      "create:cogs"
+      {
+        "name": "create:cogs",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.cogs"
   },
@@ -205,19 +211,28 @@
   },
   "fwoomp": {
     "sounds": [
-      "create:fwoomp"
+      {
+        "name": "create:fwoomp",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.fwoomp"
   },
   "haunted_bell_convert": {
     "sounds": [
-      "create:haunted_bell_convert"
+      {
+        "name": "create:haunted_bell_convert",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.haunted_bell_convert"
   },
   "haunted_bell_use": {
     "sounds": [
-      "create:haunted_bell_use"
+      {
+        "name": "create:haunted_bell_use",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.haunted_bell_use"
   },
@@ -300,14 +315,23 @@
   },
   "sanding_long": {
     "sounds": [
-      "create:sanding_long"
+      {
+        "name": "create:sanding_long",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.sanding_long"
   },
   "sanding_short": {
     "sounds": [
-      "create:sanding_short",
-      "create:sanding_short_1"
+      {
+        "name": "create:sanding_short",
+        "type": "file"
+      },
+      {
+        "name": "create:sanding_short_1",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.sanding_short"
   },
@@ -367,19 +391,31 @@
   },
   "whistle": {
     "sounds": [
-      "create:whistle"
+      {
+        "name": "create:whistle",
+        "type": "file",
+        "attenuation_distance": 64
+      }
     ],
     "subtitle": "create.subtitle.whistle"
   },
   "whistle_high": {
     "sounds": [
-      "create:whistle_high"
+      {
+        "name": "create:whistle_high",
+        "type": "file",
+        "attenuation_distance": 64
+      }
     ],
     "subtitle": "create.subtitle.whistle_high"
   },
   "whistle_low": {
     "sounds": [
-      "create:whistle_low"
+      {
+        "name": "create:whistle_low",
+        "type": "file",
+        "attenuation_distance": 64
+      }
     ],
     "subtitle": "create.subtitle.whistle_low"
   },
