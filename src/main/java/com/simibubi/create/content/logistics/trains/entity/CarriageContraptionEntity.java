@@ -2,19 +2,18 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.google.common.base.Strings;
+import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -65,10 +64,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	public boolean leftTickingChunks;
 	public boolean firstPositionUpdate;
 
+	private boolean arrivalSoundPlaying;
+	private boolean arrivalSoundReversed;
+	private int arrivalSoundTicks;
+
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 		validForRender = false;
 		firstPositionUpdate = true;
+		arrivalSoundTicks = Integer.MIN_VALUE;
 	}
 
 	@Override
@@ -167,15 +171,13 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 
 		tickActors();
-		contraption.stalled = false;
-		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
-			MovementContext context = pair.right;
-			context.stall = false;
-		}
+		boolean isStalled = isStalled();
+		carriage.stalled = isStalled;
 
 		CarriageSyncData carriageData = getCarriageData();
 
 		if (!level.isClientSide) {
+
 			entityData.set(SCHEDULED, carriage.train.runtime.getSchedule() != null);
 			boolean shouldCarriageSyncThisTick =
 				carriage.train.shouldCarriageSyncThisTick(level.getGameTime(), getType().updateInterval());
@@ -184,6 +186,18 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				entityData.set(CARRIAGE_DATA, carriageData);
 				carriageData.setDirty(false);
 			}
+
+			Navigation navigation = carriage.train.navigation;
+			if (navigation.announceArrival && Math.abs(navigation.distanceToDestination) < 60
+				&& carriageIndex == (carriage.train.speed < 0 ? carriage.train.carriages.size() - 1 : 0)) {
+				navigation.announceArrival = false;
+				arrivalSoundPlaying = true;
+				arrivalSoundReversed = carriage.train.speed < 0;
+				arrivalSoundTicks = Integer.MIN_VALUE;
+			}
+
+			if (arrivalSoundPlaying)
+				tickArrivalSound(cc);
 			return;
 		}
 
@@ -222,6 +236,59 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		firstPositionUpdate = false;
 		validForRender = true;
 	}
+
+	private void tickArrivalSound(CarriageContraption cc) {
+		List<Carriage> carriages = carriage.train.carriages;
+
+		if (arrivalSoundTicks == Integer.MIN_VALUE) {
+			int carriageCount = carriages.size();
+			Integer tick = null;
+
+			for (int index = 0; index < carriageCount; index++) {
+				int i = arrivalSoundReversed ? carriageCount - 1 - index : index;
+				Carriage carriage = carriages.get(i);
+				CarriageContraptionEntity entity = carriage.entity.get();
+				if (entity == null || !(entity.contraption instanceof CarriageContraption otherCC))
+					break;
+				tick = arrivalSoundReversed ? otherCC.soundQueue.lastTick() : otherCC.soundQueue.firstTick();
+				if (tick != null)
+					break;
+			}
+
+			if (tick == null) {
+				arrivalSoundPlaying = false;
+				return;
+			}
+
+			arrivalSoundTicks = tick;
+		}
+
+		if (tickCount % 2 == 0)
+			return;
+
+		boolean keepTicking = false;
+		for (Carriage c : carriages) {
+			CarriageContraptionEntity entity = c.entity.get();
+			if (entity == null || !(entity.contraption instanceof CarriageContraption otherCC))
+				continue;
+			keepTicking |= otherCC.soundQueue.tick(entity, arrivalSoundTicks, arrivalSoundReversed);
+		}
+
+		if (!keepTicking) {
+			arrivalSoundPlaying = false;
+			return;
+		}
+
+		arrivalSoundTicks += arrivalSoundReversed ? -1 : 1;
+	}
+
+	@Override
+	public void tickActors() {
+		super.tickActors();
+	}
+
+	@Override
+	protected void handleStallInformation(float x, float y, float z, float angle) {}
 
 	Vec3 derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, 1.5f)
 		.multiply(1, .25f, 1);
@@ -308,7 +375,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		train.navigation.waitingForSignal = null;
 		return true;
 	}
-	
+
 	@Override
 	public Component getDisplayName() {
 		if (carriage == null)

@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.curiosities.bell.AbstractBellBlock;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -17,6 +18,11 @@ public class BellMovementBehaviour implements MovementBehaviour {
 	public boolean renderAsNormalTileEntity() {
 		return true;
 	}
+	
+	@Override
+	public boolean isActive(MovementContext context) {
+		return !(context.contraption instanceof CarriageContraption);
+	}
 
 	@Override
 	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
@@ -28,7 +34,7 @@ public class BellMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public void stopMoving(MovementContext context) {
-		if (context.position != null)
+		if (context.position != null && isActive(context))
 			playSound(context);
 	}
 

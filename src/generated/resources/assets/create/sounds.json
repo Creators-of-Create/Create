@@ -419,6 +419,33 @@
     ],
     "subtitle": "create.subtitle.whistle_low"
   },
+  "whistle_train": {
+    "sounds": [
+      {
+        "name": "create:whistle_train",
+        "type": "file"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train"
+  },
+  "whistle_train_high": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_high",
+        "type": "file"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train_high"
+  },
+  "whistle_train_low": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_low",
+        "type": "file"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train_low"
+  },
   "worldshaper_place": {
     "sounds": [
       {

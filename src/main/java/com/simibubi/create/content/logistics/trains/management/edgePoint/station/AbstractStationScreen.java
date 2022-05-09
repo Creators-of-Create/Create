@@ -65,6 +65,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 			Carriage carriage = carriages.get(i);
 			w += icon.getIconWidth(carriage.bogeySpacing) + 1;
 		}
+		
 		return w;
 	}
 

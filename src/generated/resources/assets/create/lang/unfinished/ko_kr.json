@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 222",
+	"_": "Missing Localizations: 225",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1592,7 +1592,10 @@
 	"create.subtitle.potato_hit": "채소가 부딫힘",
 	"create.subtitle.saw_activate_wood": "톱이 작동함",
 	"create.subtitle.whistle_high": "UNLOCALIZED: High whistling",
+	"create.subtitle.whistle_train": "UNLOCALIZED: Whistling",
 	"create.subtitle.haunted_bell_convert": "종에 귀신이 들림",
+	"create.subtitle.whistle_train_high": "UNLOCALIZED: High whistling",
+	"create.subtitle.whistle_train_low": "UNLOCALIZED: Low whistling",
 	"create.subtitle.deny": "취소음",
 	"create.subtitle.controller_click": "조작기를 누름",
 	"create.subtitle.whistle_low": "UNLOCALIZED: Low whistling",

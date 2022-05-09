@@ -36,6 +36,7 @@ public class Carriage {
 	public Train train;
 	public int id;
 	public boolean blocked;
+	public boolean stalled;
 	public Couple<Boolean> presentConductors;
 
 	public int bogeySpacing;
@@ -49,6 +50,7 @@ public class Carriage {
 
 	// client
 	public boolean pointsInitialised;
+
 
 	static final int FIRST = 0, MIDDLE = 1, LAST = 2, BOTH = 3;
 
@@ -284,6 +286,7 @@ public class Carriage {
 		tag.putInt("Spacing", bogeySpacing);
 		tag.putBoolean("FrontConductor", presentConductors.getFirst());
 		tag.putBoolean("BackConductor", presentConductors.getSecond());
+		tag.putBoolean("Stalled", stalled);
 
 		CarriageContraptionEntity entity = this.entity.get();
 		if (entity != null)
@@ -303,6 +306,7 @@ public class Carriage {
 
 		Carriage carriage = new Carriage(bogey1, bogey2, tag.getInt("Spacing"));
 
+		carriage.stalled = tag.getBoolean("Stalled");
 		carriage.presentConductors = Couple.create(tag.getBoolean("FrontConductor"), tag.getBoolean("BackConductor"));
 		carriage.serialisedEntity = tag.getCompound("Entity")
 			.copy();

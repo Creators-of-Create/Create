@@ -116,7 +116,7 @@ public class StationScreen extends AbstractStationScreen {
 				.length());
 			trainNameBox.setHighlightPos(trainNameBox.getCursorPosition());
 		}
-		
+
 		super.tick();
 
 		updateAssemblyTooltip(te.edgePoint.isOnCurve() ? "no_assembly_curve"
@@ -154,6 +154,8 @@ public class StationScreen extends AbstractStationScreen {
 
 				int trainIconWidth = getTrainIconWidth(imminentTrain);
 				int targetPos = background.width / 2 - trainIconWidth / 2;
+				if (trainIconWidth > 130)
+					targetPos -= trainIconWidth - 130;
 				float f = (float) (imminentTrain.navigation.distanceToDestination / 15f);
 				if (trainPresent())
 					f = 0;
@@ -164,6 +166,8 @@ public class StationScreen extends AbstractStationScreen {
 
 		int trainIconWidth = getTrainIconWidth(train);
 		int targetPos = background.width / 2 - trainIconWidth / 2;
+		if (trainIconWidth > 130)
+			targetPos -= trainIconWidth - 130;
 
 		if (leavingAnimation > 0) {
 			disassembleTrainButton.active = false;

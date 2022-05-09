@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,6 +43,7 @@ public class CarriageContraption extends Contraption {
 	private boolean backwardControls;
 	public Couple<Boolean> blazeBurnerConductors;
 	public Map<BlockPos, Couple<Boolean>> conductorSeats;
+	public ArrivalSoundQueue soundQueue;
 
 	// during assembly only
 	private int bogeys;
@@ -53,6 +55,11 @@ public class CarriageContraption extends Contraption {
 		conductorSeats = new HashMap<>();
 		assembledBlazeBurners = new ArrayList<>();
 		blazeBurnerConductors = Couple.create(false, false);
+		soundQueue = new ArrivalSoundQueue();
+	}
+
+	public void setSoundQueueOffset(int offset) {
+		soundQueue.offset = offset;
 	}
 
 	public CarriageContraption(Direction assemblyDirection) {
@@ -106,6 +113,13 @@ public class CarriageContraption extends Contraption {
 	protected Pair<StructureBlockInfo, BlockEntity> capture(Level world, BlockPos pos) {
 		BlockState blockState = world.getBlockState(pos);
 
+		if (ArrivalSoundQueue.isPlayable(blockState)) {
+			int anchorCoord = VecHelper.getCoordinate(anchor, assemblyDirection.getAxis());
+			int posCoord = VecHelper.getCoordinate(pos, assemblyDirection.getAxis());
+			soundQueue.add((posCoord - anchorCoord) * assemblyDirection.getAxisDirection()
+				.getStep(), toLocalPos(pos));
+		}
+
 		if (blockState.getBlock() instanceof IBogeyBlock) {
 			bogeys++;
 			if (bogeys == 2)
@@ -151,6 +165,7 @@ public class CarriageContraption extends Contraption {
 			return compoundTag;
 		});
 		tag.put("ConductorSeats", list);
+		soundQueue.serialize(tag);
 		return tag;
 	}
 
@@ -165,6 +180,7 @@ public class CarriageContraption extends Contraption {
 		NBTHelper.iterateCompoundList(nbt.getList("ConductorSeats", Tag.TAG_COMPOUND),
 			c -> conductorSeats.put(NbtUtils.readBlockPos(c.getCompound("Pos")),
 				Couple.create(c.getBoolean("Forward"), c.getBoolean("Backward"))));
+		soundQueue.deserialize(nbt);
 		super.readNBT(world, nbt, spawnData);
 	}
 

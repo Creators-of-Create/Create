@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -52,6 +53,7 @@ public class Navigation {
 	public double distanceToDestination;
 	public double distanceStartedAt;
 	public boolean destinationBehindTrain;
+	public boolean announceArrival;
 	List<Couple<TrackNode>> currentPath;
 
 	private TravellingPoint signalScout;
@@ -366,6 +368,9 @@ public class Navigation {
 				cancelNavigation();
 			return -1;
 		}
+		
+		if (Math.abs(distanceToDestination) > 100)
+			announceArrival = true;
 
 		currentPath = pathTo.path;
 		destinationBehindTrain = pathTo.distance < 0;
@@ -676,6 +681,7 @@ public class Navigation {
 		tag.putDouble("DistanceToDestination", distanceToDestination);
 		tag.putDouble("DistanceStartedAt", distanceStartedAt);
 		tag.putBoolean("BehindTrain", destinationBehindTrain);
+		tag.putBoolean("AnnounceArrival", announceArrival);
 		tag.put("Path", NBTHelper.writeCompoundList(currentPath, c -> {
 			CompoundTag nbt = new CompoundTag();
 			nbt.put("Nodes", c.map(TrackNode::getLocation)
@@ -703,6 +709,7 @@ public class Navigation {
 		distanceToDestination = tag.getDouble("DistanceToDestination");
 		distanceStartedAt = tag.getDouble("DistanceStartedAt");
 		destinationBehindTrain = tag.getBoolean("BehindTrain");
+		announceArrival = tag.getBoolean("AnnounceArrival");
 		currentPath.clear();
 		NBTHelper.iterateCompoundList(tag.getList("Path", Tag.TAG_COMPOUND),
 			c -> currentPath.add(Couple

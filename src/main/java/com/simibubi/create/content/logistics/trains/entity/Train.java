@@ -181,6 +181,10 @@ public class Train {
 				stress[i - 1] = target - actual;
 			}
 			previousCarriage = carriage;
+			if (carriage.stalled) {
+				distance = 0;
+				speed = 0;
+			}
 		}
 
 		// positive stress: carriages should move apart
@@ -532,7 +536,6 @@ public class Train {
 		navigation.cancelNavigation();
 		forEachTravellingPoint(tp -> migratingPoints.add(new TrainMigration(tp)));
 		graph = null;
-		syncTrackGraphChanges();
 	}
 
 	public void forEachTravellingPoint(Consumer<TravellingPoint> callback) {
@@ -613,14 +616,13 @@ public class Train {
 			if (derailed)
 				status.successfulMigration();
 			derailed = false;
-			if (runtime.getSchedule() != null) {
-				if (runtime.state == State.IN_TRANSIT)
-					runtime.state = State.PRE_TRANSIT;
-			}
+			if (runtime.getSchedule() != null && runtime.state == State.IN_TRANSIT)
+				runtime.state = State.PRE_TRANSIT;
 			GlobalStation currentStation = getCurrentStation();
 			if (currentStation != null)
 				currentStation.reserveFor(this);
 			updateSignalBlocks = true;
+			migrationCooldown = 0;
 			syncTrackGraphChanges();
 			return;
 		}
@@ -722,7 +724,7 @@ public class Train {
 				while (current != null) {
 					prev = current;
 					d = current.getLocationOn(edge);
-					current = signalData.next(EdgePointType.SIGNAL, d);	
+					current = signalData.next(EdgePointType.SIGNAL, d);
 				}
 				if (prev != null) {
 					UUID group = prev.getGroup(node2);

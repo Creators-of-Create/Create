@@ -228,7 +228,7 @@ public class AllSoundEvents {
 			.attenuationDistance(64)
 			.build(),
 
-		WHISTLE = create("whistle").subtitle("Whistling")
+		WHISTLE_MEDIUM = create("whistle").subtitle("Whistling")
 			.category(SoundSource.RECORDS)
 			.attenuationDistance(64)
 			.build(),
@@ -236,6 +236,18 @@ public class AllSoundEvents {
 		WHISTLE_LOW = create("whistle_low").subtitle("Low whistling")
 			.category(SoundSource.RECORDS)
 			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_TRAIN_HIGH = create("whistle_train_high").subtitle("High whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_TRAIN_MEDIUM = create("whistle_train").subtitle("Whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_TRAIN_LOW = create("whistle_train_low").subtitle("Low whistling")
+			.category(SoundSource.RECORDS)
 			.build(),
 
 		WHISTLE_CHIFF = create("chiff").noSubtitle()

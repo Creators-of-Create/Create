@@ -33,6 +33,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -311,8 +312,8 @@ public class StationTileEntity extends SmartTileEntity {
 
 		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, targetPosition, trackState));
 
-		int MAX_LENGTH = 48;
-		int MAX_BOGEY_COUNT = 20;
+		int MAX_LENGTH = AllConfigs.SERVER.trains.maxAssemblyLength.get();
+		int MAX_BOGEY_COUNT = AllConfigs.SERVER.trains.maxBogeyCount.get();
 
 		int bogeyIndex = 0;
 		int maxBogeyCount = MAX_BOGEY_COUNT;
@@ -324,8 +325,12 @@ public class StationTileEntity extends SmartTileEntity {
 		Arrays.fill(bogeyTypes, null);
 
 		for (int i = 0; i < MAX_LENGTH; i++) {
-			if (i == MAX_LENGTH - 1 || !track.trackEquals(trackState, level.getBlockState(currentPos))) {
+			if (i == MAX_LENGTH - 1) {
 				assemblyLength = i;
+				break;
+			}
+			if (!track.trackEquals(trackState, level.getBlockState(currentPos))) {
+				assemblyLength = Math.max(0, i - 1);
 				break;
 			}
 
@@ -510,9 +515,10 @@ public class StationTileEntity extends SmartTileEntity {
 			BlockPos bogeyPosOffset = trackPosition.offset(bogeyOffset);
 
 			try {
-				boolean success = contraption.assemble(level,
-					bogeyPosOffset.relative(assemblyDirection, bogeyLocations[bogeyIndex] + 1));
+				int offset = bogeyLocations[bogeyIndex] + 1;
+				boolean success = contraption.assemble(level, bogeyPosOffset.relative(assemblyDirection, offset));
 				atLeastOneForwardControls |= contraption.hasForwardControls();
+				contraption.setSoundQueueOffset(offset);
 				if (!success) {
 					exception(new AssemblyException(Lang.translate("train_assembly.nothing_attached", bogeyIndex + 1)),
 						-1);

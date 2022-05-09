@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
-import static com.simibubi.create.AllSoundEvents.WHISTLE;
+import static com.simibubi.create.AllSoundEvents.WHISTLE_MEDIUM;
 import static com.simibubi.create.AllSoundEvents.WHISTLE_HIGH;
 import static com.simibubi.create.AllSoundEvents.WHISTLE_LOW;
 
@@ -18,7 +18,7 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 	private WhistleSize size;
 
 	public WhistleSoundInstance(WhistleSize size, BlockPos worldPosition) {
-		super((size == WhistleSize.SMALL ? WHISTLE_HIGH : size == WhistleSize.MEDIUM ? WHISTLE : WHISTLE_LOW)
+		super((size == WhistleSize.SMALL ? WHISTLE_HIGH : size == WhistleSize.MEDIUM ? WHISTLE_MEDIUM : WHISTLE_LOW)
 			.getMainEvent(), SoundSource.RECORDS);
 		this.size = size;
 		looping = true;

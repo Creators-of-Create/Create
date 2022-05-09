@@ -153,7 +153,10 @@ public class AssemblyScreen extends AbstractStationScreen {
 
 			TrainIconType icon = train.icon;
 			int offset = 0;
-			int position = background.width / 2 - getTrainIconWidth(train) / 2;
+			int trainIconWidth = getTrainIconWidth(train);
+			int position = background.width / 2 - trainIconWidth / 2;
+			if (trainIconWidth > 130)
+				position -= trainIconWidth - 130;
 			boolean frontConductor = false;
 			boolean backConductor = false;
 

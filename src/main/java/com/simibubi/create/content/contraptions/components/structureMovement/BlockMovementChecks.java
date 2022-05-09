@@ -11,6 +11,8 @@ import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
@@ -146,8 +148,7 @@ public class BlockMovementChecks {
 	/**
 	 * Attached blocks will move if blocks they are attached to are moved
 	 */
-	public static boolean isBlockAttachedTowards(BlockState state, Level world, BlockPos pos,
-												 Direction direction) {
+	public static boolean isBlockAttachedTowards(BlockState state, Level world, BlockPos pos, Direction direction) {
 		for (AttachedCheck check : ATTACHED_CHECKS) {
 			CheckResult result = check.isBlockAttachedTowards(state, world, pos, direction);
 			if (result != CheckResult.PASS) {
@@ -179,10 +180,10 @@ public class BlockMovementChecks {
 		if (state.getBlock() instanceof FenceGateBlock)
 			return true;
 		if (state.getMaterial()
-				.isReplaceable())
+			.isReplaceable())
 			return false;
 		if (state.getCollisionShape(world, pos)
-				.isEmpty())
+			.isEmpty())
 			return false;
 		return true;
 	}
@@ -258,11 +259,15 @@ public class BlockMovementChecks {
 			return true;
 		if (block instanceof WoolCarpetBlock)
 			return true;
+		if (block instanceof WhistleBlock)
+			return true;
+		if (block instanceof WhistleExtenderBlock)
+			return true;
 		return AllBlockTags.BRITTLE.matches(state);
 	}
 
 	private static boolean isBlockAttachedTowardsFallback(BlockState state, Level world, BlockPos pos,
-														  Direction direction) {
+		Direction direction) {
 		Block block = state.getBlock();
 		if (block instanceof LadderBlock)
 			return state.getValue(LadderBlock.FACING) == direction.getOpposite();
@@ -331,18 +336,23 @@ public class BlockMovementChecks {
 		}
 		if (state.getBlock() instanceof SailBlock)
 			return direction.getAxis() != state.getValue(SailBlock.FACING)
-					.getAxis();
+				.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
 			return FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (state.getBlock() instanceof ItemVaultBlock)
 			return ItemVaultConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (AllBlocks.STICKER.has(state) && state.getValue(StickerBlock.EXTENDED)) {
 			return direction == state.getValue(StickerBlock.FACING)
-					&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());
+				&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());
 		}
 		if (block instanceof IBogeyBlock bogey)
 			return bogey.getStickySurfaces(world, pos, state)
 				.contains(direction);
+		if (block instanceof WhistleBlock)
+			return direction == (state.getValue(WhistleBlock.WALL) ? state.getValue(WhistleBlock.FACING)
+				: Direction.DOWN);
+		if (block instanceof WhistleExtenderBlock)
+			return direction == Direction.DOWN;
 		return false;
 	}
 
@@ -355,7 +365,7 @@ public class BlockMovementChecks {
 			return state.getValue(HarvesterBlock.FACING) == facing;
 		if (AllBlocks.MECHANICAL_PLOUGH.has(state))
 			return state.getValue(PloughBlock.FACING) == facing;
-		
+
 		if (AllBlocks.CART_ASSEMBLER.has(state))
 			return Direction.DOWN == facing;
 		if (AllBlocks.MECHANICAL_SAW.has(state))
@@ -373,10 +383,10 @@ public class BlockMovementChecks {
 				.getAxis();
 		if (AllBlocks.PISTON_EXTENSION_POLE.has(state))
 			return facing.getAxis() != state.getValue(BlockStateProperties.FACING)
-					.getAxis();
+				.getAxis();
 		if (AllBlocks.MECHANICAL_PISTON_HEAD.has(state))
 			return facing.getAxis() != state.getValue(BlockStateProperties.FACING)
-					.getAxis();
+				.getAxis();
 		if (AllBlocks.STICKER.has(state) && !state.getValue(StickerBlock.EXTENDED))
 			return facing == state.getValue(StickerBlock.FACING);
 		return isBrittle(state);
@@ -415,13 +425,12 @@ public class BlockMovementChecks {
 		public CheckResult isNotSupportive(BlockState state, Direction direction);
 	}
 
-	public static interface AllChecks extends MovementNecessaryCheck, MovementAllowedCheck, BrittleCheck, AttachedCheck, NotSupportiveCheck {
+	public static interface AllChecks
+		extends MovementNecessaryCheck, MovementAllowedCheck, BrittleCheck, AttachedCheck, NotSupportiveCheck {
 	}
 
 	public static enum CheckResult {
-		SUCCESS,
-		FAIL,
-		PASS;
+		SUCCESS, FAIL, PASS;
 
 		public Boolean toBoolean() {
 			return this == PASS ? null : (this == SUCCESS ? true : false);
