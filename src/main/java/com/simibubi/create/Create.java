@@ -2,6 +2,9 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.curios.Curios;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -119,6 +122,8 @@ public class Create {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
+
+		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
