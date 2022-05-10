@@ -190,7 +190,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		refreshBlockState();
 		BlockState state = getBlockState();
 		if (state.getValue(FluidTankBlock.LIGHT_LEVEL) != actualLuminosity) {
-			level.setBlockAndUpdate(worldPosition, state.setValue(FluidTankBlock.LIGHT_LEVEL, actualLuminosity));
+			level.setBlock(worldPosition, state.setValue(FluidTankBlock.LIGHT_LEVEL, actualLuminosity), 23);
 		}
 	}
 
@@ -283,7 +283,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 							shape = Shape.WINDOW;
 					}
 
-					level.setBlockAndUpdate(pos, blockState.setValue(FluidTankBlock.SHAPE, shape));
+					level.setBlock(pos, blockState.setValue(FluidTankBlock.SHAPE, shape), 23);
 					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(level, pos);
 					if (tankAt != null)
 						tankAt.updateStateLuminosity();
