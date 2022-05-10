@@ -7,8 +7,6 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
-import io.github.fabricators_of_create.porting_lib.crafting.CompoundIngredient;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.IngredientAccessor;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.util.MultiItemValue;
 
@@ -21,7 +19,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionResult;
@@ -99,7 +96,7 @@ public class BlueprintItem extends Item {
 	}
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
-		Ingredient.Value[] acceptedItems = ((IngredientAccessor) ingredient).port_lib$getValues();
+		Ingredient.Value[] acceptedItems = ingredient.values;
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)

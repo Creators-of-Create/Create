@@ -138,7 +138,7 @@ public class FluidTankConnectivityHandler {
 				state = state.setValue(FluidTankBlock.BOTTOM, true);
 				state = state.setValue(FluidTankBlock.TOP, te.height == 1);
 				te.getLevel()
-					.setBlock(te.getBlockPos(), state, 22);
+						.setBlock(te.getBlockPos(), state, 23);
 			}
 
 			te.setWindows(te.window);
@@ -234,7 +234,7 @@ public class FluidTankConnectivityHandler {
 							continue;
 						state = state.setValue(FluidTankBlock.BOTTOM, yOffset == 0);
 						state = state.setValue(FluidTankBlock.TOP, yOffset == height - 1);
-						world.setBlock(pos, state, 22);
+						world.setBlock(pos, state, 23);
 					}
 				}
 			}
@@ -310,7 +310,6 @@ public class FluidTankConnectivityHandler {
 			t.commit();
 		}
 
-		te.actualTank = null;
 		if (tryReconnect)
 			formTanks(te.getType(), world, cache == null ? new TankSearchCache() : cache, frontier);
 	}

@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.IngredientAccessor;
 
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -54,7 +53,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 				Ingredient transit = Ingredient.of(parent.getTransitionalItem());
 
 				processingRecipe.getIngredients()
-					.set(0, index == 0 ? IngredientAccessor.port_lib$fromValues(ImmutableList.of(transit, parent.getIngredient()).stream().flatMap(i -> Arrays.stream(((IngredientAccessor) i).port_lib$getValues()))) : transit);
+					.set(0, index == 0 ? Ingredient.fromValues(ImmutableList.of(transit, parent.getIngredient()).stream().flatMap(i -> Arrays.stream(i.values))) : transit);
 				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
 				return sequencedRecipe;
 			}

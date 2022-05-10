@@ -6,8 +6,6 @@ import java.util.stream.Stream;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.IngredientAccessor;
-
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ItemValueAccessor;
 
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.TagValueAccessor;
@@ -42,7 +40,7 @@ public final class ToolboxColoringRecipeMaker {
 				Ingredient.Value dyeList = ItemValueAccessor.createItemValue(dyeStack);
 				Ingredient.Value colorList = TagValueAccessor.createTagValue(colorTag);
 				Stream<Ingredient.Value> colorIngredientStream = Stream.of(dyeList, colorList);
-				Ingredient colorIngredient = IngredientAccessor.port_lib$fromValues(colorIngredientStream);
+				Ingredient colorIngredient = Ingredient.fromValues(colorIngredientStream);
 				NonNullList<Ingredient> inputs =
 					NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, colorIngredient);
 				Block coloredShulkerBox = AllBlocks.TOOLBOXES.get(color)

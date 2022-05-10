@@ -59,9 +59,7 @@ public abstract class FlowSource {
 		public void manageSource(Level world) {
 			if (fluidHandler != null && world.getGameTime() % 20 != 0)
 				return;
-			BlockEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
-			if (tileEntity != null)
-				fluidHandler = TransferUtil.getFluidStorage(tileEntity, location.getOppositeFace());
+			fluidHandler = TransferUtil.getFluidStorage(world, location.getConnectedPos(), location.getOppositeFace());
 		}
 
 		@Override

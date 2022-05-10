@@ -46,7 +46,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	protected boolean forceFluidLevelUpdate;
 	protected SmartFluidTank tankInventory;
-	protected FluidTank actualTank;
 	protected BlockPos controller;
 	protected BlockPos lastKnownPos;
 	protected boolean updateConnectivity;
@@ -65,13 +64,11 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		tankInventory = createInventory();
-		actualTank = tankInventory;
 		forceFluidLevelUpdate = true;
 		updateConnectivity = false;
 		window = true;
 		height = 1;
 		width = 1;
-		refreshCapability();
 	}
 
 	protected SmartFluidTank createInventory() {
@@ -193,7 +190,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		refreshBlockState();
 		BlockState state = getBlockState();
 		if (state.getValue(FluidTankBlock.LIGHT_LEVEL) != actualLuminosity) {
-			level.setBlock(worldPosition, state.setValue(FluidTankBlock.LIGHT_LEVEL, actualLuminosity), 22);
+			level.setBlockAndUpdate(worldPosition, state.setValue(FluidTankBlock.LIGHT_LEVEL, actualLuminosity));
 		}
 	}
 
@@ -230,10 +227,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			state = state.setValue(FluidTankBlock.BOTTOM, true);
 			state = state.setValue(FluidTankBlock.TOP, true);
 			state = state.setValue(FluidTankBlock.SHAPE, window ? Shape.WINDOW : Shape.PLAIN);
-			getLevel().setBlock(worldPosition, state, 22);
+			getLevel().setBlock(worldPosition, state, 23);
 		}
 
-		refreshCapability();
 		setChanged();
 		sendData();
 	}
@@ -287,7 +283,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 							shape = Shape.WINDOW;
 					}
 
-					level.setBlock(pos, blockState.setValue(FluidTankBlock.SHAPE, shape), 22);
+					level.setBlockAndUpdate(pos, blockState.setValue(FluidTankBlock.SHAPE, shape));
 					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(level, pos);
 					if (tankAt != null)
 						tankAt.updateStateLuminosity();
@@ -303,14 +299,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (controller.equals(this.controller))
 			return;
 		this.controller = controller;
-		refreshCapability();
 		setChanged();
 		sendData();
-	}
-
-	private void refreshCapability() {
-		actualTank = isController() ? tankInventory
-				: getControllerTE() != null ? getControllerTE().tankInventory : new FluidTank(0);
 	}
 
 	@Override
@@ -437,16 +427,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		forceFluidLevelUpdate = false;
 	}
 
-//	@Nonnull
-//	@Override
-//	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-//		if (!fluidCapability.isPresent())
-//			refreshCapability();
-//		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-//			return fluidCapability.cast();
-//		return super.getCapability(cap, side);
-//	}
-
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
@@ -486,8 +466,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Nullable
 	@Override
 	public Storage<FluidVariant> getFluidStorage(@Nullable Direction direction) {
-		if (actualTank == null)
-			refreshCapability();
-		return actualTank;
+		FluidTankTileEntity controller = getControllerTE();
+		if (controller != null)
+			return controller.getTankInventory();
+		return getTankInventory();
 	}
 }
