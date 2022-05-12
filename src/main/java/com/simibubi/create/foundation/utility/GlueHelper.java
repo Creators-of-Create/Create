@@ -37,7 +37,10 @@ public class GlueHelper {
 
             for (var pos : BlockPos.betweenClosed(pos1, pos2)) {
                 var targetPos = pos.relative(dir.getOpposite());
-                if (!area.isInside(targetPos)) continue; // neighboring block inside area
+                if (!area.isInside(targetPos)
+                    || level.getBlockState(targetPos).isAir()
+                    || level.getBlockState(pos).isAir())
+                    continue; // neighboring block inside area
 
                 SuperGlueEntity entity = new SuperGlueEntity(level, pos.immutable(), dir);
                 if (!entity.onValidSurface()) continue;
@@ -52,7 +55,7 @@ public class GlueHelper {
     /**
      * Removes glue in a cuboid.
      *
-     * @param axis optional, to clear only glue on in one axis;
+     * @param axes axes to apply the glue on.
      * @return number of removed glue patches
      */
     public static int clear(Level level, BlockPos pos1, BlockPos pos2, @NotNull EnumSet<Direction.Axis> axes) {
@@ -73,8 +76,8 @@ public class GlueHelper {
      *
      * @param source source block to start from
      * @param limit  max number of glue patches to apply
-     * @param mask mask predicate to glue only blocks that match it
-     * @return
+     * @param mask glue doesn't spread through masked blocks
+     * @return number of applied patches
      */
     public static int floodfill(Level level, BlockPos source, int limit, @Nullable Predicate<BlockInWorld> mask) {
         // FIXME: this code and sail code are both BFS-order traversals. Maybe they should be refactored to one algo?
@@ -89,7 +92,7 @@ public class GlueHelper {
 
                 final BlockPos neighbor = pos.relative(dir);
                 if (visited.contains(neighbor)) continue;
-                if (mask != null && !mask.test(new BlockInWorld(level, neighbor, true))) {
+                if (mask != null && mask.test(new BlockInWorld(level, neighbor, true))) {
                     visited.add(neighbor);
                     continue;
                 }

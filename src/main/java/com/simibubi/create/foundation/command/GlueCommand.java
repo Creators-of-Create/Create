@@ -27,7 +27,7 @@ import static net.minecraft.commands.arguments.coordinates.SwizzleArgument.swizz
 
 public class GlueCommand {
 
-    public static final int GLUE_LIMIT = 32768;
+    public static final int GLUE_LIMIT = 8192;
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return literal("glue")
@@ -45,9 +45,10 @@ public class GlueCommand {
             .then(literal("floodfill")
                 .then(argument("source", blockPos())
                     .executes(ctx -> floodfillCommand(ctx, GLUE_LIMIT, null))
+                    .then(argument("mask", blockPredicate())
+                        .executes(ctx -> floodfillCommand(ctx, GLUE_LIMIT, getBlockPredicate(ctx, "mask"))))
                     .then(argument("limit", integer(1, GLUE_LIMIT))
                         .executes(ctx -> floodfillCommand(ctx, GLUE_LIMIT, null))
-                        .executes(ctx -> floodfillCommand(ctx, ctx.getArgument("limit", Integer.class), null))
                         .then(argument("mask", blockPredicate())
                             .executes(ctx -> floodfillCommand(ctx, ctx.getArgument("limit", Integer.class), getBlockPredicate(ctx, "mask")))))))
             ;
@@ -67,7 +68,7 @@ public class GlueCommand {
 
     private static int floodfillCommand(CommandContext<CommandSourceStack> ctx, int limit, @Nullable Predicate<BlockInWorld> mask) throws CommandSyntaxException {
         int propagated = GlueHelper.floodfill(ctx.getSource().getLevel(), getLoadedBlockPos(ctx, "source"), limit, mask);
-        ctx.getSource().sendSuccess(new TextComponent("Successfully propagated " + propagated + "/" + limit + " patches of glue."), true);
+        ctx.getSource().sendSuccess(new TextComponent("Successfully propagated " + propagated + "(limited to " + limit + ") patches of glue."), true);
         return Command.SINGLE_SUCCESS;
     }
 }
