@@ -24,7 +24,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 	public static final BehaviourType<SmartFluidTankBehaviour>
 
-	TYPE = new BehaviourType<>(), INPUT = new BehaviourType<>("Input"), oOUTPUT = new BehaviourType<>("Output");
+	TYPE = new BehaviourType<>(), INPUT = new BehaviourType<>("Input"), OUTPUT = new BehaviourType<>("Output");
 
 	private static final int SYNC_RATE = 8;
 
