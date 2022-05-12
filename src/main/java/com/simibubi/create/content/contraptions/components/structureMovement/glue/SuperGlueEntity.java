@@ -69,6 +69,7 @@ import net.minecraftforge.network.PacketDistributor;
 public class SuperGlueEntity extends Entity
 	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
 
+	public static final int PIXEL_SIZE = 12;
 	private int validationTimer;
 	protected BlockPos hangingPosition;
 	protected Direction facingDirection = Direction.SOUTH;
@@ -86,14 +87,6 @@ public class SuperGlueEntity extends Entity
 
 	@Override
 	protected void defineSynchedData() {}
-
-	public int getWidthPixels() {
-		return 12;
-	}
-
-	public int getHeightPixels() {
-		return 12;
-	}
 
 	public void onBroken(@Nullable Entity breaker) {
 		playSound(SoundEvents.SLIME_SQUISH_SMALL, 1.0F, 1.0F);
@@ -132,9 +125,9 @@ public class SuperGlueEntity extends Entity
 			double y = hangingPosition.getY() + 0.5 - facingDirection.getStepY() * offset;
 			double z = hangingPosition.getZ() + 0.5 - facingDirection.getStepZ() * offset;
 			this.setPosRaw(x, y, z);
-			double w = getWidthPixels();
-			double h = getHeightPixels();
-			double l = getWidthPixels();
+			double w = PIXEL_SIZE;
+			double h = PIXEL_SIZE;
+			double l = PIXEL_SIZE;
 			Axis axis = this.getFacingDirection()
 				.getAxis();
 			double depth = 2 - 1 / 128f;
@@ -177,17 +170,17 @@ public class SuperGlueEntity extends Entity
 	}
 
 	public boolean onValidSurface() {
-		BlockPos pos = hangingPosition;
-		BlockPos pos2 = hangingPosition.relative(getFacingDirection().getOpposite());
-		if (level.isOutsideBuildHeight(pos2))
+		BlockPos glueSource = hangingPosition;
+		BlockPos glueTarget = hangingPosition.relative(getFacingDirection().getOpposite());
+		if (level.isOutsideBuildHeight(glueTarget))
 			return false;
-		if (!level.isAreaLoaded(pos, 0) || !level.isAreaLoaded(pos2, 0))
+		if (!level.isAreaLoaded(glueSource, 0) || !level.isAreaLoaded(glueTarget, 0))
 			return true;
-		if (!isValidFace(level, pos2, getFacingDirection())
-			&& !isValidFace(level, pos, getFacingDirection().getOpposite()))
+		if (!isValidFace(level, glueTarget, getFacingDirection())
+			&& !isValidFace(level, glueSource, getFacingDirection().getOpposite()))
 			return false;
-		if (isSideSticky(level, pos2, getFacingDirection())
-			|| isSideSticky(level, pos, getFacingDirection().getOpposite()))
+		if (isSideSticky(level, glueTarget, getFacingDirection())
+			|| isSideSticky(level, glueSource, getFacingDirection().getOpposite()))
 			return false;
 		return level.getEntities(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
 			.isEmpty();
