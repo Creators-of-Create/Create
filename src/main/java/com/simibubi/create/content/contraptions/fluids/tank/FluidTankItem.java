@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 
@@ -74,7 +75,11 @@ public class FluidTankItem extends BlockItem {
 
 		if (!FluidTankBlock.isTank(placedOnState))
 			return;
-		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(AllTileEntities.FLUID_TANK.get(), world, placedOnPos); //FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
+		boolean creative = getBlock().equals(AllBlocks.CREATIVE_FLUID_TANK.get());
+		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(
+			creative ? AllTileEntities.CREATIVE_FLUID_TANK.get() : AllTileEntities.FLUID_TANK.get(), world, placedOnPos
+		);
+		//FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
 		if (tankAt == null)
 			return;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
