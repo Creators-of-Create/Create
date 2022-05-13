@@ -216,6 +216,7 @@ public class ConnectivityHandler {
 							if (beTank != null && fluid.isEmpty() && beTank instanceof CreativeFluidTankTileEntity.CreativeSmartFluidTank) {
 								((CreativeFluidTankTileEntity.CreativeSmartFluidTank)beTank).setContainedFluid(fluidAt);
 							}
+							if (be.hasFluid() && beTank != null) beTank.fill(fluidAt, IFluidHandler.FluidAction.EXECUTE);
 						}
 						tankAt.drain(tankAt.getCapacity(), IFluidHandler.FluidAction.EXECUTE);
 					}
