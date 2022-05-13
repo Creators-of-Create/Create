@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -71,7 +74,7 @@ public class FluidTankItem extends BlockItem {
 
 		if (!FluidTankBlock.isTank(placedOnState))
 			return;
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
+		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(AllTileEntities.FLUID_TANK.get(), world, placedOnPos); //FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
 		if (tankAt == null)
 			return;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
