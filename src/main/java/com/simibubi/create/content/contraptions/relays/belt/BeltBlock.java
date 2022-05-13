@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.minecraft.world.level.block.LevelEvent;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -463,11 +465,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return;
 
 		BlockEntity te = world.getBlockEntity(pos);
-		if (te instanceof BeltTileEntity) {
-			BeltTileEntity beltTileEntity = (BeltTileEntity) te;
-			if (beltTileEntity.isController())
-				beltTileEntity.getInventory()
-					.ejectAll();
+
+		if (te instanceof BeltTileEntity belt) {
+			if (belt.isController())
+				belt.getInventory().ejectAll();
+			te.setRemoved();
 			world.removeBlockEntity(pos);
 		}
 
@@ -483,20 +485,15 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 			boolean hasPulley = false;
 			BlockEntity tileEntity = world.getBlockEntity(currentPos);
-			if (tileEntity instanceof BeltTileEntity) {
-				BeltTileEntity belt = (BeltTileEntity) tileEntity;
-				if (belt.isController())
-					belt.getInventory()
-						.ejectAll();
-
-				belt.setRemoved();
+			if (tileEntity instanceof BeltTileEntity belt) {
 				hasPulley = belt.hasPulley();
 			}
 
 			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()
-				.setValue(BlockStateProperties.AXIS, getRotationAxis(currentState));
-			world.setBlock(currentPos, hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), 3);
-			world.levelEvent(2001, currentPos, Block.getId(currentState));
+					.setValue(BlockStateProperties.AXIS, getRotationAxis(currentState));
+			// setBlock will call onRemove for the other belts, let each block handle removing its own TE
+			world.setBlock(currentPos, hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+			world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, currentPos, Block.getId(currentState));
 		}
 	}
 
