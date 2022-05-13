@@ -87,7 +87,6 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 			if (te instanceof ItemVaultTileEntity) {
 				ItemVaultTileEntity vault = (ItemVaultTileEntity) te;
 				ConnectivityHandler.splitMulti(vault);
-				//ItemVaultConnectivityHandler.splitVault(vault);
 				vault.removeController(true);
 			}
 			state = state.setValue(LARGE, false);
@@ -105,7 +104,6 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 			ItemVaultTileEntity vaultTE = (ItemVaultTileEntity) te;
 			ItemHelper.dropContents(world, pos, vaultTE.inventory);
 			world.removeBlockEntity(pos);
-			//ItemVaultConnectivityHandler.splitVault(tankTE);
 			ConnectivityHandler.splitMulti(vaultTE);
 		}
 	}

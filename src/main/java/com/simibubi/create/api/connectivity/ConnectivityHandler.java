@@ -35,14 +35,14 @@ import java.util.Set;
 
 public class ConnectivityHandler {
 
-	public static <T extends BlockEntity & IMultiTileContainer> void formMulti (T be) {
+	public static <T extends BlockEntity & IMultiTileContainer> void formMulti(T be) {
 		SearchCache<T> cache = new SearchCache<>();
 		List<T> frontier = new ArrayList<>();
 		frontier.add(be);
 		formMulti(be.getType(), be.getLevel(), cache, frontier);
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> void formMulti (BlockEntityType<?> type, BlockGetter level, SearchCache<T> cache, List<T> frontier) {
+	private static <T extends BlockEntity & IMultiTileContainer> void formMulti(BlockEntityType<?> type, BlockGetter level, SearchCache<T> cache, List<T> frontier) {
 		PriorityQueue<Pair<Integer, T>> creationQueue = makeCreationQueue();
 		Set<BlockPos> visited = new HashSet<>();
 		Direction.Axis mainAxis = frontier.get(0).getMainConnectionAxis();
@@ -99,7 +99,7 @@ public class ConnectivityHandler {
 		}
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> int tryToFormNewMulti (T be, SearchCache<T> cache, boolean simulate) {
+	private static <T extends BlockEntity & IMultiTileContainer> int tryToFormNewMulti(T be, SearchCache<T> cache, boolean simulate) {
 		int bestWidth  =  1;
 		int bestAmount = -1;
 		if (!be.isController()) return 0;
@@ -129,7 +129,7 @@ public class ConnectivityHandler {
 		return bestAmount;
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> int tryToFormNewMultiOfWidth (T be, int width, SearchCache<T> cache, boolean simulate) {
+	private static <T extends BlockEntity & IMultiTileContainer> int tryToFormNewMultiOfWidth(T be, int width, SearchCache<T> cache, boolean simulate) {
 		int amount = 0;
 		int height = 0;
 		BlockEntityType<?> type = be.getType();
@@ -236,12 +236,12 @@ public class ConnectivityHandler {
 		return amount;
 	}
 
-	public static <T extends BlockEntity & IMultiTileContainer> void splitMulti (T be) {
+	public static <T extends BlockEntity & IMultiTileContainer> void splitMulti(T be) {
 		splitMultiAndInvalidate(be, null, false);
 	}
 
 	// tryReconnect helps whenever only a few tanks have been removed
-	private static <T extends BlockEntity & IMultiTileContainer> void splitMultiAndInvalidate (T be, @Nullable SearchCache<T> cache, boolean tryReconnect) {
+	private static <T extends BlockEntity & IMultiTileContainer> void splitMultiAndInvalidate(T be, @Nullable SearchCache<T> cache, boolean tryReconnect) {
 		Level level = be.getLevel();
 		if (level == null) return;
 
@@ -279,7 +279,7 @@ public class ConnectivityHandler {
 					if (!partAt.getController().equals(origin)) continue;
 
 					T controllerBE = partAt.getControllerTE();
-					partAt.setExtraData ( (controllerBE == null ? null : controllerBE.getExtraData()));
+					partAt.setExtraData((controllerBE == null ? null : controllerBE.getExtraData()));
 					partAt.removeController(true);
 
 					if (!toDistribute.isEmpty() && partAt != be) {
@@ -317,19 +317,19 @@ public class ConnectivityHandler {
 		}
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue () {
+	private static <T extends BlockEntity & IMultiTileContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue() {
 		return new PriorityQueue<>((one, two) -> two.getKey() - one.getKey());
 	}
 
 	@Nullable
-	public static <T extends BlockEntity & IMultiTileContainer> T partAt (BlockEntityType<?> type, BlockGetter level, BlockPos pos) {
+	public static <T extends BlockEntity & IMultiTileContainer> T partAt(BlockEntityType<?> type, BlockGetter level, BlockPos pos) {
 		BlockEntity be = level.getBlockEntity(pos);
 		if (be != null && be.getType() == type) return checked(be);
 
 		return null;
 	}
 
-	public static <T extends BlockEntity & IMultiTileContainer> boolean isConnected (BlockGetter level, BlockPos pos, BlockPos other) {
+	public static <T extends BlockEntity & IMultiTileContainer> boolean isConnected(BlockGetter level, BlockPos pos, BlockPos other) {
 		T one = checked(level.getBlockEntity(pos));
 		T two = checked(level.getBlockEntity(other));
 		if (one == null || two == null) return false;
@@ -338,7 +338,7 @@ public class ConnectivityHandler {
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	private static <T extends BlockEntity & IMultiTileContainer> T checked (BlockEntity be) {
+	private static <T extends BlockEntity & IMultiTileContainer> T checked(BlockEntity be) {
 		if (be instanceof IMultiTileContainer) return (T)be;
 		return null;
 	}
@@ -346,15 +346,15 @@ public class ConnectivityHandler {
 	private static class SearchCache<T extends BlockEntity & IMultiTileContainer> {
 		Map<BlockPos, Optional<T>> controllerMap;
 
-		public SearchCache () { controllerMap = new HashMap<>(); }
+		public SearchCache() { controllerMap = new HashMap<>(); }
 
-		void put (BlockPos pos, T target) { controllerMap.put(pos, Optional.of(target)); }
+		void put(BlockPos pos, T target) { controllerMap.put(pos, Optional.of(target)); }
 
-		void putEmpty (BlockPos pos) { controllerMap.put(pos, Optional.empty()); }
+		void putEmpty(BlockPos pos) { controllerMap.put(pos, Optional.empty()); }
 
-		boolean hasVisited (BlockPos pos) { return controllerMap.containsKey(pos); }
+		boolean hasVisited(BlockPos pos) { return controllerMap.containsKey(pos); }
 
-		Optional<T> getOrCache (BlockEntityType<?> type, BlockGetter level, BlockPos pos) {
+		Optional<T> getOrCache(BlockEntityType<?> type, BlockGetter level, BlockPos pos) {
 			if (hasVisited(pos)) return controllerMap.get(pos);
 
 			T partAt = partAt(type, level, pos);

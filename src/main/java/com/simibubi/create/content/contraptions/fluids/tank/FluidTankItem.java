@@ -79,7 +79,6 @@ public class FluidTankItem extends BlockItem {
 		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(
 			creative ? AllTileEntities.CREATIVE_FLUID_TANK.get() : AllTileEntities.FLUID_TANK.get(), world, placedOnPos
 		);
-		//FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
 		if (tankAt == null)
 			return;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();

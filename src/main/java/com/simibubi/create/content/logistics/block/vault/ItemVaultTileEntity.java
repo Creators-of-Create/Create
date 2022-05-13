@@ -63,7 +63,6 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			return;
 		if (!isController())
 			return;
-		//ItemVaultConnectivityHandler.formVaults(this);
 		ConnectivityHandler.formMulti(this);
 	}
 
@@ -250,7 +249,6 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 					BlockPos vaultPos = alongZ ? worldPosition.offset(xOffset, zOffset, yOffset)
 						: worldPosition.offset(yOffset, xOffset, zOffset);
 					ItemVaultTileEntity vaultAt =
-						//ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
 						ConnectivityHandler.partAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
 					invs[yOffset * radius * radius + xOffset * radius + zOffset] =
 						vaultAt != null ? vaultAt.inventory : new ItemStackHandler();
@@ -270,7 +268,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	public void preventConnectivityUpdate() { updateConnectivity = false; }
 
 	@Override
-	public void notifyMultiUpdated () {
+	public void notifyMultiUpdated() {
 		BlockState state = this.getBlockState();
 		if (ItemVaultBlock.isVault(state)) { // safety
 			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 22);
@@ -283,28 +281,28 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	public Direction.Axis getMainConnectionAxis() { return getMainAxisOf(this); }
 
 	@Override
-	public int getMaxLength (Direction.Axis longAxis, int width) {
+	public int getMaxLength(Direction.Axis longAxis, int width) {
 		if (longAxis == Direction.Axis.Y) return getMaxWidth();
 		return getMaxLength(width);
 	}
 
 	@Override
-	public int getMaxWidth () {
+	public int getMaxWidth() {
 		return 3;
 	}
 
 	@Override
-	public int getHeight () { return length; }
+	public int getHeight() { return length; }
 
 	@Override
-	public int getWidth () { return radius; }
+	public int getWidth() { return radius; }
 
 	@Override
-	public void setHeight (int height) { this.length = height; }
+	public void setHeight(int height) { this.length = height; }
 
 	@Override
-	public void setWidth (int width) { this.radius = width; }
+	public void setWidth(int width) { this.radius = width; }
 
 	@Override
-	public boolean hasItems () { return true; }
+	public boolean hasItems() { return true; }
 }

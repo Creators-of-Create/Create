@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
@@ -81,7 +80,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			return;
 		if (!isController())
 			return;
-		//FluidTankConnectivityHandler.formTanks(this);
 		ConnectivityHandler.formMulti(this);
 	}
 
@@ -148,7 +146,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
 					BlockPos pos = this.worldPosition.offset(xOffset, yOffset, zOffset);
-					FluidTankTileEntity tankAt = ConnectivityHandler.partAt(getType(), level, pos); //FluidTankConnectivityHandler.anyTankAt(level, pos);
+					FluidTankTileEntity tankAt = ConnectivityHandler.partAt(getType(), level, pos);
 					if (tankAt == null)
 						continue;
 					level.updateNeighbourForOutputSignal(pos, tankAt.getBlockState()
@@ -469,7 +467,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public void preventConnectivityUpdate() { updateConnectivity = false; }
 
 	@Override
-	public void notifyMultiUpdated () {
+	public void notifyMultiUpdated() {
 		BlockState state = this.getBlockState();
 		if (FluidTankBlock.isTank(state)) { // safety
 			state = state.setValue(FluidTankBlock.BOTTOM, getController().getY() == getBlockPos().getY());
@@ -482,16 +480,16 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void setExtraData (@Nullable Object data) {
+	public void setExtraData(@Nullable Object data) {
 		if (data instanceof Boolean) window = (boolean)data;
 	}
 
 	@Override
 	@Nullable
-	public Object getExtraData () { return window; }
+	public Object getExtraData() { return window; }
 
 	@Override
-	public Object modifyExtraData (Object data) {
+	public Object modifyExtraData(Object data) {
 		if (data instanceof Boolean windows) {
 			windows |= window;
 			return windows;
@@ -503,44 +501,44 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public Direction.Axis getMainConnectionAxis() { return Direction.Axis.Y; }
 
 	@Override
-	public int getMaxLength (Direction.Axis longAxis, int width) {
+	public int getMaxLength(Direction.Axis longAxis, int width) {
 		if (longAxis == Direction.Axis.Y) return getMaxHeight();
 		return getMaxWidth();
 	}
 
 	@Override
-	public int getMaxWidth () { return MAX_SIZE; }
+	public int getMaxWidth() { return MAX_SIZE; }
 
 	@Override
-	public int getHeight () { return height; }
+	public int getHeight() { return height; }
 
 	@Override
-	public void setHeight (int height) { this.height = height; }
+	public void setHeight(int height) { this.height = height; }
 
 	@Override
-	public int getWidth () { return width; }
+	public int getWidth() { return width; }
 
 	@Override
-	public void setWidth (int width) { this.width = width; }
+	public void setWidth(int width) { this.width = width; }
 
 	@Override
-	public boolean hasFluid () { return true; }
+	public boolean hasFluid() { return true; }
 
 	@Override
-	public int getTankSize (int tank) { return getCapacityMultiplier(); }
+	public int getTankSize(int tank) { return getCapacityMultiplier(); }
 
 	@Override
-	public void setTankSize (int tank, int blocks) {
+	public void setTankSize(int tank, int blocks) {
 		applyFluidTankSize(blocks);
 	}
 
 	@Override
-	public IFluidTank getTank (int tank) {
+	public IFluidTank getTank(int tank) {
 		return tankInventory;
 	}
 
 	@Override
-	public FluidStack getFluid (int tank) {
+	public FluidStack getFluid(int tank) {
 		return tankInventory.getFluid().copy();
 	}
 }

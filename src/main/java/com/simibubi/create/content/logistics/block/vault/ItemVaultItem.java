@@ -66,7 +66,6 @@ public class ItemVaultItem extends BlockItem {
 		if (!ItemVaultBlock.isVault(placedOnState))
 			return;
 		ItemVaultTileEntity tankAt = ConnectivityHandler.partAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
-		//ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
 		if (tankAt == null)
 			return;
 		ItemVaultTileEntity controllerTE = tankAt.getControllerTE();
