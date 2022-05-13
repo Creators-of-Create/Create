@@ -26,7 +26,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer {
+public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer.Inventory {
 
 	protected LazyOptional<IItemHandler> itemCapability;
 
@@ -304,5 +304,5 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	public void setWidth(int width) { this.radius = width; }
 
 	@Override
-	public boolean hasItems() { return true; }
+	public boolean hasInventory() { return true; }
 }

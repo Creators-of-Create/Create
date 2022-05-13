@@ -56,14 +56,20 @@ public interface IMultiTileContainer {
 	int getWidth  ();
 	void setWidth  (int width);
 
-	// optional item handling
-	default boolean hasItems () { return false; }
+	public interface Inventory extends IMultiTileContainer {
+		default boolean hasInventory() { return false; }
+	}
 
-	// optional fluid handling
-	// done here rather than through the Capability to allow greater flexibility
-	default boolean hasFluid () { return false; }
-	default int getTankSize  (int tank) { return 0; }
-	default void setTankSize (int tank, int blocks) {}
-	default IFluidTank getTank  (int tank) { return null; }
-	default FluidStack getFluid (int tank) { return FluidStack.EMPTY; }
+	public interface Fluid extends IMultiTileContainer {
+		// done here rather than through the Capability to allow greater flexibility
+		default boolean hasTank() { return false; }
+
+		default int getTankSize(int tank) {	return 0; }
+
+		default void setTankSize(int tank, int blocks) {}
+
+		default IFluidTank getTank(int tank) { return null; }
+
+		default FluidStack getFluid(int tank) {	return FluidStack.EMPTY; }
+	}
 }

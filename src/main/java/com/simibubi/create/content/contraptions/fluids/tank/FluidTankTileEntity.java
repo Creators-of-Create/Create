@@ -36,7 +36,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer.Fluid {
 
 	private static final int MAX_SIZE = 3;
 
@@ -522,7 +522,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public void setWidth(int width) { this.width = width; }
 
 	@Override
-	public boolean hasFluid() { return true; }
+	public boolean hasTank() { return true; }
 
 	@Override
 	public int getTankSize(int tank) { return getCapacityMultiplier(); }

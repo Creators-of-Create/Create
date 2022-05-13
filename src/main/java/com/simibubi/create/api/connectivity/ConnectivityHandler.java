@@ -117,7 +117,7 @@ public class ConnectivityHandler {
 			if (beWidth == bestWidth && beWidth*beWidth * be.getHeight() == bestAmount) return bestAmount;
 
 			splitMultiAndInvalidate(be, cache, false);
-			if (be.hasFluid()) be.setTankSize(0, bestAmount);
+			if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) ifluid.setTankSize(0, bestAmount);
 
 			tryToFormNewMultiOfWidth(be, bestWidth, cache, false);
 
@@ -140,8 +140,8 @@ public class ConnectivityHandler {
 		// optional fluid handling
 		IFluidTank beTank = null;
 		FluidStack fluid = FluidStack.EMPTY;
-		if (be.hasFluid()) {
-			beTank = be.getTank(0);
+		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) {
+			beTank = ifluid.getTank(0);
 			fluid  = beTank.getFluid();
 		}
 		Direction.Axis axis = be.getMainConnectionAxis();
@@ -182,8 +182,10 @@ public class ConnectivityHandler {
 							if (axis == Direction.Axis.X && conPos.getZ() + otherWidth > origin.getZ() + width) break Search;
 						}
 					}
-					FluidStack otherFluid = controller.getFluid(0);
-					if (!fluid.isEmpty() && !otherFluid.isEmpty() && !fluid.isFluidEqual(otherFluid)) break Search;
+					if (controller instanceof IMultiTileContainer.Fluid ifluidCon && ifluidCon.hasTank()) {
+						FluidStack otherFluid = ifluidCon.getFluid(0);
+						if (!fluid.isEmpty() && !otherFluid.isEmpty() && !fluid.isFluidEqual(otherFluid)) break Search;
+					}
 				}
 			}
 			amount += width * width;
@@ -208,15 +210,17 @@ public class ConnectivityHandler {
 
 					extraData = be.modifyExtraData(extraData);
 
-					if (part.hasFluid()) {
-						IFluidTank tankAt  = part.getTank(0);
+					if (part instanceof IMultiTileContainer.Fluid ifluidPart && ifluidPart.hasTank()) {
+						IFluidTank tankAt  = ifluidPart.getTank(0);
 						FluidStack fluidAt = tankAt.getFluid();
 						if (!fluidAt.isEmpty()) {
 							// making this generic would be a rather large mess, unfortunately
 							if (beTank != null && fluid.isEmpty() && beTank instanceof CreativeFluidTankTileEntity.CreativeSmartFluidTank) {
 								((CreativeFluidTankTileEntity.CreativeSmartFluidTank)beTank).setContainedFluid(fluidAt);
 							}
-							if (be.hasFluid() && beTank != null) beTank.fill(fluidAt, IFluidHandler.FluidAction.EXECUTE);
+							if (be instanceof IMultiTileContainer.Fluid ifluidBE && ifluidBE.hasTank() && beTank != null) {
+								beTank.fill(fluidAt, IFluidHandler.FluidAction.EXECUTE);
+							}
 						}
 						tankAt.drain(tankAt.getCapacity(), IFluidHandler.FluidAction.EXECUTE);
 					}
@@ -259,11 +263,11 @@ public class ConnectivityHandler {
 		// fluid handling, if present
 		FluidStack toDistribute = FluidStack.EMPTY;
 		int maxCapacity = 0;
-		if (be.hasFluid()) {
-			toDistribute = be.getFluid(0);
-			maxCapacity  = be.getTankSize(0);
+		if (be instanceof IMultiTileContainer.Fluid ifluidBE && ifluidBE.hasTank()) {
+			toDistribute = ifluidBE.getFluid(0);
+			maxCapacity  = ifluidBE.getTankSize(0);
 			if (!toDistribute.isEmpty() && !be.isRemoved()) toDistribute.shrink(maxCapacity);
-			be.setTankSize(0, 1);
+			ifluidBE.setTankSize(0, 1);
 		}
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {
@@ -284,7 +288,7 @@ public class ConnectivityHandler {
 
 					if (!toDistribute.isEmpty() && partAt != be) {
 						FluidStack copy = toDistribute.copy();
-						IFluidTank tank = partAt.getTank(0);
+						IFluidTank tank = (partAt instanceof IMultiTileContainer.Fluid ifluidPart ? ifluidPart.getTank(0) : null);
 						// making this generic would be a rather large mess, unfortunately
 						if (tank instanceof CreativeFluidTankTileEntity.CreativeSmartFluidTank creativeTank) {
 							if (creativeTank.isEmpty()) creativeTank.setContainedFluid(toDistribute);
@@ -293,7 +297,7 @@ public class ConnectivityHandler {
 							int split = Math.min(maxCapacity, toDistribute.getAmount());
 							copy.setAmount(split);
 							toDistribute.shrink(split);
-							tank.fill(copy, IFluidHandler.FluidAction.EXECUTE);
+							if (tank != null) tank.fill(copy, IFluidHandler.FluidAction.EXECUTE);
 						}
 					}
 					if (tryReconnect) {
@@ -306,10 +310,10 @@ public class ConnectivityHandler {
 				}
 			}
 		}
-		if (be.hasItems()) {
+		if (be instanceof IMultiTileContainer.Inventory iinv && iinv.hasInventory()) {
 			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).invalidate();
 		}
-		if (be.hasFluid()) {
+		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) {
 			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).invalidate();
 		}
 		if (tryReconnect) {
