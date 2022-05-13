@@ -333,7 +333,7 @@ public class BlockMovementChecks {
 		if (state.getBlock() instanceof FluidTankBlock)
 			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction)); //FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (state.getBlock() instanceof ItemVaultBlock)
-			return ItemVaultConnectivityHandler.isConnected(world, pos, pos.relative(direction));
+			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction)); //ItemVaultConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (AllBlocks.STICKER.has(state) && state.getValue(StickerBlock.EXTENDED)) {
 			return direction == state.getValue(StickerBlock.FACING)
 					&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());

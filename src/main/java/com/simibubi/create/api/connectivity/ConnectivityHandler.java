@@ -225,6 +225,7 @@ public class ConnectivityHandler {
 					part.preventConnectivityUpdate();
 					cache.put(pos, be);
 					part.setHeight(height);
+					part.setWidth(width);
 					part.notifyMultiUpdated();
 				}
 			}
