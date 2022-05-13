@@ -14,7 +14,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.jozufozu.flywheel.core.instancing.ConditionalInstance.ICondition;
 import com.simibubi.create.AllRecipeTypes;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
