@@ -48,7 +48,7 @@ public class GlueCommand {
                     .then(argument("mask", blockPredicate())
                         .executes(ctx -> floodfillCommand(ctx, GLUE_LIMIT, getBlockPredicate(ctx, "mask"))))
                     .then(argument("limit", integer(1, GLUE_LIMIT))
-                        .executes(ctx -> floodfillCommand(ctx, GLUE_LIMIT, null))
+                        .executes(ctx -> floodfillCommand(ctx, ctx.getArgument("limit", Integer.class), null))
                         .then(argument("mask", blockPredicate())
                             .executes(ctx -> floodfillCommand(ctx, ctx.getArgument("limit", Integer.class), getBlockPredicate(ctx, "mask")))))))
             ;
