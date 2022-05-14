@@ -7,13 +7,13 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.jozufozu.flywheel.core.instancing.ConditionalInstance.ICondition;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -26,7 +26,7 @@ import net.minecraft.world.level.ItemLike;
 public class SequencedAssemblyRecipeBuilder {
 
 	private SequencedAssemblyRecipe recipe;
-	protected List<ICondition> recipeConditions;
+	protected List<ConditionJsonProvider> recipeConditions;
 
 	public SequencedAssemblyRecipeBuilder(ResourceLocation id) {
 		recipeConditions = new ArrayList<>();
@@ -90,11 +90,11 @@ public class SequencedAssemblyRecipeBuilder {
 	public static class DataGenResult implements FinishedRecipe {
 
 		private SequencedAssemblyRecipe recipe;
-		private List<ICondition> recipeConditions;
+		private List<ConditionJsonProvider> recipeConditions;
 		private ResourceLocation id;
 		private SequencedAssemblyRecipeSerializer serializer;
 
-		public DataGenResult(SequencedAssemblyRecipe recipe, List<ICondition> recipeConditions) {
+		public DataGenResult(SequencedAssemblyRecipe recipe, List<ConditionJsonProvider> recipeConditions) {
 			this.recipeConditions = recipeConditions;
 			this.recipe = recipe;
 			this.id = new ResourceLocation(recipe.getId().getNamespace(),
