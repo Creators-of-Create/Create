@@ -230,7 +230,7 @@ public class MinecartContraptionItem extends Item {
 
 		try {
 			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-			NbtIo.write(NBTSerializer.serializeNBT(generatedStack), dataOutput);
+			NbtIo.write(NBTSerializer.serializeNBTCompound(generatedStack), dataOutput);
 			int estimatedPacketSize = dataOutput.toByteArray().length;
 			if (estimatedPacketSize > 2_000_000) {
 				player.displayClientMessage(Lang.translate("contraption.minecart_contraption_too_big")

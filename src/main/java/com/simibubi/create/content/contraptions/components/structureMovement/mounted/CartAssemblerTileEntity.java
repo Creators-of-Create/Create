@@ -165,7 +165,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 		entity.startRiding(cart);
 
 		if (cart instanceof MinecartFurnace) {
-			CompoundTag nbt = NBTSerializer.serializeNBT(cart);
+			CompoundTag nbt = NBTSerializer.serializeNBTCompound(cart);
 			nbt.putDouble("PushZ", 0);
 			nbt.putDouble("PushX", 0);
 			NBTSerializer.deserializeNBT(cart, nbt);
@@ -218,7 +218,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	protected void disassembleCart(AbstractMinecart cart) {
 		cart.ejectPassengers();
 		if (cart instanceof MinecartFurnace) {
-			CompoundTag nbt = NBTSerializer.serializeNBT(cart);
+			CompoundTag nbt = NBTSerializer.serializeNBTCompound(cart);
 			nbt.putDouble("PushZ", cart.getDeltaMovement().x);
 			nbt.putDouble("PushX", cart.getDeltaMovement().z);
 			NBTSerializer.deserializeNBT(cart, nbt);

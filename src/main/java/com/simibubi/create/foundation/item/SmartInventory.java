@@ -8,8 +8,8 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializable;
 
+import io.github.fabricators_of_create.porting_lib.util.INBTSerializable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -18,7 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class SmartInventory extends RecipeWrapper
-	implements IItemHandlerModifiableIntermediate, NBTSerializable {
+	implements IItemHandlerModifiableIntermediate, INBTSerializable<CompoundTag> {
 
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;

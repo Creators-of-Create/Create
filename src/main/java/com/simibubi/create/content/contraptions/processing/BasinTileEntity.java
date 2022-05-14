@@ -206,7 +206,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (!clientPacket)
 			return;
 
-		compound.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> NBTSerializer.serializeNBT(ia.getValue())));
+		compound.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
 		compound.put("VisualizedFluids", NBTHelper.writeCompoundList(visualizedOutputFluids, ia -> ia.getValue()
 			.writeToNBT(new CompoundTag())));
 		visualizedOutputItems.clear();

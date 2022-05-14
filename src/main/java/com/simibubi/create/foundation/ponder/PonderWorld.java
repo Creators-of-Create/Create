@@ -86,7 +86,7 @@ public class PonderWorld extends SchematicWorld {
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
 		tileEntities.forEach(
 			(k, v) -> originalTileEntities.put(k, BlockEntity.loadStatic(k, blocks.get(k), v.saveWithFullMetadata())));
-		entities.forEach(e -> EntityType.create(NBTSerializer.serializeNBT(e), this)
+		entities.forEach(e -> EntityType.create(NBTSerializer.serializeNBTCompound(e), this)
 			.ifPresent(originalEntities::add));
 	}
 
@@ -103,7 +103,7 @@ public class PonderWorld extends SchematicWorld {
 			tileEntities.put(k, te);
 			renderedTileEntities.add(te);
 		});
-		originalEntities.forEach(e -> EntityType.create(NBTSerializer.serializeNBT(e), this)
+		originalEntities.forEach(e -> EntityType.create(NBTSerializer.serializeNBTCompound(e), this)
 			.ifPresent(entities::add));
 		particles.clearEffects();
 		fixControllerTileEntities();

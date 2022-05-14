@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.util.INBTSerializable;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.Create;
@@ -20,7 +22,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -40,7 +41,7 @@ import net.minecraft.world.phys.Vec3;
  * Extended code for Minecarts, this allows for handling stalled carts and
  * coupled trains
  */
-public class MinecartController implements NBTSerializable {
+public class MinecartController implements INBTSerializable<CompoundTag> {
 
 	public static MinecartController EMPTY;
 	private boolean needsEntryRefresh;

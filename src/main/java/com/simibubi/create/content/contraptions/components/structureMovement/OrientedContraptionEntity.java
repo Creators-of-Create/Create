@@ -417,7 +417,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		// Notify to not trigger serialization side-effects
 		isSerializingFurnaceCart = true;
-		CompoundTag nbt = NBTSerializer.serializeNBT(furnaceCart);
+		CompoundTag nbt = NBTSerializer.serializeNBTCompound(furnaceCart);
 		isSerializingFurnaceCart = false;
 
 		int fuel = nbt.getInt("Fuel");
