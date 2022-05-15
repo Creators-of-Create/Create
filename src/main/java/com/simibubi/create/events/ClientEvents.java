@@ -30,8 +30,8 @@ import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
-import com.simibubi.create.content.logistics.block.data.DataGathererBlockItem;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
@@ -161,7 +161,7 @@ public class ClientEvents {
 		TrackPlacement.clientTick();
 		TrackRemoval.clientTick();
 		TrainRelocator.clientTick();
-		DataGathererBlockItem.clientTick();
+		DisplayLinkBlockItem.clientTick();
 		CurvedTrackInteraction.clientTick();
 	}
 

@@ -81,10 +81,10 @@ public enum AllGuiTextures implements ScreenElement {
 	PROJECTOR_END("projector", 0, 58, 162, 22),
 	PROJECTOR_EMPTY("projector", 0, 80, 162, 22),
 
-	DATA_GATHERER("data_gatherer", 235, 162),
-	DATA_AREA_START("data_gatherer", 0, 163, 2, 18),
-	DATA_AREA("data_gatherer", 3, 163, 1, 18),
-	DATA_AREA_END("data_gatherer", 5, 163, 2, 18),
+	DATA_GATHERER("display_link", 235, 162),
+	DATA_AREA_START("display_link", 0, 163, 2, 18),
+	DATA_AREA("display_link", 3, 163, 1, 18),
+	DATA_AREA_END("display_link", 5, 163, 2, 18),
 
 	SCHEDULE("schedule", 256, 226),
 	SCHEDULE_CARD_DARK("schedule", 5, 233, 1, 1),

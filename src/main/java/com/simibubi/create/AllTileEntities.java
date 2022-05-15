@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.content.logistics.block.data.AllDataGathererBehaviours.assignDataBehaviourTE;
+import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviourTE;
 
 import com.simibubi.create.content.contraptions.base.CutoutRotatingInstance;
 import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
@@ -144,10 +144,6 @@ import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
-import com.simibubi.create.content.logistics.block.data.DataGathererRenderer;
-import com.simibubi.create.content.logistics.block.data.DataGathererTileEntity;
-import com.simibubi.create.content.logistics.block.data.source.NixieTubeDataSource;
-import com.simibubi.create.content.logistics.block.data.target.NixieTubeDataTarget;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.depot.EjectorInstance;
@@ -157,6 +153,10 @@ import com.simibubi.create.content.logistics.block.diodes.BrassDiodeInstance;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeRenderer;
 import com.simibubi.create.content.logistics.block.diodes.PulseExtenderTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkRenderer;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
+import com.simibubi.create.content.logistics.block.display.source.NixieTubeDisplaySource;
+import com.simibubi.create.content.logistics.block.display.target.NixieTubeDisplayTarget;
 import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
@@ -665,14 +665,14 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ORANGE_NIXIE_TUBE)
 		.validBlocks(AllBlocks.NIXIE_TUBES.toArray())
 		.renderer(() -> NixieTubeRenderer::new)
-		.onRegister(assignDataBehaviourTE(new NixieTubeDataTarget()))
-		.onRegister(assignDataBehaviourTE(new NixieTubeDataSource()))
+		.onRegister(assignDataBehaviourTE(new NixieTubeDisplayTarget()))
+		.onRegister(assignDataBehaviourTE(new NixieTubeDisplaySource()))
 		.register();
 
-	public static final BlockEntityEntry<DataGathererTileEntity> DATA_GATHERER = Create.registrate()
-		.tileEntity("data_gatherer", DataGathererTileEntity::new)
-		.validBlocks(AllBlocks.DATA_GATHERER)
-		.renderer(() -> DataGathererRenderer::new)
+	public static final BlockEntityEntry<DisplayLinkTileEntity> DISPLAY_LINK = Create.registrate()
+		.tileEntity("display_link", DisplayLinkTileEntity::new)
+		.validBlocks(AllBlocks.DISPLAY_LINK)
+		.renderer(() -> DisplayLinkRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<StockpileSwitchTileEntity> STOCKPILE_SWITCH = Create.registrate()
@@ -784,7 +784,7 @@ public class AllTileEntities {
 		.tileEntity("flap_display", FlapDisplayTileEntity::new)
 		.instance(() -> MechanicalCrafterInstance::new)
 		.renderer(() -> FlapDisplayRenderer::new)
-		.validBlocks(AllBlocks.FLAP_DISPLAY)
+		.validBlocks(AllBlocks.DISPLAY_BOARD)
 		.register();
 
 	public static final BlockEntityEntry<SignalTileEntity> TRACK_SIGNAL = Create.registrate()

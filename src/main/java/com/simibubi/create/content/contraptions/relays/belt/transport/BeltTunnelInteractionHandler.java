@@ -9,8 +9,8 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
-import com.simibubi.create.content.logistics.block.data.DataGathererBlock;
-import com.simibubi.create.content.logistics.block.data.source.AccumulatedItemCountDataSource;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -104,8 +104,8 @@ public class BeltTunnelInteractionHandler {
 			flapTunnel(beltInventory, upcomingSegment, movementFacing.getOpposite(), true);
 
 			if (nextTunnel != null)
-				DataGathererBlock.sendToGatherers(world, nextTunnel.getBlockPos(),
-					(dgte, b) -> b.itemReceived(dgte, transferred), AccumulatedItemCountDataSource.class);
+				DisplayLinkBlock.sendToGatherers(world, nextTunnel.getBlockPos(),
+					(dgte, b) -> b.itemReceived(dgte, transferred), AccumulatedItemCountDisplaySource.class);
 		}
 
 		if (removed)

@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"5": "create:block/train_controls"
+		"5": "create:block/controls"
 	},
 	"elements": [
 		{
@@ -9,11 +9,11 @@
 			"to": [6, 11, 9],
 			"rotation": {"angle": 45, "axis": "x", "origin": [0, 10, 11]},
 			"faces": {
-				"north": {"uv": [0, 3, 2, 5], "rotation": 180, "texture": "#5"},
-				"east": {"uv": [0, 6, 2, 16], "rotation": 90, "texture": "#5"},
-				"west": {"uv": [0, 6, 2, 16], "rotation": 270, "texture": "#5"},
-				"up": {"uv": [0, 6, 2, 16], "texture": "#5"},
-				"down": {"uv": [0, 6, 2, 16], "rotation": 180, "texture": "#5"}
+				"north": {"uv": [8, 1.5, 9, 2.5], "rotation": 180, "texture": "#5"},
+				"east": {"uv": [9, 3, 8, 8], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [9, 3, 8, 8], "rotation": 270, "texture": "#5"},
+				"up": {"uv": [8, 3, 9, 8], "texture": "#5"},
+				"down": {"uv": [8, 3, 9, 8], "rotation": 180, "texture": "#5"}
 			}
 		}
 	]

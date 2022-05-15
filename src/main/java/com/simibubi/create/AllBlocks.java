@@ -7,7 +7,7 @@ import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
-import static com.simibubi.create.content.logistics.block.data.AllDataGathererBehaviours.assignDataBehaviour;
+import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -144,18 +144,6 @@ import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.block.chute.ChuteItem;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteBlock;
-import com.simibubi.create.content.logistics.block.data.DataGathererBlock;
-import com.simibubi.create.content.logistics.block.data.DataGathererBlockItem;
-import com.simibubi.create.content.logistics.block.data.source.AccumulatedItemCountDataSource;
-import com.simibubi.create.content.logistics.block.data.source.FillLevelDataSource;
-import com.simibubi.create.content.logistics.block.data.source.ItemCountDataSource;
-import com.simibubi.create.content.logistics.block.data.source.ItemListDataSource;
-import com.simibubi.create.content.logistics.block.data.source.ItemNameDataSource;
-import com.simibubi.create.content.logistics.block.data.source.ItemThoughputDataSource;
-import com.simibubi.create.content.logistics.block.data.source.StationSummaryDataSource;
-import com.simibubi.create.content.logistics.block.data.source.StopWatchDataSource;
-import com.simibubi.create.content.logistics.block.data.source.TimeOfDayDataSource;
-import com.simibubi.create.content.logistics.block.data.target.FlapDisplayDataTarget;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorItem;
@@ -166,6 +154,18 @@ import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchGenerator;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
+import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.FillLevelDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemCountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemListDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemNameDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemThoughputDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.StationSummaryDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.StopWatchDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.TimeOfDayDisplaySource;
+import com.simibubi.create.content.logistics.block.display.target.DisplayBoardTarget;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
@@ -443,7 +443,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(new BeltGenerator()::generate)
 		.transform(BlockStressDefaults.setImpact(0))
-		.onRegister(assignDataBehaviour(new ItemNameDataSource(), "combine_item_names"))
+		.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
@@ -512,8 +512,8 @@ public class AllBlocks {
 		REGISTRATE.block("cuckoo_clock", CuckooClockBlock::regular)
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
-			.onRegister(assignDataBehaviour(new TimeOfDayDataSource(), "time_of_day"))
-			.onRegister(assignDataBehaviour(new StopWatchDataSource(), "stop_watch"))
+			.onRegister(assignDataBehaviour(new TimeOfDayDisplaySource(), "time_of_day"))
+			.onRegister(assignDataBehaviour(new StopWatchDisplaySource(), "stop_watch"))
 			.register();
 
 	public static final BlockEntry<CuckooClockBlock> MYSTERIOUS_CUCKOO_CLOCK =
@@ -627,7 +627,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-		.onRegister(assignDataBehaviour(new ItemNameDataSource(), "combine_item_names"))
+		.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();
@@ -639,7 +639,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
 			.transform(BlockStressDefaults.setImpact(2.0))
-			.onRegister(assignDataBehaviour(new ItemNameDataSource(), "combine_item_names"))
+			.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
 			.item(EjectorItem::new)
 			.transform(customItemModel())
 			.register();
@@ -1360,7 +1360,7 @@ public class AllBlocks {
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-		.onRegister(assignDataBehaviour(new StationSummaryDataSource(), "station_summary"))
+		.onRegister(assignDataBehaviour(new StationSummaryDisplaySource(), "station_summary"))
 		.lang("Train Station")
 		.item(TrackTargetingBlockItem::new)
 		.transform(customItemModel())
@@ -1463,13 +1463,13 @@ public class AllBlocks {
 	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
 		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
-			.onRegister(assignDataBehaviour(new AccumulatedItemCountDataSource(), "accumulate_items"))
+			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
 			.register();
 
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
-			.onRegister(assignDataBehaviour(new ItemThoughputDataSource(), "item_throughput"))
+			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 
@@ -1478,8 +1478,8 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
-			.onRegister(assignDataBehaviour(new ItemCountDataSource(), "count_items"))
-			.onRegister(assignDataBehaviour(new ItemListDataSource(), "list_items"))
+			.onRegister(assignDataBehaviour(new ItemCountDisplaySource(), "count_items"))
+			.onRegister(assignDataBehaviour(new ItemListDisplaySource(), "list_items"))
 			.item()
 			.transform(customItemModel("_", "block"))
 			.register();
@@ -1490,7 +1490,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.get(),
 				AssetLookup.withIndicator(c, p, $ -> AssetLookup.standardModel(c, p), StockpileSwitchBlock.INDICATOR)))
-			.onRegister(assignDataBehaviour(new FillLevelDataSource(), "fill_level"))
+			.onRegister(assignDataBehaviour(new FillLevelDisplaySource(), "fill_level"))
 			.simpleItem()
 			.register();
 
@@ -1500,23 +1500,23 @@ public class AllBlocks {
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
-	public static final BlockEntry<DataGathererBlock> DATA_GATHERER =
-		REGISTRATE.block("data_gatherer", DataGathererBlock::new)
+	public static final BlockEntry<DisplayLinkBlock> DISPLAY_LINK =
+		REGISTRATE.block("display_link", DisplayLinkBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.addLayer(() -> RenderType::translucent)
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
-			.item(DataGathererBlockItem::new)
+			.item(DisplayLinkBlockItem::new)
 			.transform(customItemModel("_", "block"))
 			.register();
 
-	public static final BlockEntry<FlapDisplayBlock> FLAP_DISPLAY =
+	public static final BlockEntry<FlapDisplayBlock> DISPLAY_BOARD =
 		REGISTRATE.block("display_board", FlapDisplayBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
 			.transform(BlockStressDefaults.setImpact(0))
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-			.onRegister(assignDataBehaviour(new FlapDisplayDataTarget()))
+			.onRegister(assignDataBehaviour(new DisplayBoardTarget()))
 			.lang("Display Board")
 			.item()
 			.transform(customItemModel())

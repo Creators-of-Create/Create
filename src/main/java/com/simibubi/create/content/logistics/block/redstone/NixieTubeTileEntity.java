@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.content.logistics.block.data.DataGathererBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -88,7 +88,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	public void updateRedstoneStrength(int signalStrength) {
 		clearCustomText();
 		redstoneStrength = signalStrength;
-		DataGathererBlock.notifyGatherers(level, worldPosition);
+		DisplayLinkBlock.notifyGatherers(level, worldPosition);
 		notifyUpdate();
 	}
 
@@ -103,7 +103,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 		component.displayCustomText(level, worldPosition, tagElement);
 		customText = Optional.of(component);
 		nixieIndex = nixiePositionInRow;
-		DataGathererBlock.notifyGatherers(level, worldPosition);
+		DisplayLinkBlock.notifyGatherers(level, worldPosition);
 		notifyUpdate();
 	}
 

@@ -315,12 +315,12 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 	private static class PlacementHelper implements IPlacementHelper {
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
-			return AllBlocks.FLAP_DISPLAY::isIn;
+			return AllBlocks.DISPLAY_BOARD::isIn;
 		}
 
 		@Override
 		public Predicate<BlockState> getStatePredicate() {
-			return AllBlocks.FLAP_DISPLAY::has;
+			return AllBlocks.DISPLAY_BOARD::has;
 		}
 
 		@Override

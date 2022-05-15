@@ -126,7 +126,7 @@ public class AllBlockPartials {
 		BOILER_GAUGE_DIAL = block("steam_engine/gauge_dial"),
 
 		SIGNAL_ON = block("track_signal/indicator_on"), SIGNAL_OFF = block("track_signal/indicator_off"),
-		DATA_GATHERER_TUBE = block("data_gatherer/tube"), DATA_GATHERER_GLOW = block("data_gatherer/glow"),
+		DISPLAY_LINK_TUBE = block("display_link/tube"), DISPLAY_LINK_GLOW = block("display_link/glow"),
 
 		STATION_ON = block("track_station/flag_on"), STATION_OFF = block("track_station/flag_off"),
 		STATION_ASSEMBLE = block("track_station/flag_assemble"),

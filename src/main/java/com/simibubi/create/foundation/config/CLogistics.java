@@ -8,7 +8,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt psiTimeout = i(20, 1, "psiTimeout", Comments.psiTimeout);
 	public final ConfigInt mechanicalArmRange = i(5, 1, "mechanicalArmRange", Comments.mechanicalArmRange);
 	public final ConfigInt linkRange = i(128, 1, "linkRange", Comments.linkRange);
-	public final ConfigInt dataGathererRange = i(32, 1, "dataGathererRange", Comments.dataGathererRange);
+	public final ConfigInt displayLinkRange = i(32, 1, "displayLinkRange", Comments.displayLinkRange);
 	public final ConfigInt vaultCapacity = i(20, 1, "vaultCapacity", Comments.vaultCapacity);
 
 	@Override
@@ -22,7 +22,7 @@ public class CLogistics extends ConfigBase {
 		static String defaultExtractionTimer =
 			"The amount of ticks a funnel waits between item transferrals, when it is not re-activated by redstone.";
 		static String linkRange = "Maximum possible range in blocks of redstone link connections.";
-		static String dataGathererRange =
+		static String displayLinkRange =
 			"Maximum possible distance in blocks between data gatherers and their target.";
 		static String psiTimeout =
 			"The amount of ticks a portable storage interface waits for transfers until letting contraptions move along.";

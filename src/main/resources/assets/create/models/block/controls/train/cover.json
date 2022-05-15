@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"12": "create:block/train_controls",
+		"1_7": "create:block/controls",
 		"particle": "create:block/bogey/particle"
 	},
 	"elements": [
@@ -9,9 +9,9 @@
 			"from": [2, 4.95, 6.75],
 			"to": [14, 13.2, 14],
 			"faces": {
-				"north": {"uv": [2, 5, 14, 13], "texture": "#12"},
-				"up": {"uv": [2, 0, 14, 7.5], "rotation": 180, "texture": "#12"},
-				"down": {"uv": [2, 0, 14, 8], "rotation": 180, "texture": "#12"}
+				"north": {"uv": [9.5, 3.5, 15.5, 0], "texture": "#1_7"},
+				"up": {"uv": [9.5, 0, 15.5, 3.5], "rotation": 180, "texture": "#1_7"},
+				"down": {"uv": [9.5, 0, 15.5, 3.5], "rotation": 180, "texture": "#1_7"}
 			}
 		}
 	],
@@ -40,7 +40,7 @@
 		},
 		"gui": {
 			"rotation": [30, 225, 0],
-			"translation": [1, 0, 0],
+			"translation": [1.5, -0.25, 0],
 			"scale": [0.625, 0.625, 0.625]
 		},
 		"head": {
@@ -49,13 +49,5 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [
-		{
-			"name": "cover",
-			"origin": [8, 8, 8],
-			"color": 0,
-			"children": [0]
-		}
-	]
+	}
 }

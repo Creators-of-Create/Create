@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/data_gatherer/block",
-	"textures": {
-		"3": "create:block/data_gatherer_side_powered"
-	}
-}
