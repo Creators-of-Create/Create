@@ -486,13 +486,14 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		Direction direction = blockState.getValue(BasinBlock.FACING);
+		snapshotParticipant.updateSnapshots(ctx);
 		if (direction != Direction.DOWN) {
 
 			BlockEntity te = level.getBlockEntity(worldPosition.below()
-				.relative(direction));
+					.relative(direction));
 
 			InvManipulationBehaviour inserter =
-				te == null ? null : TileEntityBehaviour.get(level, te.getBlockPos(), InvManipulationBehaviour.TYPE);
+					te == null ? null : TileEntityBehaviour.get(level, te.getBlockPos(), InvManipulationBehaviour.TYPE);
 			Storage<ItemVariant> targetInv = te == null ? null
 					: TransferUtil.getItemStorage(te, direction.getOpposite());
 			if (targetInv == null && inserter != null) targetInv = inserter.getInventory();
@@ -506,16 +507,14 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				// Special case - fluid outputs but output only accepts items
 				targetTank = outputTank.getCapability();
 				if (targetTank == null)
-				return false;
-if (!acceptFluidOutputsIntoBasin(outputFluids, ctx, targetTank))
+					return false;
+				if (!acceptFluidOutputsIntoBasin(outputFluids, ctx, targetTank))
 					return false;
 			}
 
-			snapshotParticipant.updateSnapshots(ctx);
 			for (ItemStack itemStack : outputItems) {
-				if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
-						.equals(itemStack.getItem()))
-						continue;
+				if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.is(itemStack.getItem().getCraftingRemainingItem()))
+					continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
 			if (!externalTankNotPresent)
@@ -524,7 +523,7 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, ctx, targetTank))
 			return true;
 		}
 
-		SmartInventory targetInv = outputInventory;
+		Storage<ItemVariant> targetInv = outputInventory;
 		Storage<FluidVariant> targetTank = outputTank.getCapability();
 
 		if (targetInv == null && !outputItems.isEmpty())
@@ -534,6 +533,8 @@ if (!acceptFluidOutputsIntoBasin(outputFluids, ctx, targetTank))
 		if (outputFluids.isEmpty())
 			return true;
 		if (targetTank == null)
+			return false;
+		if (!acceptFluidOutputsIntoBasin(outputFluids, ctx, targetTank))
 			return false;
 
 		return true;

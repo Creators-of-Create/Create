@@ -16,11 +16,10 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -150,7 +149,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		if (totalUnits < 1)
 			return 0;
 
-		float fluidLevel = Mth.clamp(totalUnits / 2000, 0, 1);
+		float fluidLevel = Mth.clamp(totalUnits / (FluidConstants.BUCKET * 2), 0, 1);
 
 		fluidLevel = 1 - ((1 - fluidLevel) * (1 - fluidLevel));
 

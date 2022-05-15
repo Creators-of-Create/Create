@@ -47,10 +47,8 @@ public class PotionMixingRecipes {
 		int recipeIndex = 0;
 
 		List<Item> allowedSupportedContainers = new ArrayList<>();
-		List<ItemStack> supportedContainerStacks = new ArrayList<>();
 		for (Item container : SUPPORTED_CONTAINERS) {
 			ItemStack stack = new ItemStack(container);
-			supportedContainerStacks.add(stack);
 			if (PotionBrewingAccessor.port_lib$ALLOWED_CONTAINER().test(stack)) {
 				allowedSupportedContainers.add(container);
 			}

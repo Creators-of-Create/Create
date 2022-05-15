@@ -5,10 +5,11 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.builders.FluidBuilder.RenderHandlerFactory;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.entry.FluidEntry;
@@ -16,7 +17,6 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
@@ -30,18 +30,16 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-
-import java.util.List;
 
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.GLASS_BOTTLE;
@@ -199,11 +197,16 @@ public class AllFluids {
 	private static class PotionFluidVariantAttributeHandler implements FluidVariantAttributeHandler {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
-			List<MobEffectInstance> list = PotionUtils.getAllEffects(fluidVariant.getNbt());
-			for (MobEffectInstance effect : list) {
-				return new TranslatableComponent(effect.getDescriptionId());
-			}
-			return FluidVariantAttributeHandler.super.getName(fluidVariant);
+			return new TranslatableComponent(getTranslationKey(fluidVariant));
+		}
+
+		public String getTranslationKey(FluidVariant stack) {
+			CompoundTag tag = stack.getNbt();
+			ItemLike itemFromBottleType =
+					PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
+			return PotionUtils.getPotion(tag)
+					.getName(itemFromBottleType.asItem()
+							.getDescriptionId() + ".effect.");
 		}
 	}
 

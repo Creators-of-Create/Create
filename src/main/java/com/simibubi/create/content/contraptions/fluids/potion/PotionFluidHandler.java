@@ -55,8 +55,8 @@ public class PotionFluidHandler {
 		List<MobEffectInstance> list = PotionUtils.getCustomEffects(stack);
 		BottleType bottleTypeFromItem = bottleTypeFromItem(stack.getItem());
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
-			return new FluidStack(Fluids.WATER, 250);
-		FluidStack fluid = PotionFluid.withEffects(250, potion, list);
+			return new FluidStack(Fluids.WATER, FluidConstants.BOTTLE);
+		FluidStack fluid = PotionFluid.withEffects(FluidConstants.BOTTLE, potion, list);
 		CompoundTag tagInfo = fluid.getTag();
 		NBTHelper.writeEnum(tagInfo, "Bottle", bottleTypeFromItem);
 		FluidVariant variant = FluidVariant.of(fluid.getFluid(), tagInfo);
@@ -68,7 +68,7 @@ public class PotionFluidHandler {
 			return new FluidStack(Fluids.WATER, amount);
 		FluidStack fluid = PotionFluid.of(amount, potion);
 		NBTHelper.writeEnum(fluid.getOrCreateTag(), "Bottle", bottleType);
-		return fluid;
+		return new FluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getTag());
 	}
 
 	public static BottleType bottleTypeFromItem(Item item) {

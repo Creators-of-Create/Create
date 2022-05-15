@@ -34,25 +34,23 @@ public class PotionFluid extends VirtualFluid {
 	public static FluidStack of(long amount, Potion potion) {
 		FluidStack fluidStack = new FluidStack(AllFluids.POTION.get()
 				.getSource(), amount);
-		addPotionToFluidStack(fluidStack, potion);
-		return fluidStack;
+		return addPotionToFluidStack(fluidStack, potion);
 	}
 
-	public static FluidStack withEffects(int amount, Potion potion, List<MobEffectInstance> customEffects) {
+	public static FluidStack withEffects(long amount, Potion potion, List<MobEffectInstance> customEffects) {
 		FluidStack fluidStack = of(amount, potion);
-		appendEffects(fluidStack, customEffects);
-		return fluidStack;
+		return appendEffects(fluidStack, customEffects);
 	}
 
 	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
 		ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
 		if (potion == Potions.EMPTY) {
 			fs.removeChildTag("Potion");
-			return fs;
+			return new FluidStack(fs.getFluid(), fs.getAmount(), fs.getTag());
 		}
 		fs.getOrCreateTag()
 			.putString("Potion", resourcelocation.toString());
-		return fs;
+		return new FluidStack(fs.getFluid(), fs.getAmount(), fs.getTag());
 	}
 
 	public static FluidStack appendEffects(FluidStack fs, Collection<MobEffectInstance> customEffects) {
@@ -63,7 +61,7 @@ public class PotionFluid extends VirtualFluid {
 		for (MobEffectInstance effectinstance : customEffects)
 			listnbt.add(effectinstance.save(new CompoundTag()));
 		compoundnbt.put("CustomPotionEffects", listnbt);
-		return fs;
+		return new FluidStack(fs.getFluid(), fs.getAmount(), fs.getTag());
 	}
 
 	public enum BottleType {

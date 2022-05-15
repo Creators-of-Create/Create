@@ -11,10 +11,10 @@ import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
-import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
 import io.github.fabricators_of_create.porting_lib.util.MinecraftClientUtil;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -67,14 +67,13 @@ public interface IHaveGoggleInformation {
 				if (!moreThan1Tank) first = view;
 				moreThan1Tank |= iterator.hasNext();
 				if (view.isResourceBlank()) continue;
-				String translationKey = FluidUtil.getTranslationKey(view.getResource().getFluid());
 				long amount = view.getAmount();
 
-				if (translationKey.isEmpty() || amount == 0)
+				if (amount == 0)
 					continue;
 
 				long tankCapacity = view.getCapacity();
-				Component fluidName = new TranslatableComponent(translationKey).withStyle(ChatFormatting.GRAY);
+				Component fluidName = FluidVariantAttributes.getName(view.getResource()).copy().withStyle(ChatFormatting.GRAY);
 				Component contained = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(amount, unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
 				Component slash = new TextComponent(" / ").withStyle(ChatFormatting.GRAY);
 				Component capacity = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(
