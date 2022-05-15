@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -46,9 +45,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
-public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity> {
+public class FluidPipeBlock extends PipeBlock
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity> {
+
+	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -179,23 +182,23 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		return transport.canHaveFlowToward(neighbour, direction.getOpposite());
 	}
 
-	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state,
-		Direction direction) {
+	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction direction) {
 		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
 		if (!isPipe(facingState))
 			return true;
 		if (!canConnectTo(world, offsetPos, facingState, direction))
 			return true;
-		if (!isCornerOrEndPipe(world, pos, state))
-			return false;
-		if (FluidPropagator.getStraightPipeAxis(facingState) != null)
-			return true;
-		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
-			return true;
-		if (isCornerOrEndPipe(world, offsetPos, facingState))
-			return direction.getAxisDirection() == AxisDirection.POSITIVE;
-		return true;
+		return false;
+//		if (!isCornerOrEndPipe(world, pos, state))
+//			return false;
+//		if (FluidPropagator.getStraightPipeAxis(facingState) != null)
+//			return true;
+//		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
+//			return true;
+//		if (isCornerOrEndPipe(world, offsetPos, facingState))
+//			return direction.getAxisDirection() == AxisDirection.POSITIVE;
+//		return true;
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction direction) {
@@ -321,6 +324,16 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	@Override
 	public BlockEntityType<? extends FluidPipeTileEntity> getTileEntityType() {
 		return AllTileEntities.FLUID_PIPE.get();
+	}
+
+	@Override
+	public boolean supportsExternalFaceHiding(BlockState state) {
+		return false;
+	}
+
+	@Override
+	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+		return OCCLUSION_BOX;
 	}
 
 }

@@ -47,6 +47,9 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 			Axis axis = IAxisPipe.getAxisOf(state);
 			Axis otherAxis = IAxisPipe.getAxisOf(otherState);
 
+			if (attachment == AttachmentTypes.RIM && FluidPipeBlock.isPipe(otherState))
+				return AttachmentTypes.NONE;
+
 			if (axis == otherAxis && axis != null)
 				if (state.getBlock() == otherState.getBlock() || direction.getAxisDirection() == AxisDirection.POSITIVE)
 					return AttachmentTypes.NONE;

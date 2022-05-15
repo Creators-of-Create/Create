@@ -1,5 +1,5 @@
 {
-  "parent": "create:block/fluid_pipe/core_y",
+  "parent": "create:block/fluid_pipe/core_z",
   "elements": [
     {
       "from": [
@@ -13,21 +13,21 @@
         12
       ],
       "faces": {
-        "down": {
+        "north": {
           "texture": "#0",
           "uv": [
-            12.0,
             4.0,
+            0.0,
             8.0,
-            8.0
+            4.0
           ]
         },
-        "up": {
+        "south": {
           "texture": "#0",
           "uv": [
-            12.0,
             8.0,
-            8.0,
+            0.0,
+            4.0,
             4.0
           ]
         }
