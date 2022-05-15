@@ -16,6 +16,8 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
@@ -107,10 +109,12 @@ public class CarriageSyncData {
 	}
 
 	public void update(CarriageContraptionEntity entity, Carriage carriage) {
+		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+
 		TrackGraph graph = carriage.train.graph;
 		if (graph == null) {
-			fallbackLocations = Pair.of(carriage.positionAnchor, carriage.rotationAnchors);
-			carriage.pointsInitialised = true;
+			fallbackLocations = Pair.of(dce.positionAnchor, dce.rotationAnchors);
+			dce.pointsInitialised = true;
 			setDirty(true);
 			return;
 		}
@@ -136,10 +140,12 @@ public class CarriageSyncData {
 	}
 
 	public void apply(CarriageContraptionEntity entity, Carriage carriage) {
+		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+
 		fallbackPointSnapshot = null;
 		if (fallbackLocations != null) {
-			fallbackPointSnapshot = Pair.of(carriage.positionAnchor, carriage.rotationAnchors);
-			carriage.pointsInitialised = true;
+			fallbackPointSnapshot = Pair.of(dce.positionAnchor, dce.rotationAnchors);
+			dce.pointsInitialised = true;
 			return;
 		}
 
@@ -154,7 +160,7 @@ public class CarriageSyncData {
 
 			CarriageBogey bogey = carriage.bogeys.get(i / 2 == 0);
 			TravellingPoint bogeyPoint = bogey.points.get(i % 2 == 0);
-			TravellingPoint point = carriage.pointsInitialised ? pointsToApproach[i] : bogeyPoint;
+			TravellingPoint point = dce.pointsInitialised ? pointsToApproach[i] : bogeyPoint;
 
 			Couple<TrackNode> nodes = pair.getFirst()
 				.map(graph::getNode);
@@ -170,7 +176,7 @@ public class CarriageSyncData {
 			point.edge = edge;
 			point.position = pair.getSecond();
 
-			if (carriage.pointsInitialised) {
+			if (dce.pointsInitialised) {
 				float foundDistance = -1;
 				boolean direction = false;
 				for (boolean forward : Iterate.trueAndFalse) {
@@ -194,9 +200,9 @@ public class CarriageSyncData {
 			}
 		}
 
-		if (!carriage.pointsInitialised) {
+		if (!dce.pointsInitialised) {
 			carriage.train.navigation.distanceToDestination = distanceToDestination;
-			carriage.pointsInitialised = true;
+			dce.pointsInitialised = true;
 			return;
 		}
 
@@ -207,10 +213,12 @@ public class CarriageSyncData {
 	}
 
 	public void approach(CarriageContraptionEntity entity, Carriage carriage, float partial) {
+		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+
 		if (fallbackLocations != null && fallbackPointSnapshot != null) {
-			carriage.positionAnchor = approachVector(partial, carriage.positionAnchor, fallbackLocations.getFirst(),
+			dce.positionAnchor = approachVector(partial, dce.positionAnchor, fallbackLocations.getFirst(),
 				fallbackPointSnapshot.getFirst());
-			carriage.rotationAnchors.replaceWithContext((current, first) -> approachVector(partial, current,
+			dce.rotationAnchors.replaceWithContext((current, first) -> approachVector(partial, current,
 				fallbackLocations.getSecond()
 					.get(first),
 				fallbackPointSnapshot.getSecond()
@@ -238,9 +246,9 @@ public class CarriageSyncData {
 				MutableBoolean success = new MutableBoolean(true);
 				TravellingPoint toApproach = pointsToApproach[index];
 
-				point.travel(graph, partial * f,
-					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b)),
-					point.ignoreEdgePoints(), point.ignoreTurns());
+				ITrackSelector trackSelector =
+					point.follow(toApproach, b -> success.setValue(success.booleanValue() && b));
+				point.travel(graph, partial * f, trackSelector);
 
 				// could not pathfind to server location
 				if (!success.booleanValue()) {

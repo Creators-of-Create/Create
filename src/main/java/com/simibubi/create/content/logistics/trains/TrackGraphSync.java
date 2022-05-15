@@ -46,7 +46,8 @@ public class TrackGraphSync {
 
 	public void edgeAdded(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
 		flushGraphPacket(graph.id);
-		currentGraphSyncPacket.addedEdges.add(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge));
+		currentGraphSyncPacket.addedEdges
+			.add(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTurn()));
 	}
 
 	public void pointAdded(TrackGraph graph, TrackEdgePoint point) {
@@ -127,7 +128,7 @@ public class TrackGraphSync {
 			graph.connectionsByNode.get(node)
 				.forEach((node2, edge) -> {
 					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
-					currentPacket.addedEdges.add(Pair.of(key, edge));
+					currentPacket.addedEdges.add(Pair.of(key, edge.getTurn()));
 					currentPacket.syncEdgeData(node, node2, edge);
 				});
 

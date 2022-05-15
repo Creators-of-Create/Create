@@ -198,6 +198,9 @@ public class TrackTargetingBlockItem extends BlockItem {
 
 		Couple<TrackNode> nodes = location.edge.map(location.graph::locateNode);
 		TrackEdge edge = location.graph.getConnection(nodes);
+		if (edge == null)
+			return;
+		
 		EdgeData edgeData = edge.getEdgeData();
 		double edgePosition = location.position;
 

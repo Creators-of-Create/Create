@@ -20,10 +20,12 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
@@ -50,6 +52,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,6 +75,8 @@ public class Train {
 	public Component name;
 	public TrainStatus status;
 
+	public boolean invalid;
+	
 	public SteerDirection manualSteer;
 	public boolean manualTick;
 
@@ -154,7 +159,7 @@ public class Train {
 		Create.RAILWAYS.markTracksDirty();
 
 		if (graph == null) {
-			carriages.forEach(c -> c.manageEntity(level));
+			carriages.forEach(c -> c.manageEntities(level));
 			updateConductors();
 			return;
 		}
@@ -175,9 +180,40 @@ public class Train {
 			Carriage carriage = carriages.get(i);
 			if (previousCarriage != null) {
 				int target = carriageSpacing.get(i - 1);
-				Vec3 leadingAnchor = carriage.leadingAnchor();
-				Vec3 trailingAnchor = previousCarriage.trailingAnchor();
-				double actual = leadingAnchor.distanceTo(trailingAnchor);
+				double actual = target;
+
+				TravellingPoint leadingPoint = carriage.getLeadingPoint();
+				TravellingPoint trailingPoint = previousCarriage.getTrailingPoint();
+
+				int entries = 0;
+				double total = 0;
+
+				if (leadingPoint.node1 != null && trailingPoint.node1 != null) {
+					ResourceKey<Level> d1 = leadingPoint.node1.getLocation().dimension;
+					ResourceKey<Level> d2 = trailingPoint.node1.getLocation().dimension;
+					for (boolean b : Iterate.trueAndFalse) {
+						ResourceKey<Level> d = b ? d1 : d2;
+						if (!b && d1.equals(d2))
+							continue;
+
+						DimensionalCarriageEntity dimensional = carriage.getDimensionalIfPresent(d);
+						DimensionalCarriageEntity dimensional2 = previousCarriage.getDimensionalIfPresent(d);
+						if (dimensional == null || dimensional2 == null)
+							continue;
+
+						Vec3 leadingAnchor = dimensional.leadingAnchor();
+						Vec3 trailingAnchor = dimensional2.trailingAnchor();
+						if (leadingAnchor == null || trailingAnchor == null)
+							continue;
+
+						total += leadingAnchor.distanceTo(trailingAnchor);
+						entries++;
+					}
+				}
+
+				if (entries > 0)
+					actual = total / entries;
+
 				stress[i - 1] = target - actual;
 			}
 			previousCarriage = carriage;
@@ -383,10 +419,19 @@ public class Train {
 		if (derailed)
 			return;
 
-		Vec3 start = (speed < 0 ? carriage.getTrailingPoint() : carriage.getLeadingPoint()).getPosition();
-		Vec3 end = (speed < 0 ? carriage.getLeadingPoint() : carriage.getTrailingPoint()).getPosition();
+		TravellingPoint trailingPoint = carriage.getTrailingPoint();
+		TravellingPoint leadingPoint = carriage.getLeadingPoint();
 
-		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, this);
+		if (leadingPoint.node1 == null || trailingPoint.node1 == null)
+			return;
+		ResourceKey<Level> dimension = leadingPoint.node1.getLocation().dimension;
+		if (!dimension.equals(trailingPoint.node1.getLocation().dimension))
+			return;
+
+		Vec3 start = (speed < 0 ? trailingPoint : leadingPoint).getPosition();
+		Vec3 end = (speed < 0 ? leadingPoint : trailingPoint).getPosition();
+
+		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, this, dimension);
 		if (collision == null)
 			return;
 
@@ -402,7 +447,8 @@ public class Train {
 		train.crash();
 	}
 
-	public static Pair<Train, Vec3> findCollidingTrain(Level level, Vec3 start, Vec3 end, Train ignore) {
+	public static Pair<Train, Vec3> findCollidingTrain(Level level, Vec3 start, Vec3 end, Train ignore,
+		ResourceKey<Level> dimension) {
 		for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
 			if (train == ignore)
 				continue;
@@ -418,6 +464,11 @@ public class Train {
 					TravellingPoint otherLeading = otherCarriage.getLeadingPoint();
 					TravellingPoint otherTrailing = otherCarriage.getTrailingPoint();
 					if (otherLeading.edge == null || otherTrailing.edge == null)
+						continue;
+					ResourceKey<Level> otherDimension = otherLeading.node1.getLocation().dimension;
+					if (!otherDimension.equals(otherTrailing.node1.getLocation().dimension))
+						continue;
+					if (!otherDimension.equals(dimension))
 						continue;
 
 					Vec3 start2 = otherLeading.getPosition();
@@ -486,7 +537,7 @@ public class Train {
 		for (int i = 0; i < carriages.size(); i++) {
 
 			Carriage carriage = carriages.get(backwards ? carriages.size() - i - 1 : i);
-			CarriageContraptionEntity entity = carriage.entity.get();
+			CarriageContraptionEntity entity = carriage.anyAvailableEntity();
 			if (entity == null)
 				return false;
 
@@ -511,7 +562,9 @@ public class Train {
 
 	public boolean canDisassemble() {
 		for (Carriage carriage : carriages) {
-			CarriageContraptionEntity entity = carriage.entity.get();
+			if (carriage.presentInMultipleDimensions())
+				return false;
+			CarriageContraptionEntity entity = carriage.anyAvailableEntity();
 			if (entity == null)
 				return false;
 			if (!Mth.equal(entity.pitch, 0))
@@ -629,11 +682,8 @@ public class Train {
 	}
 
 	public void syncTrackGraphChanges() {
-		for (Carriage carriage : carriages) {
-			CarriageContraptionEntity entity = carriage.entity.get();
-			if (entity != null)
-				entity.setGraph(graph == null ? null : graph.id);
-		}
+		for (Carriage carriage : carriages)
+			carriage.forEachPresentEntity(e -> e.setGraph(graph == null ? null : graph.id));
 	}
 
 	public int getTotalLength() {
@@ -681,7 +731,10 @@ public class Train {
 	public LivingEntity getOwner(Level level) {
 		try {
 			UUID uuid = owner;
-			return uuid == null ? null : level.getPlayerByUUID(uuid);
+			return uuid == null ? null
+				: level.getServer()
+					.getPlayerList()
+					.getPlayer(uuid);
 		} catch (IllegalArgumentException illegalargumentexception) {
 			return null;
 		}
@@ -799,13 +852,13 @@ public class Train {
 		return Penalties.ANY_TRAIN;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
 		tag.putUUID("Owner", owner);
 		if (graph != null)
 			tag.putUUID("Graph", graph.id);
-		tag.put("Carriages", NBTHelper.writeCompoundList(carriages, Carriage::write));
+		tag.put("Carriages", NBTHelper.writeCompoundList(carriages, c -> c.write(dimensions)));
 		tag.putIntArray("CarriageSpacing", carriageSpacing);
 		tag.putBoolean("DoubleEnded", doubleEnded);
 		tag.putDouble("Speed", speed);
@@ -830,22 +883,22 @@ public class Train {
 			compoundTag.putUUID("Id", uid);
 			return compoundTag;
 		}));
-		tag.put("MigratingPoints", NBTHelper.writeCompoundList(migratingPoints, TrainMigration::write));
+		tag.put("MigratingPoints", NBTHelper.writeCompoundList(migratingPoints, tm -> tm.write(dimensions)));
 
 		tag.put("Runtime", runtime.write());
-		tag.put("Navigation", navigation.write());
+		tag.put("Navigation", navigation.write(dimensions));
 
 		return tag;
 	}
 
-	public static Train read(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks) {
+	public static Train read(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks, DimensionPalette dimensions) {
 		UUID id = tag.getUUID("Id");
 		UUID owner = tag.getUUID("Owner");
 		UUID graphId = tag.contains("Graph") ? tag.getUUID("Graph") : null;
 		TrackGraph graph = graphId == null ? null : trackNetworks.get(graphId);
 		List<Carriage> carriages = new ArrayList<>();
 		NBTHelper.iterateCompoundList(tag.getList("Carriages", Tag.TAG_COMPOUND),
-			c -> carriages.add(Carriage.read(c, graph)));
+			c -> carriages.add(Carriage.read(c, graph, dimensions)));
 		List<Integer> carriageSpacing = new ArrayList<>();
 		for (int i : tag.getIntArray("CarriageSpacing"))
 			carriageSpacing.add(i);
@@ -868,10 +921,10 @@ public class Train {
 		NBTHelper.iterateCompoundList(tag.getList("ReservedSignalBlocks", Tag.TAG_COMPOUND),
 			c -> train.reservedSignalBlocks.add(c.getUUID("Id")));
 		NBTHelper.iterateCompoundList(tag.getList("MigratingPoints", Tag.TAG_COMPOUND),
-			c -> train.migratingPoints.add(TrainMigration.read(c)));
+			c -> train.migratingPoints.add(TrainMigration.read(c, dimensions)));
 
 		train.runtime.read(tag.getCompound("Runtime"));
-		train.navigation.read(tag.getCompound("Navigation"), graph);
+		train.navigation.read(tag.getCompound("Navigation"), graph, dimensions);
 
 		if (train.getCurrentStation() != null)
 			train.getCurrentStation()

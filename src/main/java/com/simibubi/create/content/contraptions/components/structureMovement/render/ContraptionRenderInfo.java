@@ -38,7 +38,7 @@ public class ContraptionRenderInfo {
 	}
 
 	public boolean isVisible() {
-		return visible && contraption.entity.isAlive();
+		return visible && contraption.entity.isAlive() && contraption.entity.isReadyForRender();
 	}
 
 	/**

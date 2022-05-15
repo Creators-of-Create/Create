@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -22,6 +23,11 @@ public enum TrackShape implements StringRepresentable {
 	AS("ascending", 0, new Vec3(0, 1, 1), new Vec3(0, 1, -1)),
 	AE("ascending", 270, new Vec3(1, 1, 0), new Vec3(-1, 1, 0)),
 	AW("ascending", 90, new Vec3(-1, 1, 0), new Vec3(1, 1, 0)),
+
+	TN("teleport", 180, new Vec3(0, 0, -1), new Vec3(0, 1, 0)),
+	TS("teleport", 0, new Vec3(0, 0, 1), new Vec3(0, 1, 0)),
+	TE("teleport", 270, new Vec3(1, 0, 0), new Vec3(0, 1, 0)),
+	TW("teleport", 90, new Vec3(-1, 0, 0), new Vec3(0, 1, 0)),
 
 	CR_O("cross_ortho", new Vec3(0, 0, 1), new Vec3(1, 0, 0)),
 	CR_D("cross_diag", new Vec3(1, 0, 1), new Vec3(-1, 0, 1)),
@@ -60,7 +66,7 @@ public enum TrackShape implements StringRepresentable {
 			.put(CR_PDZ, CR_NDZ)
 			.put(CR_NDZ, CR_PDZ)
 			.build());
-		
+
 		clockwise.putAll(ImmutableMap.<TrackShape, TrackShape>builder()
 			.put(PD, ND)
 			.put(ND, PD)
@@ -110,6 +116,29 @@ public enum TrackShape implements StringRepresentable {
 
 	public boolean isJunction() {
 		return axes.size() > 1;
+	}
+
+	public boolean isPortal() {
+		switch (this) {
+		case TE, TN, TS, TW:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	public static TrackShape asPortal(Direction horizontalFacing) {
+		switch (horizontalFacing) {
+		case EAST:
+			return TE;
+		case NORTH:
+			return TN;
+		case SOUTH:
+			return TS;
+		case WEST:
+		default:
+			return TW;
+		}
 	}
 
 	public Vec3 getNormal() {

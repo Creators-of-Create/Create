@@ -15,14 +15,13 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 
 public class TrackGraphSyncPacket extends TrackGraphPacket {
 
 	Map<Integer, Pair<TrackNodeLocation, Vec3>> addedNodes;
-	List<Pair<Couple<Integer>, TrackEdge>> addedEdges;
+	List<Pair<Couple<Integer>, BezierConnection>> addedEdges;
 	List<Integer> removedNodes;
 	List<TrackEdgePoint> addedEdgePoints;
 	List<UUID> removedEdgePoints;
@@ -52,6 +51,8 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		if (packetDeletesGraph)
 			return;
 
+		DimensionPalette dimensions = DimensionPalette.receive(buffer);
+
 		addedNodes = new HashMap<>();
 		addedEdges = new ArrayList<>();
 		addedEdgePoints = new ArrayList<>();
@@ -67,15 +68,16 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
 			addedNodes.put(buffer.readVarInt(),
-				Pair.of(TrackNodeLocation.fromPackedPos(buffer.readBlockPos()), VecHelper.read(buffer)));
+				Pair.of(TrackNodeLocation.receive(buffer, dimensions), VecHelper.read(buffer)));
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
-			addedEdges.add(Pair.of(Couple.create(buffer::readVarInt), TrackEdge.read(buffer)));
+			addedEdges.add(
+				Pair.of(Couple.create(buffer::readVarInt), buffer.readBoolean() ? new BezierConnection(buffer) : null));
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
-			addedEdgePoints.add(EdgePointType.read(buffer));
+			addedEdgePoints.add(EdgePointType.read(buffer, dimensions));
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
@@ -99,11 +101,17 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
-
 		buffer.writeUUID(graphId);
 		buffer.writeBoolean(packetDeletesGraph);
+
 		if (packetDeletesGraph)
 			return;
+
+		// Populate and send palette ahead of time
+		DimensionPalette dimensions = new DimensionPalette();
+		addedNodes.forEach((node, loc) -> dimensions.encode(loc.getFirst().dimension));
+		addedEdgePoints.forEach(ep -> ep.edgeLocation.forEach(loc -> dimensions.encode(loc.dimension)));
+		dimensions.send(buffer);
 
 		buffer.writeVarInt(removedNodes.size());
 		removedNodes.forEach(buffer::writeVarInt);
@@ -111,7 +119,8 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		buffer.writeVarInt(addedNodes.size());
 		addedNodes.forEach((node, loc) -> {
 			buffer.writeVarInt(node);
-			buffer.writeBlockPos(new BlockPos(loc.getFirst()));
+			loc.getFirst()
+				.send(buffer, dimensions);
 			VecHelper.write(loc.getSecond(), buffer);
 		});
 
@@ -119,12 +128,14 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		addedEdges.forEach(pair -> {
 			pair.getFirst()
 				.forEach(buffer::writeVarInt);
-			pair.getSecond()
-				.write(buffer);
+			BezierConnection turn = pair.getSecond();
+			buffer.writeBoolean(turn != null);
+			if (turn != null)
+				turn.write(buffer);
 		});
 
 		buffer.writeVarInt(addedEdgePoints.size());
-		addedEdgePoints.forEach(ep -> ep.write(buffer));
+		addedEdgePoints.forEach(ep -> ep.write(buffer, dimensions));
 
 		buffer.writeVarInt(removedEdgePoints.size());
 		removedEdgePoints.forEach(buffer::writeUUID);
@@ -166,17 +177,13 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 			graph.loadNode(nodeLocation.getFirst(), nodeId, nodeLocation.getSecond());
 		}
 
-		for (Pair<Couple<Integer>, TrackEdge> pair : addedEdges) {
+		for (Pair<Couple<Integer>, BezierConnection> pair : addedEdges) {
 			Couple<TrackNode> nodes = pair.getFirst()
 				.map(graph::getNode);
 			TrackNode node1 = nodes.getFirst();
 			TrackNode node2 = nodes.getSecond();
-			if (node1 != null && node2 != null) {
-				TrackEdge edge = pair.getSecond();
-				edge.node1 = node1;
-				edge.node2 = node2;
-				graph.putConnection(node1, node2, edge);
-			}
+			if (node1 != null && node2 != null)
+				graph.putConnection(node1, node2, new TrackEdge(node1, node2, pair.getSecond()));
 		}
 
 		for (TrackEdgePoint edgePoint : addedEdgePoints)
@@ -189,7 +196,7 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		handleEdgeData(manager, graph);
 
 		if (!splitSubGraphs.isEmpty())
-			graph.findDisconnectedGraphs(splitSubGraphs)
+			graph.findDisconnectedGraphs(null, splitSubGraphs)
 				.forEach(manager::putGraph);
 	}
 

@@ -19,6 +19,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
@@ -37,9 +38,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -368,7 +367,7 @@ public class Navigation {
 				cancelNavigation();
 			return -1;
 		}
-		
+
 		if (Math.abs(distanceToDestination) > 100)
 			announceArrival = true;
 
@@ -460,7 +459,7 @@ public class Navigation {
 				return true;
 			});
 
-			if (!train.doubleEnded || !train.hasBackwardConductor())
+			if (!train.doubleEnded || !train.manualTick && !train.hasBackwardConductor())
 				break;
 		}
 
@@ -621,14 +620,9 @@ public class Navigation {
 
 			List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
 			Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node2);
-			for (Entry<TrackNode, TrackEdge> connection : connectionsFrom.entrySet()) {
-				TrackEdge newEdge = connection.getValue();
-				Vec3 currentDirection = edge.getDirection(false);
-				Vec3 newDirection = newEdge.getDirection(true);
-				if (currentDirection.dot(newDirection) < 7 / 8f)
-					continue;
-				validTargets.add(connection);
-			}
+			for (Entry<TrackNode, TrackEdge> connection : connectionsFrom.entrySet())
+				if (edge.canTravelTo(connection.getValue()))
+					validTargets.add(connection);
 
 			if (validTargets.isEmpty())
 				continue;
@@ -673,7 +667,7 @@ public class Navigation {
 			Pair<Couple<TrackNode>, TrackEdge> current, GlobalStation station);
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		if (destination == null)
 			return tag;
@@ -685,8 +679,7 @@ public class Navigation {
 		tag.put("Path", NBTHelper.writeCompoundList(currentPath, c -> {
 			CompoundTag nbt = new CompoundTag();
 			nbt.put("Nodes", c.map(TrackNode::getLocation)
-				.map(BlockPos::new)
-				.serializeEach(NbtUtils::writeBlockPos));
+				.serializeEach(loc -> loc.write(dimensions)));
 			return nbt;
 		}));
 		if (waitingForSignal == null)
@@ -698,7 +691,7 @@ public class Navigation {
 		return tag;
 	}
 
-	public void read(CompoundTag tag, TrackGraph graph) {
+	public void read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		destination = graph != null && tag.contains("Destination")
 			? graph.getPoint(EdgePointType.STATION, tag.getUUID("Destination"))
 			: null;
@@ -713,8 +706,7 @@ public class Navigation {
 		currentPath.clear();
 		NBTHelper.iterateCompoundList(tag.getList("Path", Tag.TAG_COMPOUND),
 			c -> currentPath.add(Couple
-				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND),
-					c2 -> TrackNodeLocation.fromPackedPos(NbtUtils.readBlockPos(c2)))
+				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND), c2 -> TrackNodeLocation.read(c2, dimensions))
 				.map(graph::locateNode)));
 		waitingForSignal = tag.contains("BlockingSignal")
 			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))

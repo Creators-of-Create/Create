@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.Map.Entry;
 
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -10,9 +11,7 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -100,24 +99,22 @@ public class TrainMigration {
 		return null;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putBoolean("Curve", curve);
 		tag.put("Fallback", VecHelper.writeNBT(fallback));
 		tag.putDouble("Position", positionOnOldEdge);
-		tag.put("Nodes", locations.map(BlockPos::new)
-			.serializeEach(NbtUtils::writeBlockPos));
+		tag.put("Nodes", locations.serializeEach(l -> l.write(dimensions)));
 		return tag;
 	}
 
-	public static TrainMigration read(CompoundTag tag) {
+	public static TrainMigration read(CompoundTag tag, DimensionPalette dimensions) {
 		TrainMigration trainMigration = new TrainMigration();
 		trainMigration.curve = tag.getBoolean("Curve");
 		trainMigration.fallback = VecHelper.readNBT(tag.getList("Fallback", Tag.TAG_DOUBLE));
 		trainMigration.positionOnOldEdge = tag.getDouble("Position");
 		trainMigration.locations =
-			Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), NbtUtils::readBlockPos)
-				.map(TrackNodeLocation::fromPackedPos);
+			Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), c -> TrackNodeLocation.read(c, dimensions));
 		return trainMigration;
 	}
 

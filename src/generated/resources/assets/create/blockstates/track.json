@@ -30,6 +30,21 @@
       "model": "create:block/track/ascending",
       "y": 90
     },
+    "shape=tn,turn=false": {
+      "model": "create:block/track/teleport",
+      "y": 180
+    },
+    "shape=ts,turn=false": {
+      "model": "create:block/track/teleport"
+    },
+    "shape=te,turn=false": {
+      "model": "create:block/track/teleport",
+      "y": 270
+    },
+    "shape=tw,turn=false": {
+      "model": "create:block/track/teleport",
+      "y": 90
+    },
     "shape=cr_o,turn=false": {
       "model": "create:block/track/cross_ortho"
     },
@@ -76,6 +91,21 @@
     },
     "shape=aw,turn=true": {
       "model": "create:block/track/ascending",
+      "y": 90
+    },
+    "shape=tn,turn=true": {
+      "model": "create:block/track/teleport",
+      "y": 180
+    },
+    "shape=ts,turn=true": {
+      "model": "create:block/track/teleport"
+    },
+    "shape=te,turn=true": {
+      "model": "create:block/track/teleport",
+      "y": 270
+    },
+    "shape=tw,turn=true": {
+      "model": "create:block/track/teleport",
       "y": 90
     },
     "shape=cr_o,turn=true": {

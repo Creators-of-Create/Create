@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 
 public class ControlsServerHandler {
@@ -29,6 +30,11 @@ public class ControlsServerHandler {
 			ControlsContext ctx = entry.getValue();
 			Collection<ManuallyPressedKey> list = ctx.keys;
 
+			if (ctx.entity.isRemoved()) {
+				iterator.remove();
+				continue;
+			}
+
 			for (Iterator<ManuallyPressedKey> entryIterator = list.iterator(); entryIterator.hasNext();) {
 				ManuallyPressedKey pressedKey = entryIterator.next();
 				pressedKey.decrement();
@@ -36,9 +42,16 @@ public class ControlsServerHandler {
 					entryIterator.remove(); // key released
 			}
 
+			Player player = world.getPlayerByUUID(entry.getKey());
+			if (player == null) {
+				ctx.entity.stopControlling(ctx.controlsLocalPos);
+				iterator.remove();
+				continue;
+			}
+
 			if (!ctx.entity.control(ctx.controlsLocalPos, list.stream()
 				.map(ManuallyPressedKey::getSecond)
-				.toList(), world.getPlayerByUUID(entry.getKey()))) {
+				.toList(), player)) {
 				ctx.entity.stopControlling(ctx.controlsLocalPos);
 			}
 

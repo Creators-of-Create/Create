@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
@@ -177,7 +178,7 @@ public class EdgeData {
 		return null;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag nbt = new CompoundTag();
 		if (singleSignalGroup == passiveGroup)
 			NBTHelper.putMarker(nbt, "PassiveGroup");
@@ -194,11 +195,11 @@ public class EdgeData {
 				return tag;
 			}));
 		if (hasIntersections())
-			nbt.put("Intersections", NBTHelper.writeCompoundList(intersections, TrackEdgeIntersection::write));
+			nbt.put("Intersections", NBTHelper.writeCompoundList(intersections, tei -> tei.write(dimensions)));
 		return nbt;
 	}
 
-	public static EdgeData read(CompoundTag nbt, TrackEdge edge, TrackGraph graph) {
+	public static EdgeData read(CompoundTag nbt, TrackEdge edge, TrackGraph graph, DimensionPalette dimensions) {
 		EdgeData data = new EdgeData(edge);
 		if (nbt.contains("SignalGroup"))
 			data.singleSignalGroup = nbt.getUUID("SignalGroup");
@@ -216,8 +217,8 @@ public class EdgeData {
 					data.points.add(point);
 			});
 		if (nbt.contains("Intersections"))
-			data.intersections =
-				NBTHelper.readCompoundList(nbt.getList("Intersections", Tag.TAG_COMPOUND), TrackEdgeIntersection::read);
+			data.intersections = NBTHelper.readCompoundList(nbt.getList("Intersections", Tag.TAG_COMPOUND),
+				c -> TrackEdgeIntersection.read(c, dimensions));
 		return data;
 	}
 

@@ -28,6 +28,8 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 			return false;
 		if (!entity.isAlive())
 			return false;
+		if (!entity.isReadyForRender())
+			return false;
 
 		return super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ);
 	}

@@ -144,7 +144,7 @@ public class TrackPlacement {
 		if (pos1.distSqr(pos2) > 32 * 32)
 			return info.withMessage("too_far")
 				.tooJumbly();
-		if (!state1.hasProperty(TrackBlock.HAS_TURN))
+		if (!state1.hasProperty(TrackBlock.HAS_TE))
 			return info.withMessage("original_missing");
 
 		if (axis1.dot(end2.subtract(end1)) < 0) {
@@ -469,8 +469,19 @@ public class TrackPlacement {
 			Vec3 axis = first ? info.axis1 : info.axis2;
 			BlockPos pos = first ? info.pos1 : info.pos2;
 			BlockState state = first ? state1 : state2;
-			if (state.hasProperty(TrackBlock.HAS_TURN) && !simulate)
-				state = state.setValue(TrackBlock.HAS_TURN, false);
+			if (state.hasProperty(TrackBlock.HAS_TE) && !simulate)
+				state = state.setValue(TrackBlock.HAS_TE, false);
+
+			switch (state.getValue(TrackBlock.SHAPE)) {
+			case TE, TW:
+				state = state.setValue(TrackBlock.SHAPE, TrackShape.XO);
+				break;
+			case TN, TS:
+				state = state.setValue(TrackBlock.SHAPE, TrackShape.ZO);
+				break;
+			default:
+				break;
+			}
 
 			for (int i = 0; i < (info.curve != null ? extent + 1 : extent); i++) {
 				Vec3 offset = axis.scale(i);
@@ -501,12 +512,12 @@ public class TrackPlacement {
 		if (!simulate) {
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1,
-				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TURN, true),
+				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TE, true),
 				3);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2,
-				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_TURN, true),
+				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_TE, true),
 				3);
 		}
 

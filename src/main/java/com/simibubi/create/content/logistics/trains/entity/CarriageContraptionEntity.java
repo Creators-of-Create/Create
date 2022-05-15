@@ -2,8 +2,10 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -14,9 +16,13 @@ import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
+import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -44,6 +50,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -125,6 +133,17 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		return entityData.get(SCHEDULED);
 	}
 
+	public boolean isLocalCoordWithin(BlockPos localPos, int min, int max) {
+		if (!(getContraption()instanceof CarriageContraption cc))
+			return false;
+		Direction facing = cc.getAssemblyDirection();
+		Axis axis = facing.getClockWise()
+			.getAxis();
+		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
+			.getStep();
+		return coord >= min && coord <= max;
+	}
+
 	public static CarriageContraptionEntity create(Level world, CarriageContraption contraption) {
 		CarriageContraptionEntity entity =
 			new CarriageContraptionEntity(AllEntityTypes.CARRIAGE_CONTRAPTION.get(), world);
@@ -162,8 +181,12 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				if (train == null || train.carriages.size() <= carriageIndex)
 					return;
 				carriage = train.carriages.get(carriageIndex);
-				if (carriage != null)
-					carriage.entity = new WeakReference<>(this);
+				if (carriage != null) {
+					DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
+					dimensional.entity = new WeakReference<>(this);
+					dimensional.pivot = null;
+					carriage.updateContraptionAnchors();
+				}
 				updateTrackGraph();
 			} else
 				discard();
@@ -201,7 +224,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return;
 		}
 
-		if (!carriage.pointsInitialised)
+		DimensionalCarriageEntity dce = carriage.getDimensional(level);
+
+		if (!dce.pointsInitialised)
 			return;
 
 		carriageData.approach(this, carriage, 1f / getType().updateInterval());
@@ -213,7 +238,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		yo = getY();
 		zo = getZ();
 
-		carriage.alignEntity(this);
+		dce.alignEntity(this);
 
 		double distanceTo = 0;
 		if (!firstPositionUpdate) {
@@ -232,6 +257,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (carriage.train.derailed)
 			spawnDerailParticles(carriage);
+		if (dce.pivot != null)
+			spawnPortalParticles(dce);
 
 		firstPositionUpdate = false;
 		validForRender = true;
@@ -247,7 +274,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			for (int index = 0; index < carriageCount; index++) {
 				int i = arrivalSoundReversed ? carriageCount - 1 - index : index;
 				Carriage carriage = carriages.get(i);
-				CarriageContraptionEntity entity = carriage.entity.get();
+				CarriageContraptionEntity entity = carriage.getDimensional(level).entity.get();
 				if (entity == null || !(entity.contraption instanceof CarriageContraption otherCC))
 					break;
 				tick = arrivalSoundReversed ? otherCC.soundQueue.lastTick() : otherCC.soundQueue.firstTick();
@@ -268,7 +295,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		boolean keepTicking = false;
 		for (Carriage c : carriages) {
-			CarriageContraptionEntity entity = c.entity.get();
+			CarriageContraptionEntity entity = c.getDimensional(level).entity.get();
 			if (entity == null || !(entity.contraption instanceof CarriageContraption otherCC))
 				continue;
 			keepTicking |= otherCC.soundQueue.tick(entity, arrivalSoundTicks, arrivalSoundReversed);
@@ -288,6 +315,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Override
+	protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
+		return !getContraption().isHiddenInPortal(context.localPos) && super.isActorActive(context, actor);
+	}
+
+	@Override
 	protected void handleStallInformation(float x, float y, float z, float angle) {}
 
 	Vec3 derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, 1.5f)
@@ -300,12 +332,49 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 	}
 
+	private Set<BlockPos> particleSlice = new HashSet<>();
+	private float particleAvgY = 0;
+
+	private void spawnPortalParticles(DimensionalCarriageEntity dce) {
+		Vec3 pivot = dce.pivot.getLocation()
+			.add(0, 1.5f, 0);
+		if (particleSlice.isEmpty())
+			return;
+
+		boolean alongX = Mth.equal(pivot.x, Math.round(pivot.x));
+		int extraFlip = Direction.fromYRot(yaw)
+			.getAxisDirection()
+			.getStep();
+
+		Vec3 emitter = pivot.add(0, particleAvgY, 0);
+		double speed = position().distanceTo(getPrevPositionVec());
+		int size = (int) (particleSlice.size() * Mth.clamp(4 - speed * 4, 0, 4));
+
+		for (BlockPos pos : particleSlice) {
+			if (size != 0 && random.nextInt(size) != 0)
+				continue;
+			if (alongX)
+				pos = new BlockPos(0, pos.getY(), pos.getX());
+			Vec3 v = pivot.add(pos.getX() * extraFlip, pos.getY(), pos.getZ() * extraFlip);
+			CubeParticleData data =
+				new CubeParticleData(.25f, 0, .5f, .65f + (random.nextFloat() - .5f) * .25f, 4, false);
+			Vec3 m = v.subtract(emitter)
+				.normalize()
+				.scale(.325f);
+			m = VecHelper.rotate(m, random.nextFloat() * 360, alongX ? Axis.X : Axis.Z);
+			m = m.add(VecHelper.offsetRandomly(Vec3.ZERO, random, 0.25f));
+			level.addParticle(data, v.x, v.y, v.z, m.x, m.y, m.z);
+		}
+
+	}
+
 	@Override
 	public void onClientRemoval() {
 		super.onClientRemoval();
 		entityData.set(CARRIAGE_DATA, new CarriageSyncData());
 		if (carriage != null) {
-			carriage.pointsInitialised = false;
+			DimensionalCarriageEntity dce = carriage.getDimensional(level);
+			dce.pointsInitialised = false;
 			carriage.leadingBogey().couplingAnchors = Couple.create(null, null);
 			carriage.trailingBogey().couplingAnchors = Couple.create(null, null);
 		}
@@ -467,7 +536,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 			if (lookAhead != null) {
 				if (spaceDown) {
+					carriage.train.manualTick = true;
 					nav.startNavigation(lookAhead, -1, false);
+					carriage.train.manualTick = false;
 					navDistanceTotal = nav.distanceToDestination;
 					return true;
 				}
@@ -539,6 +610,71 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	public void setGraph(@Nullable UUID graphId) {
 		entityData.set(TRACK_GRAPH, Optional.ofNullable(graphId));
 		prevPosInvalid = true;
+	}
+
+	@Override
+	public boolean isReadyForRender() {
+		return super.isReadyForRender() && validForRender && !firstPositionUpdate;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private WeakReference<CarriageContraptionInstance> instanceHolder;
+
+	@OnlyIn(Dist.CLIENT)
+	public void bindInstance(CarriageContraptionInstance instance) {
+		this.instanceHolder = new WeakReference<>(instance);
+		updateRenderedPortalCutoff();
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void updateRenderedPortalCutoff() {
+		if (carriage == null)
+			return;
+
+		// update portal slice
+		particleSlice.clear();
+		particleAvgY = 0;
+
+		if (contraption instanceof CarriageContraption cc) {
+			Direction forward = cc.getAssemblyDirection()
+				.getClockWise();
+			Axis axis = forward.getAxis();
+			boolean x = axis == Axis.X;
+			boolean flip = true;
+
+			for (BlockPos pos : contraption.getBlocks()
+				.keySet()) {
+				if (!cc.atSeam(pos))
+					continue;
+				int pX = x ? pos.getX() : pos.getZ();
+				pX *= forward.getAxisDirection()
+					.getStep() * (flip ? 1 : -1);
+				pos = new BlockPos(pX, pos.getY(), 0);
+				particleSlice.add(pos);
+				particleAvgY += pos.getY();
+			}
+
+		}
+		if (particleSlice.size() > 0)
+			particleAvgY /= particleSlice.size();
+
+		// update hidden bogeys (if instanced)
+		if (instanceHolder == null)
+			return;
+		CarriageContraptionInstance instance = instanceHolder.get();
+		if (instance == null)
+			return;
+
+		int bogeySpacing = carriage.bogeySpacing;
+
+		carriage.bogeys.forEachWithContext((bogey, first) -> {
+			if (bogey == null)
+				return;
+
+			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
+				: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
+			instance.setBogeyVisibility(first, !contraption.isHiddenInPortal(bogeyPos));
+		});
 	}
 
 }

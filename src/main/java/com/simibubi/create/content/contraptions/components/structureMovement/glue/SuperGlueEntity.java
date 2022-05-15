@@ -47,6 +47,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
@@ -287,6 +288,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		return getBoundingBox().contains(Vec3.atCenterOf(pos));
 	}
 
+	@Override
+	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
+		portalEntrancePos = blockPosition();
+		return super.findDimensionEntryPoint(pDestination);
+	}
+	
 	public void spawnParticles() {
 		AABB bb = getBoundingBox();
 		Vec3 origin = new Vec3(bb.minX, bb.minY, bb.minZ);

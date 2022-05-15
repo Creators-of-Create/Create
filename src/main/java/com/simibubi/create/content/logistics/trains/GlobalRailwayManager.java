@@ -146,8 +146,8 @@ public class GlobalRailwayManager {
 		markTracksDirty();
 	}
 
-	public void updateSplitGraph(TrackGraph graph) {
-		Set<TrackGraph> disconnected = graph.findDisconnectedGraphs(null);
+	public void updateSplitGraph(LevelAccessor level, TrackGraph graph) {
+		Set<TrackGraph> disconnected = graph.findDisconnectedGraphs(level, null);
 		disconnected.forEach(this::putGraphWithDefaultGroup);
 		if (!disconnected.isEmpty()) {
 			sync.graphSplit(graph, disconnected);
@@ -219,6 +219,13 @@ public class GlobalRailwayManager {
 
 		for (Iterator<Train> iterator = waitingTrains.iterator(); iterator.hasNext();) {
 			Train train = iterator.next();
+			
+			if (train.invalid) {
+				iterator.remove();
+				trains.remove(train.id);
+				continue;
+			}
+			
 			if (train.navigation.waitingForSignal != null)
 				continue;
 			movingTrains.add(train);
@@ -227,11 +234,20 @@ public class GlobalRailwayManager {
 
 		for (Iterator<Train> iterator = movingTrains.iterator(); iterator.hasNext();) {
 			Train train = iterator.next();
+			
+			if (train.invalid) {
+				iterator.remove();
+				trains.remove(train.id);
+				continue;
+			}
+			
 			if (train.navigation.waitingForSignal == null)
 				continue;
 			waitingTrains.add(train);
 			iterator.remove();
 		}
+		
+		
 	}
 
 	public void tickSignalOverlay() {

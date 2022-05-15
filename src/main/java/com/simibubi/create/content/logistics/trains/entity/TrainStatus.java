@@ -70,6 +70,13 @@ public class TrainStatus {
 		track = true;
 	}
 
+	public void doublePortal() {
+		if (track)
+			return;
+		displayInformation("A Carriage cannot enter a portal whilst leaving another.", false);
+		track = true;
+	}
+	
 	public void endOfTrack() {
 		if (track)
 			return;

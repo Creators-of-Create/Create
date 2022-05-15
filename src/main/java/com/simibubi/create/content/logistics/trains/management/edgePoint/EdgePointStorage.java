@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -65,14 +66,14 @@ public class EdgePointStorage {
 		pointsByType.clear();
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag nbt = new CompoundTag();
 		for (Entry<EdgePointType<?>, Map<UUID, TrackEdgePoint>> entry : pointsByType.entrySet()) {
 			EdgePointType<?> type = entry.getKey();
 			ListTag list = NBTHelper.writeCompoundList(entry.getValue()
 				.values(), edgePoint -> {
 					CompoundTag tag = new CompoundTag();
-					edgePoint.write(tag);
+					edgePoint.write(tag, dimensions);
 					return tag;
 				});
 			nbt.put(type.getId()
@@ -81,14 +82,14 @@ public class EdgePointStorage {
 		return nbt;
 	}
 
-	public void read(CompoundTag nbt) {
+	public void read(CompoundTag nbt, DimensionPalette dimensions) {
 		for (EdgePointType<?> type : EdgePointType.TYPES.values()) {
 			ListTag list = nbt.getList(type.getId()
 				.toString(), Tag.TAG_COMPOUND);
 			Map<UUID, TrackEdgePoint> map = getMap(type);
 			NBTHelper.iterateCompoundList(list, tag -> {
 				TrackEdgePoint edgePoint = type.create();
-				edgePoint.read(tag, false);
+				edgePoint.read(tag, false, dimensions);
 				map.put(edgePoint.getId(), edgePoint);
 			});
 		}

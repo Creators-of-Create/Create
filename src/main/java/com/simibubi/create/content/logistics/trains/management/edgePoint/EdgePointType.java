@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
@@ -44,11 +45,11 @@ public class EdgePointType<T extends TrackEdgePoint> {
 		return id;
 	}
 	
-	public static TrackEdgePoint read(FriendlyByteBuf buffer) {
+	public static TrackEdgePoint read(FriendlyByteBuf buffer, DimensionPalette dimensions) {
 		ResourceLocation type = buffer.readResourceLocation();
 		EdgePointType<?> edgePointType = TYPES.get(type);
 		TrackEdgePoint point = edgePointType.create();
-		point.read(buffer);
+		point.read(buffer, dimensions);
 		return point;
 	}
 

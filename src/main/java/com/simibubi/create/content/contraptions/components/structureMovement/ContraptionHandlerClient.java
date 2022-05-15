@@ -82,7 +82,7 @@ public class ContraptionHandlerClient {
 		Couple<Vec3> rayInputs = getRayInputs(player);
 		Vec3 origin = rayInputs.getFirst();
 		Vec3 target = rayInputs.getSecond();
-		AABB aabb = new AABB(origin, target).inflate(4);
+		AABB aabb = new AABB(origin, target).inflate(16);
 		List<AbstractContraptionEntity> intersectingContraptions =
 			mc.level.getEntitiesOfClass(AbstractContraptionEntity.class, aabb);
 
@@ -142,6 +142,8 @@ public class ContraptionHandlerClient {
 			BlockState state = blockInfo.state;
 			VoxelShape raytraceShape = state.getShape(Minecraft.getInstance().level, BlockPos.ZERO.below());
 			if (raytraceShape.isEmpty())
+				return false;
+			if (contraption.isHiddenInPortal(p))
 				return false;
 			BlockHitResult rayTrace = raytraceShape.clip(localOrigin, localTarget, p);
 			if (rayTrace != null) {

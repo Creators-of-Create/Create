@@ -189,14 +189,18 @@ public class TrainRelocator {
 		};
 		ITrackSelector steer = probe.steer(SteerDirection.NONE, track.getUpNormal(level, pos, blockState));
 		MutableBoolean blocked = new MutableBoolean(false);
+		MutableBoolean portal = new MutableBoolean(false);
 
 		MutableInt blockingIndex = new MutableInt(0);
 		train.forEachTravellingPointBackwards((tp, d) -> {
 			if (blocked.booleanValue())
 				return;
-			probe.travel(graph, d, steer, ignoreSignals, ignoreTurns);
+			probe.travel(graph, d, steer, ignoreSignals, ignoreTurns, $ -> {
+				portal.setTrue();
+				return true;
+			});
 			recorder.accept(probe);
-			if (probe.blocked) {
+			if (probe.blocked || portal.booleanValue()) {
 				blocked.setTrue();
 				return;
 			}
@@ -212,7 +216,8 @@ public class TrainRelocator {
 			Vec3 vec1 = recordedVecs.get(i);
 			Vec3 vec2 = recordedVecs.get(i + 1);
 			boolean blocking = i >= blockingIndex.intValue() - 1;
-			boolean collided = !blocked.booleanValue() && Train.findCollidingTrain(level, vec1, vec2, train) != null;
+			boolean collided = !blocked.booleanValue()
+				&& Train.findCollidingTrain(level, vec1, vec2, train, level.dimension()) != null;
 			if (level.isClientSide && simulate)
 				toVisualise.add(vec2);
 			if (collided || blocking)

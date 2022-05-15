@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
@@ -17,12 +18,19 @@ import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,6 +45,8 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	Map<BlockPos, BezierConnection> connections;
 	boolean connectionsValidated;
 	boolean cancelDrops;
+
+	public Pair<ResourceKey<Level>, BlockPos> boundLocation;
 
 	public TrackTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -84,12 +94,14 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	public void removeConnection(BlockPos target) {
 		connections.remove(target);
 		notifyUpdate();
-		if (!connections.isEmpty())
+		if (!connections.isEmpty() || getBlockState().getOptionalValue(TrackBlock.SHAPE)
+			.orElse(TrackShape.NONE)
+			.isPortal())
 			return;
 
 		BlockState blockState = level.getBlockState(worldPosition);
-		if (blockState.hasProperty(TrackBlock.HAS_TURN))
-			level.setBlockAndUpdate(worldPosition, blockState.setValue(TrackBlock.HAS_TURN, false));
+		if (blockState.hasProperty(TrackBlock.HAS_TE))
+			level.setBlockAndUpdate(worldPosition, blockState.setValue(TrackBlock.HAS_TE, false));
 		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
 	}
 
@@ -108,6 +120,11 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
 	}
 
+	public void bind(ResourceKey<Level> boundDimension, BlockPos boundLocation) {
+		this.boundLocation = Pair.of(boundDimension, boundLocation);
+		setChanged();
+	}
+
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
@@ -115,6 +132,13 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		for (BezierConnection bezierConnection : connections.values())
 			listTag.add(bezierConnection.write(worldPosition));
 		tag.put("Connections", listTag);
+
+		if (boundLocation != null) {
+			tag.put("BoundLocation", NbtUtils.writeBlockPos(boundLocation.getSecond()));
+			tag.putString("BoundDimension", boundLocation.getFirst()
+				.location()
+				.toString());
+		}
 	}
 
 	@Override
@@ -134,6 +158,11 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			registerToCurveInteraction();
 		else
 			removeFromCurveInteraction();
+
+		if (tag.contains("BoundLocation"))
+			boundLocation = Pair.of(
+				ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(tag.getString("BoundDimension"))),
+				NbtUtils.readBlockPos(tag.getCompound("BoundLocation")));
 	}
 
 	@Override
@@ -202,6 +231,20 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		super.setRemoved();
 		if (level.isClientSide)
 			removeFromCurveInteraction();
+	}
+
+	@Override
+	protected void setRemovedNotDueToChunkUnload() {
+		super.setRemovedNotDueToChunkUnload();
+
+		if (boundLocation != null && level instanceof ServerLevel) {
+			ServerLevel otherLevel = level.getServer()
+				.getLevel(boundLocation.getFirst());
+			if (otherLevel == null)
+				return;
+			if (AllBlocks.TRACK.has(otherLevel.getBlockState(boundLocation.getSecond())))
+				otherLevel.destroyBlock(boundLocation.getSecond(), false);
+		}
 	}
 
 	private void registerToCurveInteraction() {

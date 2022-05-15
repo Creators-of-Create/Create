@@ -13,6 +13,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -237,6 +238,7 @@ public class TrackBlockOutline {
 	private static final VoxelShape LONG_CROSS =
 		Shapes.or(TrackVoxelShapes.longOrthogonalZ(), TrackVoxelShapes.longOrthogonalX());
 	private static final VoxelShape LONG_ORTHO = TrackVoxelShapes.longOrthogonalZ();
+	private static final VoxelShape LONG_ORTHO_OFFSET = TrackVoxelShapes.longOrthogonalZOffset();
 
 	private static void walkShapes(TrackShape shape, TransformStack msr, Consumer<VoxelShape> renderer) {
 		float angle45 = Mth.PI / 4;
@@ -245,6 +247,16 @@ public class TrackBlockOutline {
 			renderer.accept(AllShapes.TRACK_ORTHO.get(Direction.EAST));
 		else if (shape == TrackShape.ZO || shape == TrackShape.CR_NDZ || shape == TrackShape.CR_PDZ)
 			renderer.accept(AllShapes.TRACK_ORTHO.get(Direction.SOUTH));
+
+		if (shape.isPortal()) {
+			for (Direction d : Iterate.horizontalDirections) {
+				if (TrackShape.asPortal(d) != shape)
+					continue;
+				msr.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(d)));
+				renderer.accept(LONG_ORTHO_OFFSET);
+				return;
+			}
+		}
 
 		if (shape == TrackShape.PD || shape == TrackShape.CR_PDX || shape == TrackShape.CR_PDZ) {
 			msr.rotateCentered(Direction.UP, angle45);

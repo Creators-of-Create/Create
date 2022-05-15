@@ -22,6 +22,7 @@ import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
@@ -409,7 +410,7 @@ public class StationTileEntity extends SmartTileEntity {
 		ITrackBlock track = edgePoint.getTrack();
 		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, trackPosition, trackState));
 
-		DiscoveredLocation location = null;
+		TrackNodeLocation location = null;
 		Vec3 centre = Vec3.atBottomCenterOf(trackPosition)
 			.add(0, track.getElevationAtCenter(level, trackPosition, trackState), 0);
 		Collection<DiscoveredLocation> ends = track.getConnected(level, trackPosition, trackState, true, null);
@@ -442,9 +443,9 @@ public class StationTileEntity extends SmartTileEntity {
 			if (points.size() == pointOffsets.size())
 				break;
 
-			DiscoveredLocation currentLocation = location;
-			location = new DiscoveredLocation(location.getLocation()
-				.add(directionVec.scale(.5)));
+			TrackNodeLocation currentLocation = location;
+			location = new TrackNodeLocation(location.getLocation()
+				.add(directionVec.scale(.5))).in(location.dimension);
 
 			if (graph == null)
 				graph = Create.RAILWAYS.getGraph(level, currentLocation);

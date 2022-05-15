@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.signal
 import java.util.UUID;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
@@ -14,7 +15,6 @@ import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.LevelAccessor;
@@ -56,7 +56,9 @@ public abstract class TrackEdgePoint {
 		if (behaviour == null)
 			return;
 		CompoundTag migrationData = new CompoundTag();
-		write(migrationData);
+		DimensionPalette dimensions = new DimensionPalette();
+		write(migrationData, dimensions);
+		dimensions.write(migrationData);
 		behaviour.invalidateEdgePoint(migrationData);
 	}
 
@@ -84,32 +86,32 @@ public abstract class TrackEdgePoint {
 			.equals(node1.getLocation());
 	}
 
-	public void read(CompoundTag nbt, boolean migration) {
+	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
 		if (migration)
 			return;
 
 		id = nbt.getUUID("Id");
 		position = nbt.getDouble("Position");
 		edgeLocation = Couple.deserializeEach(nbt.getList("Edge", Tag.TAG_COMPOUND),
-			tag -> TrackNodeLocation.fromPackedPos(NbtUtils.readBlockPos(tag)));
+			tag -> TrackNodeLocation.read(tag, dimensions));
 	}
 
-	public void read(FriendlyByteBuf buffer) {
+	public void read(FriendlyByteBuf buffer, DimensionPalette dimensions) {
 		id = buffer.readUUID();
-		edgeLocation = Couple.create(() -> TrackNodeLocation.fromPackedPos(buffer.readBlockPos()));
+		edgeLocation = Couple.create(() -> TrackNodeLocation.receive(buffer, dimensions));
 		position = buffer.readDouble();
 	}
 
-	public void write(CompoundTag nbt) {
+	public void write(CompoundTag nbt, DimensionPalette dimensions) {
 		nbt.putUUID("Id", id);
 		nbt.putDouble("Position", position);
-		nbt.put("Edge", edgeLocation.serializeEach(loc -> NbtUtils.writeBlockPos(new BlockPos(loc))));
+		nbt.put("Edge", edgeLocation.serializeEach(loc -> loc.write(dimensions)));
 	}
 
-	public void write(FriendlyByteBuf buffer) {
+	public void write(FriendlyByteBuf buffer, DimensionPalette dimensions) {
 		buffer.writeResourceLocation(type.getId());
 		buffer.writeUUID(id);
-		edgeLocation.forEach(loc -> buffer.writeBlockPos(new BlockPos(loc)));
+		edgeLocation.forEach(loc -> loc.send(buffer, dimensions));
 		buffer.writeDouble(position);
 	}
 

@@ -1,10 +1,13 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import static com.simibubi.create.AllShapes.TRACK_ASC;
+import static com.simibubi.create.AllShapes.TRACK_CROSS;
+import static com.simibubi.create.AllShapes.TRACK_CROSS_DIAG;
 import static com.simibubi.create.AllShapes.TRACK_CROSS_DIAG_ORTHO;
 import static com.simibubi.create.AllShapes.TRACK_CROSS_ORTHO_DIAG;
 import static com.simibubi.create.AllShapes.TRACK_DIAG;
 import static com.simibubi.create.AllShapes.TRACK_ORTHO;
+import static com.simibubi.create.AllShapes.TRACK_ORTHO_LONG;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +24,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
@@ -33,7 +38,9 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -42,6 +49,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -51,10 +60,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -64,6 +76,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.portal.PortalForcer;
+import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -77,17 +92,17 @@ import net.minecraftforge.client.IBlockRenderProperties;
 public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
-	public static final BooleanProperty HAS_TURN = BooleanProperty.create("turn");
+	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
 
 	public TrackBlock(Properties p_49795_) {
 		super(p_49795_);
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
-			.setValue(HAS_TURN, false));
+			.setValue(HAS_TE, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
-		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TURN));
+		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -113,7 +128,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		TrackShape best = TrackShape.ZO;
 		double bestValue = Float.MAX_VALUE;
 		for (TrackShape shape : TrackShape.values()) {
-			if (shape.isJunction())
+			if (shape.isJunction() || shape.isPortal())
 				continue;
 			Vec3 axis = shape.getAxes()
 				.get(0);
@@ -153,7 +168,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
-		if (pOldState.getBlock() == this && pState.setValue(HAS_TURN, true) == pOldState.setValue(HAS_TURN, true))
+		if (pOldState.getBlock() == this && pState.setValue(HAS_TE, true) == pOldState.setValue(HAS_TE, true))
 			return;
 		if (pLevel.isClientSide)
 			return;
@@ -164,14 +179,119 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	}
 
 	@Override
-	public void tick(BlockState p_60462_, ServerLevel p_60463_, BlockPos p_60464_, Random p_60465_) {
-		TrackPropagator.onRailAdded(p_60463_, p_60464_, p_60462_);
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random p_60465_) {
+		TrackPropagator.onRailAdded(level, pos, state);
+		if (!state.getValue(SHAPE)
+			.isPortal())
+			connectToNether(level, pos, state);
+	}
+
+	protected void connectToNether(ServerLevel level, BlockPos pos, BlockState state) {
+		TrackShape shape = state.getValue(TrackBlock.SHAPE);
+		Axis portalTest = shape == TrackShape.XO ? Axis.X : shape == TrackShape.ZO ? Axis.Z : null;
+		if (portalTest == null)
+			return;
+
+		boolean pop = false;
+
+		for (Direction d : Iterate.directionsInAxis(portalTest)) {
+			BlockPos portalPos = pos.relative(d);
+			BlockState portalState = level.getBlockState(portalPos);
+			if (!(portalState.getBlock() instanceof NetherPortalBlock))
+				continue;
+
+			pop = true;
+			Pair<ServerLevel, BlockFace> otherSide = getOtherSide(level, new BlockFace(pos, d));
+			if (otherSide == null)
+				continue;
+
+			ServerLevel otherLevel = otherSide.getFirst();
+			BlockFace otherTrack = otherSide.getSecond();
+			BlockPos otherTrackPos = otherTrack.getPos();
+			BlockState existing = otherLevel.getBlockState(otherTrackPos);
+			if (!existing.getMaterial()
+				.isReplaceable())
+				continue;
+
+			level.setBlock(pos, state.setValue(SHAPE, TrackShape.asPortal(d))
+				.setValue(HAS_TE, true), 3);
+			BlockEntity te = level.getBlockEntity(pos);
+			if (te instanceof TrackTileEntity tte)
+				tte.bind(otherLevel.dimension(), otherTrackPos);
+
+			otherLevel.setBlock(otherTrackPos, state.setValue(SHAPE, TrackShape.asPortal(otherTrack.getFace()))
+				.setValue(HAS_TE, true), 3);
+			BlockEntity otherTe = otherLevel.getBlockEntity(otherTrackPos);
+			if (otherTe instanceof TrackTileEntity tte)
+				tte.bind(level.dimension(), pos);
+
+			pop = false;
+		}
+
+		if (pop)
+			level.destroyBlock(pos, true);
+	}
+
+	protected Pair<ServerLevel, BlockFace> getOtherSide(ServerLevel level, BlockFace inboundTrack) {
+		BlockPos portalPos = inboundTrack.getConnectedPos();
+		BlockState portalState = level.getBlockState(portalPos);
+		if (!(portalState.getBlock() instanceof NetherPortalBlock))
+			return null;
+
+		MinecraftServer minecraftserver = level.getServer();
+		ResourceKey<Level> resourcekey = level.dimension() == Level.NETHER ? Level.OVERWORLD : Level.NETHER;
+		ServerLevel otherLevel = minecraftserver.getLevel(resourcekey);
+		if (otherLevel == null || !minecraftserver.isNetherEnabled())
+			return null;
+
+		PortalForcer teleporter = otherLevel.getPortalForcer();
+		SuperGlueEntity probe = new SuperGlueEntity(level, new AABB(portalPos));
+		probe.setYRot(inboundTrack.getFace()
+			.toYRot());
+		PortalInfo portalinfo = teleporter.getPortalInfo(probe, otherLevel, probe::findDimensionEntryPoint);
+		if (portalinfo == null)
+			return null;
+
+		BlockPos otherPortalPos = new BlockPos(portalinfo.pos);
+		BlockState otherPortalState = otherLevel.getBlockState(otherPortalPos);
+		if (!(otherPortalState.getBlock() instanceof NetherPortalBlock))
+			return null;
+
+		Direction targetDirection = inboundTrack.getFace();
+		if (targetDirection.getAxis() == otherPortalState.getValue(NetherPortalBlock.AXIS))
+			targetDirection = targetDirection.getClockWise();
+		BlockPos otherPos = otherPortalPos.relative(targetDirection);
+		return Pair.of(otherLevel, new BlockFace(otherPos, targetDirection.getOpposite()));
 	}
 
 	@Override
-	public Collection<DiscoveredLocation> getConnected(BlockGetter world, BlockPos pos, BlockState state,
+	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor level, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		TrackShape shape = state.getValue(SHAPE);
+		if (!shape.isPortal())
+			return state;
+
+		for (Direction d : Iterate.horizontalDirections) {
+			if (TrackShape.asPortal(d) != state.getValue(SHAPE))
+				continue;
+			if (pDirection != d)
+				continue;
+
+			BlockPos portalPos = pCurrentPos.relative(d);
+			BlockState portalState = level.getBlockState(portalPos);
+			if (!(portalState.getBlock() instanceof NetherPortalBlock))
+				return Blocks.AIR.defaultBlockState();
+		}
+
+		return state;
+	}
+
+	@Override
+	public Collection<DiscoveredLocation> getConnected(BlockGetter worldIn, BlockPos pos, BlockState state,
 		boolean linear, TrackNodeLocation connectedTo) {
 		Collection<DiscoveredLocation> list;
+		BlockGetter world = connectedTo != null && worldIn instanceof ServerLevel sl ? sl.getServer()
+			.getLevel(connectedTo.dimension) : worldIn;
 
 		if (getTrackAxes(world, pos, state).size() > 1) {
 			Vec3 center = Vec3.atBottomCenterOf(pos)
@@ -183,11 +303,12 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 					ITrackBlock.addToListIfConnected(connectedTo, list,
 						(d, b) -> axis.scale(b ? 0 : fromCenter ? -d : d)
 							.add(center),
-						b -> shape.getNormal(), axis, null);
+						b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, axis,
+						null);
 		} else
 			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
 
-		if (!state.getValue(HAS_TURN))
+		if (!state.getValue(HAS_TE))
 			return list;
 		if (linear)
 			return list;
@@ -198,22 +319,62 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
-			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get, null,
-			bc));
+			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
+			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, null, bc));
+
+		if (trackTE.boundLocation == null || !(world instanceof ServerLevel level))
+			return list;
+
+		ResourceKey<Level> otherDim = trackTE.boundLocation.getFirst();
+		ServerLevel otherLevel = level.getServer()
+			.getLevel(otherDim);
+		if (otherLevel == null)
+			return list;
+		BlockPos boundPos = trackTE.boundLocation.getSecond();
+		BlockState boundState = otherLevel.getBlockState(boundPos);
+		if (!AllBlocks.TRACK.has(boundState))
+			return list;
+
+		Vec3 center = Vec3.atBottomCenterOf(pos)
+			.add(0, getElevationAtCenter(world, pos, state), 0);
+		Vec3 boundCenter = Vec3.atBottomCenterOf(boundPos)
+			.add(0, getElevationAtCenter(otherLevel, boundPos, boundState), 0);
+		TrackShape shape = state.getValue(TrackBlock.SHAPE);
+		TrackShape boundShape = boundState.getValue(TrackBlock.SHAPE);
+		Vec3 boundAxis = getTrackAxes(otherLevel, boundPos, boundState).get(0);
+
+		getTrackAxes(world, pos, state).forEach(axis -> {
+			ITrackBlock.addToListIfConnected(connectedTo, list, (d, b) -> (b ? axis : boundAxis).scale(d)
+				.add(b ? center : boundCenter), b -> (b ? shape : boundShape).getNormal(),
+				b -> b ? level.dimension() : otherLevel.dimension(), axis, null);
+		});
+
 		return list;
+	}
+
+	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, Random pRand) {
+		if (!pState.getValue(SHAPE)
+			.isPortal())
+			return;
+		Vec3 v = Vec3.atLowerCornerOf(pPos)
+			.subtract(.125f, 0, .125f);
+		CubeParticleData data =
+			new CubeParticleData(1, pRand.nextFloat(), 1, .0125f + .0625f * pRand.nextFloat(), 30, false);
+		pLevel.addParticle(data, v.x + pRand.nextFloat() * 1.5f, v.y + .25f, v.z + pRand.nextFloat() * 1.5f, 0.0D,
+			0.04D, 0.0D);
 	}
 
 	@Override
 	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
 		boolean removeTE = false;
-		if (pState.getValue(HAS_TURN) && (!pState.is(pNewState.getBlock()) || !pNewState.getValue(HAS_TURN))) {
+		if (pState.getValue(HAS_TE) && (!pState.is(pNewState.getBlock()) || !pNewState.getValue(HAS_TE))) {
 			BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
 			if (blockEntity instanceof TrackTileEntity && !pLevel.isClientSide)
 				((TrackTileEntity) blockEntity).removeInboundConnections();
 			removeTE = true;
 		}
 
-		if (pNewState.getBlock() != this || pState.setValue(HAS_TURN, true) != pNewState.setValue(HAS_TURN, true))
+		if (pNewState.getBlock() != this || pState.setValue(HAS_TE, true) != pNewState.setValue(HAS_TE, true))
 			TrackPropagator.onRailRemoved(pLevel, pPos, pState);
 		if (removeTE)
 			pLevel.removeBlockEntity(pPos);
@@ -282,13 +443,13 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		case AS:
 			return TRACK_ASC.get(Direction.SOUTH);
 		case CR_D:
-			return AllShapes.TRACK_CROSS_DIAG;
+			return TRACK_CROSS_DIAG;
 		case CR_NDX:
 			return TRACK_CROSS_ORTHO_DIAG.get(Direction.SOUTH);
 		case CR_NDZ:
 			return TRACK_CROSS_DIAG_ORTHO.get(Direction.SOUTH);
 		case CR_O:
-			return AllShapes.TRACK_CROSS;
+			return TRACK_CROSS;
 		case CR_PDX:
 			return TRACK_CROSS_DIAG_ORTHO.get(Direction.EAST);
 		case CR_PDZ:
@@ -301,6 +462,14 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			return TRACK_ORTHO.get(Direction.EAST);
 		case ZO:
 			return TRACK_ORTHO.get(Direction.SOUTH);
+		case TE:
+			return TRACK_ORTHO_LONG.get(Direction.EAST);
+		case TW:
+			return TRACK_ORTHO_LONG.get(Direction.WEST);
+		case TS:
+			return TRACK_ORTHO_LONG.get(Direction.SOUTH);
+		case TN:
+			return TRACK_ORTHO_LONG.get(Direction.NORTH);
 		case NONE:
 		default:
 		}
@@ -320,7 +489,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState state) {
-		if (!state.getValue(HAS_TURN))
+		if (!state.getValue(HAS_TE))
 			return null;
 		return AllTileEntities.TRACK.create(p_153215_, state);
 	}
@@ -354,7 +523,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
 		Player player = context.getPlayer();
 		Level level = context.getLevel();
-		if (!level.isClientSide && !player.isCreative() && state.getValue(HAS_TURN)) {
+		if (!level.isClientSide && !player.isCreative() && state.getValue(HAS_TE)) {
 			BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
 			if (blockEntity instanceof TrackTileEntity trackTE) {
 				trackTE.cancelDrops = true;
@@ -489,7 +658,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@Override
 	public boolean trackEquals(BlockState state1, BlockState state2) {
 		return state1.getBlock() == this && state2.getBlock() == this
-			&& state1.setValue(HAS_TURN, false) == state2.setValue(HAS_TURN, false);
+			&& state1.setValue(HAS_TE, false) == state2.setValue(HAS_TE, false);
 	}
 
 	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {

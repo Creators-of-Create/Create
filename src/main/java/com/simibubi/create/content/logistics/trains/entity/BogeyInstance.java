@@ -29,10 +29,10 @@ public sealed class BogeyInstance {
 		shafts = new ModelData[2];
 
 		materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED)
-				.getModel(AllBlocks.SHAFT.getDefaultState()
-						.setValue(ShaftBlock.AXIS, Direction.Axis.Z))
-				.createInstances(shafts);
+			.material(Materials.TRANSFORMED)
+			.getModel(AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Direction.Axis.Z))
+			.createInstances(shafts);
 
 	}
 
@@ -41,14 +41,23 @@ public sealed class BogeyInstance {
 			shaft.delete();
 	}
 
+	public void hiddenFrame() {
+		beginFrame(0, null);
+	}
+	
 	public void beginFrame(float wheelAngle, PoseStack ms) {
+		if (ms == null) {
+			for (int i : Iterate.zeroAndOne)
+				shafts[i].setEmptyTransform();
+			return;
+		}
 
 		for (int i : Iterate.zeroAndOne)
 			shafts[i].setTransform(ms)
-					.translate(-.5f, .25f, i * -1)
-					.centre()
-					.rotateZ(wheelAngle)
-					.unCentre();
+				.translate(-.5f, .25f, i * -1)
+				.centre()
+				.rotateZ(wheelAngle)
+				.unCentre();
 	}
 
 	public void updateLight(BlockAndTintGetter world, CarriageContraptionEntity entity) {
@@ -67,7 +76,8 @@ public sealed class BogeyInstance {
 
 	public void updateLight(int blockLight, int skyLight) {
 		for (ModelData shaft : shafts) {
-			shaft.setBlockLight(blockLight).setSkyLight(skyLight);
+			shaft.setBlockLight(blockLight)
+				.setSkyLight(skyLight);
 		}
 	}
 
@@ -80,37 +90,46 @@ public sealed class BogeyInstance {
 			super(bogey, materialManager);
 
 			frame = materialManager.defaultSolid()
-					.material(Materials.TRANSFORMED)
-					.getModel(AllBlockPartials.BOGEY_FRAME)
-					.createInstance();
+				.material(Materials.TRANSFORMED)
+				.getModel(AllBlockPartials.BOGEY_FRAME)
+				.createInstance();
 
 			wheels = new ModelData[2];
 
 			materialManager.defaultSolid()
-					.material(Materials.TRANSFORMED)
-					.getModel(AllBlockPartials.SMALL_BOGEY_WHEELS)
-					.createInstances(wheels);
+				.material(Materials.TRANSFORMED)
+				.getModel(AllBlockPartials.SMALL_BOGEY_WHEELS)
+				.createInstances(wheels);
 		}
 
 		@Override
 		public void beginFrame(float wheelAngle, PoseStack ms) {
 			super.beginFrame(wheelAngle, ms);
 
+			if (ms == null) {
+				frame.setEmptyTransform();
+				for (int side : Iterate.positiveAndNegative)
+					wheels[(side + 1) / 2].setEmptyTransform();
+				return;
+			}
+
 			frame.setTransform(ms);
 
 			for (int side : Iterate.positiveAndNegative) {
 				wheels[(side + 1) / 2].setTransform(ms)
-						.translate(0, 12 / 16f, side)
-						.rotateX(wheelAngle);
+					.translate(0, 12 / 16f, side)
+					.rotateX(wheelAngle);
 			}
 		}
 
 		@Override
 		public void updateLight(int blockLight, int skyLight) {
 			super.updateLight(blockLight, skyLight);
-			frame.setBlockLight(blockLight).setSkyLight(skyLight);
+			frame.setBlockLight(blockLight)
+				.setSkyLight(skyLight);
 			for (ModelData wheel : wheels)
-				wheel.setBlockLight(blockLight).setSkyLight(skyLight);
+				wheel.setBlockLight(blockLight)
+					.setSkyLight(skyLight);
 		}
 
 		@Override
@@ -133,58 +152,73 @@ public sealed class BogeyInstance {
 		public Drive(CarriageBogey bogey, MaterialManager materialManager) {
 			super(bogey, materialManager);
 			Material<ModelData> mat = materialManager.defaultSolid()
-					.material(Materials.TRANSFORMED);
+				.material(Materials.TRANSFORMED);
 
 			secondShaft = new ModelData[2];
 
 			mat.getModel(AllBlocks.SHAFT.getDefaultState()
-							.setValue(ShaftBlock.AXIS, Direction.Axis.X))
-					.createInstances(secondShaft);
+				.setValue(ShaftBlock.AXIS, Direction.Axis.X))
+				.createInstances(secondShaft);
 
 			drive = mat.getModel(AllBlockPartials.BOGEY_DRIVE)
-					.createInstance();
+				.createInstance();
 			piston = mat.getModel(AllBlockPartials.BOGEY_PISTON)
-					.createInstance();
+				.createInstance();
 			wheels = mat.getModel(AllBlockPartials.LARGE_BOGEY_WHEELS)
-					.createInstance();
+				.createInstance();
 			pin = mat.getModel(AllBlockPartials.BOGEY_PIN)
-					.createInstance();
+				.createInstance();
 		}
 
 		@Override
 		public void beginFrame(float wheelAngle, PoseStack ms) {
 			super.beginFrame(wheelAngle, ms);
 
+			if (ms == null) {
+				for (int i : Iterate.zeroAndOne)
+					secondShaft[i].setEmptyTransform();
+				drive.setEmptyTransform();
+				piston.setEmptyTransform();
+				wheels.setEmptyTransform();
+				pin.setEmptyTransform();
+				return;
+			}
+
 			for (int i : Iterate.zeroAndOne)
 				secondShaft[i].setTransform(ms)
-						.translate(-.5f, .25f, .5f + i * -2)
-						.centre()
-						.rotateX(wheelAngle)
-						.unCentre();
+					.translate(-.5f, .25f, .5f + i * -2)
+					.centre()
+					.rotateX(wheelAngle)
+					.unCentre();
 
 			drive.setTransform(ms);
 			piston.setTransform(ms)
-					.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)));
+				.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)));
 
 			wheels.setTransform(ms)
-					.translate(0, 1, 0)
-					.rotateX(wheelAngle);
+				.translate(0, 1, 0)
+				.rotateX(wheelAngle);
 			pin.setTransform(ms)
-					.translate(0, 1, 0)
-					.rotateX(wheelAngle)
-					.translate(0, 1 / 4f, 0)
-					.rotateX(-wheelAngle);
+				.translate(0, 1, 0)
+				.rotateX(wheelAngle)
+				.translate(0, 1 / 4f, 0)
+				.rotateX(-wheelAngle);
 		}
 
 		@Override
 		public void updateLight(int blockLight, int skyLight) {
 			super.updateLight(blockLight, skyLight);
 			for (ModelData shaft : secondShaft)
-				shaft.setBlockLight(blockLight).setSkyLight(skyLight);
-			drive.setBlockLight(blockLight).setSkyLight(skyLight);
-			piston.setBlockLight(blockLight).setSkyLight(skyLight);
-			wheels.setBlockLight(blockLight).setSkyLight(skyLight);
-			pin.setBlockLight(blockLight).setSkyLight(skyLight);
+				shaft.setBlockLight(blockLight)
+					.setSkyLight(skyLight);
+			drive.setBlockLight(blockLight)
+				.setSkyLight(skyLight);
+			piston.setBlockLight(blockLight)
+				.setSkyLight(skyLight);
+			wheels.setBlockLight(blockLight)
+				.setSkyLight(skyLight);
+			pin.setBlockLight(blockLight)
+				.setSkyLight(skyLight);
 		}
 
 		@Override

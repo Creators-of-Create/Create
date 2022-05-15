@@ -2,15 +2,23 @@ package com.simibubi.create.content.logistics.trains;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class TrackNodeLocation extends Vec3i {
+
+	public ResourceKey<Level> dimension;
 
 	public TrackNodeLocation(Vec3 vec) {
 		this(vec.x, vec.y, vec.z);
@@ -20,7 +28,16 @@ public class TrackNodeLocation extends Vec3i {
 		super(Math.round(p_121865_ * 2), Math.floor(p_121866_ * 2), Math.round(p_121867_ * 2));
 	}
 
-	public static TrackNodeLocation fromPackedPos(BlockPos bufferPos) {
+	public TrackNodeLocation in(Level level) {
+		return in(level.dimension());
+	}
+
+	public TrackNodeLocation in(ResourceKey<Level> dimension) {
+		this.dimension = dimension;
+		return this;
+	}
+
+	private static TrackNodeLocation fromPackedPos(BlockPos bufferPos) {
 		return new TrackNodeLocation(bufferPos);
 	}
 
@@ -32,14 +49,44 @@ public class TrackNodeLocation extends Vec3i {
 		return new Vec3(getX() / 2f, getY() / 2f, getZ() / 2f);
 	}
 
+	public ResourceKey<Level> getDimension() {
+		return dimension;
+	}
+
 	@Override
 	public boolean equals(Object pOther) {
-		return super.equals(pOther);
+		return super.equals(pOther) && pOther instanceof TrackNodeLocation tnl
+			&& Objects.equals(tnl.dimension, dimension);
 	}
 
 	@Override
 	public int hashCode() {
-		return (this.getY() + this.getZ() * 31) * 31 + this.getX();
+		return (this.getY() + (this.getZ() * 31 + dimension.hashCode()) * 31) * 31 + this.getX();
+	}
+
+	public CompoundTag write(DimensionPalette dimensions) {
+		CompoundTag c = NbtUtils.writeBlockPos(new BlockPos(this));
+		if (dimensions != null)
+			c.putInt("D", dimensions.encode(dimension));
+		return c;
+	}
+
+	public static TrackNodeLocation read(CompoundTag tag, DimensionPalette dimensions) {
+		TrackNodeLocation location = fromPackedPos(NbtUtils.readBlockPos(tag));
+		if (dimensions != null)
+			location.dimension = dimensions.decode(tag.getInt("D"));
+		return location;
+	}
+
+	public void send(FriendlyByteBuf buffer, DimensionPalette dimensions) {
+		buffer.writeBlockPos(new BlockPos(this));
+		buffer.writeVarInt(dimensions.encode(dimension));
+	}
+
+	public static TrackNodeLocation receive(FriendlyByteBuf buffer, DimensionPalette dimensions) {
+		TrackNodeLocation location = fromPackedPos(buffer.readBlockPos());
+		location.dimension = dimensions.decode(buffer.readVarInt());
+		return location;
 	}
 
 	public Collection<BlockPos> allAdjacent() {
@@ -60,12 +107,18 @@ public class TrackNodeLocation extends Vec3i {
 		Vec3 direction;
 		Vec3 normal;
 
-		public DiscoveredLocation(double p_121865_, double p_121866_, double p_121867_) {
+		public DiscoveredLocation(Level level, double p_121865_, double p_121866_, double p_121867_) {
 			super(p_121865_, p_121866_, p_121867_);
+			in(level);
 		}
 
-		public DiscoveredLocation(Vec3 vec) {
+		public DiscoveredLocation(ResourceKey<Level> dimension, Vec3 vec) {
 			super(vec);
+			in(dimension);
+		}
+
+		public DiscoveredLocation(Level level, Vec3 vec) {
+			this(level.dimension(), vec);
 		}
 
 		public DiscoveredLocation viaTurn(BezierConnection turn) {

@@ -29,9 +29,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			for (CarriageBogey bogey : carriage.bogeys)
 				if (bogey != null)
 					bogey.couplingAnchors.replace(v -> null);
-		if (!super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ))
-			return false;
-		return entity.validForRender && !entity.firstPositionUpdate;
+		return super.shouldRender(entity, clippingHelper, cameraX, cameraY, cameraZ);
 	}
 
 	@Override
@@ -53,12 +51,19 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			if (bogey == null)
 				return;
 
-			if (!Backend.isOn()) {
+			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
+				: BlockPos.ZERO.relative(entity.getInitialOrientation()
+					.getCounterClockWise(), bogeySpacing);
+
+			if (!Backend.isOn() && !entity.getContraption()
+				.isHiddenInPortal(bogeyPos)) {
+
 				ms.pushPose();
 				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
 
 				int light = getBogeyLightCoords(entity, bogey, partialTicks);
-				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light, overlay);
+				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
+					overlay);
 
 				ms.popPose();
 			}
@@ -70,25 +75,28 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		});
 	}
 
-	public static void translateBogey(PoseStack ms, CarriageBogey bogey, int bogeySpacing, float viewYRot, float viewXRot, float partialTicks) {
+	public static void translateBogey(PoseStack ms, CarriageBogey bogey, int bogeySpacing, float viewYRot,
+		float viewXRot, float partialTicks) {
 		TransformStack.cast(ms)
-				.rotateY(viewYRot + 90)
-				.rotateX(-viewXRot)
-				.rotateY(180)
-				.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing)
-				.rotateY(-180)
-				.rotateX(viewXRot)
-				.rotateY(-viewYRot - 90)
-				.rotateY(bogey.yaw.getValue(partialTicks))
-				.rotateX(bogey.pitch.getValue(partialTicks))
-				.translate(0, .5f, 0);
+			.rotateY(viewYRot + 90)
+			.rotateX(-viewXRot)
+			.rotateY(180)
+			.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing)
+			.rotateY(-180)
+			.rotateX(viewXRot)
+			.rotateY(-viewYRot - 90)
+			.rotateY(bogey.yaw.getValue(partialTicks))
+			.rotateX(bogey.pitch.getValue(partialTicks))
+			.translate(0, .5f, 0);
 	}
 
 	public static int getBogeyLightCoords(CarriageContraptionEntity entity, CarriageBogey bogey, float partialTicks) {
 
-		var lightPos = new BlockPos(Objects.requireNonNullElseGet(bogey.getAnchorPosition(), () -> entity.getLightProbePosition(partialTicks)));
+		var lightPos = new BlockPos(
+			Objects.requireNonNullElseGet(bogey.getAnchorPosition(), () -> entity.getLightProbePosition(partialTicks)));
 
-		return LightTexture.pack(entity.level.getBrightness(LightLayer.BLOCK, lightPos), entity.level.getBrightness(LightLayer.SKY, lightPos));
+		return LightTexture.pack(entity.level.getBrightness(LightLayer.BLOCK, lightPos),
+			entity.level.getBrightness(LightLayer.SKY, lightPos));
 	}
 
 }

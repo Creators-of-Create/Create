@@ -297,7 +297,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		contraption.onEntityTick(level);
 		tickContraption();
 		super.tick();
-
+		
 		if (!(level instanceof ServerLevelAccessor sl))
 			return;
 
@@ -362,7 +362,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			context.rotation = v -> applyRotation(v, 1);
 			context.position = actorPosition;
-			if (!actor.isActive(context))
+			if (!isActorActive(context, actor))
 				continue;
 			if (newPosVisited && !context.stall) {
 				actor.visitNewPosition(context, gridPosition);
@@ -406,6 +406,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 
 		contraption.stalled = isStalled();
+	}
+
+	protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
+		return actor.isActive(context);
 	}
 
 	protected void onContraptionStalled() {
@@ -788,6 +792,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	public void setSecondsOnFire(int p_70015_1_) {
 		// Contraptions no longer catch fire
+	}
+
+	public boolean isReadyForRender() {
+		return initialized;
 	}
 
 }

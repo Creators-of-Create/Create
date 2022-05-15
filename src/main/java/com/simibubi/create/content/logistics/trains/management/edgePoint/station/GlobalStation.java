@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleTileEdgePoint;
@@ -33,16 +34,16 @@ public class GlobalStation extends SingleTileEdgePoint {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean migration) {
-		super.read(nbt, migration);
+	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
+		super.read(nbt, migration, dimensions);
 		name = nbt.getString("Name");
 		assembling = nbt.getBoolean("Assembling");
 		nearestTrain = new WeakReference<Train>(null);
 	}
 
 	@Override
-	public void read(FriendlyByteBuf buffer) {
-		super.read(buffer);
+	public void read(FriendlyByteBuf buffer, DimensionPalette dimensions) {
+		super.read(buffer, dimensions);
 		name = buffer.readUtf();
 		assembling = buffer.readBoolean();
 		if (buffer.readBoolean())
@@ -50,15 +51,15 @@ public class GlobalStation extends SingleTileEdgePoint {
 	}
 
 	@Override
-	public void write(CompoundTag nbt) {
-		super.write(nbt);
+	public void write(CompoundTag nbt, DimensionPalette dimensions) {
+		super.write(nbt, dimensions);
 		nbt.putString("Name", name);
 		nbt.putBoolean("Assembling", assembling);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		super.write(buffer);
+	public void write(FriendlyByteBuf buffer, DimensionPalette dimensions) {
+		super.write(buffer, dimensions);
 		buffer.writeUtf(name);
 		buffer.writeBoolean(assembling);
 		buffer.writeBoolean(tilePos != null);

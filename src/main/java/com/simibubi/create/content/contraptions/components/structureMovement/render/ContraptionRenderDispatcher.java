@@ -48,29 +48,36 @@ public class ContraptionRenderDispatcher {
 
 	/**
 	 * Reset a contraption's renderer.
+	 * 
 	 * @param contraption The contraption to invalidate.
 	 * @return true if there was a renderer associated with the given contraption.
 	 */
 	public static boolean invalidate(Contraption contraption) {
 		Level level = contraption.entity.level;
 
-		return WORLDS.get(level).invalidate(contraption);
+		return WORLDS.get(level)
+			.invalidate(contraption);
 	}
 
 	public static void tick(Level world) {
-		if (Minecraft.getInstance().isPaused()) return;
+		if (Minecraft.getInstance()
+			.isPaused())
+			return;
 
-		WORLDS.get(world).tick();
+		WORLDS.get(world)
+			.tick();
 	}
 
 	@SubscribeEvent
 	public static void beginFrame(BeginFrameEvent event) {
-		WORLDS.get(event.getWorld()).beginFrame(event);
+		WORLDS.get(event.getWorld())
+			.beginFrame(event);
 	}
 
 	@SubscribeEvent
 	public static void renderLayer(RenderLayerEvent event) {
-		WORLDS.get(event.getWorld()).renderLayer(event);
+		WORLDS.get(event.getWorld())
+			.renderLayer(event);
 
 		GlError.pollAndThrow(() -> "contraption layer: " + event.getLayer());
 	}
@@ -84,15 +91,17 @@ public class ContraptionRenderDispatcher {
 		reset();
 	}
 
-	public static void renderFromEntity(AbstractContraptionEntity entity, Contraption contraption, MultiBufferSource buffers) {
+	public static void renderFromEntity(AbstractContraptionEntity entity, Contraption contraption,
+		MultiBufferSource buffers) {
 		Level world = entity.level;
 
 		ContraptionRenderInfo renderInfo = WORLDS.get(world)
-				.getRenderInfo(contraption);
+			.getRenderInfo(contraption);
 		ContraptionMatrices matrices = renderInfo.getMatrices();
 
 		// something went wrong with the other rendering
-		if (!matrices.isReady()) return;
+		if (!matrices.isReady())
+			return;
 
 		VirtualRenderWorld renderWorld = renderInfo.renderWorld;
 
@@ -106,28 +115,30 @@ public class ContraptionRenderDispatcher {
 
 	public static VirtualRenderWorld setupRenderWorld(Level world, Contraption c) {
 		ContraptionWorld contraptionWorld = c.getContraptionWorld();
-		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, c.anchor, contraptionWorld.getHeight(), contraptionWorld.getMinBuildHeight());
+
+		BlockPos origin = c.anchor;
+		int height = contraptionWorld.getHeight();
+		int minBuildHeight = contraptionWorld.getMinBuildHeight();
+		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, origin, height, minBuildHeight);
 
 		renderWorld.setBlockEntities(c.presentTileEntities.values());
-
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
-				.values())
+			.values())
 			// Skip individual lighting updates to prevent lag with large contraptions
 			renderWorld.setBlock(info.pos, info.state, Block.UPDATE_SUPPRESS_LIGHT);
 
 		renderWorld.runLightingEngine();
-
 		return renderWorld;
 	}
 
 	public static void renderTileEntities(Level world, VirtualRenderWorld renderWorld, Contraption c,
-										  ContraptionMatrices matrices, MultiBufferSource buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities,
-				matrices.getModelViewProjection(), matrices.getLight(), buffer);
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
+		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.getSpecialRenderedTEs(),
+			matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 
 	protected static void renderActors(Level world, VirtualRenderWorld renderWorld, Contraption c,
-									   ContraptionMatrices matrices, MultiBufferSource buffer) {
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		PoseStack m = matrices.getModel();
 
 		for (Pair<StructureTemplate.StructureBlockInfo, MovementContext> actor : c.getActors()) {
@@ -140,18 +151,20 @@ public class ContraptionRenderDispatcher {
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 			if (movementBehaviour != null) {
+				if (c.isHiddenInPortal(blockInfo.pos))
+					continue;
 				m.pushPose();
 				TransformStack.cast(m)
-						.translate(blockInfo.pos);
+					.translate(blockInfo.pos);
 				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
 				m.popPose();
 			}
 		}
 	}
 
-	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c, RenderType layer) {
-		Collection<StructureTemplate.StructureBlockInfo> values = c.getBlocks()
-				.values();
+	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
+		RenderType layer) {
+		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
 		BufferBuilder builder = ModelUtil.getBufferBuilderFromTemplate(renderWorld, layer, values);
 		return new SuperByteBuffer(builder);
 	}

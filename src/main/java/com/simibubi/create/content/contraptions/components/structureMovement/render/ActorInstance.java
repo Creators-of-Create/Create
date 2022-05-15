@@ -17,7 +17,7 @@ public abstract class ActorInstance {
         this.context = context;
     }
 
-    public void tick() { }
+	public void tick() { }
 
     public void beginFrame() { }
 

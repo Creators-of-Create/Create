@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -15,8 +16,10 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -48,6 +51,20 @@ public class CarriageBogey {
 		couplingAnchors = Couple.create(null, null);
 	}
 
+	public ResourceKey<Level> getDimension() {
+		TravellingPoint leading = leading();
+		TravellingPoint trailing = trailing();
+		if (leading.edge == null || trailing.edge == null)
+			return null;
+		if (leading.edge.isInterDimensional() || trailing.edge.isInterDimensional())
+			return null;
+		ResourceKey<Level> dimension1 = leading.node1.getLocation().dimension;
+		ResourceKey<Level> dimension2 = trailing.node1.getLocation().dimension;
+		if (dimension1.equals(dimension2))
+			return dimension1;
+		return null;
+	}
+
 	public void updateAngles(CarriageContraptionEntity entity, double distanceMoved) {
 		double angleDiff = 360 * distanceMoved / (Math.PI * 2 * type.getWheelRadius());
 
@@ -56,6 +73,10 @@ public class CarriageBogey {
 
 		if (leading().edge == null || carriage.train.derailed) {
 			yRot = -90 + entity.yaw - derailAngle;
+		} else if (!entity.level.dimension()
+			.equals(getDimension())) {
+			yRot = -90 + entity.yaw;
+			xRot = 0;
 		} else {
 			Vec3 positionVec = leading().getPosition();
 			Vec3 coupledVec = trailing().getPosition();
@@ -86,6 +107,8 @@ public class CarriageBogey {
 	}
 
 	public double getStress() {
+		if (getDimension() == null)
+			return 0;
 		return type.getWheelPointSpacing() - leading().getPosition()
 			.distanceTo(trailing().getPosition());
 	}
@@ -119,19 +142,19 @@ public class CarriageBogey {
 		couplingAnchors.set(leading, entityPos.add(thisOffset));
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Type", ((Block) type).getRegistryName()
 			.toString());
-		tag.put("Points", points.serializeEach(TravellingPoint::write));
+		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		return tag;
 	}
 
-	public static CarriageBogey read(CompoundTag tag, TrackGraph graph) {
+	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
 		IBogeyBlock type = (IBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
-		Couple<TravellingPoint> points =
-			Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND), c -> TravellingPoint.read(c, graph));
+		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
+			c -> TravellingPoint.read(c, graph, dimensions));
 		CarriageBogey carriageBogey = new CarriageBogey(type, points.getFirst(), points.getSecond());
 		return carriageBogey;
 	}

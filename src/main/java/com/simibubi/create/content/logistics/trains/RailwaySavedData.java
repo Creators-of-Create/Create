@@ -26,14 +26,15 @@ public class RailwaySavedData extends SavedData {
 	public CompoundTag save(CompoundTag nbt) {
 		GlobalRailwayManager railways = Create.RAILWAYS;
 		Create.LOGGER.info("Saving Railway Information...");
-		nbt.put("RailGraphs", NBTHelper.writeCompoundList(railways.trackNetworks.values(), TrackGraph::write));
-		nbt.put("SignalBlocks",
-			NBTHelper.writeCompoundList(railways.signalEdgeGroups.values(), seg -> {
-				if (seg.fallbackGroup && !railways.trackNetworks.containsKey(seg.id))
-					return null;
-				return seg.write();
-			}));
-		nbt.put("Trains", NBTHelper.writeCompoundList(railways.trains.values(), Train::write));
+		DimensionPalette dimensions = new DimensionPalette();
+		nbt.put("RailGraphs", NBTHelper.writeCompoundList(railways.trackNetworks.values(), tg -> tg.write(dimensions)));
+		nbt.put("SignalBlocks", NBTHelper.writeCompoundList(railways.signalEdgeGroups.values(), seg -> {
+			if (seg.fallbackGroup && !railways.trackNetworks.containsKey(seg.id))
+				return null;
+			return seg.write();
+		}));
+		nbt.put("Trains", NBTHelper.writeCompoundList(railways.trains.values(), t -> t.write(dimensions)));
+		dimensions.write(nbt);
 		return nbt;
 	}
 
@@ -44,17 +45,18 @@ public class RailwaySavedData extends SavedData {
 		sd.trains = new HashMap<>();
 		Create.LOGGER.info("Loading Railway Information...");
 
+		DimensionPalette dimensions = DimensionPalette.read(nbt);
 		NBTHelper.iterateCompoundList(nbt.getList("RailGraphs", Tag.TAG_COMPOUND), c -> {
-			TrackGraph graph = TrackGraph.read(c);
+			TrackGraph graph = TrackGraph.read(c, dimensions);
 			sd.trackNetworks.put(graph.id, graph);
-		});
-		NBTHelper.iterateCompoundList(nbt.getList("Trains", Tag.TAG_COMPOUND), c -> {
-			Train train = Train.read(c, sd.trackNetworks);
-			sd.trains.put(train.id, train);
 		});
 		NBTHelper.iterateCompoundList(nbt.getList("SignalBlocks", Tag.TAG_COMPOUND), c -> {
 			SignalEdgeGroup group = SignalEdgeGroup.read(c);
 			sd.signalEdgeGroups.put(group.id, group);
+		});
+		NBTHelper.iterateCompoundList(nbt.getList("Trains", Tag.TAG_COMPOUND), c -> {
+			Train train = Train.read(c, sd.trackNetworks, dimensions);
+			sd.trains.put(train.id, train);
 		});
 
 		for (TrackGraph graph : sd.trackNetworks.values()) {

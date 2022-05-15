@@ -1,9 +1,12 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -25,14 +28,17 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -51,11 +57,17 @@ public class CarriageContraption extends Contraption {
 	private BlockPos secondBogeyPos;
 	private List<BlockPos> assembledBlazeBurners;
 
+	// render
+	public int portalCutoffMin;
+	public int portalCutoffMax;
+
 	public CarriageContraption() {
 		conductorSeats = new HashMap<>();
 		assembledBlazeBurners = new ArrayList<>();
 		blazeBurnerConductors = Couple.create(false, false);
 		soundQueue = new ArrivalSoundQueue();
+		portalCutoffMin = Integer.MIN_VALUE;
+		portalCutoffMax = Integer.MAX_VALUE;
 	}
 
 	public void setSoundQueueOffset(int offset) {
@@ -214,6 +226,72 @@ public class CarriageContraption extends Contraption {
 
 	public BlockPos getSecondBogeyPos() {
 		return secondBogeyPos;
+	}
+
+	private Collection<BlockEntity> specialRenderedTEsOutsidePortal = new ArrayList<>();
+
+	@Override
+	public Collection<StructureBlockInfo> getRenderedBlocks() {
+		if (notInPortal())
+			return super.getRenderedBlocks();
+
+		specialRenderedTEsOutsidePortal = new ArrayList<>();
+		specialRenderedTileEntities.stream()
+			.filter(te -> !isHiddenInPortal(te.getBlockPos()))
+			.forEach(specialRenderedTEsOutsidePortal::add);
+
+		Collection<StructureBlockInfo> values = new ArrayList<>();
+		for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
+			BlockPos pos = entry.getKey();
+			if (withinVisible(pos))
+				values.add(entry.getValue());
+			else if (atSeam(pos))
+				values.add(new StructureBlockInfo(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState(), null));
+		}
+		return values;
+	}
+
+	@Override
+	public Collection<BlockEntity> getSpecialRenderedTEs() {
+		if (notInPortal())
+			return super.getSpecialRenderedTEs();
+		return specialRenderedTEsOutsidePortal;
+	}
+
+	@Override
+	public Optional<List<AABB>> getSimplifiedEntityColliders() {
+		if (notInPortal())
+			return super.getSimplifiedEntityColliders();
+		return Optional.empty();
+	}
+
+	@Override
+	public boolean isHiddenInPortal(BlockPos localPos) {
+		if (notInPortal())
+			return super.isHiddenInPortal(localPos);
+		return !withinVisible(localPos) || atSeam(localPos);
+	}
+
+	private boolean notInPortal() {
+		return portalCutoffMin == Integer.MIN_VALUE && portalCutoffMax == Integer.MAX_VALUE;
+	}
+
+	public boolean atSeam(BlockPos localPos) {
+		Direction facing = assemblyDirection;
+		Axis axis = facing.getClockWise()
+			.getAxis();
+		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
+			.getStep();
+		return coord == portalCutoffMin || coord == portalCutoffMax;
+	}
+
+	public boolean withinVisible(BlockPos localPos) {
+		Direction facing = assemblyDirection;
+		Axis axis = facing.getClockWise()
+			.getAxis();
+		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
+			.getStep();
+		return coord > portalCutoffMin && coord < portalCutoffMax;
 	}
 
 }

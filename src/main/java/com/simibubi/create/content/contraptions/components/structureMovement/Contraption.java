@@ -5,6 +5,7 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1372,6 +1373,22 @@ public abstract class Contraption {
 //			return pos.equals(te.getBlockPos());
 //		}
 //	}
+	
+	public Collection<StructureBlockInfo> getRenderedBlocks() {
+		return blocks.values();
+	}
+	
+	public Collection<BlockEntity> getSpecialRenderedTEs() {
+		return specialRenderedTileEntities;
+	}
+	
+	public boolean isHiddenInPortal(BlockPos localPos) {
+		return false;
+	}
+
+	public Optional<List<AABB>> getSimplifiedEntityColliders() {
+		return simplifiedEntityColliders;
+	}
 
 	public static class ContraptionInvWrapper extends CombinedInvWrapper {
 		protected final boolean isExternal;
@@ -1392,4 +1409,5 @@ public abstract class Contraption {
 			return handler instanceof ContraptionInvWrapper && ((ContraptionInvWrapper) handler).isSlotExternal(slot);
 		}
 	}
+
 }

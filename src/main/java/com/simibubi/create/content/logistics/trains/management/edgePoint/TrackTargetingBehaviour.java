@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -186,7 +187,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		boolean reverseEdge = front || point instanceof SingleTileEdgePoint;
 
 		if (data != null)
-			point.read(data, true);
+			point.read(data, true, DimensionPalette.read(data));
 
 		point.setId(id);
 		point.setLocation(reverseEdge ? loc.edge : loc.edge.swap(), reverseEdge ? loc.position : length - loc.position);

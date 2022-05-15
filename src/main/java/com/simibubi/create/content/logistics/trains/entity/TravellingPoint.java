@@ -11,10 +11,12 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -25,9 +27,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -59,6 +59,9 @@ public class TravellingPoint {
 	public static interface ITurnListener extends BiConsumer<Double, TrackEdge> {
 	};
 
+	public static interface IPortalListener extends Predicate<Couple<TrackNodeLocation>> {
+	};
+
 	public TravellingPoint() {}
 
 	public TravellingPoint(TrackNode node1, TrackNode node2, TrackEdge edge, double position) {
@@ -75,6 +78,10 @@ public class TravellingPoint {
 	public ITurnListener ignoreTurns() {
 		return (d, c) -> {
 		};
+	}
+
+	public IPortalListener ignorePortals() {
+		return $ -> false;
 	}
 
 	public ITrackSelector random() {
@@ -176,8 +183,22 @@ public class TravellingPoint {
 		};
 	}
 
+	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector) {
+		return travel(graph, distance, trackSelector, ignoreEdgePoints());
+	}
+
+	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
+		IEdgePointListener signalListener) {
+		return travel(graph, distance, trackSelector, signalListener, ignoreTurns());
+	}
+
 	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
 		IEdgePointListener signalListener, ITurnListener turnListener) {
+		return travel(graph, distance, trackSelector, signalListener, turnListener, ignorePortals());
+	}
+
+	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
+		IEdgePointListener signalListener, ITurnListener turnListener, IPortalListener portalListener) {
 		blocked = false;
 		double edgeLength = edge.getLength();
 		if (Mth.equal(distance, 0))
@@ -185,7 +206,7 @@ public class TravellingPoint {
 
 		double prevPos = position;
 		double traveled = distance;
-		double currentT = position / edgeLength;
+		double currentT = edgeLength == 0 ? 0 : position / edgeLength;
 		double incrementT = edge.incrementT(currentT, distance);
 		position = incrementT * edgeLength;
 
@@ -222,9 +243,7 @@ public class TravellingPoint {
 						continue;
 
 					TrackEdge newEdge = entry.getValue();
-					Vec3 currentDirection = edge.getDirection(false);
-					Vec3 newDirection = newEdge.getDirection(true);
-					if (currentDirection.dot(newDirection) < 7 / 8f)
+					if (!edge.canTravelTo(newEdge))
 						continue;
 
 					validTargets.add(entry);
@@ -239,6 +258,16 @@ public class TravellingPoint {
 
 				Entry<TrackNode, TrackEdge> entry = validTargets.size() == 1 ? validTargets.get(0)
 					: trackSelector.apply(graph, Pair.of(true, validTargets));
+
+				if (entry.getValue()
+					.getLength() == 0 && portalListener.test(
+						Couple.create(node2.getLocation(), entry.getKey()
+							.getLocation()))) {
+					traveled -= position - edgeLength;
+					position = edgeLength;
+					blocked = true;
+					break;
+				}
 
 				node1 = node2;
 				node2 = entry.getKey();
@@ -272,12 +301,9 @@ public class TravellingPoint {
 					TrackNode newNode = entry.getKey();
 					if (newNode == node2)
 						continue;
-
-					TrackEdge newEdge = graph.getConnectionsFrom(newNode)
-						.get(node1);
-					Vec3 currentDirection = edge.getDirection(true);
-					Vec3 newDirection = newEdge.getDirection(false);
-					if (currentDirection.dot(newDirection) < 7 / 8f)
+					if (!graph.getConnectionsFrom(newNode)
+						.get(node1)
+						.canTravelTo(edge))
 						continue;
 
 					validTargets.add(entry);
@@ -292,6 +318,16 @@ public class TravellingPoint {
 
 				Entry<TrackNode, TrackEdge> entry = validTargets.size() == 1 ? validTargets.get(0)
 					: trackSelector.apply(graph, Pair.of(false, validTargets));
+
+				if (entry.getValue()
+					.getLength() == 0 && portalListener.test(
+						Couple.create(entry.getKey()
+							.getLocation(), node1.getLocation()))) {
+					traveled -= position;
+					position = 0;
+					blocked = true;
+					break;
+				}
 
 				node2 = node1;
 				node1 = entry.getKey();
@@ -322,9 +358,10 @@ public class TravellingPoint {
 		if (edge.isTurn())
 			turnListener.accept(Math.max(0, totalDistance), edge);
 
-		EdgeData edgeData = edge.getEdgeData();
 		double from = forward ? prevPos : position;
 		double to = forward ? position : prevPos;
+
+		EdgeData edgeData = edge.getEdgeData();
 		List<TrackEdgePoint> edgePoints = edgeData.getPoints();
 
 		double length = edge.getLength();
@@ -353,7 +390,11 @@ public class TravellingPoint {
 	}
 
 	public Vec3 getPosition() {
-		double t = position / edge.getLength();
+		return getPositionWithOffset(0);
+	}
+
+	public Vec3 getPositionWithOffset(double offset) {
+		double t = (position + offset) / edge.getLength();
 		return edge.getPosition(t)
 			.add(edge.getNormal(node1, node2, t)
 				.scale(1));
@@ -369,28 +410,25 @@ public class TravellingPoint {
 			.get(node2);
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		Couple<TrackNode> nodes = Couple.create(node1, node2);
 		if (nodes.either(Objects::isNull))
 			return tag;
 		tag.put("Nodes", nodes.map(TrackNode::getLocation)
-			.map(BlockPos::new)
-			.serializeEach(NbtUtils::writeBlockPos));
+			.serializeEach(loc -> loc.write(dimensions)));
 		tag.putDouble("Position", position);
 		return tag;
 	}
 
-	public static TravellingPoint read(CompoundTag tag, TrackGraph graph) {
+	public static TravellingPoint read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		if (graph == null)
 			return new TravellingPoint(null, null, null, 0);
 
-		Couple<TrackNode> locs =
-			tag.contains("Nodes")
-				? Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), NbtUtils::readBlockPos)
-					.map(TrackNodeLocation::fromPackedPos)
-					.map(graph::locateNode)
-				: Couple.create(null, null);
+		Couple<TrackNode> locs = tag.contains("Nodes")
+			? Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), c -> TrackNodeLocation.read(c, dimensions))
+				.map(graph::locateNode)
+			: Couple.create(null, null);
 
 		if (locs.either(Objects::isNull))
 			return new TravellingPoint(null, null, null, 0);

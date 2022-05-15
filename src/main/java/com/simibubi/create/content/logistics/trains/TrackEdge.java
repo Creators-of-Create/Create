@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -22,8 +21,10 @@ public class TrackEdge {
 	public TrackNode node2;
 	BezierConnection turn;
 	EdgeData edgeData;
+	boolean interDimensional;
 
 	public TrackEdge(TrackNode node1, TrackNode node2, BezierConnection turn) {
+		this.interDimensional = !node1.location.dimension.equals(node2.location.dimension);
 		this.edgeData = new EdgeData(this);
 		this.node1 = node1;
 		this.node2 = node2;
@@ -32,6 +33,10 @@ public class TrackEdge {
 
 	public boolean isTurn() {
 		return turn != null;
+	}
+
+	public boolean isInterDimensional() {
+		return interDimensional;
 	}
 
 	public EdgeData getEdgeData() {
@@ -47,15 +52,24 @@ public class TrackEdge {
 			.normalize();
 	}
 
+	public boolean canTravelTo(TrackEdge other) {
+		if (isInterDimensional() || other.isInterDimensional())
+			return true;
+		Vec3 newDirection = other.getDirection(true);
+		return getDirection(false).dot(newDirection) > 7 / 8f;
+	}
+
 	public double getLength() {
-		return isTurn() ? turn.getLength()
-			: node1.location.getLocation()
-				.distanceTo(node2.location.getLocation());
+		return isInterDimensional() ? 0
+			: isTurn() ? turn.getLength()
+				: node1.location.getLocation()
+					.distanceTo(node2.location.getLocation());
 	}
 
 	public double incrementT(double currentT, double distance) {
 		boolean tooFar = Math.abs(distance) > 5;
-		distance = distance / getLength();
+		double length = getLength();
+		distance = distance / (length == 0 ? 1 : length);
 		return !tooFar && isTurn() ? turn.incrementT(currentT, distance) : currentT + distance;
 	}
 
@@ -71,6 +85,8 @@ public class TrackEdge {
 		Vec3 w1 = other1.location.getLocation();
 		Vec3 w2 = other2.location.getLocation();
 
+		if (isInterDimensional() || other.isInterDimensional())
+			return Collections.emptyList();
 		if (v1.y != v2.y || v1.y != w1.y || v1.y != w2.y)
 			return Collections.emptyList();
 
@@ -152,26 +168,17 @@ public class TrackEdge {
 		return isTurn() ? turn.getNormal(Mth.clamp(t, 0, 1)) : node1.getNormal();
 	}
 
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(isTurn());
-		if (isTurn())
-			turn.write(buffer);
-	}
-
-	public static TrackEdge read(FriendlyByteBuf buffer) {
-		return new TrackEdge(null, null, buffer.readBoolean() ? new BezierConnection(buffer) : null);
-	}
-
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag baseCompound = isTurn() ? turn.write(BlockPos.ZERO) : new CompoundTag();
-		baseCompound.put("Signals", edgeData.write());
+		baseCompound.put("Signals", edgeData.write(dimensions));
 		return baseCompound;
 	}
 
-	public static TrackEdge read(CompoundTag tag, TrackGraph graph) {
+	public static TrackEdge read(TrackNode node1, TrackNode node2, CompoundTag tag, TrackGraph graph,
+		DimensionPalette dimensions) {
 		TrackEdge trackEdge =
-			new TrackEdge(null, null, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
-		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), trackEdge, graph);
+			new TrackEdge(node1, node2, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
+		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), trackEdge, graph, dimensions);
 		return trackEdge;
 	}
 

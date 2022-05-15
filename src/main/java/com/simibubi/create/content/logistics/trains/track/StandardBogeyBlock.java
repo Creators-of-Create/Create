@@ -77,7 +77,7 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 
 	@Override
 	public boolean allowsSingleBogeyCarriage() {
-		return !large;
+		return true;
 	}
 
 	@Override

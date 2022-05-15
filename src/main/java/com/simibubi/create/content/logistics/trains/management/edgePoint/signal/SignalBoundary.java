@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.google.common.base.Objects;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
@@ -237,8 +238,8 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean migration) {
-		super.read(nbt, migration);
+	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
+		super.read(nbt, migration, dimensions);
 
 		if (migration)
 			return;
@@ -265,8 +266,8 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void read(FriendlyByteBuf buffer) {
-		super.read(buffer);
+	public void read(FriendlyByteBuf buffer, DimensionPalette dimensions) {
+		super.read(buffer, dimensions);
 		for (int i = 1; i <= 2; i++) {
 			if (buffer.readBoolean())
 				groups.set(i == 1, buffer.readUUID());
@@ -274,8 +275,8 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void write(CompoundTag nbt) {
-		super.write(nbt);
+	public void write(CompoundTag nbt, DimensionPalette dimensions) {
+		super.write(nbt, dimensions);
 		for (int i = 1; i <= 2; i++)
 			if (!blockEntities.get(i == 1)
 				.isEmpty())
@@ -293,8 +294,8 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		super.write(buffer);
+	public void write(FriendlyByteBuf buffer, DimensionPalette dimensions) {
+		super.write(buffer, dimensions);
 		for (int i = 1; i <= 2; i++) {
 			boolean hasGroup = groups.get(i == 1) != null;
 			buffer.writeBoolean(hasGroup);

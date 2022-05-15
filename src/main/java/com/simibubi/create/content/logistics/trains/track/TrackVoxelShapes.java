@@ -19,6 +19,10 @@ public class TrackVoxelShapes {
 		return Block.box(-14, 0, -3.3, 16 + 14, 4, 19.3);
 	}
 
+	public static VoxelShape longOrthogonalZOffset() {
+		return Block.box(-14, 0, 0, 16 + 14, 4, 24);
+	}
+
 	public static VoxelShape ascending() {
 		VoxelShape shape = Block.box(-14, 0, 0, 16 + 14, 4, 4);
 		VoxelShape[] shapes = new VoxelShape[6];

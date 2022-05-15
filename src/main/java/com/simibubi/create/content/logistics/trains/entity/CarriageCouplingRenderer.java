@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,14 +36,15 @@ public class CarriageCouplingRenderer {
 			return;
 
 		Vec3 camera = cameraEntity.getPosition(partialTicks);
+		Level level = cameraEntity.level;
 
 		for (Train train : trains) {
 			List<Carriage> carriages = train.carriages;
 			for (int i = 0; i < carriages.size() - 1; i++) {
 				Carriage carriage = carriages.get(i);
-				CarriageContraptionEntity entity = carriage.entity.get();
+				CarriageContraptionEntity entity = carriage.getDimensional(level).entity.get();
 				Carriage carriage2 = carriages.get(i + 1);
-				CarriageContraptionEntity entity2 = carriage.entity.get();
+				CarriageContraptionEntity entity2 = carriage.getDimensional(level).entity.get();
 
 				if (entity == null || entity2 == null)
 					continue;
@@ -51,7 +53,7 @@ public class CarriageCouplingRenderer {
 				CarriageBogey bogey2 = carriage2.leadingBogey();
 				Vec3 anchor = bogey1.couplingAnchors.getSecond();
 				Vec3 anchor2 = bogey2.couplingAnchors.getFirst();
-				
+
 				if (anchor == null || anchor2 == null)
 					continue;
 				if (!anchor.closerThan(camera, 64))

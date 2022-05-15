@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -79,6 +80,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (state.getBlock() instanceof LiquidBlock)
 			return false;
 		if (state.getBlock() instanceof BubbleColumnBlock)
+			return false;
+		if (state.getBlock() instanceof NetherPortalBlock)
 			return false;
 		return state.getCollisionShape(world, breakingPos)
 			.isEmpty();

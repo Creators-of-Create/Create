@@ -21,7 +21,10 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,8 +50,10 @@ public interface ITrackBlock {
 		return isSlope(world, pos, state) ? .5 : 0;
 	}
 
-	public static Collection<DiscoveredLocation> walkConnectedTracks(BlockGetter world, TrackNodeLocation location,
+	public static Collection<DiscoveredLocation> walkConnectedTracks(BlockGetter worldIn, TrackNodeLocation location,
 		boolean linear) {
+		BlockGetter world = location != null && worldIn instanceof ServerLevel sl ? sl.getServer()
+			.getLevel(location.dimension) : worldIn;
 		List<DiscoveredLocation> list = new ArrayList<>();
 		for (BlockPos blockPos : location.allAdjacent()) {
 			BlockState blockState = world.getBlockState(blockPos);
@@ -58,15 +63,18 @@ public interface ITrackBlock {
 		return list;
 	}
 
-	public default Collection<DiscoveredLocation> getConnected(BlockGetter world, BlockPos pos, BlockState state,
+	public default Collection<DiscoveredLocation> getConnected(BlockGetter worldIn, BlockPos pos, BlockState state,
 		boolean linear, @Nullable TrackNodeLocation connectedTo) {
+		BlockGetter world = connectedTo != null && worldIn instanceof ServerLevel sl ? sl.getServer()
+			.getLevel(connectedTo.dimension) : worldIn;
 		Vec3 center = Vec3.atBottomCenterOf(pos)
 			.add(0, getElevationAtCenter(world, pos, state), 0);
 		List<DiscoveredLocation> list = new ArrayList<>();
 		TrackShape shape = state.getValue(TrackBlock.SHAPE);
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			addToListIfConnected(connectedTo, list, (d, b) -> axis.scale(b ? d : -d)
-				.add(center), b -> shape.getNormal(), axis, null);
+				.add(center), b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD,
+				axis, null);
 		});
 
 		return list;
@@ -74,15 +82,22 @@ public interface ITrackBlock {
 
 	public static void addToListIfConnected(@Nullable TrackNodeLocation fromEnd, Collection<DiscoveredLocation> list,
 		BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
-		Vec3 axis, BezierConnection viaTurn) {
+		Function<Boolean, ResourceKey<Level>> dimensionFactory, Vec3 axis, BezierConnection viaTurn) {
 
-		DiscoveredLocation firstLocation = new DiscoveredLocation(offsetFactory.apply(0.5d, true)).viaTurn(viaTurn)
-			.withNormal(normalFactory.apply(true))
-			.withDirection(axis);
-		DiscoveredLocation secondLocation = new DiscoveredLocation(offsetFactory.apply(0.5d, false)).viaTurn(viaTurn)
-			.withNormal(normalFactory.apply(false))
-			.withDirection(axis);
+		DiscoveredLocation firstLocation =
+			new DiscoveredLocation(dimensionFactory.apply(true), offsetFactory.apply(0.5d, true)).viaTurn(viaTurn)
+				.withNormal(normalFactory.apply(true))
+				.withDirection(axis);
+		DiscoveredLocation secondLocation =
+			new DiscoveredLocation(dimensionFactory.apply(false), offsetFactory.apply(0.5d, false)).viaTurn(viaTurn)
+				.withNormal(normalFactory.apply(false))
+				.withDirection(axis);
 
+		if (!firstLocation.dimension.equals(secondLocation.dimension)) {
+			firstLocation.forceNode();
+			secondLocation.forceNode();
+		}
+		
 		boolean skipFirst = false;
 		boolean skipSecond = false;
 

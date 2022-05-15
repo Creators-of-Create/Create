@@ -24,8 +24,6 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.world.phys.Vec3;
-
 public class SignalPropagator {
 
 	public static void onSignalRemoved(TrackGraph graph, SignalBoundary signal) {
@@ -103,7 +101,7 @@ public class SignalPropagator {
 			return true;
 
 		}, false);
-		
+
 		group.resolveColor();
 		sync.edgeGroupCreated(groupId, group.color);
 	}
@@ -180,14 +178,10 @@ public class SignalPropagator {
 					continue;
 
 				// chain signal: check if reachable
-				if (forCollection) {
-					Vec3 currentDirection = graph.getConnectionsFrom(prevNode)
-						.get(currentNode)
-						.getDirection(false);
-					Vec3 newDirection = edge.getDirection(true);
-					if (currentDirection.dot(newDirection) < 3 / 4f)
-						continue;
-				}
+				if (forCollection && !graph.getConnectionsFrom(prevNode)
+					.get(currentNode)
+					.canTravelTo(edge))
+					continue;
 
 				TrackEdge oppositeEdge = graph.getConnectionsFrom(nextNode)
 					.get(currentNode);

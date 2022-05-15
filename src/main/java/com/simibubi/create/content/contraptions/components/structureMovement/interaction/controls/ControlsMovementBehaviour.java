@@ -28,6 +28,12 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
+	public void stopMoving(MovementContext context) {
+		context.contraption.entity.stopControlling(context.localPos);
+		MovementBehaviour.super.stopMoving(context);
+	}
+
+	@Override
 	public void tick(MovementContext context) {
 		MovementBehaviour.super.tick(context);
 		if (!context.world.isClientSide)

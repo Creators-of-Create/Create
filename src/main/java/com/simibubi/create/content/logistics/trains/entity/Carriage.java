@@ -2,25 +2,41 @@ package com.simibubi.create.content.logistics.trains.entity;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
@@ -28,6 +44,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class Carriage {
 
@@ -42,29 +61,21 @@ public class Carriage {
 	public int bogeySpacing;
 	public Couple<CarriageBogey> bogeys;
 
-	public Vec3 positionAnchor;
-	public Couple<Vec3> rotationAnchors;
-
 	CompoundTag serialisedEntity;
-	WeakReference<CarriageContraptionEntity> entity;
+	Map<Integer, CompoundTag> serialisedPassengers;
 
-	// client
-	public boolean pointsInitialised;
-
+	private Map<ResourceKey<Level>, DimensionalCarriageEntity> entities;
 
 	static final int FIRST = 0, MIDDLE = 1, LAST = 2, BOTH = 3;
 
 	public Carriage(CarriageBogey bogey1, @Nullable CarriageBogey bogey2, int bogeySpacing) {
 		this.bogeySpacing = bogeySpacing;
 		this.bogeys = Couple.create(bogey1, bogey2);
-		this.entity = new WeakReference<>(null);
 		this.id = netIdGenerator.incrementAndGet();
 		this.serialisedEntity = new CompoundTag();
-		this.pointsInitialised = false;
-		this.rotationAnchors = Couple.create(null, null);
 		this.presentConductors = Couple.create(false, false);
-
-		updateContraptionAnchors();
+		this.serialisedPassengers = new HashMap<>();
+		this.entities = new HashMap<>();
 
 		bogey1.setLeading();
 		bogey1.carriage = this;
@@ -76,13 +87,18 @@ public class Carriage {
 		this.train = train;
 	}
 
+	public boolean presentInMultipleDimensions() {
+		return entities.size() > 1;
+	}
+
 	public void setContraption(Level level, CarriageContraption contraption) {
 		CarriageContraptionEntity entity = CarriageContraptionEntity.create(level, contraption);
 		entity.setCarriage(this);
 		contraption.startMoving(level);
 		contraption.onEntityInitialize(level, entity);
 		updateContraptionAnchors();
-		alignEntity(entity);
+
+		getDimensional(level).alignEntity(entity);
 
 		List<Entity> players = new ArrayList<>();
 		for (Entity passenger : entity.getPassengers())
@@ -96,11 +112,24 @@ public class Carriage {
 		serialisedEntity = entity.serializeNBT();
 	}
 
+	public DimensionalCarriageEntity getDimensional(Level level) {
+		return getDimensional(level.dimension());
+	}
+
+	public DimensionalCarriageEntity getDimensional(ResourceKey<Level> dimension) {
+		return entities.computeIfAbsent(dimension, $ -> new DimensionalCarriageEntity());
+	}
+
+	@Nullable
+	public DimensionalCarriageEntity getDimensionalIfPresent(ResourceKey<Level> dimension) {
+		return entities.get(dimension);
+	}
+
 	public double travel(Level level, TrackGraph graph, double distance,
 		Function<TravellingPoint, ITrackSelector> forwardControl,
 		Function<TravellingPoint, ITrackSelector> backwardControl, int type) {
 		boolean onTwoBogeys = isOnTwoBogeys();
-		double stress = onTwoBogeys ? bogeySpacing - leadingAnchor().distanceTo(trailingAnchor()) : 0;
+		double stress = onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
 
 		MutableDouble distanceMoved = new MutableDouble(distance);
@@ -140,12 +169,23 @@ public class Carriage {
 				IEdgePointListener passiveListener = point.ignoreEdgePoints();
 
 				toMove += correction + bogeyCorrection;
-				double moved =
-					point
-						.travel(graph, toMove, toMove > 0 ? frontTrackSelector : backTrackSelector,
-							toMove > 0 ? atFront ? frontListener : atBack ? backListener : passiveListener
-								: atFront ? backListener : atBack ? frontListener : passiveListener,
-							point.ignoreTurns());
+
+				ITrackSelector trackSelector = toMove > 0 ? frontTrackSelector : backTrackSelector;
+				IEdgePointListener signalListener =
+					toMove > 0 ? atFront ? frontListener : atBack ? backListener : passiveListener
+						: atFront ? backListener : atBack ? frontListener : passiveListener;
+
+				double moved = point.travel(graph, toMove, trackSelector, signalListener, point.ignoreTurns(), c -> {
+					for (DimensionalCarriageEntity dce : entities.values())
+						if (c.either(tnl -> tnl.equals(dce.pivot)))
+							return false;
+					if (entities.size() > 1) {
+						train.status.doublePortal();
+						return true;
+					}
+					return false;
+				});
+
 				blocked |= point.blocked;
 
 				distanceMoved.setValue(moved);
@@ -153,98 +193,185 @@ public class Carriage {
 		}
 
 		updateContraptionAnchors();
-		manageEntity(level);
+		manageEntities(level);
 		return distanceMoved.getValue();
 	}
 
-	public void updateConductors() {
-		CarriageContraptionEntity entity = this.entity.get();
-		if (entity != null && entity.isAlive())
-			presentConductors = entity.checkConductors();
+	private double getAnchorDiff() {
+		double diff = 0;
+		int entries = 0;
+
+		TravellingPoint leadingPoint = getLeadingPoint();
+		TravellingPoint trailingPoint = getTrailingPoint();
+		if (leadingPoint.node1 != null && trailingPoint.node1 != null)
+			if (!leadingPoint.node1.getLocation().dimension.equals(trailingPoint.node1.getLocation().dimension))
+				return bogeySpacing;
+
+		for (DimensionalCarriageEntity dce : entities.values())
+			if (dce.leadingAnchor() != null && dce.trailingAnchor() != null) {
+				entries++;
+				diff += dce.leadingAnchor()
+					.distanceTo(dce.trailingAnchor());
+			}
+
+		if (entries == 0)
+			return bogeySpacing;
+		return diff / entries;
 	}
 
-	public void createEntity(Level level) {
-		Entity entity = EntityType.loadEntityRecursive(serialisedEntity, level, e -> {
-			e.moveTo(positionAnchor);
-			return e;
+	public void updateConductors() {
+		if (anyAvailableEntity() == null || entities.size() > 1)
+			return;
+		presentConductors.replace($ -> false);
+		for (DimensionalCarriageEntity dimensionalCarriageEntity : entities.values()) {
+			CarriageContraptionEntity entity = dimensionalCarriageEntity.entity.get();
+			if (entity != null && entity.isAlive())
+				presentConductors.replaceWithParams((current, checked) -> current || checked, entity.checkConductors());
+		}
+	}
+
+	private Set<ResourceKey<Level>> currentlyTraversedDimensions = new HashSet<>();
+
+	public void manageEntities(Level level) {
+		currentlyTraversedDimensions.clear();
+
+		bogeys.forEach(cb -> {
+			if (cb == null)
+				return;
+			cb.points.forEach(tp -> {
+				if (tp.node1 == null)
+					return;
+				currentlyTraversedDimensions.add(tp.node1.getLocation().dimension);
+			});
 		});
 
-		if (!(entity instanceof CarriageContraptionEntity cce))
-			return;
+		for (Iterator<Entry<ResourceKey<Level>, DimensionalCarriageEntity>> iterator = entities.entrySet()
+			.iterator(); iterator.hasNext();) {
+			Entry<ResourceKey<Level>, DimensionalCarriageEntity> entry = iterator.next();
 
-		cce.setGraph(train.graph == null ? null : train.graph.id);
-		cce.setCarriage(this);
-		cce.syncCarriage();
+			boolean discard =
+				!currentlyTraversedDimensions.isEmpty() && !currentlyTraversedDimensions.contains(entry.getKey());
+			ServerLevel currentLevel = level.getServer()
+				.getLevel(entry.getKey());
+			if (currentLevel == null)
+				continue;
 
-		this.entity = new WeakReference<>(cce);
+			DimensionalCarriageEntity dimensionalCarriageEntity = entry.getValue();
+			CarriageContraptionEntity entity = dimensionalCarriageEntity.entity.get();
 
-		if (level instanceof ServerLevel sl)
-			sl.tryAddFreshEntityWithPassengers(entity);
-	}
+			if (entity == null) {
+				if (discard)
+					iterator.remove();
+				else if (dimensionalCarriageEntity.positionAnchor != null && CarriageEntityHandler
+					.isActiveChunk(currentLevel, new BlockPos(dimensionalCarriageEntity.positionAnchor)))
+					dimensionalCarriageEntity.createEntity(currentLevel, anyAvailableEntity() == null);
 
-	public void manageEntity(Level level) {
-		CarriageContraptionEntity entity = this.entity.get();
-		if (entity == null) {
-			if (CarriageEntityHandler.isActiveChunk(level, new BlockPos(positionAnchor)))
-				createEntity(level);
-		} else {
-			CarriageEntityHandler.validateCarriageEntity(entity);
-			if (!entity.isAlive() || entity.leftTickingChunks) {
-				removeAndSaveEntity(entity);
-				return;
+			} else {
+				if (discard) {
+					discard = dimensionalCarriageEntity.discardTicks > 3;
+					dimensionalCarriageEntity.discardTicks++;
+				} else
+					dimensionalCarriageEntity.discardTicks = 0;
+
+				CarriageEntityHandler.validateCarriageEntity(entity);
+				if (!entity.isAlive() || entity.leftTickingChunks || discard) {
+					dimensionalCarriageEntity.removeAndSaveEntity(entity, discard);
+					if (discard)
+						iterator.remove();
+					continue;
+				}
+			}
+
+			entity = dimensionalCarriageEntity.entity.get();
+			if (entity != null && dimensionalCarriageEntity.positionAnchor != null) {
+				dimensionalCarriageEntity.alignEntity(entity);
+				entity.syncCarriage();
 			}
 		}
 
-		entity = this.entity.get();
-		if (entity == null)
-			return;
-
-		alignEntity(entity);
-		entity.syncCarriage();
-	}
-
-	private void removeAndSaveEntity(CarriageContraptionEntity entity) {
-		serialisedEntity = entity.serializeNBT();
-
-		for (Entity passenger : entity.getPassengers())
-			if (!(passenger instanceof Player))
-				passenger.discard();
-		entity.discard();
-
-		this.entity.clear();
 	}
 
 	public void updateContraptionAnchors() {
 		CarriageBogey leadingBogey = leadingBogey();
 		if (leadingBogey.points.either(t -> t.edge == null))
 			return;
-		positionAnchor = leadingBogey.getAnchorPosition();
-		rotationAnchors = bogeys.mapWithContext((b, first) -> isOnTwoBogeys() ? b.getAnchorPosition()
-			: leadingBogey.points.get(first)
-				.getPosition());
+		CarriageBogey trailingBogey = trailingBogey();
+		if (trailingBogey.points.either(t -> t.edge == null))
+			return;
+
+		ResourceKey<Level> leadingBogeyDim = leadingBogey.getDimension();
+		ResourceKey<Level> trailingBogeyDim = trailingBogey.getDimension();
+		double leadingWheelSpacing = leadingBogey.type.getWheelPointSpacing();
+		double trailingWheelSpacing = trailingBogey.type.getWheelPointSpacing();
+
+		for (boolean leading : Iterate.trueAndFalse) {
+			TravellingPoint point = leading ? getLeadingPoint() : getTrailingPoint();
+			TravellingPoint otherPoint = !leading ? getLeadingPoint() : getTrailingPoint();
+			ResourceKey<Level> dimension = point.node1.getLocation().dimension;
+			ResourceKey<Level> otherDimension = otherPoint.node1.getLocation().dimension;
+
+			if (dimension.equals(otherDimension) && leading) {
+				getDimensional(dimension).discardPivot();
+				continue;
+			}
+
+			DimensionalCarriageEntity dce = getDimensional(dimension);
+
+			dce.positionAnchor = dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
+				: pivoted(dce, dimension, point,
+					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2);
+
+			int prevmin = dce.minAllowedLocalCoord();
+			int prevmax = dce.maxAllowedLocalCoord();
+
+			dce.updateCutoff(leading);
+			if (prevmin != dce.minAllowedLocalCoord() || prevmax != dce.maxAllowedLocalCoord()) {
+				dce.updateRenderedCutoff();
+				dce.updatePassengerLoadout();
+			}
+
+			if (isOnTwoBogeys()) {
+				dce.rotationAnchors.setFirst(dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
+					: pivoted(dce, dimension, point,
+						leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2));
+				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition()
+					: pivoted(dce, dimension, point,
+						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2));
+				continue;
+			}
+
+			if (dimension.equals(otherDimension)) {
+				dce.rotationAnchors = leadingBogey.points.map(TravellingPoint::getPosition);
+				continue;
+			}
+
+			dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
+				: pivoted(dce, dimension, point, leadingWheelSpacing));
+			dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
+				: pivoted(dce, dimension, point, leadingWheelSpacing));
+		}
+
 	}
 
-	public void alignEntity(CarriageContraptionEntity entity) {
-		Vec3 positionVec = rotationAnchors.getFirst();
-		Vec3 coupledVec = rotationAnchors.getSecond();
+	private Vec3 pivoted(DimensionalCarriageEntity dce, ResourceKey<Level> dimension, TravellingPoint start,
+		double offset) {
+		if (train.graph == null)
+			return dce.pivot == null ? null : dce.pivot.getLocation();
+		TrackNodeLocation pivot = dce.findPivot(dimension, start == getLeadingPoint());
+		if (pivot == null)
+			return null;
+		Vec3 startVec = start.getPosition();
+		Vec3 portalVec = pivot.getLocation()
+			.add(0, 1, 0);
+		return VecHelper.lerp((float) (offset / startVec.distanceTo(portalVec)), startVec, portalVec);
+	}
 
-		double diffX = positionVec.x - coupledVec.x;
-		double diffY = positionVec.y - coupledVec.y;
-		double diffZ = positionVec.z - coupledVec.z;
-
-		entity.setPos(positionAnchor);
-		entity.prevYaw = entity.yaw;
-		entity.prevPitch = entity.pitch;
-
-		entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
-		entity.pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1;
-
-		if (entity.firstPositionUpdate) {
-			entity.xo = entity.getX();
-			entity.yo = entity.getY();
-			entity.zo = entity.getZ();
-			entity.prevYaw = entity.yaw;
-			entity.prevPitch = entity.pitch;
+	public void alignEntity(Level level) {
+		DimensionalCarriageEntity dimensionalCarriageEntity = entities.get(level.dimension());
+		if (dimensionalCarriageEntity != null) {
+			CarriageContraptionEntity entity = dimensionalCarriageEntity.entity.get();
+			if (entity != null)
+				dimensionalCarriageEntity.alignEntity(entity);
 		}
 	}
 
@@ -268,41 +395,79 @@ public class Carriage {
 		return bogeys.getSecond() != null;
 	}
 
-	public Vec3 leadingAnchor() {
-		return isOnTwoBogeys() ? rotationAnchors.getFirst() : positionAnchor;
+	public CarriageContraptionEntity anyAvailableEntity() {
+		for (DimensionalCarriageEntity dimensionalCarriageEntity : entities.values()) {
+			CarriageContraptionEntity entity = dimensionalCarriageEntity.entity.get();
+			if (entity != null)
+				return entity;
+		}
+		return null;
 	}
 
-	public Vec3 trailingAnchor() {
-		return isOnTwoBogeys() ? rotationAnchors.getSecond() : positionAnchor;
+	public void forEachPresentEntity(Consumer<CarriageContraptionEntity> callback) {
+		for (DimensionalCarriageEntity dimensionalCarriageEntity : entities.values()) {
+			CarriageContraptionEntity entity = dimensionalCarriageEntity.entity.get();
+			if (entity != null)
+				callback.accept(entity);
+		}
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.put("FirstBogey", bogeys.getFirst()
-			.write());
+			.write(dimensions));
 		if (isOnTwoBogeys())
 			tag.put("SecondBogey", bogeys.getSecond()
-				.write());
+				.write(dimensions));
 		tag.putInt("Spacing", bogeySpacing);
 		tag.putBoolean("FrontConductor", presentConductors.getFirst());
 		tag.putBoolean("BackConductor", presentConductors.getSecond());
 		tag.putBoolean("Stalled", stalled);
 
-		CarriageContraptionEntity entity = this.entity.get();
-		if (entity != null)
-			serialisedEntity = entity.serializeNBT();
+		Map<Integer, CompoundTag> passengerMap = new HashMap<>();
+
+		for (DimensionalCarriageEntity dimensionalCarriageEntity : entities.values()) {
+			CarriageContraptionEntity entity = dimensionalCarriageEntity.entity.get();
+			if (entity == null)
+				continue;
+			serialize(entity);
+			Contraption contraption = entity.getContraption();
+			if (contraption == null)
+				continue;
+			Map<UUID, Integer> mapping = contraption.getSeatMapping();
+			for (Entity passenger : entity.getPassengers())
+				if (mapping.containsKey(passenger.getUUID()))
+					passengerMap.put(mapping.get(passenger.getUUID()), passenger.serializeNBT());
+		}
 
 		tag.put("Entity", serialisedEntity.copy());
-		tag.put("PositionAnchor", VecHelper.writeNBT(positionAnchor));
-		tag.put("RotationAnchors", rotationAnchors.serializeEach(VecHelper::writeNBTCompound));
+
+		CompoundTag passengerTag = new CompoundTag();
+		passengerMap.putAll(serialisedPassengers);
+		passengerMap.forEach((seat, nbt) -> passengerTag.put("Seat" + seat, nbt.copy()));
+		tag.put("Passengers", passengerTag);
+
+		tag.put("EntityPositioning", NBTHelper.writeCompoundList(entities.entrySet(), e -> {
+			CompoundTag c = e.getValue()
+				.write();
+			c.putInt("Dim", dimensions.encode(e.getKey()));
+			return c;
+		}));
 
 		return tag;
 	}
 
-	public static Carriage read(CompoundTag tag, TrackGraph graph) {
-		CarriageBogey bogey1 = CarriageBogey.read(tag.getCompound("FirstBogey"), graph);
+	private void serialize(Entity entity) {
+		serialisedEntity = entity.serializeNBT();
+		serialisedEntity.remove("Passengers");
+		serialisedEntity.getCompound("Contraption")
+			.remove("Passengers");
+	}
+
+	public static Carriage read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
+		CarriageBogey bogey1 = CarriageBogey.read(tag.getCompound("FirstBogey"), graph, dimensions);
 		CarriageBogey bogey2 =
-			tag.contains("SecondBogey") ? CarriageBogey.read(tag.getCompound("SecondBogey"), graph) : null;
+			tag.contains("SecondBogey") ? CarriageBogey.read(tag.getCompound("SecondBogey"), graph, dimensions) : null;
 
 		Carriage carriage = new Carriage(bogey1, bogey2, tag.getInt("Spacing"));
 
@@ -311,13 +476,373 @@ public class Carriage {
 		carriage.serialisedEntity = tag.getCompound("Entity")
 			.copy();
 
-		if (carriage.positionAnchor == null) {
-			carriage.positionAnchor = VecHelper.readNBT(tag.getList("PositionAnchor", Tag.TAG_DOUBLE));
-			carriage.rotationAnchors =
-				Couple.deserializeEach(tag.getList("RotationAnchors", Tag.TAG_COMPOUND), VecHelper::readNBTCompound);
-		}
+		NBTHelper.iterateCompoundList(tag.getList("EntityPositioning", Tag.TAG_COMPOUND),
+			c -> carriage.getDimensional(dimensions.decode(c.getInt("Dim")))
+				.read(c));
+
+		CompoundTag passengersTag = tag.getCompound("Passengers");
+		passengersTag.getAllKeys()
+			.forEach(key -> carriage.serialisedPassengers.put(Integer.valueOf(key.substring(4)),
+				passengersTag.getCompound(key)));
 
 		return carriage;
+	}
+
+	private TravellingPoint portalScout = new TravellingPoint();
+
+	public class DimensionalCarriageEntity {
+		public Vec3 positionAnchor;
+		public Couple<Vec3> rotationAnchors;
+		public WeakReference<CarriageContraptionEntity> entity;
+
+		public TrackNodeLocation pivot;
+		int discardTicks;
+
+		// 0 == whole, 0..1 = fading out, -1..0 = fading in
+		public float cutoff;
+
+		// client
+		public boolean pointsInitialised;
+
+		public DimensionalCarriageEntity() {
+			this.entity = new WeakReference<>(null);
+			this.rotationAnchors = Couple.create(null, null);
+			this.pointsInitialised = false;
+		}
+
+		public void discardPivot() {
+			float prevCutoff = cutoff;
+			cutoff = 0;
+			pivot = null;
+			if (!serialisedPassengers.isEmpty() || !Mth.equal(prevCutoff, cutoff)) {
+				updatePassengerLoadout();
+				updateRenderedCutoff();
+			}
+		}
+
+		public void updateCutoff(boolean leadingIsCurrent) {
+			Vec3 leadingAnchor = rotationAnchors.getFirst();
+			Vec3 trailingAnchor = rotationAnchors.getSecond();
+
+			if (leadingAnchor == null || trailingAnchor == null)
+				return;
+			if (pivot == null) {
+				cutoff = 0;
+				return;
+			}
+
+			Vec3 pivotLoc = pivot.getLocation()
+				.add(0, 1, 0);
+
+			double leadingSpacing = leadingBogey().type.getWheelPointSpacing() / 2;
+			double trailingSpacing = trailingBogey().type.getWheelPointSpacing() / 2;
+			double anchorSpacing = leadingSpacing + bogeySpacing + trailingSpacing;
+
+			if (isOnTwoBogeys()) {
+				Vec3 diff = trailingAnchor.subtract(leadingAnchor)
+					.normalize();
+				trailingAnchor = trailingAnchor.add(diff.scale(trailingSpacing));
+				leadingAnchor = leadingAnchor.add(diff.scale(-leadingSpacing));
+			}
+
+			double leadingDiff = leadingAnchor.distanceTo(pivotLoc);
+			double trailingDiff = trailingAnchor.distanceTo(pivotLoc);
+
+			leadingDiff /= anchorSpacing;
+			trailingDiff /= anchorSpacing;
+
+			if (leadingIsCurrent && leadingDiff > trailingDiff && leadingDiff > 1)
+				cutoff = 0;
+			else if (leadingIsCurrent && leadingDiff < trailingDiff && trailingDiff > 1)
+				cutoff = 1;
+			else if (!leadingIsCurrent && leadingDiff > trailingDiff && leadingDiff > 1)
+				cutoff = -1;
+			else if (!leadingIsCurrent && leadingDiff < trailingDiff && trailingDiff > 1)
+				cutoff = 0;
+			else
+				cutoff = (float) Mth.clamp(1 - (leadingIsCurrent ? leadingDiff : trailingDiff), 0, 1)
+					* (leadingIsCurrent ? 1 : -1);
+		}
+
+		public TrackNodeLocation findPivot(ResourceKey<Level> dimension, boolean leading) {
+			if (pivot != null)
+				return pivot;
+
+			TravellingPoint start = leading ? getLeadingPoint() : getTrailingPoint();
+			TravellingPoint end = !leading ? getLeadingPoint() : getTrailingPoint();
+
+			portalScout.node1 = start.node1;
+			portalScout.node2 = start.node2;
+			portalScout.edge = start.edge;
+			portalScout.position = start.position;
+
+			ITrackSelector trackSelector = portalScout.follow(end);
+			int distance = bogeySpacing + 10;
+			int direction = leading ? -1 : 1;
+
+			portalScout.travel(train.graph, direction * distance, trackSelector, portalScout.ignoreEdgePoints(),
+				portalScout.ignoreTurns(), nodes -> {
+					for (boolean b : Iterate.trueAndFalse)
+						if (nodes.get(b).dimension.equals(dimension))
+							pivot = nodes.get(b);
+					return true;
+				});
+
+			return pivot;
+		}
+
+		public CompoundTag write() {
+			CompoundTag tag = new CompoundTag();
+			tag.putFloat("Cutoff", cutoff);
+			tag.putInt("DiscardTicks", discardTicks);
+			if (pivot != null)
+				tag.put("Pivot", pivot.write(null));
+			if (positionAnchor != null)
+				tag.put("PositionAnchor", VecHelper.writeNBT(positionAnchor));
+			if (rotationAnchors.both(Objects::nonNull))
+				tag.put("RotationAnchors", rotationAnchors.serializeEach(VecHelper::writeNBTCompound));
+			return tag;
+		}
+
+		public void read(CompoundTag tag) {
+			cutoff = tag.getFloat("Cutoff");
+			discardTicks = tag.getInt("DiscardTicks");
+			if (tag.contains("Pivot"))
+				pivot = TrackNodeLocation.read(tag.getCompound("Pivot"), null);
+			if (positionAnchor != null)
+				return;
+			if (tag.contains("PositionAnchor"))
+				positionAnchor = VecHelper.readNBT(tag.getList("PositionAnchor", Tag.TAG_DOUBLE));
+			if (tag.contains("RotationAnchors"))
+				rotationAnchors = Couple.deserializeEach(tag.getList("RotationAnchors", Tag.TAG_COMPOUND),
+					VecHelper::readNBTCompound);
+		}
+
+		public Vec3 leadingAnchor() {
+			return isOnTwoBogeys() ? rotationAnchors.getFirst() : positionAnchor;
+		}
+
+		public Vec3 trailingAnchor() {
+			return isOnTwoBogeys() ? rotationAnchors.getSecond() : positionAnchor;
+		}
+
+		public int minAllowedLocalCoord() {
+			if (cutoff <= 0)
+				return Integer.MIN_VALUE;
+			if (cutoff >= 1)
+				return Integer.MAX_VALUE;
+			return Mth.floor(-bogeySpacing + -1 + (2 + bogeySpacing) * cutoff);
+		}
+
+		public int maxAllowedLocalCoord() {
+			if (cutoff >= 0)
+				return Integer.MAX_VALUE;
+			if (cutoff <= -1)
+				return Integer.MIN_VALUE;
+			return Mth.ceil(-bogeySpacing + -1 + (2 + bogeySpacing) * (cutoff + 1));
+		}
+
+		public void updatePassengerLoadout() {
+			Entity entity = this.entity.get();
+			if (!(entity instanceof CarriageContraptionEntity cce))
+				return;
+			if (!(entity.level instanceof ServerLevel sLevel))
+				return;
+
+			Set<Integer> loadedPassengers = new HashSet<>();
+			int min = minAllowedLocalCoord();
+			int max = maxAllowedLocalCoord();
+
+			for (Entry<Integer, CompoundTag> entry : serialisedPassengers.entrySet()) {
+				Integer seatId = entry.getKey();
+				List<BlockPos> seats = cce.getContraption()
+					.getSeats();
+				if (seatId >= seats.size())
+					continue;
+
+				BlockPos localPos = seats.get(seatId);
+				if (!cce.isLocalCoordWithin(localPos, min, max))
+					continue;
+
+				CompoundTag tag = entry.getValue();
+				Entity passenger = null;
+
+				if (tag.contains("PlayerPassenger")) {
+					passenger = sLevel.getServer()
+						.getPlayerList()
+						.getPlayer(tag.getUUID("PlayerPassenger"));
+
+				} else {
+					passenger = EntityType.loadEntityRecursive(tag, entity.level, e -> {
+						e.moveTo(positionAnchor);
+						return e;
+					});
+					if (passenger != null)
+						sLevel.tryAddFreshEntityWithPassengers(passenger);
+				}
+
+				if (passenger != null) {
+					ResourceKey<Level> passengerDimension = passenger.level.dimension();
+					if (!passengerDimension.equals(sLevel.dimension()) && passenger instanceof ServerPlayer sp)
+						continue;
+					cce.addSittingPassenger(passenger, seatId);
+				}
+
+				loadedPassengers.add(seatId);
+			}
+
+			loadedPassengers.forEach(serialisedPassengers::remove);
+
+			Map<UUID, Integer> mapping = cce.getContraption()
+				.getSeatMapping();
+			for (Entity passenger : entity.getPassengers()) {
+				BlockPos localPos = cce.getContraption()
+					.getSeatOf(passenger.getUUID());
+				if (cce.isLocalCoordWithin(localPos, min, max))
+					continue;
+				if (!mapping.containsKey(passenger.getUUID()))
+					continue;
+
+				Integer seat = mapping.get(passenger.getUUID());
+				if ((passenger instanceof ServerPlayer sp)) {
+					dismountPlayer(sLevel, sp, seat, true);
+					continue;
+				}
+
+				serialisedPassengers.put(seat, passenger.serializeNBT());
+				passenger.discard();
+			}
+
+		}
+
+		private void dismountPlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean portal) {
+			if (!portal) {
+				sp.stopRiding();
+				return;
+			}
+
+			CompoundTag tag = new CompoundTag();
+			tag.putUUID("PlayerPassenger", sp.getUUID());
+			serialisedPassengers.put(seat, tag);
+			sp.stopRiding();
+			sp.getPersistentData()
+				.remove("ContraptionDismountLocation");
+
+			for (Entry<ResourceKey<Level>, DimensionalCarriageEntity> other : entities.entrySet()) {
+				DimensionalCarriageEntity otherDce = other.getValue();
+				if (otherDce == this)
+					continue;
+				if (sp.level.dimension()
+					.equals(other.getKey()))
+					continue;
+				if (otherDce.pivot == null)
+					continue;
+				Vec3 loc = otherDce.pivot.getLocation();
+				ServerLevel level = sLevel.getServer()
+					.getLevel(other.getKey());
+				sp.teleportTo(level, loc.x, loc.y, loc.z, sp.getYRot(), sp.getXRot());
+				sp.setPortalCooldown();
+			}
+		}
+
+		public void updateRenderedCutoff() {
+			Entity entity = this.entity.get();
+			if (!(entity instanceof CarriageContraptionEntity cce))
+				return;
+			if (!entity.level.isClientSide())
+				return;
+			Contraption contraption = cce.getContraption();
+			if (!(contraption instanceof CarriageContraption cc))
+				return;
+			cc.portalCutoffMin = minAllowedLocalCoord();
+			cc.portalCutoffMax = maxAllowedLocalCoord();
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(cce));
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private void invalidate(CarriageContraptionEntity entity) {
+			ContraptionRenderDispatcher.invalidate(entity.getContraption());
+			entity.updateRenderedPortalCutoff();
+		}
+
+		private void createEntity(Level level, boolean loadPassengers) {
+			Entity entity = EntityType.loadEntityRecursive(serialisedEntity, level, e -> {
+				e.moveTo(positionAnchor);
+				return e;
+			});
+
+			if (!(entity instanceof CarriageContraptionEntity cce)) {
+				train.invalid = true;
+				return;
+			}
+
+			cce.setGraph(train.graph == null ? null : train.graph.id);
+			cce.setCarriage(Carriage.this);
+			cce.syncCarriage();
+
+			this.entity = new WeakReference<>(cce);
+
+			if (level instanceof ServerLevel sl)
+				sl.tryAddFreshEntityWithPassengers(entity);
+
+			updatePassengerLoadout();
+		}
+
+		private void removeAndSaveEntity(CarriageContraptionEntity entity, boolean portal) {
+			Contraption contraption = entity.getContraption();
+			if (contraption != null) {
+				Map<UUID, Integer> mapping = contraption.getSeatMapping();
+				for (Entity passenger : entity.getPassengers()) {
+					if (!mapping.containsKey(passenger.getUUID()))
+						continue;
+
+					Integer seat = mapping.get(passenger.getUUID());
+
+					if (passenger instanceof ServerPlayer sp) {
+						dismountPlayer(sp.getLevel(), sp, seat, portal);
+						continue;
+					}
+
+					serialisedPassengers.put(seat, passenger.serializeNBT());
+				}
+			}
+
+			for (Entity passenger : entity.getPassengers())
+				if (!(passenger instanceof Player))
+					passenger.discard();
+
+			serialize(entity);
+			entity.discard();
+			this.entity.clear();
+		}
+
+		public void alignEntity(CarriageContraptionEntity entity) {
+			if (rotationAnchors.either(Objects::isNull))
+				return;
+
+			Vec3 positionVec = rotationAnchors.getFirst();
+			Vec3 coupledVec = rotationAnchors.getSecond();
+
+			double diffX = positionVec.x - coupledVec.x;
+			double diffY = positionVec.y - coupledVec.y;
+			double diffZ = positionVec.z - coupledVec.z;
+
+			entity.setPos(positionAnchor);
+			entity.prevYaw = entity.yaw;
+			entity.prevPitch = entity.pitch;
+
+			entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
+			entity.pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1;
+
+			if (!entity.firstPositionUpdate)
+				return;
+
+			entity.xo = entity.getX();
+			entity.yo = entity.getY();
+			entity.zo = entity.getZ();
+			entity.prevYaw = entity.yaw;
+			entity.prevPitch = entity.pitch;
+		}
 	}
 
 }

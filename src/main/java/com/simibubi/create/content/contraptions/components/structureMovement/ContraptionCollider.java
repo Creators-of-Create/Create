@@ -116,7 +116,7 @@ public class ContraptionCollider {
 
 			// Use simplified bbs when present
 			final Vec3 motionCopy = motion;
-			List<AABB> collidableBBs = contraption.simplifiedEntityColliders.orElseGet(() -> {
+			List<AABB> collidableBBs = contraption.getSimplifiedEntityColliders().orElseGet(() -> {
 
 				// Else find 'nearby' individual block shapes to collide with
 				List<AABB> bbs = new ArrayList<>();
@@ -490,6 +490,7 @@ public class ContraptionCollider {
 
 		List<VoxelShape> potentialHits = BlockPos.betweenClosedStream(min, max)
 			.filter(contraption.getBlocks()::containsKey)
+			.filter(Predicates.not(contraption::isHiddenInPortal))
 			.map(p -> {
 				BlockState blockState = contraption.getBlocks()
 					.get(p).state;

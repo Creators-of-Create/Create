@@ -73,7 +73,7 @@ public class TrackPropagator {
 		// 3. Ensure any affected graph gets checked for segmentation
 
 		for (TrackGraph railGraph : toUpdate)
-			manager.updateSplitGraph(railGraph);
+			manager.updateSplitGraph(reader, railGraph);
 
 		manager.markTracksDirty();
 	}
@@ -235,9 +235,9 @@ public class TrackPropagator {
 		if (location.shouldForceNode())
 			return true;
 		if (next.stream()
-			.anyMatch(DiscoveredLocation::connectedViaTurn))
+			.anyMatch(DiscoveredLocation::shouldForceNode))
 			return true;
-
+		
 		Vec3 direction = location.direction;
 		if (direction != null && next.stream()
 			.anyMatch(dl -> dl.notInLineWith(direction)))

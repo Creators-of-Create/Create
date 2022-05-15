@@ -11,7 +11,6 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackEdgeIntersection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
@@ -51,6 +50,9 @@ public class TrackGraphVisualizer {
 			Vec3 location = nodeLocation.getLocation();
 			if (location.distanceTo(camera) > 50)
 				continue;
+			if (!mc.level.dimension()
+				.equals(nodeLocation.dimension))
+				continue;
 
 			Map<TrackNode, TrackEdge> map = graph.connectionsByNode.get(node);
 			if (map == null)
@@ -62,16 +64,8 @@ public class TrackGraphVisualizer {
 				TrackEdge edge = entry.getValue();
 				EdgeData signalData = edge.getEdgeData();
 
-				// temporary
-				if (other.hashCode() > hashCode == ctrl)
-					for (TrackEdgeIntersection intersection : signalData.getIntersections()) {
-						Vec3 v1 = edge.getPosition(intersection.location / edge.getLength());
-						Vec3 v2 = v1.add(node.normal.scale(8 / 16f));
-						outliner.showLine(intersection, v1, v2)
-							.colored(Color.mixColors(Color.WHITE, graph.color, 1))
-							.lineWidth(width);
-					} //
-
+				if (!edge.node1.location.dimension.equals(edge.node2.location.dimension))
+					continue;
 				if (other.hashCode() > hashCode && !ctrl)
 					continue;
 
@@ -234,6 +228,9 @@ public class TrackGraphVisualizer {
 			Vec3 location = nodeLocation.getLocation();
 			if (location.distanceTo(camera) > 50)
 				continue;
+			if (!mc.level.dimension()
+				.equals(nodeLocation.dimension))
+				continue;
 
 			Vec3 yOffset = new Vec3(0, 3 / 16f, 0);
 			Vec3 v1 = location.add(yOffset);
@@ -249,12 +246,20 @@ public class TrackGraphVisualizer {
 			int hashCode = node.hashCode();
 			for (Entry<TrackNode, TrackEdge> entry : map.entrySet()) {
 				TrackNode other = entry.getKey();
+				TrackEdge edge = entry.getValue();
 
+				if (!edge.node1.location.dimension.equals(edge.node2.location.dimension)) {
+					v1 = location.add(yOffset);
+					v2 = v1.add(node.normal.scale(3 / 16f));
+					CreateClient.OUTLINER.showLine(Integer.valueOf(node.netId), v1, v2)
+						.colored(Color.mixColors(Color.WHITE, graph.color, 1))
+						.lineWidth(1 / 4f);
+					continue;
+				}
 				if (other.hashCode() > hashCode && !AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
 					continue;
-				yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
 
-				TrackEdge edge = entry.getValue();
+				yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
 				if (!edge.isTurn()) {
 					CreateClient.OUTLINER.showLine(edge, edge.getPosition(0)
 						.add(yOffset),

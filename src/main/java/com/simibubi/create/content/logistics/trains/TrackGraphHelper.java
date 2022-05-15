@@ -34,7 +34,7 @@ public class TrackGraphHelper {
 		// Case 1: Centre of block lies on a node
 
 		TrackNodeLocation location = new TrackNodeLocation(Vec3.atBottomCenterOf(pos)
-			.add(0, track.getElevationAtCenter(level, pos, trackBlockState), 0));
+			.add(0, track.getElevationAtCenter(level, pos, trackBlockState), 0)).in(level);
 		graph = Create.RAILWAYS.sided(level)
 			.getGraph(level, location);
 		if (graph != null) {
@@ -142,7 +142,7 @@ public class TrackGraphHelper {
 		if (bc == null || !bc.isPrimary())
 			return null;
 
-		TrackNodeLocation targetLoc = new TrackNodeLocation(bc.starts.getSecond());
+		TrackNodeLocation targetLoc = new TrackNodeLocation(bc.starts.getSecond()).in(level);
 		for (DiscoveredLocation location : track.getConnected(level, pos, state, true, null)) {
 			TrackGraph graph = Create.RAILWAYS.sided(level)
 				.getGraph(level, location);

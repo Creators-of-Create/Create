@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 
 public class CarriageContraptionInstance extends EntityInstance<CarriageContraptionEntity> implements DynamicInstance {
 
@@ -14,25 +15,34 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 	private Carriage carriage;
 	private Couple<BogeyInstance> bogeys;
+	private Couple<Boolean> bogeyHidden;
 
 	public CarriageContraptionInstance(MaterialManager materialManager, CarriageContraptionEntity entity) {
 		super(materialManager, entity);
+		bogeyHidden = Couple.create(() -> false);
+		entity.bindInstance(this);
 	}
 
 	@Override
 	public void init() {
 		carriage = entity.getCarriage();
 
-		if (carriage == null) return;
+		if (carriage == null)
+			return;
 
 		bogeys = carriage.bogeys.mapNotNullWithParam(CarriageBogey::createInstance, materialManager);
 		updateLight();
 	}
 
+	public void setBogeyVisibility(boolean first, boolean visible) {
+		bogeyHidden.set(first, !visible);
+	}
+	
 	@Override
 	public void beginFrame() {
 		if (bogeys == null) {
-			init();
+			if (entity.isReadyForRender())
+				init();
 			return;
 		}
 
@@ -47,18 +57,23 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 		TransformStack.cast(ms)
 			.translate(getInstancePosition(partialTicks));
 
-		for (BogeyInstance instance : bogeys) {
-			if (instance != null) {
-				ms.pushPose();
-				CarriageBogey bogey = instance.bogey;
-
-				CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot,
-					partialTicks);
-				ms.translate(0, -1.5 - 1 / 128f, 0);
-
-				instance.beginFrame(bogey.wheelAngle.getValue(partialTicks), ms);
-				ms.popPose();
+		for (boolean current : Iterate.trueAndFalse) {
+			BogeyInstance instance = bogeys.get(current);
+			if (instance == null) 
+				continue;
+			if (bogeyHidden.get(current)) {
+				instance.hiddenFrame();
+				continue;
 			}
+			
+			ms.pushPose();
+			CarriageBogey bogey = instance.bogey;
+
+			CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
+			ms.translate(0, -1.5 - 1 / 128f, 0);
+
+			instance.beginFrame(bogey.wheelAngle.getValue(partialTicks), ms);
+			ms.popPose();
 		}
 
 		ms.popPose();
@@ -66,7 +81,8 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 	@Override
 	public void updateLight() {
-		if (bogeys == null) return;
+		if (bogeys == null)
+			return;
 
 		bogeys.forEach(instance -> {
 			if (instance != null)
@@ -76,7 +92,8 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 	@Override
 	public void remove() {
-		if (bogeys == null) return;
+		if (bogeys == null)
+			return;
 
 		bogeys.forEach(instance -> {
 			if (instance != null)
