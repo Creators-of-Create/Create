@@ -52,8 +52,9 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
 		List<BakedQuad> quads = super.getQuads(state, side, rand, data);
 		if (data.hasProperty(PIPE_PROPERTY)) {
-			quads = new ArrayList<>(quads);
-			addQuads(quads, state, side, rand, data, data.getData(PIPE_PROPERTY));
+			PipeModelData pipeData = data.getData(PIPE_PROPERTY);
+			quads = side != null && pipeData.hasRim(side) ? new ArrayList<>() : new ArrayList<>(quads);
+			addQuads(quads, state, side, rand, data, pipeData);
 		}
 		return quads;
 	}

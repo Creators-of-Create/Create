@@ -51,7 +51,7 @@ public class AllSpriteShifts {
 		CHASSIS_STICKY = omni("linear_chassis_end_sticky");
 
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
-		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank"),
+		FLUID_TANK = getCT(CTType.RECTANGLE, "fluid_tank"),
 		CREATIVE_FLUID_TANK = getCT(CTType.CROSS, "creative_fluid_tank");
 
 	public static final Couple<CTSpriteShiftEntry> VAULT_TOP = vault("top"), VAULT_FRONT = vault("front"),

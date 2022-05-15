@@ -1,16 +1,16 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "create:block/fluid_pipe",
-		"particle": "create:block/fluid_pipe"
+		"0": "create:block/pipes_connected",
+		"particle": "create:block/pipes_connected"
 	},
 	"elements": [
 		{
 			"from": [4, 4, 4],
 			"to": [12, 12, 12],
 			"faces": {
-				"east": {"uv": [1, 1, 5, 5], "rotation": 180, "texture": "#0"},
-				"west": {"uv": [1, 1, 5, 5], "rotation": 180, "texture": "#0"}
+				"east": {"uv": [16, 8, 12, 12], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [16, 8, 12, 12], "rotation": 180, "texture": "#0"}
 			}
 		}
 	]
