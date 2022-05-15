@@ -248,31 +248,22 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		super.read(nbt, clientPacket);
 	}
 
+	// fabric: anonymous enums are cursed and apparently aren't enums!
 	public enum BottomlessFluidMode implements Predicate<Fluid> {
-		ALLOW_ALL {
-			@Override
-			public boolean test(Fluid fluid) {
-				return true;
-			}
-		},
-		DENY_ALL {
-			@Override
-			public boolean test(Fluid fluid) {
-				return false;
-			}
-		},
-		ALLOW_BY_TAG {
-			@Override
-			public boolean test(Fluid fluid) {
-				return AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid);
-			}
-		},
-		DENY_BY_TAG {
-			@Override
-			public boolean test(Fluid fluid) {
-				return !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
-			}
-		};
+		ALLOW_ALL,
+		DENY_ALL,
+		ALLOW_BY_TAG,
+		DENY_BY_TAG;
+
+		@Override
+		public boolean test(Fluid fluid) {
+			return switch (this) {
+				case ALLOW_ALL -> true;
+				case DENY_ALL -> false;
+				case ALLOW_BY_TAG -> AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid);
+				case DENY_BY_TAG -> !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
+			};
+		}
 	}
 
 }
