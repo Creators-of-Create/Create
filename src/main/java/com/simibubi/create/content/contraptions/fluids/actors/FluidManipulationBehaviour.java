@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
@@ -205,14 +207,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
 		BlockPos splooshPos = pos == null ? tileEntity.getBlockPos() : pos;
 
-		SoundEvent soundevent = null;//fillSound ? fluid.getAttributes()
-//			.getFillSound()
-//			: fluid.getAttributes()
-//				.getEmptySound();
-		if (soundevent == null)
-			soundevent =
-				fluid.is(FluidTags.LAVA) ? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
-					: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
+		FluidVariant variant = FluidVariant.of(fluid);
+		SoundEvent soundevent = fillSound
+				? FluidVariantAttributes.getFillSound(variant)
+				: FluidVariantAttributes.getEmptySound(variant);
 
 		world.playSound(null, splooshPos, soundevent, SoundSource.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerLevel)

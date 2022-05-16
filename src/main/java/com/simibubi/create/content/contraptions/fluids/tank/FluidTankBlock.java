@@ -166,11 +166,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			Fluid fluid = fluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()
 				.createLegacyBlock();
-//			FluidAttributes attributes = fluid.getAttributes();
-//			soundevent = attributes.getEmptySound();
-			if (soundevent == null)
-				soundevent =
-					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+			soundevent = FluidVariantAttributes.getEmptySound(FluidVariant.of(fluid));
 		}
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
@@ -180,11 +176,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			Fluid fluid = prevFluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()
 				.createLegacyBlock();
-//			soundevent = fluid.getAttributes()
-//				.getFillSound();
-			if (soundevent == null)
-				soundevent =
-					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
+			soundevent = FluidVariantAttributes.getFillSound(FluidVariant.of(fluid));
 		}
 
 		if (soundevent != null && !onClient) {
