@@ -132,7 +132,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 				Mth.clamp((speed) / (!inventory.appliedRecipe ? Mth.log2(inventory.getStackInSlot(0)
 					.getCount()) : 1), .25f, 20);
 			inventory.remainingTime -= processingSpeed;
-			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
 			if (level.isClientSide)
