@@ -32,6 +32,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -77,7 +78,7 @@ public class GoggleOverlayRenderer {
 			hoverTicks = 0;
 		lastHovered = pos;
 
-		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
+		boolean shouldSeeOverlay = shouldSeeOverlay(mc);
 
 		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
 		boolean hasHoveringInformation = te instanceof IHaveHoveringInformation;
@@ -87,7 +88,7 @@ public class GoggleOverlayRenderer {
 
 		List<Component> tooltip = new ArrayList<>();
 
-		if (hasGoggleInformation && wearingGoggles) {
+		if (hasGoggleInformation && shouldSeeOverlay) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
 			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, mc.player.isShiftKeyDown());
 		}
@@ -116,17 +117,17 @@ public class GoggleOverlayRenderer {
 
 		// check for piston poles if goggles are worn
 		BlockState state = world.getBlockState(pos);
-		if (wearingGoggles && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
+		if (shouldSeeOverlay && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
 			Direction[] directions = Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
-				.getAxis());
+					.getAxis());
 			int poles = 1;
 			boolean pistonFound = false;
 			for (Direction dir : directions) {
 				int attachedPoles = PistonExtensionPoleBlock.PlacementHelper.get()
-					.attachedPoles(world, pos, dir);
+						.attachedPoles(world, pos, dir);
 				poles += attachedPoles;
 				pistonFound |= world.getBlockState(pos.relative(dir, attachedPoles + 1))
-					.getBlock() instanceof MechanicalPistonBlock;
+						.getBlock() instanceof MechanicalPistonBlock;
 			}
 
 			if (!pistonFound)
@@ -135,8 +136,8 @@ public class GoggleOverlayRenderer {
 				tooltip.add(TextComponent.EMPTY);
 
 			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-				.append(Lang.translate("gui.goggles.pole_length"))
-				.append(new TextComponent(" " + poles)));
+					.append(Lang.translate("gui.goggles.pole_length"))
+					.append(new TextComponent(" " + poles)));
 		}
 
 		if (tooltip.isEmpty())
@@ -184,13 +185,18 @@ public class GoggleOverlayRenderer {
 		}
 
 		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1,
-			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
+				colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)
-			.at(posX + 10, posY - 16, 450)
-			.render(poseStack);
+				.at(posX + 10, posY - 16, 450)
+				.render(poseStack);
 		poseStack.popPose();
+	}
+
+	private static boolean shouldSeeOverlay(Minecraft mc) {
+		return GogglesItem.isWearingGoggles(mc.player)
+				|| mc.gameMode.getPlayerMode() == GameType.CREATIVE && AllConfigs.CLIENT.creativeOverlay.get();
 	}
 
 }
