@@ -27,13 +27,13 @@ public class AllSpriteShifts {
 
 	public static final CTSpriteShiftEntry FRAMED_GLASS =
 		getCT(OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
-		HORIZONTAL_FRAMED_GLASS = getCT(CTType.HORIZONTAL_KRYPPERS, "palettes/framed_glass", "palettes/horizontal_framed_glass"),
+		HORIZONTAL_FRAMED_GLASS =
+			getCT(CTType.HORIZONTAL_KRYPPERS, "palettes/framed_glass", "palettes/horizontal_framed_glass"),
 		VERTICAL_FRAMED_GLASS = getCT(VERTICAL, "palettes/framed_glass", "palettes/vertical_framed_glass"),
 		ORNATE_IRON_WINDOW = vertical("palettes/ornate_iron_window");
 
 	public static final CTSpriteShiftEntry CRAFTER_FRONT = getCT(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing"),
-		CRAFTER_SIDE = vertical("crafter_side"),
-		CRAFTER_OTHERSIDE = horizontal("crafter_side"),
+		CRAFTER_SIDE = vertical("crafter_side"), CRAFTER_OTHERSIDE = horizontal("crafter_side"),
 		ANDESITE_ENCASED_COGWHEEL_SIDE = vertical("andesite_encased_cogwheel_side"),
 		ANDESITE_ENCASED_COGWHEEL_OTHERSIDE = horizontal("andesite_encased_cogwheel_side"),
 		BRASS_ENCASED_COGWHEEL_SIDE = vertical("brass_encased_cogwheel_side"),
@@ -43,11 +43,11 @@ public class AllSpriteShifts {
 	public static final CTSpriteShiftEntry ANDESITE_CASING = omni("andesite_casing"),
 		BRASS_CASING = omni("brass_casing"), COPPER_CASING = omni("copper_casing"),
 		SHADOW_STEEL_CASING = omni("shadow_steel_casing"), REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
+		RAILWAY_CASING = omni("railway_casing"), RAILWAY_CASING_SIDE = omni("railway_casing_side"),
 		CREATIVE_CASING = getCT(CTType.CROSS, "creative_casing");
 
 	public static final CTSpriteShiftEntry CHASSIS_SIDE = omni("linear_chassis_side"),
-		SECONDARY_CHASSIS_SIDE = omni("secondary_linear_chassis_side"),
-		CHASSIS = omni("linear_chassis_end"),
+		SECONDARY_CHASSIS_SIDE = omni("secondary_linear_chassis_side"), CHASSIS = omni("linear_chassis_end"),
 		CHASSIS_STICKY = omni("linear_chassis_end_sticky");
 
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
@@ -84,8 +84,7 @@ public class AllSpriteShifts {
 
 	private static Couple<CTSpriteShiftEntry> vault(String name) {
 		final String prefixed = "vault_" + name;
-		return Couple
-			.createWithContext(b -> getCT(CTType.CROSS, prefixed, b ? prefixed : prefixed + "_large"));
+		return Couple.createWithContext(b -> getCT(CTType.CROSS, prefixed, b ? prefixed : prefixed + "_large"));
 	}
 
 	//

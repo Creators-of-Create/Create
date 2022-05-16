@@ -203,6 +203,7 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
+import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
@@ -1353,6 +1354,12 @@ public class AllBlocks {
 		.item(TrackBlockItem::new)
 		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
 		.build()
+		.register();
+
+	public static final BlockEntry<CasingBlock> RAILWAY_CASING = REGISTRATE.block("railway_casing", CasingBlock::new)
+		.transform(BuilderTransformers.layeredCasing(() -> AllSpriteShifts.RAILWAY_CASING_SIDE,
+			() -> AllSpriteShifts.RAILWAY_CASING))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.register();
 
 	public static final BlockEntry<StationBlock> TRACK_STATION = REGISTRATE.block("track_station", StationBlock::new)

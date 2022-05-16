@@ -110,6 +110,7 @@
     "create:rotation_speed_controller",
     "create:mechanical_arm",
     "create:track",
+    "create:railway_casing",
     "create:track_station",
     "create:track_signal",
     "create:item_vault",

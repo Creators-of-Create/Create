@@ -32,6 +32,7 @@ import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
@@ -153,6 +154,23 @@ public class BuilderTransformers {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.onRegister(connectedTextures(() -> new EncasedCTBehaviour(ct.get())))
+			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
+			.tag(AllBlockTags.CASING.tag)
+			.item()
+			.tag(AllItemTags.CASING.tag)
+			.build();
+	}
+
+	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> layeredCasing(
+		Supplier<CTSpriteShiftEntry> ct, Supplier<CTSpriteShiftEntry> ct2) {
+		return b -> b.initialProperties(SharedProperties::stone)
+			.transform(axeOrPickaxe())
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+				.cubeColumn(c.getName(), ct.get()
+					.getOriginalResourceLocation(),
+					ct2.get()
+						.getOriginalResourceLocation())))
+			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get(), ct2.get())))
 			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
 			.tag(AllBlockTags.CASING.tag)
 			.item()
