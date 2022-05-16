@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 226",
+	"_": "Missing Localizations: 228",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -858,6 +858,8 @@
 	"create.recipe.mystery_conversion": "Conversie Misterioasă",
 	"create.recipe.spout_filling": "Umplere prin Duză",
 	"create.recipe.draining": "Drenaj De Obiecte",
+	"create.recipe.item_application": "UNLOCALIZED: Manual Item Application",
+	"create.recipe.item_application.any_axe": "UNLOCALIZED: Any Axe",
 	"create.recipe.sequenced_assembly": "Asamblare Secvențială",
 	"create.recipe.assembly.next": "Următorul: %1$s",
 	"create.recipe.assembly.step": "Pasul %1$s:",

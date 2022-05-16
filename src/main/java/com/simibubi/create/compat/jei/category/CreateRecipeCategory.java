@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -113,6 +114,15 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 					.withStyle(ChatFormatting.GOLD));
 		});
+	}
+
+	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
+		return (view, tooltip) -> {
+			float chance = output.getChance();
+			if (chance != 1)
+				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+					.withStyle(ChatFormatting.GOLD));
+		};
 	}
 
 	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {

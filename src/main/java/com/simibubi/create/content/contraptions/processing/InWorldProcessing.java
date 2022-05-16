@@ -10,6 +10,7 @@ import java.util.Optional;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -237,11 +238,12 @@ public class InWorldProcessing {
 	public static List<ItemStack> applyRecipeOn(ItemStack stackIn, Recipe<?> recipe) {
 		List<ItemStack> stacks;
 
-		if (recipe instanceof ProcessingRecipe) {
+		if (recipe instanceof ProcessingRecipe<?> pr) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
-				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults();
-				for (ItemStack stack : rollResults) {
+				List<ProcessingOutput> outputs =
+					pr instanceof ManualApplicationRecipe mar ? mar.getRollableResults() : pr.getRollableResults();
+				for (ItemStack stack : pr.rollResults(outputs)) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())
 							continue;
@@ -472,8 +474,8 @@ public class InWorldProcessing {
 						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL)
 						.orElse(false))
 				return Type.HAUNTING;
-			if (block == Blocks.FIRE || blockState.is(BlockTags.CAMPFIRES)
-				&& blockState.getOptionalValue(CampfireBlock.LIT)
+			if (block == Blocks.FIRE
+				|| blockState.is(BlockTags.CAMPFIRES) && blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
 				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
 					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)

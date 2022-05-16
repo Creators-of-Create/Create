@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 230",
+	"_": "Missing Localizations: 232",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -858,6 +858,8 @@
 	"create.recipe.mystery_conversion": "Conversión misteriosa",
 	"create.recipe.spout_filling": "Llenar por el pico",
 	"create.recipe.draining": "Drenador de objetos",
+	"create.recipe.item_application": "UNLOCALIZED: Manual Item Application",
+	"create.recipe.item_application.any_axe": "UNLOCALIZED: Any Axe",
 	"create.recipe.sequenced_assembly": "Montaje secuenciado",
 	"create.recipe.assembly.next": "Siguiente: %1$s",
 	"create.recipe.assembly.step": "Fase %1$s:",

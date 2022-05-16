@@ -73,7 +73,7 @@ public class BuilderTransformers {
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
 	}
-	
+
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
 		String casing, Supplier<CTSpriteShiftEntry> casingShift) {
 		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get(), false);
@@ -90,8 +90,7 @@ public class BuilderTransformers {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
-		return encasedBase(b, drop)
-			.addLayer(() -> RenderType::cutoutMipped)
+		return encasedBase(b, drop).addLayer(() -> RenderType::cutoutMipped)
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
@@ -155,7 +154,10 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.onRegister(connectedTextures(() -> new EncasedCTBehaviour(ct.get())))
 			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
-			.simpleItem();
+			.tag(AllBlockTags.CASING.tag)
+			.item()
+			.tag(AllItemTags.CASING.tag)
+			.build();
 	}
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(

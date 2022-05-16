@@ -13,6 +13,7 @@ public class CRecipes extends ConfigBase {
 	public final ConfigBool allowStonecuttingOnSaw = b(true, "allowStonecuttingOnSaw", Comments.allowStonecuttingOnSaw);
 	public final ConfigBool allowWoodcuttingOnSaw = b(true, "allowWoodcuttingOnSaw", Comments.allowWoodcuttingOnSaw);
 	public final ConfigBool allowCastingBySpout = b(true, "allowCastingBySpout", Comments.allowCastingBySpout);
+	public final ConfigBool displayLogStrippingRecipes = b(true, "displayLogStrippingRecipes", Comments.displayLogStrippingRecipes);
 	public final ConfigInt lightSourceCountForRefinedRadiance =
 		i(10, 1, "lightSourceCountForRefinedRadiance", Comments.refinedRadiance);
 	public final ConfigBool enableRefinedRadianceRecipe =
@@ -45,6 +46,7 @@ public class CRecipes extends ConfigBase {
 			"The amount of Light sources destroyed before Chromatic Compound turns into Refined Radiance.";
 		static String refinedRadianceRecipe = "Allow the standard in-world Refined Radiance recipes.";
 		static String shadowSteelRecipe = "Allow the standard in-world Shadow Steel recipe.";
+		static String displayLogStrippingRecipes = "Display vanilla Log-stripping interactions in JEI.";
 	}
 
 }

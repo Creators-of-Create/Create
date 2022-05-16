@@ -112,51 +112,6 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("BA")
 				.pattern("AB")),
 
-		ANDESITE_CASING = create(AllBlocks.ANDESITE_CASING).returns(4)
-			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
-				.define('C', I.andesite())
-				.define('S', ItemTags.LOGS)
-				.pattern("AAA")
-				.pattern("CSC")
-				.pattern("AAA")),
-
-		BRASS_CASING = create(AllBlocks.BRASS_CASING).returns(4)
-			.unlockedByTag(I::brass)
-			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
-				.define('C', I.brassSheet())
-				.define('S', ItemTags.LOGS)
-				.pattern("AAA")
-				.pattern("CSC")
-				.pattern("AAA")),
-
-		COPPER_CASING = create(AllBlocks.COPPER_CASING).returns(4)
-			.unlockedBy(I::copper)
-			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
-				.define('C', I.copperSheet())
-				.define('S', ItemTags.LOGS)
-				.pattern("AAA")
-				.pattern("CSC")
-				.pattern("AAA")),
-
-		RADIANT_CASING = create(AllBlocks.REFINED_RADIANCE_CASING).returns(4)
-			.unlockedBy(I::refinedRadiance)
-			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
-				.define('C', I.refinedRadiance())
-				.define('S', Tags.Items.GLASS_COLORLESS)
-				.pattern("AAA")
-				.pattern("CSC")
-				.pattern("AAA")),
-
-		SHADOW_CASING = create(AllBlocks.SHADOW_STEEL_CASING).returns(4)
-			.unlockedBy(I::shadowSteel)
-			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
-				.define('C', I.shadowSteel())
-				.define('S', Tags.Items.OBSIDIAN)
-				.pattern("AAA")
-				.pattern("CSC")
-				.pattern("AAA")),
-
 		ELECTRON_TUBE = create(AllItems.ELECTRON_TUBE).unlockedBy(AllItems.ROSE_QUARTZ::get)
 			.viaShaped(b -> b.define('L', AllItems.POLISHED_ROSE_QUARTZ.get())
 				.define('R', Items.REDSTONE_TORCH)

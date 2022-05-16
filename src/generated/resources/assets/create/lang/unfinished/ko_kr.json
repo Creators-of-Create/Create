@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 225",
+	"_": "Missing Localizations: 227",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -858,6 +858,8 @@
 	"create.recipe.mystery_conversion": "?",
 	"create.recipe.spout_filling": "채우기",
 	"create.recipe.draining": "배수",
+	"create.recipe.item_application": "UNLOCALIZED: Manual Item Application",
+	"create.recipe.item_application.any_axe": "UNLOCALIZED: Any Axe",
 	"create.recipe.sequenced_assembly": "순서 조립",
 	"create.recipe.assembly.next": "다음 단계: %1$s",
 	"create.recipe.assembly.step": "단계 %1$s:",

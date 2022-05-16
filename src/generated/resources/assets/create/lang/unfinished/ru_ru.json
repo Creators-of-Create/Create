@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 603",
+	"_": "Missing Localizations: 605",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -858,6 +858,8 @@
 	"create.recipe.mystery_conversion": "Хроматический метаморфоз",
 	"create.recipe.spout_filling": "Заполнение дозатором",
 	"create.recipe.draining": "Осушение предметов",
+	"create.recipe.item_application": "UNLOCALIZED: Manual Item Application",
+	"create.recipe.item_application.any_axe": "UNLOCALIZED: Any Axe",
 	"create.recipe.sequenced_assembly": "Последовательная сборка",
 	"create.recipe.assembly.next": "Следующее: %1$s",
 	"create.recipe.assembly.step": "Шаг %1$s:",

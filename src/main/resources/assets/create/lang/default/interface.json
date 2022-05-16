@@ -56,8 +56,10 @@
 	"create.recipe.mystery_conversion": "Mysterious Conversion",
 	"create.recipe.spout_filling": "Filling by Spout",
 	"create.recipe.draining": "Item Draining",
+	"create.recipe.item_application": "Manual Item Application",
+	"create.recipe.item_application.any_axe": "Any Axe",
 
-	"create.recipe.sequenced_assembly": "Sequenced Assembly",
+	"create.recipe.sequenced_assembly": "Recipe Sequence",
 	"create.recipe.assembly.next": "Next: %1$s",
 	"create.recipe.assembly.step": "Step %1$s:",
 	"create.recipe.assembly.progress": "Progress: %1$s/%2$s",

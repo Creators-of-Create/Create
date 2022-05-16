@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 225",
+	"_": "Missing Localizations: 227",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -858,6 +858,8 @@
 	"create.recipe.mystery_conversion": "神秘转化",
 	"create.recipe.spout_filling": "注液",
 	"create.recipe.draining": "分液",
+	"create.recipe.item_application": "UNLOCALIZED: Manual Item Application",
+	"create.recipe.item_application.any_axe": "UNLOCALIZED: Any Axe",
 	"create.recipe.sequenced_assembly": "序列组装",
 	"create.recipe.assembly.next": "下一步：%1$s",
 	"create.recipe.assembly.step": "第%1$s步：",

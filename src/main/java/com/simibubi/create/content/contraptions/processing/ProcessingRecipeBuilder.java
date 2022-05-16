@@ -150,12 +150,15 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	}
 
 	public ProcessingRecipeBuilder<T> output(float chance, ItemStack output) {
-		params.results.add(new ProcessingOutput(output, chance));
-		return this;
+		return output(new ProcessingOutput(output, chance));
 	}
 
 	public ProcessingRecipeBuilder<T> output(float chance, ResourceLocation registryName, int amount) {
-		params.results.add(new ProcessingOutput(Pair.of(registryName, amount), chance));
+		return output(new ProcessingOutput(Pair.of(registryName, amount), chance));
+	}
+	
+	public ProcessingRecipeBuilder<T> output(ProcessingOutput output) {
+		params.results.add(output);
 		return this;
 	}
 

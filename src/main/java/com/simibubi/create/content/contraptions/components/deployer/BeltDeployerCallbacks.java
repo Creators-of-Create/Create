@@ -10,6 +10,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
@@ -122,11 +123,12 @@ public class BeltDeployerCallbacks {
 		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
 			.getBoolean("Unbreakable");
 		boolean keepHeld =
-			recipe instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) recipe).shouldKeepHeldItem();
+			recipe instanceof ItemApplicationRecipe && ((ItemApplicationRecipe) recipe).shouldKeepHeldItem();
 
 		if (!unbreakable && !keepHeld) {
 			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+				heldItem.hurtAndBreak(1, deployerTileEntity.player,
+					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 			else
 				heldItem.shrink(1);
 		}

@@ -1,0 +1,16 @@
+{
+  "type": "create:item_application",
+  "ingredients": [
+    {
+      "tag": "forge:stripped_logs"
+    },
+    {
+      "tag": "forge:plates/brass"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:brass_casing"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
@@ -54,6 +55,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	DEPLOYING(DeployerApplicationRecipe::new),
 	FILLING(FillingRecipe::new),
 	EMPTYING(EmptyingRecipe::new),
+	ITEM_APPLICATION(ManualApplicationRecipe::new),
 
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
