@@ -56,6 +56,8 @@ public class CClient extends ConfigBase {
 			Comments.overlayBorderColorTop);
 	public final ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
 			Comments.overlayBorderColorBot);
+	public final ConfigBool creativeOverlay = b(false, "creativeOverlay",
+			Comments.creativeOverlay);
 
 	//placement assist group
 	public final ConfigGroup placementAssist = group(1, "placementAssist",
@@ -71,7 +73,7 @@ public class CClient extends ConfigBase {
 	public final ConfigBool comfyReading = b(false, "comfyReading",
 			Comments.comfyReading);
 	public final ConfigBool editingMode = b(false, "editingMode",
-		Comments.editingMode);
+			Comments.editingMode);
 
 	//sound group
 	public final ConfigGroup sound = group(1, "sound",
@@ -140,6 +142,7 @@ public class CClient extends ConfigBase {
 				"The custom bot color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled",
 				"[in Hex: #AaRrGgBb]", ConfigAnnotations.IntDisplay.HEX.asComment()
 		};
+		static String creativeOverlay = "Display goggle's overlay in Creative Mode even if you don't wear them";
 		static String placementAssist = "Settings for the Placement Assist";
 		static String[] placementIndicator = new String[]{
 				"What indicator should be used when showing where the assisted placement ends up relative to your crosshair",
