@@ -64,13 +64,15 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			);
 
 			return new Data(
-					rootPos, new ArrayList<>(validationFrontier), new HashSet<>(validationVisited),
+					fluid, isValid, rootPos, new ArrayList<>(validationFrontier), new HashSet<>(validationVisited),
 					new HashSet<>(newValidationSet), revalidateIn, box, new ObjectArrayList<>(queueList)
 			);
 		}
 
 		@Override
 		protected void readSnapshot(Data snapshot) {
+			fluid = snapshot.fluid;
+			isValid = snapshot.valid;
 			validationFrontier = snapshot.validationFrontier;
 			validationVisited = snapshot.validationVisited;
 			newValidationSet = snapshot.newValidationSet;
@@ -87,7 +89,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		return snapshotParticipant;
 	}
 
-	record Data(BlockPos rootPos, List<BlockPosEntry> validationFrontier,
+	record Data(Fluid fluid, boolean valid, BlockPos rootPos, List<BlockPosEntry> validationFrontier,
 				Set<BlockPos> validationVisited, Set<BlockPos> newValidationSet,
 				int revalidateIn, BoundingBox affectedArea,
 				ObjectArrayList<BlockPosEntry> queueList) {
@@ -194,10 +196,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				return true;
 			}
 
-			if (!tileEntity.isVirtual()) {
-				((LevelExtensions) world).updateSnapshots(ctx);
-				world.setBlock(currentPos, emptied, 2 | 16);
-			}
 			affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 
 			BlockPosEntry e = queue.dequeue();
@@ -207,6 +205,10 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				reset(ctx);
 			} else if (!validationSet.contains(currentPos)) {
 				reset(ctx);
+			}
+			if (!tileEntity.isVirtual()) {
+				((LevelExtensions) world).updateSnapshots(ctx);
+				world.setBlock(currentPos, emptied, 2 | 16);
 			}
 			return true;
 		}
@@ -403,15 +405,12 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	public FluidStack getDrainableFluid(BlockPos rootPos) {
-		try (Transaction t = TransferUtil.getTransaction()) {
+		try (Transaction t = TransferUtil.getTransaction()) { // simulate pullNext
 			if (fluid == null || isSearching() || !pullNext(rootPos, t)) {
 				return FluidStack.EMPTY;
-			} else if (fluid == null) { // fabric: we need to check again because null isn't allowed and search/pull can set to null
-				return FluidStack.EMPTY;
-			} else {
-				return new FluidStack(fluid, FluidConstants.BUCKET);
 			}
 		}
+		return new FluidStack(fluid, FluidConstants.BUCKET);
 	}
 
 }
