@@ -23,13 +23,13 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 		this.localPos = localPos;
 		this.containedFluid = containedFluid;
 	}
-	
+
 	public ContraptionFluidPacket(FriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
 		localPos = buffer.readBlockPos();
 		containedFluid = FluidStack.readFromPacket(buffer);
 	}
-	
+
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
@@ -45,7 +45,7 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
 				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-				contraptionEntity.getContraption().updateContainedFluid(localPos, containedFluid);
+				contraptionEntity.getContraption().handleContraptionFluidPacket(localPos, containedFluid);
 			});
 		context.get()
 			.setPacketHandled(true);

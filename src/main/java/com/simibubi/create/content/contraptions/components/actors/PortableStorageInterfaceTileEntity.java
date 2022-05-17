@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -50,6 +51,14 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		if (connectedEntity != null && !connectedEntity.isAlive())
 			stopTransferring();
 		return connectedEntity != null && isConnected();
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		powered = level.hasNeighborSignal(worldPosition);
+		if (!powered)
+			notifyContraptions();
 	}
 
 	protected abstract void invalidateCapability();
@@ -109,7 +118,10 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		super.read(compound, clientPacket);
 		transferTimer = compound.getInt("Timer");
 		distance = compound.getFloat("Distance");
+		boolean poweredPreviously = powered;
 		powered = compound.getBoolean("Powered");
+		if (clientPacket && powered != poweredPreviously && !powered)
+			notifyContraptions();
 	}
 
 	@Override
@@ -125,7 +137,16 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		if (isBlockPowered == powered)
 			return;
 		powered = isBlockPowered;
+		if (!powered)
+			notifyContraptions();
+		if (powered)
+			stopTransferring();
 		sendData();
+	}
+
+	private void notifyContraptions() {
+		level.getEntitiesOfClass(AbstractContraptionEntity.class, new AABB(worldPosition).inflate(3))
+			.forEach(AbstractContraptionEntity::refreshPSIs);
 	}
 
 	public boolean isPowered() {

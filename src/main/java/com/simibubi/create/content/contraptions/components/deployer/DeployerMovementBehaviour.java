@@ -123,7 +123,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
-			IItemHandler iItemHandler = context.contraption.inventory;
+			IItemHandler iItemHandler = context.contraption.getSharedInventory();
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				int amountFound = ItemHelper
 					.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
@@ -202,7 +202,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			ItemStack filter = getFilter(context);
 			if (AllItems.SCHEMATIC.isIn(filter))
 				return;
-			ItemStack held = ItemHelper.extract(context.contraption.inventory,
+			ItemStack held = ItemHelper.extract(context.contraption.getSharedInventory(),
 				stack -> FilterItem.test(context.world, stack, filter), 1, false);
 			player.setItemInHand(InteractionHand.MAIN_HAND, held);
 		}

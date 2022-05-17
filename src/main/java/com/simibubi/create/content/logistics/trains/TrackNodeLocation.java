@@ -55,8 +55,12 @@ public class TrackNodeLocation extends Vec3i {
 
 	@Override
 	public boolean equals(Object pOther) {
-		return super.equals(pOther) && pOther instanceof TrackNodeLocation tnl
+		return equalsIgnoreDim(pOther) && pOther instanceof TrackNodeLocation tnl
 			&& Objects.equals(tnl.dimension, dimension);
+	}
+	
+	public boolean equalsIgnoreDim(Object pOther) {
+		return super.equals(pOther);
 	}
 
 	@Override

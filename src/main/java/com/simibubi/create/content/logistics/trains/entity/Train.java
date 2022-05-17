@@ -541,6 +541,8 @@ public class Train {
 			if (entity == null)
 				return false;
 
+			if (entity.getContraption() instanceof CarriageContraption cc)
+				cc.returnStorageForDisassembly(carriage.storage);
 			entity.setPos(Vec3
 				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
 			entity.disassemble();

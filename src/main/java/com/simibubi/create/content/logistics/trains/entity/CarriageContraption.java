@@ -14,6 +14,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.MountedStorageManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
@@ -41,15 +42,20 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class CarriageContraption extends Contraption {
 
 	private Direction assemblyDirection;
 	private boolean forwardControls;
 	private boolean backwardControls;
+
 	public Couple<Boolean> blazeBurnerConductors;
 	public Map<BlockPos, Couple<Boolean>> conductorSeats;
 	public ArrivalSoundQueue soundQueue;
+
+	protected MountedStorageManager storageProxy;
 
 	// during assembly only
 	private int bogeys;
@@ -114,6 +120,21 @@ public class CarriageContraption extends Contraption {
 		if (!AllBlocks.CONTROLS.has(info.state))
 			return false;
 		return info.state.getValue(ControlsBlock.FACING) == direction.getOpposite();
+	}
+
+	public void swapStorageAfterAssembly(CarriageContraptionEntity cce) {
+		// Ensure that the entity does not hold its inventory data, because the global
+		// carriage manages it instead
+		Carriage carriage = cce.getCarriage();
+		if (carriage.storage == null) {
+			carriage.storage = storage;
+			storage = new MountedStorageManager();
+		}
+		storageProxy = carriage.storage;
+	}
+	
+	public void returnStorageForDisassembly(MountedStorageManager storage) {
+		this.storage = storage;
 	}
 
 	@Override
@@ -272,7 +293,7 @@ public class CarriageContraption extends Contraption {
 		return !withinVisible(localPos) || atSeam(localPos);
 	}
 
-	private boolean notInPortal() {
+	public boolean notInPortal() {
 		return portalCutoffMin == Integer.MIN_VALUE && portalCutoffMax == Integer.MAX_VALUE;
 	}
 
@@ -293,5 +314,16 @@ public class CarriageContraption extends Contraption {
 			.getStep();
 		return coord > portalCutoffMin && coord < portalCutoffMax;
 	}
+
+	@Override
+	public IItemHandlerModifiable getSharedInventory() {
+		return storageProxy.getItems();
+	}
+
+	@Override
+	public IFluidHandler getSharedFluidTanks() {
+		return storageProxy.getFluids();
+	}
+
 
 }

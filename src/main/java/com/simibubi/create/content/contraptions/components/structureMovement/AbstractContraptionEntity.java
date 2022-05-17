@@ -21,12 +21,14 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -294,10 +296,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		if (!initialized)
 			contraptionInitialize();
-		contraption.onEntityTick(level);
+
+		contraption.storage.entityTick(this);
 		tickContraption();
 		super.tick();
-		
+
 		if (!(level instanceof ServerLevelAccessor sl))
 			return;
 
@@ -352,6 +355,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			MovementContext context = pair.right;
 			StructureBlockInfo blockInfo = pair.left;
 			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
+
+			if (actor == null)
+				continue;
 
 			Vec3 oldMotion = context.motion;
 			Vec3 actorPosition = toGlobalVector(VecHelper.getCenterOf(blockInfo.pos)
@@ -408,6 +414,16 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		contraption.stalled = isStalled();
 	}
 
+	public void refreshPSIs() {
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
+			MovementContext context = pair.right;
+			StructureBlockInfo blockInfo = pair.left;
+			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
+			if (actor instanceof PortableStorageInterfaceMovement && isActorActive(context, actor))
+				actor.visitNewPosition(context, new BlockPos(context.position));
+		}
+	}
+
 	protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
 		return actor.isActive(context);
 	}
@@ -428,7 +444,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;
 		return !new BlockPos(previousPosition).equals(gridPosition)
-			|| context.relativeMotion.length() > 0 && context.firstMovement;
+			|| (context.relativeMotion.length() > 0 || context.contraption instanceof CarriageContraption)
+				&& context.firstMovement;
 	}
 
 	public void move(double x, double y, double z) {

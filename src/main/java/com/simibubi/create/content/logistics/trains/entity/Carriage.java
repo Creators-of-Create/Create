@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.MountedStorageManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -60,6 +61,7 @@ public class Carriage {
 
 	public int bogeySpacing;
 	public Couple<CarriageBogey> bogeys;
+	public MountedStorageManager storage;
 
 	CompoundTag serialisedEntity;
 	Map<Integer, CompoundTag> serialisedPassengers;
@@ -76,6 +78,7 @@ public class Carriage {
 		this.presentConductors = Couple.create(false, false);
 		this.serialisedPassengers = new HashMap<>();
 		this.entities = new HashMap<>();
+		this.storage = new MountedStorageManager();
 
 		bogey1.setLeading();
 		bogey1.carriage = this;
@@ -92,6 +95,7 @@ public class Carriage {
 	}
 
 	public void setContraption(Level level, CarriageContraption contraption) {
+		this.storage = null;
 		CarriageContraptionEntity entity = CarriageContraptionEntity.create(level, contraption);
 		entity.setCarriage(this);
 		contraption.startMoving(level);
@@ -177,7 +181,7 @@ public class Carriage {
 
 				double moved = point.travel(graph, toMove, trackSelector, signalListener, point.ignoreTurns(), c -> {
 					for (DimensionalCarriageEntity dce : entities.values())
-						if (c.either(tnl -> tnl.equals(dce.pivot)))
+						if (c.either(tnl -> tnl.equalsIgnoreDim(dce.pivot)))
 							return false;
 					if (entities.size() > 1) {
 						train.status.doublePortal();
@@ -220,7 +224,7 @@ public class Carriage {
 	}
 
 	public void updateConductors() {
-		if (anyAvailableEntity() == null || entities.size() > 1)
+		if (anyAvailableEntity() == null || entities.size() > 1 || serialisedPassengers.size() > 0)
 			return;
 		presentConductors.replace($ -> false);
 		for (DimensionalCarriageEntity dimensionalCarriageEntity : entities.values()) {
@@ -321,15 +325,6 @@ public class Carriage {
 				: pivoted(dce, dimension, point,
 					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2);
 
-			int prevmin = dce.minAllowedLocalCoord();
-			int prevmax = dce.maxAllowedLocalCoord();
-
-			dce.updateCutoff(leading);
-			if (prevmin != dce.minAllowedLocalCoord() || prevmax != dce.maxAllowedLocalCoord()) {
-				dce.updateRenderedCutoff();
-				dce.updatePassengerLoadout();
-			}
-
 			if (isOnTwoBogeys()) {
 				dce.rotationAnchors.setFirst(dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 					: pivoted(dce, dimension, point,
@@ -337,18 +332,27 @@ public class Carriage {
 				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition()
 					: pivoted(dce, dimension, point,
 						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2));
-				continue;
-			}
 
-			if (dimension.equals(otherDimension)) {
-				dce.rotationAnchors = leadingBogey.points.map(TravellingPoint::getPosition);
-				continue;
+			} else {
+				if (dimension.equals(otherDimension)) {
+					dce.rotationAnchors = leadingBogey.points.map(TravellingPoint::getPosition);
+				} else {
+					dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
+						: pivoted(dce, dimension, point, leadingWheelSpacing));
+					dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
+						: pivoted(dce, dimension, point, leadingWheelSpacing));
+				}
 			}
+			
+			int prevmin = dce.minAllowedLocalCoord();
+			int prevmax = dce.maxAllowedLocalCoord();
+			
+			dce.updateCutoff(leading);
 
-			dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
-				: pivoted(dce, dimension, point, leadingWheelSpacing));
-			dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
-				: pivoted(dce, dimension, point, leadingWheelSpacing));
+			if (prevmin != dce.minAllowedLocalCoord() || prevmax != dce.maxAllowedLocalCoord()) {
+				dce.updateRenderedCutoff();
+				dce.updatePassengerLoadout();
+			}
 		}
 
 	}
@@ -595,6 +599,7 @@ public class Carriage {
 			CompoundTag tag = new CompoundTag();
 			tag.putFloat("Cutoff", cutoff);
 			tag.putInt("DiscardTicks", discardTicks);
+			storage.write(tag, false);
 			if (pivot != null)
 				tag.put("Pivot", pivot.write(null));
 			if (positionAnchor != null)
@@ -607,6 +612,7 @@ public class Carriage {
 		public void read(CompoundTag tag) {
 			cutoff = tag.getFloat("Cutoff");
 			discardTicks = tag.getInt("DiscardTicks");
+			storage.read(tag, null, false);
 			if (tag.contains("Pivot"))
 				pivot = TrackNodeLocation.read(tag.getCompound("Pivot"), null);
 			if (positionAnchor != null)
@@ -749,13 +755,13 @@ public class Carriage {
 			Entity entity = this.entity.get();
 			if (!(entity instanceof CarriageContraptionEntity cce))
 				return;
-			if (!entity.level.isClientSide())
-				return;
 			Contraption contraption = cce.getContraption();
 			if (!(contraption instanceof CarriageContraption cc))
 				return;
 			cc.portalCutoffMin = minAllowedLocalCoord();
 			cc.portalCutoffMax = maxAllowedLocalCoord();
+			if (!entity.level.isClientSide())
+				return;
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(cce));
 		}
 
@@ -776,11 +782,11 @@ public class Carriage {
 				return;
 			}
 
+			this.entity = new WeakReference<>(cce);
+			
 			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
-
-			this.entity = new WeakReference<>(cce);
 
 			if (level instanceof ServerLevel sl)
 				sl.tryAddFreshEntityWithPassengers(entity);

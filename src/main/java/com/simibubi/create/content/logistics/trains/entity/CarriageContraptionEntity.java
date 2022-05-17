@@ -186,6 +186,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					dimensional.entity = new WeakReference<>(this);
 					dimensional.pivot = null;
 					carriage.updateContraptionAnchors();
+					dimensional.updateRenderedCutoff();
 				}
 				updateTrackGraph();
 			} else
@@ -316,7 +317,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	@Override
 	protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
-		return !getContraption().isHiddenInPortal(context.localPos) && super.isActorActive(context, actor);
+		return (contraption instanceof CarriageContraption cc) && (cc.notInPortal() || level.isClientSide())
+			&& super.isActorActive(context, actor);
 	}
 
 	@Override
@@ -605,6 +607,13 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		this.carriage = carriage;
 		this.trainId = carriage.train.id;
 		this.carriageIndex = carriage.train.carriages.indexOf(carriage);
+		if (contraption instanceof CarriageContraption cc)
+			cc.swapStorageAfterAssembly(this);
+		
+		DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
+		dimensional.pivot = null;
+		carriage.updateContraptionAnchors();
+		dimensional.updateRenderedCutoff();
 	}
 
 	public void setGraph(@Nullable UUID graphId) {

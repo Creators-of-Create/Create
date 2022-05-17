@@ -16,7 +16,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTileEntity {
 
 	protected LazyOptional<IItemHandlerModifiable> capability;
-	
+
 	public PortableItemInterfaceTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		capability = createEmptyHandler();
@@ -25,7 +25,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
 		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		capability = LazyOptional.of(() -> new InterfaceItemHandler(contraption.inventory));
+		capability = LazyOptional.of(() -> new InterfaceItemHandler(contraption.getSharedInventory()));
 		oldCap.invalidate();
 		super.startTransferringTo(contraption, distance);
 	}
@@ -37,7 +37,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 		oldCap.invalidate();
 		super.stopTransferring();
 	}
-	
+
 	private LazyOptional<IItemHandlerModifiable> createEmptyHandler() {
 		return LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
 	}
