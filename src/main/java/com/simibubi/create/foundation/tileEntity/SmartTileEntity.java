@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
-import io.github.fabricators_of_create.porting_lib.extensions.BlockEntityExtensions;
+import io.github.fabricators_of_create.porting_lib.block.ChunkUnloadListeningBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker, BlockEntityExtensions {
+public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker, ChunkUnloadListeningBlockEntity {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
@@ -123,7 +123,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 
 	@Override
 	public void onChunkUnloaded() {
-//		super.onChunkUnloaded();
+		ChunkUnloadListeningBlockEntity.super.onChunkUnloaded();
 		unloaded = true;
 	}
 
