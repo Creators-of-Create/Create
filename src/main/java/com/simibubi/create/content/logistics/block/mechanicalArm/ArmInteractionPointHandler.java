@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -146,7 +147,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllItems.WRENCH.isIn(heldItem)) {
+		if (!AllTags.AllItemTags.WRENCHES.matches(heldItem)) {
 			return;
 		}
 

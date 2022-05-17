@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.AssemblyOperatorUseContext;
@@ -81,7 +82,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		BlockHitResult hit) {
 		ItemStack heldByPlayer = player.getItemInHand(handIn)
 			.copy();
-		if (AllItems.WRENCH.isIn(heldByPlayer))
+		if (AllTags.AllItemTags.WRENCHES.matches(heldByPlayer))
 			return InteractionResult.PASS;
 
 		if (hit.getDirection() != state.getValue(FACING))

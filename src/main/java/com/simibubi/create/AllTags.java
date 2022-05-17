@@ -196,7 +196,8 @@ public class AllTags {
 		VALVE_HANDLES,
 
 		BEACON_PAYMENT(FORGE),
-		PLATES(FORGE)
+		PLATES(FORGE),
+		WRENCHES(FORGE)
 
 		;
 

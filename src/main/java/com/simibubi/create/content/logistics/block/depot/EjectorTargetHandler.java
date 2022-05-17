@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.depot;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -169,7 +170,7 @@ public class EjectorTargetHandler {
 
 	protected static void drawArc() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean wrench = AllItems.WRENCH.isIn(mc.player.getMainHandItem());
+		boolean wrench = AllTags.AllItemTags.WRENCHES.matches(mc.player.getMainHandItem());
 
 		if (currentSelection == null)
 			return;
@@ -225,7 +226,7 @@ public class EjectorTargetHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllItems.WRENCH.isIn(heldItem))
+		if (!AllTags.AllItemTags.WRENCHES.matches(heldItem))
 			return;
 		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
 		if (!(objectMouseOver instanceof BlockHitResult))

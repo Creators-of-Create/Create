@@ -40,7 +40,7 @@ public class EdgeInteractionRenderer {
 		EdgeInteractionBehaviour behaviour = TileEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)
 			return;
-		if (behaviour.requiredItem.orElse(heldItem.getItem()) != heldItem.getItem())
+		if (!behaviour.requiredPredicate.test(heldItem.getItem()) && heldItem.getItem() != heldItem.getItem())
 			return;
 
 		Direction face = result.getDirection();

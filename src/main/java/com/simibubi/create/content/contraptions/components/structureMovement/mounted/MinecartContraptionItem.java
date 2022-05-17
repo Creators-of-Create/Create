@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
@@ -199,7 +200,7 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.PASS;
 
 		ItemStack wrench = player.getItemInHand(hand);
-		if (!AllItems.WRENCH.isIn(wrench))
+		if (!AllTags.AllItemTags.WRENCHES.matches(wrench))
 			return InteractionResult.PASS;
 		if (entity instanceof AbstractContraptionEntity)
 			entity = entity.getVehicle();

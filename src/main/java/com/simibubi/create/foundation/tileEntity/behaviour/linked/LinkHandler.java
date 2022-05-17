@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.linked;
 import java.util.Arrays;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
@@ -34,7 +35,7 @@ public class LinkHandler {
 			return InteractionResult.PASS;
 		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.isIn(heldItem))
+		if (AllTags.AllItemTags.WRENCHES.matches(heldItem))
 			return InteractionResult.PASS;
 
 		for (boolean first : Arrays.asList(false, true)) {

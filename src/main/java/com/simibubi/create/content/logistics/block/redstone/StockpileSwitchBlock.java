@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
@@ -108,7 +109,7 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
-		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
+		if (player != null && AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		EnvExecutor.runWhenOn(EnvType.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));

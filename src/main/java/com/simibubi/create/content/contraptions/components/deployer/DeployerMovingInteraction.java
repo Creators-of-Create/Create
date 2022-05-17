@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import com.simibubi.create.AllTags;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -43,8 +45,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			return false;
 
 		ItemStack heldStack = player.getItemInHand(activeHand);
-		if (heldStack.getItem()
-			.equals(AllItems.WRENCH.get())) {
+		if (AllTags.AllItemTags.WRENCHES
+			.matches(heldStack.getItem())) {
 			DeployerTileEntity.Mode mode = NBTHelper.readEnum(ctx.tileData, "Mode", DeployerTileEntity.Mode.class);
 			NBTHelper.writeEnum(ctx.tileData, "Mode",
 				mode == DeployerTileEntity.Mode.PUNCH ? DeployerTileEntity.Mode.USE : DeployerTileEntity.Mode.PUNCH);

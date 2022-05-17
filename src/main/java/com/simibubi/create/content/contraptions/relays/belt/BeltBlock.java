@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.AllTags;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -256,7 +258,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getItemInHand(handIn);
 
-		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
+		boolean isWrench = AllTags.AllItemTags.WRENCHES.matches(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
 		boolean isDye = heldItem.is(Tags.Items.DYES);

@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -64,7 +65,7 @@ public class FilteringHandler {
 		ItemStack toApply = player.getItemInHand(hand)
 			.copy();
 
-		if (AllItems.WRENCH.isIn(toApply))
+		if (AllTags.AllItemTags.WRENCHES.matches(toApply))
 			return InteractionResult.PASS;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return InteractionResult.PASS;

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
@@ -44,7 +45,7 @@ public class ScrollValueHandler {
 			return false;
 		if (!mc.player.mayBuild())
 			return false;
-		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
+		if (scrolling.needsWrench && !AllTags.AllItemTags.WRENCHES.matches(mc.player.getMainHandItem()))
 			return false;
 
 		passiveScrollDirection = (float) -delta;

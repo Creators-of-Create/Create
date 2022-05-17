@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
@@ -462,7 +463,7 @@ public class BeltSlicer {
 		Feedback feedback = new Feedback();
 
 		// TODO: Populate feedback in the methods for clientside
-		if (AllItems.WRENCH.isIn(held) || AllItems.WRENCH.isIn(heldOffHand))
+		if (AllTags.AllItemTags.WRENCHES.matches(held) || AllTags.AllItemTags.WRENCHES.matches(heldOffHand))
 			useWrench(state, world, pos, mc.player, InteractionHand.MAIN_HAND, result, feedback);
 		else if (AllItems.BELT_CONNECTOR.isIn(held) || AllItems.BELT_CONNECTOR.isIn(heldOffHand))
 			useConnector(state, world, pos, mc.player, InteractionHand.MAIN_HAND, result, feedback);

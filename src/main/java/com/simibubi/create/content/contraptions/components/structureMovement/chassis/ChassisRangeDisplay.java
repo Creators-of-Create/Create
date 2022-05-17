@@ -13,6 +13,7 @@ import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 
 import net.minecraft.client.Minecraft;
@@ -89,7 +90,7 @@ public class ChassisRangeDisplay {
 	public static void tick() {
 		Player player = Minecraft.getInstance().player;
 		Level world = Minecraft.getInstance().level;
-		boolean hasWrench = AllItems.WRENCH.isIn(player.getMainHandItem());
+		boolean hasWrench = AllTags.AllItemTags.WRENCHES.matches(player.getMainHandItem());
 
 		for (Iterator<BlockPos> iterator = entries.keySet()
 			.iterator(); iterator.hasNext();) {

@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.block.diodes;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
+
 import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 
 import net.minecraft.core.BlockPos;
@@ -53,7 +55,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock implements ConnectableR
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
+		if (AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		return activated(worldIn, pos, state);
 	}

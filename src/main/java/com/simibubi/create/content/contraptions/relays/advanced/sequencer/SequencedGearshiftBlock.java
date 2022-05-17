@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
@@ -89,7 +90,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
 		ItemStack held = player.getMainHandItem();
-		if (AllItems.WRENCH.isIn(held))
+		if (AllTags.AllItemTags.WRENCHES.matches(held))
 			return InteractionResult.PASS;
 		if (held.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) held.getItem();

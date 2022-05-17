@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
+import com.simibubi.create.AllTags;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
@@ -44,7 +46,7 @@ public class MinecartCouplingItem extends Item {
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
 			if (!onCouplingInteractOnMinecart(player.level, minecart, player, controller))
 				return InteractionResult.PASS;
-		} else if (AllItems.WRENCH.isIn(heldItem)) {
+		} else if (AllTags.AllItemTags.WRENCHES.matches(heldItem)) {
 			if (!onWrenchInteractOnMinecart(player.level, minecart, player, controller))
 				return InteractionResult.PASS;
 		} else

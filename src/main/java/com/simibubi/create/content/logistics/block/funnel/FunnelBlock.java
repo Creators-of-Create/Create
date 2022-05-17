@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.funnel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -69,7 +70,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		ItemStack heldItem = player.getItemInHand(handIn);
 		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
 
-		if (AllItems.WRENCH.isIn(heldItem))
+		if (AllTags.AllItemTags.WRENCHES.matches(heldItem))
 			return InteractionResult.PASS;
 
 		if (hit.getDirection() == getFunnelFacing(state) && !shouldntInsertItem) {

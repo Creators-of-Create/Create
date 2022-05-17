@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
@@ -359,7 +361,7 @@ public class BlueprintEntity extends HangingEntity
 		if (player instanceof FakeServerPlayer)
 			return InteractionResult.PASS;
 
-		boolean holdingWrench = AllItems.WRENCH.isIn(player.getItemInHand(hand));
+		boolean holdingWrench = AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand));
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 

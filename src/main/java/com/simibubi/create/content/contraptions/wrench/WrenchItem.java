@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.wrench;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.world.phys.BlockHitResult;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
@@ -32,11 +34,12 @@ public class WrenchItem extends Item {
 	}
 
 	@Nonnull
-	@Override
-	public InteractionResult useOn(UseOnContext context) {
-		Player player = context.getPlayer();
+	public static InteractionResult useOn(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		UseOnContext context = new UseOnContext(player, hand, hitResult);
 		if (player == null || !player.mayBuild())
-			return super.useOn(context);
+			return InteractionResult.PASS;
+		if (!AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand)))
+			return InteractionResult.PASS;
 
 		BlockState state = context.getLevel()
 			.getBlockState(context.getClickedPos());
@@ -45,7 +48,7 @@ public class WrenchItem extends Item {
 		if (!(block instanceof IWrenchable)) {
 			if (canWrenchPickup(state))
 				return onItemUseOnOther(context);
-			return super.useOn(context);
+			return InteractionResult.PASS;
 		}
 
 		IWrenchable actor = (IWrenchable) block;
@@ -54,11 +57,11 @@ public class WrenchItem extends Item {
 		return actor.onWrenched(state, context);
 	}
 
-	private boolean canWrenchPickup(BlockState state) {
+	private static boolean canWrenchPickup(BlockState state) {
 		return AllTags.AllBlockTags.WRENCH_PICKUP.matches(state);
 	}
 
-	private InteractionResult onItemUseOnOther(UseOnContext context) {
+	private static InteractionResult onItemUseOnOther(UseOnContext context) {
 		Player player = context.getPlayer();
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
@@ -78,7 +81,7 @@ public class WrenchItem extends Item {
 		if (!(target instanceof AbstractMinecart))
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getMainHandItem();
-		if (!AllItems.WRENCH.isIn(heldItem))
+		if (!AllTags.AllItemTags.WRENCHES.matches(heldItem))
 			return InteractionResult.PASS;
 		if (player.isCreative())
 			return InteractionResult.PASS;

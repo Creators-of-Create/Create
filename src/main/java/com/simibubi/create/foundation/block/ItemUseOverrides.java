@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,7 @@ public class ItemUseOverrides {
 	}
 
 	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult traceResult) {
-		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
+		if (AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
 
 		if (player.isSpectator())
