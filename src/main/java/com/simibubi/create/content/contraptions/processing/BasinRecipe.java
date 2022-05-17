@@ -97,7 +97,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					long extracted = view.extract(var, 1, t);
 					if (extracted == 0) continue;
 					if (stack.getItem().hasCraftingRemainingItem())
-						recipeOutputItems.add(stack);
+						recipeOutputItems.add(stack.getItem().getCraftingRemainingItem().getDefaultInstance());
 					continue Ingredients;
 				}
 				// something wasn't found

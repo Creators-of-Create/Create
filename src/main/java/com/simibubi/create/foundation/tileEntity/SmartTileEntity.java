@@ -123,7 +123,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 
 	@Override
 	public void onChunkUnloaded() {
-//		super.onChunkUnloaded();
+		ChunkUnloadListeningBlockEntity.super.onChunkUnloaded();
 		unloaded = true;
 	}
 
