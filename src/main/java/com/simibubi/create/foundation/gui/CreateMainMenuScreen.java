@@ -37,8 +37,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
 	public static final PanoramaRenderer PANORAMA = new PanoramaRenderer(PANORAMA_RESOURCES);
 
-	public static final String PROJECT_LINK = "https://www.curseforge.com/minecraft/mc-mods/create";
-	public static final String ISSUE_TRACKER_LINK = "https://github.com/Creators-of-Create/Create/issues";
+	public static final String PROJECT_LINK = "https://www.curseforge.com/minecraft/mc-mods/create-fabric";
+	public static final String ISSUE_TRACKER_LINK = "https://github.com/Fabricators-of-Create/Create/issues";
 	public static final String SUPPORT_LINK = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
 	protected final Screen parent;
