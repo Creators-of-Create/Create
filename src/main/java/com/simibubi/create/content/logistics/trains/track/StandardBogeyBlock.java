@@ -23,6 +23,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -187,9 +190,15 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 	@Override
 	public BlockState rotate(BlockState pState, Rotation pRotation) {
 		return switch (pRotation) {
-			case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> pState.cycle(AXIS);
-			default -> pState;
+		case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> pState.cycle(AXIS);
+		default -> pState;
 		};
+	}
+
+	@Override
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
+		Player player) {
+		return AllBlocks.RAILWAY_CASING.asStack();
 	}
 
 	@Override

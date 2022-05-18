@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 232",
+	"_": "Missing Localizations: 236",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -616,9 +616,8 @@
 	"item.create.handheld_worldshaper": "Modelator De Lume Creativ",
 	"item.create.honey_bucket": "Găleată De Miere",
 	"item.create.honeyed_apple": "Măr Cu Miere",
-	"item.create.incomplete_cogwheel": "Roată Dințată Incompletă",
-	"item.create.incomplete_large_cogwheel": "Roată Dințată Mare Incompletă",
 	"item.create.incomplete_precision_mechanism": "Mecanism De Precizie Incomplet",
+	"item.create.incomplete_track": "UNLOCALIZED: Incomplete Track",
 	"item.create.iron_sheet": "Placă De Fier",
 	"item.create.linked_controller": "Controlor Legat",
 	"item.create.minecart_contraption": "Invenție De Vagonet",
@@ -631,6 +630,7 @@
 	"item.create.raw_zinc": "Zinc Brut",
 	"item.create.red_sand_paper": "Șmirghel Roșu",
 	"item.create.refined_radiance": "Radianță Rafinată",
+	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Cuarț Roz",
 	"item.create.sand_paper": "Șmirghel",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
@@ -640,6 +640,7 @@
 	"item.create.super_glue": "Super-Lipici",
 	"item.create.sweet_roll": "Rolă Dulce",
 	"item.create.tree_fertilizer": "Fertilizator De Copaci",
+	"item.create.unprocessed_obsidian_sheet": "UNLOCALIZED: Unprocessed Obsidian Sheet",
 	"item.create.vertical_gearbox": "Cutie De Viteze Verticală",
 	"item.create.wand_of_symmetry": "Baghetă De Simetrie",
 	"item.create.wheat_flour": "Făină De Grâu",
@@ -1447,6 +1448,7 @@
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
+	"create.train_assembly.requires_casing": "UNLOCALIZED: Use Railway Casing to create bogeys on tracks",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

@@ -421,7 +421,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 				.isInside(pos))
 				continue;
 			if (world.getBlockEntity(entry.getKey())instanceof StationTileEntity station)
-				if (station.trackClicked(player, this, state, pos))
+				if (station.trackClicked(player, hand, this, state, pos))
 					return InteractionResult.SUCCESS;
 		}
 

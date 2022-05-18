@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 565",
+	"_": "Missing Localizations: 569",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -616,9 +616,8 @@
 	"item.create.handheld_worldshaper": "Forma Mundos del Creativo",
 	"item.create.honey_bucket": "Balde de Miel",
 	"item.create.honeyed_apple": "Manzana Enmielada",
-	"item.create.incomplete_cogwheel": "Engranaje Incompleto",
-	"item.create.incomplete_large_cogwheel": "Engranaje Grande Incompleto",
 	"item.create.incomplete_precision_mechanism": "Mecanismo de Precisión Incompleto",
+	"item.create.incomplete_track": "UNLOCALIZED: Incomplete Track",
 	"item.create.iron_sheet": "Plancha de Hierro",
 	"item.create.linked_controller": "Controlador Vinculable",
 	"item.create.minecart_contraption": "Contrapción de Vagoneta",
@@ -631,6 +630,7 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Papel de Arena Roja",
 	"item.create.refined_radiance": "Radiancia Refinada",
+	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Cuarzo Rosa",
 	"item.create.sand_paper": "Papel de Arena",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
@@ -640,6 +640,7 @@
 	"item.create.super_glue": "La Gotita",
 	"item.create.sweet_roll": "Rollito Dulce",
 	"item.create.tree_fertilizer": "Fertilizante Arbóreo",
+	"item.create.unprocessed_obsidian_sheet": "UNLOCALIZED: Unprocessed Obsidian Sheet",
 	"item.create.vertical_gearbox": "Caja de Engranajes Vertical",
 	"item.create.wand_of_symmetry": "Vara de Simetría",
 	"item.create.wheat_flour": "Harina de Trigo",
@@ -1447,6 +1448,7 @@
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
+	"create.train_assembly.requires_casing": "UNLOCALIZED: Use Railway Casing to create bogeys on tracks",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

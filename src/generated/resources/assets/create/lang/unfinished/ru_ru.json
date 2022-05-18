@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 609",
+	"_": "Missing Localizations: 613",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -616,9 +616,8 @@
 	"item.create.handheld_worldshaper": "Ручной редактор мира",
 	"item.create.honey_bucket": "Ведро мёда",
 	"item.create.honeyed_apple": "Яблоко в меду",
-	"item.create.incomplete_cogwheel": "Незаконченная шестерня",
-	"item.create.incomplete_large_cogwheel": "Незаконченная большая шестерня",
 	"item.create.incomplete_precision_mechanism": "Незаконченный механизм точности",
+	"item.create.incomplete_track": "UNLOCALIZED: Incomplete Track",
 	"item.create.iron_sheet": "Железный лист",
 	"item.create.linked_controller": "Контроллер связей",
 	"item.create.minecart_contraption": "Вагонеточная штуковина",
@@ -631,6 +630,7 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Красная наждачная бумага",
 	"item.create.refined_radiance": "Изысканное сияние",
+	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Розовый кварц",
 	"item.create.sand_paper": "Наждачная бумага",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
@@ -640,6 +640,7 @@
 	"item.create.super_glue": "Супер-клей",
 	"item.create.sweet_roll": "Сладкий рулет",
 	"item.create.tree_fertilizer": "Удобрение для деревьев",
+	"item.create.unprocessed_obsidian_sheet": "UNLOCALIZED: Unprocessed Obsidian Sheet",
 	"item.create.vertical_gearbox": "Вертикальная коробка передач",
 	"item.create.wand_of_symmetry": "Жезл симметрии",
 	"item.create.wheat_flour": "Пшеничная мука",
@@ -1447,6 +1448,7 @@
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
+	"create.train_assembly.requires_casing": "UNLOCALIZED: Use Railway Casing to create bogeys on tracks",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

@@ -1,12 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "II",
-    "AA"
+    " I ",
+    "IAI",
+    " I "
   ],
   "key": {
     "A": {
-      "item": "minecraft:iron_bars"
+      "tag": "forge:netherrack"
     },
     "I": {
       "tag": "forge:plates/iron"

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:stone_slab",
+    "minecraft:smooth_stone_slab",
+    "minecraft:andesite_slab"
+  ]
+}

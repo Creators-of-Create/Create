@@ -72,6 +72,7 @@ public class BuilderTransformers {
 			.properties(p -> p.noOcclusion())
 			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
+			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
 			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
 	}
 

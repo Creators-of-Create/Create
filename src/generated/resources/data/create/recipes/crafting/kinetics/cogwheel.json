@@ -1,20 +1,14 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "SSS",
-    "SCS",
-    "SSS"
-  ],
-  "key": {
-    "S": {
-      "tag": "minecraft:wooden_buttons"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:shaft"
     },
-    "C": {
-      "item": "create:andesite_alloy"
+    {
+      "tag": "minecraft:planks"
     }
-  },
+  ],
   "result": {
-    "item": "create:cogwheel",
-    "count": 8
+    "item": "create:cogwheel"
   }
 }

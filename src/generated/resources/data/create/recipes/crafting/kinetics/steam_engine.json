@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P",
+    "A",
+    "C"
+  ],
+  "key": {
+    "P": {
+      "tag": "forge:plates/gold"
+    },
+    "C": {
+      "item": "minecraft:copper_block"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "item": "create:steam_engine"
+  }
+}

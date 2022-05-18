@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 623",
+	"_": "Missing Localizations: 627",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -616,9 +616,8 @@
 	"item.create.handheld_worldshaper": "地形雕塑器",
 	"item.create.honey_bucket": "蜂蜜桶",
 	"item.create.honeyed_apple": "蜂蜜蘋果",
-	"item.create.incomplete_cogwheel": "未完成的小齒輪",
-	"item.create.incomplete_large_cogwheel": "未完成的大齒輪",
 	"item.create.incomplete_precision_mechanism": "未完成的精確控制器",
+	"item.create.incomplete_track": "UNLOCALIZED: Incomplete Track",
 	"item.create.iron_sheet": "鐵板",
 	"item.create.linked_controller": "遙控器",
 	"item.create.minecart_contraption": "裝修過的礦車",
@@ -631,6 +630,7 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "紅砂紙",
 	"item.create.refined_radiance": "光輝石",
+	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "玫瑰石英",
 	"item.create.sand_paper": "砂紙",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
@@ -640,6 +640,7 @@
 	"item.create.super_glue": "強力膠",
 	"item.create.sweet_roll": "甜捲捲",
 	"item.create.tree_fertilizer": "樹木肥料",
+	"item.create.unprocessed_obsidian_sheet": "UNLOCALIZED: Unprocessed Obsidian Sheet",
 	"item.create.vertical_gearbox": "豎直齒輪箱",
 	"item.create.wand_of_symmetry": "對稱杖",
 	"item.create.wheat_flour": "小麥粉",
@@ -1447,6 +1448,7 @@
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
+	"create.train_assembly.requires_casing": "UNLOCALIZED: Use Railway Casing to create bogeys on tracks",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

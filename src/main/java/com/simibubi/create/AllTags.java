@@ -206,6 +206,7 @@ public class AllTags {
 		VANILLA_STRIPPED_LOGS,
 		VANILLA_STRIPPED_WOOD,
 		CASING,
+		SLEEPERS,
 
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
@@ -362,6 +363,8 @@ public class AllTags {
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 			Items.HONEY_BOTTLE, Items.CAKE);
+
+		AllItemTags.SLEEPERS.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 

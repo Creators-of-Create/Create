@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
@@ -55,6 +56,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
@@ -232,7 +234,8 @@ public class StationTileEntity extends SmartTileEntity {
 		}
 	}
 
-	public boolean trackClicked(Player player, ITrackBlock track, BlockState state, BlockPos pos) {
+	public boolean trackClicked(Player player, InteractionHand hand, ITrackBlock track, BlockState state,
+		BlockPos pos) {
 		refreshAssemblyInfo();
 		BoundingBox bb = assemblyAreas.get(level)
 			.get(worldPosition);
@@ -242,7 +245,6 @@ public class StationTileEntity extends SmartTileEntity {
 		BlockPos up = new BlockPos(track.getUpNormal(level, pos, state));
 		int bogeyOffset = pos.distManhattan(edgePoint.getGlobalPosition()) - 1;
 		if (!isValidBogeyOffset(bogeyOffset)) {
-
 			for (int i = -1; i <= 1; i++) {
 				BlockPos bogeyPos = pos.relative(assemblyDirection, i)
 					.offset(up);
@@ -257,6 +259,12 @@ public class StationTileEntity extends SmartTileEntity {
 			return false;
 		}
 
+		ItemStack handItem = player.getItemInHand(hand);
+		if (!player.isCreative() && !AllBlocks.RAILWAY_CASING.isIn(handItem)) {
+			player.displayClientMessage(Lang.translate("train_assembly.requires_casing"), true);
+			return false;
+		}
+
 		BlockState bogeyAnchor = track.getBogeyAnchor(level, pos, state);
 		level.setBlock(pos.offset(up), bogeyAnchor, 3);
 		player.displayClientMessage(Lang.translate("train_assembly.bogey_created"), true);
@@ -264,6 +272,14 @@ public class StationTileEntity extends SmartTileEntity {
 			.getSoundType(state, level, pos, player);
 		level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
 			soundtype.getPitch() * 0.8F);
+		
+		if (!player.isCreative()) {
+			ItemStack itemInHand = player.getItemInHand(hand);
+			itemInHand.shrink(1);
+			if (itemInHand.isEmpty())
+				player.setItemInHand(hand, ItemStack.EMPTY);
+		}
+		
 		return true;
 	}
 

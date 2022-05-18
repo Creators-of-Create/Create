@@ -1,14 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " I "
+    "B",
+    "C",
+    "S"
   ],
   "key": {
-    "I": {
-      "item": "create:shaft"
-    },
     "S": {
       "item": "create:electron_tube"
     },

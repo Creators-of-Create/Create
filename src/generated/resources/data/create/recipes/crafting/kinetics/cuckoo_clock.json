@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " S ",
-    "SAS",
-    "BPB"
+    "S",
+    "C",
+    "A"
   ],
   "key": {
     "S": {
@@ -12,11 +12,8 @@
     "A": {
       "item": "minecraft:clock"
     },
-    "B": {
-      "tag": "minecraft:logs"
-    },
-    "P": {
-      "item": "create:cogwheel"
+    "C": {
+      "item": "create:andesite_casing"
     }
   },
   "result": {

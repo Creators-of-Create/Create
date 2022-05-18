@@ -115,9 +115,17 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static TagKey<Item> ironSheet() {
 			return AllTags.forgeItemTag("plates/iron");
 		}
+		
+		static TagKey<Item> reinforcedSheet() {
+			return AllTags.forgeItemTag("plates/obsidian");
+		}
 
 		static ItemLike brassCasing() {
 			return AllBlocks.BRASS_CASING.get();
+		}
+		
+		static ItemLike railwayCasing() {
+			return AllBlocks.RAILWAY_CASING.get();
 		}
 
 		static ItemLike electronTube() {

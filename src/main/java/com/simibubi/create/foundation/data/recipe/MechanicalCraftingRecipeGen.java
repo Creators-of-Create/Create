@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
@@ -60,14 +59,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.key('S', AllBlocks.FLUID_PIPE.get())
 				.key('C', Ingredient.of(I.copper()))
 				.patternLine("LRSSS")
-				.patternLine("CC   ")),
-
-		FLYWHEEL = create(AllBlocks.FLYWHEEL::get).returns(1)
-			.recipe(b -> b.key('B', Ingredient.of(I.brass()))
-				.key('C', I.brassCasing())
-				.patternLine(" BBB")
-				.patternLine("CB B")
-				.patternLine(" BBB"))
+				.patternLine("CC   "))
 
 	;
 

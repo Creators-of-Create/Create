@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/logistics/stockpile_switch"
+      "create:crafting/kinetics/sail_framefrom_conversion"
     ]
   },
   "criteria": {
@@ -12,7 +12,7 @@
         "items": [
           {
             "items": [
-              "create:brass_casing"
+              "create:white_sail"
             ]
           }
         ]
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/logistics/stockpile_switch"
+        "recipe": "create:crafting/kinetics/sail_framefrom_conversion"
       }
     }
   },

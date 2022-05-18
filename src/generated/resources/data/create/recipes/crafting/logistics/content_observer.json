@@ -1,21 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "RCI",
-    " B "
+    "I",
+    "B",
+    "R"
   ],
   "key": {
     "B": {
       "item": "create:brass_casing"
     },
     "R": {
-      "tag": "forge:dusts/redstone"
+      "item": "create:electron_tube"
     },
     "I": {
-      "tag": "forge:ingots/iron"
-    },
-    "C": {
-      "item": "minecraft:observer"
+      "item": "minecraft:comparator"
     }
   },
   "result": {

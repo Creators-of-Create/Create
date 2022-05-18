@@ -16,6 +16,9 @@ public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 	GeneratedRecipe ANDESITE = woodCasing("andesite", I::andesite, I::andesiteCasing);
 	GeneratedRecipe COPPER = woodCasingTag("copper", I::copperSheet, I::copperCasing);
 	GeneratedRecipe BRASS = woodCasingTag("brass", I::brassSheet, I::brassCasing);
+	GeneratedRecipe RAILWAY = create("railway_casing", b -> b.require(I.brassCasing())
+		.require(I.reinforcedSheet())
+		.output(I.railwayCasing()));
 
 	protected GeneratedRecipe woodCasing(String type, Supplier<ItemLike> ingredient, Supplier<ItemLike> output) {
 		return woodCasingIngredient(type, () -> Ingredient.of(ingredient.get()), output);

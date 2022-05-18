@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " C ",
-    "LDL",
-    "SIS"
+    " I ",
+    "LIL",
+    "SDS"
   ],
   "key": {
     "L": {
@@ -11,9 +11,6 @@
     },
     "D": {
       "item": "minecraft:dispenser"
-    },
-    "C": {
-      "item": "minecraft:cauldron"
     },
     "S": {
       "item": "minecraft:smooth_stone"

@@ -1,19 +1,21 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
+import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
+import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluids;
 
 public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
@@ -47,35 +49,28 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 		.loops(5)
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.cog()))
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.largeCog()))
-		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.ironNugget()))
-		),
+		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.ironNugget()))),
 
-	COGWHEEL = create("cogwheel", b -> b.require(I.andesite())
-		.transitionTo(AllItems.INCOMPLETE_COGWHEEL.get())
-		.addOutput(new ItemStack(AllBlocks.COGWHEEL.get(), 12), 32)
-		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
-		.addOutput(Blocks.ANDESITE, 1)
-		.addOutput(AllBlocks.LARGE_COGWHEEL.get(), 1)
-		.addOutput(Items.STICK, 1)
-		.addOutput(Items.IRON_NUGGET, 1)
-		.loops(4)
-		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ItemTags.WOODEN_BUTTONS))
-		.addStep(CuttingRecipe::new, rb -> rb.duration(50))
-		),
+		REINFORCED_SHEET = create("reinforced_sheet", b -> b.require(AllItems.POWDERED_OBSIDIAN.get())
+			.transitionTo(AllItems.INCOMPLETE_REINFORCED_SHEET.get())
+			.addOutput(AllItems.REINFORCED_SHEET.get(), 1)
+			.loops(1)
+			.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 500))
+			.addStep(PressingRecipe::new, rb -> rb)
+			.addStep(PressingRecipe::new, rb -> rb)),
 
-	LARGE_COGWHEEL = create("large_cogwheel", b -> b.require(I.andesite())
-		.transitionTo(AllItems.INCOMPLETE_LARGE_COGWHEEL.get())
-		.addOutput(new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 6), 32)
-		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
-		.addOutput(Blocks.ANDESITE, 1)
-		.addOutput(AllBlocks.COGWHEEL.get(), 1)
-		.addOutput(Items.STICK, 1)
-		.addOutput(Items.IRON_NUGGET, 1)
-		.loops(3)
-		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.planks()))
-		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ItemTags.WOODEN_BUTTONS))
-		.addStep(CuttingRecipe::new, rb -> rb.duration(50))
-		)
+		TRACK = create("track", b -> b.require(AllItemTags.SLEEPERS.tag)
+			.transitionTo(AllItems.INCOMPLETE_TRACK.get())
+			.addOutput(AllBlocks.TRACK.get(), 1)
+			.loops(1)
+			.addStep(DeployerApplicationRecipe::new,
+				rb -> rb.require(Ingredient.fromValues(
+					Stream.of(new Ingredient.TagValue(I.ironNugget()), new Ingredient.TagValue(I.zincNugget())))))
+			.addStep(DeployerApplicationRecipe::new,
+				rb -> rb.require(Ingredient.fromValues(
+					Stream.of(new Ingredient.TagValue(I.ironNugget()), new Ingredient.TagValue(I.zincNugget())))))
+			.addStep(PressingRecipe::new, rb -> rb))
+
 	;
 
 	public SequencedAssemblyRecipeGen(DataGenerator p_i48262_1_) {

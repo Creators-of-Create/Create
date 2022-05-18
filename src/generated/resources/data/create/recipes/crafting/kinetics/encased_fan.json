@@ -1,19 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " S ",
-    "RAR",
-    " P "
+    "A",
+    "P"
   ],
   "key": {
-    "S": {
-      "item": "create:shaft"
-    },
     "A": {
       "item": "create:andesite_casing"
-    },
-    "R": {
-      "item": "create:cogwheel"
     },
     "P": {
       "item": "create:propeller"

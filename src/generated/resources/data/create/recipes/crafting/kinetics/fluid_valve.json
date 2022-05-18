@@ -1,21 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "I",
-    "S",
-    "P"
-  ],
-  "key": {
-    "P": {
-      "item": "create:shaft"
-    },
-    "S": {
-      "item": "create:fluid_pipe"
-    },
-    "I": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "tag": "forge:plates/iron"
+    },
+    {
+      "item": "create:fluid_pipe"
     }
-  },
+  ],
   "result": {
     "item": "create:fluid_valve"
   }

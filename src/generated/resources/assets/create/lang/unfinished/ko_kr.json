@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 231",
+	"_": "Missing Localizations: 235",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -616,9 +616,8 @@
 	"item.create.handheld_worldshaper": "크리에이티브 세계편집기",
 	"item.create.honey_bucket": "꿀 양동이",
 	"item.create.honeyed_apple": "꿀 바른 사과",
-	"item.create.incomplete_cogwheel": "미완성된 톱니바퀴",
-	"item.create.incomplete_large_cogwheel": "미완성된 큰 톱니바퀴",
 	"item.create.incomplete_precision_mechanism": "미완성된 정밀 기계장치",
+	"item.create.incomplete_track": "UNLOCALIZED: Incomplete Track",
 	"item.create.iron_sheet": "철 판",
 	"item.create.linked_controller": "레드스톤 링크 조작기",
 	"item.create.minecart_contraption": "광산 수레 구조물",
@@ -631,6 +630,7 @@
 	"item.create.raw_zinc": "아연 원석",
 	"item.create.red_sand_paper": "붉은 사포",
 	"item.create.refined_radiance": "정제된 광채",
+	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "장밋빛 석영",
 	"item.create.sand_paper": "사포",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
@@ -640,6 +640,7 @@
 	"item.create.super_glue": "강력 접착제",
 	"item.create.sweet_roll": "롤빵",
 	"item.create.tree_fertilizer": "나무 비료",
+	"item.create.unprocessed_obsidian_sheet": "UNLOCALIZED: Unprocessed Obsidian Sheet",
 	"item.create.vertical_gearbox": "수직 기어박스",
 	"item.create.wand_of_symmetry": "대칭의 지팡이",
 	"item.create.wheat_flour": "밀가루",
@@ -1447,6 +1448,7 @@
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
+	"create.train_assembly.requires_casing": "UNLOCALIZED: Use Railway Casing to create bogeys on tracks",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 231",
+	"_": "Missing Localizations: 235",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -616,9 +616,8 @@
 	"item.create.handheld_worldshaper": "携帯型ワールドシェーパー",
 	"item.create.honey_bucket": "ハチミツ入りバケツ",
 	"item.create.honeyed_apple": "リンゴのハチミツかけ",
-	"item.create.incomplete_cogwheel": "組み立て中の歯車",
-	"item.create.incomplete_large_cogwheel": "組み立て中の大きな歯車",
 	"item.create.incomplete_precision_mechanism": "組み立て中の精密機構",
+	"item.create.incomplete_track": "UNLOCALIZED: Incomplete Track",
 	"item.create.iron_sheet": "鉄板",
 	"item.create.linked_controller": "リンクコントローラー",
 	"item.create.minecart_contraption": "からくりトロッコ",
@@ -631,6 +630,7 @@
 	"item.create.raw_zinc": "亜鉛の原石",
 	"item.create.red_sand_paper": "赤い紙やすり",
 	"item.create.refined_radiance": "高貴な光輝",
+	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "ローズクォーツ",
 	"item.create.sand_paper": "紙やすり",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
@@ -640,6 +640,7 @@
 	"item.create.super_glue": "超粘着剤",
 	"item.create.sweet_roll": "スイートロール",
 	"item.create.tree_fertilizer": "樹木の肥料",
+	"item.create.unprocessed_obsidian_sheet": "UNLOCALIZED: Unprocessed Obsidian Sheet",
 	"item.create.vertical_gearbox": "垂直ギアボックス",
 	"item.create.wand_of_symmetry": "対称の杖",
 	"item.create.wheat_flour": "小麦粉",
@@ -1447,6 +1448,7 @@
 	"create.train_assembly.no_controls": "UNLOCALIZED: At least one forward-facing controls block needs to be mounted on the train",
 	"create.train_assembly.sideways_controls": "UNLOCALIZED: A mounted controls block is facing sideways",
 	"create.train_assembly.bogey_created": "UNLOCALIZED: Bogey created. Click again to cycle type",
+	"create.train_assembly.requires_casing": "UNLOCALIZED: Use Railway Casing to create bogeys on tracks",
 
 	"create.track_target.set": "UNLOCALIZED: Targeted track selected",
 	"create.track_target.success": "UNLOCALIZED: Successfully bound to targeted track",

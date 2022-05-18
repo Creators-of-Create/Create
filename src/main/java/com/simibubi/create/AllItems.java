@@ -82,27 +82,18 @@ public class AllItems {
 
 	public static final ItemEntry<Item> WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
 		CINDER_FLOUR = ingredient("cinder_flour"), ROSE_QUARTZ = ingredient("rose_quartz"),
-		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), PROPELLER = ingredient("propeller"),
-		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
+		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
+		REINFORCED_SHEET = taggedIngredient("reinforced_sheet", forgeItemTag("plates/obsidian")),
+		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
 
-	public static final ItemEntry<HiddenIngredientItem> POWDERED_OBSIDIAN = hiddenIngredient("powdered_obsidian");
+	public static final ItemEntry<SequencedAssemblyItem>
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_PRECISION_MECHANISM =
-		REGISTRATE.item("incomplete_precision_mechanism", SequencedAssemblyItem::new)
-			.register();
+	INCOMPLETE_PRECISION_MECHANISM = sequencedIngredient("incomplete_precision_mechanism"),
+		INCOMPLETE_REINFORCED_SHEET = sequencedIngredient("unprocessed_obsidian_sheet"),
+		INCOMPLETE_TRACK = sequencedIngredient("incomplete_track");
 
 	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
-
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
-		REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
-			.model(AssetLookup.existingItemModel())
-			.register();
-
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
-		REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
-			.model(AssetLookup.existingItemModel())
-			.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -374,10 +365,15 @@ public class AllItems {
 			.register();
 	}
 
-	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
-		return REGISTRATE.item(name, HiddenIngredientItem::new)
+	private static ItemEntry<SequencedAssemblyItem> sequencedIngredient(String name) {
+		return REGISTRATE.item(name, SequencedAssemblyItem::new)
 			.register();
 	}
+
+//	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+//		return REGISTRATE.item(name, HiddenIngredientItem::new)
+//			.register();
+//	}
 
 	@SafeVarargs
 	private static ItemEntry<Item> taggedIngredient(String name, TagKey<Item>... tags) {
