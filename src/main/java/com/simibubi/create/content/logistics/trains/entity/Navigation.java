@@ -95,8 +95,7 @@ public class Navigation {
 
 		destination.reserveFor(train);
 
-		double acceleration = AllConfigs.SERVER.trains.getAccelerationMPTT();
-		double turnTopSpeed = AllConfigs.SERVER.trains.getTurningTopSpeedMPT();
+		double acceleration = train.acceleration();
 		double brakingDistance = (train.speed * train.speed) / (2 * acceleration);
 		double speedMod = destinationBehindTrain ? -1 : 1;
 		double preDepartureLookAhead = train.getCurrentStation() != null ? 4.5 : 0;
@@ -240,7 +239,11 @@ public class Navigation {
 			return;
 		}
 
-		double topSpeed = AllConfigs.SERVER.trains.getTopSpeedMPT();
+		train.burnFuel();
+		
+		double topSpeed = train.maxSpeed();
+		double turnTopSpeed = train.maxTurnSpeed();
+		
 		if (targetDistance < 10) {
 			double target = topSpeed * ((targetDistance) / 10);
 			if (target < Math.abs(train.speed)) {
@@ -505,7 +508,7 @@ public class Navigation {
 			return null;
 
 		MutableObject<GlobalStation> result = new MutableObject<>(null);
-		double acceleration = AllConfigs.SERVER.trains.getAccelerationMPTT();
+		double acceleration = train.acceleration();
 		double minDistance = .75f * (train.speed * train.speed) / (2 * acceleration);
 		double maxDistance = Math.max(32, 1.5f * (train.speed * train.speed) / (2 * acceleration));
 

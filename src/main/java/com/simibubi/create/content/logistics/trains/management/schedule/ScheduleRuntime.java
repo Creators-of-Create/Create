@@ -15,8 +15,6 @@ import com.simibubi.create.content.logistics.trains.management.schedule.conditio
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CTrains;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
@@ -239,8 +237,7 @@ public class ScheduleRuntime {
 		} else {
 			GlobalStation destination = train.navigation.destination;
 			if (destination != null) {
-				CTrains conf = AllConfigs.SERVER.trains;
-				double speed = (conf.getTopSpeedMPT() + conf.getTurningTopSpeedMPT()) / 2;
+				double speed = (train.maxSpeed() + train.maxTurnSpeed()) / 2;
 				int timeRemaining = (int) (train.navigation.distanceToDestination / speed) * 2;
 
 				if (predictionTicks.size() > current && train.navigation.distanceStartedAt != 0) {

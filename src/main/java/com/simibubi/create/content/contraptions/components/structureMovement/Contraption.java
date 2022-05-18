@@ -1242,6 +1242,10 @@ public abstract class Contraption {
 		return storage.getItems();
 	}
 	
+	public IItemHandlerModifiable getSharedFuelInventory() {
+		return storage.getFuelItems();
+	}
+	
 	public IFluidHandler getSharedFluidTanks() {
 		return storage.getFluids();
 	}

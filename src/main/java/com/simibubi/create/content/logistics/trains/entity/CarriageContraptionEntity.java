@@ -496,6 +496,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			targetSteer *= -1;
 		}
 
+		if (targetSpeed != 0)
+			carriage.train.burnFuel();
+		
 		boolean slow = inverted ^ targetSpeed < 0;
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
@@ -551,7 +554,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriage.train.manualSteer =
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
-		double topSpeed = AllConfigs.SERVER.trains.getTopSpeedMPT();
+		double topSpeed = carriage.train.maxSpeed();
 		carriage.train.targetSpeed = topSpeed * targetSpeed;
 		if (slow)
 			carriage.train.targetSpeed /= 8;

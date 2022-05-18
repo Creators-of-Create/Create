@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 public class MountedStorageManager {
 
 	private ContraptionInvWrapper inventory;
+	private ContraptionInvWrapper fuelInventory;
 	private CombinedTankWrapper fluidInventory;
 	private Map<BlockPos, MountedStorage> storage;
 	private Map<BlockPos, MountedFluidStorage> fluidStorage;
@@ -43,12 +46,16 @@ public class MountedStorageManager {
 	}
 
 	public void createHandlers() {
-		List<IItemHandlerModifiable> list = storage.values()
-			.stream()
+		Collection<MountedStorage> itemHandlers = storage.values();
+
+		inventory = wrap(itemHandlers.stream()
 			.map(MountedStorage::getItemHandler)
-			.collect(Collectors.toList());
-		inventory =
-			new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+			.toList());
+
+		fuelInventory = wrap(itemHandlers.stream()
+			.filter(MountedStorage::canUseForFuel)
+			.map(MountedStorage::getItemHandler)
+			.toList());
 
 		List<IFluidHandler> fluidHandlers = fluidStorage.values()
 			.stream()
@@ -56,6 +63,10 @@ public class MountedStorageManager {
 			.collect(Collectors.toList());
 		fluidInventory = new CombinedTankWrapper(
 			Arrays.copyOf(fluidHandlers.toArray(), fluidHandlers.size(), IFluidHandler[].class));
+	}
+
+	private ContraptionInvWrapper wrap(List<IItemHandlerModifiable> list) {
+		return new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 	}
 
 	public void addBlock(BlockPos localPos, BlockEntity te) {
@@ -88,17 +99,22 @@ public class MountedStorageManager {
 				mfs.assignTileEntity(tank);
 			});
 
-		IItemHandlerModifiable[] handlers = new IItemHandlerModifiable[storage.size()];
-		int index = 0;
-		for (MountedStorage mountedStorage : storage.values())
-			handlers[index++] = mountedStorage.getItemHandler();
+		List<IItemHandlerModifiable> handlers = new ArrayList<>();
+		List<IItemHandlerModifiable> fuelHandlers = new ArrayList<>();
+		for (MountedStorage mountedStorage : storage.values()) {
+			IItemHandlerModifiable itemHandler = mountedStorage.getItemHandler();
+			handlers.add(itemHandler);
+			if (mountedStorage.canUseForFuel())
+				fuelHandlers.add(itemHandler);
+		}
 
+		int index = 0;
 		IFluidHandler[] fluidHandlers = new IFluidHandler[fluidStorage.size()];
-		index = 0;
 		for (MountedFluidStorage mountedStorage : fluidStorage.values())
 			fluidHandlers[index++] = mountedStorage.getFluidHandler();
 
-		inventory = new ContraptionInvWrapper(handlers);
+		inventory = wrap(handlers);
+		fuelInventory = wrap(fuelHandlers);
 		fluidInventory = new CombinedTankWrapper(fluidHandlers);
 	}
 
@@ -164,13 +180,18 @@ public class MountedStorageManager {
 		if (mountedFluidStorage != null)
 			mountedFluidStorage.updateFluid(containedFluid);
 	}
-	
+
 	public void attachExternal(IItemHandlerModifiable externalStorage) {
 		inventory = new ContraptionInvWrapper(externalStorage, inventory);
+		fuelInventory = new ContraptionInvWrapper(externalStorage, fuelInventory);
 	}
 
 	public IItemHandlerModifiable getItems() {
 		return inventory;
+	}
+
+	public IItemHandlerModifiable getFuelItems() {
+		return fuelInventory;
 	}
 
 	public IFluidHandler getFluids() {

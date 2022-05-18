@@ -56,9 +56,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.PacketDistributor;
 
 public class Train {
@@ -76,7 +80,7 @@ public class Train {
 	public TrainStatus status;
 
 	public boolean invalid;
-	
+
 	public SteerDirection manualSteer;
 	public boolean manualTick;
 
@@ -95,6 +99,8 @@ public class Train {
 	List<TrainMigration> migratingPoints;
 	public int migrationCooldown;
 	public boolean derailed;
+
+	public int fuelTicks;
 
 	int tickOffset;
 	double[] stress;
@@ -387,7 +393,7 @@ public class Train {
 
 	private void tickPassiveSlowdown() {
 		if (!manualTick && navigation.destination == null && speed != 0) {
-			double acceleration = AllConfigs.SERVER.trains.getAccelerationMPTT();
+			double acceleration = acceleration();
 			if (speed > 0) {
 				speed = Math.max(speed - acceleration, 0);
 			} else
@@ -541,7 +547,7 @@ public class Train {
 			if (entity == null)
 				return false;
 
-			if (entity.getContraption() instanceof CarriageContraption cc)
+			if (entity.getContraption()instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
 			entity.setPos(Vec3
 				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
@@ -747,7 +753,7 @@ public class Train {
 			return;
 		if (manualTick)
 			leaveStation();
-		double acceleration = AllConfigs.SERVER.trains.getAccelerationMPTT();
+		double acceleration = acceleration();
 		if (speed < targetSpeed)
 			speed = Math.min(speed + acceleration * accelerationMod, targetSpeed);
 		else if (speed > targetSpeed)
@@ -854,6 +860,50 @@ public class Train {
 		return Penalties.ANY_TRAIN;
 	}
 
+	public void burnFuel() {
+		if (fuelTicks > 0) {
+			fuelTicks--;
+			return;
+		}
+
+		boolean iterateFromBack = speed < 0;
+		int carriageCount = carriages.size();
+
+		for (int index = 0; index < carriageCount; index++) {
+			int i = iterateFromBack ? carriageCount - 1 - index : index;
+			Carriage carriage = carriages.get(i);
+			IItemHandlerModifiable fuelItems = carriage.storage.getFuelItems();
+
+			for (int slot = 0; slot < fuelItems.getSlots(); slot++) {
+				ItemStack stack = fuelItems.extractItem(slot, 1, true);
+				int burnTime = ForgeHooks.getBurnTime(stack, null);
+				if (burnTime <= 0)
+					continue;
+
+				stack = fuelItems.extractItem(slot, 1, false);
+				fuelTicks += burnTime * stack.getCount();
+				ItemStack containerItem = stack.getContainerItem();
+				if (!containerItem.isEmpty())
+					ItemHandlerHelper.insertItemStacked(fuelItems, containerItem, false);
+			}
+		}
+	}
+
+	public float maxSpeed() {
+		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTopSpeed.getF()
+			: AllConfigs.SERVER.trains.trainTopSpeed.getF()) / 20;
+	}
+
+	public float maxTurnSpeed() {
+		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTurningTopSpeed.getF()
+			: AllConfigs.SERVER.trains.trainTurningTopSpeed.getF()) / 20;
+	}
+
+	public float acceleration() {
+		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainAcceleration.getF()
+			: AllConfigs.SERVER.trains.trainAcceleration.getF()) / 400;
+	}
+
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
@@ -864,6 +914,7 @@ public class Train {
 		tag.putIntArray("CarriageSpacing", carriageSpacing);
 		tag.putBoolean("DoubleEnded", doubleEnded);
 		tag.putDouble("Speed", speed);
+		tag.putInt("Fuel", fuelTicks);
 		tag.putDouble("TargetSpeed", targetSpeed);
 		tag.putString("IconType", icon.id.toString());
 		tag.putString("Name", Component.Serializer.toJson(name));
@@ -917,6 +968,7 @@ public class Train {
 		train.heldForAssembly = tag.getBoolean("StillAssembling");
 		train.derailed = tag.getBoolean("Derailed");
 		train.updateSignalBlocks = tag.getBoolean("UpdateSignals");
+		train.fuelTicks = tag.getInt("Fuel");
 
 		NBTHelper.iterateCompoundList(tag.getList("SignalBlocks", Tag.TAG_COMPOUND), c -> train.occupiedSignalBlocks
 			.put(c.getUUID("Id"), c.contains("Boundary") ? c.getUUID("Boundary") : null));
