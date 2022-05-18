@@ -52,6 +52,16 @@ public class TrackEdge {
 			.normalize();
 	}
 
+	public Vec3 getDirectionAt(double t) {
+		double length = getLength();
+		double step = .5f / length;
+		t /= length;
+		Vec3 ahead = getPosition(Math.min(1, t + step));
+		Vec3 behind = getPosition(Math.max(0, t - step));
+		return ahead.subtract(behind)
+			.normalize();
+	}
+
 	public boolean canTravelTo(TrackEdge other) {
 		if (isInterDimensional() || other.isInterDimensional())
 			return true;

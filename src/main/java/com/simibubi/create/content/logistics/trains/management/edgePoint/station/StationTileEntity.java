@@ -17,6 +17,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -71,7 +73,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
-public class StationTileEntity extends SmartTileEntity {
+public class StationTileEntity extends SmartTileEntity implements ITransformableTE {
 
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
 	public LerpedFloat flag;
@@ -698,6 +700,11 @@ public class StationTileEntity extends SmartTileEntity {
 			.getNormal())) > 0;
 
 		return true;
+	}
+
+	@Override
+	public void transform(StructureTransform transform) {
+		edgePoint.transform(transform);
 	}
 
 }

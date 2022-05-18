@@ -36,6 +36,9 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation.Discovered
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -61,6 +64,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -94,7 +98,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 
-public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock {
+public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -686,6 +690,33 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public boolean trackEquals(BlockState state1, BlockState state2) {
 		return state1.getBlock() == this && state2.getBlock() == this
 			&& state1.setValue(HAS_TE, false) == state2.setValue(HAS_TE, false);
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+		int trackAmount = 1;
+		int girderAmount = 0;
+
+		if (te instanceof TrackTileEntity track) {
+			for (BezierConnection bezierConnection : track.getConnections().values()) {
+				if (!bezierConnection.isPrimary())
+					continue;
+				trackAmount += bezierConnection.getTrackItemCost();
+				girderAmount += bezierConnection.getGirderItemCost();
+			}
+		}
+
+		List<ItemStack> stacks = new ArrayList<>();
+		while (trackAmount > 0) {
+			stacks.add(AllBlocks.TRACK.asStack(Math.min(trackAmount, 64)));
+			trackAmount -= 64;
+		}
+		while (girderAmount > 0) {
+			stacks.add(AllBlocks.METAL_GIRDER.asStack(Math.min(girderAmount, 64)));
+			girderAmount -= 64;
+		}
+
+		return new ItemRequirement(ItemUseType.CONSUME, stacks);
 	}
 
 	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {

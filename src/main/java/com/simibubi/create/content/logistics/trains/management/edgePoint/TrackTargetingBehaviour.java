@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -18,11 +19,13 @@ import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleTileEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -32,6 +35,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -49,6 +53,9 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	private AxisDirection targetDirection;
 	private UUID id;
 
+	private Vec3 prevDirection;
+	private Vec3 rotatedDirection;
+
 	private CompoundTag migrationData;
 	private EdgePointType<T> edgePointType;
 	private T edgePoint;
@@ -65,11 +72,20 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	}
 
 	@Override
+	public boolean isSafeNBT() {
+		return true;
+	}
+	
+	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
 		nbt.putUUID("Id", id);
 		nbt.put("TargetTrack", NbtUtils.writeBlockPos(targetTrack));
 		nbt.putBoolean("Ortho", orthogonal);
 		nbt.putBoolean("TargetDirection", targetDirection == AxisDirection.POSITIVE);
+		if (rotatedDirection != null)
+			nbt.put("RotatedAxis", VecHelper.writeNBT(rotatedDirection));
+		if (prevDirection != null)
+			nbt.put("PrevAxis", VecHelper.writeNBT(prevDirection));
 		if (migrationData != null && !clientPacket)
 			nbt.put("Migrate", migrationData);
 		if (targetBezier != null) {
@@ -84,10 +100,14 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
-		id = nbt.getUUID("Id");
+		id = nbt.contains("Id") ? nbt.getUUID("Id") : UUID.randomUUID();
 		targetTrack = NbtUtils.readBlockPos(nbt.getCompound("TargetTrack"));
 		targetDirection = nbt.getBoolean("TargetDirection") ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
 		orthogonal = nbt.getBoolean("Ortho");
+		if (nbt.contains("PrevAxis"))
+			prevDirection = VecHelper.readNBT(nbt.getList("PrevAxis", Tag.TAG_DOUBLE));
+		if (nbt.contains("RotatedAxis"))
+			rotatedDirection = VecHelper.readNBT(nbt.getList("RotatedAxis", Tag.TAG_DOUBLE));
 		if (nbt.contains("Migrate"))
 			migrationData = nbt.getCompound("Migrate");
 		if (clientPacket)
@@ -144,11 +164,25 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		TrackNode node2 = graph.locateNode(loc.edge.getSecond());
 		TrackEdge edge = graph.getConnectionsFrom(node1)
 			.get(node2);
-
-		boolean front = getTargetDirection() == AxisDirection.POSITIVE;
-
 		if (edge == null)
 			return null;
+
+		T point = edgePointType.create();
+		boolean front = getTargetDirection() == AxisDirection.POSITIVE;
+
+		prevDirection = edge.getDirectionAt(loc.position)
+			.scale(front ? -1 : 1);
+
+		if (rotatedDirection != null) {
+			double dot = prevDirection.dot(rotatedDirection);
+			if (dot < -.85f) {
+				rotatedDirection = null;
+				targetDirection = targetDirection.opposite();
+				return null;
+			}
+
+			rotatedDirection = null;
+		}
 
 		double length = edge.getLength();
 		CompoundTag data = migrationData;
@@ -183,13 +217,11 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 			}
 		}
 
-		T point = edgePointType.create();
-		boolean reverseEdge = front || point instanceof SingleTileEdgePoint;
-
 		if (data != null)
 			point.read(data, true, DimensionPalette.read(data));
 
 		point.setId(id);
+		boolean reverseEdge = front || point instanceof SingleTileEdgePoint;
 		point.setLocation(reverseEdge ? loc.edge : loc.edge.swap(), reverseEdge ? loc.position : length - loc.position);
 		point.tileAdded(tileEntity, front);
 		loc.graph.addPoint(edgePointType, point);
@@ -262,6 +294,8 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction,
 		BezierTrackPointLocation bezier, PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		RenderedTrackOverlayType type, float scale) {
+		if (level instanceof SchematicWorld)
+			return;
 
 		BlockState trackState = level.getBlockState(pos);
 		Block block = trackState.getBlock();
@@ -282,6 +316,18 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
 		ms.popPose();
+	}
+
+	public void transform(StructureTransform transform) {
+		id = UUID.randomUUID();
+		targetTrack = transform.applyWithoutOffset(targetTrack);
+		if (prevDirection != null)
+			rotatedDirection = transform.applyWithoutOffsetUncentered(prevDirection);
+		if (targetBezier != null)
+			targetBezier = new BezierTrackPointLocation(transform.applyWithoutOffset(targetBezier.curveTarget()
+				.subtract(getPos()))
+				.offset(getPos()), targetBezier.segment());
+		tileEntity.notifyUpdate();
 	}
 
 }

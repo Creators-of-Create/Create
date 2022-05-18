@@ -12,12 +12,14 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
+import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
@@ -69,15 +71,34 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 
 	private void validateConnections() {
 		Set<BlockPos> invalid = new HashSet<>();
+
 		for (Entry<BlockPos, BezierConnection> entry : connections.entrySet()) {
 			BlockPos key = entry.getKey();
 			BezierConnection bc = entry.getValue();
-			if (key.equals(bc.getKey()) && worldPosition.equals(bc.tePositions.getFirst())) {
-				BlockEntity blockEntity = level.getBlockEntity(key);
-				if (blockEntity instanceof TrackTileEntity trackTE && trackTE.connections.containsKey(worldPosition))
-					continue;
+
+			if (!key.equals(bc.getKey()) || !worldPosition.equals(bc.tePositions.getFirst())) {
+				invalid.add(key);
+				continue;
 			}
-			invalid.add(key);
+
+			BlockState blockState = level.getBlockState(key);
+			if (blockState.getBlock()instanceof ITrackBlock trackBlock && !blockState.getValue(TrackBlock.HAS_TE))
+				for (Vec3 v : trackBlock.getTrackAxes(level, key, blockState)) {
+					Vec3 bcEndAxis = bc.axes.getSecond();
+					if (v.distanceTo(bcEndAxis) < 1 / 1024f || v.distanceTo(bcEndAxis.scale(-1)) < 1 / 1024f)
+						level.setBlock(key, blockState.setValue(TrackBlock.HAS_TE, true), 3);
+					else
+						Debug.debugChat(v + " != " + bcEndAxis);
+				}
+
+			BlockEntity blockEntity = level.getBlockEntity(key);
+			if (!(blockEntity instanceof TrackTileEntity trackTE) || blockEntity.isRemoved()) {
+				invalid.add(key);
+				continue;
+			}
+
+			if (!trackTE.connections.containsKey(worldPosition))
+				trackTE.addConnection(bc.secondary());
 		}
 
 		connectionsValidated = true;
@@ -126,19 +147,28 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	@Override
+	public void writeSafe(CompoundTag tag, boolean clientPacket) {
+		super.writeSafe(tag, clientPacket);
+		writeTurns(tag);
+	}
+
+	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
+		writeTurns(tag);
+		if (boundLocation == null)
+			return;
+		tag.put("BoundLocation", NbtUtils.writeBlockPos(boundLocation.getSecond()));
+		tag.putString("BoundDimension", boundLocation.getFirst()
+			.location()
+			.toString());
+	}
+
+	private void writeTurns(CompoundTag tag) {
 		ListTag listTag = new ListTag();
 		for (BezierConnection bezierConnection : connections.values())
 			listTag.add(bezierConnection.write(worldPosition));
 		tag.put("Connections", listTag);
-
-		if (boundLocation != null) {
-			tag.put("BoundLocation", NbtUtils.writeBlockPos(boundLocation.getSecond()));
-			tag.putString("BoundDimension", boundLocation.getFirst()
-				.location()
-				.toString());
-		}
 	}
 
 	@Override

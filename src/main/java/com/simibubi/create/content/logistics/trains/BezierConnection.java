@@ -298,16 +298,24 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	public void addItemsToPlayer(Player player) {
 		Inventory inv = player.getInventory();
-		int tracks = (getSegmentCount() + 1) / 2;
+		int tracks = getTrackItemCost();
 		while (tracks > 0) {
 			inv.placeItemBackInInventory(AllBlocks.TRACK.asStack(Math.min(64, tracks)));
 			tracks -= 64;
 		}
-		int girders = hasGirder ? ((getSegmentCount() + 1) / 2) * 2 : 0;
+		int girders = getGirderItemCost();
 		while (girders > 0) {
 			inv.placeItemBackInInventory(AllBlocks.METAL_GIRDER.asStack(Math.min(64, girders)));
 			girders -= 64;
 		}
+	}
+
+	public int getGirderItemCost() {
+		return hasGirder ? getTrackItemCost() * 2 : 0;
+	}
+
+	public int getTrackItemCost() {
+		return (getSegmentCount() + 1) / 2;
 	}
 
 	public void spawnItems(Level level) {

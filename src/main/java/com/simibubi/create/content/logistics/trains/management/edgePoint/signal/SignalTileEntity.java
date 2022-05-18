@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock.SignalType;
@@ -19,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.ticks.TickPriority;
 
-public class SignalTileEntity extends SmartTileEntity {
+public class SignalTileEntity extends SmartTileEntity implements ITransformableTE {
 
 	public static enum OverlayState {
 		RENDER, SKIP, DUAL
@@ -151,6 +153,11 @@ public class SignalTileEntity extends SmartTileEntity {
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition, edgePoint.getGlobalPosition()).inflate(2);
+	}
+
+	@Override
+	public void transform(StructureTransform transform) {
+		edgePoint.transform(transform);
 	}
 
 }
