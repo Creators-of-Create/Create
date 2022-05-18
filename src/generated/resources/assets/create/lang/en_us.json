@@ -1422,6 +1422,10 @@
 	"create.track.not_enough_tracks": "Not holding enough tracks",
 	"create.track.not_enough_pavement": "Not holding enough pavement blocks",
 
+	"create.portal_track.failed": "Cannot place portal track:",
+	"create.portal_track.missing": "Target portal not generated yet",
+	"create.portal_track.blocked": "Target location blocked (%1$s,%2$s,%3$s)",
+
 	"create.station.create_train": "Create new Train",
 	"create.station.disassemble_train": "Disassemble Train",
 	"create.station.remove_schedule": "Retrieve Schedule",

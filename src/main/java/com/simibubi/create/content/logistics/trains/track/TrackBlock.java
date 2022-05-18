@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -40,15 +41,19 @@ import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -193,6 +198,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			return;
 
 		boolean pop = false;
+		String fail = null;
+		BlockPos failPos = null;
 
 		for (Direction d : Iterate.directionsInAxis(portalTest)) {
 			BlockPos portalPos = pos.relative(d);
@@ -202,16 +209,21 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 			pop = true;
 			Pair<ServerLevel, BlockFace> otherSide = getOtherSide(level, new BlockFace(pos, d));
-			if (otherSide == null)
+			if (otherSide == null) {
+				fail = "missing";
 				continue;
+			}
 
 			ServerLevel otherLevel = otherSide.getFirst();
 			BlockFace otherTrack = otherSide.getSecond();
 			BlockPos otherTrackPos = otherTrack.getPos();
 			BlockState existing = otherLevel.getBlockState(otherTrackPos);
 			if (!existing.getMaterial()
-				.isReplaceable())
+				.isReplaceable()) {
+				fail = "blocked";
+				failPos = otherTrackPos;
 				continue;
+			}
 
 			level.setBlock(pos, state.setValue(SHAPE, TrackShape.asPortal(d))
 				.setValue(HAS_TE, true), 3);
@@ -228,8 +240,23 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			pop = false;
 		}
 
-		if (pop)
-			level.destroyBlock(pos, true);
+		if (!pop)
+			return;
+
+		level.destroyBlock(pos, true);
+
+		if (fail == null)
+			return;
+		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
+		if (player == null)
+			return;
+		player.displayClientMessage(new TextComponent("<!> ").append(Lang.translate("portal_track.failed"))
+			.withStyle(ChatFormatting.GOLD), false);
+		MutableComponent component =
+			failPos != null ? Lang.translate("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
+				: Lang.translate("portal_track." + fail);
+		player.displayClientMessage(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
+			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}
 
 	protected Pair<ServerLevel, BlockFace> getOtherSide(ServerLevel level, BlockFace inboundTrack) {
