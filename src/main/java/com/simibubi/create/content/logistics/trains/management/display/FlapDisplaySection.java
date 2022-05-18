@@ -81,15 +81,18 @@ public class FlapDisplaySection {
 		spinningTicks = 0;
 	}
 
-	public void tick() {
+	public int tick() {
 		if (cyclingOptions == null)
-			return;
+			return 0;
 		int max = Math.max(4, (int) (cyclingOptions.length * 1.75f));
 		if (spinningTicks > max)
-			return;
+			return 0;
+		
 		spinningTicks++;
 		if (spinningTicks <= max && spinningTicks < 2)
-			return;
+			return spinningTicks == 1 ? 0 : spinning.length;
+		
+		int spinningFlaps = 0;
 		for (int i = 0; i < spinning.length; i++) {
 			int increasingChance = Mth.clamp(8 - spinningTicks, 1, 10);
 			boolean continueSpin = Create.RANDOM.nextInt(increasingChance * max / 4) != 0;
@@ -102,7 +105,12 @@ public class FlapDisplaySection {
 				spinning[i + 1] &= continueSpin;
 			if (spinningTicks > max)
 				spinning[i] = false;
+			
+			if (spinning[i])
+				spinningFlaps++;
 		}
+		
+		return spinningFlaps;
 	}
 
 	public float getSize() {

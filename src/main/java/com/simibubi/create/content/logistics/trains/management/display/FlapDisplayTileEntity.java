@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.JsonElement;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.DyeHelper;
@@ -18,6 +19,8 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -104,9 +107,25 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		isRunning = super.isSpeedRequirementFulfilled();
 		if (!level.isClientSide || !isRunning)
 			return;
-		List<FlapDisplayLayout> lines = getLines();
-		lines.forEach(l -> l.getSections()
-			.forEach(FlapDisplaySection::tick));
+		int activeFlaps = 0;
+		for (FlapDisplayLayout line : lines)
+			for (FlapDisplaySection section : line.getSections())
+				activeFlaps += section.tick();
+		if (activeFlaps == 0)
+			return;
+
+		float volume = Mth.clamp(activeFlaps / 20f, 0.25f, 1.5f);
+		float bgVolume = Mth.clamp(activeFlaps / 40f, 0.25f, 1f);
+		BlockPos middle = worldPosition.relative(getDirection().getClockWise(), xSize / 2)
+			.relative(Direction.DOWN, ySize / 2);
+		AllSoundEvents.SCROLL_VALUE.playAt(level, middle, volume, 0.56f, false);
+		level.playLocalSound(middle.getX(), middle.getY(), middle.getZ(), SoundEvents.CALCITE_HIT, SoundSource.BLOCKS,
+			.35f * bgVolume, 1.95f, false);
+	}
+
+	@Override
+	protected boolean isNoisy() {
+		return false;
 	}
 
 	@Override
@@ -279,7 +298,8 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 
 	public int getLineColor(int line) {
 		DyeColor color = colour[line];
-		return color == null ? 0xFF_D3C6BA : DyeHelper.DYE_TABLE.get(color)
+		return color == null ? 0xFF_D3C6BA
+			: DyeHelper.DYE_TABLE.get(color)
 				.getFirst() | 0xFF_000000;
 	}
 }

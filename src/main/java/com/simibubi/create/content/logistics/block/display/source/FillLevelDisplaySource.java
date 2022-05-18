@@ -34,7 +34,7 @@ public class FillLevelDisplaySource extends NumericSingleLineDisplaySource {
 			.getString("Label");
 
 		int labelSize = label.isEmpty() ? 0 : label.length() + 1;
-		int length = Math.min(stats.maxColumns() - labelSize, 32);
+		int length = Math.min(stats.maxColumns() - labelSize, 128);
 
 		if (context.getTargetTE() instanceof SignBlockEntity)
 			length = (int) (length * 6f / 9f);
