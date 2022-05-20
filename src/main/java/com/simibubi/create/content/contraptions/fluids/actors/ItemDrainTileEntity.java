@@ -76,6 +76,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			return returned;
 
 		transportedStack = transportedStack.copy();
+		transportedStack.stack = inserted.copy();
 		transportedStack.beltPosition = side.getAxis()
 			.isVertical() ? .5f : 0;
 		transportedStack.prevSideOffset = transportedStack.sideOffset;
@@ -277,7 +278,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
 		super.read(compound, clientPacket);
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (side != null && side.getAxis()
