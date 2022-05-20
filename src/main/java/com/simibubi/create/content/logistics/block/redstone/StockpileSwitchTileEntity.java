@@ -92,7 +92,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 					for (StorageView<ItemVariant> view : inv.iterable(t)) {
 						long space = Math.min(view.getCapacity(), view.getResource().getItem().getMaxStackSize());
 						long count = view.getAmount();
-						if (count == 0)
+						if (space == 0)
 							continue;
 
 						totalSpace += 1;
@@ -109,7 +109,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 					for (StorageView<FluidVariant> view : tank.iterable(t)) {
 						long space = view.getCapacity();
 						long count = view.getAmount();
-						if (count == 0)
+						if (space == 0)
 							continue;
 
 						totalSpace += 1;
