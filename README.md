@@ -28,7 +28,7 @@ Check out the wiki and in-game Tool-tips for further info on how to use these fe
 [<img src="https://i.imgur.com/aWrjfKJ.jpg" width="200">](https://discord.gg/hmaD7Se "Feedback & Help")
 [<img src="https://i.imgur.com/xj8o2xC.jpg" width="200">](https://www.patreon.com/simibubi "Support Us")
 
-- Support for Versions Prior to Minecraft 1.18: Not planned
+- Support for Versions prior to Minecraft 1.18: Not planned
 - Support for Forge: https://github.com/Creators-of-Create/Create
 <hr>
 <h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create-fabric">CurseForge</a> page or our <a href="https://modrinth.com/mod/create-fabric">Modrinth</a> page.</h4>
