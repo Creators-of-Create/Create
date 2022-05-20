@@ -104,6 +104,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			return returned;
 
 		transportedStack = transportedStack.copy();
+		transportedStack.stack = inserted.copy();
 		transportedStack.beltPosition = side.getAxis()
 			.isVertical() ? .5f : 0;
 		transportedStack.prevSideOffset = transportedStack.sideOffset;
