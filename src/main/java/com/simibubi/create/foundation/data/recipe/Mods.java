@@ -4,14 +4,19 @@ import net.minecraft.resources.ResourceLocation;
 
 public enum Mods {
 
-	MEK("mekanism", true), 
-	TH("thermal", false), 
-	MW("mysticalworld", false), 
-	SM("silents_mechanisms", false), 
+	MEK("mekanism", true),
+	TH("thermal", false),
+	MW("mysticalworld", false),
+	SM("silents_mechanisms", false),
 	IE("immersiveengineering", true),
 	EID("eidolon", false),
-	INF("iceandfire", false)
+	INF("iceandfire", false),
 
+	//Fabric Mods
+	TR("techreborn", false),
+	MI("modern_industrialization", false),
+	MTM("mythicmetals", false),
+	ALG("alloygery", false)
 	;
 
 	private final String id;
