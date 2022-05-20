@@ -1,0 +1,22 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_silver_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "modern_industrialization:silver_nugget",
+      "count": 9
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "modern_industrialization"
+      ]
+    }
+  ]
+}

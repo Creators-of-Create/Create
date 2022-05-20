@@ -12,7 +12,7 @@ public enum Mods {
 	EID("eidolon", false),
 	INF("iceandfire", false),
 
-	//Fabric Mods
+	// Fabric Mods
 	TR("techreborn", false),
 	MI("modern_industrialization", false),
 	MTM("mythicmetals", false),

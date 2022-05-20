@@ -7,7 +7,6 @@ import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
 import static com.simibubi.create.foundation.data.recipe.Mods.MW;
 import static com.simibubi.create.foundation.data.recipe.Mods.SM;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
-//Fabric Mods
 import static com.simibubi.create.foundation.data.recipe.Mods.TR;
 import static com.simibubi.create.foundation.data.recipe.Mods.MI;
 import static com.simibubi.create.foundation.data.recipe.Mods.MTM;
