@@ -77,7 +77,7 @@ dependencies {
     // dependencies
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}+${project.minecraft_version}.${project.port_lib_hash}"))
+    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}+${project.minecraft_version}-dev.${project.port_lib_hash}"))
     modImplementation(include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
     modImplementation(include("com.electronwill.night-config:core:${project.night_config_core_version}"))
     modImplementation(include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
