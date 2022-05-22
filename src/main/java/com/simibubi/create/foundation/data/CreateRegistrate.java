@@ -30,6 +30,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -168,10 +169,24 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				Create.asResource("fluid/" + name + "_flow"), attributesFactory, factory));
 	}
 
+	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow,
+																						BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+																						NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+		return entry(name,
+				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
+						flow, attributesFactory, factory));
+	}
+
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
 				Create.asResource("fluid/" + name + "_flow"), null, VirtualFluid::new));
+	}
+
+	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow) {
+		return entry(name,
+				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
+						flow, null, VirtualFluid::new));
 	}
 
 	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name) {

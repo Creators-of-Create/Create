@@ -29,8 +29,8 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelTileEntity
         tunnelFlaps = new EnumMap<>(Direction.class);
 
         Instancer<FlapData> model = modelManager.defaultSolid()
-                .material(AllMaterialSpecs.FLAPS)
-				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
+            .material(AllMaterialSpecs.FLAPS)
+            .getModel(AllBlockPartials.BELT_TUNNEL_FLAP);
 
         int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = world.getBrightness(LightLayer.SKY, pos);

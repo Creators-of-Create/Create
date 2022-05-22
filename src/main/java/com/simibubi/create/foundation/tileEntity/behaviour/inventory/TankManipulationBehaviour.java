@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFluidHandler, TankManipulationBehaviour> {
 
-	public static BehaviourType<TankManipulationBehaviour> OBSERVE = new BehaviourType<>();
+	public static final BehaviourType<TankManipulationBehaviour> OBSERVE = new BehaviourType<>();
 	private BehaviourType<TankManipulationBehaviour> behaviourType;
 
 	public TankManipulationBehaviour(SmartTileEntity te, InterfaceProvider target) {

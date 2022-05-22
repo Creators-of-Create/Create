@@ -8,11 +8,7 @@
   "results": [
     {
       "item": "minecraft:gold_nugget",
-      "count": 7
-    },
-    {
-      "item": "minecraft:gold_nugget",
-      "chance": 0.5
+      "count": 18
     },
     {
       "item": "create:experience_nugget",

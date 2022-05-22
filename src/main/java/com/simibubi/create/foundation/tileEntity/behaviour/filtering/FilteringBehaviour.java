@@ -25,7 +25,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<FilteringBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<FilteringBehaviour> TYPE = new BehaviourType<>();
 
 	ValueBoxTransform slotPositioning;
 	boolean showCount;

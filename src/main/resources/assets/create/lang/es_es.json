@@ -1,5 +1,4 @@
 {
-	"_": "Missing Localizations: 330",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -567,11 +566,12 @@
 	"item.create.chromatic_compound": "Compuesto cromático",
 	"item.create.cinder_flour": "Harina del Nether",
 	"item.create.copper_backtank": "Depósito trasero de cobre",
+	"item.create.copper_backtank_placeable": "Depósito de cobre colocable",
 	"item.create.copper_nugget": "Pepita de cobre",
 	"item.create.copper_sheet": "Lámina de cobre",
 	"item.create.crafter_slot_cover": "Tapa de ranura del ensamblador mecánico",
 	"item.create.crafting_blueprint": "Plano de elaboración",
-	"item.create.creative_blaze_cake": "´Pastel de blaze creativo",
+	"item.create.creative_blaze_cake": "Pastel de blaze creativo",
 	"item.create.crushed_aluminum_ore": "Mineral de aluminio molido",
 	"item.create.crushed_copper_ore": "Mineral de cobre molido",
 	"item.create.crushed_gold_ore": "Mineral de oro molido",
@@ -636,7 +636,7 @@
 
 	"advancement.create.root": "Bienvenido a Create",
 	"advancement.create.root.desc": "¡Es hora de empezar a construir increíbles artefactos animados!",
-	"advancement.creatse.andesite_alloy": "Aleaciones en abundancia",
+	"advancement.create.andesite_alloy": "Aliteraciones a montones",
 	"advancement.create.andesite_alloy.desc": "Los materiales de Create tienen nombres extraños, la aleación de andesita es uno de ellos.",
 	"advancement.create.its_alive": "¡Está vivo!",
 	"advancement.create.its_alive.desc": "Mira cómo gira tu primer componente cinético.",
@@ -821,6 +821,8 @@
 	"create.recipe.fan_washing.fan": "Ventilador detrás del agua fluyente",
 	"create.recipe.fan_smoking": "Ahumador a granel",
 	"create.recipe.fan_smoking.fan": "Ventilador detrás del fuego",
+	"create.recipe.fan_haunting": "Maldecidor a granel",
+	"create.recipe.fan_haunting.fan": "Ventilador detrás del fuego de alma",
 	"create.recipe.fan_blasting": "Voladuras a granel",
 	"create.recipe.fan_blasting.fan": "Ventilador detrás de la lava",
 	"create.recipe.pressing": "Prensando",
@@ -1163,6 +1165,8 @@
 	"create.item_attributes.furnace_fuel.inverted": "no es combustible para hornos",
 	"create.item_attributes.washable": "se puede lavar",
 	"create.item_attributes.washable.inverted": "no se puede lavar",
+	"create.item_attributes.hauntable": "puede ser maldito",
+	"create.item_attributes.hauntable.inverted": "no puede ser maldito",
 	"create.item_attributes.crushable": "puede ser molido",
 	"create.item_attributes.crushable.inverted": "no puede ser molido",
 	"create.item_attributes.smeltable": "se puede fundir",
@@ -1227,6 +1231,7 @@
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Requisitos de velocidad: %1$s",
 	"create.tooltip.speedRequirement.none": "Ninguno",
+	"create.tooltip.speedRequirement.slow": "Lento",
 	"create.tooltip.speedRequirement.medium": "Moderado",
 	"create.tooltip.speedRequirement.fast": "Rápido",
 	"create.tooltip.stressImpact": "Impacto de estrés: %1$s",
@@ -2438,6 +2443,6 @@
 	"create.ponder.windmill_structure.header": "Artefactos estacionarios de molinos de viento",
 	"create.ponder.windmill_structure.text_1": "Cualquier estructura puede contar como un molino de viento válido, siempre que contenga al menos 8 velas.",
 
-	"_": "¡Gracias por traducir Create!"
+	"_": "Thank you for translating Create!"
 
 }

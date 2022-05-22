@@ -6,6 +6,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTE
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_ON;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -111,10 +112,7 @@ public class ToolboxHandlerClient {
 		Level level = player.level;
 
 		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
-
-		if (!toolboxes.isEmpty())
-			Collections.sort(toolboxes, (te1, te2) -> te1.getUniqueId()
-				.compareTo(te2.getUniqueId()));
+		toolboxes.sort(Comparator.comparing(ToolboxTileEntity::getUniqueId));
 
 		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");

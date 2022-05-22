@@ -1,6 +1,6 @@
 package com.simibubi.create.content.schematics.client;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -33,7 +33,7 @@ public class SchematicRenderer {
 
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
-	private final Map<RenderType, SuperByteBuffer> bufferCache = new HashMap<>(getLayerCount());
+	private final Map<RenderType, SuperByteBuffer> bufferCache = new LinkedHashMap<>(getLayerCount());
 	private boolean active;
 	private boolean changed;
 	protected SchematicWorld schematic;

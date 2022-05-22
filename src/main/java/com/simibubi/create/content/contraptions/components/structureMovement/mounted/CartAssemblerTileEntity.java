@@ -162,7 +162,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 		OrientedContraptionEntity entity = OrientedContraptionEntity.create(world, contraption, initialOrientation);
 		if (couplingFound)
 			entity.setCouplingId(cart.getUUID());
-		entity.setPos(pos.getX(), pos.getY(), pos.getZ());
+		entity.setPos(pos.getX() + .5, pos.getY(), pos.getZ() + .5);
 		world.addFreshEntity(entity);
 		entity.startRiding(cart);
 

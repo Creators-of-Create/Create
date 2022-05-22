@@ -8,11 +8,14 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
+import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
@@ -98,6 +101,7 @@ public class Create {
 		AllMovementBehaviours.register();
 		AllDisplayBehaviours.register();
 		AllInteractionBehaviours.register();
+		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		AllConfigs.register(modLoadingContext);
@@ -120,6 +124,8 @@ public class Create {
 		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
+
+		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

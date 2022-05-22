@@ -41,6 +41,8 @@ import net.minecraft.world.ticks.LevelTicks;
 
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
+	public static final BehaviourType<FluidFillingBehaviour> TYPE = new BehaviourType<>();
+
 	PriorityQueue<BlockPosEntry> queue;
 
 	List<BlockPosEntry> infinityCheckFrontier;
@@ -72,7 +74,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
 		int maxBlocks = maxBlocks();
 
-		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1) {
+		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1 && !fillInfinite()) {
 			if (!infinite) {
 				reset();
 				infinite = true;
@@ -163,9 +165,11 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 			if (visited.size() >= maxBlocks && maxBlocks != -1) {
 				infinite = true;
-				visited.clear();
-				queue.clear();
-				return false;
+				if (!fillInfinite()) {
+					visited.clear();
+					queue.clear();
+					return false;
+				}
 			}
 
 			SpaceType spaceType = getAtPos(world, currentPos, fluid);
@@ -297,8 +301,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		infinityCheckFrontier.clear();
 		infinityCheckVisited.clear();
 	}
-
-	public static BehaviourType<FluidFillingBehaviour> TYPE = new BehaviourType<>();
 
 	@Override
 	public BehaviourType<?> getType() {

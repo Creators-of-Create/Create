@@ -22,7 +22,7 @@ public class PressInstance extends ShaftInstance implements DynamicInstance {
 
 		pressHead = dispatcher.defaultSolid()
 			.material(Materials.ORIENTED)
-			.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
+			.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD)
 			.createInstance();
 
 		Quaternion q = Vector3f.YP

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -28,20 +29,20 @@ public class FluidTankModel extends CTModel {
 	public static FluidTankModel standard(BakedModel originalModel) {
 		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);
 	}
-	
+
 	public static FluidTankModel creative(BakedModel originalModel) {
 		return new FluidTankModel(originalModel, AllSpriteShifts.CREATIVE_FLUID_TANK, AllSpriteShifts.CREATIVE_CASING);
 	}
-	
+
 	private FluidTankModel(BakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top) {
 		super(originalModel, new FluidTankCTBehaviour(side, top));
 	}
-	
+
 	@Override
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
-			cullData.setCulled(d, FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(d)));
+			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d))); //FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(d)));
 		return super.gatherModelData(builder, world, pos, state).withInitial(CULL_PROPERTY, cullData);
 	}
 

@@ -30,7 +30,7 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 		super(dispatcher, tile);
 
 		gantryCogs = getTransformMaterial()
-								 .getModel(AllBlockPartials.GANTRY_COGS, blockState)
+								 .getModel(AllBlockPartials.GANTRY_COGS)
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);

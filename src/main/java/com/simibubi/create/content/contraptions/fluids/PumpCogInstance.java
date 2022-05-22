@@ -32,7 +32,7 @@ public class PumpCogInstance extends SingleRotatingInstance implements DynamicIn
 
 		materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState)
+				.getModel(AllBlockPartials.MECHANICAL_PUMP_ARROW)
 				.createInstances(arrows);
 	}
 
@@ -63,7 +63,7 @@ public class PumpCogInstance extends SingleRotatingInstance implements DynamicIn
     protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-		return getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_PUMP_COG, referenceState, facing);
+		return getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_PUMP_COG, facing);
 	}
 
 	@Override

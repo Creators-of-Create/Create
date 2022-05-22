@@ -41,7 +41,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class DepotBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<DepotBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<DepotBehaviour> TYPE = new BehaviourType<>();
 
 	TransportedItemStack heldItem;
 	List<TransportedItemStack> incoming;

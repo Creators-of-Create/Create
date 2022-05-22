@@ -229,7 +229,7 @@ public class ItemHelper {
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
-				if (stackInSlot.isEmpty())
+				if (stackInSlot.isEmpty() || !test.test(stackInSlot))
 					continue;
 				int maxExtractionCountForItem = amountFunction.apply(stackInSlot);
 				if (maxExtractionCountForItem == 0)

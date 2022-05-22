@@ -30,6 +30,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
+	public static final BehaviourType<FluidDrainingBehaviour> TYPE = new BehaviourType<>();
+
 	Fluid fluid;
 
 	// Execution
@@ -321,8 +323,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		validationVisited.clear();
 		tileEntity.sendData();
 	}
-
-	public static BehaviourType<FluidDrainingBehaviour> TYPE = new BehaviourType<>();
 
 	@Override
 	public BehaviourType<?> getType() {
