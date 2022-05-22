@@ -28,10 +28,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
-import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
 import net.minecraft.core.BlockPos;
@@ -331,9 +329,9 @@ public class BlockMovementChecks {
 			return direction.getAxis() != state.getValue(SailBlock.FACING)
 					.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
-			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction)); //FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(direction));
+			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (state.getBlock() instanceof ItemVaultBlock)
-			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction)); //ItemVaultConnectivityHandler.isConnected(world, pos, pos.relative(direction));
+			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (AllBlocks.STICKER.has(state) && state.getValue(StickerBlock.EXTENDED)) {
 			return direction == state.getValue(StickerBlock.FACING)
 					&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());
