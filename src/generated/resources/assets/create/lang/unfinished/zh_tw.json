@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 394",
+	"_": "Missing Localizations: 396",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "度",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "順時鐘方向",
 	"create.generic.counter_clockwise": "逆時鐘方向",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "這個礦車結構太大了而無法撿取",
 	"create.contraption.minecart_contraption_illegal_pickup": "一股神秘的力量將這個礦車結構與世界綁在一起",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

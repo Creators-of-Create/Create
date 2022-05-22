@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2",
+	"_": "Missing Localizations: 4",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "시계 방향",
 	"create.generic.counter_clockwise": "시계 반대 방향",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "이 수레 구조물은 들기에 너무 큽니다!",
 	"create.contraption.minecart_contraption_illegal_pickup": "신비로운 힘이 이 수레 구조물을 세계에 묶어두고 있습니다!",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

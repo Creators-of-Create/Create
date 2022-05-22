@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 7",
+	"_": "Missing Localizations: 9",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "SU(unidades de estrés)",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "En el sentido de las agujas del reloj",
 	"create.generic.counter_clockwise": "En sentido contrario a las agujas del reloj",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "Este artefacto móvil de vagoneta parece demasiado grande para recogerlo",
 	"create.contraption.minecart_contraption_illegal_pickup": "Una fuerza mística está atando este artefacto móvil de vagoneta al mundo",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

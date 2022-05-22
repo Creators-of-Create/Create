@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 336",
+	"_": "Missing Localizations: 338",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "us",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "En sentido del Reloj",
 	"create.generic.counter_clockwise": "Al contrario del Reloj",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "Esta contrapción de vagoneta parece demasiado grande para recogerla",
 	"create.contraption.minecart_contraption_illegal_pickup": "Una fuerza mística está vinculando esta contrapción de vagoneta al mundo",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

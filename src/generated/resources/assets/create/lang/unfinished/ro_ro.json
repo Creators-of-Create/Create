@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 3",
+	"_": "Missing Localizations: 5",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "În sensul acelor de ceasornic",
 	"create.generic.counter_clockwise": "În sensul invers acelor de ceasornic",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "Această Invenție de Vagonet pare ca este prea mare pentru a fi luat.",
 	"create.contraption.minecart_contraption_illegal_pickup": "O forță mistică leagă această Invenție de Vagonet de lume",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

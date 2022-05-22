@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 375",
+	"_": "Missing Localizations: 377",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "JO",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smW",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "Zgodnie ze wskazówkami zegara",
 	"create.generic.counter_clockwise": "Przeciwnie do wskazówek zegara",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "Ta maszyna w wagoniku jest zbyt duża, aby ją podnieść",
 	"create.contraption.minecart_contraption_illegal_pickup": "Mistyczna siła jednoczy tą maszynę w wagoniku ze światem",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1276",
+	"_": "Missing Localizations: 1278",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$s mB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "Senso orario",
 	"create.generic.counter_clockwise": "Senso anti-orario",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "UNLOCALIZED: This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "UNLOCALIZED: A mystical force is binding this Cart Contraption to the world",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
