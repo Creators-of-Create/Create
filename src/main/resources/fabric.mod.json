@@ -51,6 +51,11 @@
     "milk": ">=${milk_lib_version}"
   },
 
+  "breaks": {
+    "optifabric": "*",
+    "colormatic": "<=3.1.1"
+  },
+
   "custom": {
     "/* you need to enable this (and move it out of 'custom') if you want to run datagen because yes */ provides": [
       "com_electronwill_night-config_core",
