@@ -9,7 +9,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -114,10 +113,9 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 			if (tank != null)
 				source = new WeakReference<>(null);
 			Direction facing = SteamEngineBlock.getFacing(getBlockState());
-			FluidTankTileEntity anyTankAt =
-				FluidTankConnectivityHandler.anyTankAt(level, worldPosition.relative(facing.getOpposite()));
-			if (anyTankAt != null)
-				source = new WeakReference<>(tank = anyTankAt);
+			BlockEntity be = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
+			if (be instanceof FluidTankTileEntity tankTe)
+				source = new WeakReference<>(tank = tankTe);
 		}
 		if (tank == null)
 			return null;

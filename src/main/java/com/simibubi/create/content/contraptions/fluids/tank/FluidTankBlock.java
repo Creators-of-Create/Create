@@ -333,9 +333,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	
 	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
 		BlockState tankState = pLevel.getBlockState(tankPos);
-		if (!FluidTankBlock.isTank(tankState))
+		if (!(tankState.getBlock() instanceof FluidTankBlock tank))
 			return;
-		FluidTankTileEntity tankTE = FluidTankConnectivityHandler.anyTankAt(pLevel, tankPos);
+		FluidTankTileEntity tankTE = tank.getTileEntity(pLevel, tankPos);
 		if (tankTE == null)
 			return;
 		FluidTankTileEntity controllerTE = tankTE.getControllerTE();

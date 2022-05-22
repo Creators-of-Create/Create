@@ -8,7 +8,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.steam.SteamJetParticleData;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock.WhistleExtenderShape;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -26,6 +25,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -161,10 +161,9 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 			if (tank != null)
 				source = new WeakReference<>(null);
 			Direction facing = WhistleBlock.getAttachedDirection(getBlockState());
-			FluidTankTileEntity anyTankAt =
-				FluidTankConnectivityHandler.anyTankAt(level, worldPosition.relative(facing));
-			if (anyTankAt != null)
-				source = new WeakReference<>(tank = anyTankAt);
+			BlockEntity be = level.getBlockEntity(worldPosition.relative(facing));
+			if (be instanceof FluidTankTileEntity tankTe)
+				source = new WeakReference<>(tank = tankTe);
 		}
 		if (tank == null)
 			return null;

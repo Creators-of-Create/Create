@@ -521,6 +521,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		}
 		setWindows(window);
 		onFluidStackChanged(tankInventory.getFluid());
+		updateBoilerState();
 		setChanged();
 	}
 
