@@ -203,12 +203,4 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	public boolean isPauseScreen() {
 		return true;
 	}
-
-	public static void initIcons() {
-		ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlasTexture, registry) -> {
-			registry.register(Create.asResource(CF_ICON.getPath().substring(8, CF_ICON.getPath().length() - 4)));
-			registry.register(Create.asResource(MR_ICON.getPath().substring(8, MR_ICON.getPath().length() - 4)));
-		});
-	}
-
 }

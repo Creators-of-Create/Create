@@ -110,8 +110,6 @@ public class CreateClient implements ClientModInitializer {
 		AllPackets.channel.initClientListener();
 		RenderTypes.init();
 		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
-
-		CreateMainMenuScreen.initIcons();
 	}
 
 	private static void registerOverlays() {
