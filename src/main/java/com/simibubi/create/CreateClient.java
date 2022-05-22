@@ -22,6 +22,7 @@ import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.events.InputEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
@@ -109,6 +110,8 @@ public class CreateClient implements ClientModInitializer {
 		AllPackets.channel.initClientListener();
 		RenderTypes.init();
 		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
+
+		CreateMainMenuScreen.initIcons();
 	}
 
 	private static void registerOverlays() {

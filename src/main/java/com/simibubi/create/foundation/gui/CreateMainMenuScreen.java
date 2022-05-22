@@ -9,6 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.SimpleButtonWithIcon;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
@@ -17,17 +18,24 @@ import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.TitleScreenAccessor;
 
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.InventoryMenu;
+
+import javax.swing.text.Element;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
@@ -37,9 +45,14 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
 	public static final PanoramaRenderer PANORAMA = new PanoramaRenderer(PANORAMA_RESOURCES);
 
-	public static final String PROJECT_LINK = "https://www.curseforge.com/minecraft/mc-mods/create-fabric";
+	public static final String CF_PROJECT_LINK = "https://www.curseforge.com/minecraft/mc-mods/create-fabric";
+	public static final ResourceLocation CF_ICON = Create.asResource("textures/gui/platform_icon/curseforge.png");
+	public static final String MR_PROJECT_LINK = "https://modrinth.com/mod/create-fabric";
+	public static final ResourceLocation MR_ICON = Create.asResource("textures/gui/platform_icon/modrinth.png");
+
 	public static final String ISSUE_TRACKER_LINK = "https://github.com/Fabricators-of-Create/Create/issues";
 	public static final String SUPPORT_LINK = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
+	public static final Component EMPTY = new TextComponent("");
 
 	protected final Screen parent;
 	protected boolean returnOnClose;
@@ -47,6 +60,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	private PanoramaRenderer vanillaPanorama;
 	private long firstRenderTime;
 	private Button gettingStarted;
+
+	private Button mrPage;
+	private Button cfPage;
 
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
@@ -147,9 +163,10 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
-
-		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
-			$ -> linkTo(PROJECT_LINK)));
+		cfPage = addRenderableWidget(new SimpleButtonWithIcon(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight, CF_ICON,
+			20, 20, $ -> linkTo(CF_PROJECT_LINK)));
+		mrPage = addRenderableWidget(new SimpleButtonWithIcon(center - 50, yStart + 48 + -16, bShortWidth / 2, bHeight, MR_ICON,
+				14, 14, $ -> linkTo(MR_PROJECT_LINK)));
 		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
 			$ -> linkTo(ISSUE_TRACKER_LINK)));
 		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
@@ -189,6 +206,13 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	@Override
 	public boolean isPauseScreen() {
 		return true;
+	}
+
+	public static void initIcons() {
+		ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlasTexture, registry) -> {
+			registry.register(Create.asResource(CF_ICON.getPath().substring(8, CF_ICON.getPath().length() - 4)));
+			registry.register(Create.asResource(MR_ICON.getPath().substring(8, MR_ICON.getPath().length() - 4)));
+		});
 	}
 
 }
