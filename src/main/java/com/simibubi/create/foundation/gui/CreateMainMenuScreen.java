@@ -52,7 +52,6 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 	public static final String ISSUE_TRACKER_LINK = "https://github.com/Fabricators-of-Create/Create/issues";
 	public static final String SUPPORT_LINK = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
-	public static final Component EMPTY = new TextComponent("");
 
 	protected final Screen parent;
 	protected boolean returnOnClose;
