@@ -16,7 +16,7 @@ public class CreateData implements DataGeneratorEntrypoint {
 		var existingData = System.getProperty("com.simibubi.create.existingData").split(";");
 		var existingFileHelper = new ExistingFileHelper(Arrays.stream(existingData).map(Paths::get).toList(), Collections.emptySet(),
 				true, null, null);
-		Create.gatherData(generator, existingFileHelper);
 		GatherDataEvent.EVENT.invoker().gatherData(generator, existingFileHelper);
+		Create.gatherData(generator, existingFileHelper);
 	}
 }
