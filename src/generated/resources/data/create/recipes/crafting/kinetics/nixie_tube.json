@@ -9,6 +9,7 @@
     }
   ],
   "result": {
-    "item": "create:nixie_tube"
+    "item": "create:nixie_tube",
+    "count": 4
   }
 }

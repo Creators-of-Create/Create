@@ -7,7 +7,7 @@
   ],
   "key": {
     "B": {
-      "tag": "minecraft:planks"
+      "tag": "minecraft:wooden_slabs"
     },
     "C": {
       "item": "create:andesite_casing"

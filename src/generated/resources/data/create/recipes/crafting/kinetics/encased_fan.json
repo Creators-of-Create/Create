@@ -1,12 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "S",
     "A",
     "P"
   ],
   "key": {
     "A": {
       "item": "create:andesite_casing"
+    },
+    "S": {
+      "item": "create:shaft"
     },
     "P": {
       "item": "create:propeller"

@@ -6,7 +6,7 @@
       "y": 90
     },
     "alt=true,axis=x": {
-      "model": "create:block/fluid_pipe/window_alt",
+      "model": "create:block/fluid_pipe/window",
       "x": 90,
       "y": 90
     },
@@ -14,17 +14,15 @@
       "model": "create:block/fluid_pipe/window"
     },
     "alt=true,axis=y": {
-      "model": "create:block/fluid_pipe/window_alt"
+      "model": "create:block/fluid_pipe/window"
     },
     "alt=false,axis=z": {
       "model": "create:block/fluid_pipe/window",
-      "x": 90,
-      "y": 180
+      "x": 90
     },
     "alt=true,axis=z": {
-      "model": "create:block/fluid_pipe/window_alt",
-      "x": 90,
-      "y": 180
+      "model": "create:block/fluid_pipe/window",
+      "x": 90
     }
   }
 }

@@ -5,7 +5,13 @@
       "item": "create:andesite_casing"
     },
     {
-      "item": "minecraft:chain"
+      "tag": "forge:nuggets/iron"
+    },
+    {
+      "tag": "forge:nuggets/iron"
+    },
+    {
+      "tag": "forge:nuggets/iron"
     }
   ],
   "result": {

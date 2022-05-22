@@ -203,7 +203,6 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
-import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
@@ -235,6 +234,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -725,7 +725,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.pipe())
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -739,7 +739,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -748,10 +748,20 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::copperMetal)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
-			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> p.models()
-				.getExistingFile(
-					p.modLoc("block/fluid_pipe/window" + (s.getValue(GlassFluidPipeBlock.ALT) ? "_alt" : "")))))
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.blockstate((c, p) -> {
+				p.getVariantBuilder(c.getEntry())
+					.forAllStatesExcept(state -> {
+						Axis axis = state.getValue(BlockStateProperties.AXIS);
+						return ConfiguredModel.builder()
+							.modelFile(p.models()
+								.getExistingFile(p.modLoc("block/fluid_pipe/window")))
+							.uvLock(false)
+							.rotationX(axis == Axis.Y ? 0 : 90)
+							.rotationY(axis == Axis.X ? 90 : 0)
+							.build();
+					}, BlockStateProperties.WATERLOGGED);
+			})
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::transparent))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -759,7 +769,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
@@ -770,7 +780,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::copperMetal)
 			.transform(pickaxeOnly())
 			.blockstate(new SmartFluidPipeGenerator()::generate)
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::transparent))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -781,7 +791,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
 			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
 				state.getValue(FluidValveBlock.ENABLED) ? "open" : "closed")))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -837,6 +847,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<HosePulleyBlock> HOSE_PULLEY = REGISTRATE.block("hose_pulley", HosePulleyBlock::new)
 		.initialProperties(SharedProperties::copperMetal)
+		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.horizontalBlockProvider(true))
 		.transform(BlockStressDefaults.setImpact(4.0))

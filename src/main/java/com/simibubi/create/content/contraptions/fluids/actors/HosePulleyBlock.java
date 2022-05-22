@@ -88,13 +88,6 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return AllShapes.PULLEY.get(state.getValue(HORIZONTAL_FACING)
-			.getClockWise()
-			.getAxis());
-	}
-
-	@Override
 	public Class<HosePulleyTileEntity> getTileEntityClass() {
 		return HosePulleyTileEntity.class;
 	}

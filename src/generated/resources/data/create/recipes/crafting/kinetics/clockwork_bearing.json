@@ -10,7 +10,7 @@
       "item": "create:electron_tube"
     },
     "B": {
-      "item": "create:turntable"
+      "tag": "minecraft:wooden_slabs"
     },
     "C": {
       "item": "create:brass_casing"

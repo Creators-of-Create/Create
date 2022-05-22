@@ -34,7 +34,7 @@ public class BoilerData {
 	static final int SAMPLE_RATE = 5;
 
 	private static final int waterSupplyPerLevel = 10;
-	private static final float passiveEngineEfficiency = 1 / 32f;
+	private static final float passiveEngineEfficiency = 1 / 8f;
 
 	// pooled water supply
 	int gatheredSupply;

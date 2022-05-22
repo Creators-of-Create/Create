@@ -146,7 +146,7 @@ public class AllItems {
 	public static final ItemEntry<Item> RAW_ZINC =
 		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), forgeItemTag("raw_materials"));
 
-	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
+	public static final ItemEntry<Item> ANDESITE_ALLOY = taggedIngredient("andesite_alloy", CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
 

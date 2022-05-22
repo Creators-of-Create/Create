@@ -27,9 +27,19 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 	private static final ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
+	private boolean hideAttachmentConnector;
 
-	public PipeAttachmentModel(BakedModel template) {
+	public static PipeAttachmentModel opaque(BakedModel template) {
+		return new PipeAttachmentModel(template, false);
+	}
+	
+	public static PipeAttachmentModel transparent(BakedModel template) {
+		return new PipeAttachmentModel(template, true);
+	}
+	
+	public PipeAttachmentModel(BakedModel template, boolean hideAttachmentConnector) {
 		super(template);
+		this.hideAttachmentConnector = hideAttachmentConnector;
 	}
 
 	@Override
@@ -61,6 +71,11 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, Random rand, IModelData data,
 		PipeModelData pipeData) {
+		BakedModel bracket = pipeData.getBracket();
+		if (bracket != null)
+			quads.addAll(bracket.getQuads(state, side, rand, data));
+		if (hideAttachmentConnector && side == Direction.UP)
+			return;
 		for (Direction d : Iterate.directions)
 			if (pipeData.hasRim(d))
 				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(pipeData.getRim(d))
@@ -70,9 +85,6 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		if (pipeData.isEncased())
 			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
 				.getQuads(state, side, rand, data));
-		BakedModel bracket = pipeData.getBracket();
-		if (bracket != null)
-			quads.addAll(bracket.getQuads(state, side, rand, data));
 	}
 
 	private static class PipeModelData {

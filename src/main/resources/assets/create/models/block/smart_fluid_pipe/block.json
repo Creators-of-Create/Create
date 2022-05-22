@@ -2,7 +2,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "create:block/pipes",
 		"2": "create:block/smart_pipe_1",
 		"3": "create:block/smart_pipe_2",
 		"particle": "create:block/copper_plating"
@@ -21,25 +20,25 @@
 			}
 		},
 		{
-			"from": [4, 4, 0],
-			"to": [12, 12, 4],
+			"from": [4.05, 4.05, 0],
+			"to": [11.95, 11.95, 4],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 0]},
 			"faces": {
-				"east": {"uv": [0, 8, 4, 6], "rotation": 270, "texture": "#1"},
-				"west": {"uv": [0, 8, 4, 6], "rotation": 90, "texture": "#1"},
-				"up": {"uv": [0, 8, 4, 6], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [0, 8, 4, 6], "rotation": 180, "texture": "#1"}
+				"east": {"uv": [10, 3, 6, 11], "texture": "#2"},
+				"west": {"uv": [10, 3, 6, 11], "rotation": 180, "texture": "#2"},
+				"up": {"uv": [6, 11, 10, 3], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [6, 11, 10, 3], "rotation": 270, "texture": "#2"}
 			}
 		},
 		{
-			"from": [4, 4, 12],
-			"to": [12, 12, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 16]},
+			"from": [4.05, 4.05, 12],
+			"to": [11.95, 11.95, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 14]},
 			"faces": {
-				"east": {"uv": [0, 6, 4, 8], "rotation": 270, "texture": "#1"},
-				"west": {"uv": [0, 6, 4, 8], "rotation": 90, "texture": "#1"},
-				"up": {"uv": [0, 6, 4, 8], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [0, 6, 4, 8], "rotation": 180, "texture": "#1"}
+				"east": {"uv": [10, 3, 6, 11], "rotation": 180, "texture": "#2"},
+				"west": {"uv": [10, 3, 6, 11], "texture": "#2"},
+				"up": {"uv": [6, 11, 10, 3], "rotation": 270, "texture": "#2"},
+				"down": {"uv": [6, 11, 10, 3], "rotation": 90, "texture": "#2"}
 			}
 		},
 		{

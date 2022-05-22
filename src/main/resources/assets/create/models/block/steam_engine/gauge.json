@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "GuageMetalBack",
-			"from": [14, 3, 3],
-			"to": [16, 13, 13],
+			"from": [14, 3.05, 3.05],
+			"to": [15.95, 12.95, 12.95],
 			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
 			"faces": {
 				"north": {"uv": [11, 0, 13, 10], "texture": "#1"},

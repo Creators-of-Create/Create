@@ -82,7 +82,7 @@ public class AllShapes {
 			.add(0.1, 1, 10, 15.9, 5, 14)
 			.add(0.1, -1, 11, 15.9, 1, 15)
 			.forHorizontal(NORTH),
-		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
+		FLUID_VALVE = shape(3, 0, 3, 13, 16, 13).add(2, 2, 2, 14, 14, 14)
 			.forAxis(),
 		TOOLBOX = shape(1, 0, 4, 15, 9, 12).forHorizontal(NORTH),
 		SMART_FLUID_PIPE_FLOOR = shape(4, 4, 0, 12, 12, 16).add(3, 3, 3, 13, 13, 13)

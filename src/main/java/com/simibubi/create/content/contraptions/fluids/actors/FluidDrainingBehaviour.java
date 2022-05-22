@@ -12,10 +12,12 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -88,7 +90,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			BlockState emptied = blockState;
 			Fluid fluid = Fluids.EMPTY;
 
-			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)
+				&& blockState.getValue(BlockStateProperties.WATERLOGGED)) {
 				emptied = blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false));
 				fluid = Fluids.WATER;
 			} else if (blockState.getBlock() instanceof LiquidBlock) {
@@ -108,8 +111,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					continue;
 				}
 			} else if (blockState.getFluidState()
-				.getType() != Fluids.EMPTY
-				&& blockState.getCollisionShape(world, currentPos, CollisionContext.empty())
+				.getType() != Fluids.EMPTY && blockState.getCollisionShape(world, currentPos, CollisionContext.empty())
 					.isEmpty()) {
 				fluid = blockState.getFluidState()
 					.getType();
@@ -135,7 +137,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
 
 			if (infinite) {
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(fluid)), world, tileEntity.getBlockPos(), 8);
+				AllTriggers.triggerForNearbyPlayers(
+					AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(fluid)), world,
+					tileEntity.getBlockPos(), 8);
 				return true;
 			}
 
@@ -180,6 +184,11 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		for (int timeout = 1000; timeout > 0 && !root.equals(tileEntity.getBlockPos()); timeout--) {
 			FluidBlockType canPullFluidsFrom = canPullFluidsFrom(world.getBlockState(currentPos), currentPos);
 			if (canPullFluidsFrom == FluidBlockType.FLOWING) {
+				for (Direction d : Iterate.directions) {
+					BlockPos side = currentPos.relative(d);
+					if (canPullFluidsFrom(world.getBlockState(side), side) == FluidBlockType.SOURCE)
+						return true;
+				}
 				currentPos = currentPos.above();
 				continue;
 			}
@@ -202,7 +211,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	protected FluidBlockType canPullFluidsFrom(BlockState blockState, BlockPos pos) {
-		if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED))
+		if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)
+			&& blockState.getValue(BlockStateProperties.WATERLOGGED))
 			return FluidBlockType.SOURCE;
 		if (blockState.getBlock() instanceof LiquidBlock)
 			return blockState.getValue(LiquidBlock.LEVEL) == 0 ? FluidBlockType.SOURCE : FluidBlockType.FLOWING;

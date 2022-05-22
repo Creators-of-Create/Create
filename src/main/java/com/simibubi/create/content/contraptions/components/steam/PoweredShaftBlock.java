@@ -39,12 +39,12 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
 		return AllTileEntities.POWERED_SHAFT.get();
 	}
-	
+
 	@Override
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
-	
+
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
 		if (!stillValid(pState, pLevel, pPos))
@@ -57,18 +57,22 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 	public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
 		return AllBlocks.SHAFT.asStack();
 	}
-	
+
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		return stillValid(pState, pLevel, pPos);
 	}
-	
+
 	public static boolean stillValid(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == pState.getValue(AXIS))
 				continue;
-			BlockState engineState = pLevel.getBlockState(pPos.relative(d, 2));
+			BlockPos enginePos = pPos.relative(d, 2);
+			BlockState engineState = pLevel.getBlockState(enginePos);
 			if (!(engineState.getBlock()instanceof SteamEngineBlock engine))
+				continue;
+			if (!SteamEngineBlock.getShaftPos(engineState, enginePos)
+				.equals(pPos))
 				continue;
 			if (SteamEngineBlock.isShaftValid(engineState, pState))
 				return true;

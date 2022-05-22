@@ -185,20 +185,13 @@ public class FluidPipeBlock extends PipeBlock
 	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction direction) {
 		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
+		if (facingState.getBlock() instanceof EncasedPipeBlock)
+			return true;
 		if (!isPipe(facingState))
 			return true;
 		if (!canConnectTo(world, offsetPos, facingState, direction))
 			return true;
 		return false;
-//		if (!isCornerOrEndPipe(world, pos, state))
-//			return false;
-//		if (FluidPropagator.getStraightPipeAxis(facingState) != null)
-//			return true;
-//		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
-//			return true;
-//		if (isCornerOrEndPipe(world, offsetPos, facingState))
-//			return direction.getAxisDirection() == AxisDirection.POSITIVE;
-//		return true;
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction direction) {

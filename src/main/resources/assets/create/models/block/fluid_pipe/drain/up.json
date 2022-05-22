@@ -10,10 +10,10 @@
 			"from": [4, 12, 4],
 			"to": [12, 14, 12],
 			"faces": {
-				"north": {"uv": [0, 8, 4, 9], "texture": "#0"},
-				"east": {"uv": [0, 8, 4, 9], "texture": "#0"},
-				"south": {"uv": [4, 8, 0, 9], "texture": "#0"},
-				"west": {"uv": [4, 8, 0, 9], "texture": "#0"}
+				"north": {"uv": [0, 8, 4, 9], "texture": "#0", "cullface": "up"},
+				"east": {"uv": [0, 8, 4, 9], "texture": "#0", "cullface": "up"},
+				"south": {"uv": [4, 8, 0, 9], "texture": "#0", "cullface": "up"},
+				"west": {"uv": [4, 8, 0, 9], "texture": "#0", "cullface": "up"}
 			}
 		},
 		{

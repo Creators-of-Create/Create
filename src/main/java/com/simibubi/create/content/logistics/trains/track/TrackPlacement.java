@@ -258,7 +258,7 @@ public class TrackPlacement {
 				info.end2Extent = (int) Math.round(dist2 - dist1);
 
 			double turnSize = Math.min(dist1, dist2);
-			if (intersect[0] < 0)
+			if (intersect[0] < 0 || intersect[1] < 0)
 				return info.withMessage("too_sharp")
 					.tooJumbly();
 			if (turnSize < 2)

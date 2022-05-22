@@ -1,12 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "S",
     "C",
     "I"
   ],
   "key": {
     "C": {
       "item": "create:andesite_casing"
+    },
+    "S": {
+      "item": "create:cogwheel"
     },
     "I": {
       "item": "create:whisk"

@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,12 +46,12 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 			Axis axis = IAxisPipe.getAxisOf(state);
 			Axis otherAxis = IAxisPipe.getAxisOf(otherState);
 
-			if (attachment == AttachmentTypes.RIM && FluidPipeBlock.isPipe(otherState))
+			if (attachment == AttachmentTypes.RIM && state.getBlock() instanceof FluidValveBlock)
 				return AttachmentTypes.NONE;
-
+			if (attachment == AttachmentTypes.RIM && FluidPipeBlock.isPipe(otherState))
+				return AttachmentTypes.RIM;
 			if (axis == otherAxis && axis != null)
-				if (state.getBlock() == otherState.getBlock() || direction.getAxisDirection() == AxisDirection.POSITIVE)
-					return AttachmentTypes.NONE;
+				return AttachmentTypes.NONE;
 
 			if (otherState.getBlock() instanceof FluidValveBlock
 				&& FluidValveBlock.getPipeAxis(otherState) == direction.getAxis())

@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -30,7 +31,9 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidPropagator {
 
@@ -126,8 +129,10 @@ public class FluidPropagator {
 		BlockPos neighborPos, boolean isMoving) {
 		if (world.isClientSide)
 			return null;
-		// calling getblockstate() as otherBlock param seems to contain the block which was replaced
-		otherBlock = world.getBlockState(neighborPos).getBlock();
+		// calling getblockstate() as otherBlock param seems to contain the block which
+		// was replaced
+		otherBlock = world.getBlockState(neighborPos)
+			.getBlock();
 		if (otherBlock instanceof FluidPipeBlock)
 			return null;
 		if (otherBlock instanceof AxisPipeBlock)
@@ -185,31 +190,13 @@ public class FluidPropagator {
 		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
 	}
 
-//	static AABB smallCenter = new AABB(BlockPos.ZERO).shrink(.25);
-//	
-//	@Deprecated 
-//	public static OutlineParams showBlockFace(BlockFace face) {
-//		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
-//		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-//			Vector3d directionVec = new Vector3d(face.getFace()
-//				.getDirectionVec());
-//			Vector3d scaleVec = directionVec.scale(-.25f * face.getFace()
-//				.getAxisDirection()
-//				.getOffset());
-//			directionVec = directionVec.scale(.45f);
-//			params.setValue(CreateClient.outliner.showAABB(face,
-//				FluidPropagator.smallCenter.offset(directionVec.add(new Vector3d(face.getPos())))
-//					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
-//					.grow(1 / 16f)));
-//		});
-//		return params.getValue()
-//			.lineWidth(1 / 16f);
-//	}
-
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
 		BlockEntity tileEntity = world.getBlockEntity(pos);
-		return tileEntity != null && tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
-			.isPresent();
+		if (tileEntity == null)
+			return false;
+		LazyOptional<IFluidHandler> capability =
+			tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		return capability.isPresent();
 	}
 
 	@Nullable

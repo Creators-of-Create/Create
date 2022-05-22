@@ -5,7 +5,7 @@
       "tag": "forge:stripped_logs"
     },
     {
-      "tag": "forge:plates/copper"
+      "item": "minecraft:copper_ingot"
     }
   ],
   "results": [
