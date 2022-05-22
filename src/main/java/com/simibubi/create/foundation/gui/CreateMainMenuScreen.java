@@ -60,9 +60,6 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	private long firstRenderTime;
 	private Button gettingStarted;
 
-	private Button mrPage;
-	private Button cfPage;
-
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
 		returnOnClose = true;
@@ -162,9 +159,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
-		cfPage = addRenderableWidget(new SimpleButtonWithIcon(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight, CF_ICON,
+		addRenderableWidget(new SimpleButtonWithIcon(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight, CF_ICON,
 			20, 20, $ -> linkTo(CF_PROJECT_LINK)));
-		mrPage = addRenderableWidget(new SimpleButtonWithIcon(center - 50, yStart + 48 + -16, bShortWidth / 2, bHeight, MR_ICON,
+		addRenderableWidget(new SimpleButtonWithIcon(center - 50, yStart + 48 + -16, bShortWidth / 2, bHeight, MR_ICON,
 				14, 14, $ -> linkTo(MR_PROJECT_LINK)));
 		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
 			$ -> linkTo(ISSUE_TRACKER_LINK)));
