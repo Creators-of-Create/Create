@@ -202,6 +202,8 @@ public class AllFluids {
 
 		public String getTranslationKey(FluidVariant stack) {
 			CompoundTag tag = stack.getNbt();
+			if (tag == null)
+				return "create.potion.invalid";
 			ItemLike itemFromBottleType =
 					PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
 			return PotionUtils.getPotion(tag)
