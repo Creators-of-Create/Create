@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -35,7 +36,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IMultiTileContainer.Fluid {
 
 	private static final int MAX_SIZE = 3;
 
@@ -79,7 +80,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			return;
 		if (!isController())
 			return;
-		FluidTankConnectivityHandler.formTanks(this);
+		ConnectivityHandler.formMulti(this);
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (fluidLevel != null)
 			fluidLevel.tick();
 	}
-	
+
 	@Override
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
@@ -145,7 +146,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
 					BlockPos pos = this.worldPosition.offset(xOffset, yOffset, zOffset);
-					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(level, pos);
+					FluidTankTileEntity tankAt = ConnectivityHandler.partAt(getType(), level, pos);
 					if (tankAt == null)
 						continue;
 					level.updateNeighbourForOutputSignal(pos, tankAt.getBlockState()
@@ -161,7 +162,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			setChanged();
 			sendData();
 		}
-		
+
 		if (isVirtual()) {
 			if (fluidLevel == null)
 				fluidLevel = new InterpolatedChasingValue().start(getFillState());
@@ -462,4 +463,82 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		this.fluidLevel = fluidLevel;
 	}
 
+	@Override
+	public void preventConnectivityUpdate() { updateConnectivity = false; }
+
+	@Override
+	public void notifyMultiUpdated() {
+		BlockState state = this.getBlockState();
+		if (FluidTankBlock.isTank(state)) { // safety
+			state = state.setValue(FluidTankBlock.BOTTOM, getController().getY() == getBlockPos().getY());
+			state = state.setValue(FluidTankBlock.TOP, getController().getY() + height - 1 == getBlockPos().getY());
+			level.setBlock(getBlockPos(), state, 22);
+		}
+		setWindows(window);
+		onFluidStackChanged(tankInventory.getFluid());
+		setChanged();
+	}
+
+	@Override
+	public void setExtraData(@Nullable Object data) {
+		if (data instanceof Boolean) window = (boolean)data;
+	}
+
+	@Override
+	@Nullable
+	public Object getExtraData() { return window; }
+
+	@Override
+	public Object modifyExtraData(Object data) {
+		if (data instanceof Boolean windows) {
+			windows |= window;
+			return windows;
+		}
+		return data;
+	}
+
+	@Override
+	public Direction.Axis getMainConnectionAxis() { return Direction.Axis.Y; }
+
+	@Override
+	public int getMaxLength(Direction.Axis longAxis, int width) {
+		if (longAxis == Direction.Axis.Y) return getMaxHeight();
+		return getMaxWidth();
+	}
+
+	@Override
+	public int getMaxWidth() { return MAX_SIZE; }
+
+	@Override
+	public int getHeight() { return height; }
+
+	@Override
+	public void setHeight(int height) { this.height = height; }
+
+	@Override
+	public int getWidth() { return width; }
+
+	@Override
+	public void setWidth(int width) { this.width = width; }
+
+	@Override
+	public boolean hasTank() { return true; }
+
+	@Override
+	public int getTankSize(int tank) { return getCapacityMultiplier(); }
+
+	@Override
+	public void setTankSize(int tank, int blocks) {
+		applyFluidTankSize(blocks);
+	}
+
+	@Override
+	public IFluidTank getTank(int tank) {
+		return tankInventory;
+	}
+
+	@Override
+	public FluidStack getFluid(int tank) {
+		return tankInventory.getFluid().copy();
+	}
 }

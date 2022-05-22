@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 
@@ -21,6 +22,6 @@ public class FluidTankCTBehaviour extends HorizontalCTBehaviour {
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
-		return state.getBlock() == other.getBlock() && FluidTankConnectivityHandler.isConnected(reader, pos, otherPos);
+		return state.getBlock() == other.getBlock() && ConnectivityHandler.isConnected(reader, pos, otherPos); //FluidTankConnectivityHandler.isConnected(reader, pos, otherPos);
 	}
 }

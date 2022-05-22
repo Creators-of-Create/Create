@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.vault;
 
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 
@@ -62,7 +63,7 @@ public class ItemVaultCTBehaviour extends ConnectedTextureBehaviour {
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
 		BlockPos otherPos, Direction face) {
-		return state == other && ItemVaultConnectivityHandler.isConnected(reader, pos, otherPos);
+		return state == other && ConnectivityHandler.isConnected(reader, pos, otherPos); //ItemVaultConnectivityHandler.isConnected(reader, pos, otherPos);
 	}
 
 }
