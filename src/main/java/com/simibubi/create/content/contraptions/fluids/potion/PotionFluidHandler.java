@@ -54,6 +54,8 @@ public class PotionFluidHandler {
 		Potion potion = PotionUtils.getPotion(stack);
 		List<MobEffectInstance> list = PotionUtils.getCustomEffects(stack);
 		BottleType bottleTypeFromItem = bottleTypeFromItem(stack.getItem());
+		if (potion == Potions.EMPTY)
+			return FluidStack.EMPTY;
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
 			return new FluidStack(Fluids.WATER, FluidConstants.BOTTLE);
 		FluidStack fluid = PotionFluid.withEffects(FluidConstants.BOTTLE, potion, list);

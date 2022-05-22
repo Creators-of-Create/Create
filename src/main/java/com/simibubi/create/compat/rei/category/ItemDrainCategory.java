@@ -35,14 +35,10 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MobBucketItem;
-import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
@@ -61,7 +57,8 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 					.stream()
 					.forEach(entryStack -> {
 						ItemStack stack = entryStack.getValue();
-			if (stack.getItem() instanceof PotionItem) {
+			Item item = stack.getItem();
+			if (item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION) {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient potion = Ingredient.of(stack);
 				consumer.accept(new ProcessingRecipeBuilder<>(EmptyingRecipe::new, Create.asResource("potions"))
