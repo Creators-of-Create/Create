@@ -56,7 +56,7 @@ public class OpenCreateMenuButton extends Button {
 		public static final MenuRows MAIN_MENU = new MenuRows(Arrays.asList(
 			new SingleMenuRow("menu.singleplayer"),
 			new SingleMenuRow("menu.multiplayer"),
-			new SingleMenuRow("fml.menu.mods", "menu.online"),
+			new SingleMenuRow("menu.online"),
 			new SingleMenuRow("narrator.button.language", "narrator.button.accessibility")
 		));
 
