@@ -10,7 +10,11 @@ import io.github.fabricators_of_create.porting_lib.event.client.KeyInputCallback
 import io.github.fabricators_of_create.porting_lib.event.client.MouseButtonCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.MouseScrolledCallback;
 
+import io.github.fabricators_of_create.porting_lib.event.client.OnStartUseItemCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.PickBlockCallback;
+import net.fabricmc.fabric.api.event.client.player.ClientPickBlockGatherCallback;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 
 public class InputEvents {
@@ -47,17 +51,14 @@ public class InputEvents {
 		return InteractionResult.PASS;
 	}
 
-	public static InteractionResult onClickInput(int button, int action, int mods) {
+	public static boolean onPickBlock() {
 		if (Minecraft.getInstance().screen != null)
-			return InteractionResult.PASS;
+			return false;
+		return ToolboxHandlerClient.onPickItem();
+	}
 
-		if (/*button == */Minecraft.getInstance().options.keyPickItem.isDown()) {
-			if (ToolboxHandlerClient.onPickItem())
-				return InteractionResult.SUCCESS;
-			return InteractionResult.PASS;
-		}
-
-		if (button == 1)
+	public static InteractionResult onStartUseItem(InteractionHand hand) {
+		if (Minecraft.getInstance().screen == null)
 			LinkedControllerClientHandler.deactivateInLectern();
 		return InteractionResult.PASS;
 	}
@@ -66,7 +67,8 @@ public class InputEvents {
 		KeyInputCallback.EVENT.register(InputEvents::onKeyInput);
 		MouseScrolledCallback.EVENT.register(InputEvents::onMouseScrolled);
 		MouseButtonCallback.EVENT.register(InputEvents::onMouseInput);
-		MouseButtonCallback.EVENT.register(InputEvents::onClickInput);
+		OnStartUseItemCallback.EVENT.register(InputEvents::onStartUseItem);
+		PickBlockCallback.EVENT.register(InputEvents::onPickBlock);
 	}
 
 }
