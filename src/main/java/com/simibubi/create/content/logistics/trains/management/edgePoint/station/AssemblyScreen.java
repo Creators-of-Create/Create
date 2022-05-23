@@ -220,7 +220,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 			new TextComponent(bogeyCount == 0 ? "No Bogeys" : bogeyCount + (bogeyCount == 1 ? " Bogey" : " Bogeys"));
 		font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A);
 
-		font.drawWordWrap(new TextComponent("Use Railway Casing on highlighted Tracks to create bogeys."), x + 28, y + 62, 134,
+		font.drawWordWrap(new TextComponent("Use Train Casing on highlighted Tracks to create bogeys."), x + 28, y + 62, 134,
 			0x7A7A7A);
 		font.drawWordWrap(new TextComponent("Remove bogeys by breaking the block on top."), x + 28, y + 94, 134,
 			0x7A7A7A);

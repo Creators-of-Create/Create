@@ -1458,6 +1458,7 @@ public class AllBlocks {
 			() -> AllSpriteShifts.RAILWAY_CASING))
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.lang("Train Casing")
 		.register();
 
 	public static final BlockEntry<StationBlock> TRACK_STATION = REGISTRATE.block("track_station", StationBlock::new)

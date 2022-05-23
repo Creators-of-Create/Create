@@ -32,7 +32,6 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -222,8 +221,10 @@ public class Navigation {
 
 		// dont leave until green light
 		if (targetDistance > 1 / 32f && train.getCurrentStation() != null) {
-			if (waitingForSignal != null && distanceToSignal < preDepartureLookAhead)
+			if (waitingForSignal != null && distanceToSignal < preDepartureLookAhead) {
+				ticksWaitingForSignal++;
 				return;
+			}
 			train.leaveStation();
 		}
 
@@ -240,10 +241,10 @@ public class Navigation {
 		}
 
 		train.burnFuel();
-		
+
 		double topSpeed = train.maxSpeed();
 		double turnTopSpeed = train.maxTurnSpeed();
-		
+
 		if (targetDistance < 10) {
 			double target = topSpeed * ((targetDistance) / 10);
 			if (target < Math.abs(train.speed)) {
@@ -576,6 +577,7 @@ public class Navigation {
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
+		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
 
 		Search: while (!frontier.isEmpty()) {
 			FrontierEntry entry = frontier.poll();
@@ -604,6 +606,18 @@ public class Navigation {
 						continue Search;
 					if (!point.canNavigateVia(node2))
 						continue Search;
+					if (point instanceof SignalBoundary signal) {
+						UUID group = signal.getGroup(node2);
+						if (group == null)
+							continue;
+						SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(group);
+						if (signalEdgeGroup == null)
+							continue;
+						if (signalEdgeGroup.isOccupiedUnless(signal)) {
+							penalty += signalWeight;
+							signalWeight /= 2;
+						}
+					}
 					if (point instanceof GlobalStation station) {
 						Train presentTrain = station.getPresentTrain();
 						boolean isOwnStation = presentTrain == train;

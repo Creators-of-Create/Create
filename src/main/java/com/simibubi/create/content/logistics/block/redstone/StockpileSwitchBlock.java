@@ -55,11 +55,11 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 
 	@Override
 	public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
-		if (world.isClientSide())
-			return;
-		if (!isObserving(state, pos, neighbor))
-			return;
-		updateObservedInventory(state, world, pos);
+//		if (world.isClientSide())
+//			return;
+//		if (!isObserving(state, pos, neighbor))
+//			return;
+//		updateObservedInventory(state, world, pos);
 	}
 
 	@Override

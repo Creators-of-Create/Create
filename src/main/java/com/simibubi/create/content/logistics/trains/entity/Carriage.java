@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,7 +39,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -102,18 +100,9 @@ public class Carriage {
 		contraption.onEntityInitialize(level, entity);
 		updateContraptionAnchors();
 
-		getDimensional(level).alignEntity(entity);
-
-		List<Entity> players = new ArrayList<>();
-		for (Entity passenger : entity.getPassengers())
-			if (!(passenger instanceof Player))
-				passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
-			else
-				players.add(passenger);
-		for (Entity player : players)
-			player.stopRiding();
-
-		serialisedEntity = entity.serializeNBT();
+		DimensionalCarriageEntity dimensional = getDimensional(level);
+		dimensional.alignEntity(entity);
+		dimensional.removeAndSaveEntity(entity, false);
 	}
 
 	public DimensionalCarriageEntity getDimensional(Level level) {
@@ -343,10 +332,10 @@ public class Carriage {
 						: pivoted(dce, dimension, point, leadingWheelSpacing));
 				}
 			}
-			
+
 			int prevmin = dce.minAllowedLocalCoord();
 			int prevmax = dce.maxAllowedLocalCoord();
-			
+
 			dce.updateCutoff(leading);
 
 			if (prevmin != dce.minAllowedLocalCoord() || prevmax != dce.maxAllowedLocalCoord()) {
@@ -772,24 +761,23 @@ public class Carriage {
 		}
 
 		private void createEntity(Level level, boolean loadPassengers) {
-			Entity entity = EntityType.loadEntityRecursive(serialisedEntity, level, e -> {
-				e.moveTo(positionAnchor);
-				return e;
-			});
+			Entity entity = EntityType.create(serialisedEntity, level)
+				.orElse(null);
 
 			if (!(entity instanceof CarriageContraptionEntity cce)) {
 				train.invalid = true;
 				return;
 			}
 
+			entity.moveTo(positionAnchor);
 			this.entity = new WeakReference<>(cce);
-			
+
 			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
 
 			if (level instanceof ServerLevel sl)
-				sl.tryAddFreshEntityWithPassengers(entity);
+				sl.addFreshEntity(entity);
 
 			updatePassengerLoadout();
 		}

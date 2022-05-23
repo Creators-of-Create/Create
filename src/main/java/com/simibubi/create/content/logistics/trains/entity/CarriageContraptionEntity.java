@@ -25,7 +25,6 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
