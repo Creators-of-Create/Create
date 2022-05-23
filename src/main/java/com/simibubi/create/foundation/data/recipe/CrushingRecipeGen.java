@@ -139,6 +139,10 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		GLOWSTONE = create(() -> Blocks.GLOWSTONE, b -> b.duration(150)
 			.output(Items.GLOWSTONE_DUST, 3)
 			.output(.5f, Items.GLOWSTONE_DUST)),
+		
+		AMETHYST_BLOCK = create(() -> Blocks.AMETHYST_BLOCK, b -> b.duration(150)
+			.output(Items.AMETHYST_SHARD, 3)
+			.output(.5f, Items.AMETHYST_SHARD)),
 
 		LEATHER_HORSE_ARMOR = create(() -> Items.LEATHER_HORSE_ARMOR, b -> b.duration(200)
 			.output(Items.LEATHER, 2)

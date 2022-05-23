@@ -25,6 +25,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
@@ -50,8 +51,8 @@ public class AllPaletteBlocks {
 		framedGlass("framed_glass", () -> new StandardCTBehaviour(AllSpriteShifts.FRAMED_GLASS)),
 		HORIZONTAL_FRAMED_GLASS = framedGlass("horizontal_framed_glass",
 			() -> new HorizontalCTBehaviour(AllSpriteShifts.HORIZONTAL_FRAMED_GLASS, AllSpriteShifts.FRAMED_GLASS)),
-		VERTICAL_FRAMED_GLASS =
-			framedGlass("vertical_framed_glass", () -> new HorizontalCTBehaviour(AllSpriteShifts.VERTICAL_FRAMED_GLASS));
+		VERTICAL_FRAMED_GLASS = framedGlass("vertical_framed_glass",
+			() -> new HorizontalCTBehaviour(AllSpriteShifts.VERTICAL_FRAMED_GLASS));
 
 	public static final BlockEntry<GlassPaneBlock> TILED_GLASS_PANE =
 		WindowGen.standardGlassPane("tiled_glass", TILED_GLASS, Create.asResource("block/palettes/tiled_glass"),
@@ -61,8 +62,8 @@ public class AllPaletteBlocks {
 		framedGlassPane("framed_glass", FRAMED_GLASS, () -> AllSpriteShifts.FRAMED_GLASS),
 		HORIZONTAL_FRAMED_GLASS_PANE = framedGlassPane("horizontal_framed_glass", HORIZONTAL_FRAMED_GLASS,
 			() -> AllSpriteShifts.HORIZONTAL_FRAMED_GLASS),
-		VERTICAL_FRAMED_GLASS_PANE =
-			framedGlassPane("vertical_framed_glass", VERTICAL_FRAMED_GLASS, () -> AllSpriteShifts.VERTICAL_FRAMED_GLASS);
+		VERTICAL_FRAMED_GLASS_PANE = framedGlassPane("vertical_framed_glass", VERTICAL_FRAMED_GLASS,
+			() -> AllSpriteShifts.VERTICAL_FRAMED_GLASS);
 
 	public static final BlockEntry<WindowBlock> OAK_WINDOW = woodenWindowBlock(WoodType.OAK, Blocks.OAK_PLANKS),
 		SPRUCE_WINDOW = woodenWindowBlock(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS),
@@ -72,8 +73,9 @@ public class AllPaletteBlocks {
 		DARK_OAK_WINDOW = woodenWindowBlock(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS),
 		CRIMSON_WINDOW = woodenWindowBlock(WoodType.CRIMSON, Blocks.CRIMSON_PLANKS),
 		WARPED_WINDOW = woodenWindowBlock(WoodType.WARPED, Blocks.WARPED_PLANKS),
-		ORNATE_IRON_WINDOW = customWindowBlock("ornate_iron_window", AllItems.ANDESITE_ALLOY,
-			() -> AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::cutoutMipped);
+		ORNATE_IRON_WINDOW =
+			customWindowBlock("ornate_iron_window", AllItems.ANDESITE_ALLOY, () -> AllSpriteShifts.ORNATE_IRON_WINDOW,
+				() -> RenderType::cutoutMipped, () -> MaterialColor.TERRACOTTA_LIGHT_GRAY);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
 		woodenWindowPane(WoodType.OAK, OAK_WINDOW),
@@ -90,7 +92,7 @@ public class AllPaletteBlocks {
 	static {
 		AllPaletteStoneTypes.register(REGISTRATE);
 	}
-	
+
 	public static void register() {}
 
 }
