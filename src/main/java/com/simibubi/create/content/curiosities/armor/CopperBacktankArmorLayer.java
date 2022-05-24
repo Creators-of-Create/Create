@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.Minecraft;
@@ -108,13 +107,13 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			return;
 		if (player.isSpectator() || player.isCreative())
 			return;
-		if (!EntityHelper.getExtraCustomData(player)
+		if (!player.getExtraCustomData()
 			.contains("VisualBacktankAir"))
 			return;
 		if (!player.isEyeInFluid(FluidTags.WATER))
 			return;
 
-		int timeLeft = EntityHelper.getExtraCustomData(player)
+		int timeLeft = player.getExtraCustomData()
 			.getInt("VisualBacktankAir");
 
 		poseStack.pushPose();

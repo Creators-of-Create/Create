@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -91,7 +90,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 			return;
 //		if (entityIn instanceof ItemEntity)
 //			((ItemEntity) entityIn).setPickUpDelay(10);
-		CompoundTag data = EntityHelper.getExtraCustomData(entityIn);
+		CompoundTag data = entityIn.getExtraCustomData();
 		if (data.contains("BypassCrushingWheel")) {
 			if (pos.equals(NbtUtils.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				return;
@@ -170,7 +169,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 		if (entity == null)
 			return standardShape;
 
-		CompoundTag data = EntityHelper.getExtraCustomData(entity);
+		CompoundTag data = entity.getExtraCustomData();
 		if (data.contains("BypassCrushingWheel"))
 			if (pos.equals(NbtUtils.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				if (state.getValue(FACING) != Direction.UP) // Allow output items to land on top of the block rather

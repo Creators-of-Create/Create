@@ -28,7 +28,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.EntityAccessor;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -116,7 +115,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		if (level.isClientSide)
 			return;
 		if (transformedVector != null)
-			EntityHelper.getExtraCustomData(passenger)
+			passenger.getExtraCustomData()
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());

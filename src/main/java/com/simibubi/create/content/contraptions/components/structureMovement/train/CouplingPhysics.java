@@ -53,7 +53,7 @@ public class CouplingPhysics {
 				continue;
 
 			RailShape shape = null;
-			BlockPos railPosition = MinecartAndRailUtil.getExpectedRailPos(cart);
+			BlockPos railPosition = cart.getCurrentRailPos();
 			BlockState railState = world.getBlockState(railPosition.above());
 
 			if (railState.getBlock() instanceof BaseRailBlock) {

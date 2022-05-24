@@ -18,7 +18,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.item.CustomMaxCountItem;
 import io.github.fabricators_of_create.porting_lib.item.EntityTickListenerItem;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BeaconBlockEntityAccessor;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -100,7 +99,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 		double y = entity.getY();
 		double yMotion = entity.getDeltaMovement().y;
 		int minHeight = world.getMinBuildHeight();
-		CompoundTag data = EntityHelper.getExtraCustomData(entity);
+		CompoundTag data = entity.getExtraCustomData();
 
 		// Convert to Shadow steel if in void
 		if (y < minHeight && y - yMotion < -10 + minHeight && config.enableShadowSteelRecipe.get()) {
@@ -118,7 +117,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setDeltaMovement(entity.getDeltaMovement());
-			EntityHelper.getExtraCustomData(newEntity)
+			newEntity.getExtraCustomData()
 				.putBoolean("JustCreated", true);
 			itemData.remove("CollectingLight");
 			world.addFreshEntity(newEntity);

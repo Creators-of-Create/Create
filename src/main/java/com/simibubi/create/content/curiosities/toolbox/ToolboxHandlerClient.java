@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.fabricmc.fabric.api.entity.EntityPickInteractionAware;
@@ -125,7 +124,7 @@ public class ToolboxHandlerClient {
 			Collections.sort(toolboxes, (te1, te2) -> te1.getUniqueId()
 				.compareTo(te2.getUniqueId()));
 
-		CompoundTag compound = EntityHelper.getExtraCustomData(player)
+		CompoundTag compound = player.getExtraCustomData()
 			.getCompound("CreateToolboxData");
 
 		String slotKey = String.valueOf(player.getInventory().selected);
@@ -168,11 +167,11 @@ public class ToolboxHandlerClient {
 		RenderSystem.enableDepthTest();
 
 		Player player = Minecraft.getInstance().player;
-		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
+		CompoundTag persistentData = player.getExtraCustomData();
 		if (!persistentData.contains("CreateToolboxData"))
 			return;
 
-		CompoundTag compound = EntityHelper.getExtraCustomData(player)
+		CompoundTag compound = player.getExtraCustomData()
 			.getCompound("CreateToolboxData");
 
 		if (compound.isEmpty())

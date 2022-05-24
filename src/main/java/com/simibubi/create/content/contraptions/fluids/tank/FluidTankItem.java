@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -116,10 +115,10 @@ public class FluidTankItem extends BlockItem {
 				if (FluidTankBlock.isTank(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				EntityHelper.getExtraCustomData(player)
+				player.getExtraCustomData()
 					.putBoolean("SilenceTankSound", true);
 				super.place(context);
-				EntityHelper.getExtraCustomData(player)
+				player.getExtraCustomData()
 					.remove("SilenceTankSound");
 			}
 		}

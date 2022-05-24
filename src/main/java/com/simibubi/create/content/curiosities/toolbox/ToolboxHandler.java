@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
@@ -51,12 +50,12 @@ public class ToolboxHandler {
 			return;
 
 		ServerPlayer player = (ServerPlayer) entity;
-		if (!EntityHelper.getExtraCustomData(player)
+		if (!player.getExtraCustomData()
 			.contains("CreateToolboxData"))
 			return;
 
 		boolean sendData = false;
-		CompoundTag compound = EntityHelper.getExtraCustomData(player)
+		CompoundTag compound = player.getExtraCustomData()
 			.getCompound("CreateToolboxData");
 		for (int i = 0; i < 9; i++) {
 			String key = String.valueOf(i);
@@ -88,9 +87,9 @@ public class ToolboxHandler {
 	public static void playerLogin(Player player) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		if (EntityHelper.getExtraCustomData(player)
+		if (player.getExtraCustomData()
 			.contains("CreateToolboxData")
-			&& !EntityHelper.getExtraCustomData(player)
+			&& !player.getExtraCustomData()
 				.getCompound("CreateToolboxData")
 				.isEmpty()) {
 			syncData(player);
@@ -115,7 +114,7 @@ public class ToolboxHandler {
 	}
 
 	public static void unequip(Player player, int hotbarSlot, boolean keepItems) {
-		CompoundTag compound = EntityHelper.getExtraCustomData(player)
+		CompoundTag compound = player.getExtraCustomData()
 			.getCompound("CreateToolboxData");
 		Level world = player.level;
 		String key = String.valueOf(hotbarSlot);
