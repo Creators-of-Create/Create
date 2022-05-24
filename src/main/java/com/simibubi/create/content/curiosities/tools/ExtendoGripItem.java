@@ -3,6 +3,8 @@ package com.simibubi.create.content.curiosities.tools;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -12,9 +14,7 @@ import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
-import dev.architectury.event.events.common.PlayerEvent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -37,8 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-
-import javax.annotation.Nullable;
 
 public class ExtendoGripItem extends Item  {
 	public static final int MAX_DAMAGE = 200;
@@ -74,7 +72,7 @@ public class ExtendoGripItem extends Item  {
 
 		Player player = (Player) entity;
 
-		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
+		CompoundTag persistentData = player.getExtraCustomData();
 		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
 		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getMainHandItem());
 		boolean holdingDualExtendo = inOff && inMain;
@@ -116,7 +114,7 @@ public class ExtendoGripItem extends Item  {
 	public static void addReachToJoiningPlayersHoldingExtendo(Entity entity, @Nullable CompoundTag persistentData) {
 		if (!(entity instanceof Player player) || persistentData == null) return;
 //		Player player = event.getPlayer();
-//		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
+//		CompoundTag persistentData = player.getExtraCustomData();
 
 		if (persistentData.contains(DUAL_EXTENDO_MARKER))
 			player.getAttributes()

@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -146,7 +145,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 	@Override
 	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		SoundType soundType = getSoundType(state);
-		if (entity != null && EntityHelper.getExtraCustomData(entity)
+		if (entity != null && entity.getExtraCustomData()
 			.contains("SilenceVaultSound"))
 			return SILENCED_METAL;
 		return soundType;

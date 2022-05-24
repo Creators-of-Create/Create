@@ -24,7 +24,6 @@ import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelp
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
@@ -72,9 +71,9 @@ public class InWorldProcessing {
 	private static final HauntingWrapper HAUNTING_WRAPPER = new HauntingWrapper();
 
 	public static boolean canProcess(ItemEntity entity, Type type) {
-		if (EntityHelper.getExtraCustomData(entity)
+		if (entity.getExtraCustomData()
 			.contains("CreateData")) {
-			CompoundTag compound = EntityHelper.getExtraCustomData(entity)
+			CompoundTag compound = entity.getExtraCustomData()
 				.getCompound("CreateData");
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
@@ -197,7 +196,7 @@ public class InWorldProcessing {
 	}
 
 	private static int decrementProcessingTime(ItemEntity entity, Type type) {
-		CompoundTag nbt = EntityHelper.getExtraCustomData(entity);
+		CompoundTag nbt = entity.getExtraCustomData();
 
 		if (!nbt.contains("CreateData"))
 			nbt.put("CreateData", new CompoundTag());
@@ -369,14 +368,14 @@ public class InWorldProcessing {
 					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
 				}
 				if (entity instanceof Horse horse) {
-					int progress = EntityHelper.getExtraCustomData(horse)
+					int progress = horse.getExtraCustomData()
 						.getInt("CreateHaunting");
 					if (progress < 100) {
 						if (progress % 10 == 0) {
 							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
 								1f, 1.5f * progress / 100f);
 						}
-						EntityHelper.getExtraCustomData(horse)
+						horse.getExtraCustomData()
 							.putInt("CreateHaunting", progress + 1);
 						return;
 					}

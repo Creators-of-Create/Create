@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -300,7 +299,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	@Override
 	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		SoundType soundType = getSoundType(state);
-		if (entity != null && EntityHelper.getExtraCustomData(entity)
+		if (entity != null && entity.getExtraCustomData()
 			.contains("SilenceTankSound"))
 			return SILENCED_METAL;
 		return soundType;

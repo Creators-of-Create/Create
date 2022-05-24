@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.authlib.GameProfile;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +24,7 @@ public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayer {
 
 	@Inject(at = @At("HEAD"), method = "isUnderWater", cancellable = true)
 	public void noSwimmingWithHeavyBootsOn(CallbackInfoReturnable<Boolean> cir) {
-		CompoundTag persistentData = EntityHelper.getExtraCustomData(this);
+		CompoundTag persistentData = getExtraCustomData();
 		if (persistentData.contains("HeavyBoots"))
 			cir.setReturnValue(false);
 	}

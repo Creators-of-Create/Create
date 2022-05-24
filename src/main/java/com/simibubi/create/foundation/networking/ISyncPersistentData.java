@@ -3,8 +3,6 @@ package com.simibubi.create.foundation.networking;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,7 +35,7 @@ public interface ISyncPersistentData {
 		@Override
 		public void write(FriendlyByteBuf buffer) {
 			buffer.writeInt(entityId);
-			buffer.writeNbt(EntityHelper.getExtraCustomData(entity));
+			buffer.writeNbt(entity.getExtraCustomData());
 		}
 
 		@Override
@@ -45,7 +43,7 @@ public interface ISyncPersistentData {
 			context.get()
 				.enqueueWork(() -> {
 					Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-					CompoundTag data = EntityHelper.getExtraCustomData(entityByID);
+					CompoundTag data = entityByID.getExtraCustomData();
 					new HashSet<>(data.getAllKeys()).forEach(data::remove);
 					data.merge(readData);
 					if (!(entityByID instanceof ISyncPersistentData))

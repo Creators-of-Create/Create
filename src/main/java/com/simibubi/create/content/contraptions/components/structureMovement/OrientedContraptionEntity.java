@@ -378,7 +378,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		if (!rotationLock) {
 			if (riding instanceof AbstractMinecart) {
 				AbstractMinecart minecartEntity = (AbstractMinecart) riding;
-				BlockPos railPosition = MinecartAndRailUtil.getExpectedRailPos(minecartEntity);
+				BlockPos railPosition = minecartEntity.getCurrentRailPos();
 				BlockState blockState = level.getBlockState(railPosition);
 				if (blockState.getBlock() instanceof BaseRailBlock) {
 					BaseRailBlock abstractRailBlock = (BaseRailBlock) blockState.getBlock();

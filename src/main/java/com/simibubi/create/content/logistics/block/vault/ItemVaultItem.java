@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.vault;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -117,10 +116,10 @@ public class ItemVaultItem extends BlockItem {
 				if (ItemVaultBlock.isVault(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				EntityHelper.getExtraCustomData(player)
+				player.getExtraCustomData()
 					.putBoolean("SilenceVaultSound", true);
 				super.place(context);
-				EntityHelper.getExtraCustomData(player)
+				player.getExtraCustomData()
 					.remove("SilenceVaultSound");
 			}
 		}

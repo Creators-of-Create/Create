@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,7 +24,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 		boolean drowning = entity.getAirSupply() == 0;
 
 		if (world.isClientSide)
-			EntityHelper.getExtraCustomData(entity)
+			entity.getExtraCustomData()
 				.remove("VisualBacktankAir");
 
 		if (!AllItems.DIVING_HELMET.get()
@@ -46,7 +45,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			entity.setAirSupply(10);
 
 		if (world.isClientSide)
-			EntityHelper.getExtraCustomData(entity)
+			entity.getExtraCustomData()
 				.putInt("VisualBacktankAir", (int) BackTankUtil.getAir(backtank));
 
 		if (!second)

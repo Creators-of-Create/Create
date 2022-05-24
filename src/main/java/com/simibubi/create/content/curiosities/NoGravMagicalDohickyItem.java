@@ -2,7 +2,6 @@ package com.simibubi.create.content.curiosities;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.item.EntityTickListenerItem;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,7 +27,7 @@ public class NoGravMagicalDohickyItem extends Item implements EntityTickListener
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
 		Level world = entity.level;
 		Vec3 pos = entity.position();
-		CompoundTag persistentData = EntityHelper.getExtraCustomData(entity);
+		CompoundTag persistentData = entity.getExtraCustomData();
 
 		if (world.isClientSide) {
 			if (world.random.nextFloat() < getIdleParticleChance(entity)) {

@@ -10,7 +10,6 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -54,7 +53,7 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 				return;
 			ToolboxTileEntity toolbox = (ToolboxTileEntity) blockEntity;
 
-			CompoundTag compound = EntityHelper.getExtraCustomData(player)
+			CompoundTag compound = player.getExtraCustomData()
 				.getCompound("CreateToolboxData");
 			MutableBoolean sendData = new MutableBoolean(false);
 

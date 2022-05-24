@@ -5,8 +5,6 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -99,7 +97,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				});
 			}
 
-			CompoundTag compound = EntityHelper.getExtraCustomData(player)
+			CompoundTag compound = player.getExtraCustomData()
 				.getCompound("CreateToolboxData");
 			String key = String.valueOf(hotbarSlot);
 
@@ -108,7 +106,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
 			compound.put(key, data);
 
-			EntityHelper.getExtraCustomData(player)
+			player.getExtraCustomData()
 				.put("CreateToolboxData", compound);
 
 			toolboxTileEntity.connectPlayer(slot, player, hotbarSlot);

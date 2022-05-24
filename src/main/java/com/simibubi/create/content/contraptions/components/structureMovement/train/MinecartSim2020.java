@@ -137,7 +137,7 @@ public class MinecartSim2020 {
 
 		cart.setPos(actualX, actualY, actualZ);
 		cart.setDeltaMovement(forcedMovement);
-		MinecartAndRailUtil.moveMinecartOnRail(cart, cartPos);
+		cart.moveMinecartOnRail(cartPos);
 
 		x = cart.getX();
 		y = cart.getY();
