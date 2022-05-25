@@ -116,11 +116,15 @@ public class LinkedControllerClientHandler {
 	}
 
 	protected static boolean isActuallyPressed(KeyMapping kb) {
-		return InputConstants.isKeyDown(Minecraft.getInstance()
-			.getWindow()
-			.getWindow(),
-			kb.getKey()
-				.getValue());
+
+		if(kb.matchesMouse(kb.getKey().getValue()))
+			return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), kb.getKey().getValue()) == 1;
+		else
+			return InputConstants.isKeyDown(Minecraft.getInstance()
+							.getWindow()
+							.getWindow(),
+					kb.getKey()
+							.getValue());
 	}
 
 	public static void tick() {
@@ -172,8 +176,9 @@ public class LinkedControllerClientHandler {
 		Vector<KeyMapping> controls = getControls();
 		Collection<Integer> pressedKeys = new HashSet<>();
 		for (int i = 0; i < controls.size(); i++) {
-			if (isActuallyPressed(controls.get(i)))
+			if (isActuallyPressed(controls.get(i))) {
 				pressedKeys.add(i);
+			}
 		}
 
 		Collection<Integer> newKeys = new HashSet<>(pressedKeys);
