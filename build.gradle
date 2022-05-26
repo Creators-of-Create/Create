@@ -68,6 +68,8 @@ dependencies {
 
 //    modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
 //    runtimeOnly('org.joml:joml:1.10.4') // for sodium
+//    modLocalRuntime("maven.modrinth:phosphor:mc1.18.x-0.8.1")
+//    modLocalRuntime("maven.modrinth:starlight:1.0.2+1.18.2")
 
 //    modLocalRuntime("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
 //    modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
