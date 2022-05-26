@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
@@ -110,6 +111,7 @@ public class ToolboxHandler {
 			.sorted((p1, p2) -> Double.compare(distance(location, p1), distance(location, p2)))
 			.limit(maxAmount)
 			.map(toolboxes.get(world)::get)
+			.filter(ToolboxTileEntity::isFullyInitialized)
 			.collect(Collectors.toList());
 	}
 

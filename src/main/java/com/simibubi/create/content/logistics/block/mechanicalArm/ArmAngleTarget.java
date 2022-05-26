@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ArmAngleTarget {
 
-	static ArmAngleTarget NO_TARGET = new ArmAngleTarget();
+	static final ArmAngleTarget NO_TARGET = new ArmAngleTarget();
 
 	float baseAngle;
 	float lowerArmAngle;

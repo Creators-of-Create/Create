@@ -23,14 +23,13 @@ Welcome to Create, a mod offering a variety of tools and blocks for Building, De
 
 The added elements of tech are designed to leave as many design choices to the player as possible, where item processing doesn't happen inside a single block with funny textures, it requires a set of actors working together in many possible arrangements.
 
-Check out the wiki and in-game Tool-tips for further info on how to use these features, and stay tuned for an ever-growing selection of possibilities for Creative and Survival Minecraft.
+Check out the in-game Documentation for further info on how to use the added features, and stay tuned for an ever-growing selection of possibilities for Creative and Survival Minecraft.
 
 [<img src="https://i.imgur.com/0lLX9Oy.jpg" width="200">](https://github.com/Fabricators-of-Create/Create/issues "Report Issues")
 [<img src="https://i.imgur.com/bjEZraY.jpg" width="200">](https://www.youtube.com/channel/UCrKV2QTuyGcv4E3eSJpBiYA/playlists "Watch Videos")
 [<img src="https://i.imgur.com/aWrjfKJ.jpg" width="200">](https://discord.gg/hmaD7Se "Feedback & Help")
 [<img src="https://i.imgur.com/xj8o2xC.jpg" width="200">](https://www.patreon.com/simibubi "Support Us")
 
-- Support for Versions prior to Minecraft 1.18: Not planned
-- Support for Forge: https://github.com/Creators-of-Create/Create
 <hr>
 <h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create-fabric">CurseForge</a> page or our <a href="https://modrinth.com/mod/create-fabric">Modrinth</a> page.</h4>
+<h4 align="center">Looking for the Forge version? <a href="https://github.com/Creators-of-Create/Create">Find it here</a></h4>

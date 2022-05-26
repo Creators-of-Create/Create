@@ -18,7 +18,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 public class TankManipulationBehaviour extends CapManipulationBehaviourBase<FluidVariant, TankManipulationBehaviour> {
 
-	public static BehaviourType<TankManipulationBehaviour> OBSERVE = new BehaviourType<>();
+	public static final BehaviourType<TankManipulationBehaviour> OBSERVE = new BehaviourType<>();
 	private BehaviourType<TankManipulationBehaviour> behaviourType;
 
 	public TankManipulationBehaviour(SmartTileEntity te, InterfaceProvider target) {

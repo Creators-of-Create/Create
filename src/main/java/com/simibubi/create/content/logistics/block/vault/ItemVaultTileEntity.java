@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -27,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer, ItemTransferable {
+public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer.Inventory, ItemTransferable {
 
 	protected Storage<ItemVariant> itemCapability;
 
@@ -70,7 +71,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			return;
 		if (!isController())
 			return;
-		ItemVaultConnectivityHandler.formVaults(this);
+		ConnectivityHandler.formMulti(this);
 	}
 
 	protected void updateComparators() {
@@ -259,7 +260,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 					BlockPos vaultPos = alongZ ? worldPosition.offset(xOffset, zOffset, yOffset)
 						: worldPosition.offset(yOffset, xOffset, zOffset);
 					ItemVaultTileEntity vaultAt =
-						ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
+						ConnectivityHandler.partAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
 					invs[yOffset * radius * radius + xOffset * radius + zOffset] =
 						vaultAt != null ? vaultAt.inventory : new ItemStackHandler();
 				}
@@ -274,4 +275,45 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		return radius * 3;
 	}
 
+	@Override
+	public void preventConnectivityUpdate() { updateConnectivity = false; }
+
+	@Override
+	public void notifyMultiUpdated() {
+		BlockState state = this.getBlockState();
+		if (ItemVaultBlock.isVault(state)) { // safety
+			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 22);
+		}
+		itemCapability.invalidate();
+		setChanged();
+	}
+
+	@Override
+	public Direction.Axis getMainConnectionAxis() { return getMainAxisOf(this); }
+
+	@Override
+	public int getMaxLength(Direction.Axis longAxis, int width) {
+		if (longAxis == Direction.Axis.Y) return getMaxWidth();
+		return getMaxLength(width);
+	}
+
+	@Override
+	public int getMaxWidth() {
+		return 3;
+	}
+
+	@Override
+	public int getHeight() { return length; }
+
+	@Override
+	public int getWidth() { return radius; }
+
+	@Override
+	public void setHeight(int height) { this.length = height; }
+
+	@Override
+	public void setWidth(int width) { this.radius = width; }
+
+	@Override
+	public boolean hasInventory() { return true; }
 }

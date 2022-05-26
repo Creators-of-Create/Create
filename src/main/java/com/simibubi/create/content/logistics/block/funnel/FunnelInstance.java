@@ -30,8 +30,8 @@ public class FunnelInstance extends BlockEntityInstance<FunnelTileEntity> implem
 		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
         Instancer<FlapData> model = modelManager.defaultSolid()
-                .material(AllMaterialSpecs.FLAPS)
-				.getModel(flapPartial, blockState);
+            .material(AllMaterialSpecs.FLAPS)
+            .getModel(flapPartial);
 
         int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = world.getBrightness(LightLayer.SKY, pos);

@@ -31,7 +31,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements Tic
 	public GlueInstance(MaterialManager materialManager, SuperGlueEntity entity) {
 		super(materialManager, entity);
 
-		Instancer<OrientedData> instancer = getInstancer(materialManager, entity);
+		Instancer<OrientedData> instancer = getInstancer(materialManager);
 
 		Direction face = entity.getFacingDirection();
 		rotation = new Quaternion(AngleHelper.verticalAngle(face), AngleHelper.horizontalAngle(face), 0, true);
@@ -42,10 +42,10 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements Tic
 				.update();
 	}
 
-	private Instancer<OrientedData> getInstancer(MaterialManager materialManager, SuperGlueEntity entity) {
+	private Instancer<OrientedData> getInstancer(MaterialManager materialManager) {
 		MaterialGroup group = GlueModel.USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(RenderType.entityCutout(TEXTURE));
 
-		return group.material(Materials.ORIENTED).model(entity.getType(), GlueModel::get);
+		return group.material(Materials.ORIENTED).model(GlueModel.INSTANCE);
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class DeferralBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<DeferralBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<DeferralBehaviour> TYPE = new BehaviourType<>();
 
 	private boolean needsUpdate;
 	private Supplier<Boolean> callback;

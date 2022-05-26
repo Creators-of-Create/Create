@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
@@ -154,7 +156,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		return basinRecipe;
 	}
 
-	protected BasinRecipe(AllRecipeTypes type, ProcessingRecipeParams params) {
+	protected BasinRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {
 		super(type, params);
 	}
 

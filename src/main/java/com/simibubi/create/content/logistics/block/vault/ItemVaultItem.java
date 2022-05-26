@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.vault;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -64,7 +65,7 @@ public class ItemVaultItem extends BlockItem {
 
 		if (!ItemVaultBlock.isVault(placedOnState))
 			return;
-		ItemVaultTileEntity tankAt = ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
+		ItemVaultTileEntity tankAt = ConnectivityHandler.partAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
 		if (tankAt == null)
 			return;
 		ItemVaultTileEntity controllerTE = tankAt.getControllerTE();

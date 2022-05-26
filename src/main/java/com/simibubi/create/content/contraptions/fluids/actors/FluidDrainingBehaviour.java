@@ -40,6 +40,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
+	public static final BehaviourType<FluidDrainingBehaviour> TYPE = new BehaviourType<>();
+
 	Fluid fluid;
 
 	// Execution
@@ -392,8 +394,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		if (ctx != null) TransactionCallback.onSuccess(ctx, tileEntity::sendData);
 		else tileEntity.sendData();
 	}
-
-	public static BehaviourType<FluidDrainingBehaviour> TYPE = new BehaviourType<>();
 
 	@Override
 	public BehaviourType<?> getType() {

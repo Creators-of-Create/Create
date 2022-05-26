@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ScrollValueBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<ScrollValueBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<ScrollValueBehaviour> TYPE = new BehaviourType<>();
 
 	ValueBoxTransform slotPositioning;
 	Vec3 textShift;

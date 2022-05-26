@@ -28,8 +28,8 @@ public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverTileEnti
 
         Material<ModelData> mat = getTransformMaterial();
 
-        handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
-        indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
+        handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE).createInstance();
+        indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR).createInstance();
 
 		transform(indicator);
 

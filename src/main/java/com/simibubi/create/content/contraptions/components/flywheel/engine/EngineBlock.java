@@ -88,7 +88,6 @@ public abstract class EngineBlock extends HorizontalDirectionalBlock implements 
 		return pos.relative(state.getValue(FACING).getOpposite());
 	}
 
-	@Nullable
 	@Environment(EnvType.CLIENT)
 	public abstract PartialModel getFrameModel();
 

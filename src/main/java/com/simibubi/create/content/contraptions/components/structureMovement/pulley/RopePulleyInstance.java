@@ -22,15 +22,15 @@ public class RopePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected Instancer<OrientedData> getHalfMagnetModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF_MAGNET, blockState);
+		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF_MAGNET);
 	}
 
 	protected Instancer<OrientedData> getCoilModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_COIL, blockState, rotatingAbout);
+		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_COIL, rotatingAbout);
 	}
 
 	protected Instancer<OrientedData> getHalfRopeModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF, blockState);
+		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF);
 	}
 
 	protected float getOffset() {

@@ -83,6 +83,13 @@ public interface ItemAttribute {
 		return attributeType;
 	}
 
+	static ItemAttribute fromNBT(CompoundTag nbt) {
+		for (ItemAttribute itemAttribute : types)
+			if (itemAttribute.canRead(nbt))
+				return itemAttribute.readNBT(nbt.getCompound(itemAttribute.getNBTKey()));
+		return null;
+	}
+
 	default boolean appliesTo(ItemStack stack, Level world) {
 		return appliesTo(stack);
 	}
@@ -93,27 +100,18 @@ public interface ItemAttribute {
 		return listAttributesOf(stack);
 	}
 
-	public List<ItemAttribute> listAttributesOf(ItemStack stack);
+	List<ItemAttribute> listAttributesOf(ItemStack stack);
 
-	public String getTranslationKey();
+	String getTranslationKey();
 
 	void writeNBT(CompoundTag nbt);
 
 	ItemAttribute readNBT(CompoundTag nbt);
 
-	public default void serializeNBT(CompoundTag nbt) {
+	default void serializeNBT(CompoundTag nbt) {
 		CompoundTag compound = new CompoundTag();
 		writeNBT(compound);
 		nbt.put(getNBTKey(), compound);
-	}
-
-	public static ItemAttribute fromNBT(CompoundTag nbt) {
-		for (ItemAttribute itemAttribute : types) {
-			if (!itemAttribute.canRead(nbt))
-				continue;
-			return itemAttribute.readNBT(nbt.getCompound(itemAttribute.getNBTKey()));
-		}
-		return null;
 	}
 
 	default Object[] getTranslationParameters() {

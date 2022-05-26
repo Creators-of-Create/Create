@@ -18,7 +18,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class TransportedItemStackHandlerBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<TransportedItemStackHandlerBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<TransportedItemStackHandlerBehaviour> TYPE = new BehaviourType<>();
+
 	private ProcessingCallback processingCallback;
 	private PositionGetter positionGetter;
 

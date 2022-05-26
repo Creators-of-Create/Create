@@ -54,7 +54,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 		BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
 		wheel = getTransformMaterial()
-			.getModel(AllBlockPartials.FLYWHEEL, referenceState, referenceState.getValue(HORIZONTAL_FACING))
+			.getModel(AllBlockPartials.FLYWHEEL, referenceState.getValue(HORIZONTAL_FACING))
 			.createInstance();
 
 		connection = FlywheelBlock.getConnection(blockState);
@@ -68,13 +68,13 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 			Material<ModelData> mat = getTransformMaterial();
 
-			upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState)
+			upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING)
 				.createInstance();
-			lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState)
+			lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING)
 				.createInstance();
-			upperSliding = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_SLIDING, blockState)
+			upperSliding = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_SLIDING)
 				.createInstance();
-			lowerSliding = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_SLIDING, blockState)
+			lowerSliding = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_SLIDING)
 				.createInstance();
 
 			connectors = Lists.newArrayList(upperRotating, lowerRotating, upperSliding, lowerSliding);
@@ -168,7 +168,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 	protected Instancer<RotatingData> shaftModel() {
 		Direction opposite = facing.getOpposite();
-		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite);
+		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, opposite);
 	}
 
 	protected void transformConnector(TransformStack ms, boolean upper, boolean rotating, float angle,

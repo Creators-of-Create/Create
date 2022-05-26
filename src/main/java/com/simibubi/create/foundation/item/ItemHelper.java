@@ -211,7 +211,7 @@ public class ItemHelper {
 
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (StorageView<ItemVariant> view : inv.iterable(t)) {
-				if (view.isResourceBlank())
+				if (view.isResourceBlank() || !test.test(stackInSlot))
 					continue;
 				ItemVariant var = view.getResource();
 				if (extracting.isEmpty()) {

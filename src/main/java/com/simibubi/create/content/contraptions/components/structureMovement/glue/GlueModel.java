@@ -1,7 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import com.jozufozu.flywheel.api.ModelSupplier;
 import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.core.Formats;
+import com.jozufozu.flywheel.core.SimpleModelSupplier;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.vertex.PosTexNormalWriterUnsafe;
 import com.mojang.blaze3d.platform.MemoryTracker;
@@ -14,16 +16,12 @@ import net.minecraft.world.phys.Vec3;
 
 public class GlueModel implements Model {
 
-	public static final GlueModel INSTANCE = new GlueModel();
+	public static final ModelSupplier INSTANCE = new SimpleModelSupplier(GlueModel::new);
 	static final boolean USE_ATLAS = false;
-
-	public static GlueModel get() {
-		return INSTANCE;
-	}
 
 	private final VertexList reader;
 
-	private GlueModel() {
+	protected GlueModel() {
 		PosTexNormalWriterUnsafe writer = Formats.POS_TEX_NORMAL.createWriter(MemoryTracker.create(size()));
 		createGlueModel(writer);
 		reader = writer.intoReader();

@@ -32,7 +32,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
+        Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL);
         Instancer<ModelData> headModel = getHeadModel();
 
         ms = new PoseStack();
@@ -150,7 +150,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
 
         @Override
         protected Instancer<ModelData> getHeadModel() {
-            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
+            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_SPEED);
         }
     }
 
@@ -161,7 +161,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
 
         @Override
         protected Instancer<ModelData> getHeadModel() {
-            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
+            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_STRESS);
         }
     }
 }

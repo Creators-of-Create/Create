@@ -22,6 +22,7 @@ import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
@@ -90,6 +91,7 @@ public class Create implements ModInitializer {
 		AllTileEntities.register();
 		AllMovementBehaviours.register();
 		AllInteractionBehaviours.register();
+		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		FurnaceEngineInteractions.registerDefaults();
@@ -118,6 +120,8 @@ public class Create implements ModInitializer {
 		AllWorldFeatures.registerOreFeatures();
 
 		AllPackets.channel.initServerListener();
+
+		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
 	}
 
 	public static void init() {

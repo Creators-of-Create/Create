@@ -400,6 +400,11 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		return uniqueId;
 	}
 
+	public boolean isFullyInitialized() {
+		// returns true when uniqueId has been initialized
+		return uniqueId != null;
+	}
+
 	public void setCustomName(Component customName) {
 		this.customName = customName;
 	}

@@ -42,6 +42,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -123,7 +124,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			if (phase == Phase.MOVE_TO_INPUT) {
 				ArmInteractionPoint point = getTargetedInteractionPoint();
 				if (point != null)
-					point.keepAlive(level);
+					point.keepAlive();
 			}
 			return;
 		}
@@ -171,9 +172,9 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {
 		for (ArmInteractionPoint armInteractionPoint : list) {
-			if (!(armInteractionPoint instanceof Jukebox))
+			if (!(armInteractionPoint instanceof AllArmInteractionPointTypes.JukeboxPoint))
 				continue;
-			BlockState state = level.getBlockState(armInteractionPoint.pos);
+			BlockState state = level.getBlockState(armInteractionPoint.getPos());
 			if (state.getOptionalValue(JukeboxBlock.HAS_RECORD).orElse(false))
 				return true;
 		}
@@ -243,7 +244,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 		InteractionPoints: for (int i = startIndex; i < scanRange; i++) {
 			ArmInteractionPoint armInteractionPoint = inputs.get(i);
-			if (!armInteractionPoint.isStillValid(level))
+			if (!armInteractionPoint.isValid())
 				continue;
 
 			if (getDistributableAmount(armInteractionPoint) == 0)
@@ -281,10 +282,10 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (int i = startIndex; i < scanRange; i++) {
 				ArmInteractionPoint armInteractionPoint = outputs.get(i);
-				if (!armInteractionPoint.isStillValid(level))
+				if (!armInteractionPoint.isValid())
 					continue;
 
-				ItemStack remainder = armInteractionPoint.insert(level, held, t);
+				ItemStack remainder = armInteractionPoint.insert(held, t);
 				if (ItemStackUtil.equals(remainder, heldItem, false))
 					continue;
 
@@ -331,12 +332,22 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		}
 	}
 
+	private ItemStack simulateInsertion(ItemStack stack) {
+		for (ArmInteractionPoint armInteractionPoint : outputs) {
+			if (armInteractionPoint.isValid())
+				stack = armInteractionPoint.insert(stack, true);
+				if (stack.isEmpty())
+					break;
+		}
+		return stack;
+	}
+
 	protected void depositItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		if (armInteractionPoint != null) {
+		if (armInteractionPoint != null && armInteractionPoint.isValid()) {
 			ItemStack toInsert = heldItem.copy();
 			try (Transaction t = TransferUtil.getTransaction()) {
-				ItemStack remainder = armInteractionPoint.insert(level, toInsert, t);
+				ItemStack remainder = armInteractionPoint.insert(toInsert, t);
 				t.commit();
 				heldItem = remainder;
 			}
@@ -353,24 +364,24 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 	protected void collectItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		if (armInteractionPoint != null) {
+		if (armInteractionPoint != null && armInteractionPoint.isValid()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				int amountExtracted = getDistributableAmount(armInteractionPoint);
-				if (amountExtracted != 0) {
-					ItemStack prevHeld = heldItem;
-					heldItem = armInteractionPoint.extract(level, amountExtracted, t);
-					phase = Phase.SEARCH_OUTPUTS;
-					chasedPointProgress = 0;
-					chasedPointIndex = -1;
-					sendData();
-					setChanged();
+				if (amountExtracted == 0)
+					continue;
+				ItemStack prevHeld = heldItem;
+				heldItem = armInteractionPoint.extract(level, amountExtracted, t);
+				phase = Phase.SEARCH_OUTPUTS;
+				chasedPointProgress = 0;
+				chasedPointIndex = -1;
+				sendData();
+				setChanged();
 
-					if (!prevHeld.sameItem(heldItem))
-						level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
-								.5f + Create.RANDOM.nextFloat() * .25f);
-					t.commit();
-					return;
-				}
+				if (!prevHeld.sameItem(heldItem))
+					level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
+							.5f + Create.RANDOM.nextFloat() * .25f);
+				t.commit();
+				return;
 			}
 		}
 
@@ -379,17 +390,6 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		chasedPointIndex = -1;
 		sendData();
 		setChanged();
-	}
-
-	private ItemStack simulateInsertion(ItemStack stack) {
-		try (Transaction t = TransferUtil.getTransaction()) {
-			for (ArmInteractionPoint armInteractionPoint : outputs) {
-				stack = armInteractionPoint.insert(level, stack, t);
-				if (stack.isEmpty())
-					break;
-			}
-			return stack;
-		}
 	}
 
 	public void redstoneUpdate() {
@@ -409,8 +409,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (interactionPointTag == null)
 			return;
 
-		for (Tag inbt : interactionPointTag) {
-			ArmInteractionPoint.transformPos(transform, (CompoundTag) inbt);
+		for (Tag tag : interactionPointTag) {
+			ArmInteractionPoint.transformPos((CompoundTag) tag, transform);
 		}
 
 		notifyUpdate();
@@ -425,15 +425,15 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		outputs.clear();
 
 		boolean hasBlazeBurner = false;
-		for (Tag inbt : interactionPointTag) {
-			ArmInteractionPoint point = ArmInteractionPoint.deserialize(level, worldPosition, (CompoundTag) inbt);
+		for (Tag tag : interactionPointTag) {
+			ArmInteractionPoint point = ArmInteractionPoint.deserialize((CompoundTag) tag, level, worldPosition);
 			if (point == null)
 				continue;
-			if (point.mode == Mode.DEPOSIT)
+			if (point.getMode() == Mode.DEPOSIT)
 				outputs.add(point);
-			if (point.mode == Mode.TAKE)
+			else if (point.getMode() == Mode.TAKE)
 				inputs.add(point);
-			hasBlazeBurner |= point instanceof ArmInteractionPoint.BlazeBurner;
+			hasBlazeBurner |= point instanceof AllArmInteractionPointTypes.BlazeBurnerPoint;
 		}
 
 		if (!level.isClientSide) {
@@ -513,6 +513,10 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 				previousPoint == null ? ArmAngleTarget.NO_TARGET : previousPoint.getTargetAngles(worldPosition, ceiling);
 			if (previousPoint != null)
 				previousBaseAngle = previousPoint.getTargetAngles(worldPosition, ceiling).baseAngle;
+
+			ArmInteractionPoint targetedPoint = getTargetedInteractionPoint();
+			if (targetedPoint != null)
+				targetedPoint.updateCachedState();
 		}
 	}
 
@@ -533,6 +537,16 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 		TooltipHelper.addHint(tooltip, "hint.mechanical_arm_no_targets");
 		return true;
+	}
+
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		for (ArmInteractionPoint input : inputs) {
+			input.setLevel(level);
+		}
+		for (ArmInteractionPoint output : outputs) {
+			output.setLevel(level);
+		}
 	}
 
 	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {

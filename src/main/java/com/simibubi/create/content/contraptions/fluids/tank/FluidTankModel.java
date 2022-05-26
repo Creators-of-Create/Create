@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -34,7 +35,7 @@ public class FluidTankModel extends CTModel {
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
-			cullData.setCulled(d, FluidTankConnectivityHandler.isConnected(blockView, pos, pos.relative(d)));
+			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d))); //FluidTankConnectivityHandler.isConnected(blockView, pos, pos.relative(d)));
 
 		context.pushTransform(quad -> {
 			Direction cullFace = quad.cullFace();
