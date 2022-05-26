@@ -121,8 +121,6 @@ public class Create implements ModInitializer {
 		AllWorldFeatures.registerOreFeatures();
 
 		AllPackets.channel.initServerListener();
-
-//		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
 	}
 
 	public static void init() {
