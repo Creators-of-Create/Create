@@ -133,7 +133,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	public boolean isLocalCoordWithin(BlockPos localPos, int min, int max) {
-		if (!(getContraption()instanceof CarriageContraption cc))
+		if (!(getContraption() instanceof CarriageContraption cc))
 			return false;
 		Direction facing = cc.getAssemblyDirection();
 		Axis axis = facing.getClockWise()
@@ -186,6 +186,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					dimensional.pivot = null;
 					carriage.updateContraptionAnchors();
 					dimensional.updateRenderedCutoff();
+					
+					carriage.storage.bindTanks(contraption.presentTileEntities);
 				}
 				updateTrackGraph();
 			} else
@@ -497,7 +499,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (targetSpeed != 0)
 			carriage.train.burnFuel();
-		
+
 		boolean slow = inverted ^ targetSpeed < 0;
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
@@ -611,7 +613,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		this.carriageIndex = carriage.train.carriages.indexOf(carriage);
 		if (contraption instanceof CarriageContraption cc)
 			cc.swapStorageAfterAssembly(this);
-		
+
 		DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
 		dimensional.pivot = null;
 		carriage.updateContraptionAnchors();

@@ -17,8 +17,10 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 
 	public boolean slotsActive = true;
-	public boolean targetSlotActive = true;
+	public int targetSlotsActive = 1;
 	
+	static final int slots = 2;
+
 	public ScheduleContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
@@ -29,7 +31,7 @@ public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 
 	@Override
 	protected ItemStackHandler createGhostInventory() {
-		return new ItemStackHandler(1);
+		return new ItemStackHandler(slots);
 	}
 
 	@Override
@@ -51,9 +53,10 @@ public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 	@Override
 	protected void addSlots() {
 		addPlayerSlots(46, 140);
-		addSlot(new InactiveItemHandlerSlot(ghostInventory, 0, 54, 88));
+		for (int i = 0; i < slots; i++)
+			addSlot(new InactiveItemHandlerSlot(ghostInventory, i, i, 54 + 20 * i, 88));
 	}
-	
+
 	@Override
 	protected void addPlayerSlots(int x, int y) {
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
@@ -70,31 +73,35 @@ public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 	public boolean stillValid(Player player) {
 		return playerInventory.getSelected() == contentHolder;
 	}
-	
+
 	class InactiveSlot extends Slot {
 
 		public InactiveSlot(Container pContainer, int pIndex, int pX, int pY) {
 			super(pContainer, pIndex, pX, pY);
 		}
-		
+
 		@Override
 		public boolean isActive() {
 			return slotsActive;
 		}
-		
+
 	}
-	
+
 	class InactiveItemHandlerSlot extends SlotItemHandler {
-		
-		public InactiveItemHandlerSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+
+		private int targetIndex;
+
+		public InactiveItemHandlerSlot(IItemHandler itemHandler, int targetIndex, int index, int xPosition,
+			int yPosition) {
 			super(itemHandler, index, xPosition, yPosition);
+			this.targetIndex = targetIndex;
 		}
 
 		@Override
 		public boolean isActive() {
-			return slotsActive && targetSlotActive;
+			return slotsActive && targetIndex < targetSlotsActive;
 		}
-		
+
 	}
 
 }

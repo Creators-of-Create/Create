@@ -51,6 +51,7 @@ import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -290,6 +291,7 @@ public class CreateJEI implements IModPlugin {
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(LinkedControllerScreen.class, new GhostIngredientHandler());
+		registration.addGhostIngredientHandler(ScheduleScreen.class, new GhostIngredientHandler());
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {

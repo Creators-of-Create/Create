@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
@@ -154,13 +154,13 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine)
 			addFullNumberConfig(builder);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected void addFullNumberConfig(LineBuilder builder) {
+	protected void addFullNumberConfig(ModularGuiLineBuilder builder) {
 		builder.addSelectionScrollInput(0, 75,
 			(si, l) -> si.forOptions(Lang.translatedOptions("display_source.value_list", "shortened", "full_number"))
 				.titled(Lang.translate("display_source.value_list.display")),

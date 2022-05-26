@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class GhostIngredientHandler<T extends GhostItemContainer<?>>
-		implements IGhostIngredientHandler<AbstractSimiContainerScreen<T>> {
+	implements IGhostIngredientHandler<AbstractSimiContainerScreen<T>> {
 
 	@Override
 	public <I> List<Target<I>> getTargets(AbstractSimiContainerScreen<T> gui, I ingredient, boolean doStart) {
@@ -29,9 +29,12 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 
 		if (ingredient instanceof ItemStack) {
 			for (int i = 36; i < gui.getMenu().slots.size(); i++) {
-				targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
+				if (gui.getMenu().slots.get(i)
+					.isActive())
+					targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
 
-				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna override that one
+				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna
+				// override that one
 				if (isAttributeFilter)
 					break;
 			}
@@ -41,8 +44,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 	}
 
 	@Override
-	public void onComplete() {
-	}
+	public void onComplete() {}
 
 	@Override
 	public boolean shouldHighlightTargets() {

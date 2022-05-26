@@ -114,8 +114,8 @@ public class LinkedControllerServerHandler {
 		}
 
 		@Override
-		public Pair<Frequency, Frequency> getNetworkKey() {
-			return Pair.of(getSecond().getFirst(), getSecond().getSecond());
+		public Couple<Frequency> getNetworkKey() {
+			return getSecond();
 		}
 
 	}

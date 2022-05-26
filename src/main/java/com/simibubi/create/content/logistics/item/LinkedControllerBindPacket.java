@@ -1,8 +1,5 @@
 package com.simibubi.create.content.logistics.item;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 
@@ -46,18 +43,15 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 		if (linkBehaviour == null)
 			return;
 
-		Pair<Frequency, Frequency> pair = linkBehaviour.getNetworkKey();
-		frequencyItems.setStackInSlot(button * 2, pair.getKey()
-			.getStack()
-			.copy());
-		frequencyItems.setStackInSlot(button * 2 + 1, pair.getValue()
-			.getStack()
-			.copy());
+		linkBehaviour.getNetworkKey()
+			.forEachWithContext((f, first) -> frequencyItems.setStackInSlot(button * 2 + (first ? 0 : 1), f.getStack()
+				.copy()));
 
-		heldItem.getTag().put("Items", frequencyItems.serializeNBT());
+		heldItem.getTag()
+			.put("Items", frequencyItems.serializeNBT());
 	}
 
 	@Override
-	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) { }
+	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) {}
 
 }

@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class ChangeTitleInstruction extends ScheduleInstructionWithEditBox {
+public class ChangeTitleInstruction extends TextScheduleInstruction {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
@@ -45,7 +45,7 @@ public class ChangeTitleInstruction extends ScheduleInstructionWithEditBox {
 	}
 
 	@Override
-	public List<Component> getSecondLineTooltip() {
+	public List<Component> getSecondLineTooltip(int slot) {
 		return ImmutableList.of(Lang.translate("schedule.instruction.name_edit_box"),
 			Lang.translate("schedule.instruction.name_edit_box_1")
 				.withStyle(ChatFormatting.GRAY),

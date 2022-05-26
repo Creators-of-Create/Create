@@ -83,6 +83,7 @@ public enum AllGuiTextures implements ScreenElement {
 
 	DATA_GATHERER("display_link", 235, 162),
 	DATA_AREA_START("display_link", 0, 163, 2, 18),
+	DATA_AREA_SPEECH("display_link", 8, 163, 5, 18),
 	DATA_AREA("display_link", 3, 163, 1, 18),
 	DATA_AREA_END("display_link", 5, 163, 2, 18),
 
@@ -112,9 +113,8 @@ public enum AllGuiTextures implements ScreenElement {
 	SCHEDULE_STRIP_END("schedule", 34, 239, 11, 16),
 	SCHEDULE_STRIP_ACTION("schedule", 209, 239, 11, 16),
 	SCHEDULE_EDITOR("schedule_2", 256, 89),
+	SCHEDULE_EDITOR_ADDITIONAL_SLOT("schedule_2", 55, 47, 32, 18),
 	SCHEDULE_EDITOR_INACTIVE_SLOT("schedule_2", 0, 91, 18, 18),
-	SCHEDULE_EDITOR_SECOND_LINE("schedule_2", 20, 91, 124, 18),
-	SCHEDULE_EDITOR_DIVIDER("schedule_2", 145, 91, 4, 18),
 	SCHEDULE_POINTER("schedule", 185, 239, 21, 16),
 	SCHEDULE_POINTER_OFFSCREEN("schedule", 171, 239, 13, 16),
 

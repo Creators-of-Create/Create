@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.display.source;
 import java.util.stream.Stream;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.IntAttached;
 
 import net.minecraft.network.chat.Component;
@@ -58,6 +58,6 @@ public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {}
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {}
 
 }

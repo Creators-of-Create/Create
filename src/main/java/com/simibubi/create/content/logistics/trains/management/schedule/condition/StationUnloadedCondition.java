@@ -30,10 +30,10 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void write(CompoundTag tag) {}
+	protected void writeAdditional(CompoundTag tag) {}
 
 	@Override
-	protected void read(CompoundTag tag) {}
+	protected void readAdditional(CompoundTag tag) {}
 
 	@Override
 	public ResourceLocation getId() {

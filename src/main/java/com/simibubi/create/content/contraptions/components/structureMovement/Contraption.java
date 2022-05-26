@@ -1290,4 +1290,8 @@ public abstract class Contraption {
 		}
 	}
 
+	public void tickStorage(AbstractContraptionEntity entity) {
+		storage.entityTick(entity);
+	}
+
 }

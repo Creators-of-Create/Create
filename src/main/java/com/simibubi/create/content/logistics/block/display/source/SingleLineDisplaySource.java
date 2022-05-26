@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -25,13 +25,13 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine && allowsLabeling(context))
 			addLabelingTextBox(builder);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected void addLabelingTextBox(LineBuilder builder) {
+	protected void addLabelingTextBox(ModularGuiLineBuilder builder) {
 		builder.addTextInput(0, 137, (e, t) -> {
 			e.setValue("");
 			t.withTooltip(ImmutableList.of(Lang.translate("display_source.label")

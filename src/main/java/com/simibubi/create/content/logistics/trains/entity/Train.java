@@ -169,6 +169,9 @@ public class Train {
 			updateConductors();
 			return;
 		}
+		
+		if (heldForAssembly && getCurrentStation() == null)
+			heldForAssembly = false;
 
 		updateConductors();
 		runtime.tick(level);
@@ -290,7 +293,7 @@ public class Train {
 	public IEdgePointListener frontSignalListener() {
 		return (distance, couple) -> {
 
-			if (couple.getFirst()instanceof GlobalStation station) {
+			if (couple.getFirst() instanceof GlobalStation station) {
 				if (!station.canApproachFrom(couple.getSecond()
 					.getSecond()) || navigation.destination != station)
 					return false;
@@ -302,7 +305,7 @@ public class Train {
 				return true;
 			}
 
-			if (!(couple.getFirst()instanceof SignalBoundary signal))
+			if (!(couple.getFirst() instanceof SignalBoundary signal))
 				return false;
 			if (navigation.waitingForSignal != null && navigation.waitingForSignal.getFirst()
 				.equals(signal.id)) {
@@ -333,7 +336,7 @@ public class Train {
 
 	public IEdgePointListener backSignalListener() {
 		return (distance, couple) -> {
-			if (!(couple.getFirst()instanceof SignalBoundary signal))
+			if (!(couple.getFirst() instanceof SignalBoundary signal))
 				return false;
 			UUID groupId = signal.getGroup(couple.getSecond()
 				.getFirst());
@@ -547,7 +550,7 @@ public class Train {
 			if (entity == null)
 				return false;
 
-			if (entity.getContraption()instanceof CarriageContraption cc)
+			if (entity.getContraption() instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
 			entity.setPos(Vec3
 				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
@@ -813,7 +816,7 @@ public class Train {
 
 		forEachTravellingPointBackwards((tp, d) -> {
 			signalScout.travel(graph, d, signalScout.follow(tp), (distance, couple) -> {
-				if (!(couple.getFirst()instanceof SignalBoundary signal))
+				if (!(couple.getFirst() instanceof SignalBoundary signal))
 					return false;
 				couple.getSecond()
 					.map(signal::getGroup)

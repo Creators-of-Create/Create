@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
@@ -87,8 +86,6 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 					Vec3 bcEndAxis = bc.axes.getSecond();
 					if (v.distanceTo(bcEndAxis) < 1 / 1024f || v.distanceTo(bcEndAxis.scale(-1)) < 1 / 1024f)
 						level.setBlock(key, blockState.setValue(TrackBlock.HAS_TE, true), 3);
-					else
-						Debug.debugChat(v + " != " + bcEndAxis);
 				}
 
 			BlockEntity blockEntity = level.getBlockEntity(key);

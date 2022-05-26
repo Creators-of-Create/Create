@@ -3,25 +3,22 @@ package com.simibubi.create.content.logistics.trains.management.schedule.destina
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.trains.management.schedule.IScheduleInput;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleDataEntry;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class ScheduleInstruction implements IScheduleInput {
+public abstract class ScheduleInstruction extends ScheduleDataEntry {
 
-	protected abstract void write(CompoundTag tag);
-
-	protected abstract void read(CompoundTag tag);
-	
 	public abstract boolean supportsConditions();
 
 	public final CompoundTag write() {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Id", getId().toString());
-		write(tag);
+		tag.put("Data", data.copy());
+		writeAdditional(tag);
 		return tag;
 	}
 
@@ -39,7 +36,8 @@ public abstract class ScheduleInstruction implements IScheduleInput {
 		}
 
 		ScheduleInstruction scheduleDestination = supplier.get();
-		scheduleDestination.read(tag);
+		scheduleDestination.data = tag.getCompound("Data");
+		scheduleDestination.readAdditional(tag);
 		return scheduleDestination;
 	}
 

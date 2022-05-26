@@ -1,10 +1,7 @@
 package com.simibubi.create.content.logistics.block.display;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.BiConsumer;
 
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -16,21 +13,18 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTargetS
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.ModularGuiLine;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
-import com.simibubi.create.foundation.gui.widget.TooltipArea;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -63,13 +57,13 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 	ScrollInput targetLineSelector;
 	Label targetLineLabel;
 
-	Couple<Set<Pair<AbstractWidget, String>>> configWidgets;
+	Couple<ModularGuiLine> configWidgets;
 
 	public DisplayLinkScreen(DisplayLinkTileEntity te) {
 		this.background = AllGuiTextures.DATA_GATHERER;
 		this.te = te;
 		sources = Collections.emptyList();
-		configWidgets = Couple.create(HashSet::new);
+		configWidgets = Couple.create(ModularGuiLine::new);
 		target = null;
 	}
 
@@ -124,7 +118,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		removeWidget(sourceTypeSelector);
 		removeWidget(sourceTypeLabel);
 
-		configWidgets.forEach(s -> s.forEach(p -> removeWidget(p.getFirst())));
+		configWidgets.forEach(s -> s.forEach(this::removeWidget));
 
 		targetLineSelector = null;
 		sourceTypeSelector = null;
@@ -178,100 +172,22 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 	private void initGathererSourceSubOptions(int i) {
 		DisplaySource source = sources.get(i);
 		source.populateData(new DisplayLinkContext(te.getLevel(), te));
-		
+
 		if (targetLineSelector != null)
 			targetLineSelector
 				.titled(source instanceof SingleLineDisplaySource ? Lang.translate("display_link.display_on")
 					: Lang.translate("display_link.display_on_multiline"));
 
 		configWidgets.forEach(s -> {
-			s.forEach(p -> removeWidget(p.getFirst()));
+			s.forEach(this::removeWidget);
 			s.clear();
 		});
 
 		DisplayLinkContext context = new DisplayLinkContext(minecraft.level, te);
 		configWidgets.forEachWithContext((s, first) -> source.initConfigurationWidgets(context,
-			new LineBuilder(s, guiLeft + 60, guiTop + (first ? 51 : 72)), first));
-
-		configWidgets.forEach(s -> s.forEach(p -> {
-			loadValue(te.getSourceConfig(), p);
-			if (p.getFirst() instanceof TooltipArea)
-				addRenderableOnly(p.getFirst());
-			else
-				addRenderableWidget(p.getFirst());
-		}));
-	}
-
-	public class LineBuilder {
-
-		private Set<Pair<AbstractWidget, String>> targetSet;
-		private int x;
-		private int y;
-
-		public LineBuilder(Set<Pair<AbstractWidget, String>> targetSet, int x, int y) {
-			this.targetSet = targetSet;
-			this.x = x;
-			this.y = y;
-		}
-
-		public LineBuilder addScrollInput(int x, int width, BiConsumer<ScrollInput, Label> inputTransform,
-			String dataKey) {
-			ScrollInput input = new ScrollInput(x + this.x, y - 4, width, 18);
-			addScrollInput(input, inputTransform, dataKey);
-			return this;
-		}
-
-		public LineBuilder addSelectionScrollInput(int x, int width,
-			BiConsumer<SelectionScrollInput, Label> inputTransform, String dataKey) {
-			SelectionScrollInput input = new SelectionScrollInput(x + this.x, y - 4, width, 18);
-			addScrollInput(input, inputTransform, dataKey);
-			return this;
-		}
-
-		private <T extends ScrollInput> void addScrollInput(T input, BiConsumer<T, Label> inputTransform,
-			String dataKey) {
-			Label label = new Label(input.x + 5, y, TextComponent.EMPTY);
-			label.withShadow();
-			inputTransform.accept(input, label);
-			input.writingTo(label);
-			targetSet.add(Pair.of(label, "Dummy"));
-			targetSet.add(Pair.of(input, dataKey));
-		}
-
-		public LineBuilder addTextInput(int x, int width, BiConsumer<EditBox, TooltipArea> inputTransform,
-			String dataKey) {
-			EditBox input = new EditBox(font, x + this.x + 5, y, width - 9, 8, TextComponent.EMPTY);
-			input.setBordered(false);
-			input.setTextColor(0xffffff);
-			input.changeFocus(false);
-			input.mouseClicked(0, 0, 0);
-			TooltipArea tooltipArea = new TooltipArea(this.x + x, y - 4, width, 18);
-			inputTransform.accept(input, tooltipArea);
-			targetSet.add(Pair.of(input, dataKey));
-			targetSet.add(Pair.of(tooltipArea, "Dummy"));
-			return this;
-		}
-
-	}
-
-	private void saveValue(CompoundTag data, Pair<AbstractWidget, String> widget) {
-		AbstractWidget w = widget.getFirst();
-		String key = widget.getSecond();
-		if (w instanceof EditBox eb)
-			data.putString(key, eb.getValue());
-		if (w instanceof ScrollInput si)
-			data.putInt(key, si.getState());
-	}
-
-	private void loadValue(CompoundTag data, Pair<AbstractWidget, String> widget) {
-		AbstractWidget w = widget.getFirst();
-		String key = widget.getSecond();
-		if (!data.contains(key))
-			return;
-		if (w instanceof EditBox eb)
-			eb.setValue(data.getString(key));
-		if (w instanceof ScrollInput si)
-			si.setState(data.getInt(key));
+			new ModularGuiLineBuilder(font, s, guiLeft + 60, guiTop + (first ? 51 : 72)), first));
+		configWidgets
+			.forEach(s -> s.loadValues(te.getSourceConfig(), this::addRenderableWidget, this::addRenderableOnly));
 	}
 
 	@Override
@@ -282,7 +198,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		if (!sources.isEmpty()) {
 			sourceData.putString("Id",
 				sources.get(sourceTypeSelector == null ? 0 : sourceTypeSelector.getState()).id.toString());
-			configWidgets.forEach(s -> s.forEach(p -> saveValue(sourceData, p)));
+			configWidgets.forEach(s -> s.saveValues(sourceData));
 		}
 
 		AllPackets.channel.sendToServer(new DisplayLinkConfigurationPacket(te.getBlockPos(), sourceData,
@@ -310,12 +226,14 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			minecraft.getItemRenderer()
 				.renderGuiItem(targetIcon, x + 37, y + 105);
 
-		configWidgets.forEachWithContext((s, first) -> s.forEach(p -> {
-			if (p.getSecond()
-				.equals("Dummy"))
-				return;
-			renderWidgetBG(ms, p.getFirst(), first);
-		}));
+		ms.pushPose();
+		ms.translate(0, guiTop + 48, 0);
+		configWidgets.getFirst()
+			.renderWidgetBG(guiLeft, ms);
+		ms.translate(0, 21, 0);
+		configWidgets.getSecond()
+			.renderWidgetBG(guiLeft, ms);
+		ms.popPose();
 
 		ms.pushPose();
 		TransformStack.cast(ms)
@@ -328,21 +246,6 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			.setValue(DisplayLinkBlock.FACING, Direction.UP))
 			.render(ms);
 		ms.popPose();
-	}
-
-	protected void renderWidgetBG(PoseStack ms, AbstractWidget aw, boolean firstLine) {
-		int x = aw.x;
-		int width = aw.getWidth();
-		int y = guiTop + (firstLine ? 46 : 67);
-
-		if (aw instanceof EditBox) {
-			x -= 5;
-			width += 9;
-		}
-
-		UIRenderHelper.drawStretched(ms, x, y, width, 18, -100, AllGuiTextures.DATA_AREA);
-		AllGuiTextures.DATA_AREA_START.render(ms, x, y);
-		AllGuiTextures.DATA_AREA_END.render(ms, x + width - 2, y);
 	}
 
 	@Override

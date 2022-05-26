@@ -12,15 +12,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ScheduledDelay extends TimedWaitCondition {
+
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		return Pair.of(ItemStack.EMPTY, Lang.translate("schedule.condition.delay_short", formatTime(true)));
 	}
-	
+
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
 		int time = context.getInt("Time");
-		if (time >= value * timeUnit.ticksPer)
+		if (time >= totalWaitTicks())
 			return true;
 		context.putInt("Time", time + 1);
 		return false;

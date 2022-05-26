@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -56,7 +56,7 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 	}
 
 	@Override
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine)
 			builder.addTextInput(0, 137, (e, t) -> {
 				e.setValue("");

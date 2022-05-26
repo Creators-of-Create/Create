@@ -24,18 +24,16 @@ public class SelectionScrollInput extends ScrollInput {
 	public ScrollInput forOptions(List<? extends Component> options) {
 		this.options = options;
 		this.max = options.size();
+		format(options::get);
 		updateTooltip();
 		return this;
 	}
 
 	@Override
-	protected void writeToLabel() {
-		displayLabel.text = options.get(state);
-	}
-
-	@Override
 	protected void updateTooltip() {
 		toolTip.clear();
+		if (title == null)
+			return;
 		toolTip.add(title.plainCopy()
 			.withStyle(s -> s.withColor(HEADER_RGB)));
 		int min = Math.min(this.max - 16, state - 7);

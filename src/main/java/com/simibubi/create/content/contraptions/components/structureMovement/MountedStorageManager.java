@@ -30,11 +30,11 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class MountedStorageManager {
 
-	private ContraptionInvWrapper inventory;
-	private ContraptionInvWrapper fuelInventory;
-	private CombinedTankWrapper fluidInventory;
-	private Map<BlockPos, MountedStorage> storage;
-	private Map<BlockPos, MountedFluidStorage> fluidStorage;
+	protected ContraptionInvWrapper inventory;
+	protected ContraptionInvWrapper fuelInventory;
+	protected CombinedTankWrapper fluidInventory;
+	protected Map<BlockPos, MountedStorage> storage;
+	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 
 	public MountedStorageManager() {
 		storage = new HashMap<>();
@@ -48,25 +48,27 @@ public class MountedStorageManager {
 	public void createHandlers() {
 		Collection<MountedStorage> itemHandlers = storage.values();
 
-		inventory = wrap(itemHandlers.stream()
+		inventory = wrapItems(itemHandlers.stream()
 			.map(MountedStorage::getItemHandler)
-			.toList());
+			.toList(), false);
 
-		fuelInventory = wrap(itemHandlers.stream()
+		fuelInventory = wrapItems(itemHandlers.stream()
 			.filter(MountedStorage::canUseForFuel)
 			.map(MountedStorage::getItemHandler)
-			.toList());
+			.toList(), true);
 
-		List<IFluidHandler> fluidHandlers = fluidStorage.values()
+		fluidInventory = wrapFluids(fluidStorage.values()
 			.stream()
 			.map(MountedFluidStorage::getFluidHandler)
-			.collect(Collectors.toList());
-		fluidInventory = new CombinedTankWrapper(
-			Arrays.copyOf(fluidHandlers.toArray(), fluidHandlers.size(), IFluidHandler[].class));
+			.collect(Collectors.toList()));
 	}
 
-	private ContraptionInvWrapper wrap(List<IItemHandlerModifiable> list) {
+	protected ContraptionInvWrapper wrapItems(Collection<IItemHandlerModifiable> list, boolean fuel) {
 		return new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+	}
+
+	protected CombinedTankWrapper wrapFluids(Collection<IFluidHandler> list) {
+		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), IFluidHandler[].class));
 	}
 
 	public void addBlock(BlockPos localPos, BlockEntity te) {
@@ -86,18 +88,7 @@ public class MountedStorageManager {
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
 
 		if (clientPacket && presentTileEntities != null)
-			fluidStorage.forEach((pos, mfs) -> {
-				BlockEntity tileEntity = presentTileEntities.get(pos);
-				if (!(tileEntity instanceof FluidTankTileEntity))
-					return;
-				FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
-				IFluidTank tankInventory = tank.getTankInventory();
-				if (tankInventory instanceof FluidTank)
-					((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
-				tank.getFluidLevel()
-					.startWithValue(tank.getFillState());
-				mfs.assignTileEntity(tank);
-			});
+			bindTanks(presentTileEntities);
 
 		List<IItemHandlerModifiable> handlers = new ArrayList<>();
 		List<IItemHandlerModifiable> fuelHandlers = new ArrayList<>();
@@ -108,14 +99,27 @@ public class MountedStorageManager {
 				fuelHandlers.add(itemHandler);
 		}
 
-		int index = 0;
-		IFluidHandler[] fluidHandlers = new IFluidHandler[fluidStorage.size()];
-		for (MountedFluidStorage mountedStorage : fluidStorage.values())
-			fluidHandlers[index++] = mountedStorage.getFluidHandler();
+		inventory = wrapItems(handlers, false);
+		fuelInventory = wrapItems(fuelHandlers, true);
+		fluidInventory = wrapFluids(fluidStorage.values()
+			.stream()
+			.map(MountedFluidStorage::getFluidHandler)
+			.toList());
+	}
 
-		inventory = wrap(handlers);
-		fuelInventory = wrap(fuelHandlers);
-		fluidInventory = new CombinedTankWrapper(fluidHandlers);
+	public void bindTanks(Map<BlockPos, BlockEntity> presentTileEntities) {
+		fluidStorage.forEach((pos, mfs) -> {
+			BlockEntity tileEntity = presentTileEntities.get(pos);
+			if (!(tileEntity instanceof FluidTankTileEntity))
+				return;
+			FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
+			IFluidTank tankInventory = tank.getTankInventory();
+			if (tankInventory instanceof FluidTank)
+				((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
+			tank.getFluidLevel()
+				.startWithValue(tank.getFillState());
+			mfs.assignTileEntity(tank);
+		});
 	}
 
 	public void write(CompoundTag nbt, boolean clientPacket) {

@@ -21,6 +21,7 @@ public class ScrollInput extends AbstractSimiWidget {
 	protected final Component shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 	protected boolean inverted;
+	protected Function<Integer, Component> formatter;
 
 	protected int min, max;
 	protected int shiftStep;
@@ -33,12 +34,13 @@ public class ScrollInput extends AbstractSimiWidget {
 		max = 1;
 		shiftStep = 5;
 		step = standardStep();
+		formatter = i -> new TextComponent(String.valueOf(i));
 	}
 
 	public Function<StepContext, Integer> standardStep() {
 		return c -> c.shift ? shiftStep : 1;
 	}
-	
+
 	public ScrollInput inverted() {
 		inverted = true;
 		return this;
@@ -54,7 +56,12 @@ public class ScrollInput extends AbstractSimiWidget {
 		this.onScroll = onScroll;
 		return this;
 	}
-	
+
+	public ScrollInput format(Function<Integer, Component> formatter) {
+		this.formatter = formatter;
+		return this;
+	}
+
 	public ScrollInput removeCallback() {
 		this.onScroll = null;
 		return this;
@@ -73,7 +80,8 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	public ScrollInput writingTo(Label label) {
 		this.displayLabel = label;
-		writeToLabel();
+		if (label != null)
+			writeToLabel();
 		return this;
 	}
 
@@ -99,7 +107,7 @@ public class ScrollInput extends AbstractSimiWidget {
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		if (inverted)
 			delta *= -1;
-		
+
 		StepContext context = new StepContext();
 		context.control = AllKeys.ctrlDown();
 		context.shift = AllKeys.shiftDown();
@@ -138,14 +146,19 @@ public class ScrollInput extends AbstractSimiWidget {
 	}
 
 	protected void writeToLabel() {
-		displayLabel.text = new TextComponent(String.valueOf(state));
+		displayLabel.text = formatter.apply(state);
 	}
 
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.plainCopy().withStyle(s -> s.withColor(HEADER_RGB)));
-		toolTip.add(scrollToModify.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
-		toolTip.add(shiftScrollsFaster.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
+		if (title == null)
+			return;
+		toolTip.add(title.plainCopy()
+			.withStyle(s -> s.withColor(HEADER_RGB)));
+		toolTip.add(scrollToModify.plainCopy()
+			.withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
+		toolTip.add(shiftScrollsFaster.plainCopy()
+			.withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 	}
 
 }

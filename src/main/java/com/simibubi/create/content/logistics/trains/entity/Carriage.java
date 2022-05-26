@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.MountedStorageManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
@@ -59,7 +59,7 @@ public class Carriage {
 
 	public int bogeySpacing;
 	public Couple<CarriageBogey> bogeys;
-	public MountedStorageManager storage;
+	public TrainCargoManager storage;
 
 	CompoundTag serialisedEntity;
 	Map<Integer, CompoundTag> serialisedPassengers;
@@ -76,7 +76,7 @@ public class Carriage {
 		this.presentConductors = Couple.create(false, false);
 		this.serialisedPassengers = new HashMap<>();
 		this.entities = new HashMap<>();
-		this.storage = new MountedStorageManager();
+		this.storage = new TrainCargoManager();
 
 		bogey1.setLeading();
 		bogey1.carriage = this;
@@ -775,7 +775,7 @@ public class Carriage {
 			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
-
+			
 			if (level instanceof ServerLevel sl)
 				sl.addFreshEntity(entity);
 

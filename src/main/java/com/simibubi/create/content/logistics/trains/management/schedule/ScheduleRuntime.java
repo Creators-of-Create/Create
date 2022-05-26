@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimedWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
@@ -57,6 +58,8 @@ public class ScheduleRuntime {
 			return;
 		state = State.POST_TRANSIT;
 		conditionProgress.clear();
+		for (Carriage carriage : train.carriages) 
+			carriage.storage.resetIdleCargoTracker();
 
 		if (ticksInTransit > 0) {
 			int current = predictionTicks.get(currentEntry);
@@ -143,6 +146,9 @@ public class ScheduleRuntime {
 				conditionProgress.set(i, progress + 1);
 			}
 		}
+		
+		for (Carriage carriage : train.carriages)
+			carriage.storage.tickIdleCargoTracker();
 	}
 
 	public GlobalStation startCurrentInstruction() {
@@ -322,8 +328,8 @@ public class ScheduleRuntime {
 		ScheduleEntry scheduleEntry = schedule.entries.get(index);
 		for (List<ScheduleWaitCondition> list : scheduleEntry.conditions)
 			for (ScheduleWaitCondition condition : list)
-				if (condition instanceof TimedWaitCondition wait)
-					return wait.timeUnit.ticksPer * wait.value;
+				if (condition instanceof ScheduledDelay wait)
+					return wait.totalWaitTicks();
 
 		return 5; // TODO properly ask conditions for time prediction
 	}

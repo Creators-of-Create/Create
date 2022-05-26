@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
@@ -26,15 +25,16 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimedWaitCondition.TimeUnit;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.ModularGuiLine;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
@@ -52,7 +52,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -90,9 +89,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	private SelectionScrollInput scrollInput;
 	private Label scrollInputLabel;
 	private IconButton editorConfirm, editorDelete;
+	private ModularGuiLine editorSubWidgets;
 	private Consumer<Boolean> onEditorClose;
-	private List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets;
-	private List<Integer> editorDividers;
 
 	private DestinationSuggestions destinationSuggestions;
 
@@ -104,7 +102,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		if (!tag.isEmpty())
 			schedule = Schedule.fromTag(tag);
 		container.slotsActive = false;
-		editorSubWidgets = new ArrayList<>();
+		editorSubWidgets = new ModularGuiLine();
 	}
 
 	@Override
@@ -178,7 +176,13 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		if (allowDeletion)
 			editorDelete = new IconButton(leftPos + 56 - 45, topPos + 65 + 22, AllIcons.I_TRASH);
 		menu.slotsActive = true;
-		menu.targetSlotActive = field.needsSlot();
+		menu.targetSlotsActive = field.slotsTargeted();
+
+		for (int i = 0; i < field.slotsTargeted(); i++) {
+			ItemStack item = field.getItem(i);
+			menu.ghostInventory.setStackInSlot(i, item);
+			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(item, i));
+		}
 
 		if (field instanceof ScheduleInstruction instruction) {
 			int startIndex = 0;
@@ -260,15 +264,15 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		removeWidget(editorDelete);
 
 		IScheduleInput editing = editingCondition == null ? editingDestination : editingCondition;
-		editing.setItem(menu.getSlot(36)
-			.getItem());
+		for (int i = 0; i < editing.slotsTargeted(); i++) {
+			editing.setItem(i, menu.ghostInventory.getStackInSlot(i));
+			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(ItemStack.EMPTY, i));
+		}
 
-		editorSubWidgets.forEach(p -> p.getSecond()
-			.accept(editing, p.getFirst()));
-		editorSubWidgets.forEach(p -> removeWidget(p.getFirst()));
+		editorSubWidgets.saveValues(editing.getData());
+		editorSubWidgets.forEach(this::removeWidget);
 		editorSubWidgets.clear();
 
-		editorDividers = null;
 		editingCondition = null;
 		editingDestination = null;
 		editorConfirm = null;
@@ -279,32 +283,25 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	protected void updateEditorSubwidgets(IScheduleInput field) {
 		destinationSuggestions = null;
-		menu.targetSlotActive = field.needsSlot();
-		editorSubWidgets.forEach(p -> removeWidget(p.getFirst()));
+		menu.targetSlotsActive = field.slotsTargeted();
+
+		editorSubWidgets.forEach(this::removeWidget);
 		editorSubWidgets.clear();
-		editorDividers = new ArrayList<>();
+		field.initConfigurationWidgets(
+			new ModularGuiLineBuilder(font, editorSubWidgets, getGuiLeft() + 77, getGuiTop() + 92).speechBubble());
+		editorSubWidgets.loadValues(field.getData(), this::addRenderableWidget, this::addRenderableOnly);
 
-		field.createWidgets(this, editorSubWidgets, editorDividers, leftPos - 2, topPos + 40);
+		if (!(field instanceof DestinationInstruction))
+			return;
 
-		if (editorSubWidgets.isEmpty())
-			editorDividers = null;
-
-		if (field instanceof DestinationInstruction) {
-			EditBox destinationBox = (EditBox) editorSubWidgets.get(0)
-				.getFirst();
+		editorSubWidgets.forEach(e -> {
+			if (!(e instanceof EditBox destinationBox))
+				return;
 			destinationSuggestions = new DestinationSuggestions(this.minecraft, this, destinationBox, this.font,
 				getViableStations(field), topPos + 33);
 			destinationSuggestions.setAllowSuggestions(true);
 			destinationSuggestions.updateCommandInfo();
 			destinationBox.setResponder(this::onDestinationEdited);
-		}
-
-		editorSubWidgets.forEach(pair -> {
-			GuiEventListener e = pair.getFirst();
-			if (e instanceof AbstractSimiWidget)
-				addRenderableWidget((AbstractSimiWidget) e);
-			if (e instanceof EditBox)
-				addRenderableWidget((EditBox) e);
 		});
 	}
 
@@ -839,8 +836,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				ArrayList<ScheduleWaitCondition> initialConditions = new ArrayList<>();
 				initialConditions.add(delay);
 				entry.instruction = editingDestination;
-				delay.value = 5;
-				delay.timeUnit = TimeUnit.SECONDS;
 				entry.conditions.add(initialConditions);
 				schedule.entries.add(entry);
 			}, true);
@@ -1005,16 +1000,21 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 		if (editingCondition == null && editingDestination == null)
 			return;
+
 		int x = leftPos + 53;
 		int y = topPos + 87;
-		if (mouseX < x || mouseY < y || mouseX >= x + 18 || mouseY >= y + 18)
+		if (mouseX < x || mouseY < y || mouseX >= x + 120 || mouseY >= y + 18)
 			return;
+
 		IScheduleInput rendered = editingCondition == null ? editingDestination : editingCondition;
-		List<Component> secondLineTooltip = rendered.getSecondLineTooltip();
-		if (secondLineTooltip == null || (hoveredSlot != null && !hoveredSlot.getItem()
-			.isEmpty()))
-			return;
-		renderTooltip(matrixStack, secondLineTooltip, Optional.empty(), mouseX, mouseY);
+
+		for (int i = 0; i < Math.max(1, rendered.slotsTargeted()); i++) {
+			List<Component> secondLineTooltip = rendered.getSecondLineTooltip(i);
+			if (secondLineTooltip == null || (hoveredSlot != menu.getSlot(36 + i) || !hoveredSlot.getItem()
+				.isEmpty()))
+				continue;
+			renderTooltip(matrixStack, secondLineTooltip, Optional.empty(), mouseX, mouseY);
+		}
 	}
 
 	@Override
@@ -1042,7 +1042,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			(float) topPos + 44, 0x505050);
 
 		IScheduleInput rendered = editingCondition == null ? editingDestination : editingCondition;
-		if (!rendered.needsSlot() && !rendered.renderSpecialIcon(pPoseStack, leftPos + 54, topPos + 88)) {
+
+		for (int i = 0; i < rendered.slotsTargeted(); i++)
+			AllGuiTextures.SCHEDULE_EDITOR_ADDITIONAL_SLOT.render(pPoseStack, leftPos + 53 + 20 * i, topPos + 87);
+
+		if (rendered.slotsTargeted() == 0 && !rendered.renderSpecialIcon(pPoseStack, leftPos + 54, topPos + 88)) {
 			Pair<ItemStack, Component> summary = rendered.getSummary();
 			ItemStack icon = summary.getFirst();
 			if (icon.isEmpty())
@@ -1055,12 +1059,10 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					.render(pPoseStack);
 		}
 
-		if (editorDividers == null)
-			return;
-
-		AllGuiTextures.SCHEDULE_EDITOR_SECOND_LINE.render(pPoseStack, leftPos + 74, topPos + 87);
-		for (Integer integer : editorDividers)
-			AllGuiTextures.SCHEDULE_EDITOR_DIVIDER.render(pPoseStack, leftPos + 74 + integer, topPos + 87);
+		pPoseStack.pushPose();
+		pPoseStack.translate(0, getGuiTop() + 87, 0);
+		editorSubWidgets.renderWidgetBG(getGuiLeft() + 77, pPoseStack);
+		pPoseStack.popPose();
 	}
 
 	@Override

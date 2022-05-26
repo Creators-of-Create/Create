@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.block.display.source;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.MutableComponent;
@@ -72,7 +72,7 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)
 			return;

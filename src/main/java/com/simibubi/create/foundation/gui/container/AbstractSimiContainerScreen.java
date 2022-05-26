@@ -111,15 +111,16 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 		// values instead
 	}
 
-	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		renderTooltip(matrixStack, mouseX, mouseY);
+	protected void renderForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+		renderTooltip(ms, mouseX, mouseY);
 		for (Widget widget : renderables) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
-				int ttx = simiWidget.lockedTooltipX;
-				int tty = simiWidget.lockedTooltipY;
-				if (!tooltip.isEmpty())
-					renderComponentTooltip(matrixStack, tooltip, ttx == -1 ? mouseX : ttx, tty == -1 ? mouseY : tty);
+				if (tooltip.isEmpty())
+					continue;
+				int ttx = simiWidget.lockedTooltipX == -1 ? mouseX : simiWidget.lockedTooltipX + simiWidget.x;
+				int tty = simiWidget.lockedTooltipY == -1 ? mouseY : simiWidget.lockedTooltipY + simiWidget.y;
+				renderComponentTooltip(ms, tooltip, ttx, tty);
 			}
 		}
 	}
