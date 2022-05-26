@@ -1,5 +1,10 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTileEntities;
+
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
+
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.minecraft.core.BlockPos;

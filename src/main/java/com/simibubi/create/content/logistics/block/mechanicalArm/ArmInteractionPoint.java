@@ -7,41 +7,21 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
-import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.ChatFormatting;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
-import com.jozufozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
-import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -61,7 +41,7 @@ public class ArmInteractionPoint {
 	protected Mode mode = Mode.DEPOSIT;
 
 	protected BlockState cachedState;
-	protected Map<Level, BlockApiCache<Storage<ItemVariant>, Direction>> handlerCaches = new IdentityHashMap<>();
+	protected BlockApiCache<Storage<ItemVariant>, Direction> cachedHandler = null;
 	protected ArmAngleTarget cachedAngles;
 
 	public ArmInteractionPoint(ArmInteractionPointType type, Level level, BlockPos pos, BlockState state) {
@@ -124,24 +104,10 @@ public class ArmInteractionPoint {
 
 	@Nullable
 	protected Storage<ItemVariant> getHandler() {
-		if (!cachedHandler.isPresent()) {
-			BlockEntity te = level.getBlockEntity(pos);
-			if (te == null)
-				return null;
-			cachedHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
+		if (cachedHandler == null) {
+			cachedHandler = TransferUtil.getItemCache(level, pos);
 		}
-		return cachedHandler.orElse(null);
-	}
-
-	// a
-	@Nullable
-	protected Storage<ItemVariant> getHandler(Level world) {
-		BlockApiCache<Storage<ItemVariant>, Direction> cache = getHandlerCache(world);
-		return cache == null ? null : cache.find(Direction.UP);
-	}
-
-	protected BlockApiCache<Storage<ItemVariant>, Direction> getHandlerCache(Level level) {
-		return handlerCaches.computeIfAbsent(level, $ -> TransferUtil.getItemCache(level, pos));
+		return cachedHandler.find(Direction.UP);
 	}
 
 	public ItemStack insert(ItemStack stack, TransactionContext ctx) {
@@ -159,12 +125,8 @@ public class ArmInteractionPoint {
 		return TransferUtil.extractAnyItem(handler, amount);
 	}
 
-	public ItemStack extract(Level world, int slot, boolean simulate) {
-		return extract(world, slot, 64, simulate);
-	}
-
-	protected ItemStack extract(Level world, TransactionContext ctx) {
-		return extract(world, 64, ctx);
+	public ItemStack extract(TransactionContext ctx) {
+		return extract(64, ctx);
 	}
 
 	protected void serialize(CompoundTag nbt, BlockPos anchor) {

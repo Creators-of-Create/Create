@@ -284,7 +284,6 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		if (ItemVaultBlock.isVault(state)) { // safety
 			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 22);
 		}
-		itemCapability.invalidate();
 		setChanged();
 	}
 

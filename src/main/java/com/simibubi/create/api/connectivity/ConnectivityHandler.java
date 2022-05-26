@@ -5,20 +5,15 @@ import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 
 import com.simibubi.create.foundation.utility.Iterate;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-
-import net.minecraftforge.fluids.capability.IFluidHandler;
-
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -160,7 +155,7 @@ public class ConnectivityHandler {
 		BlockPos origin = be.getBlockPos();
 
 		// optional fluid handling
-		IFluidTank beTank = null;
+		FluidTank beTank = null;
 		FluidStack fluid = FluidStack.EMPTY;
 		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) {
 			beTank = ifluid.getTank(0);
@@ -250,7 +245,7 @@ public class ConnectivityHandler {
 					extraData = be.modifyExtraData(extraData);
 
 					if (part instanceof IMultiTileContainer.Fluid ifluidPart && ifluidPart.hasTank()) {
-						IFluidTank tankAt = ifluidPart.getTank(0);
+						FluidTank tankAt = ifluidPart.getTank(0);
 						FluidStack fluidAt = tankAt.getFluid();
 						if (!fluidAt.isEmpty()) {
 							// making this generic would be a rather large mess, unfortunately
@@ -261,10 +256,10 @@ public class ConnectivityHandler {
 							}
 							if (be instanceof IMultiTileContainer.Fluid ifluidBE && ifluidBE.hasTank()
 								&& beTank != null) {
-								beTank.fill(fluidAt, IFluidHandler.FluidAction.EXECUTE);
+								TransferUtil.insertFluid(beTank, fluidAt);
 							}
 						}
-						tankAt.drain(tankAt.getCapacity(), IFluidHandler.FluidAction.EXECUTE);
+						TransferUtil.clearStorage(tankAt);
 					}
 
 					splitMultiAndInvalidate(part, cache, false);
@@ -308,7 +303,7 @@ public class ConnectivityHandler {
 
 		// fluid handling, if present
 		FluidStack toDistribute = FluidStack.EMPTY;
-		int maxCapacity = 0;
+		long maxCapacity = 0;
 		if (be instanceof IMultiTileContainer.Fluid ifluidBE && ifluidBE.hasTank()) {
 			toDistribute = ifluidBE.getFluid(0);
 			maxCapacity = ifluidBE.getTankSize(0);
@@ -338,18 +333,18 @@ public class ConnectivityHandler {
 
 					if (!toDistribute.isEmpty() && partAt != be) {
 						FluidStack copy = toDistribute.copy();
-						IFluidTank tank =
+						FluidTank tank =
 							(partAt instanceof IMultiTileContainer.Fluid ifluidPart ? ifluidPart.getTank(0) : null);
 						// making this generic would be a rather large mess, unfortunately
 						if (tank instanceof CreativeFluidTankTileEntity.CreativeSmartFluidTank creativeTank) {
 							if (creativeTank.isEmpty())
 								creativeTank.setContainedFluid(toDistribute);
 						} else {
-							int split = Math.min(maxCapacity, toDistribute.getAmount());
+							long split = Math.min(maxCapacity, toDistribute.getAmount());
 							copy.setAmount(split);
 							toDistribute.shrink(split);
 							if (tank != null)
-								tank.fill(copy, IFluidHandler.FluidAction.EXECUTE);
+								TransferUtil.insertFluid(tank, copy);
 						}
 					}
 					if (tryReconnect) {
@@ -361,14 +356,6 @@ public class ConnectivityHandler {
 					}
 				}
 			}
-		}
-		if (be instanceof IMultiTileContainer.Inventory iinv && iinv.hasInventory()) {
-			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-				.invalidate();
-		}
-		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) {
-			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.invalidate();
 		}
 		if (tryReconnect) {
 			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);

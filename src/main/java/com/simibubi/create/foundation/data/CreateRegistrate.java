@@ -7,6 +7,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidAttributes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -47,6 +49,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Fluid;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
@@ -167,12 +170,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				Create.asResource("fluid/" + name + "_flow"), /*attributesFactory, */factory));
 	}
 
-	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow,
-																						BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
-																						NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+	public <T extends SimpleFlowableFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow,
+//																						BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+																						NonNullFunction<SimpleFlowableFluid.Properties, T> factory) {
 		return entry(name,
 				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
-						flow, attributesFactory, factory));
+						flow, factory));
 	}
 
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
@@ -184,7 +187,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow) {
 		return entry(name,
 				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
-						flow, null, VirtualFluid::new));
+						flow, VirtualFluid::new));
 	}
 
 	public FluidBuilder<SimpleFlowableFluid.Flowing, CreateRegistrate> standardFluid(String name) {

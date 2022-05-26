@@ -9,8 +9,6 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity.SelectionMode;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -321,7 +319,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 	protected int getDistributableAmount(ArmInteractionPoint armInteractionPoint) {
 		try (Transaction t = TransferUtil.getTransaction()) {
-			ItemStack stack = armInteractionPoint.extract(level,t);
+			ItemStack stack = armInteractionPoint.extract(t);
 
 			ItemStack remainder = stack.isEmpty() ? stack : simulateInsertion(stack);
 			if (stack.sameItem(remainder)) {
@@ -333,13 +331,15 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	private ItemStack simulateInsertion(ItemStack stack) {
-		for (ArmInteractionPoint armInteractionPoint : outputs) {
-			if (armInteractionPoint.isValid())
-				stack = armInteractionPoint.insert(stack, true);
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (ArmInteractionPoint armInteractionPoint : outputs) {
+				if (armInteractionPoint.isValid())
+					stack = armInteractionPoint.insert(stack, t);
 				if (stack.isEmpty())
 					break;
+			}
+			return stack;
 		}
-		return stack;
 	}
 
 	protected void depositItem() {
@@ -368,9 +368,9 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			try (Transaction t = TransferUtil.getTransaction()) {
 				int amountExtracted = getDistributableAmount(armInteractionPoint);
 				if (amountExtracted == 0)
-					continue;
+					return;
 				ItemStack prevHeld = heldItem;
-				heldItem = armInteractionPoint.extract(level, amountExtracted, t);
+				heldItem = armInteractionPoint.extract(amountExtracted, t);
 				phase = Phase.SEARCH_OUTPUTS;
 				chasedPointProgress = 0;
 				chasedPointIndex = -1;

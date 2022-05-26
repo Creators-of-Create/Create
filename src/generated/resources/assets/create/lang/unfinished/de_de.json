@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 697",
+	"_": "Missing Localizations: 699",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -872,6 +872,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "UNLOCALIZED: %1$s Droplets",
 	"create.generic.clockwise": "Uhrzeigersinn",
 	"create.generic.counter_clockwise": "Gegen-Uhrzeigersinn",
 
@@ -1331,6 +1332,8 @@
 
 	"create.contraption.minecart_contraption_too_big": "Dieses Lorengespann ist zu groß, um es aufzusammeln",
 	"create.contraption.minecart_contraption_illegal_pickup": "Eine mysteriöse Kraft hält dieses Lorengespann in dieser Welt",
+
+	"create.potion.invalid": "UNLOCALIZED: Invalid Potion",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

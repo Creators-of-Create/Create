@@ -285,9 +285,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 					}
 
 					level.setBlock(pos, blockState.setValue(FluidTankBlock.SHAPE, shape), 23);
-					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(level, pos);
-					if (tankAt != null)
+					BlockEntity be = level.getBlockEntity(pos);
+					if (be instanceof FluidTankTileEntity tankAt)
 						tankAt.updateStateLuminosity();
+					level.getChunkSource()
+							.getLightEngine()
+							.checkBlock(pos);
 				}
 			}
 		}
@@ -526,7 +529,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public boolean hasTank() { return true; }
 
 	@Override
-	public int getTankSize(int tank) { return getCapacityMultiplier(); }
+	public long getTankSize(int tank) { return getCapacityMultiplier(); }
 
 	@Override
 	public void setTankSize(int tank, int blocks) {
@@ -534,12 +537,21 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public IFluidTank getTank(int tank) {
+	public FluidTank getTank(int tank) {
 		return tankInventory;
 	}
 
 	@Override
 	public FluidStack getFluid(int tank) {
 		return tankInventory.getFluid().copy();
+	}
+
+	@Nullable
+	@Override
+	public Storage<FluidVariant> getFluidStorage(@Nullable Direction direction) {
+		FluidTankTileEntity controller = getControllerTE();
+		if (controller != null)
+			return controller.getTankInventory();
+		return getTankInventory();
 	}
 }

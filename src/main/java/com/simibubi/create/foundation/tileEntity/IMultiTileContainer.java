@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 
 import javax.annotation.Nullable;
 
@@ -64,11 +64,11 @@ public interface IMultiTileContainer {
 		// done here rather than through the Capability to allow greater flexibility
 		default boolean hasTank() { return false; }
 
-		default int getTankSize(int tank) {	return 0; }
+		default long getTankSize(int tank) {	return 0; }
 
 		default void setTankSize(int tank, int blocks) {}
 
-		default IFluidTank getTank(int tank) { return null; }
+		default FluidTank getTank(int tank) { return null; }
 
 		default FluidStack getFluid(int tank) {	return FluidStack.EMPTY; }
 	}

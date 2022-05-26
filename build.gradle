@@ -66,8 +66,8 @@ dependencies {
 //    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
 //    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
 
-//    modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
-//    runtimeOnly('org.joml:joml:1.10.4') // for sodium
+//    modLocalRuntime("maven.modrinth:sodium:mc1.18.2-0.4.1")
+//    localRuntime('org.joml:joml:1.10.4') // for sodium
 //    modLocalRuntime("maven.modrinth:phosphor:mc1.18.x-0.8.1")
 //    modLocalRuntime("maven.modrinth:starlight:1.0.2+1.18.2")
 

@@ -5,6 +5,12 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -56,10 +62,6 @@ import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 public class AllArmInteractionPointTypes {
 
@@ -347,13 +349,8 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public ItemStack extract(int slot, int amount, boolean simulate) {
+		public ItemStack extract(int amount, TransactionContext ctx) {
 			return ItemStack.EMPTY;
-		}
-
-		@Override
-		public int getSlotCount() {
-			return 0;
 		}
 	}
 
@@ -400,15 +397,15 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public ItemStack insert(ItemStack stack, boolean simulate) {
+		public ItemStack insert(ItemStack stack, TransactionContext ctx) {
 			ItemStack input = stack.copy();
-			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(cachedState, level, pos, input, false, false, simulate);
+			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(cachedState, level, pos, input, false, false, ctx);
 			ItemStack remainder = res.getObject();
 			if (input.isEmpty()) {
 				return remainder;
 			} else {
-				if (!simulate)
-					Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder);
+				TransactionCallback.onSuccess(ctx, () ->
+						Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder));
 				return input;
 			}
 		}
@@ -440,14 +437,14 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public ItemStack extract(int slot, int amount, boolean simulate) {
+		public ItemStack extract(int amount, TransactionContext ctx) {
 			BlockEntity te = level.getBlockEntity(pos);
 			if (!(te instanceof MechanicalCrafterTileEntity))
 				return ItemStack.EMPTY;
 			MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
 			SmartInventory inventory = crafter.getInventory();
 			inventory.allowExtraction();
-			ItemStack extract = super.extract(slot, amount, simulate);
+			ItemStack extract = super.extract(amount, ctx);
 			inventory.forbidExtraction();
 			return extract;
 		}
@@ -517,7 +514,7 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public ItemStack insert(ItemStack stack, boolean simulate) {
+		public ItemStack insert(ItemStack stack, TransactionContext ctx) {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(level, pos, FilteringBehaviour.TYPE);
 			InvManipulationBehaviour inserter = TileEntityBehaviour.get(level, pos, InvManipulationBehaviour.TYPE);
 			if (cachedState.getOptionalValue(BlockStateProperties.POWERED).orElse(false))
@@ -526,10 +523,9 @@ public class AllArmInteractionPointTypes {
 				return stack;
 			if (filtering != null && !filtering.test(stack))
 				return stack;
-			if (simulate)
-				inserter.simulate();
+
 			ItemStack insert = inserter.insert(stack);
-			if (!simulate && insert.getCount() != stack.getCount()) {
+			if (insert.getCount() != stack.getCount()) {
 				BlockEntity tileEntity = level.getBlockEntity(pos);
 				if (tileEntity instanceof FunnelTileEntity) {
 					FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
@@ -548,29 +544,26 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public ItemStack insert(ItemStack stack, boolean simulate) {
+		public ItemStack insert(ItemStack stack, TransactionContext ctx) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (!(blockEntity instanceof CampfireBlockEntity campfireBE))
 				return stack;
 			Optional<CampfireCookingRecipe> recipe = campfireBE.getCookableRecipe(stack);
 			if (recipe.isEmpty())
 				return stack;
-			if (simulate) {
-				boolean hasSpace = false;
-				for (ItemStack campfireStack : campfireBE.getItems()) {
-					if (campfireStack.isEmpty()) {
-						hasSpace = true;
-						break;
-					}
+			boolean hasSpace = false;
+			for (ItemStack campfireStack : campfireBE.getItems()) {
+				if (campfireStack.isEmpty()) {
+					hasSpace = true;
+					break;
 				}
-				if (!hasSpace)
-					return stack;
-				ItemStack remainder = stack.copy();
-				remainder.shrink(1);
-				return remainder;
 			}
+			if (!hasSpace)
+				return stack;
 			ItemStack remainder = stack.copy();
-			campfireBE.placeFood(remainder, recipe.get().getCookingTime());
+			TransactionCallback.onSuccess(ctx, () ->
+					campfireBE.placeFood(remainder.copy(), recipe.get().getCookingTime()));
+			remainder.shrink(1);
 			return remainder;
 		}
 	}
@@ -585,28 +578,29 @@ public class AllArmInteractionPointTypes {
 			return Vec3.atLowerCornerOf(pos).add(.5f, 13 / 16f, .5f);
 		}
 
-		@Override
-		public void updateCachedState() {
-			BlockState oldState = cachedState;
-			super.updateCachedState();
-			if (oldState != cachedState)
-				cachedHandler.invalidate();
-		}
-
-		@Nullable
-		@Override
-		protected IItemHandler getHandler() {
-			if (!cachedHandler.isPresent()) {
-				cachedHandler = LazyOptional.of(() -> {
-					ComposterBlock composterBlock = (ComposterBlock) Blocks.COMPOSTER;
-					WorldlyContainer container = composterBlock.getContainer(cachedState, level, pos);
-					SidedInvWrapper insertionHandler = new SidedInvWrapper(container, Direction.UP);
-					SidedInvWrapper extractionHandler = new SidedInvWrapper(container, Direction.DOWN);
-					return new CombinedInvWrapper(insertionHandler, extractionHandler);
-				});
-			}
-			return cachedHandler.orElse(null);
-		}
+		// fabric: should not be needed since FAPI handles wrapping Containers
+//		@Override
+//		public void updateCachedState() {
+//			BlockState oldState = cachedState;
+//			super.updateCachedState();
+//			if (oldState != cachedState)
+//				cachedHandler.invalidate();
+//		}
+//
+//		@Nullable
+//		@Override
+//		protected IItemHandler getHandler() {
+//			if (!cachedHandler.isPresent()) {
+//				cachedHandler = LazyOptional.of(() -> {
+//					ComposterBlock composterBlock = (ComposterBlock) Blocks.COMPOSTER;
+//					WorldlyContainer container = composterBlock.getContainer(cachedState, level, pos);
+//					SidedInvWrapper insertionHandler = new SidedInvWrapper(container, Direction.UP);
+//					SidedInvWrapper extractionHandler = new SidedInvWrapper(container, Direction.DOWN);
+//					return new CombinedInvWrapper(insertionHandler, extractionHandler);
+//				});
+//			}
+//			return cachedHandler.orElse(null);
+//		}
 	}
 
 	public static class JukeboxPoint extends TopFaceArmInteractionPoint {
@@ -615,12 +609,7 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public int getSlotCount() {
-			return 1;
-		}
-
-		@Override
-		public ItemStack insert(ItemStack stack, boolean simulate) {
+		public ItemStack insert(ItemStack stack, TransactionContext ctx) {
 			Item item = stack.getItem();
 			if (!(item instanceof RecordItem))
 				return stack;
@@ -634,17 +623,18 @@ public class AllArmInteractionPointTypes {
 				return stack;
 			ItemStack remainder = stack.copy();
 			ItemStack toInsert = remainder.split(1);
-			if (!simulate) {
+			level.updateSnapshots(ctx);
+			level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, true), 2);
+			TransactionCallback.onSuccess(ctx, () -> {
 				jukeboxBE.setRecord(toInsert);
-				level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, true), 2);
 				level.levelEvent(null, 1010, pos, Item.getId(item));
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.MUSICAL_ARM, level, pos, 10);
-			}
+			});
 			return remainder;
 		}
 
 		@Override
-		public ItemStack extract(int slot, int amount, boolean simulate) {
+		public ItemStack extract(int amount, TransactionContext ctx) {
 			if (!cachedState.getValue(JukeboxBlock.HAS_RECORD))
 				return ItemStack.EMPTY;
 			BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -653,11 +643,12 @@ public class AllArmInteractionPointTypes {
 			ItemStack record = jukeboxBE.getRecord();
 			if (record.isEmpty())
 				return ItemStack.EMPTY;
-			if (!simulate) {
+			level.updateSnapshots(ctx);
+			level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, false), 2);
+			TransactionCallback.onSuccess(ctx, () -> {
 				level.levelEvent(1010, pos, 0);
 				jukeboxBE.clearContent();
-				level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, false), 2);
-			}
+			});
 			return record;
 		}
 	}
@@ -673,13 +664,12 @@ public class AllArmInteractionPointTypes {
 		}
 
 		@Override
-		public ItemStack insert(ItemStack stack, boolean simulate) {
+		public ItemStack insert(ItemStack stack, TransactionContext ctx) {
 			if (!stack.is(Items.GLOWSTONE))
 				return stack;
 			if (cachedState.getValue(RespawnAnchorBlock.CHARGE) == 4)
 				return stack;
-			if (!simulate)
-				RespawnAnchorBlock.charge(level, pos, cachedState);
+			TransactionCallback.onSuccess(ctx, () -> RespawnAnchorBlock.charge(level, pos, cachedState));
 			ItemStack remainder = stack.copy();
 			remainder.shrink(1);
 			return remainder;

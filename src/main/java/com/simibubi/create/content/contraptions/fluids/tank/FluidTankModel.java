@@ -35,7 +35,7 @@ public class FluidTankModel extends CTModel {
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
-			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d))); //FluidTankConnectivityHandler.isConnected(blockView, pos, pos.relative(d)));
+			cullData.setCulled(d, ConnectivityHandler.isConnected(blockView, pos, pos.relative(d))); //FluidTankConnectivityHandler.isConnected(blockView, pos, pos.relative(d)));
 
 		context.pushTransform(quad -> {
 			Direction cullFace = quad.cullFace();

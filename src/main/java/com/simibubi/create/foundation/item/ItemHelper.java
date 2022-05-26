@@ -211,11 +211,11 @@ public class ItemHelper {
 
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (StorageView<ItemVariant> view : inv.iterable(t)) {
+				ItemVariant var = view.getResource();
+				ItemStack stackInSlot = var.toStack();
 				if (view.isResourceBlank() || !test.test(stackInSlot))
 					continue;
-				ItemVariant var = view.getResource();
 				if (extracting.isEmpty()) {
-					ItemStack stackInSlot = var.toStack();
 					int maxExtractionCountForItem = amountFunction.apply(stackInSlot);
 					if (maxExtractionCountForItem == 0)
 						continue;

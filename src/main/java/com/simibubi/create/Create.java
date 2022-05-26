@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
+import com.simibubi.create.compat.Mods;
 import com.tterrag.registrate.fabric.GatherDataEvent;
 
 import io.github.tropheusj.milk.Milk;
@@ -121,7 +122,7 @@ public class Create implements ModInitializer {
 
 		AllPackets.channel.initServerListener();
 
-		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
+//		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
 	}
 
 	public static void init() {
