@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -78,6 +79,11 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	public void updateCurrentLevel() {
+		if (Transaction.isOpen()) {
+			// can't do this during close callbacks.
+			// lazyTick should catch any updates we miss.
+			return;
+		}
 		boolean changed = false;
 		float occupied = 0;
 		float totalSpace = 0;
