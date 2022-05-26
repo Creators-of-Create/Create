@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.trinkets.Trinkets;
 import com.tterrag.registrate.fabric.GatherDataEvent;
 
 import io.github.tropheusj.milk.Milk;
@@ -121,6 +122,10 @@ public class Create implements ModInitializer {
 		AllWorldFeatures.registerOreFeatures();
 
 		AllPackets.channel.initServerListener();
+
+		// causes class loading issues or something
+		// noinspection Convert2MethodRef
+		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.init());
 	}
 
 	public static void init() {

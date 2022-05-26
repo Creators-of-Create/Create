@@ -1,0 +1,8 @@
+{
+  "entities": [
+    "player"
+  ],
+  "slots": [
+    "head/face"
+  ]
+}

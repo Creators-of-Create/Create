@@ -59,6 +59,7 @@ dependencies {
     modLocalRuntime("maven.modrinth:lazydfu:0.1.2")
     modLocalRuntime("maven.modrinth:lithium:mc1.18.2-0.7.9")
     modCompileOnly("maven.modrinth:sandwichable:1.2+1.18.2")
+    modImplementation("dev.emi:trinkets:${project.trinkets_version}")
 
     // uncomment these to test
 

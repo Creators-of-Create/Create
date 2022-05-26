@@ -1,6 +1,8 @@
 package com.simibubi.create;
 
 import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.trinkets.Trinkets;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
@@ -110,6 +112,9 @@ public class CreateClient implements ClientModInitializer {
 		AllPackets.channel.initClientListener();
 		RenderTypes.init();
 		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
+		// causes class loading issues or something
+		// noinspection Convert2MethodRef
+		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.clientInit());
 	}
 
 	private static void registerOverlays() {
