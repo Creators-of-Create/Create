@@ -9,6 +9,7 @@
     }
   ],
   "result": {
-    "item": "create:track_station"
+    "item": "create:track_station",
+    "count": 2
   }
 }

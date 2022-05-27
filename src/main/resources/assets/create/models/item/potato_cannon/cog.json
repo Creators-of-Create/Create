@@ -3,7 +3,8 @@
 	"parent": "create:item/potato_cannon/item",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "create:item/potato_cannon"
+		"1": "create:item/potato_cannon",
+		"particle": "create:block/copper_casing"
 	},
 	"elements": [
 		{
@@ -65,10 +66,10 @@
 	],
 	"display": {
 		"thirdperson_righthand": {
-			"translation": [0, 1.75, 0]
+			"translation": [0, 2, 0]
 		},
 		"thirdperson_lefthand": {
-			"translation": [0, 1.75, 0]
+			"translation": [0, 2, 0]
 		},
 		"firstperson_righthand": {
 			"rotation": [5, 4, 5],
@@ -85,7 +86,7 @@
 		},
 		"gui": {
 			"rotation": [64, 47, -47],
-			"translation": [0.5, 0, 0],
+			"translation": [0.25, -0.25, 0],
 			"scale": [0.86, 0.86, 0.86]
 		},
 		"head": {

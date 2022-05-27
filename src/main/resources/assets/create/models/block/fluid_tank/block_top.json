@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/copper_casing",
+		"0": "create:block/fluid_tank_top",
 		"1": "create:block/fluid_tank",
 		"particle": "create:block/fluid_tank"
 	},
