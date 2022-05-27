@@ -69,6 +69,7 @@ public class Train {
 
 	public double speed = 0;
 	public double targetSpeed = 0;
+	public Double speedBeforeStall = null;
 
 	public UUID id;
 	public UUID owner;
@@ -184,6 +185,7 @@ public class Train {
 		double distance = speed;
 		Carriage previousCarriage = null;
 		int carriageCount = carriages.size();
+		boolean stalled = false;
 
 		for (int i = 0; i < carriageCount; i++) {
 			Carriage carriage = carriages.get(i);
@@ -225,11 +227,21 @@ public class Train {
 
 				stress[i - 1] = target - actual;
 			}
+
 			previousCarriage = carriage;
+
 			if (carriage.stalled) {
+				if (speedBeforeStall == null)
+					speedBeforeStall = speed;
 				distance = 0;
 				speed = 0;
+				stalled = true;
 			}
+		}
+
+		if (!stalled && speedBeforeStall != null) {
+			speed = Mth.clamp(speedBeforeStall, -1, 1);
+			speedBeforeStall = null;
 		}
 
 		// positive stress: carriages should move apart
@@ -918,6 +930,8 @@ public class Train {
 		tag.putIntArray("CarriageSpacing", carriageSpacing);
 		tag.putBoolean("DoubleEnded", doubleEnded);
 		tag.putDouble("Speed", speed);
+		if (speedBeforeStall != null)
+			tag.putDouble("SpeedBeforeStall", speedBeforeStall);
 		tag.putInt("Fuel", fuelTicks);
 		tag.putDouble("TargetSpeed", targetSpeed);
 		tag.putString("IconType", icon.id.toString());
@@ -964,6 +978,8 @@ public class Train {
 		Train train = new Train(id, owner, graph, carriages, carriageSpacing, doubleEnded);
 
 		train.speed = tag.getDouble("Speed");
+		if (tag.contains("SpeedBeforeStall"))
+			train.speedBeforeStall = tag.getDouble("SpeedBeforeStall");
 		train.targetSpeed = tag.getDouble("TargetSpeed");
 		train.icon = TrainIconType.byId(new ResourceLocation(tag.getString("IconType")));
 		train.name = Component.Serializer.fromJson(tag.getString("Name"));

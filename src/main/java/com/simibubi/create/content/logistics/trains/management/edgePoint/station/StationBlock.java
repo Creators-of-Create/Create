@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.depot.SharedDepotBlockMethods;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -32,7 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class StationBlock extends Block implements ITE<StationTileEntity> {
+public class StationBlock extends Block implements ITE<StationTileEntity>, IWrenchable {
 
 	public static final BooleanProperty ASSEMBLING = BooleanProperty.create("assembling");
 

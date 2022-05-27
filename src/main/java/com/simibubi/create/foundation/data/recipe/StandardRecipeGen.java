@@ -527,6 +527,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(Items.PAPER)),
 
 		TRAIN_STATION = create(AllBlocks.TRACK_STATION).unlockedBy(I::railwayCasing)
+			.returns(2)
 			.viaShapeless(b -> b.requires(I.railwayCasing())
 				.requires(Items.COMPASS)),
 

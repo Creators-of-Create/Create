@@ -70,6 +70,7 @@ public class BuilderTransformers {
 		return b -> b.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 			.properties(p -> p.noOcclusion())
+			.transform(pickaxeOnly())
 			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))

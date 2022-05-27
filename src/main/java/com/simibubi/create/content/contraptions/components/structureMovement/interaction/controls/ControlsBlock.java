@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.in
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ControlsBlock extends HorizontalDirectionalBlock {
+public class ControlsBlock extends HorizontalDirectionalBlock implements IWrenchable {
 
 	public static final BooleanProperty OPEN = BooleanProperty.create("open");
 

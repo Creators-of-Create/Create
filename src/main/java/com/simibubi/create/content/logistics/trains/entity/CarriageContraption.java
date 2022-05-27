@@ -227,6 +227,11 @@ public class CarriageContraption extends Contraption {
 	}
 
 	@Override
+	protected MountedStorageManager getStorageForSpawnPacket() {
+		return storageProxy;
+	}
+	
+	@Override
 	protected ContraptionType getType() {
 		return ContraptionType.CARRIAGE;
 	}

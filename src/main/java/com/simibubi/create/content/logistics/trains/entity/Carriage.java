@@ -504,10 +504,14 @@ public class Carriage {
 		}
 
 		public void discardPivot() {
-			float prevCutoff = cutoff;
+			int prevmin = minAllowedLocalCoord();
+			int prevmax = maxAllowedLocalCoord();
+
 			cutoff = 0;
 			pivot = null;
-			if (!serialisedPassengers.isEmpty() || !Mth.equal(prevCutoff, cutoff)) {
+
+			if ((!serialisedPassengers.isEmpty() && entity.get() != null) || prevmin != minAllowedLocalCoord()
+				|| prevmax != maxAllowedLocalCoord()) {
 				updatePassengerLoadout();
 				updateRenderedCutoff();
 			}
@@ -749,7 +753,7 @@ public class Carriage {
 				return;
 			cc.portalCutoffMin = minAllowedLocalCoord();
 			cc.portalCutoffMax = maxAllowedLocalCoord();
-			if (!entity.level.isClientSide())
+			if (!entity.level.isClientSide()) 
 				return;
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(cce));
 		}
@@ -775,7 +779,7 @@ public class Carriage {
 			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
-			
+
 			if (level instanceof ServerLevel sl)
 				sl.addFreshEntity(entity);
 

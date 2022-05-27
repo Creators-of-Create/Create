@@ -327,7 +327,7 @@ public abstract class Contraption {
 		}
 
 		// Bogeys tend to have sticky sides
-		if (state.getBlock()instanceof IBogeyBlock bogey)
+		if (state.getBlock() instanceof IBogeyBlock bogey)
 			for (Direction d : bogey.getStickySurfaces(world, pos, state))
 				if (!visited.contains(pos.relative(d)))
 					frontier.add(pos.relative(d));
@@ -735,7 +735,7 @@ public abstract class Contraption {
 			}
 		}
 
-		storage.write(nbt, spawnPacket);
+		(spawnPacket ? getStorageForSpawnPacket() : storage).write(nbt, spawnPacket);
 
 		ListTag interactorNBT = new ListTag();
 		for (BlockPos pos : interactors.keySet()) {
@@ -774,6 +774,10 @@ public abstract class Contraption {
 		}
 
 		return nbt;
+	}
+
+	protected MountedStorageManager getStorageForSpawnPacket() {
+		return storage;
 	}
 
 	private CompoundTag writeBlocksCompound() {
@@ -1043,7 +1047,7 @@ public abstract class Contraption {
 				transform.apply(tileEntity);
 			}
 		}
-		
+
 		for (StructureBlockInfo block : blocks.values()) {
 			if (!shouldUpdateAfterMovement(block))
 				continue;
@@ -1051,7 +1055,7 @@ public abstract class Contraption {
 			world.markAndNotifyBlock(targetPos, world.getChunkAt(targetPos), block.state, block.state,
 				Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL, 512);
 		}
-		
+
 		for (AABB box : superglue) {
 			box = new AABB(transform.apply(new Vec3(box.minX, box.minY, box.minZ)),
 				transform.apply(new Vec3(box.maxX, box.maxY, box.maxZ)));
@@ -1241,15 +1245,15 @@ public abstract class Contraption {
 	public IItemHandlerModifiable getSharedInventory() {
 		return storage.getItems();
 	}
-	
+
 	public IItemHandlerModifiable getSharedFuelInventory() {
 		return storage.getFuelItems();
 	}
-	
+
 	public IFluidHandler getSharedFluidTanks() {
 		return storage.getFluids();
 	}
-	
+
 	public Collection<StructureBlockInfo> getRenderedBlocks() {
 		return blocks.values();
 	}
@@ -1265,7 +1269,7 @@ public abstract class Contraption {
 	public Optional<List<AABB>> getSimplifiedEntityColliders() {
 		return simplifiedEntityColliders;
 	}
-	
+
 	public void handleContraptionFluidPacket(BlockPos localPos, FluidStack containedFluid) {
 		storage.updateContainedFluid(localPos, containedFluid);
 	}

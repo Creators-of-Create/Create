@@ -5,6 +5,7 @@ public class CTrains extends ConfigBase {
 	public final ConfigBool trainsCauseDamage = b(true, "trainsCauseDamage", Comments.trainsCauseDamage);
 	public final ConfigInt maxAssemblyLength = i(128, 5, "maxAssemblyLength", Comments.maxAssemblyLength);
 	public final ConfigInt maxBogeyCount = i(20, 1, "maxBogeyCount", Comments.maxBogeyCount);
+	public final ConfigFloat manualTrainSpeedModifier = f(.75f, 0, "manualTrainSpeedModifier", Comments.manualTrainSpeedModifier);
 	
 	public final ConfigGroup trainStats = group(1, "trainStats", "Standard Trains");
 	public final ConfigFloat trainTopSpeed = f(28, 0, "trainTopSpeed", Comments.mps, Comments.trainTopSpeed);
@@ -34,6 +35,7 @@ public class CTrains extends ConfigBase {
 		static String trainsCauseDamage = "Whether moving Trains can hurt colliding mobs and players.";
 		static String maxAssemblyLength = "Maximum length of a Train Stations' assembly track.";
 		static String maxBogeyCount = "Maximum amount of bogeys assembled as a single Train.";
+		static String manualTrainSpeedModifier = "Relative speed of a manually controlled Train compared to a Scheduled one.";
 	}
 
 }

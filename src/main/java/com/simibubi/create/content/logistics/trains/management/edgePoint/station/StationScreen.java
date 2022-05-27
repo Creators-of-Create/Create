@@ -91,9 +91,9 @@ public class StationScreen extends AbstractStationScreen {
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
-		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 20, 10, new TextComponent(""));
+		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 75, 10, new TextComponent(""));
 		trainNameBox.setBordered(false);
-		trainNameBox.setMaxLength(15);
+		trainNameBox.setMaxLength(35);
 		trainNameBox.setTextColor(0xC6C6C6);
 		trainNameBox.changeFocus(false);
 		trainNameBox.mouseClicked(0, 0, 0);
@@ -281,9 +281,12 @@ public class StationScreen extends AbstractStationScreen {
 		ms.popPose();
 
 		text = trainNameBox.getValue();
-		if (!trainNameBox.isFocused())
-			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(ms, nameBoxX(text, trainNameBox) + font.width(text) + 5,
-				y + 44);
+		if (!trainNameBox.isFocused()) {
+			int buttonX = nameBoxX(text, trainNameBox) + font.width(text) + 5;
+			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(ms, Math.min(buttonX, guiLeft + 156), y + 44);
+			if (font.width(text) > trainNameBox.getWidth())
+				font.drawShadow(ms, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
+		}
 	}
 
 	@Override

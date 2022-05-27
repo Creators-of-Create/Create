@@ -1465,7 +1465,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
-		.transform(axeOrPickaxe())
+		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 		.onRegister(assignDataBehaviour(new StationSummaryDisplaySource(), "station_summary"))
 		.lang("Train Station")
@@ -1505,6 +1505,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
 			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
 		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))

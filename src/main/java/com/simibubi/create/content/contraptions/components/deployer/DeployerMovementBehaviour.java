@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
@@ -28,10 +29,12 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -85,8 +88,12 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		Vec3 vec = context.position.subtract(facingVec.scale(2));
 
 		float xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
-		if (Math.abs(xRot) > 89)
-			facingVec = context.rotation.apply(new Vec3(0, 0, 1));
+		if (Math.abs(xRot) > 89) {
+			Vec3 initial = new Vec3(0, 0, 1);
+			if (context.contraption.entity instanceof OrientedContraptionEntity oce)
+				initial = VecHelper.rotate(initial, oce.getInitialYaw(), Axis.Y);
+			facingVec = context.rotation.apply(initial);
+		}
 
 		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
 		player.setXRot(xRot);

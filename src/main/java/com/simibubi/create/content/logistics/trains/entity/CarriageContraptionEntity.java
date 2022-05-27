@@ -25,6 +25,7 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -186,8 +187,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					dimensional.pivot = null;
 					carriage.updateContraptionAnchors();
 					dimensional.updateRenderedCutoff();
-					
-					carriage.storage.bindTanks(contraption.presentTileEntities);
 				}
 				updateTrackGraph();
 			} else
@@ -318,8 +317,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	@Override
 	protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
-		return (contraption instanceof CarriageContraption cc) && (cc.notInPortal() || level.isClientSide())
-			&& super.isActorActive(context, actor);
+		if (!(contraption instanceof CarriageContraption cc))
+			return false;
+		if (!super.isActorActive(context, actor))
+			return false;
+		return cc.notInPortal() || level.isClientSide();
 	}
 
 	@Override
@@ -555,10 +557,17 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriage.train.manualSteer =
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
-		double topSpeed = carriage.train.maxSpeed();
+
+		double topSpeed = carriage.train.maxSpeed() * AllConfigs.SERVER.trains.manualTrainSpeedModifier.getF();
+
+		if (carriage.getLeadingPoint().edge != null && carriage.getLeadingPoint().edge.isTurn()
+			|| carriage.getTrailingPoint().edge != null && carriage.getTrailingPoint().edge.isTurn())
+			topSpeed = carriage.train.maxTurnSpeed();
+
 		carriage.train.targetSpeed = topSpeed * targetSpeed;
 		if (slow)
-			carriage.train.targetSpeed /= 8;
+			carriage.train.targetSpeed /= 6;
+		
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
 		carriage.train.manualTick = true;
 		carriage.train.approachTargetSpeed(counteringAcceleration ? 2 : 1);

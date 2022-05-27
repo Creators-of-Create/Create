@@ -443,7 +443,9 @@ public class TrackPlacement {
 	private static void paveTracks(Level level, PlacementInfo info, BlockItem blockItem, boolean simulate) {
 		Block block = blockItem.getBlock();
 		info.requiredPavement = 0;
-		if (block == null || block instanceof EntityBlock)
+		if (block == null || block instanceof EntityBlock || block.defaultBlockState()
+			.getCollisionShape(level, info.pos1)
+			.isEmpty())
 			return;
 
 		Set<BlockPos> visited = new HashSet<>();
@@ -496,7 +498,7 @@ public class TrackPlacement {
 				if (simulate)
 					continue;
 
-				if (stateAtPos.getBlock()instanceof ITrackBlock trackAtPos) {
+				if (stateAtPos.getBlock() instanceof ITrackBlock trackAtPos) {
 					toPlace = trackAtPos.overlay(level, offsetPos, stateAtPos, toPlace);
 					canPlace = true;
 				}
