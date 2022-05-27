@@ -117,17 +117,12 @@ public class LinkedControllerClientHandler {
 		LinkedControllerItemRenderer.resetButtons();
 	}
 
-
 	protected static boolean isActuallyPressed(KeyMapping kb) {
-
 		if(kb.matchesMouse(kb.getKey().getValue()))
 			return AllKeys.isMouseButtonDown(kb.getKey().getValue());
 		else
 			return AllKeys.isKeyDown(kb.getKey().getValue());
 	}
-
-
-
 
 	public static void tick() {
 		LinkedControllerItemRenderer.tick();

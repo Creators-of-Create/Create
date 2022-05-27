@@ -69,7 +69,6 @@ public enum AllKeys {
 				.getWindow(), button) != 0;
 	}
 
-
 	public static boolean ctrlDown() {
 		return Screen.hasControlDown();
 	}
