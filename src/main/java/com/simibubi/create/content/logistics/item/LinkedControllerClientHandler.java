@@ -134,7 +134,6 @@ public class LinkedControllerClientHandler {
 
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
-		assert player != null;
 		ItemStack heldItem = player.getMainHandItem();
 
 		if (player.isSpectator()) {
