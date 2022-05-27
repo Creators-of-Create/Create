@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
+import com.simibubi.create.AllKeys;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -115,17 +117,17 @@ public class LinkedControllerClientHandler {
 		LinkedControllerItemRenderer.resetButtons();
 	}
 
+
 	protected static boolean isActuallyPressed(KeyMapping kb) {
 
 		if(kb.matchesMouse(kb.getKey().getValue()))
-			return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), kb.getKey().getValue()) == 1;
+			return AllKeys.isMouseButtonDown(kb.getKey().getValue());
 		else
-			return InputConstants.isKeyDown(Minecraft.getInstance()
-							.getWindow()
-							.getWindow(),
-					kb.getKey()
-							.getValue());
+			return AllKeys.isKeyDown(kb.getKey().getValue());
 	}
+
+
+
 
 	public static void tick() {
 		LinkedControllerItemRenderer.tick();
@@ -176,9 +178,8 @@ public class LinkedControllerClientHandler {
 		Vector<KeyMapping> controls = getControls();
 		Collection<Integer> pressedKeys = new HashSet<>();
 		for (int i = 0; i < controls.size(); i++) {
-			if (isActuallyPressed(controls.get(i))) {
+			if (isActuallyPressed(controls.get(i)))
 				pressedKeys.add(i);
-			}
 		}
 
 		Collection<Integer> newKeys = new HashSet<>(pressedKeys);

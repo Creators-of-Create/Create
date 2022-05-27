@@ -63,6 +63,13 @@ public enum AllKeys {
 			.getWindow(), key) != 0;
 	}
 
+	public static boolean isMouseButtonDown(int button){
+		return GLFW.glfwGetMouseButton(Minecraft.getInstance()
+				.getWindow()
+				.getWindow(), button) != 0;
+	}
+
+
 	public static boolean ctrlDown() {
 		return Screen.hasControlDown();
 	}
