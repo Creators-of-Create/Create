@@ -347,7 +347,11 @@ public class StationScreen extends AbstractStationScreen {
 		AllPackets.channel
 			.sendToServer(StationEditPacket.configure(te.getBlockPos(), switchingToAssemblyMode, nameBox.getValue()));
 		Train train = displayedTrain.get();
-		if (!switchingToAssemblyMode && train != null)
+		if (train == null)
+			return;
+		if (switchingToAssemblyMode)
+			train.heldForAssembly = true;
+		if (!switchingToAssemblyMode)
 			AllPackets.channel
 				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), false, train.icon.getId()));
 	}

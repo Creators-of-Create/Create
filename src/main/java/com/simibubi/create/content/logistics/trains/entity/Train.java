@@ -88,7 +88,10 @@ public class Train {
 	public UUID currentStation;
 	public boolean currentlyBackwards;
 
+	// considered for removal
+	@Deprecated
 	public boolean heldForAssembly;
+	
 	public boolean doubleEnded;
 	public List<Carriage> carriages;
 	public List<Integer> carriageSpacing;
@@ -124,7 +127,7 @@ public class Train {
 
 		navigation = new Navigation(this);
 		runtime = new ScheduleRuntime(this);
-		heldForAssembly = true;
+		heldForAssembly = false;
 		migratingPoints = new ArrayList<>();
 		currentStation = null;
 		manualSteer = SteerDirection.NONE;
@@ -171,9 +174,6 @@ public class Train {
 			return;
 		}
 		
-		if (heldForAssembly && getCurrentStation() == null)
-			heldForAssembly = false;
-
 		updateConductors();
 		runtime.tick(level);
 		navigation.tick(level);
