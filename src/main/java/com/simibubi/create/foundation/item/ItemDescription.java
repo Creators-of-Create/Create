@@ -107,9 +107,8 @@ public class ItemDescription {
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
 		if (hasSpeedRequirement) {
-			int index = minimumRequiredSpeedLevel.ordinal();
 			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
+				new TextComponent(makeProgressBar(3, minimumRequiredSpeedLevel.ordinal())).withStyle(minimumRequiredSpeedLevel.getTextColor());
 
 			if (hasGoggles)
 				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue()))
@@ -127,9 +126,8 @@ public class ItemDescription {
 			double impact = BlockStressValues.getImpact(block);
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
-			int index = impactId.ordinal();
 			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index + 1)).withStyle(impactId.getAbsoluteColor());
+				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(impactId.getAbsoluteColor());
 
 			if (hasGoggles)
 				level.append(impact + "x ")
@@ -144,17 +142,17 @@ public class ItemDescription {
 
 		if (hasStressCapacity) {
 			double capacity = BlockStressValues.getCapacity(block);
-			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
-				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
-			int index = StressImpact.values().length - 2 - impactId.ordinal();
+			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
+				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
+			StressImpact opposite = StressImpact.values()[StressImpact.values().length - 2 - impactId.ordinal()];
 			MutableComponent level =
-				new TextComponent(makeProgressBar(3, index + 1)).withStyle(impactId.getAbsoluteColor());
+				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(opposite.getAbsoluteColor());
 
 			if (hasGoggles)
 				level.append(capacity + "x ")
 					.append(rpmUnit);
 			else
-				level.append(Lang.translate("tooltip.capacityProvided." + Lang.asId(impactId.name())));
+				level.append(Lang.translate("tooltip.capacityProvided." + Lang.asId(opposite.name())));
 
 //			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 //				level +=

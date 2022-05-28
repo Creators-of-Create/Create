@@ -6,14 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
-import com.simibubi.create.AllKeys;
-
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -118,10 +117,12 @@ public class LinkedControllerClientHandler {
 	}
 
 	protected static boolean isActuallyPressed(KeyMapping kb) {
-		if(kb.matchesMouse(kb.getKey().getValue()))
-			return AllKeys.isMouseButtonDown(kb.getKey().getValue());
-		else
-			return AllKeys.isKeyDown(kb.getKey().getValue());
+		InputConstants.Key key = kb.getKey();
+		if (key.getType() == InputConstants.Type.MOUSE) {
+			return AllKeys.isMouseButtonDown(key.getValue());
+		} else {
+			return AllKeys.isKeyDown(key.getValue());
+		}
 	}
 
 	public static void tick() {

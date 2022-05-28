@@ -5258,6 +5258,7 @@ dc96331cded39b2d2f24853f4dd6c1f6f3863115 data/forge/tags/items/raw_materials/zin
 ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/items/storage_blocks/brass.json
 823d05187626797205381d4620a84abda3bc8f89 data/forge/tags/items/storage_blocks/raw_zinc.json
 7f71a774800111e50b42de0e6159ed2d2a807d32 data/forge/tags/items/storage_blocks/zinc.json
+e002dfedc5e8762de0f97ea1f3fa546e92e748ae data/forge/tags/items/tools/wrench.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/azalea_root_replaceable.json
 9f7a428085b1aac66da32a43e9d51c7efc1f0d81 data/minecraft/tags/blocks/beacon_base_blocks.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/dripstone_replaceable_blocks.json
