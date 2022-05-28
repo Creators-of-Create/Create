@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.trains;
 
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -75,7 +77,9 @@ public interface IBogeyBlock extends IWrenchable {
 			if (newBlock instanceof IBogeyBlock bogey) {
 				BlockState matchingBogey = bogey.getMatchingBogey(bogeyUpDirection, trackAxisAlongFirstCoordinate);
 				if (matchingBogey != null)
-					return matchingBogey;
+					return matchingBogey.hasProperty(WATERLOGGED)
+						? matchingBogey.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+						: matchingBogey;
 			}
 			index = (index + 1) % BOGEYS.size();
 		}

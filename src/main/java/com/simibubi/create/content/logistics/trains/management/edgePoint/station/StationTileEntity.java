@@ -37,6 +37,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -251,7 +252,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				BlockPos bogeyPos = pos.relative(assemblyDirection, i)
 					.offset(up);
 				BlockState blockState = level.getBlockState(bogeyPos);
-				if (blockState.getBlock()instanceof IBogeyBlock bogey) {
+				if (blockState.getBlock() instanceof IBogeyBlock bogey) {
 					level.setBlock(bogeyPos, bogey.getRotatedBlockState(blockState, Direction.DOWN), 3);
 					bogey.playRotateSound(level, bogeyPos);
 					return true;
@@ -267,21 +268,21 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return false;
 		}
 
-		BlockState bogeyAnchor = track.getBogeyAnchor(level, pos, state);
+		BlockState bogeyAnchor = ProperWaterloggedBlock.withWater(level, track.getBogeyAnchor(level, pos, state), pos);
 		level.setBlock(pos.offset(up), bogeyAnchor, 3);
 		player.displayClientMessage(Lang.translate("train_assembly.bogey_created"), true);
 		SoundType soundtype = bogeyAnchor.getBlock()
 			.getSoundType(state, level, pos, player);
 		level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
 			soundtype.getPitch() * 0.8F);
-		
+
 		if (!player.isCreative()) {
 			ItemStack itemInHand = player.getItemInHand(hand);
 			itemInHand.shrink(1);
 			if (itemInHand.isEmpty())
 				player.setItemInHand(hand, ItemStack.EMPTY);
 		}
-		
+
 		return true;
 	}
 
@@ -354,7 +355,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			}
 
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
-			if (potentialBogeyState.getBlock()instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
+			if (potentialBogeyState.getBlock() instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
 				bogeyTypes[bogeyIndex] = bogey;
 				bogeyLocations[bogeyIndex] = i;
 				bogeyIndex++;
@@ -677,7 +678,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return true;
 
 		BlockState target = edgePoint.getTrackBlockState();
-		if (!(target.getBlock()instanceof ITrackBlock def))
+		if (!(target.getBlock() instanceof ITrackBlock def))
 			return false;
 
 		Vec3 axis = null;

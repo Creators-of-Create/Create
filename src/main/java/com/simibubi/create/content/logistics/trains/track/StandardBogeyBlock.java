@@ -14,6 +14,7 @@ import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -26,6 +27,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
@@ -34,12 +36,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<StandardBogeyTileEntity> {
+public class StandardBogeyBlock extends Block
+	implements IBogeyBlock, ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock {
 
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	private final boolean large;
@@ -47,11 +51,12 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 	public StandardBogeyBlock(Properties p_i48440_1_, boolean large) {
 		super(p_i48440_1_);
 		this.large = large;
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(AXIS);
+		builder.add(AXIS, WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
 
@@ -63,6 +68,18 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 		return state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Axis.X ? STICKY_X : STICKY_Z;
 	}
 
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(pLevel, pState, pCurrentPos);
+		return pState;
+	}
+	
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
+	}
+	
 	@Override
 	public double getWheelPointSpacing() {
 		return 2;

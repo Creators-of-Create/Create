@@ -13,6 +13,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -504,7 +505,7 @@ public class TrackPlacement {
 				}
 
 				if (canPlace)
-					level.setBlock(offsetPos, toPlace, 3);
+					level.setBlock(offsetPos, ProperWaterloggedBlock.withWater(level, toPlace, offsetPos), 3);
 			}
 		}
 
@@ -513,14 +514,14 @@ public class TrackPlacement {
 
 		if (!simulate) {
 			BlockState stateAtPos = level.getBlockState(targetPos1);
-			level.setBlock(targetPos1,
+			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
 				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TE, true),
-				3);
+				targetPos1), 3);
 
 			stateAtPos = level.getBlockState(targetPos2);
-			level.setBlock(targetPos2,
+			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
 				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_TE, true),
-				3);
+				targetPos2), 3);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);

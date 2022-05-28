@@ -9,6 +9,7 @@ import java.util.Set;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -182,7 +183,7 @@ public class TrackPaver {
 		if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.getMaterial()
 			.isReplaceable()) {
 			if (!simulate)
-				level.setBlock(pos, state, 3);
+				level.setBlock(pos, ProperWaterloggedBlock.withWater(level, state, pos), 3);
 			return true;
 		}
 		return false;

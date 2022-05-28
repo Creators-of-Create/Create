@@ -1,10 +1,17 @@
 {
   "variants": {
-    "axis=x": {
+    "axis=x,waterlogged=false": {
       "model": "create:block/track/bogey/top",
       "y": 90
     },
-    "axis=z": {
+    "axis=z,waterlogged=false": {
+      "model": "create:block/track/bogey/top"
+    },
+    "axis=x,waterlogged=true": {
+      "model": "create:block/track/bogey/top",
+      "y": 90
+    },
+    "axis=z,waterlogged=true": {
       "model": "create:block/track/bogey/top"
     }
   }

@@ -45,6 +45,8 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -109,6 +111,16 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		withTileEntityDo(context.getLevel(), context.getClickedPos(), FluidTankTileEntity::toggleWindows);
 		return InteractionResult.SUCCESS;
+	}
+
+	static final VoxelShape CAMPFIRE_SMOKE_CLIP = Block.box(0, 4, 0, 16, 16, 16);
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+		CollisionContext pContext) {
+		if (pContext == CollisionContext.empty())
+			return CAMPFIRE_SMOKE_CLIP;
+		return pState.getShape(pLevel, pPos);
 	}
 
 	@Override
@@ -330,7 +342,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
 			.orElse(0);
 	}
-	
+
 	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
 		BlockState tankState = pLevel.getBlockState(tankPos);
 		if (!(tankState.getBlock() instanceof FluidTankBlock tank))

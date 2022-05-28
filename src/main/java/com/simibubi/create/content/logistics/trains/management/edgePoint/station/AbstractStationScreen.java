@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
@@ -65,7 +66,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 			Carriage carriage = carriages.get(i);
 			w += icon.getIconWidth(carriage.bogeySpacing) + 1;
 		}
-		
+
 		return w;
 	}
 
@@ -83,11 +84,12 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 			.scale(40)
 			.rotateX(-22)
 			.rotateY(63);
-		GuiGameElement.of(te.getBlockState())
+		GuiGameElement.of(te.getBlockState()
+			.setValue(BlockStateProperties.WATERLOGGED, false))
 			.render(ms);
 
 		if (te.resolveFlagAngle()) {
-			msr.translate(1 / 16f, -9 / 16f, -11 / 16f);
+			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
 			StationRenderer.transformFlag(msr, te, partialTicks, 180, false);
 			GuiGameElement.of(getFlag(partialTicks))
 				.render(ms);

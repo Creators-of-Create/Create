@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -36,8 +37,15 @@ public class ScheduleEditPacket extends SimplePacketBase {
 				ItemStack mainHandItem = sender.getMainHandItem();
 				if (!AllItems.SCHEDULE.isIn(mainHandItem))
 					return;
-				mainHandItem.getOrCreateTag()
-					.put("Schedule", schedule.write());
+				
+				CompoundTag tag = mainHandItem.getOrCreateTag();
+				if (schedule.entries.isEmpty()) {
+					tag.remove("Schedule");
+					if (tag.isEmpty())
+						mainHandItem.setTag(null);
+				} else
+					tag.put("Schedule", schedule.write());
+				
 				sender.getCooldowns()
 					.addCooldown(mainHandItem.getItem(), 5);
 			});

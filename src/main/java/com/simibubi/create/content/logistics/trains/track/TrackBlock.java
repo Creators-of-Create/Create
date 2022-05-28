@@ -39,6 +39,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -84,6 +85,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.portal.PortalForcer;
 import net.minecraft.world.level.portal.PortalInfo;
@@ -98,7 +100,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 
-public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement {
+public class TrackBlock extends Block
+	implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -106,12 +109,18 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	public TrackBlock(Properties p_49795_) {
 		super(p_49795_);
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
-			.setValue(HAS_TE, false));
+			.setValue(HAS_TE, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
-		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE));
+		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE, WATERLOGGED));
+	}
+
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return fluidState(state);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -121,7 +130,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-		BlockState stateForPlacement = super.getStateForPlacement(ctx);
+		BlockState stateForPlacement = withWater(super.getStateForPlacement(ctx), ctx);
+
 		if (ctx.getPlayer() == null)
 			return stateForPlacement;
 
@@ -298,6 +308,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@Override
 	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor level, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(level, state, pCurrentPos);
 		TrackShape shape = state.getValue(SHAPE);
 		if (!shape.isPortal())
 			return state;
@@ -424,7 +435,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 			if (!entry.getValue()
 				.isInside(pos))
 				continue;
-			if (world.getBlockEntity(entry.getKey())instanceof StationTileEntity station)
+			if (world.getBlockEntity(entry.getKey()) instanceof StationTileEntity station)
 				if (station.trackClicked(player, hand, this, state, pos))
 					return InteractionResult.SUCCESS;
 		}
@@ -440,7 +451,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 				BlockPos girderPos = pPos.below()
 					.offset(vec3.z * side, 0, vec3.x * side);
 				BlockState girderState = pLevel.getBlockState(girderPos);
-				if (girderState.getBlock()instanceof GirderBlock girderBlock
+				if (girderState.getBlock() instanceof GirderBlock girderBlock
 					&& !blockTicks.hasScheduledTick(girderPos, girderBlock))
 					pLevel.scheduleTick(girderPos, girderBlock, 1);
 			}
@@ -635,7 +646,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		Vec3 normal = null;
 		Vec3 offset = null;
 
-		if (bezierPoint != null && world.getBlockEntity(pos)instanceof TrackTileEntity trackTE) {
+		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackTileEntity trackTE) {
 			BezierConnection bc = trackTE.connections.get(bezierPoint.curveTarget());
 			if (bc != null) {
 				double length = Mth.floor(bc.getLength() * 2);
@@ -698,7 +709,8 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		int girderAmount = 0;
 
 		if (te instanceof TrackTileEntity track) {
-			for (BezierConnection bezierConnection : track.getConnections().values()) {
+			for (BezierConnection bezierConnection : track.getConnections()
+				.values()) {
 				if (!bezierConnection.isPrimary())
 					continue;
 				trackAmount += bezierConnection.getTrackItemCost();

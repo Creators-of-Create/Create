@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.in
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,32 +16,40 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ControlsBlock extends HorizontalDirectionalBlock implements IWrenchable {
+public class ControlsBlock extends HorizontalDirectionalBlock implements IWrenchable, ProperWaterloggedBlock {
 
 	public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
 	public ControlsBlock(Properties p_54120_) {
 		super(p_54120_);
-		registerDefaultState(defaultBlockState().setValue(OPEN, false));
+		registerDefaultState(defaultBlockState().setValue(OPEN, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
-		super.createBlockStateDefinition(pBuilder.add(FACING, OPEN));
+		super.createBlockStateDefinition(pBuilder.add(FACING, OPEN, WATERLOGGED));
 	}
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(pLevel, pState, pCurrentPos);
 		return pState.setValue(OPEN, pLevel instanceof ContraptionWorld);
+	}
+	
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-		BlockState state = super.getStateForPlacement(pContext);
+		BlockState state = withWater(super.getStateForPlacement(pContext), pContext);
 		Direction horizontalDirection = pContext.getHorizontalDirection();
 		Player player = pContext.getPlayer();
 
