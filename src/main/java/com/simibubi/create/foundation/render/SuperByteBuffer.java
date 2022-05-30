@@ -85,19 +85,24 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 			return;
 
 		Matrix4f modelMat = input.last()
-				.pose()
-				.copy();
+			.pose()
+			.copy();
 		Matrix4f localTransforms = transforms.last()
-				.pose();
+			.pose();
 		modelMat.multiply(localTransforms);
 
 		Matrix3f normalMat;
 		if (fullNormalTransform) {
-			normalMat = input.last().normal().copy();
-			Matrix3f localNormalTransforms = transforms.last().normal();
+			normalMat = input.last()
+				.normal()
+				.copy();
+			Matrix3f localNormalTransforms = transforms.last()
+				.normal();
 			normalMat.mul(localNormalTransforms);
 		} else {
-			normalMat = transforms.last().normal().copy();
+			normalMat = transforms.last()
+				.normal()
+				.copy();
 		}
 
 		if (useWorldLight) {
@@ -109,7 +114,8 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		final Vector4f lightPos = new Vector4f();
 
 		DiffuseLightCalculator diffuseCalculator = ForcedDiffuseState.getForcedCalculator();
-		final boolean disableDiffuseMult = this.disableDiffuseMult || (OptifineHandler.isUsingShaders() && diffuseCalculator == null);
+		final boolean disableDiffuseMult =
+			this.disableDiffuseMult || (OptifineHandler.isUsingShaders() && diffuseCalculator == null);
 		if (diffuseCalculator == null) {
 			diffuseCalculator = this.diffuseCalculator;
 			if (diffuseCalculator == null) {
@@ -268,16 +274,16 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	@Override
 	public SuperByteBuffer mulPose(Matrix4f pose) {
 		transforms.last()
-				.pose()
-				.multiply(pose);
+			.pose()
+			.multiply(pose);
 		return this;
 	}
 
 	@Override
 	public SuperByteBuffer mulNormal(Matrix3f normal) {
 		transforms.last()
-				.normal()
-				.mul(normal);
+			.normal()
+			.mul(normal);
 		return this;
 	}
 
@@ -328,8 +334,9 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	/**
-	 * Prevents vertex colors from being multiplied by the diffuse value calculated from the final transformed normal vector.
-	 * Useful for entity rendering, when diffuse is applied automatically later.
+	 * Prevents vertex colors from being multiplied by the diffuse value calculated
+	 * from the final transformed normal vector. Useful for entity rendering, when
+	 * diffuse is applied automatically later.
 	 */
 	public SuperByteBuffer disableDiffuseMult() {
 		disableDiffuseMult = true;
@@ -353,10 +360,15 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollV) {
+		return this.shiftUVScrolling(entry, 0, scrollV);
+	}
+
+	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollU, float scrollV) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = u - entry.getOriginal()
 				.getU0() + entry.getTarget()
-					.getU0();
+					.getU0()
+				+ scrollU;
 			float targetV = v - entry.getOriginal()
 				.getV0() + entry.getTarget()
 					.getV0()
@@ -412,8 +424,9 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	/**
-	 * Uses max light from calculated light (world light or custom light) and vertex light for the final light value.
-	 * Ineffective if any other light method was not called.
+	 * Uses max light from calculated light (world light or custom light) and vertex
+	 * light for the final light value. Ineffective if any other light method was
+	 * not called.
 	 */
 	public SuperByteBuffer hybridLight() {
 		hybridLight = true;
@@ -421,7 +434,8 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	/**
-	 * Transforms normals not only by the local matrix stack, but also by the passed matrix stack.
+	 * Transforms normals not only by the local matrix stack, but also by the passed
+	 * matrix stack.
 	 */
 	public SuperByteBuffer fullNormalTransform() {
 		fullNormalTransform = true;

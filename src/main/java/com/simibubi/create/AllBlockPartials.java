@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -137,10 +136,17 @@ public class AllBlockPartials {
 		SIGNAL_RED = block("track_signal/red_tube"), SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
 		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"), SIGNAL_YELLOW = block("track_signal/yellow_tube"),
 
+		BLAZE_GOGGLES = block("blaze_burner/goggles"),
+		BLAZE_IDLE = block("blaze_burner/blaze/idle"), BLAZE_ACTIVE = block("blaze_burner/blaze/active"),
+		BLAZE_SUPER = block("blaze_burner/blaze/super"), BLAZE_BURNER_FLAME = block("blaze_burner/flame"),
+		BLAZE_BURNER_RODS = block("blaze_burner/rods_small"), BLAZE_BURNER_RODS_2 = block("blaze_burner/rods_large"),
+		BLAZE_BURNER_SUPER_RODS = block("blaze_burner/superheated_rods_small"),
+		BLAZE_BURNER_SUPER_RODS_2 = block("blaze_burner/superheated_rods_large"),
+
 		WHISTLE_MOUTH_LARGE = block("steam_whistle/large_mouth"),
 		WHISTLE_MOUTH_MEDIUM = block("steam_whistle/medium_mouth"),
 		WHISTLE_MOUTH_SMALL = block("steam_whistle/small_mouth"),
-		
+
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),
 		CRAFTING_BLUEPRINT_3x3 = entity("crafting_blueprint_large"),
@@ -155,8 +161,6 @@ public class AllBlockPartials {
 	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
 		new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.class);
 
-	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES =
-		new EnumMap<>(BlazeBurnerBlock.HeatLevel.class);
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 
@@ -170,11 +174,6 @@ public class AllBlockPartials {
 				map.put(d, block("fluid_pipe/" + asId + "/" + Lang.asId(d.getSerializedName())));
 			}
 			PIPE_ATTACHMENTS.put(type, map);
-		}
-		for (BlazeBurnerBlock.HeatLevel heat : BlazeBurnerBlock.HeatLevel.values()) {
-			if (heat == BlazeBurnerBlock.HeatLevel.NONE)
-				continue;
-			BLAZES.put(heat, block("blaze_burner/blaze/" + heat.getSerializedName()));
 		}
 		for (DyeColor color : DyeColor.values())
 			TOOLBOX_LIDS.put(color, block("toolbox/lid/" + Lang.asId(color.name())));

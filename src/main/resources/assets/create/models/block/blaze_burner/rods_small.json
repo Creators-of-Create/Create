@@ -1,0 +1,9 @@
+{
+	"parent": "block/block",
+	"loader": "forge:obj",
+	"flip-v": true,
+	"model": "create:models/block/blaze_burner/blaze_rods_small.obj",
+	"textures": {
+		"0": "create:block/blaze_active"
+	}
+}

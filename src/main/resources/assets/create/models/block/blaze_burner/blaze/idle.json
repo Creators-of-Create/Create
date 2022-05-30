@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "create:block/blaze_kindled",
-		"particle": "create:block/blaze_kindled"
+		"2": "create:block/blaze_idle",
+		"particle": "create:block/blaze_idle"
 	},
 	"elements": [
 		{

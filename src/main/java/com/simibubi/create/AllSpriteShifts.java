@@ -25,6 +25,11 @@ public class AllSpriteShifts {
 	public static final Map<DyeColor, SpriteShiftEntry> DYED_BELTS = new IdentityHashMap<>(),
 		DYED_OFFSET_BELTS = new IdentityHashMap<>(), DYED_DIAGONAL_BELTS = new IdentityHashMap<>();
 
+	public static final SpriteShiftEntry BURNER_FLAME =
+		SpriteShifter.get("block/blaze_burner_flame", "block/blaze_burner_flame_scroll"),
+		SUPER_BURNER_FLAME =
+			SpriteShifter.get("block/blaze_burner_flame", "block/blaze_burner_flame_superheated_scroll");
+
 	public static final CTSpriteShiftEntry FRAMED_GLASS =
 		getCT(OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
 		HORIZONTAL_FRAMED_GLASS =
@@ -51,8 +56,7 @@ public class AllSpriteShifts {
 		CHASSIS_STICKY = omni("linear_chassis_end_sticky");
 
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
-		FLUID_TANK = getCT(CTType.RECTANGLE, "fluid_tank"),
-		FLUID_TANK_TOP = getCT(CTType.RECTANGLE, "fluid_tank_top"),
+		FLUID_TANK = getCT(CTType.RECTANGLE, "fluid_tank"), FLUID_TANK_TOP = getCT(CTType.RECTANGLE, "fluid_tank_top"),
 		CREATIVE_FLUID_TANK = getCT(CTType.CROSS, "creative_fluid_tank");
 
 	public static final Couple<CTSpriteShiftEntry> VAULT_TOP = vault("top"), VAULT_FRONT = vault("front"),

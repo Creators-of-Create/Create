@@ -153,6 +153,7 @@ public class BuilderTransformers {
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(
 		Supplier<CTSpriteShiftEntry> ct) {
 		return b -> b.initialProperties(SharedProperties::stone)
+			.properties(p -> p.sound(SoundType.WOOD))
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.onRegister(connectedTextures(() -> new EncasedCTBehaviour(ct.get())))

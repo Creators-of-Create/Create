@@ -130,7 +130,7 @@ public class TrackGraphSync {
 					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
 					currentPacket.addedEdges.add(Pair.of(key, edge.getTurn()));
 					currentPacket.syncEdgeData(node, node2, edge);
-				});
+				});//FIXME these edges will have missing nodes
 
 			if (sent++ < 1000)
 				continue;

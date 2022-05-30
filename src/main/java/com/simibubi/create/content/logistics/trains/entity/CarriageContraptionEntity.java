@@ -567,7 +567,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.train.targetSpeed = topSpeed * targetSpeed;
 		if (slow)
 			carriage.train.targetSpeed /= 6;
-		
+
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
 		carriage.train.manualTick = true;
 		carriage.train.approachTargetSpeed(counteringAcceleration ? 2 : 1);
