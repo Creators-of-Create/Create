@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create:andesite_ladder",
+    "create:brass_ladder",
+    "create:copper_ladder"
+  ]
+}

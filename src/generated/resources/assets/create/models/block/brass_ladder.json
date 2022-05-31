@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/ladder",
+  "textures": {
+    "0": "create:block/ladder_brass_hoop",
+    "1": "create:block/ladder_brass",
+    "particle": "create:block/ladder_brass"
+  }
+}

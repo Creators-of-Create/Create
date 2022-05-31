@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
-
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;

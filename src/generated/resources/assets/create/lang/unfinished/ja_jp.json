@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 243",
+	"_": "Missing Localizations: 246",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -13,6 +13,7 @@
 	"block.create.andesite_encased_large_cogwheel": "安山岩ケース入り大きな歯車",
 	"block.create.andesite_encased_shaft": "安山岩ケース入りシャフト",
 	"block.create.andesite_funnel": "安山岩ファンネル",
+	"block.create.andesite_ladder": "UNLOCALIZED: Andesite Ladder",
 	"block.create.andesite_pillar": "安山岩の柱",
 	"block.create.andesite_tunnel": "安山岩トンネル",
 	"block.create.asurine": "瑠璃岩",
@@ -39,6 +40,7 @@
 	"block.create.brass_encased_large_cogwheel": "真鍮ケース入り大きな歯車",
 	"block.create.brass_encased_shaft": "真鍮ケース入りシャフト",
 	"block.create.brass_funnel": "真鍮ファンネル",
+	"block.create.brass_ladder": "UNLOCALIZED: Brass Ladder",
 	"block.create.brass_tunnel": "真鍮トンネル",
 	"block.create.brown_nixie_tube": "茶色のニキシー管",
 	"block.create.brown_sail": "茶色の帆",
@@ -57,6 +59,7 @@
 	"block.create.controls": "UNLOCALIZED: Train Controls",
 	"block.create.copper_backtank": "銅のバックタンク",
 	"block.create.copper_casing": "銅ケーシング",
+	"block.create.copper_ladder": "UNLOCALIZED: Copper Ladder",
 	"block.create.copper_shingle_slab": "銅の屋根板のハーフブロック",
 	"block.create.copper_shingle_stairs": "銅の屋根板の階段",
 	"block.create.copper_shingles": "銅の屋根板",

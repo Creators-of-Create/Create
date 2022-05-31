@@ -35,6 +35,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
@@ -236,7 +237,19 @@ public class ContraptionCollider {
 					.scale(.5f));
 				if (temporalCollision)
 					collisionLocation = collisionLocation.add(0, motionResponse.y, 0);
-				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
+
+				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(entity.position(), 0));
+				if (contraption.getBlocks()
+					.containsKey(pos)) {
+					BlockState blockState = contraption.getBlocks()
+						.get(pos).state;
+					if (blockState.is(BlockTags.CLIMBABLE)) {
+						surfaceCollision.setTrue();
+						totalResponse = totalResponse.add(0, .1f, 0);
+					}
+				}
+
+				pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
 				if (contraption.getBlocks()
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()

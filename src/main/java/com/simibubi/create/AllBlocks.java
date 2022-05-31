@@ -133,6 +133,7 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
+import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
@@ -762,6 +763,24 @@ public class AllBlocks {
 					.setRolls(ConstantValue.exactly(1.0F))
 					.add(LootItem.lootTableItem(SHAFT.get()))))))
 			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
+			.register();
+
+	public static final BlockEntry<MetalLadderBlock> ANDESITE_LADDER =
+		REGISTRATE.block("andesite_ladder", MetalLadderBlock::new)
+			.transform(
+				BuilderTransformers.ladder("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get())))
+			.register();
+
+	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
+		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
+			.transform(
+				BuilderTransformers.ladder("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass"))))
+			.register();
+
+	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
+		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
+			.transform(
+				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper"))))
 			.register();
 
 	// Fluids

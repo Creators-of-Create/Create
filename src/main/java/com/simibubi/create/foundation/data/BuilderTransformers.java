@@ -34,16 +34,19 @@ import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -132,6 +135,24 @@ public class BuilderTransformers {
 			.transform(BlockStressDefaults.setImpact(1.0))
 			.item()
 			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
+	}
+
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
+		Supplier<DataIngredient> ingredient) {
+		return b -> b.initialProperties(() -> Blocks.LADDER)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
+				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
+				.texture("0", p.modLoc("block/ladder_" + name + "_hoop"))
+				.texture("1", p.modLoc("block/ladder_" + name))
+				.texture("particle", p.modLoc("block/ladder_" + name))))
+			.properties(p -> p.sound(SoundType.COPPER))
+			.transform(pickaxeOnly())
+			.tag(BlockTags.CLIMBABLE)
+			.item()
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), c::get, 2))
+			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
+			.build();
 	}
 
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(
