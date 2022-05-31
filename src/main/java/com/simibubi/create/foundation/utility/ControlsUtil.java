@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility;
 import java.util.Vector;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.simibubi.create.AllKeys;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -27,11 +28,12 @@ public class ControlsUtil {
 	}
 
 	public static boolean isActuallyPressed(KeyMapping kb) {
-		return InputConstants.isKeyDown(Minecraft.getInstance()
-			.getWindow()
-			.getWindow(),
-			kb.getKey()
-				.getValue());
+		InputConstants.Key key = kb.getKey();
+		if (key.getType() == InputConstants.Type.MOUSE) {
+			return AllKeys.isMouseButtonDown(key.getValue());
+		} else {
+			return AllKeys.isKeyDown(key.getValue());
+		}
 	}
 
 }
