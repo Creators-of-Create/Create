@@ -1443,7 +1443,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackBlock::new)
 		.initialProperties(Material.STONE)
-		.properties(p -> p.color(MaterialColor.NONE)
+		.properties(p -> p.color(MaterialColor.METAL)
 			.strength(0.8F)
 			.sound(SoundType.METAL)
 			.noOcclusion())

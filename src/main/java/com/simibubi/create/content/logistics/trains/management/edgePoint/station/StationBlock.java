@@ -20,6 +20,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -64,7 +67,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
@@ -107,6 +110,25 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
 		if (AllItems.WRENCH.isIn(itemInHand))
 			return InteractionResult.PASS;
+
+		if (itemInHand.getItem() == Items.FILLED_MAP) {
+			return onTileEntityUse(pLevel, pPos, station -> {
+				if (pLevel.isClientSide)
+					return InteractionResult.SUCCESS;
+
+				if (station.getStation() == null || station.getStation().getId() == null)
+					return InteractionResult.FAIL;
+
+				MapItemSavedData savedData = MapItem.getSavedData(itemInHand, pLevel);
+				if (!(savedData instanceof StationMapData stationMapData))
+					return InteractionResult.FAIL;
+
+				if (!stationMapData.toggleStation(pLevel, pPos, station))
+					return InteractionResult.FAIL;
+
+				return InteractionResult.SUCCESS;
+			});
+		}
 
 		InteractionResult result = onTileEntityUse(pLevel, pPos, station -> {
 			ItemStack autoSchedule = station.getAutoSchedule();

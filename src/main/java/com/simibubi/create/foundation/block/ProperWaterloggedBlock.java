@@ -20,7 +20,7 @@ import net.minecraft.world.level.material.Fluids;
  */
 public interface ProperWaterloggedBlock extends SimpleWaterloggedBlock {
 
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	default FluidState fluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
@@ -35,14 +35,13 @@ public interface ProperWaterloggedBlock extends SimpleWaterloggedBlock {
 		return withWater(ctx.getLevel(), placementState, ctx.getClickedPos());
 	}
 
-	public static BlockState withWater(LevelAccessor level, BlockState placementState, BlockPos pos) {
+	static BlockState withWater(LevelAccessor level, BlockState placementState, BlockPos pos) {
 		if (placementState == null)
 			return null;
 		if (!(placementState.getBlock() instanceof SimpleWaterloggedBlock))
-			return null;
+			return placementState;
 		FluidState ifluidstate = level.getFluidState(pos);
-		return placementState.setValue(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
+		return placementState.setValue(BlockStateProperties.WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
 	}
 
 }
