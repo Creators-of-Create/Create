@@ -212,6 +212,7 @@
 	"block.create.exposed_copper_tile_slab": "Exposed Copper Tile Slab",
 	"block.create.exposed_copper_tile_stairs": "Exposed Copper Tile Stairs",
 	"block.create.exposed_copper_tiles": "Exposed Copper Tiles",
+	"block.create.fake_track": "Track Marker for Maps",
 	"block.create.fluid_pipe": "Fluid Pipe",
 	"block.create.fluid_tank": "Fluid Tank",
 	"block.create.fluid_valve": "Fluid Valve",

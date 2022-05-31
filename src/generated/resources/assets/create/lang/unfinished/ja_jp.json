@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 246",
+	"_": "Missing Localizations: 247",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -213,6 +213,7 @@
 	"block.create.exposed_copper_tile_slab": "風化した銅タイルのハーフブロック",
 	"block.create.exposed_copper_tile_stairs": "風化した銅タイルの階段",
 	"block.create.exposed_copper_tiles": "風化した銅タイル",
+	"block.create.fake_track": "UNLOCALIZED: Track Marker for Maps",
 	"block.create.fluid_pipe": "液体パイプ",
 	"block.create.fluid_tank": "液体タンク",
 	"block.create.fluid_valve": "液体バルブ",

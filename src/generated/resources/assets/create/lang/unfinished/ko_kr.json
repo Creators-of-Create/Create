@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 246",
+	"_": "Missing Localizations: 247",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -213,6 +213,7 @@
 	"block.create.exposed_copper_tile_slab": "약간 녹슨 구리 타일 반 블록",
 	"block.create.exposed_copper_tile_stairs": "약간 녹슨 구리 타일 계단",
 	"block.create.exposed_copper_tiles": "약간 녹슨 구리 타일",
+	"block.create.fake_track": "UNLOCALIZED: Track Marker for Maps",
 	"block.create.fluid_pipe": "액체 파이프",
 	"block.create.fluid_tank": "액체 탱크",
 	"block.create.fluid_valve": "액체 밸브",

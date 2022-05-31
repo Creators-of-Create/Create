@@ -195,6 +195,7 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
+import com.simibubi.create.content.logistics.trains.track.FakeTrackBlock;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
@@ -1474,6 +1475,16 @@ public class AllBlocks {
 		.item(TrackBlockItem::new)
 		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
 		.build()
+		.register();
+
+	public static final BlockEntry<FakeTrackBlock> FAKE_TRACK = REGISTRATE.block("fake_track", FakeTrackBlock::new)
+		.initialProperties((new Material.Builder(MaterialColor.METAL)).noCollider()
+			.nonSolid()
+			.replaceable()
+			.build())
+		.blockstate((c, p) -> p.models()
+			.withExistingParent(c.getName(), p.mcLoc("block/air")))
+		.lang("Track Marker for Maps")
 		.register();
 
 	public static final BlockEntry<CasingBlock> RAILWAY_CASING = REGISTRATE.block("railway_casing", CasingBlock::new)

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 247",
+	"_": "Missing Localizations: 248",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -213,6 +213,7 @@
 	"block.create.exposed_copper_tile_slab": "Lespede De Țiglă De Cupru Expusă",
 	"block.create.exposed_copper_tile_stairs": "Scări De Țiglă De Cupru Expuse",
 	"block.create.exposed_copper_tiles": "Țigle De Cupru Expuse",
+	"block.create.fake_track": "UNLOCALIZED: Track Marker for Maps",
 	"block.create.fluid_pipe": "Conductă De Fluide",
 	"block.create.fluid_tank": "Rezervor De Fluid",
 	"block.create.fluid_valve": "Supapă De Fluid",

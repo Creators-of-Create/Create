@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2170",
+	"_": "Missing Localizations: 2171",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -213,6 +213,7 @@
 	"block.create.exposed_copper_tile_slab": "UNLOCALIZED: Exposed Copper Tile Slab",
 	"block.create.exposed_copper_tile_stairs": "UNLOCALIZED: Exposed Copper Tile Stairs",
 	"block.create.exposed_copper_tiles": "UNLOCALIZED: Exposed Copper Tiles",
+	"block.create.fake_track": "UNLOCALIZED: Track Marker for Maps",
 	"block.create.fluid_pipe": "UNLOCALIZED: Fluid Pipe",
 	"block.create.fluid_tank": "UNLOCALIZED: Fluid Tank",
 	"block.create.fluid_valve": "UNLOCALIZED: Fluid Valve",

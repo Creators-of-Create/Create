@@ -182,6 +182,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.track.FakeTrackTileEntity;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
 import com.simibubi.create.content.logistics.trains.track.TrackInstance;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
@@ -766,6 +767,11 @@ public class AllTileEntities {
 		.instance(() -> TrackInstance::new)
 		.renderer(() -> TrackRenderer::new)
 		.validBlocks(AllBlocks.TRACK)
+		.register();
+	
+	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = Create.registrate()
+		.tileEntity("fake_track", FakeTrackTileEntity::new)
+		.validBlocks(AllBlocks.FAKE_TRACK)
 		.register();
 
 	public static final BlockEntityEntry<StandardBogeyTileEntity> BOGEY = Create.registrate()

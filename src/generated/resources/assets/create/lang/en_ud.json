@@ -209,6 +209,7 @@
   "block.create.exposed_copper_tile_slab": "q\u0250\u05DFS \u01DD\u05DF\u0131\u27D8 \u0279\u01DDddo\u0186 p\u01DDsodx\u018E",
   "block.create.exposed_copper_tile_stairs": "s\u0279\u0131\u0250\u0287S \u01DD\u05DF\u0131\u27D8 \u0279\u01DDddo\u0186 p\u01DDsodx\u018E",
   "block.create.exposed_copper_tiles": "s\u01DD\u05DF\u0131\u27D8 \u0279\u01DDddo\u0186 p\u01DDsodx\u018E",
+  "block.create.fake_track": "sd\u0250W \u0279o\u025F \u0279\u01DD\u029E\u0279\u0250W \u029E\u0254\u0250\u0279\u27D8",
   "block.create.fluid_pipe": "\u01DDd\u0131\u0500 p\u0131n\u05DF\u2132",
   "block.create.fluid_tank": "\u029Eu\u0250\u27D8 p\u0131n\u05DF\u2132",
   "block.create.fluid_valve": "\u01DD\u028C\u05DF\u0250\u039B p\u0131n\u05DF\u2132",

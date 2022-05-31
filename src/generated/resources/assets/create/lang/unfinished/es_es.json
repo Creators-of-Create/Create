@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 244",
+	"_": "Missing Localizations: 245",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -213,6 +213,7 @@
 	"block.create.exposed_copper_tile_slab": "Losa de baldosas de cobre expuesto",
 	"block.create.exposed_copper_tile_stairs": "Escaleras de baldosas de cobre expuesto",
 	"block.create.exposed_copper_tiles": "Blooque de baldosas de cobre expuesto",
+	"block.create.fake_track": "UNLOCALIZED: Track Marker for Maps",
 	"block.create.fluid_pipe": "Tubería de fluidos de cobre",
 	"block.create.fluid_tank": "Depósito de fluidos",
 	"block.create.fluid_valve": "Válvula de fluidos",
