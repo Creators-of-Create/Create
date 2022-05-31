@@ -29,6 +29,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -440,6 +442,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return false;
 
 		context.motion = actorPosition.subtract(previousPosition);
+		if (!level.isClientSide() && context.contraption.entity instanceof CarriageContraptionEntity cce
+			&& cce.getCarriage() != null) {
+			Train train = cce.getCarriage().train;
+			double actualSpeed = train.speedBeforeStall != null ? train.speedBeforeStall : train.speed;
+			context.motion = context.motion.normalize()
+				.scale(actualSpeed);
+		}
+
 		Vec3 relativeMotion = context.motion;
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;

@@ -69,6 +69,13 @@ public class TrainStatus {
 		displayInformation("Tracks are missing beneath the Train", false);
 		track = true;
 	}
+	
+	public void highStress() {
+		if (track)
+			return;
+		displayInformation("Forced stop due to Stress on Couplings", false);
+		track = true;
+	}
 
 	public void doublePortal() {
 		if (track)

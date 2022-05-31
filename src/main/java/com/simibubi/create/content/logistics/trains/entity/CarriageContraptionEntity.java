@@ -76,6 +76,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	private boolean arrivalSoundReversed;
 	private int arrivalSoundTicks;
 
+	private Vec3 serverPrevPos;
+
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 		validForRender = false;
@@ -133,6 +135,17 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		return entityData.get(SCHEDULED);
 	}
 
+	public void setServerSidePrevPosition() {
+		serverPrevPos = position();
+	}
+
+	@Override
+	public Vec3 getPrevPositionVec() {
+		if (!level.isClientSide() && serverPrevPos != null)
+			return serverPrevPos;
+		return super.getPrevPositionVec();
+	}
+
 	public boolean isLocalCoordWithin(BlockPos localPos, int min, int max) {
 		if (!(getContraption() instanceof CarriageContraption cc))
 			return false;
@@ -173,6 +186,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	@Override
 	protected void tickContraption() {
+		if (nonDamageTicks > 0)
+			nonDamageTicks--;
 		if (!(contraption instanceof CarriageContraption cc))
 			return;
 		if (carriage == null) {
@@ -509,6 +524,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			player.displayClientMessage(new TextComponent("<i> Arrived at ").withStyle(ChatFormatting.GREEN)
 				.append(new TextComponent(currentStation.name).withStyle(ChatFormatting.WHITE)), true);
 			return true;
+		}
+
+		if (carriage.train.speedBeforeStall != null && targetSpeed != 0
+			&& Math.signum(carriage.train.speedBeforeStall) != Math.signum(targetSpeed)) {
+			carriage.train.cancelStall();
 		}
 
 		if (currentStation != null && targetSpeed != 0) {

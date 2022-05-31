@@ -740,6 +740,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<GirderBlock> METAL_GIRDER = REGISTRATE.block("metal_girder", GirderBlock::new)
+		.initialProperties(SharedProperties::softMetal)
 		.blockstate(GirderBlockStateGenerator::blockState)
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
@@ -751,6 +752,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<GirderEncasedShaftBlock> METAL_GIRDER_ENCASED_SHAFT =
 		REGISTRATE.block("metal_girder_encased_shaft", GirderEncasedShaftBlock::new)
+			.initialProperties(SharedProperties::softMetal)
 			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
 			.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))

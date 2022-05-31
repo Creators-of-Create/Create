@@ -152,6 +152,11 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 	public void stopMoving(MovementContext context) {
 //		reset(context);
 	}
+	
+	@Override
+	public void cancelStall(MovementContext context) {
+		reset(context);
+	}
 
 	public void reset(MovementContext context) {
 		context.data.remove(_clientPrevPos_);

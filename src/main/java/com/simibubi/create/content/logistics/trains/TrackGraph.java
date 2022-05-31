@@ -294,9 +294,9 @@ public class TrackGraph {
 						frontier.add(connected.getLocation());
 
 				if (target != null) {
-					transfer(level, currentNode, target);
 					if (preAssignedIds != null && preAssignedIds.containsKey(currentNode.getNetId()))
 						target.setId(preAssignedIds.get(currentNode.getNetId()));
+					transfer(level, currentNode, target);
 				}
 			}
 
@@ -331,16 +331,18 @@ public class TrackGraph {
 			}
 		}
 
-		for (Iterator<UUID> iterator = trains.keySet()
-			.iterator(); iterator.hasNext();) {
-			UUID uuid = iterator.next();
-			Train train = trains.get(uuid);
-			if (train.graph != this)
-				continue;
-			if (!train.isTravellingOn(node))
-				continue;
-			train.graph = target;
-		}
+		if (level != null)
+			for (Iterator<UUID> iterator = trains.keySet()
+				.iterator(); iterator.hasNext();) {
+				UUID uuid = iterator.next();
+				Train train = trains.get(uuid);
+				if (train.graph != this)
+					continue;
+				if (!train.isTravellingOn(node))
+					continue;
+				train.graph = target;
+				train.syncTrackGraphChanges();
+			}
 
 		nodes.remove(nodeLoc);
 		nodesById.remove(node.getNetId());

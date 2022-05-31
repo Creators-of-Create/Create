@@ -187,6 +187,21 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
+	public void cancelStall(MovementContext context) {
+		if (context.world.isClientSide)
+			return;
+
+		MovementBehaviour.super.cancelStall(context);
+		DeployerFakePlayer player = getPlayer(context);
+		if (player == null)
+			return;
+		if (player.blockBreakingProgress == null)
+			return;
+		context.world.destroyBlockProgress(player.getId(), player.blockBreakingProgress.getKey(), -1);
+		player.blockBreakingProgress = null;
+	}
+
+	@Override
 	public void stopMoving(MovementContext context) {
 		if (context.world.isClientSide)
 			return;
@@ -195,6 +210,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (player == null)
 			return;
 
+		cancelStall(context);
 		context.tileData.put("Inventory", player.getInventory()
 			.save(new ListTag()));
 		player.discard();

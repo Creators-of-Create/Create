@@ -52,6 +52,10 @@ public interface MovementBehaviour {
 	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {}
 
 	default void stopMoving(MovementContext context) {}
+	
+	default void cancelStall(MovementContext context) {
+		context.stall = false;
+	}
 
 	default void writeExtraData(MovementContext context) {}
 

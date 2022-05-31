@@ -109,6 +109,8 @@ public class CarriageBogey {
 	public double getStress() {
 		if (getDimension() == null)
 			return 0;
+		if (carriage.train.derailed)
+			return 0;
 		return type.getWheelPointSpacing() - leading().getPosition()
 			.distanceTo(trailing().getPosition());
 	}

@@ -123,6 +123,15 @@ public class TrackGraphSync {
 		for (TrackNode node : graph.nodes.values()) {
 			TrackGraphSyncPacket currentPacket = packet;
 			currentPacket.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
+			if (sent++ < 1000)
+				continue;
+
+			sent = 0;
+			packet = flushAndCreateNew(graph, player, packet);
+		}
+
+		for (TrackNode node : graph.nodes.values()) {
+			TrackGraphSyncPacket currentPacket = packet;
 			if (!graph.connectionsByNode.containsKey(node))
 				continue;
 			graph.connectionsByNode.get(node)
@@ -130,7 +139,7 @@ public class TrackGraphSync {
 					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
 					currentPacket.addedEdges.add(Pair.of(key, edge.getTurn()));
 					currentPacket.syncEdgeData(node, node2, edge);
-				});//FIXME these edges will have missing nodes
+				});
 
 			if (sent++ < 1000)
 				continue;

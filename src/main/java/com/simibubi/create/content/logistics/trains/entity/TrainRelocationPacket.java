@@ -96,6 +96,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 				sender.displayClientMessage(Lang.translate("train.relocate.success")
 					.withStyle(ChatFormatting.GREEN), true);
 				train.syncTrackGraphChanges();
+				train.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));
 				return;
 			}
 

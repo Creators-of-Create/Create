@@ -122,7 +122,7 @@ public class Carriage {
 		Function<TravellingPoint, ITrackSelector> forwardControl,
 		Function<TravellingPoint, ITrackSelector> backwardControl, int type) {
 		boolean onTwoBogeys = isOnTwoBogeys();
-		double stress = onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
+		double stress = train.derailed ? 0 : onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
 
 		MutableDouble distanceMoved = new MutableDouble(distance);
@@ -190,7 +190,7 @@ public class Carriage {
 		return distanceMoved.getValue();
 	}
 
-	private double getAnchorDiff() {
+	public double getAnchorDiff() {
 		double diff = 0;
 		int entries = 0;
 
@@ -753,7 +753,7 @@ public class Carriage {
 				return;
 			cc.portalCutoffMin = minAllowedLocalCoord();
 			cc.portalCutoffMax = maxAllowedLocalCoord();
-			if (!entity.level.isClientSide()) 
+			if (!entity.level.isClientSide())
 				return;
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(cce));
 		}
@@ -825,6 +825,9 @@ public class Carriage {
 			double diffY = positionVec.y - coupledVec.y;
 			double diffZ = positionVec.z - coupledVec.z;
 
+			if (!entity.level.isClientSide())
+				entity.setServerSidePrevPosition();
+			
 			entity.setPos(positionAnchor);
 			entity.prevYaw = entity.yaw;
 			entity.prevPitch = entity.pitch;

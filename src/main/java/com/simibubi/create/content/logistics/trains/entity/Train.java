@@ -19,7 +19,9 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -91,7 +93,7 @@ public class Train {
 	// considered for removal
 	@Deprecated
 	public boolean heldForAssembly;
-	
+
 	public boolean doubleEnded;
 	public List<Carriage> carriages;
 	public List<Integer> carriageSpacing;
@@ -173,7 +175,7 @@ public class Train {
 			updateConductors();
 			return;
 		}
-		
+
 		updateConductors();
 		runtime.tick(level);
 		navigation.tick(level);
@@ -186,6 +188,7 @@ public class Train {
 		Carriage previousCarriage = null;
 		int carriageCount = carriages.size();
 		boolean stalled = false;
+		double maxStress = 0;
 
 		for (int i = 0; i < carriageCount; i++) {
 			Carriage carriage = carriages.get(i);
@@ -226,6 +229,7 @@ public class Train {
 					actual = total / entries;
 
 				stress[i - 1] = target - actual;
+				maxStress = Math.max(maxStress, Math.abs(target - actual));
 			}
 
 			previousCarriage = carriage;
@@ -275,13 +279,21 @@ public class Train {
 			Function<TravellingPoint, ITrackSelector> backwardControl =
 				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
 
-			double totalStress = leadingStress + trailingStress;
+			double totalStress = derailed ? 0 : leadingStress + trailingStress;
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
 				carriage.travel(level, graph, distance + totalStress, forwardControl, backwardControl, carriageType);
 			blocked |= carriage.blocked;
+
+			boolean onTwoBogeys = carriage.isOnTwoBogeys();
+			maxStress = Math.max(maxStress, onTwoBogeys ? carriage.bogeySpacing - carriage.getAnchorDiff() : 0);
+			maxStress = Math.max(maxStress, carriage.leadingBogey()
+				.getStress());
+			if (onTwoBogeys)
+				maxStress = Math.max(maxStress, carriage.trailingBogey()
+					.getStress());
 
 			if (index == 0) {
 				distance = actualDistance;
@@ -296,6 +308,15 @@ public class Train {
 			navigation.cancelNavigation();
 			runtime.tick(level);
 			status.endOfTrack();
+
+		} else if (maxStress > 2) {
+			speed = 0;
+			navigation.cancelNavigation();
+			runtime.tick(level);
+			derailed = true;
+			syncTrackGraphChanges();
+			status.highStress();
+
 		} else if (speed != 0)
 			status.trackOK();
 
@@ -336,6 +357,20 @@ public class Train {
 			return false;
 
 		};
+	}
+
+	public void cancelStall() {
+		speedBeforeStall = null;
+		carriages.forEach(c -> {
+			c.stalled = false;
+			c.forEachPresentEntity(cce -> cce.getContraption()
+				.getActors()
+				.forEach(pair -> {
+					MovementBehaviour behaviour = AllMovementBehaviours.of(pair.getKey().state);
+					if (behaviour != null)
+						behaviour.cancelStall(pair.getValue());
+				}));
+		});
 	}
 
 	private boolean occupy(UUID groupId, @Nullable UUID boundaryId) {

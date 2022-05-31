@@ -74,12 +74,15 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	public float prevPitch;
 	public float pitch;
+	
+	public int nonDamageTicks;
 
 	public OrientedContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 		motionBeforeStall = Vec3.ZERO;
 		attachedExtraInventories = false;
 		isSerializingFurnaceCart = false;
+		nonDamageTicks = 10;
 	}
 
 	public static OrientedContraptionEntity create(Level world, Contraption contraption, Direction initialOrientation) {
@@ -243,6 +246,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	protected void tickContraption() {
+		if (nonDamageTicks > 0)
+			nonDamageTicks--;
 		Entity e = getVehicle();
 		if (e == null)
 			return;
