@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1793",
+	"_": "Missing Localizations: 1794",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -330,6 +330,7 @@
 	"block.create.pink_toolbox": "Caixa de ferramentas rosa",
 	"block.create.pink_valve_handle": "Válvula rosa",
 	"block.create.piston_extension_pole": "Vara de Extensão do Pistão",
+	"block.create.placard": "UNLOCALIZED: Placard",
 	"block.create.polished_cut_andesite": "UNLOCALIZED: Polished Cut Andesite",
 	"block.create.polished_cut_andesite_slab": "UNLOCALIZED: Polished Cut Andesite Slab",
 	"block.create.polished_cut_andesite_stairs": "UNLOCALIZED: Polished Cut Andesite Stairs",

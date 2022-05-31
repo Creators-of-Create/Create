@@ -145,6 +145,8 @@ public class AllShapes {
 			.add(1, 4, 5, 15, 12, 13)
 			.forHorizontal(SOUTH),
 
+		PLACARD = shape(2, 0, 2, 14, 3, 14).forDirectional(UP),
+
 		TRACK_ORTHO = shape(TrackVoxelShapes.orthogonal()).forHorizontal(NORTH),
 		TRACK_ASC = shape(TrackVoxelShapes.ascending()).forHorizontal(SOUTH),
 		TRACK_DIAG = shape(TrackVoxelShapes.diagonal()).forHorizontal(SOUTH),

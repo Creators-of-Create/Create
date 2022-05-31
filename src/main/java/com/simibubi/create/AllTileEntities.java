@@ -133,6 +133,8 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
 import com.simibubi.create.content.curiosities.bell.BellRenderer;
 import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
+import com.simibubi.create.content.curiosities.deco.PlacardRenderer;
+import com.simibubi.create.content.curiosities.deco.PlacardTileEntity;
 import com.simibubi.create.content.curiosities.toolbox.ToolBoxInstance;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
@@ -646,6 +648,12 @@ public class AllTileEntities {
 		.instance(() -> AnalogLeverInstance::new, false)
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
+		.register();
+	
+	public static final BlockEntityEntry<PlacardTileEntity> PLACARD = Create.registrate()
+		.tileEntity("placard", PlacardTileEntity::new)
+		.validBlocks(AllBlocks.PLACARD)
+		.renderer(() -> PlacardRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<CartAssemblerTileEntity> CART_ASSEMBLER = Create.registrate()

@@ -39,6 +39,11 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 		super(p_53182_);
 		registerDefaultState(defaultBlockState().setValue(TYPE, SignalType.ENTRY_SIGNAL));
 	}
+	
+	@Override
+	public boolean propagatesSkylightDown(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+		return pState.getFluidState().isEmpty();
+	}
 
 	@Override
 	public Class<SignalTileEntity> getTileEntityClass() {

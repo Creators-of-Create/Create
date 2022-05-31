@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
@@ -164,6 +165,8 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 			state = state.setValue(updateProperty, true);
 		else if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
 			state = state.setValue(updateProperty, true);
+		else if (sideState.getBlock() instanceof PlacardBlock && PlacardBlock.connectedDirection(sideState) == d)
+			state = state.setValue(updateProperty, true);
 		else if (isFacingBracket(level, pos, d))
 			state = state.setValue(updateProperty, true);
 
@@ -197,14 +200,15 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		Property<Boolean> updateProperty, BlockState sideState, Direction d) {
 		if (isGirder(sideState) && isXGirder(sideState) == isZGirder(sideState))
 			state = state.setValue(updateProperty, true);
-		else if (isGirder(sideState) && isXGirder(sideState) != isXGirder(state)
-			&& isZGirder(sideState) != isZGirder(state))
+		else if (isGirder(sideState))
 			state = state.setValue(updateProperty, true);
 		else if (sideState.hasProperty(WallBlock.UP) && sideState.getValue(WallBlock.UP))
 			state = state.setValue(updateProperty, true);
 		else if (sideState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(sideState) == d)
 			state = state.setValue(updateProperty, true);
 		else if (sideState.getBlock() instanceof FlapDisplayBlock)
+			state = state.setValue(updateProperty, true);
+		else if (sideState.getBlock() instanceof PlacardBlock && PlacardBlock.connectedDirection(sideState) == d)
 			state = state.setValue(updateProperty, true);
 		else if (isFacingBracket(level, pos, d))
 			state = state.setValue(updateProperty, true);
@@ -254,6 +258,8 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		if (blockState.getBlock() instanceof NixieTubeBlock && NixieTubeBlock.getFacing(blockState) == side)
 			return true;
 		if (isFacingBracket(world, pos, side))
+			return true;
+		if (blockState.getBlock() instanceof PlacardBlock && PlacardBlock.connectedDirection(blockState) == side)
 			return true;
 		VoxelShape shape = blockState.getShape(world, relative);
 		if (shape.isEmpty())

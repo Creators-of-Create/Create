@@ -299,6 +299,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("R")
 				.pattern("A")),
 
+		PLACARD = create(AllBlocks.PLACARD).returns(1)
+			.unlockedByTag(() -> I.brass())
+			.viaShapeless(b -> b.requires(Items.ITEM_FRAME)
+				.requires(I.brassSheet())),
+
 		ANALOG_LEVER = create(AllBlocks.ANALOG_LEVER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('S', I.andesiteCasing())
 				.define('P', Tags.Items.RODS_WOODEN)

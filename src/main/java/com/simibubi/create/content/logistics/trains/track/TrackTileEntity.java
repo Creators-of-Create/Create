@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
@@ -73,11 +74,11 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 
 	@Override
 	public void lazyTick() {
-		for (BezierConnection connection : connections.values()) 
+		for (BezierConnection connection : connections.values())
 			if (connection.isPrimary())
 				manageFakeTracksAlong(connection, false);
 	}
-	
+
 	private void validateConnections() {
 		Set<BlockPos> invalid = new HashSet<>();
 
@@ -117,7 +118,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		connections.put(connection.getKey(), connection);
 		level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
 		notifyUpdate();
-		
+
 		if (connection.isPrimary())
 			manageFakeTracksAlong(connection, false);
 	}
@@ -125,10 +126,10 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	public void removeConnection(BlockPos target) {
 		BezierConnection removed = connections.remove(target);
 		notifyUpdate();
-		
+
 		if (removed != null)
 			manageFakeTracksAlong(removed, true);
-		
+
 		if (!connections.isEmpty() || getBlockState().getOptionalValue(TrackBlock.SHAPE)
 			.orElse(TrackShape.NONE)
 			.isPortal())
@@ -280,8 +281,8 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	@Override
 	protected void setRemovedNotDueToChunkUnload() {
 		super.setRemovedNotDueToChunkUnload();
-		
-		for (BezierConnection connection : connections.values()) 
+
+		for (BezierConnection connection : connections.values())
 			manageFakeTracksAlong(connection, true);
 
 		if (boundLocation != null && level instanceof ServerLevel) {
@@ -385,7 +386,8 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 
 			if (!present && stateAtPos.getMaterial()
 				.isReplaceable())
-				level.setBlock(targetPos, AllBlocks.FAKE_TRACK.getDefaultState(), 3);
+				level.setBlock(targetPos,
+					ProperWaterloggedBlock.withWater(level, AllBlocks.FAKE_TRACK.getDefaultState(), targetPos), 3);
 			FakeTrackBlock.keepAlive(level, targetPos);
 		}
 	}

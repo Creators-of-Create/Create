@@ -134,6 +134,7 @@ import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
+import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
@@ -1510,6 +1511,7 @@ public class AllBlocks {
 	public static final BlockEntry<SignalBlock> TRACK_SIGNAL = REGISTRATE.block("track_signal", SignalBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.PODZOL))
+		.properties(p -> p.noOcclusion())
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.getVariantBuilder(c.get())
@@ -1728,6 +1730,14 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel())
 			.register();
+
+	public static final BlockEntry<PlacardBlock> PLACARD = REGISTRATE.block("placard", PlacardBlock::new)
+		.initialProperties(SharedProperties::copperMetal)
+		.transform(pickaxeOnly())
+		.tag(AllBlockTags.SAFE_NBT.tag)
+		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.standardModel(c, p)))
+		.simpleItem()
+		.register();
 
 	public static final BlockEntry<BrassDiodeBlock> PULSE_REPEATER =
 		REGISTRATE.block("pulse_repeater", BrassDiodeBlock::new)

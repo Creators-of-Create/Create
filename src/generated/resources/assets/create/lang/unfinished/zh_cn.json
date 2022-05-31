@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 245",
+	"_": "Missing Localizations: 246",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -330,6 +330,7 @@
 	"block.create.pink_toolbox": "粉红色工具箱",
 	"block.create.pink_valve_handle": "粉红色阀门手轮",
 	"block.create.piston_extension_pole": "活塞杆",
+	"block.create.placard": "UNLOCALIZED: Placard",
 	"block.create.polished_cut_andesite": "磨制切制安山岩",
 	"block.create.polished_cut_andesite_slab": "磨制切制安山岩台阶",
 	"block.create.polished_cut_andesite_stairs": "磨制切制安山岩楼梯",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 931",
+	"_": "Missing Localizations: 932",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -330,6 +330,7 @@
 	"block.create.pink_toolbox": "Rosa Werkzeugkasten",
 	"block.create.pink_valve_handle": "Rosa Ventilgriff",
 	"block.create.piston_extension_pole": "Kolben-Pleuelverlängerung",
+	"block.create.placard": "UNLOCALIZED: Placard",
 	"block.create.polished_cut_andesite": "Polierter geschnittener Andesit",
 	"block.create.polished_cut_andesite_slab": "Polierte geschnittene Andesitstufe",
 	"block.create.polished_cut_andesite_stairs": "Polierte geschnittene Andesittreppe",

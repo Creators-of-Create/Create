@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 247",
+	"_": "Missing Localizations: 248",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -330,6 +330,7 @@
 	"block.create.pink_toolbox": "桃色の",
 	"block.create.pink_valve_handle": "桃色のバルブハンドル",
 	"block.create.piston_extension_pole": "ピストン延長ポール",
+	"block.create.placard": "UNLOCALIZED: Placard",
 	"block.create.polished_cut_andesite": "磨かれた安山岩の切石",
 	"block.create.polished_cut_andesite_slab": "磨かれた安山岩の切石のハーフブロック",
 	"block.create.polished_cut_andesite_stairs": "磨かれた安山岩の切石の階段",

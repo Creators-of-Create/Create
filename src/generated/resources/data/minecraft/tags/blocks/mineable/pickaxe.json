@@ -148,6 +148,7 @@
     "create:black_nixie_tube",
     "create:redstone_link",
     "create:analog_lever",
+    "create:placard",
     "create:copper_backtank",
     "create:peculiar_bell",
     "create:haunted_bell",
