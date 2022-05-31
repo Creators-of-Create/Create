@@ -211,7 +211,8 @@ public class AllTags {
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
 		BEACON_PAYMENT(FORGE),
-		PLATES(FORGE)
+		PLATES(FORGE),
+		WRENCH(FORGE, "tools/wrench")
 
 		;
 

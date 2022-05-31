@@ -5353,6 +5353,7 @@ ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/items/storage_blocks/br
 7f71a774800111e50b42de0e6159ed2d2a807d32 data/forge/tags/items/storage_blocks/zinc.json
 4853a67b18e1fbfc8f60b5ce6c386b05e40c9942 data/forge/tags/items/stripped_logs.json
 4efc25d146ac84be29a702b3f6490a367695242a data/forge/tags/items/stripped_wood.json
+e002dfedc5e8762de0f97ea1f3fa546e92e748ae data/forge/tags/items/tools/wrench.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/azalea_root_replaceable.json
 9f7a428085b1aac66da32a43e9d51c7efc1f0d81 data/minecraft/tags/blocks/beacon_base_blocks.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/dripstone_replaceable_blocks.json
