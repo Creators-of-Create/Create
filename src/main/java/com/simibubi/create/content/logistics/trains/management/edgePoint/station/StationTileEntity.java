@@ -268,8 +268,16 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return false;
 		}
 
+		BlockPos targetPos = pos.offset(up);
+		if (level.getBlockState(targetPos)
+			.getDestroySpeed(level, targetPos) == -1) {
+			return false;
+		}
+		
+		level.destroyBlock(targetPos, true);
+
 		BlockState bogeyAnchor = ProperWaterloggedBlock.withWater(level, track.getBogeyAnchor(level, pos, state), pos);
-		level.setBlock(pos.offset(up), bogeyAnchor, 3);
+		level.setBlock(targetPos, bogeyAnchor, 3);
 		player.displayClientMessage(Lang.translate("train_assembly.bogey_created"), true);
 		SoundType soundtype = bogeyAnchor.getBlock()
 			.getSoundType(state, level, pos, player);
