@@ -131,7 +131,10 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 					return InteractionResult.FAIL;
 				if (pState.getValue(POWERED))
 					return InteractionResult.FAIL;
-				if (!FilterItem.test(pLevel, inHand, inBlock)) {
+				
+				boolean test = inBlock.getItem() instanceof FilterItem ? FilterItem.test(pLevel, inHand, inBlock)
+					: ItemHandlerHelper.canItemStacksStack(inHand, inBlock);
+				if (!test) {
 					AllSoundEvents.DENY.play(pLevel, null, pPos, 1, 1);
 					return InteractionResult.SUCCESS;
 				}

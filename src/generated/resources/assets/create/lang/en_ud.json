@@ -496,6 +496,8 @@
   "block.create.track": "\u029E\u0254\u0250\u0279\u27D8 u\u0131\u0250\u0279\u27D8",
   "block.create.track_signal": "\u05DF\u0250ub\u0131S u\u0131\u0250\u0279\u27D8",
   "block.create.track_station": "uo\u0131\u0287\u0250\u0287S u\u0131\u0250\u0279\u27D8",
+  "block.create.train_door": "\u0279oo\u15E1 u\u0131\u0250\u0279\u27D8",
+  "block.create.train_trapdoor": "\u0279oopd\u0250\u0279\u27D8 u\u0131\u0250\u0279\u27D8",
   "block.create.tuff_pillar": "\u0279\u0250\u05DF\u05DF\u0131\u0500 \u025F\u025Fn\u27D8",
   "block.create.turntable": "\u01DD\u05DFq\u0250\u0287u\u0279n\u27D8",
   "block.create.veridium": "\u026Fn\u0131p\u0131\u0279\u01DD\u039B",

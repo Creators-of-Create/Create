@@ -119,6 +119,8 @@
     "create:small_bogey",
     "create:large_bogey",
     "create:controls",
+    "create:train_door",
+    "create:train_trapdoor",
     "create:item_vault",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",

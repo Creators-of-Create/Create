@@ -66,6 +66,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsMovementBehaviour;
@@ -135,6 +137,8 @@ import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
+import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
+import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
@@ -226,6 +230,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -1549,6 +1554,42 @@ public class AllBlocks {
 		.item()
 		.transform(customItemModel())
 		.register();
+
+	public static final BlockEntry<TrainDoorBlock> TRAIN_DOOR = REGISTRATE.block("train_door", TrainDoorBlock::new)
+		.initialProperties(Material.NETHER_WOOD) // for villager AI..
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.blockstate((c, p) -> {
+			ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
+			ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
+			p.doorBlock(c.get(), bottom, bottom, top, top);
+		})
+		.addLayer(() -> RenderType::cutoutMipped)
+		.transform(pickaxeOnly())
+		.onRegister(addInteractionBehaviour(new DoorMovingInteraction()))
+		.tag(BlockTags.DOORS)
+		.tag(BlockTags.WOODEN_DOORS) // for villager AI
+		.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
+		.item()
+		.tag(ItemTags.DOORS)
+		.model((c, p) -> p.blockSprite(c, p.modLoc("item/train_door")))
+		.build()
+		.register();
+
+	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
+		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN))
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.blockstate((c, p) -> p.trapdoorBlock(c.get(), AssetLookup.partialBaseModel(c, p, "bottom"),
+				AssetLookup.partialBaseModel(c, p, "top"), AssetLookup.partialBaseModel(c, p, "open"), true))
+			.transform(pickaxeOnly())
+			.tag(BlockTags.TRAPDOORS)
+			.onRegister(addInteractionBehaviour(new TrapdoorMovingInteraction()))
+			.item()
+			.tag(ItemTags.TRAPDOORS)
+			.build()
+			.register();
 
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)

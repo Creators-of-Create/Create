@@ -499,6 +499,8 @@
 	"block.create.track": "Train Track",
 	"block.create.track_signal": "Train Signal",
 	"block.create.track_station": "Train Station",
+	"block.create.train_door": "Train Door",
+	"block.create.train_trapdoor": "Train Trapdoor",
 	"block.create.tuff_pillar": "Tuff Pillar",
 	"block.create.turntable": "Turntable",
 	"block.create.veridium": "Veridium",

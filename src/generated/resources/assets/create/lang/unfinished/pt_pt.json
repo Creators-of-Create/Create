@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1794",
+	"_": "Missing Localizations: 1796",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -500,6 +500,8 @@
 	"block.create.track": "UNLOCALIZED: Train Track",
 	"block.create.track_signal": "UNLOCALIZED: Train Signal",
 	"block.create.track_station": "UNLOCALIZED: Train Station",
+	"block.create.train_door": "UNLOCALIZED: Train Door",
+	"block.create.train_trapdoor": "UNLOCALIZED: Train Trapdoor",
 	"block.create.tuff_pillar": "UNLOCALIZED: Tuff Pillar",
 	"block.create.turntable": "Mesa giratória",
 	"block.create.veridium": "UNLOCALIZED: Veridium",

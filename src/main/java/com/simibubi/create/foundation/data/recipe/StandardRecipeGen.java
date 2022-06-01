@@ -304,6 +304,16 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShapeless(b -> b.requires(Items.ITEM_FRAME)
 				.requires(I.brassSheet())),
 
+		TRAIN_DOOR = create(AllBlocks.TRAIN_DOOR).returns(1)
+			.unlockedByTag(() -> I.brass())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(I.brassSheet())),
+
+		TRAIN_TRAPDOOR = create(AllBlocks.TRAIN_TRAPDOOR).returns(1)
+			.unlockedByTag(() -> I.brass())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_TRAPDOORS)
+				.requires(I.brassSheet())),
+
 		ANALOG_LEVER = create(AllBlocks.ANALOG_LEVER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('S', I.andesiteCasing())
 				.define('P', Tags.Items.RODS_WOODEN)

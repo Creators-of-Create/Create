@@ -135,6 +135,8 @@ import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
 import com.simibubi.create.content.curiosities.deco.PlacardRenderer;
 import com.simibubi.create.content.curiosities.deco.PlacardTileEntity;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorRenderer;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorTileEntity;
 import com.simibubi.create.content.curiosities.toolbox.ToolBoxInstance;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
@@ -792,6 +794,12 @@ public class AllTileEntities {
 		.tileEntity("track_station", StationTileEntity::new)
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
+		.register();
+	
+	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = Create.registrate()
+		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
+		.renderer(() -> SlidingDoorRenderer::new)
+		.validBlocks(AllBlocks.TRAIN_DOOR)
 		.register();
 
 	public static final BlockEntityEntry<FlapDisplayTileEntity> FLAP_DISPLAY = Create.registrate()
