@@ -1,32 +1,33 @@
 {
-	"required": true,
-	"priority": 1100,
-	"package": "com.simibubi.create.foundation.mixin",
-	"compatibilityLevel": "JAVA_16",
-	"refmap": "create.refmap.json",
-	"mixins": [
-		"CustomItemUseEffectsMixin",
-		"MapItemSavedDataMixin",
-		"accessor.AbstractProjectileDispenseBehaviorAccessor",
-		"accessor.DispenserBlockAccessor",
-		"accessor.FallingBlockEntityAccessor",
-		"accessor.LivingEntityAccessor",
-		"accessor.ServerLevelAccessor"
-	],
-	"client": [
-		"DestroyProgressMixin",
-		"EntityContraptionInteractionMixin",
-		"FixNormalScalingMixin",
-		"GameRendererMixin",
-		"HeavyBootsOnPlayerMixin",
-		"ModelDataRefreshMixin",
-		"WindowResizeMixin",
-		"accessor.AgeableListModelAccessor",
-		"accessor.GameRendererAccessor",
-		"accessor.ParticleEngineAccessor"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"minVersion": "0.8"
+  "required": true,
+  "priority": 1100,
+  "package": "com.simibubi.create.foundation.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "refmap": "create.refmap.json",
+  "mixins": [
+    "CustomItemUseEffectsMixin",
+    "MapItemSavedDataMixin",
+    "accessor.AbstractProjectileDispenseBehaviorAccessor",
+    "accessor.DispenserBlockAccessor",
+    "accessor.FallingBlockEntityAccessor",
+    "accessor.LivingEntityAccessor",
+    "accessor.ServerLevelAccessor"
+  ],
+  "client": [
+    "DestroyProgressMixin",
+    "EntityContraptionInteractionMixin",
+    "FixNormalScalingMixin",
+    "GameRendererMixin",
+    "HeavyBootsOnPlayerMixin",
+    "MapRendererMixin",
+    "ModelDataRefreshMixin",
+    "WindowResizeMixin",
+    "accessor.AgeableListModelAccessor",
+    "accessor.GameRendererAccessor",
+    "accessor.ParticleEngineAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
 }

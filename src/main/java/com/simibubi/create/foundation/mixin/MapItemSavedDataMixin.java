@@ -3,8 +3,6 @@ package com.simibubi.create.foundation.mixin;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +19,6 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
@@ -42,7 +39,11 @@ public class MapItemSavedDataMixin implements StationMapData {
 	@Shadow
 	public byte scale;
 
-	private final Map<String, StationMarker> stationMarkers = Maps.newHashMap();
+	@Final
+	@Shadow
+	Map<String, MapDecoration> decorations;
+
+	private final Map<String, StationMarker> stationMarkers = Maps.newLinkedHashMap();
 
 	@Inject(
 			method = "save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;",
@@ -69,19 +70,27 @@ public class MapItemSavedDataMixin implements StationMapData {
 		ListTag listTag = compound.getList("create:stations", 10);
 		for (int k = 0; k < listTag.size(); ++k) {
 			StationMarker stationMarker = StationMarker.load(listTag.getCompound(k));
-			stationMapData.loadStationMarker(stationMarker);
+			stationMapData.addStationMarker(stationMarker);
 		}
 	}
 
 	@Override
-	public void loadStationMarker(StationMarker marker) {
+	public void addStationMarker(StationMarker marker) {
 		stationMarkers.put(marker.getId(), marker);
-		addDecoration(marker.getType(), null, marker.getId(), marker.getPos().getX(), marker.getPos().getZ(), 180.0D, marker.getName());
-	}
 
-	@Shadow
-	private void addDecoration(MapDecoration.Type pType, @Nullable LevelAccessor pLevel, String pDecorationName, double pLevelX, double pLevelZ, double pRotation, @Nullable Component pName) {
-		throw new AssertionError();
+		int scaleMultiplier = 1 << this.scale;
+
+		double localX = ((double) marker.getTarget().getX() - (double) this.x) / (double) scaleMultiplier;
+		double localZ = ((double) marker.getTarget().getZ() - (double) this.z) / (double) scaleMultiplier;
+
+		if (localX < -63.0D || localX > 63.0D || localZ < -63.0D || localZ > 63.0D)
+			return;
+
+		byte localXByte = (byte) (int) (localX * 2.0F + 0.5D);
+		byte localZByte = (byte) (int) (localZ * 2.0F + 0.5D);
+
+		MapDecoration decoration = new StationMarker.Decoration(localXByte, localZByte, marker.getName());
+		this.decorations.put(marker.getId(), decoration);
 	}
 
 	@Shadow
@@ -116,8 +125,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 		}
 
 		if (!this.isTrackedCountOverLimit(256)) {
-			this.stationMarkers.put(marker.getId(), marker);
-			this.addDecoration(marker.getType(), level, marker.getId(), xCenter, zCenter, 180.0D, marker.getName());
+			addStationMarker(marker);
 		}
 
 		return false;
@@ -128,15 +136,23 @@ public class MapItemSavedDataMixin implements StationMapData {
 			at = @At("RETURN")
 	)
 	public void checkBanners(BlockGetter pReader, int pX, int pZ, CallbackInfo ci) {
+		checkStations(pReader, pX, pZ);
+	}
+
+	private void checkStations(BlockGetter pReader, int pX, int pZ) {
 		Iterator<StationMarker> iterator = this.stationMarkers.values().iterator();
 
 		while (iterator.hasNext()) {
 			StationMarker marker = iterator.next();
-			if (marker.getPos().getX() == pX && marker.getPos().getZ() == pZ) {
-				StationMarker other = StationMarker.fromWorld(pReader, marker.getPos());
+			if (marker.getTarget().getX() == pX && marker.getTarget().getZ() == pZ) {
+				StationMarker other = StationMarker.fromWorld(pReader, marker.getSource());
 				if (!marker.equals(other)) {
 					iterator.remove();
 					this.removeDecoration(marker.getId());
+
+					if (other != null && marker.getTarget().equals(other.getTarget())) {
+						addStationMarker(other);
+					}
 				}
 			}
 		}
