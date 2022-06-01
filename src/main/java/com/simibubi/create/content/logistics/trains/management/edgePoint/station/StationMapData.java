@@ -7,6 +7,6 @@ public interface StationMapData {
 
 	boolean toggleStation(LevelAccessor level, BlockPos pos, StationTileEntity stationTileEntity);
 
-	void loadStationMarker(StationMarker marker);
+	void addStationMarker(StationMarker marker);
 
 }
