@@ -10,11 +10,31 @@
 			"name": "ladder",
 			"from": [2, 0, 14],
 			"to": [14, 16, 16],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [2, 0, 14, 16], "texture": "#1"},
 				"east": {"uv": [12, 0, 14, 16], "texture": "#0"},
 				"west": {"uv": [14, 0, 12, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "ladder",
+			"from": [2, 0, 14],
+			"to": [14, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [2, 0, 14, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "ladder_backface",
+			"from": [2, 0, 16],
+			"to": [14, 16, 14],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [14, 0, 12, 16], "texture": "#0"},
+				"west": {"uv": [12, 0, 14, 16], "texture": "#0"}
 			}
 		},
 		{
@@ -23,9 +43,7 @@
 			"to": [14, 16, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"east": {"uv": [14, 0, 12, 16], "texture": "#0"},
-				"south": {"uv": [14, 0, 2, 16], "texture": "#1"},
-				"west": {"uv": [12, 0, 14, 16], "texture": "#0"}
+				"south": {"uv": [14, 0, 2, 16], "texture": "#1"}
 			}
 		},
 		{
