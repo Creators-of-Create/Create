@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -52,8 +51,10 @@ public class StationMarker {
 		if (stationOption.isEmpty() || stationOption.get().getStation() == null)
 			return null;
 
-		String name = stationOption.get().getStation().name;
-		return new StationMarker(pos, TileEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE).getGlobalPosition(), new TextComponent(name));
+		String name = stationOption.get()
+			.getStation().name;
+		return new StationMarker(pos, TileEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE)
+			.getPositionForMapMarker(), new TextComponent(name));
 	}
 
 	public CompoundTag save() {
@@ -144,13 +145,13 @@ public class StationMarker {
 				Font font = Minecraft.getInstance().font;
 				Component component = getName();
 				float f6 = (float)font.width(component);
-				float f7 = Mth.clamp(25.0F / f6, 0.0F, 6.0F / 9.0F);
+//				float f7 = Mth.clamp(25.0F / f6, 0.0F, 6.0F / 9.0F);
 				ms.pushPose();
 				//ms.translate((double)(0.0F + (float)getX() / 2.0F + 64.0F / 2.0F), (double)(0.0F + (float)getY() / 2.0F + 64.0F + 4.0F), (double)-0.025F);
 				ms.translate(0, 6.0D, -0.005F);
 
 				ms.scale(0.8f, 0.8f, 1.0F);
-				ms.translate(-f6 / 2f, 0, 0);
+				ms.translate(-f6 / 2f + .5f, 0, 0);
 				//ms.scale(f7, f7, 1.0F);
 				font.drawInBatch(component, 0.0F, 0.0F, -1, false, ms.last().pose(), bufferSource, false, Integer.MIN_VALUE, 15728880);
 				ms.popPose();

@@ -9,6 +9,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
+import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -19,6 +20,7 @@ import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleTileEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -36,6 +38,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -75,7 +78,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	public boolean isSafeNBT() {
 		return true;
 	}
-	
+
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
 		nbt.putUUID("Id", id);
@@ -263,6 +266,21 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 
 	public BlockPos getGlobalPosition() {
 		return targetTrack.offset(tileEntity.getBlockPos());
+	}
+
+	public BlockPos getPositionForMapMarker() {
+		BlockPos target = targetTrack.offset(tileEntity.getBlockPos());
+		if (targetBezier != null && getWorld().getBlockEntity(target) instanceof TrackTileEntity tte) {
+			BezierConnection bc = tte.getConnections()
+				.get(targetBezier.curveTarget());
+			if (bc == null)
+				return target;
+			double length = Mth.floor(bc.getLength() * 2);
+			int seg = targetBezier.segment() + 1;
+			double t = seg / length;
+			return new BlockPos(bc.getPosition(t));
+		}
+		return target;
 	}
 
 	public AxisDirection getTargetDirection() {
