@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,6 +19,7 @@ public class SlidingDoorTileEntity extends SmartTileEntity {
 
 	LerpedFloat animation;
 	int bridgeTicks;
+	boolean deferUpdate;
 
 	public SlidingDoorTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -27,6 +29,12 @@ public class SlidingDoorTileEntity extends SmartTileEntity {
 
 	@Override
 	public void tick() {
+		if (deferUpdate && !level.isClientSide()) {
+			deferUpdate = false;
+			BlockState blockState = getBlockState();
+			blockState.neighborChanged(level, worldPosition, Blocks.AIR, worldPosition, false);
+		}
+
 		super.tick();
 		boolean open = isOpen(getBlockState());
 		boolean wasSettled = animation.settled();

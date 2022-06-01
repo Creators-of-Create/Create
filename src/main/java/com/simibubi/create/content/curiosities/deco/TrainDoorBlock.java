@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.deco;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -16,6 +17,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -59,7 +61,7 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-		if (!pState.getValue(OPEN) && pState.getValue(VISIBLE))
+		if (!pState.getValue(OPEN) && (pState.getValue(VISIBLE) || pLevel instanceof ContraptionWorld))
 			return super.getShape(pState, pLevel, pPos, pContext);
 
 		Direction direction = pState.getValue(FACING);
@@ -74,6 +76,12 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 	}
 
 	@Override
+	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+		return pState.getValue(HALF) == DoubleBlockHalf.LOWER || pLevel.getBlockState(pPos.below())
+			.is(this);
+	}
+
+	@Override
 	public VoxelShape getInteractionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return getShape(pState, pLevel, pPos, CollisionContext.empty());
 	}
@@ -82,8 +90,15 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		BlockState stateForPlacement = super.getStateForPlacement(pContext);
 		if (stateForPlacement != null && stateForPlacement.getValue(OPEN))
-			return stateForPlacement.setValue(VISIBLE, false);
+			return stateForPlacement.setValue(OPEN, false)
+				.setValue(POWERED, false);
 		return stateForPlacement;
+	}
+
+	@Override
+	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+		if (!pOldState.is(this))
+			deferUpdate(pLevel, pPos);
 	}
 
 	@Override
@@ -128,11 +143,15 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 	@Override
 	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
 		boolean pIsMoving) {
-		boolean isPowered = pLevel.hasNeighborSignal(pPos) || pLevel.hasNeighborSignal(
-			pPos.relative(pState.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+		boolean lower = pState.getValue(HALF) == DoubleBlockHalf.LOWER;
+		boolean isPowered = isDoorPowered(pLevel, pPos, pState);
 		if (defaultBlockState().is(pBlock))
 			return;
 		if (isPowered == pState.getValue(POWERED))
+			return;
+
+		SlidingDoorTileEntity te = getTileEntity(pLevel, lower ? pPos : pPos.below());
+		if (te != null && te.deferUpdate)
 			return;
 
 		BlockState changedState = pState.setValue(POWERED, Boolean.valueOf(isPowered))
@@ -149,6 +168,7 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 			BlockPos otherPos =
 				pPos.relative(hinge == DoorHingeSide.LEFT ? facing.getClockWise() : facing.getCounterClockWise());
 			BlockState otherDoor = pLevel.getBlockState(otherPos);
+
 			if (isDoubleDoor(changedState, hinge, facing, otherDoor)) {
 				otherDoor = otherDoor.setValue(POWERED, Boolean.valueOf(isPowered))
 					.setValue(OPEN, Boolean.valueOf(isPowered));
@@ -159,6 +179,22 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 		}
 
 		pLevel.setBlock(pPos, changedState, 2);
+	}
+
+	public static boolean isDoorPowered(Level pLevel, BlockPos pPos, BlockState state) {
+		boolean lower = state.getValue(HALF) == DoubleBlockHalf.LOWER;
+		DoorHingeSide hinge = state.getValue(HINGE);
+		Direction facing = state.getValue(FACING);
+		BlockPos otherPos =
+			pPos.relative(hinge == DoorHingeSide.LEFT ? facing.getClockWise() : facing.getCounterClockWise());
+		BlockState otherDoor = pLevel.getBlockState(otherPos);
+
+		if (isDoubleDoor(state.cycle(OPEN), hinge, facing, otherDoor) && (pLevel.hasNeighborSignal(otherPos)
+			|| pLevel.hasNeighborSignal(otherPos.relative(lower ? Direction.UP : Direction.DOWN))))
+			return true;
+
+		return pLevel.hasNeighborSignal(pPos)
+			|| pLevel.hasNeighborSignal(pPos.relative(lower ? Direction.UP : Direction.DOWN));
 	}
 
 	@Override
@@ -184,7 +220,11 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 		return InteractionResult.sidedSuccess(pLevel.isClientSide);
 	}
 
-	private boolean isDoubleDoor(BlockState pState, DoorHingeSide hinge, Direction facing, BlockState otherDoor) {
+	public void deferUpdate(LevelAccessor level, BlockPos pos) {
+		withTileEntityDo(level, pos, sdte -> sdte.deferUpdate = true);
+	}
+
+	public static boolean isDoubleDoor(BlockState pState, DoorHingeSide hinge, Direction facing, BlockState otherDoor) {
 		return otherDoor.getBlock() == pState.getBlock() && otherDoor.getValue(HINGE) != hinge
 			&& otherDoor.getValue(FACING) == facing && otherDoor.getValue(OPEN) != pState.getValue(OPEN)
 			&& otherDoor.getValue(HALF) == pState.getValue(HALF);

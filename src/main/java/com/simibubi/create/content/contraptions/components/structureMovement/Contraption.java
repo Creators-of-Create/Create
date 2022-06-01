@@ -56,6 +56,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
@@ -105,6 +106,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
@@ -590,6 +592,8 @@ public abstract class Contraption {
 			blockstate = BlockHelper.copyProperties(blockstate, AllBlocks.SHAFT.getDefaultState());
 		if (AllBlocks.CONTROLS.has(blockstate))
 			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
+		if (blockstate.hasProperty(TrainDoorBlock.VISIBLE))
+			blockstate = blockstate.setValue(TrainDoorBlock.VISIBLE, false);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
 			blockstate = blockstate.setValue(ButtonBlock.POWERED, false);
 			world.scheduleTick(pos, blockstate.getBlock(), -1);
@@ -673,6 +677,8 @@ public abstract class Contraption {
 			.forEach(c -> {
 				CompoundTag comp = (CompoundTag) c;
 				StructureBlockInfo info = this.blocks.get(NbtUtils.readBlockPos(comp.getCompound("Pos")));
+				if (info == null)
+					return;
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
 				getActors().add(MutablePair.of(info, context));
 			});
@@ -695,7 +701,10 @@ public abstract class Contraption {
 		interactors.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Interactors", Tag.TAG_COMPOUND), c -> {
 			BlockPos pos = NbtUtils.readBlockPos(c.getCompound("Pos"));
-			MovingInteractionBehaviour behaviour = AllInteractionBehaviours.of(getBlocks().get(pos).state.getBlock());
+			StructureBlockInfo structureBlockInfo = getBlocks().get(pos);
+			if (structureBlockInfo == null)
+				return;
+			MovingInteractionBehaviour behaviour = AllInteractionBehaviours.of(structureBlockInfo.state.getBlock());
 			if (behaviour != null)
 				interactors.put(pos, behaviour);
 		});
@@ -1013,6 +1022,9 @@ public abstract class Contraption {
 
 				if (AllBlocks.SHAFT.has(state))
 					state = ShaftBlock.pickCorrectShaftType(state, world, targetPos);
+				if (state.hasProperty(TrainDoorBlock.VISIBLE))
+					state = state.setValue(TrainDoorBlock.VISIBLE, !state.getValue(TrainDoorBlock.OPEN))
+						.setValue(TrainDoorBlock.POWERED, false);
 
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
@@ -1024,6 +1036,7 @@ public abstract class Contraption {
 				}
 
 				BlockEntity tileEntity = world.getBlockEntity(targetPos);
+
 				CompoundTag tag = block.nbt;
 				if (tileEntity != null)
 					tag = NBTProcessors.process(tileEntity, tag, false);
@@ -1112,6 +1125,8 @@ public abstract class Contraption {
 		if (PoiType.forState(info.state)
 			.isPresent())
 			return false;
+		if (info.state.getBlock() instanceof TrainDoorBlock)
+			return false;
 		return true;
 	}
 
@@ -1199,7 +1214,7 @@ public abstract class Contraption {
 			for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
 				StructureBlockInfo info = entry.getValue();
 				BlockPos localPos = entry.getKey();
-				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos);
+				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos, CollisionContext.empty());
 				if (collisionShape.isEmpty())
 					continue;
 				combinedShape = Shapes.joinUnoptimized(combinedShape,

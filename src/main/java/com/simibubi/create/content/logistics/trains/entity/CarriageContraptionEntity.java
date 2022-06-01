@@ -16,6 +16,7 @@ import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
@@ -26,6 +27,7 @@ import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalC
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -52,6 +54,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.PacketDistributor;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -127,7 +130,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 	}
 
-	private CarriageSyncData getCarriageData() {
+	public CarriageSyncData getCarriageData() {
 		return entityData.get(CARRIAGE_DATA);
 	}
 
@@ -182,6 +185,18 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					continue;
 				alignPassenger(entity);
 			}
+	}
+
+	@Override
+	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
+		if (carriage == null)
+			return;
+		carriage.forEachPresentEntity(cce -> {
+			cce.contraption.getBlocks()
+				.put(localPos, newInfo);
+			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> cce),
+				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state));
+		});
 	}
 
 	@Override

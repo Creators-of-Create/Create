@@ -45,7 +45,7 @@ public class SlidingDoorRenderer extends SafeTileEntityRenderer<SlidingDoorTileE
 		for (DoubleBlockHalf half : DoubleBlockHalf.values()) {
 			CachedBufferer.block(blockState.setValue(DoorBlock.OPEN, false)
 				.setValue(DoorBlock.HALF, half))
-				.translate(0, half == DoubleBlockHalf.UPPER ? 1 : 0, 0)
+				.translate(0, half == DoubleBlockHalf.UPPER ? 1 - 1 / 512f : 0, 0)
 				.translate(offset)
 				.light(light)
 				.renderInto(ms, vb);

@@ -12,6 +12,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEn
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -135,20 +136,25 @@ public class ContraptionHandlerClient {
 
 		MutableObject<BlockHitResult> mutableResult = new MutableObject<>();
 		PredicateTraceResult predicateResult = RaycastHelper.rayTraceUntil(localOrigin, localTarget, p -> {
-			StructureBlockInfo blockInfo = contraption.getBlocks()
-				.get(p);
-			if (blockInfo == null)
-				return false;
-			BlockState state = blockInfo.state;
-			VoxelShape raytraceShape = state.getShape(Minecraft.getInstance().level, BlockPos.ZERO.below());
-			if (raytraceShape.isEmpty())
-				return false;
-			if (contraption.isHiddenInPortal(p))
-				return false;
-			BlockHitResult rayTrace = raytraceShape.clip(localOrigin, localTarget, p);
-			if (rayTrace != null) {
-				mutableResult.setValue(rayTrace);
-				return true;
+			for (Direction d : Iterate.directions) {
+				if (d == Direction.UP)
+					continue;
+				BlockPos pos = d == Direction.DOWN ? p : p.relative(d);
+				StructureBlockInfo blockInfo = contraption.getBlocks()
+					.get(pos);
+				if (blockInfo == null)
+					continue;
+				BlockState state = blockInfo.state;
+				VoxelShape raytraceShape = state.getShape(contraption.getContraptionWorld(), BlockPos.ZERO.below());
+				if (raytraceShape.isEmpty())
+					continue;
+				if (contraption.isHiddenInPortal(pos))
+					continue;
+				BlockHitResult rayTrace = raytraceShape.clip(localOrigin, localTarget, pos);
+				if (rayTrace != null) {
+					mutableResult.setValue(rayTrace);
+					return true;
+				}
 			}
 			return false;
 		});

@@ -27,7 +27,9 @@ import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -62,6 +64,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
@@ -69,6 +72,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -338,6 +342,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			living.yHeadRot = angle;
 		} else
 			living.setYRot(angle);
+	}
+
+	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
+		contraption.blocks.put(localPos, newInfo);
+		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+			new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state));
 	}
 
 	protected abstract void tickContraption();
@@ -653,25 +663,36 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@OnlyIn(Dist.CLIENT)
 	static void handleStallPacket(ContraptionStallPacket packet) {
-		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
-		if (!(entity instanceof AbstractContraptionEntity))
-			return;
-		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
-		ce.handleStallInformation(packet.x, packet.y, packet.z, packet.angle);
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
+			ce.handleStallInformation(packet.x, packet.y, packet.z, packet.angle);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	static void handleBlockChangedPacket(ContraptionBlockChangedPacket packet) {
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
+			ce.handleBlockChange(packet.localPos, packet.newState);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	static void handleDisassemblyPacket(ContraptionDisassemblyPacket packet) {
-		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
-		if (!(entity instanceof AbstractContraptionEntity))
-			return;
-		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
-		ce.moveCollidedEntitiesOnDisassembly(packet.transform);
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
+			ce.moveCollidedEntitiesOnDisassembly(packet.transform);
 	}
 
 	protected abstract float getStalledAngle();
 
 	protected abstract void handleStallInformation(float x, float y, float z, float angle);
+
+	@OnlyIn(Dist.CLIENT)
+	protected void handleBlockChange(BlockPos localPos, BlockState newState) {
+		if (contraption == null || !contraption.blocks.containsKey(localPos))
+			return;
+		StructureBlockInfo info = contraption.blocks.get(localPos);
+		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
+		if (info.state != newState && !(newState.getBlock() instanceof TrainDoorBlock))
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ContraptionRenderDispatcher.invalidate(contraption));
+		contraption.invalidateColliders();
+	}
 
 	@Override
 	public CompoundTag saveWithoutId(CompoundTag nbt) {

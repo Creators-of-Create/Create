@@ -137,6 +137,7 @@ import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
 import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
@@ -1567,6 +1568,7 @@ public class AllBlocks {
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.onRegister(addInteractionBehaviour(new DoorMovingInteraction()))
+		.onRegister(addMovementBehaviour(new SlidingDoorMovementBehaviour()))
 		.tag(BlockTags.DOORS)
 		.tag(BlockTags.WOODEN_DOORS) // for villager AI
 		.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
