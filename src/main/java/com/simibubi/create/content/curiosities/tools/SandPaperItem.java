@@ -12,6 +12,9 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
+import io.github.fabricators_of_create.porting_lib.util.ToolAction;
+import io.github.fabricators_of_create.porting_lib.util.ToolActions;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.mixin.content.registry.AxeItemAccessor;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -34,6 +37,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -201,10 +205,9 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		return InteractionResult.PASS;
 	}
 
-	//@Override
-	public boolean canPerformAction(ItemStack stack/*, ToolAction toolAction*/) {
-		return stack.getItem() instanceof AxeItem;
-		//return toolAction == ToolActions.AXE_SCRAPE || toolAction == ToolActions.AXE_WAX_OFF;
+	@Override
+	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+		return toolAction == ToolActions.AXE_SCRAPE || toolAction == ToolActions.AXE_WAX_OFF;
 	}
 
 	@Override

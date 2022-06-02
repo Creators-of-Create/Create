@@ -32,7 +32,10 @@
       "com.simibubi.create.compat.rei.CreateREI"
     ]
   },
-
+  "provides": [
+    "com_electronwill_night-config_core",
+    "com_electronwill_night-config_toml"
+  ],
   "mixins": [ "create.mixins.json" ],
   "accessWidener": "create.accesswidener",
 

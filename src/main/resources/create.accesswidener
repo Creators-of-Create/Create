@@ -13,5 +13,7 @@ accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 
+accessible method net/minecraft/world/level/block/WeatheringCopper getPrevious (Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/Optional;
+
 # Mixin can't handle an invoker here thanks to weird generics, so we need this AW'd
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
