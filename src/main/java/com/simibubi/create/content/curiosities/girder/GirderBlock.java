@@ -5,6 +5,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
@@ -98,6 +99,13 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 					pPlayer.setItemInHand(pHand, ItemStack.EMPTY);
 			}
 			return InteractionResult.SUCCESS;
+		}
+
+		if (AllItems.WRENCH.isIn(itemInHand) && !pPlayer.isSteppingCarefully()) {
+			if (GirderWrenchBehavior.handleClick(pLevel, pPos, pState, pHit))
+				return InteractionResult.sidedSuccess(pLevel.isClientSide);
+
+			return InteractionResult.FAIL;
 		}
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
