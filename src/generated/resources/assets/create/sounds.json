@@ -389,6 +389,46 @@
     ],
     "subtitle": "create.subtitle.slime_added"
   },
+  "steam": {
+    "sounds": [
+      {
+        "name": "create:steam",
+        "type": "file",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "create.subtitle.steam"
+  },
+  "train": {
+    "sounds": [
+      {
+        "name": "create:train",
+        "type": "file",
+        "attenuation_distance": 128
+      }
+    ],
+    "subtitle": "create.subtitle.train"
+  },
+  "train2": {
+    "sounds": [
+      {
+        "name": "create:train2",
+        "type": "file",
+        "attenuation_distance": 128
+      }
+    ],
+    "subtitle": "create.subtitle.train2"
+  },
+  "train3": {
+    "sounds": [
+      {
+        "name": "create:train3",
+        "type": "file",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "create.subtitle.train3"
+  },
   "whistle": {
     "sounds": [
       {

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -21,6 +22,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -56,7 +59,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 		boolean verticalTarget = false;
 		BlockState shaftState = shaft.getBlockState();
 		Axis targetAxis = Axis.X;
-		if (shaftState.getBlock()instanceof IRotate ir)
+		if (shaftState.getBlock() instanceof IRotate ir)
 			targetAxis = ir.getRotationAxis(shaftState);
 		verticalTarget = targetAxis == Axis.Y;
 
@@ -93,7 +96,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	protected AABB createRenderBoundingBox() {
 		return super.createRenderBoundingBox().inflate(2);
 	}
-	
+
 	public PoweredShaftTileEntity getShaft() {
 		PoweredShaftTileEntity shaft = target.get();
 		if (shaft == null || shaft.isRemoved() || !shaft.canBePoweredBy(worldPosition)) {
@@ -152,6 +155,18 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 			return;
 		}
 
+		FluidTankTileEntity sourceTE = source.get();
+		if (sourceTE != null) {
+			FluidTankTileEntity controller = sourceTE.getControllerTE();
+			if (controller != null && controller.boiler != null) {
+				float volume = 3f / Math.max(2, controller.boiler.attachedEngines / 6);
+				float pitch = 1.18f - level.random.nextFloat() * .25f;
+				level.playLocalSound(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
+					SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, volume, pitch, false);
+				AllSoundEvents.STEAM.playAt(level, worldPosition, volume / 16, .8f, false);
+			}
+		}
+
 		Direction facing = SteamEngineBlock.getFacing(getBlockState());
 
 		for (int i = 0; i < 2; i++) {
@@ -197,7 +212,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 			angle *= -1;
 		return angle;
 	}
-	
+
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		PoweredShaftTileEntity shaft = getShaft();

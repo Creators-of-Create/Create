@@ -238,6 +238,26 @@ public class AllSoundEvents {
 			.attenuationDistance(64)
 			.build(),
 
+		STEAM = create("steam").subtitle("Steam noises")
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(32)
+			.build(),
+
+		TRAIN = create("train").subtitle("Bogey wheels rumble")
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(128)
+			.build(),
+
+		TRAIN2 = create("train2").subtitle("Bogey wheels rumble")
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(128)
+			.build(),
+
+		TRAIN3 = create("train3").subtitle("Bogey wheels rumble muffled")
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(16)
+			.build(),
+
 		WHISTLE_TRAIN_HIGH = create("whistle_train_high").subtitle("High whistling")
 			.category(SoundSource.RECORDS)
 			.build(),
@@ -406,7 +426,7 @@ public class AllSoundEvents {
 		public SoundEntry build() {
 			SoundEntry entry =
 				wrappedEvents.isEmpty() ? new CustomSoundEntry(id, variants, subtitle, category, attenuationDistance)
-					: new WrappedSoundEntry(id, subtitle, wrappedEvents, category);
+					: new WrappedSoundEntry(id, subtitle, wrappedEvents, category, attenuationDistance);
 			entries.put(entry.getId(), entry);
 			return entry;
 		}
@@ -418,11 +438,13 @@ public class AllSoundEvents {
 		protected ResourceLocation id;
 		protected String subtitle;
 		protected SoundSource category;
+		protected int attenuationDistance;
 
-		public SoundEntry(ResourceLocation id, String subtitle, SoundSource category) {
+		public SoundEntry(ResourceLocation id, String subtitle, SoundSource category, int attenuationDistance) {
 			this.id = id;
 			this.subtitle = subtitle;
 			this.category = category;
+			this.attenuationDistance = attenuationDistance;
 		}
 
 		public abstract void prepare();
@@ -498,8 +520,8 @@ public class AllSoundEvents {
 		private List<Pair<SoundEvent, Couple<Float>>> compiledEvents;
 
 		public WrappedSoundEntry(ResourceLocation id, String subtitle,
-			List<Pair<SoundEvent, Couple<Float>>> wrappedEvents, SoundSource category) {
-			super(id, subtitle, category);
+			List<Pair<SoundEvent, Couple<Float>>> wrappedEvents, SoundSource category, int attenuationDistance) {
+			super(id, subtitle, category, attenuationDistance);
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
 		}
@@ -541,6 +563,8 @@ public class AllSoundEvents {
 					.getLocation()
 					.toString());
 				s.addProperty("type", "event");
+				if (attenuationDistance != 0)
+					s.addProperty("attenuation_distance", attenuationDistance);
 				list.add(s);
 				entry.add("sounds", list);
 				if (i == 0 && hasSubtitle())
@@ -572,13 +596,11 @@ public class AllSoundEvents {
 
 		protected List<ResourceLocation> variants;
 		protected SoundEvent event;
-		protected int attenuationDistance;
 
 		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle,
 			SoundSource category, int attenuationDistance) {
-			super(id, subtitle, category);
+			super(id, subtitle, category, attenuationDistance);
 			this.variants = variants;
-			this.attenuationDistance = attenuationDistance;
 		}
 
 		@Override

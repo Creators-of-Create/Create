@@ -227,7 +227,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 				.renderGuiItem(targetIcon, x + 37, y + 105);
 
 		ms.pushPose();
-		ms.translate(0, guiTop + 48, 0);
+		ms.translate(0, guiTop + 46, 0);
 		configWidgets.getFirst()
 			.renderWidgetBG(guiLeft, ms);
 		ms.translate(0, 21, 0);

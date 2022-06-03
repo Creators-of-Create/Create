@@ -106,7 +106,7 @@ public class ArrivalSoundQueue {
 				playSimple(entity, SoundEvents.BELL_BLOCK, 1, 1);
 		}
 
-		if (state.getBlock()instanceof NoteBlock nb) {
+		if (state.getBlock() instanceof NoteBlock nb) {
 			float f = (float) Math.pow(2, (state.getValue(NoteBlock.NOTE) - 12) / 12.0);
 			playSimple(entity, state.getValue(NoteBlock.INSTRUMENT)
 				.getSoundEvent(), 1, f);
@@ -114,14 +114,14 @@ public class ArrivalSoundQueue {
 
 		if (state.getBlock() instanceof WhistleBlock && info.nbt != null) {
 			int pitch = info.nbt.getInt("Pitch");
-			float f = (float) Math.pow(2, (pitch - 12) / 12.0);
 			WhistleSize size = state.getValue(WhistleBlock.SIZE);
-			playSimple(entity, (size == WhistleSize.LARGE ? AllSoundEvents.WHISTLE_TRAIN_LOW
-				: size == WhistleSize.MEDIUM ? AllSoundEvents.WHISTLE_TRAIN_MEDIUM : AllSoundEvents.WHISTLE_TRAIN_HIGH)
+			float f = (float) Math.pow(2, ((size == WhistleSize.SMALL ? 12 : 0) - pitch) / 12.0);
+			playSimple(entity,
+				(size == WhistleSize.LARGE ? AllSoundEvents.WHISTLE_TRAIN_LOW : AllSoundEvents.WHISTLE_TRAIN_MEDIUM)
 					.getMainEvent(),
 				1, f);
-			playSimple(entity, AllSoundEvents.WHISTLE_CHIFF.getMainEvent(), .75f,
-				size == WhistleSize.SMALL ? f + .75f : f);
+//			playSimple(entity, AllSoundEvents.WHISTLE_CHIFF.getMainEvent(), .75f,
+//				size == WhistleSize.SMALL ? f + .75f : f);
 		}
 
 	}

@@ -45,7 +45,7 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 
 		if (!wasSettled && doorTE.animation.settled() && !open)
 			context.world.playLocalSound(context.position.x, context.position.y, context.position.z,
-				SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .5f, 1, false);
+				SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .125f, 1, false);
 	}
 
 	protected void tickOpen(MovementContext context, boolean currentlyOpen) {
@@ -67,7 +67,7 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 
 		if (shouldOpen)
 			context.world.playSound(null, new BlockPos(context.position), SoundEvents.IRON_DOOR_OPEN,
-				SoundSource.BLOCKS, .5f, 1);
+				SoundSource.BLOCKS, .125f, 1);
 	}
 
 	private void toggleDoor(BlockPos pos, Contraption contraption, StructureBlockInfo info) {

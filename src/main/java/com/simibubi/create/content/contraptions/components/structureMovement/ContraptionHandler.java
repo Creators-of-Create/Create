@@ -67,6 +67,7 @@ public class ContraptionHandler {
 		if (entityLiving.getVehicle() == null)
 			entityLiving.teleportTo(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");
+		entityLiving.setOnGround(false);
 	}
 
 }

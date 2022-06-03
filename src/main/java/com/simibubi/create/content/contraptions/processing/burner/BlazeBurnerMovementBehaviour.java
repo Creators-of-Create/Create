@@ -46,7 +46,7 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 		Vec3 c = context.position;
 		Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
 			.multiply(1, 0, 1));
-		if (r.nextInt(3) == 0)
+		if (r.nextInt(3) == 0 && context.motion.length() < 1 / 64f)
 			context.world.addParticle(ParticleTypes.LARGE_SMOKE, v.x, v.y, v.z, 0, 0, 0);
 
 		LerpedFloat headAngle = getHeadAngle(context);

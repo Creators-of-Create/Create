@@ -39,6 +39,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -333,6 +334,8 @@ public class ContraptionCollider {
 
 					EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
 					double damage = diffMotion.length();
+					if (entity.getClassification(false) == MobCategory.MONSTER)
+						damage *= 2;
 
 					if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator()) {
 						if (playerType == PlayerType.CLIENT) {
@@ -346,9 +349,7 @@ public class ContraptionCollider {
 								SoundSource.NEUTRAL, 1, .75f);
 						}
 
-						Vec3 added = entityMotion.add(entity.position()
-							.subtract(contraptionPosition)
-							.multiply(1, 0, 1)
+						Vec3 added = entityMotion.add(contraptionMotion.multiply(1, 0, 1)
 							.normalize()
 							.add(0, .25, 0)
 							.scale(damage * 4))

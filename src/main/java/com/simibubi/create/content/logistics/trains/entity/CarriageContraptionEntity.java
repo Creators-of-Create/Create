@@ -81,6 +81,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private Vec3 serverPrevPos;
 
+	@OnlyIn(Dist.CLIENT)
+	public CarriageSounds sounds;
+	@OnlyIn(Dist.CLIENT)
+	public CarriageParticles particles;
+
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 		validForRender = false;
@@ -271,6 +276,14 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		dce.alignEntity(this);
 
+		if (sounds == null)
+			sounds = new CarriageSounds(this);
+		sounds.tick(dce);
+		
+		if (particles == null)
+			particles = new CarriageParticles(this);
+		particles.tick(dce);
+
 		double distanceTo = 0;
 		if (!firstPositionUpdate) {
 			Vec3 diff = position().subtract(xo, yo, zo);
@@ -414,6 +427,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			carriage.trailingBogey().couplingAnchors = Couple.create(null, null);
 		}
 		firstPositionUpdate = true;
+		if (sounds != null)
+			sounds.stop();
 	}
 
 	@Override

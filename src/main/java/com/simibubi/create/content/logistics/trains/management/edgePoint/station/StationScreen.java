@@ -254,11 +254,10 @@ public class StationScreen extends AbstractStationScreen {
 		for (int i = carriages.size() - 1; i > 0; i--) {
 			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
 				Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
-
-			if (i == carriages.size() - 1 && train.doubleEnded) {
-				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
-				continue;
-			}
+//			if (i == carriages.size() - 1 && train.doubleEnded) {
+//				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
+//				continue;
+//			}
 			Carriage carriage = carriages.get(te.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}

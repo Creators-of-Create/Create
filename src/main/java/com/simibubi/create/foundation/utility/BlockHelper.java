@@ -288,7 +288,7 @@ public class BlockHelper {
 	public static double getBounceMultiplier(Block block) {
 		if (block instanceof SlimeBlock)
 			return 0.8D;
-		if (block instanceof BedBlock || block instanceof SeatBlock)
+		if (block instanceof BedBlock)
 			return 0.66 * 0.8D;
 		return 0;
 	}

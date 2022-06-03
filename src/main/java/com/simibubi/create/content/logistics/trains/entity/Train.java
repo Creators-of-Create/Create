@@ -924,6 +924,8 @@ public class Train {
 			int i = iterateFromBack ? carriageCount - 1 - index : index;
 			Carriage carriage = carriages.get(i);
 			IItemHandlerModifiable fuelItems = carriage.storage.getFuelItems();
+			if (fuelItems == null)
+				continue;
 
 			for (int slot = 0; slot < fuelItems.getSlots(); slot++) {
 				ItemStack stack = fuelItems.extractItem(slot, 1, true);

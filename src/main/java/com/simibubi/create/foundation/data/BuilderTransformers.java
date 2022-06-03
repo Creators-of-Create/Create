@@ -140,7 +140,7 @@ public class BuilderTransformers {
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
 		Supplier<DataIngredient> ingredient) {
 		return b -> b.initialProperties(() -> Blocks.LADDER)
-			.addLayer(() -> RenderType::cutoutMipped)
+			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
 				.texture("0", p.modLoc("block/ladder_" + name + "_hoop"))
