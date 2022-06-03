@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -109,8 +110,8 @@ public class SequencedAssemblyRecipeBuilder {
 				return;
 
 			JsonArray conds = new JsonArray();
-			//recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
-			json.add("conditions", conds);
+			recipeConditions.forEach(c -> conds.add(c.toJson()));
+			json.add(ResourceConditions.CONDITIONS_KEY, conds);
 		}
 
 		@Override

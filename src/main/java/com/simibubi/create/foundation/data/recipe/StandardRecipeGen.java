@@ -1090,18 +1090,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace();
 	}
 
-	// todo: port
 	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
 		String metalName = metal.getName();
-//		for (Mods mod : metal.getMods()) {
-//			ResourceLocation ingot = mod.ingotOf(metalName);
-//			String modId = mod.getId();
-//			create(ingot).withSuffix("_compat_" + modId)
-////				.whenModLoaded(modId)
-//				.viaCooking(ingredient::get)
-//				.rewardXP(.1f)
-//				.inBlastFurnace();
-//		}
+		for (Mods mod : metal.getMods()) {
+			ResourceLocation ingot = mod.ingotOf(metalName);
+			String modId = mod.getId();
+			create(ingot).withSuffix("_compat_" + modId)
+				.whenModLoaded(modId)
+				.viaCooking(ingredient::get)
+				.rewardXP(.1f)
+				.inBlastFurnace();
+		}
 		return null;
 	}
 
