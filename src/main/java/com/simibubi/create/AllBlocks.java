@@ -1558,8 +1558,10 @@ public class AllBlocks {
 
 	public static final BlockEntry<TrainDoorBlock> TRAIN_DOOR = REGISTRATE.block("train_door", TrainDoorBlock::new)
 		.initialProperties(Material.NETHER_WOOD) // for villager AI..
-		.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN))
-		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
+			.sound(SoundType.NETHERITE_BLOCK)
+			.requiresCorrectToolForDrops()
+			.strength(3.0F, 6.0F))
 		.blockstate((c, p) -> {
 			ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
 			ModelFile top = AssetLookup.partialBaseModel(c, p, "top");

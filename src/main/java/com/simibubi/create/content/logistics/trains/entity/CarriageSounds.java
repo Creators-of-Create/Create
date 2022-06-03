@@ -95,8 +95,8 @@ public class CarriageSounds {
 		if (entity.carriageIndex == 0) {
 			float v = volume * (1 - seatCrossfade.getValue() * .35f) * .75f;
 			if ((3 + tick) % 4 == 0)
-				AllSoundEvents.STEAM.playAt(entity.level, soundLocation, v * ((tick + 7) % 8 == 0 ? 0.75f : .45f), 1.17f,
-					false);
+				AllSoundEvents.STEAM.playAt(entity.level, soundLocation, v * ((tick + 7) % 8 == 0 ? 0.75f : .45f),
+					1.17f, false);
 			if (tick % 16 == 0)
 				AllSoundEvents.STEAM.playAt(entity.level, soundLocation, v * 1.5f, .8f, false);
 		}
@@ -155,10 +155,10 @@ public class CarriageSounds {
 	}
 
 	public void submitSharedSoundVolume(Vec3 location, float volume) {
-		sharedWheelSound =
-			playIfMissing(Minecraft.getInstance(), sharedWheelSound, AllSoundEvents.TRAIN2.getMainEvent());
-		sharedWheelSoundSeated =
-			playIfMissing(Minecraft.getInstance(), sharedWheelSoundSeated, AllSoundEvents.TRAIN3.getMainEvent());
+		Minecraft mc = Minecraft.getInstance();
+		minecartEsqueSound = playIfMissing(mc, minecartEsqueSound, AllSoundEvents.TRAIN.getMainEvent());
+		sharedWheelSound = playIfMissing(mc, sharedWheelSound, AllSoundEvents.TRAIN2.getMainEvent());
+		sharedWheelSoundSeated = playIfMissing(mc, sharedWheelSoundSeated, AllSoundEvents.TRAIN3.getMainEvent());
 
 		boolean approach = true;
 
