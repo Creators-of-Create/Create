@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.config;
 
 public class CServer extends ConfigBase {
 
+	public final ConfigBool limitAdventureMode = b(true, "limitAdventureMode", Comments.limitAdventureMode, Comments.limitAdventureMode2);
 	public final ConfigGroup infrastructure = group(0, "infrastructure", Comments.infrastructure);
 	public final ConfigInt tickrateSyncTimer =
 		i(20, 5, "tickrateSyncTimer", "[in Ticks]", Comments.tickrateSyncTimer, Comments.tickrateSyncTimer2);
@@ -29,6 +30,8 @@ public class CServer extends ConfigBase {
 		static String tickrateSyncTimer =
 			"The amount of time a server waits before sending out tickrate synchronization packets.";
 		static String tickrateSyncTimer2 = "These packets help animations to be more accurate when tps is below 20.";
+		static String limitAdventureMode = "If players in adventure mode should have additional interactions restricted.";
+		static String limitAdventureMode2 = "Includes: filter slots, scroll values";
 	}
 
 }

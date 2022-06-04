@@ -35,16 +35,16 @@ import net.minecraft.world.phys.HitResult;
 public class FilteringHandler {
 
 	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
-//		Level world = event.getWorld();
-		BlockPos pos = hitResult.getBlockPos();//event.getPos();
-//		Player player = event.getPlayer();
-//		InteractionHand hand = event.getHand();
+		BlockPos pos = hitResult.getBlockPos();
 
 		if (player.isShiftKeyDown() || player.isSpectator())
 			return InteractionResult.PASS;
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
+
 		if (behaviour == null)
+			return InteractionResult.PASS;
+		if (!behaviour.canInteract(player))
 			return InteractionResult.PASS;
 
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);

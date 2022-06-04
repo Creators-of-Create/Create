@@ -41,6 +41,8 @@ public class ScrollValueHandler {
 		ScrollValueBehaviour scrolling = TileEntityBehaviour.get(world, blockPos, ScrollValueBehaviour.TYPE);
 		if (scrolling == null)
 			return false;
+		if (!scrolling.canInteract(mc.player))
+			return false;
 		if (!scrolling.isActive())
 			return false;
 		if (!mc.player.mayBuild())

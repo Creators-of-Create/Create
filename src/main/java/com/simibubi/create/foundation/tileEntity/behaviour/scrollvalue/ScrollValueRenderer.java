@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
@@ -71,7 +70,8 @@ public class ScrollValueRenderer {
 				box.subLabel(new TextComponent("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
 		}
 
-		box.scrollTooltip(new TextComponent("[").append(Lang.translate("action.scroll")).append("]"));
+		if (behaviour.canInteract(Minecraft.getInstance().player))
+			box.scrollTooltip(new TextComponent("[").append(Lang.translate("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 				.withColors(0x5A5D5A, 0xB5B7B6)
 				.passive(!highlight);

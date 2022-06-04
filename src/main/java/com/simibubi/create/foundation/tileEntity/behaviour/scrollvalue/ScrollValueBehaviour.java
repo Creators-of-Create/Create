@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -10,9 +11,12 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -36,6 +40,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	Function<Integer, Component> unit;
 	Function<StepContext, Integer> step;
 	private Supplier<Boolean> isActive;
+	private Predicate<Player> canInteract;
 	boolean needsWrench;
 
 	public ScrollValueBehaviour(Component label, SmartTileEntity te, ValueBoxTransform slot) {
@@ -52,6 +57,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		value = 0;
 		isActive = () -> true;
 		ticksUntilScrollPacket = -1;
+		canInteract = FilteringBehaviour::playerCanInteract;
 	}
 
 	@Override
@@ -135,6 +141,11 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
+	public ScrollValueBehaviour interactiveWhen(Predicate<Player> condition) {
+		canInteract = condition;
+		return this;
+	}
+
 	public ScrollValueBehaviour withStepFunction(Function<StepContext, Integer> step) {
 		this.step = step;
 		return this;
@@ -174,6 +185,10 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 
 	public boolean isActive() {
 		return isActive.get();
+	}
+
+	public boolean canInteract(Player player) {
+		return canInteract.test(player);
 	}
 
 	public boolean testHit(Vec3 hit) {

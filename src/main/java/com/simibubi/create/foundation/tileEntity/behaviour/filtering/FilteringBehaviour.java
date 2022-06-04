@@ -1,10 +1,12 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -18,6 +20,7 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -37,6 +40,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	private Consumer<ItemStack> callback;
 	private Supplier<Boolean> isActive;
 	private Supplier<Boolean> showCountPredicate;
+	private Predicate<Player> canInteract;
 
 	int scrollableValue;
 	int ticksUntilScrollPacket;
@@ -58,6 +62,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		showCountPredicate = () -> showCount;
 		recipeFilter = false;
 		fluidFilter = false;
+		canInteract = FilteringBehaviour::playerCanInteract;
 	}
 
 	@Override
@@ -128,6 +133,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		return this;
 	}
 
+	public FilteringBehaviour interactiveWhen(Predicate<Player> condition) {
+		canInteract = condition;
+		return this;
+	}
+
 	public FilteringBehaviour showCount() {
 		showCount = true;
 		return this;
@@ -192,6 +202,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		return showCountPredicate.get();
 	}
 
+	public boolean canInteract(Player player) {
+		return canInteract.test(player);
+	}
+
 	public boolean test(ItemStack stack) {
 		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getLevel(), stack, filter);
 	}
@@ -221,6 +235,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	public boolean isActive() {
 		return isActive.get();
+	}
+
+	public static boolean playerCanInteract(Player player) {
+		boolean adventure = !player.getAbilities().mayBuild && !player.isSpectator(); // from GameRenderer
+		return !(adventure && AllConfigs.SERVER.limitAdventureMode.get());
 	}
 
 }
