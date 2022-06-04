@@ -63,6 +63,7 @@ dependencies {
 
     // uncomment these to test
 
+//    modLocalRuntime("maven.modrinth:better-biome-blend:1.18.2-1.3.5-fabric")
 //    modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
 //    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
 //    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")

@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class OpenCreateMenuButton extends Button {
@@ -44,8 +45,8 @@ public class OpenCreateMenuButton extends Button {
 	public static class SingleMenuRow {
 		public final String left, right;
 		public SingleMenuRow(String left, String right) {
-			this.left = I18n.get(left);
-			this.right = I18n.get(right);
+			this.left = left;
+			this.right = right;
 		}
 		public SingleMenuRow(String center) {
 			this(center, center);
@@ -101,7 +102,7 @@ public class OpenCreateMenuButton extends Button {
 				((ScreenAccessor) gui).port_lib$getChildren().stream()
 						.filter(w -> w instanceof AbstractWidget)
 						.map(w -> (AbstractWidget) w)
-						.filter(w -> w.getMessage().getString().equals(target))
+						.filter(w -> w.getMessage() instanceof TranslatableComponent t && target.equals(t.getKey()))
 						.findFirst()
 						.ifPresent(w -> gui.addRenderableWidget(
 								new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
