@@ -28,6 +28,8 @@ public class LinkHandler {
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return InteractionResult.PASS;
+		if (!behaviour.canInteract(player))
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);

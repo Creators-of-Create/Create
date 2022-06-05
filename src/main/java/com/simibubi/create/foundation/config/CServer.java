@@ -31,7 +31,7 @@ public class CServer extends ConfigBase {
 			"The amount of time a server waits before sending out tickrate synchronization packets.";
 		static String tickrateSyncTimer2 = "These packets help animations to be more accurate when tps is below 20.";
 		static String limitAdventureMode = "If players in adventure mode should have additional interactions restricted.";
-		static String limitAdventureMode2 = "Includes: filter slots, scroll values";
+		static String limitAdventureMode2 = "Includes: filter slots, scroll values, Redstone Links, Deployers";
 	}
 
 }

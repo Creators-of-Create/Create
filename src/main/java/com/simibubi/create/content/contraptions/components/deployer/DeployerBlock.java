@@ -91,6 +91,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 			return InteractionResult.SUCCESS;
 
 		withTileEntityDo(worldIn, pos, te -> {
+			if (!FilteringBehaviour.playerCanInteract(player))
+				return;
 			ItemStack heldByDeployer = te.player.getMainHandItem()
 				.copy();
 			if (heldByDeployer.isEmpty() && heldByPlayer.isEmpty())

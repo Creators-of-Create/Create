@@ -127,9 +127,16 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
-		if (player.isShiftKeyDown())
+		if (player.isShiftKeyDown() && playerCanToggle(player, worldIn, pos))
 			return toggleMode(state, worldIn, pos);
 		return InteractionResult.PASS;
+	}
+
+	public boolean playerCanToggle(Player player, Level level, BlockPos pos) {
+		return onTileEntityUse(level, pos, te -> te.link.canInteract(player)
+				? InteractionResult.SUCCESS
+				: InteractionResult.FAIL
+		) != InteractionResult.FAIL;
 	}
 
 	public InteractionResult toggleMode(BlockState state, Level worldIn, BlockPos pos) {

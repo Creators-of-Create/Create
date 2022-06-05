@@ -21,7 +21,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	private boolean receivedSignalChanged;
 	private int receivedSignal;
 	private int transmittedSignal;
-	private LinkBehaviour link;
+	protected LinkBehaviour link;
 	private boolean transmitter;
 
 	public RedstoneLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {

@@ -3,6 +3,11 @@ package com.simibubi.create.foundation.tileEntity.behaviour.linked;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
+import java.util.function.Predicate;
+
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+
+import net.minecraft.world.entity.player.Player;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -40,6 +45,8 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 	private IntSupplier transmission;
 	private IntConsumer signalCallback;
 
+	private Predicate<Player> canInteract;
+
 	protected LinkBehaviour(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
 		super(te);
 		frequencyFirst = Frequency.EMPTY;
@@ -48,6 +55,7 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 		secondSlot = slots.getRight();
 		textShift = Vec3.ZERO;
 		newPosition = true;
+		canInteract = FilteringBehaviour::playerCanInteract;
 	}
 
 	public static LinkBehaviour receiver(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
@@ -171,6 +179,11 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 		getHandler().addToNetwork(getWorld(), this);
 	}
 
+	public LinkBehaviour interactiveWhen(Predicate<Player> condition) {
+		canInteract = condition;
+		return this;
+	}
+
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
@@ -208,6 +221,10 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 	@Override
 	public boolean isAlive() {
 		return !tileEntity.isRemoved() && getWorld().getBlockEntity(getPos()) == tileEntity;
+	}
+
+	public boolean canInteract(Player player) {
+		return canInteract.test(player);
 	}
 
 	@Override
