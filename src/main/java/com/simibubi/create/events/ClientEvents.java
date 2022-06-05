@@ -25,6 +25,7 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableHa
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
@@ -143,6 +144,7 @@ public class ClientEvents {
 		ScrollValueRenderer.tick();
 		ChassisRangeDisplay.tick();
 		EdgeInteractionRenderer.tick();
+		GirderWrenchBehavior.tick();
 		WorldshaperRenderHandler.tick();
 		CouplingHandlerClient.tick();
 		CouplingRenderer.tickDebugModeRenders();
