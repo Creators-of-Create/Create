@@ -8,8 +8,11 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -77,6 +80,17 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return AllTileEntities.FAKE_TRACK.create(pPos, pState);
+	}
+	
+	@Override
+	public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2,
+		LivingEntity entity, int numberOfParticles) {
+		return true;
+	}
+	
+	@Override
+	public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
+		return true;
 	}
 
 }

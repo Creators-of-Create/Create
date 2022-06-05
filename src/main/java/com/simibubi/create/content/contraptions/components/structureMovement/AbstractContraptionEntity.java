@@ -432,7 +432,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			StructureBlockInfo blockInfo = pair.left;
 			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
 			if (actor instanceof PortableStorageInterfaceMovement && isActorActive(context, actor))
-				actor.visitNewPosition(context, new BlockPos(context.position));
+				if (context.position != null)
+					actor.visitNewPosition(context, new BlockPos(context.position));
 		}
 	}
 
@@ -452,17 +453,19 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return false;
 
 		context.motion = actorPosition.subtract(previousPosition);
+
 		if (!level.isClientSide() && context.contraption.entity instanceof CarriageContraptionEntity cce
 			&& cce.getCarriage() != null) {
 			Train train = cce.getCarriage().train;
 			double actualSpeed = train.speedBeforeStall != null ? train.speedBeforeStall : train.speed;
 			context.motion = context.motion.normalize()
-				.scale(actualSpeed);
+				.scale(Math.abs(actualSpeed));
 		}
 
 		Vec3 relativeMotion = context.motion;
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;
+
 		return !new BlockPos(previousPosition).equals(gridPosition)
 			|| (context.relativeMotion.length() > 0 || context.contraption instanceof CarriageContraption)
 				&& context.firstMovement;

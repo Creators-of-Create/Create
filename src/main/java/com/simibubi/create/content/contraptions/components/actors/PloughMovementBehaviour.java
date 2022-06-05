@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock.PloughFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.content.logistics.trains.track.FakeTrackBlock;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -83,6 +84,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (state.getBlock() instanceof BubbleColumnBlock)
 			return false;
 		if (state.getBlock() instanceof NetherPortalBlock)
+			return false;
+		if (state.getBlock() instanceof FakeTrackBlock)
 			return false;
 		return state.getCollisionShape(world, breakingPos)
 			.isEmpty();

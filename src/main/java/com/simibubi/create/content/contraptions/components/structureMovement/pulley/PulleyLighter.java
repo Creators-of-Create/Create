@@ -20,13 +20,11 @@ public class PulleyLighter extends ContraptionLighter<PulleyContraption> {
         Level world = contraption.entity.level;
 
         BlockPos.MutableBlockPos pos = contraption.anchor.mutable();
-        while (!AllBlocks.ROPE_PULLEY.has(world.getBlockState(pos)) && pos.getY() < 256) {
+        while (!AllBlocks.ROPE_PULLEY.has(world.getBlockState(pos)) && pos.getY() < world.getMaxBuildHeight()) 
             pos.move(0, 1, 0);
-        }
 
         bounds.translate(pos);
-        bounds.setMinY(1); // the super constructor will take care of making this 0
-
+        bounds.setMinY(world.getMinBuildHeight());
         return bounds;
     }
 }

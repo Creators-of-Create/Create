@@ -37,7 +37,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	public void startTransferringTo(Contraption contraption, float distance) {
-		this.distance = distance;
+		this.distance = Math.min(2, distance);
 		connectedEntity = contraption.entity;
 		startConnecting();
 		notifyUpdate();

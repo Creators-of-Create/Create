@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
@@ -92,6 +93,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			Vec3 initial = new Vec3(0, 0, 1);
 			if (context.contraption.entity instanceof OrientedContraptionEntity oce)
 				initial = VecHelper.rotate(initial, oce.getInitialYaw(), Axis.Y);
+			if (context.contraption.entity instanceof CarriageContraptionEntity cce)
+				initial = VecHelper.rotate(initial, 90, Axis.Y);
 			facingVec = context.rotation.apply(initial);
 		}
 

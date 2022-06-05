@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class SlidingDoorTileEntity extends SmartTileEntity {
 
@@ -51,6 +52,11 @@ public class SlidingDoorTileEntity extends SmartTileEntity {
 
 		if (!open && !wasSettled && animation.settled() && !isVisible(getBlockState()))
 			showBlockModel();
+	}
+
+	@Override
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(1);
 	}
 
 	protected boolean isVisible(BlockState state) {

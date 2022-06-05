@@ -13,6 +13,9 @@ import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -31,6 +34,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -43,7 +47,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StandardBogeyBlock extends Block
-	implements IBogeyBlock, ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock {
+	implements IBogeyBlock, ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	private final boolean large;
@@ -74,12 +78,12 @@ public class StandardBogeyBlock extends Block
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
 	}
-	
+
 	@Override
 	public double getWheelPointSpacing() {
 		return 2;
@@ -226,6 +230,11 @@ public class StandardBogeyBlock extends Block
 	@Override
 	public BlockEntityType<? extends StandardBogeyTileEntity> getTileEntityType() {
 		return AllTileEntities.BOGEY.get();
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.RAILWAY_CASING.asStack());
 	}
 
 }
