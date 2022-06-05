@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 588",
+	"_": "Missing Localizations: 590",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -498,6 +498,7 @@
 	"block.create.tiled_glass": "Vidrio Baldosa",
 	"block.create.tiled_glass_pane": "Panel de Vidrio Baldosa",
 	"block.create.track": "UNLOCALIZED: Train Track",
+	"block.create.track_observer": "UNLOCALIZED: Train Observer",
 	"block.create.track_signal": "UNLOCALIZED: Train Signal",
 	"block.create.track_station": "UNLOCALIZED: Train Station",
 	"block.create.train_door": "UNLOCALIZED: Train Door",
@@ -1545,6 +1546,7 @@
 	"create.display_source.station_summary.now": "UNLOCALIZED: now",
 	"create.display_source.station_summary.minutes": "UNLOCALIZED:  min",
 	"create.display_source.station_summary.seconds": "UNLOCALIZED: %1$ss",
+	"create.display_source.observed_train_name": "UNLOCALIZED: Detected Train Name",
 
 	"create.display_target.line": "UNLOCALIZED: Line %1$s",
 	"create.display_target.page": "UNLOCALIZED: Page %1$s",

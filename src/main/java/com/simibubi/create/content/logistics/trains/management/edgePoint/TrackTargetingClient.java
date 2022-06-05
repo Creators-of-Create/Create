@@ -48,7 +48,7 @@ public class TrackTargetingClient {
 		BezierTrackPointLocation hoveredBezier = null;
 
 		ItemStack stack = player.getMainHandItem();
-		if (stack.getItem()instanceof TrackTargetingBlockItem ttbi)
+		if (stack.getItem() instanceof TrackTargetingBlockItem ttbi)
 			type = ttbi.getType(stack);
 
 		if (type == EdgePointType.SIGNAL)
@@ -83,7 +83,7 @@ public class TrackTargetingClient {
 					BlockHitResult blockHitResult = (BlockHitResult) hitResult;
 					BlockPos pos = blockHitResult.getBlockPos();
 					BlockState blockState = mc.level.getBlockState(pos);
-					if (blockState.getBlock()instanceof ITrackBlock track) {
+					if (blockState.getBlock() instanceof ITrackBlock track) {
 						direction = track.getNearestTrackAxis(mc.level, pos, blockState, lookAngle)
 							.getSecond() == AxisDirection.POSITIVE;
 						hovered = pos;
@@ -124,8 +124,9 @@ public class TrackTargetingClient {
 		BlockPos pos = lastHovered;
 		int light = LevelRenderer.getLightColor(mc.level, pos);
 		AxisDirection direction = lastDirection ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
-		RenderedTrackOverlayType type =
-			lastType == EdgePointType.SIGNAL ? RenderedTrackOverlayType.SIGNAL : RenderedTrackOverlayType.STATION;
+
+		RenderedTrackOverlayType type = lastType == EdgePointType.SIGNAL ? RenderedTrackOverlayType.SIGNAL
+			: lastType == EdgePointType.OBSERVER ? RenderedTrackOverlayType.OBSERVER : RenderedTrackOverlayType.STATION;
 
 		TrackTargetingBehaviour.render(mc.level, pos, direction, lastHoveredBezierSegment, ms, buffer, light,
 			OverlayTexture.NO_OVERLAY, type, 1 + 1 / 16f);

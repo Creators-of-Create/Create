@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserver;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
@@ -23,6 +24,8 @@ public class EdgePointType<T extends TrackEdgePoint> {
 		register(Create.asResource("signal"), SignalBoundary::new);
 	public static final EdgePointType<GlobalStation> STATION =
 		register(Create.asResource("station"), GlobalStation::new);
+	public static final EdgePointType<TrackObserver> OBSERVER =
+		register(Create.asResource("observer"), TrackObserver::new);
 
 	public static <T extends TrackEdgePoint> EdgePointType<T> register(ResourceLocation id, Supplier<T> factory) {
 		EdgePointType<T> type = new EdgePointType<>(id, factory);

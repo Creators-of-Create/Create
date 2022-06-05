@@ -5,7 +5,6 @@ import java.util.function.BiConsumer;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -19,6 +18,7 @@ import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
+import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -30,6 +30,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -41,8 +42,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TrackTargetingBlockItem extends BlockItem {
 
-	public TrackTargetingBlockItem(Block pBlock, Properties pProperties) {
+	private EdgePointType<?> type;
+
+	public static <T extends Block> NonNullBiFunction<? super T, Item.Properties, TrackTargetingBlockItem> ofType(
+		EdgePointType<?> type) {
+		return (b, p) -> new TrackTargetingBlockItem(b, p, type);
+	}
+
+	public TrackTargetingBlockItem(Block pBlock, Properties pProperties, EdgePointType<?> type) {
 		super(pBlock, pProperties);
+		this.type = type;
 	}
 
 	@Override
@@ -134,8 +143,8 @@ public class TrackTargetingBlockItem extends BlockItem {
 		return useOn;
 	}
 
-	protected EdgePointType<?> getType(ItemStack stack) {
-		return AllBlocks.TRACK_SIGNAL.isIn(stack) ? EdgePointType.SIGNAL : EdgePointType.STATION;
+	public EdgePointType<?> getType(ItemStack stack) {
+		return type;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -200,7 +209,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		TrackEdge edge = location.graph.getConnection(nodes);
 		if (edge == null)
 			return;
-		
+
 		EdgeData edgeData = edge.getEdgeData();
 		double edgePosition = location.position;
 

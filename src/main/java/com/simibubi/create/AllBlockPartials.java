@@ -110,6 +110,7 @@ public class AllBlockPartials {
 		TRACK_STATION_OVERLAY = block("track_overlay/station"), TRACK_SIGNAL_OVERLAY = block("track_overlay/signal"),
 		TRACK_ASSEMBLING_OVERLAY = block("track_overlay/assembling"),
 		TRACK_SIGNAL_DUAL_OVERLAY = block("track_overlay/signal_dual"),
+		TRACK_OBSERVER_OVERLAY = block("track_overlay/observer"),
 
 		BOGEY_FRAME = block("track/bogey/bogey_frame"), SMALL_BOGEY_WHEELS = block("track/bogey/bogey_wheel"),
 		BOGEY_PIN = block("track/bogey/bogey_drive_wheel_pin"), BOGEY_PISTON = block("track/bogey/bogey_drive_piston"),
@@ -136,10 +137,10 @@ public class AllBlockPartials {
 		SIGNAL_RED = block("track_signal/red_tube"), SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
 		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"), SIGNAL_YELLOW = block("track_signal/yellow_tube"),
 
-		BLAZE_GOGGLES = block("blaze_burner/goggles"),
-		BLAZE_IDLE = block("blaze_burner/blaze/idle"), BLAZE_ACTIVE = block("blaze_burner/blaze/active"),
-		BLAZE_SUPER = block("blaze_burner/blaze/super"), BLAZE_BURNER_FLAME = block("blaze_burner/flame"),
-		BLAZE_BURNER_RODS = block("blaze_burner/rods_small"), BLAZE_BURNER_RODS_2 = block("blaze_burner/rods_large"),
+		BLAZE_GOGGLES = block("blaze_burner/goggles"), BLAZE_IDLE = block("blaze_burner/blaze/idle"),
+		BLAZE_ACTIVE = block("blaze_burner/blaze/active"), BLAZE_SUPER = block("blaze_burner/blaze/super"),
+		BLAZE_BURNER_FLAME = block("blaze_burner/flame"), BLAZE_BURNER_RODS = block("blaze_burner/rods_small"),
+		BLAZE_BURNER_RODS_2 = block("blaze_burner/rods_large"),
 		BLAZE_BURNER_SUPER_RODS = block("blaze_burner/superheated_rods_small"),
 		BLAZE_BURNER_SUPER_RODS_2 = block("blaze_burner/superheated_rods_large"),
 

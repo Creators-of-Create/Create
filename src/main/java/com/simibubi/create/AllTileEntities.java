@@ -182,6 +182,8 @@ import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.logistics.trains.IBogeyTileEntityRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverRenderer;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationRenderer;
@@ -813,6 +815,12 @@ public class AllTileEntities {
 		.tileEntity("track_signal", SignalTileEntity::new)
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
+		.register();
+	
+	public static final BlockEntityEntry<TrackObserverTileEntity> TRACK_OBSERVER = Create.registrate()
+		.tileEntity("track_observer", TrackObserverTileEntity::new)
+		.renderer(() -> TrackObserverRenderer::new)
+		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();
 
 	public static void register() {}

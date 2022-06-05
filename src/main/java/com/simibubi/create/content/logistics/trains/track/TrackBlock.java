@@ -536,12 +536,12 @@ public class TrackBlock extends Block
 			return null;
 		return AllTileEntities.TRACK.create(p_153215_, state);
 	}
-	
+
 	@Override
 	public Class<TrackTileEntity> getTileEntityClass() {
 		return TrackTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends TrackTileEntity> getTileEntityType() {
 		return AllTileEntities.TRACK.get();
@@ -702,10 +702,12 @@ public class TrackBlock extends Block
 				msr.rotateCentered(Direction.UP, Mth.PI);
 		}
 
-		msr.scale(type == RenderedTrackOverlayType.STATION ? 1 + 1 / 512f : 1);
-		return type == RenderedTrackOverlayType.STATION ? AllBlockPartials.TRACK_STATION_OVERLAY
-			: type == RenderedTrackOverlayType.SIGNAL ? AllBlockPartials.TRACK_SIGNAL_OVERLAY
-				: AllBlockPartials.TRACK_SIGNAL_DUAL_OVERLAY;
+		return switch (type) {
+		case DUAL_SIGNAL -> AllBlockPartials.TRACK_SIGNAL_DUAL_OVERLAY;
+		case OBSERVER -> AllBlockPartials.TRACK_OBSERVER_OVERLAY;
+		case SIGNAL -> AllBlockPartials.TRACK_SIGNAL_OVERLAY;
+		case STATION -> AllBlockPartials.TRACK_STATION_OVERLAY;
+		};
 	}
 
 	@Override

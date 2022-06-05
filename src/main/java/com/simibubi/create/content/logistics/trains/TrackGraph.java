@@ -355,11 +355,16 @@ public class TrackGraph {
 	}
 
 	public Map<TrackNode, TrackEdge> getConnectionsFrom(TrackNode node) {
+		if (node == null)
+			return null;
 		return connectionsByNode.getOrDefault(node, new HashMap<>());
 	}
 
 	public TrackEdge getConnection(Couple<TrackNode> nodes) {
-		return getConnectionsFrom(nodes.getFirst()).get(nodes.getSecond());
+		Map<TrackNode, TrackEdge> connectionsFrom = getConnectionsFrom(nodes.getFirst());
+		if (connectionsFrom == null)
+			return null;
+		return connectionsFrom.get(nodes.getSecond());
 	}
 
 	public void connectNodes(LevelAccessor reader, TrackNodeLocation location, TrackNodeLocation location2,

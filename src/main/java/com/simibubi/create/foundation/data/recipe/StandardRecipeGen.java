@@ -536,6 +536,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShapeless(b -> b.requires(I.railwayCasing())
 				.requires(I.electronTube())),
 
+		TRAIN_OBSERVER = create(AllBlocks.TRACK_OBSERVER).unlockedBy(I::railwayCasing)
+			.returns(2)
+			.viaShapeless(b -> b.requires(I.railwayCasing())
+				.requires(ItemTags.WOODEN_PRESSURE_PLATES)),
+
+		TRAIN_OBSERVER_2 = create(AllBlocks.TRACK_OBSERVER).withSuffix("_from_other_plates")
+			.unlockedBy(I::railwayCasing)
+			.returns(2)
+			.viaShapeless(b -> b.requires(I.railwayCasing())
+				.requires(Ingredient.of(Items.STONE_PRESSURE_PLATE, Items.POLISHED_BLACKSTONE_PRESSURE_PLATE,
+					Items.HEAVY_WEIGHTED_PRESSURE_PLATE, Items.LIGHT_WEIGHTED_PRESSURE_PLATE))),
+
 		TRAIN_SCHEDULE = create(AllItems.SCHEDULE).unlockedByTag(I::reinforcedSheet)
 			.returns(4)
 			.viaShapeless(b -> b.requires(I.reinforcedSheet())

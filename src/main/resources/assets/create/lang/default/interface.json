@@ -759,6 +759,7 @@
 	"create.display_source.station_summary.now": "now",
 	"create.display_source.station_summary.minutes": " min",
 	"create.display_source.station_summary.seconds": "%1$ss",
+	"create.display_source.observed_train_name": "Detected Train Name",
 	
 	"create.display_target.line": "Line %1$s",
 	"create.display_target.page": "Page %1$s",

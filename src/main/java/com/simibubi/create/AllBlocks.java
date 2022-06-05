@@ -170,6 +170,7 @@ import com.simibubi.create.content.logistics.block.display.source.ItemCountDispl
 import com.simibubi.create.content.logistics.block.display.source.ItemListDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemNameDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemThoughputDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ObservedTrainNameSource;
 import com.simibubi.create.content.logistics.block.display.source.StationSummaryDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.StopWatchDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.TimeOfDayDisplaySource;
@@ -198,7 +199,9 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
 import com.simibubi.create.content.logistics.trains.track.FakeTrackBlock;
@@ -1510,7 +1513,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 		.onRegister(assignDataBehaviour(new StationSummaryDisplaySource(), "station_summary"))
 		.lang("Train Station")
-		.item(TrackTargetingBlockItem::new)
+		.item(TrackTargetingBlockItem.ofType(EdgePointType.STATION))
 		.transform(customItemModel())
 		.register();
 
@@ -1526,9 +1529,23 @@ public class AllBlocks {
 					.getSerializedName()))
 				.build()))
 		.lang("Train Signal")
-		.item(TrackTargetingBlockItem::new)
+		.item(TrackTargetingBlockItem.ofType(EdgePointType.SIGNAL))
 		.transform(customItemModel())
 		.register();
+
+	public static final BlockEntry<TrackObserverBlock> TRACK_OBSERVER =
+		REGISTRATE.block("track_observer", TrackObserverBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.color(MaterialColor.PODZOL))
+			.properties(p -> p.noOcclusion())
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
+			.transform(pickaxeOnly())
+			.onRegister(assignDataBehaviour(new ObservedTrainNameSource(), "observed_train_name"))
+			.lang("Train Observer")
+			.item(TrackTargetingBlockItem.ofType(EdgePointType.OBSERVER))
+			.transform(customItemModel("_", "block"))
+			.register();
 
 	public static final BlockEntry<StandardBogeyBlock> SMALL_BOGEY =
 		REGISTRATE.block("small_bogey", p -> new StandardBogeyBlock(p, false))

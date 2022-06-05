@@ -22,6 +22,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -33,6 +34,7 @@ import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrac
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserver;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock.SignalType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
@@ -63,6 +65,9 @@ import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.PacketDistributor;
@@ -102,6 +107,9 @@ public class Train {
 	public Map<UUID, UUID> occupiedSignalBlocks;
 	public Set<UUID> reservedSignalBlocks;
 
+	public Set<UUID> occupiedObservers;
+	public Map<UUID, Pair<Integer, Boolean>> cachedObserverFiltering;
+
 	List<TrainMigration> migratingPoints;
 	public int migrationCooldown;
 	public boolean derailed;
@@ -135,6 +143,8 @@ public class Train {
 		manualSteer = SteerDirection.NONE;
 		occupiedSignalBlocks = new HashMap<>();
 		reservedSignalBlocks = new HashSet<>();
+		occupiedObservers = new HashSet<>();
+		cachedObserverFiltering = new HashMap<>();
 		tickOffset = Create.RANDOM.nextInt(100);
 	}
 
@@ -154,6 +164,73 @@ public class Train {
 
 		addToSignalGroups(occupiedSignalBlocks.keySet());
 		addToSignalGroups(reservedSignalBlocks);
+
+		if (occupiedObservers.isEmpty())
+			return;
+
+		tickOccupiedObservers(level);
+	}
+
+	private void tickOccupiedObservers(Level level) {
+		int storageVersion = 0;
+		for (Carriage carriage : carriages)
+			storageVersion += carriage.storage.getVersion();
+
+		for (UUID uuid : occupiedObservers) {
+			TrackObserver observer = graph.getPoint(EdgePointType.OBSERVER, uuid);
+			if (observer == null)
+				continue;
+
+			ItemStack filter = observer.getFilter();
+			if (filter.isEmpty()) {
+				observer.keepAlive(this);
+				continue;
+			}
+
+			Pair<Integer, Boolean> cachedMatch = cachedObserverFiltering.computeIfAbsent(uuid, $ -> Pair.of(-1, false));
+			boolean shouldActivate = cachedMatch.getSecond();
+
+			if (cachedMatch.getFirst() == storageVersion) {
+				if (shouldActivate)
+					observer.keepAlive(this);
+				continue;
+			}
+
+			shouldActivate = false;
+			for (Carriage carriage : carriages) {
+				if (shouldActivate)
+					break;
+
+				IItemHandlerModifiable inv = carriage.storage.getItems();
+				if (inv != null) {
+					for (int slot = 0; slot < inv.getSlots(); slot++) {
+						if (shouldActivate)
+							break;
+						ItemStack extractItem = inv.extractItem(slot, 1, true);
+						if (extractItem.isEmpty())
+							continue;
+						shouldActivate |= FilterItem.test(level, extractItem, filter);
+					}
+				}
+
+				IFluidHandler tank = carriage.storage.getFluids();
+				if (tank != null) {
+					for (int slot = 0; slot < tank.getTanks(); slot++) {
+						if (shouldActivate)
+							break;
+						FluidStack drain = tank.drain(1, FluidAction.SIMULATE);
+						if (drain.isEmpty())
+							continue;
+						shouldActivate |= FilterItem.test(level, drain, filter);
+					}
+				}
+			}
+
+			cachedObserverFiltering.put(uuid, Pair.of(storageVersion, shouldActivate));
+
+			if (shouldActivate)
+				observer.keepAlive(this);
+		}
 	}
 
 	private void addToSignalGroups(Collection<UUID> groups) {
@@ -338,10 +415,15 @@ public class Train {
 				return true;
 			}
 
+			if (couple.getFirst() instanceof TrackObserver observer) {
+				occupiedObservers.add(observer.getId());
+				return false;
+			}
+
 			if (!(couple.getFirst() instanceof SignalBoundary signal))
 				return false;
 			if (navigation.waitingForSignal != null && navigation.waitingForSignal.getFirst()
-				.equals(signal.id)) {
+				.equals(signal.getId())) {
 				speed = 0;
 				navigation.distanceToSignal = 0;
 				return true;
@@ -383,6 +465,11 @@ public class Train {
 
 	public IEdgePointListener backSignalListener() {
 		return (distance, couple) -> {
+			if (couple.getFirst() instanceof TrackObserver observer) {
+				occupiedObservers.remove(observer.getId());
+				cachedObserverFiltering.remove(observer.getId());
+				return false;
+			}
 			if (!(couple.getFirst() instanceof SignalBoundary signal))
 				return false;
 			UUID groupId = signal.getGroup(couple.getSecond()
@@ -821,6 +908,8 @@ public class Train {
 
 		occupiedSignalBlocks.clear();
 		reservedSignalBlocks.clear();
+		occupiedObservers.clear();
+		cachedObserverFiltering.clear();
 
 		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position);
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.signalEdgeGroups;
@@ -863,6 +952,10 @@ public class Train {
 
 		forEachTravellingPointBackwards((tp, d) -> {
 			signalScout.travel(graph, d, signalScout.follow(tp), (distance, couple) -> {
+				if (couple.getFirst() instanceof TrackObserver observer) {
+					occupiedObservers.add(observer.getId());
+					return false;
+				}
 				if (!(couple.getFirst() instanceof SignalBoundary signal))
 					return false;
 				couple.getSecond()
@@ -991,6 +1084,11 @@ public class Train {
 			compoundTag.putUUID("Id", uid);
 			return compoundTag;
 		}));
+		tag.put("OccupiedObservers", NBTHelper.writeCompoundList(occupiedObservers, uid -> {
+			CompoundTag compoundTag = new CompoundTag();
+			compoundTag.putUUID("Id", uid);
+			return compoundTag;
+		}));
 		tag.put("MigratingPoints", NBTHelper.writeCompoundList(migratingPoints, tm -> tm.write(dimensions)));
 
 		tag.put("Runtime", runtime.write());
@@ -1031,6 +1129,8 @@ public class Train {
 			.put(c.getUUID("Id"), c.contains("Boundary") ? c.getUUID("Boundary") : null));
 		NBTHelper.iterateCompoundList(tag.getList("ReservedSignalBlocks", Tag.TAG_COMPOUND),
 			c -> train.reservedSignalBlocks.add(c.getUUID("Id")));
+		NBTHelper.iterateCompoundList(tag.getList("OccupiedObservers", Tag.TAG_COMPOUND),
+			c -> train.occupiedObservers.add(c.getUUID("Id")));
 		NBTHelper.iterateCompoundList(tag.getList("MigratingPoints", Tag.TAG_COMPOUND),
 			c -> train.migratingPoints.add(TrainMigration.read(c, dimensions)));
 

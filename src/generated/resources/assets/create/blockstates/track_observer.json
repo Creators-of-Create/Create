@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "create:block/track_observer/block"
+    },
+    "powered=true": {
+      "model": "create:block/track_observer/block_powered"
+    }
+  }
+}

@@ -305,7 +305,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	}
 
 	public static enum RenderedTrackOverlayType {
-		STATION, SIGNAL, DUAL_SIGNAL;
+		STATION, SIGNAL, DUAL_SIGNAL, OBSERVER;
 	}
 
 	@OnlyIn(Dist.CLIENT)
