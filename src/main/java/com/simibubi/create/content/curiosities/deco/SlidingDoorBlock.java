@@ -34,7 +34,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<SlidingDoorTileEntity> {
+public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<SlidingDoorTileEntity> {
 
 	protected static final VoxelShape SE_AABB = Block.box(0.0D, 0.0D, -13.0D, 3.0D, 16.0D, 3.0D);
 	protected static final VoxelShape ES_AABB = Block.box(-13.0D, 0.0D, 0.0D, 3.0D, 16.0D, 3.0D);
@@ -50,7 +50,7 @@ public class TrainDoorBlock extends DoorBlock implements IWrenchable, ITE<Slidin
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 
-	public TrainDoorBlock(Properties p_52737_) {
+	public SlidingDoorBlock(Properties p_52737_) {
 		super(p_52737_);
 	}
 

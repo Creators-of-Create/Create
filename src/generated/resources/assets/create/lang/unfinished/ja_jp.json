@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 256",
+	"_": "Missing Localizations: 258",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "液体バルブ",
 	"block.create.flywheel": "弾み車",
 	"block.create.framed_glass": "ガラス窓",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "ガラス板窓",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "ガントリーキャリッジ",
 	"block.create.gantry_shaft": "ガントリーシャフト",
 	"block.create.gearbox": "ギアボックス",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "亜鉛の原石",
 	"item.create.red_sand_paper": "赤い紙やすり",
 	"item.create.refined_radiance": "高貴な光輝",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "ローズクォーツ",
 	"item.create.sand_paper": "紙やすり",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "概略図",
 	"item.create.schematic_and_quill": "概略図と羽根ペン",
 	"item.create.shadow_steel": "シャドウスチール",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "超粘着剤",
 	"item.create.sweet_roll": "スイートロール",
 	"item.create.tree_fertilizer": "樹木の肥料",

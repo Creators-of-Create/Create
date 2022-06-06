@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1124",
+	"_": "Missing Localizations: 1126",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "Válvula",
 	"block.create.flywheel": "Volante de inércia",
 	"block.create.framed_glass": "Vidro emoldurado",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "Vidraça emoldurada",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "Carruagem de Pórtico",
 	"block.create.gantry_shaft": "Eixo de Pórtico",
 	"block.create.gearbox": "Caixa de Transmissão",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "Zinco bruto",
 	"item.create.red_sand_paper": "Lixa Vermelha",
 	"item.create.refined_radiance": "Luz Refinada",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Quartzo Rosa",
 	"item.create.sand_paper": "Lixa",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Esquema",
 	"item.create.schematic_and_quill": "Esquema e pena",
 	"item.create.shadow_steel": "Aço sombrio",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "Super Cola",
 	"item.create.sweet_roll": "Rolinho Doce",
 	"item.create.tree_fertilizer": "Fertilizante de Árvore",

@@ -314,6 +314,16 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShapeless(b -> b.requires(ItemTags.WOODEN_TRAPDOORS)
 				.requires(I.brassSheet())),
 
+		FRAMED_GLASS_DOOR = create(AllBlocks.FRAMED_GLASS_DOOR).returns(1)
+			.unlockedBy(AllPaletteBlocks.FRAMED_GLASS::get)
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(AllPaletteBlocks.FRAMED_GLASS.get())),
+
+		FRAMED_GLASS_TRAPDOOR = create(AllBlocks.FRAMED_GLASS_TRAPDOOR).returns(1)
+			.unlockedBy(AllPaletteBlocks.FRAMED_GLASS::get)
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_TRAPDOORS)
+				.requires(AllPaletteBlocks.FRAMED_GLASS.get())),
+
 		ANALOG_LEVER = create(AllBlocks.ANALOG_LEVER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('S', I.andesiteCasing())
 				.define('P', Tags.Items.RODS_WOODEN)
@@ -548,9 +558,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(Ingredient.of(Items.STONE_PRESSURE_PLATE, Items.POLISHED_BLACKSTONE_PRESSURE_PLATE,
 					Items.HEAVY_WEIGHTED_PRESSURE_PLATE, Items.LIGHT_WEIGHTED_PRESSURE_PLATE))),
 
-		TRAIN_SCHEDULE = create(AllItems.SCHEDULE).unlockedByTag(I::reinforcedSheet)
+		TRAIN_SCHEDULE = create(AllItems.SCHEDULE).unlockedByTag(I::sturdySheet)
 			.returns(4)
-			.viaShapeless(b -> b.requires(I.reinforcedSheet())
+			.viaShapeless(b -> b.requires(I.sturdySheet())
 				.requires(Items.PAPER)),
 
 		TRAIN_STATION = create(AllBlocks.TRACK_STATION).unlockedBy(I::railwayCasing)

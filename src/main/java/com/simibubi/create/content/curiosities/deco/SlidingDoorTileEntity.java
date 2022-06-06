@@ -60,7 +60,7 @@ public class SlidingDoorTileEntity extends SmartTileEntity {
 	}
 
 	protected boolean isVisible(BlockState state) {
-		return state.getOptionalValue(TrainDoorBlock.VISIBLE)
+		return state.getOptionalValue(SlidingDoorBlock.VISIBLE)
 			.orElse(true);
 	}
 
@@ -69,7 +69,7 @@ public class SlidingDoorTileEntity extends SmartTileEntity {
 	}
 
 	protected void showBlockModel() {
-		level.setBlock(worldPosition, getBlockState().setValue(TrainDoorBlock.VISIBLE, true), 3);
+		level.setBlock(worldPosition, getBlockState().setValue(SlidingDoorBlock.VISIBLE, true), 3);
 		level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .5f, 1);
 	}
 

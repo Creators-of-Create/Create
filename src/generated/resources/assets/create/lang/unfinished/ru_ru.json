@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 634",
+	"_": "Missing Localizations: 636",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "Жидкостный клапан",
 	"block.create.flywheel": "Маховик",
 	"block.create.framed_glass": "Обрамлённое стекло",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "Обрамлённая стеклянная панель",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "Шасси портального крана",
 	"block.create.gantry_shaft": "Вал портального крана",
 	"block.create.gearbox": "Коробка передач",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Красная наждачная бумага",
 	"item.create.refined_radiance": "Изысканное сияние",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Розовый кварц",
 	"item.create.sand_paper": "Наждачная бумага",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Схематика",
 	"item.create.schematic_and_quill": "Схематика и перо",
 	"item.create.shadow_steel": "Призрачная сталь",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "Супер-клей",
 	"item.create.sweet_roll": "Сладкий рулет",
 	"item.create.tree_fertilizer": "Удобрение для деревьев",

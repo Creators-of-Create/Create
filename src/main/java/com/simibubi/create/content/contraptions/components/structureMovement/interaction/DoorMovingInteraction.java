@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.interaction;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +22,7 @@ public class DoorMovingInteraction extends SimpleBlockMovingInteraction {
 		if (!(currentState.getBlock() instanceof DoorBlock))
 			return currentState;
 		
-		boolean trainDoor = currentState.getBlock() instanceof TrainDoorBlock;
+		boolean trainDoor = currentState.getBlock() instanceof SlidingDoorBlock;
 		SoundEvent sound = currentState.getValue(DoorBlock.OPEN) ? trainDoor ? null : SoundEvents.WOODEN_DOOR_CLOSE
 			: trainDoor ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.WOODEN_DOOR_OPEN;
 
@@ -39,13 +39,13 @@ public class DoorMovingInteraction extends SimpleBlockMovingInteraction {
 		if (player != null) {
 
 			if (trainDoor) {
-				DoorHingeSide hinge = currentState.getValue(TrainDoorBlock.HINGE);
-				Direction facing = currentState.getValue(TrainDoorBlock.FACING);
+				DoorHingeSide hinge = currentState.getValue(SlidingDoorBlock.HINGE);
+				Direction facing = currentState.getValue(SlidingDoorBlock.FACING);
 				BlockPos doublePos =
 					pos.relative(hinge == DoorHingeSide.LEFT ? facing.getClockWise() : facing.getCounterClockWise());
 				StructureBlockInfo doubleInfo = contraption.getBlocks()
 					.get(doublePos);
-				if (doubleInfo != null && TrainDoorBlock.isDoubleDoor(currentState, hinge, facing, doubleInfo.state))
+				if (doubleInfo != null && SlidingDoorBlock.isDoubleDoor(currentState, hinge, facing, doubleInfo.state))
 					handlePlayerInteraction(null, InteractionHand.MAIN_HAND, doublePos, contraption.entity);
 			}
 

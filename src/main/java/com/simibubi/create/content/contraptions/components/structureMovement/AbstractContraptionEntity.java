@@ -29,7 +29,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
-import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -692,7 +692,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		StructureBlockInfo info = contraption.blocks.get(localPos);
 		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
-		if (info.state != newState && !(newState.getBlock() instanceof TrainDoorBlock))
+		if (info.state != newState && !(newState.getBlock() instanceof SlidingDoorBlock))
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ContraptionRenderDispatcher.invalidate(contraption));
 		contraption.invalidateColliders();
 	}

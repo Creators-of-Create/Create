@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 257",
+	"_": "Missing Localizations: 259",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "Supapă De Fluid",
 	"block.create.flywheel": "Volant",
 	"block.create.framed_glass": "Sticlă Înrămată",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "Geam Înrămat",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "Cărucior Portal",
 	"block.create.gantry_shaft": "Rotor Portal",
 	"block.create.gearbox": "Cutie De Viteze",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "Zinc Brut",
 	"item.create.red_sand_paper": "Șmirghel Roșu",
 	"item.create.refined_radiance": "Radianță Rafinată",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Cuarț Roz",
 	"item.create.sand_paper": "Șmirghel",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Schemă",
 	"item.create.schematic_and_quill": "Schemă Și Condei",
 	"item.create.shadow_steel": "Oțel De Umbră",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "Super-Lipici",
 	"item.create.sweet_roll": "Rolă Dulce",
 	"item.create.tree_fertilizer": "Fertilizator De Copaci",

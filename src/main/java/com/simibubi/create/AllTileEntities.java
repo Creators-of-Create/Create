@@ -801,7 +801,7 @@ public class AllTileEntities {
 	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = Create.registrate()
 		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
 		.renderer(() -> SlidingDoorRenderer::new)
-		.validBlocks(AllBlocks.TRAIN_DOOR)
+		.validBlocks(AllBlocks.TRAIN_DOOR, AllBlocks.FRAMED_GLASS_DOOR)
 		.register();
 
 	public static final BlockEntityEntry<FlapDisplayTileEntity> FLAP_DISPLAY = Create.registrate()

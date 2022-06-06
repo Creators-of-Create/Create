@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create:item/reinforced_sheet"
+    "layer0": "create:item/glass_door"
   }
 }

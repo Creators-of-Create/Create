@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.AllInteractionBehaviours.addInteractionBehaviour;
+import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
 import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
@@ -19,11 +21,15 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
@@ -40,17 +46,21 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -78,6 +88,47 @@ public class BuilderTransformers {
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
 			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
+	}
+
+	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
+		return b -> b.blockstate((c, p) -> {
+			ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
+			ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
+			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
+			if (orientable)
+				p.trapdoorBlock(c.get(), bottom, top, open, orientable);
+			else
+				BlockStateGen.uvLockedTrapdoorBlock(c.get(), bottom, top, open)
+					.accept(c, p);
+		})
+			.transform(pickaxeOnly())
+			.tag(BlockTags.TRAPDOORS)
+			.onRegister(addInteractionBehaviour(new TrapdoorMovingInteraction()))
+			.item()
+			.tag(ItemTags.TRAPDOORS)
+			.build();
+	}
+
+	public static <B extends SlidingDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> slidingDoor(String type) {
+		return b -> b.initialProperties(Material.NETHER_WOOD) // for villager AI..
+			.properties(p -> p.requiresCorrectToolForDrops()
+				.strength(3.0F, 6.0F))
+			.blockstate((c, p) -> {
+				ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
+				ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
+				p.doorBlock(c.get(), bottom, bottom, top, top);
+			})
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(pickaxeOnly())
+			.onRegister(addInteractionBehaviour(new DoorMovingInteraction()))
+			.onRegister(addMovementBehaviour(new SlidingDoorMovementBehaviour()))
+			.tag(BlockTags.DOORS)
+			.tag(BlockTags.WOODEN_DOORS) // for villager AI
+			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
+			.item()
+			.tag(ItemTags.DOORS)
+			.model((c, p) -> p.blockSprite(c, p.modLoc("item/" + type + "_door")))
+			.build();
 	}
 
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(

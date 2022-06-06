@@ -66,8 +66,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsMovementBehaviour;
@@ -135,10 +133,10 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
+import com.simibubi.create.content.curiosities.deco.TrapdoorCTBehaviour;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
-import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
-import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
@@ -234,7 +232,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -1573,43 +1570,38 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<TrainDoorBlock> TRAIN_DOOR = REGISTRATE.block("train_door", TrainDoorBlock::new)
-		.initialProperties(Material.NETHER_WOOD) // for villager AI..
+	public static final BlockEntry<SlidingDoorBlock> TRAIN_DOOR = REGISTRATE.block("train_door", SlidingDoorBlock::new)
+		.transform(BuilderTransformers.slidingDoor("train"))
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
 			.sound(SoundType.NETHERITE_BLOCK)
-			.requiresCorrectToolForDrops()
-			.strength(3.0F, 6.0F))
-		.blockstate((c, p) -> {
-			ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
-			ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
-			p.doorBlock(c.get(), bottom, bottom, top, top);
-		})
-		.addLayer(() -> RenderType::cutoutMipped)
-		.transform(pickaxeOnly())
-		.onRegister(addInteractionBehaviour(new DoorMovingInteraction()))
-		.onRegister(addMovementBehaviour(new SlidingDoorMovementBehaviour()))
-		.tag(BlockTags.DOORS)
-		.tag(BlockTags.WOODEN_DOORS) // for villager AI
-		.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
-		.item()
-		.tag(ItemTags.DOORS)
-		.model((c, p) -> p.blockSprite(c, p.modLoc("item/train_door")))
-		.build()
+			.noOcclusion())
 		.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
 		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN))
-			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
-			.blockstate((c, p) -> p.trapdoorBlock(c.get(), AssetLookup.partialBaseModel(c, p, "bottom"),
-				AssetLookup.partialBaseModel(c, p, "top"), AssetLookup.partialBaseModel(c, p, "open"), true))
-			.transform(pickaxeOnly())
-			.tag(BlockTags.TRAPDOORS)
-			.onRegister(addInteractionBehaviour(new TrapdoorMovingInteraction()))
-			.item()
-			.tag(ItemTags.TRAPDOORS)
-			.build()
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(BuilderTransformers.trapdoor(true))
+			.register();
+
+	public static final BlockEntry<SlidingDoorBlock> FRAMED_GLASS_DOOR =
+		REGISTRATE.block("framed_glass_door", SlidingDoorBlock::new)
+			.transform(BuilderTransformers.slidingDoor("glass"))
+			.properties(p -> p.color(MaterialColor.NONE)
+				.sound(SoundType.GLASS)
+				.noOcclusion())
+			.register();
+
+	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
+		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.transform(BuilderTransformers.trapdoor(false))
+			.properties(p -> p.color(MaterialColor.NONE)
+				.sound(SoundType.GLASS)
+				.noOcclusion())
+			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
+			.addLayer(() -> RenderType::cutoutMipped)
 			.register();
 
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 256",
+	"_": "Missing Localizations: 258",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "액체 밸브",
 	"block.create.flywheel": "플라이휠",
 	"block.create.framed_glass": "큰 유리",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "큰 유리판",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "갠트리 운반대",
 	"block.create.gantry_shaft": "갠트리 축",
 	"block.create.gearbox": "기어박스",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "아연 원석",
 	"item.create.red_sand_paper": "붉은 사포",
 	"item.create.refined_radiance": "정제된 광채",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "장밋빛 석영",
 	"item.create.sand_paper": "사포",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "청사진",
 	"item.create.schematic_and_quill": "청사진과 깃펜",
 	"item.create.shadow_steel": "그림자 강철",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "강력 접착제",
 	"item.create.sweet_roll": "롤빵",
 	"item.create.tree_fertilizer": "나무 비료",

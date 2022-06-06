@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 254",
+	"_": "Missing Localizations: 256",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "流体阀门",
 	"block.create.flywheel": "飞轮",
 	"block.create.framed_glass": "边框玻璃",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "边框玻璃板",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "起重机取物器",
 	"block.create.gantry_shaft": "起重机杆",
 	"block.create.gearbox": "十字齿轮箱",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "粗锌",
 	"item.create.red_sand_paper": "红沙砂纸",
 	"item.create.refined_radiance": "光辉石",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "玫瑰石英",
 	"item.create.sand_paper": "砂纸",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "蓝图",
 	"item.create.schematic_and_quill": "蓝图与笔",
 	"item.create.shadow_steel": "暗影钢",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "强力胶",
 	"item.create.sweet_roll": "甜甜卷",
 	"item.create.tree_fertilizer": "树木肥料",

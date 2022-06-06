@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 629",
+	"_": "Missing Localizations: 631",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "Zawór",
 	"block.create.flywheel": "Koło zamachowe",
 	"block.create.framed_glass": "Oprawione okno",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "Oprawiona szyba",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "Przenośnik suwnicowy",
 	"block.create.gantry_shaft": "Suwnica",
 	"block.create.gearbox": "Przekładnia",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Czerwony papier ścierny",
 	"item.create.refined_radiance": "Świetlisty materiał",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Różowy kwarc",
 	"item.create.sand_paper": "Papier ścierny",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Schemat",
 	"item.create.schematic_and_quill": "Schemat z piórem",
 	"item.create.shadow_steel": "Mroczna stal",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "Super Glue",
 	"item.create.sweet_roll": "Słodka bułka",
 	"item.create.tree_fertilizer": "Nawóz do drzew",

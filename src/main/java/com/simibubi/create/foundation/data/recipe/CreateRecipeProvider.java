@@ -116,7 +116,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllTags.forgeItemTag("plates/iron");
 		}
 		
-		static TagKey<Item> reinforcedSheet() {
+		static TagKey<Item> sturdySheet() {
 			return AllTags.forgeItemTag("plates/obsidian");
 		}
 

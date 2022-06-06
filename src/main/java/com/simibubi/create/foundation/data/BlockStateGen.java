@@ -36,9 +36,11 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -345,6 +347,28 @@ public class BlockStateGen {
 		};
 	}
 
+	public static <P extends TrapDoorBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> uvLockedTrapdoorBlock(
+		P block, ModelFile bottom, ModelFile top, ModelFile open) {
+		return (c, p) -> {
+			p.getVariantBuilder(block)
+				.forAllStatesExcept(state -> {
+					int xRot = 0;
+					int yRot = ((int) state.getValue(TrapDoorBlock.FACING)
+						.toYRot()) + 180;
+					boolean isOpen = state.getValue(TrapDoorBlock.OPEN);
+					if (!isOpen)
+						yRot = 0;
+					yRot %= 360;
+					return ConfiguredModel.builder()
+						.modelFile(isOpen ? open : state.getValue(TrapDoorBlock.HALF) == Half.TOP ? top : bottom)
+						.rotationX(xRot)
+						.rotationY(yRot)
+						.uvLock(!isOpen)
+						.build();
+				}, TrapDoorBlock.POWERED, TrapDoorBlock.WATERLOGGED);
+		};
+	}
+
 	public static <P extends WhistleExtenderBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> whistleExtender() {
 		return (c, p) -> {
 			BlockModelProvider models = p.models();
@@ -485,17 +509,17 @@ public class BlockStateGen {
 		Axis axis, String s, boolean up, boolean down, boolean left, boolean right) {
 		Direction positiveAxis = Direction.get(AxisDirection.POSITIVE, axis);
 		Map<Direction, BooleanProperty> propertyMap = FluidPipeBlock.PROPERTY_BY_DIRECTION;
-		
+
 		Direction upD = Pointing.UP.getCombinedDirection(positiveAxis);
 		Direction leftD = Pointing.LEFT.getCombinedDirection(positiveAxis);
 		Direction rightD = Pointing.RIGHT.getCombinedDirection(positiveAxis);
 		Direction downD = Pointing.DOWN.getCombinedDirection(positiveAxis);
-		
+
 		if (axis == Axis.Y || axis == Axis.X) {
 			leftD = leftD.getOpposite();
 			rightD = rightD.getOpposite();
 		}
-		
+
 		builder.part()
 			.modelFile(coreModels.get(Pair.of(s, axis)))
 			.addModel()

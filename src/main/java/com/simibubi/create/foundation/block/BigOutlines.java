@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.block;
 
-import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -49,7 +49,7 @@ public class BigOutlines {
 
 					// Could be a dedicated interface for big blocks
 					if (!(blockState.getBlock() instanceof TrackBlock)
-						&& !(blockState.getBlock() instanceof TrainDoorBlock))
+						&& !(blockState.getBlock() instanceof SlidingDoorBlock))
 						continue;
 
 					BlockHitResult hit = blockState.getInteractionShape(mc.level, p)

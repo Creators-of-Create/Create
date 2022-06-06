@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 590",
+	"_": "Missing Localizations: 592",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "Válvula de Fluidos",
 	"block.create.flywheel": "Volante de Inercia",
 	"block.create.framed_glass": "Vidrio Enmarcado",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "Panel de Vidrio Enmarcado",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "Carruaje de Grúa",
 	"block.create.gantry_shaft": "Eje de Grúa",
 	"block.create.gearbox": "Caja de Engranajes",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Papel de Arena Roja",
 	"item.create.refined_radiance": "Radiancia Refinada",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Cuarzo Rosa",
 	"item.create.sand_paper": "Papel de Arena",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Esquema",
 	"item.create.schematic_and_quill": "Esquema con Pluma",
 	"item.create.shadow_steel": "Acero Sombrío",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "La Gotita",
 	"item.create.sweet_roll": "Rollito Dulce",
 	"item.create.tree_fertilizer": "Fertilizante Arbóreo",

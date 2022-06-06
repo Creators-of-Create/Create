@@ -29,7 +29,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
-import com.simibubi.create.content.curiosities.deco.TrainDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
@@ -389,7 +389,7 @@ public class BlockMovementChecks {
 				.getAxis();
 		if (AllBlocks.STICKER.has(state) && !state.getValue(StickerBlock.EXTENDED))
 			return facing == state.getValue(StickerBlock.FACING);
-		if (state.getBlock() instanceof TrainDoorBlock)
+		if (state.getBlock() instanceof SlidingDoorBlock)
 			return false;
 		return isBrittle(state);
 	}

@@ -13,7 +13,7 @@
 			"faces": {
 				"north": {"uv": [0, 12, 16, 15], "rotation": 270, "texture": "#0"},
 				"east": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"south": {"uv": [0, 4, 16, 7], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [0, 12, 16, 15], "rotation": 270, "texture": "#0"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#2"},
 				"down": {"uv": [0, 8, 16, 11], "rotation": 90, "texture": "#0"}
 			}

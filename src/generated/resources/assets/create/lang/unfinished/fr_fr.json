@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1828",
+	"_": "Missing Localizations: 1830",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -219,7 +219,9 @@
 	"block.create.fluid_valve": "UNLOCALIZED: Fluid Valve",
 	"block.create.flywheel": "Volant d'inertie",
 	"block.create.framed_glass": "Grande fenêtre en verre",
+	"block.create.framed_glass_door": "UNLOCALIZED: Framed Glass Door",
 	"block.create.framed_glass_pane": "Grande vitre encadrée",
+	"block.create.framed_glass_trapdoor": "UNLOCALIZED: Framed Glass Trapdoor",
 	"block.create.gantry_carriage": "UNLOCALIZED: Gantry Carriage",
 	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "Boîte à roue dentée",
@@ -638,13 +640,13 @@
 	"item.create.raw_zinc": "UNLOCALIZED: Raw Zinc",
 	"item.create.red_sand_paper": "Papier de verre rouge",
 	"item.create.refined_radiance": "Éclat raffiné",
-	"item.create.reinforced_sheet": "UNLOCALIZED: Reinforced Sheet",
 	"item.create.rose_quartz": "Quartz rose",
 	"item.create.sand_paper": "Papier de verre",
 	"item.create.schedule": "UNLOCALIZED: Train Schedule",
 	"item.create.schematic": "Schéma",
 	"item.create.schematic_and_quill": "Schéma et plume",
 	"item.create.shadow_steel": "Acier sombre",
+	"item.create.sturdy_sheet": "UNLOCALIZED: Sturdy Sheet",
 	"item.create.super_glue": "Colle extra-forte",
 	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "Engrais pour arbres",
