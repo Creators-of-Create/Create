@@ -37,9 +37,9 @@ public class DisplayBoardTarget extends DisplayTarget {
 				reserve(i + line, controller, context);
 			if (i > 0 && isReserved(i + line, controller, context))
 				break;
-			
+
 			FlapDisplayLayout layout = lines.get(i + line);
-			
+
 			if (i >= text.size()) {
 				if (source instanceof SingleLineDisplaySource)
 					break;
@@ -47,7 +47,7 @@ public class DisplayBoardTarget extends DisplayTarget {
 				continue;
 			}
 
-			source.loadFlapDisplayLayout(context, controller, layout);
+			source.loadFlapDisplayLayout(context, controller, layout, i);
 
 			for (int sectionIndex = 0; sectionIndex < layout.getSections()
 				.size(); sectionIndex++) {
@@ -96,7 +96,7 @@ public class DisplayBoardTarget extends DisplayTarget {
 		FlapDisplayTileEntity controller = fdte.getController();
 		if (controller == null)
 			return baseShape;
-		
+
 		Vec3i normal = controller.getDirection()
 			.getClockWise()
 			.getNormal();

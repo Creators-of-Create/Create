@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 258",
+	"_": "Missing Localizations: 272",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -908,6 +908,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "度",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.buckets": "UNLOCALIZED: B",
 	"create.generic.clockwise": "時計回り",
 	"create.generic.counter_clockwise": "反時計回り",
 	"create.generic.in_quotes": "UNLOCALIZED: \"%1$s\"",
@@ -1515,6 +1516,8 @@
 	"create.display_source.combine_item_names": "UNLOCALIZED: Combine Item Names",
 	"create.display_source.count_items": "UNLOCALIZED: Amount of matching Items",
 	"create.display_source.list_items": "UNLOCALIZED: List matching Items",
+	"create.display_source.fluid_amount": "UNLOCALIZED: Amount of matching Fluids",
+	"create.display_source.list_fluids": "UNLOCALIZED: List matching Fluids",
 	"create.display_source.nixie_tube": "UNLOCALIZED: Copy Nixie Tubes",
 	"create.display_source.fill_level": "UNLOCALIZED: Container Fill Level",
 	"create.display_source.fill_level.display": "UNLOCALIZED: Display Format",
@@ -1549,6 +1552,16 @@
 	"create.display_source.station_summary.minutes": "UNLOCALIZED:  min",
 	"create.display_source.station_summary.seconds": "UNLOCALIZED: %1$ss",
 	"create.display_source.observed_train_name": "UNLOCALIZED: Detected Train Name",
+	"create.display_source.max_enchant_level": "UNLOCALIZED: Max Enchanting Cost",
+	"create.display_source.boiler_status": "UNLOCALIZED: Boiler Status",
+	"create.display_source.entity_name": "UNLOCALIZED: Entity Name",
+	"create.display_source.kinetic_speed": "UNLOCALIZED: Rotation Speed (RPM)",
+	"create.display_source.kinetic_speed.absolute": "UNLOCALIZED: Ignore Direction",
+	"create.display_source.kinetic_speed.directional": "UNLOCALIZED: Include Direction",
+	"create.display_source.kinetic_stress.current": "UNLOCALIZED: Stress Impact (Amount)",
+	"create.display_source.kinetic_stress.max": "UNLOCALIZED: Stress Capacity (Max)",
+	"create.display_source.kinetic_stress.percent": "UNLOCALIZED: Stress Impact (Percent)",
+	"create.display_source.kinetic_stress.remaining": "UNLOCALIZED: Stress Capacity (Remaining)",
 
 	"create.display_target.line": "UNLOCALIZED: Line %1$s",
 	"create.display_target.page": "UNLOCALIZED: Page %1$s",
@@ -1558,8 +1571,9 @@
 	"create.flap_display.cycles.numeric": "UNLOCALIZED:  ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": "UNLOCALIZED:    ; min;now;15s;30s;45s",
 	"create.flap_display.cycles.shortened_numbers": "UNLOCALIZED:  ;K;M",
+	"create.flap_display.cycles.fluid_units": "UNLOCALIZED: mB;B ",
 	"create.flap_display.cycles.instant": "UNLOCALIZED:  ; ",
-	"create.flap_display.cycles.pixel": "UNLOCALIZED: █;▒",
+	"create.flap_display.cycles.pixel": "UNLOCALIZED: █;▓;▒",
 
 	"create.super_glue.too_far": "UNLOCALIZED: Selected area is too big",
 	"create.super_glue.cannot_reach": "UNLOCALIZED: Selected blocks must be connected",

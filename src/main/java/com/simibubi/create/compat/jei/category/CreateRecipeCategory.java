@@ -168,7 +168,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			}
 
 			int amount = amounts.get(index != -1 ? 0 : slotIndex);
-			Component text = (Lang.translate("generic.unit.millibuckets", amount)).withStyle(ChatFormatting.GOLD);
+			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translate("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {

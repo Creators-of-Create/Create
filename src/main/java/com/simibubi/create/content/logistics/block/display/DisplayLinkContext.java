@@ -2,29 +2,29 @@ package com.simibubi.create.content.logistics.block.display;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class DisplayLinkContext {
 
-	private LevelAccessor level;
+	private Level level;
 	private DisplayLinkTileEntity te;
-	
+
 	public Object flapDisplayContext;
 
-	public DisplayLinkContext(LevelAccessor level, DisplayLinkTileEntity te) {
+	public DisplayLinkContext(Level level, DisplayLinkTileEntity te) {
 		this.level = level;
 		this.te = te;
 	}
 
-	public LevelAccessor level() {
+	public Level level() {
 		return level;
 	}
-	
+
 	public DisplayLinkTileEntity te() {
 		return te;
 	}
-	
+
 	public BlockEntity getSourceTE() {
 		return level.getBlockEntity(getSourcePos());
 	}

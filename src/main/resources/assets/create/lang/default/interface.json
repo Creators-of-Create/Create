@@ -19,7 +19,7 @@
 	"death.attack.create.cuckoo_clock_explosion.player": "%1$s was blown up by tampered cuckoo clock",
 	"death.attack.create.run_over": "%1$s was run over by %2$s",
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
-	
+
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",
 
 	"create.menu.return": "Return to Menu",
@@ -95,7 +95,8 @@
 	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "\u00B0",
-	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.millibuckets": "mB",
+	"create.generic.unit.buckets": "B",
 	"create.generic.clockwise": "Clockwise",
 	"create.generic.counter_clockwise": "Counter-Clockwise",
 	"create.generic.in_quotes": "\"%1$s\"",
@@ -721,11 +722,13 @@
 	"create.display_link.information_type": "Type of Information",
 	"create.display_link.display_on": "Write data to:",
 	"create.display_link.display_on_multiline": "Start writing at:",
-	
+
 	"create.display_source.label": "Attached Label",
 	"create.display_source.combine_item_names": "Combine Item Names",
 	"create.display_source.count_items": "Amount of matching Items",
 	"create.display_source.list_items": "List matching Items",
+	"create.display_source.fluid_amount": "Amount of matching Fluids",
+	"create.display_source.list_fluids": "List matching Fluids",
 	"create.display_source.nixie_tube": "Copy Nixie Tubes",
 	"create.display_source.fill_level": "Container Fill Level",
 	"create.display_source.fill_level.display": "Display Format",
@@ -760,7 +763,17 @@
 	"create.display_source.station_summary.minutes": " min",
 	"create.display_source.station_summary.seconds": "%1$ss",
 	"create.display_source.observed_train_name": "Detected Train Name",
-	
+	"create.display_source.max_enchant_level": "Max Enchanting Cost",
+	"create.display_source.boiler_status": "Boiler Status",
+	"create.display_source.entity_name": "Entity Name",
+	"create.display_source.kinetic_speed": "Rotation Speed (RPM)",
+  "create.display_source.kinetic_speed.absolute": "Ignore Direction",
+  "create.display_source.kinetic_speed.directional": "Include Direction",
+  "create.display_source.kinetic_stress.current": "Stress Impact (Amount)",
+	"create.display_source.kinetic_stress.max": "Stress Capacity (Max)",
+	"create.display_source.kinetic_stress.percent": "Stress Impact (Percent)",
+	"create.display_source.kinetic_stress.remaining": "Stress Capacity (Remaining)",
+
 	"create.display_target.line": "Line %1$s",
 	"create.display_target.page": "Page %1$s",
 	"create.display_target.single_line": "Single Line",
@@ -769,8 +782,9 @@
 	"create.flap_display.cycles.numeric": " ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": "   ; min;now;15s;30s;45s",
 	"create.flap_display.cycles.shortened_numbers": " ;K;M",
+	"create.flap_display.cycles.fluid_units": "mB;B ",
 	"create.flap_display.cycles.instant": " ; ",
-	"create.flap_display.cycles.pixel": "\u2588;\u2592",
+	"create.flap_display.cycles.pixel": "\u2588;\u2593;\u2592",
 
 	"create.super_glue.too_far": "Selected area is too big",
 	"create.super_glue.cannot_reach": "Selected blocks must be connected",
