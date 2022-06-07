@@ -160,7 +160,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 			ms.pushPose();
 			ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
 
-			if (diff.lengthSqr() < 36 * 36) {
+			if (diff.lengthSqr() < 96 * 96) {
 				boolean vert = first ^ facing.getAxis()
 					.isHorizontal();
 				float longSide = yellow ? 1 : 4;

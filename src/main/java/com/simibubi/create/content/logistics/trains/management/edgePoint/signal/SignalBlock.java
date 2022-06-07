@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.signal
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
@@ -13,18 +15,22 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrenchable {
 
 	public static final EnumProperty<SignalType> TYPE = EnumProperty.create("type", SignalType.class);
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public enum SignalType implements StringRepresentable {
 		ENTRY_SIGNAL, CROSS_SIGNAL;
@@ -37,7 +43,8 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 
 	public SignalBlock(Properties p_53182_) {
 		super(p_53182_);
-		registerDefaultState(defaultBlockState().setValue(TYPE, SignalType.ENTRY_SIGNAL));
+		registerDefaultState(defaultBlockState().setValue(TYPE, SignalType.ENTRY_SIGNAL)
+			.setValue(POWERED, false));
 	}
 
 	@Override
@@ -47,7 +54,41 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
-		super.createBlockStateDefinition(pBuilder.add(TYPE));
+		super.createBlockStateDefinition(pBuilder.add(TYPE, POWERED));
+	}
+
+	@Override
+	public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		return this.defaultBlockState()
+			.setValue(POWERED, Boolean.valueOf(pContext.getLevel()
+				.hasNeighborSignal(pContext.getClickedPos())));
+	}
+
+	@Override
+	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
+		boolean pIsMoving) {
+		if (pLevel.isClientSide)
+			return;
+		boolean powered = pState.getValue(POWERED);
+		if (powered == pLevel.hasNeighborSignal(pPos))
+			return;
+		if (powered) {
+			pLevel.scheduleTick(pPos, this, 4);
+		} else {
+			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
+		}
+	}
+
+	@Override
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
+		if (pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
+			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
 	}
 
 	@Override
@@ -76,23 +117,13 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
-		return side != null;
-	}
-
-	@Override
-	public boolean isSignalSource(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState pState) {
 		return true;
 	}
 
 	@Override
-	public void tick(BlockState blockState, ServerLevel world, BlockPos pos, Random random) {
-		getTileEntityOptional(world, pos).ifPresent(SignalTileEntity::updatePowerAfterDelay);
-	}
-
-	@Override
-	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		return getTileEntityOptional(blockAccess, pos).filter(SignalTileEntity::isPowered)
+	public int getAnalogOutputSignal(BlockState pState, Level blockAccess, BlockPos pPos) {
+		return getTileEntityOptional(blockAccess, pPos).filter(SignalTileEntity::isPowered)
 			.map($ -> 15)
 			.orElse(0);
 	}

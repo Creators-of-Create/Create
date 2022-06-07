@@ -56,7 +56,7 @@ public class Navigation {
 
 	private TravellingPoint signalScout;
 	public Pair<UUID, Boolean> waitingForSignal;
-	private Map<UUID, SignalBoundary> waitingForChainedGroups;
+	private Map<UUID, Pair<SignalBoundary, Boolean>> waitingForChainedGroups;
 	public double distanceToSignal;
 	public int ticksWaitingForSignal;
 
@@ -158,13 +158,14 @@ public class Navigation {
 
 						boolean primary = entering.equals(signal.groups.getFirst());
 						boolean crossSignal = signal.types.get(primary) == SignalType.CROSS_SIGNAL;
-						boolean occupied = signalEdgeGroup.isOccupiedUnless(train);
+						boolean occupied =
+							signal.isForcedRed(nodes.getSecond()) || signalEdgeGroup.isOccupiedUnless(train);
 
 						if (!crossSignalTracked) {
 							if (crossSignal) { // Now entering cross signal path
 								trackingCrossSignal.setValue(Pair.of(boundary.id, primary));
 								crossSignalDistanceTracker.setValue(distance);
-								waitingForChainedGroups.put(entering, signal);
+								waitingForChainedGroups.put(entering, Pair.of(signal, primary));
 							}
 							if (occupied) { // Section is occupied
 								waitingForSignal = Pair.of(boundary.id, primary);
@@ -179,7 +180,7 @@ public class Navigation {
 						}
 
 						if (crossSignalTracked) {
-							waitingForChainedGroups.put(entering, signal); // Add group to chain
+							waitingForChainedGroups.put(entering, Pair.of(signal, primary)); // Add group to chain
 							if (occupied) { // Section is occupied, but wait at the cross signal that started the chain
 								waitingForSignal = trackingCrossSignal.getValue();
 								distanceToSignal = crossSignalDistanceTracker.doubleValue();
@@ -272,7 +273,7 @@ public class Navigation {
 		waitingForChainedGroups.forEach((groupId, boundary) -> {
 			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
 			if (signalEdgeGroup != null)
-				signalEdgeGroup.reserved = boundary;
+				signalEdgeGroup.reserved = boundary.getFirst();
 		});
 		waitingForChainedGroups.clear();
 	}
@@ -286,11 +287,17 @@ public class Navigation {
 
 		// Cross Signal
 		if (signal.types.get(waitingForSignal.getSecond()) == SignalType.CROSS_SIGNAL) {
-			for (UUID groupId : waitingForChainedGroups.keySet()) {
-				SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
+			for (Entry<UUID, Pair<SignalBoundary, Boolean>> entry : waitingForChainedGroups.entrySet()) {
+				Pair<SignalBoundary, Boolean> boundary = entry.getValue();
+				SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(entry.getKey());
 				if (signalEdgeGroup == null) { // Migration, re-initialize chain
 					waitingForSignal.setFirst(null);
 					return true;
+				}
+				if (boundary.getFirst()
+					.isForcedRed(boundary.getSecond())) {
+					train.reservedSignalBlocks.clear();
+					return false;
 				}
 				if (signalEdgeGroup.isOccupiedUnless(train))
 					return false;
@@ -607,6 +614,10 @@ public class Navigation {
 					if (!point.canNavigateVia(node2))
 						continue Search;
 					if (point instanceof SignalBoundary signal) {
+						if (signal.isForcedRed(node2)) {
+							penalty += Train.Penalties.REDSTONE_RED_SIGNAL;
+							continue;
+						}
 						UUID group = signal.getGroup(node2);
 						if (group == null)
 							continue;

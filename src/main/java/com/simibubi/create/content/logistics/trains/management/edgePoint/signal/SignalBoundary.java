@@ -1,9 +1,8 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.base.Objects;
@@ -29,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class SignalBoundary extends TrackEdgePoint {
 
-	public Couple<Set<BlockPos>> blockEntities;
+	public Couple<Map<BlockPos, Boolean>> blockEntities;
 	public Couple<SignalType> types;
 	public Couple<UUID> groups;
 	public Couple<Boolean> sidesToUpdate;
@@ -38,7 +37,7 @@ public class SignalBoundary extends TrackEdgePoint {
 	private Couple<Map<UUID, Boolean>> chainedSignals;
 
 	public SignalBoundary() {
-		blockEntities = Couple.create(HashSet::new);
+		blockEntities = Couple.create(HashMap::new);
 		chainedSignals = Couple.create(null, null);
 		groups = Couple.create(null, null);
 		sidesToUpdate = Couple.create(true, true);
@@ -83,7 +82,8 @@ public class SignalBoundary extends TrackEdgePoint {
 
 	@Override
 	public void invalidate(LevelAccessor level) {
-		blockEntities.forEach(s -> s.forEach(pos -> invalidateAt(level, pos)));
+		blockEntities.forEach(s -> s.keySet()
+			.forEach(p -> invalidateAt(level, p)));
 		groups.forEach(uuid -> {
 			if (Create.RAILWAYS.signalEdgeGroups.remove(uuid) != null)
 				Create.RAILWAYS.sync.edgeGroupRemoved(uuid);
@@ -97,18 +97,24 @@ public class SignalBoundary extends TrackEdgePoint {
 
 	@Override
 	public void tileAdded(BlockEntity tile, boolean front) {
-		Set<BlockPos> tilesOnSide = blockEntities.get(front);
+		Map<BlockPos, Boolean> tilesOnSide = blockEntities.get(front);
 		if (tilesOnSide.isEmpty())
 			tile.getBlockState()
 				.getOptionalValue(SignalBlock.TYPE)
 				.ifPresent(type -> types.set(front, type));
-		tilesOnSide.add(tile.getBlockPos());
+		tilesOnSide.put(tile.getBlockPos(), tile instanceof SignalTileEntity ste && ste.getReportedPower());
+	}
+
+	public void updateTilePower(SignalTileEntity tile) {
+		for (boolean front : Iterate.trueAndFalse)
+			blockEntities.get(front)
+				.computeIfPresent(tile.getBlockPos(), (p, c) -> tile.getReportedPower());
 	}
 
 	@Override
 	public void tileRemoved(BlockPos tilePos, boolean front) {
 		blockEntities.forEach(s -> s.remove(tilePos));
-		if (blockEntities.both(Set::isEmpty))
+		if (blockEntities.both(Map::isEmpty))
 			removeFromAllGraphs();
 	}
 
@@ -134,8 +140,8 @@ public class SignalBoundary extends TrackEdgePoint {
 
 	public OverlayState getOverlayFor(BlockPos tile) {
 		for (boolean first : Iterate.trueAndFalse) {
-			Set<BlockPos> set = blockEntities.get(first);
-			for (BlockPos blockPos : set) {
+			Map<BlockPos, Boolean> set = blockEntities.get(first);
+			for (BlockPos blockPos : set.keySet()) {
 				if (blockPos.equals(tile))
 					return blockEntities.get(!first)
 						.isEmpty() ? OverlayState.RENDER : OverlayState.DUAL;
@@ -147,13 +153,13 @@ public class SignalBoundary extends TrackEdgePoint {
 
 	public SignalType getTypeFor(BlockPos tile) {
 		return types.get(blockEntities.getFirst()
-			.contains(tile));
+			.containsKey(tile));
 	}
 
 	public SignalState getStateFor(BlockPos tile) {
 		for (boolean first : Iterate.trueAndFalse) {
-			Set<BlockPos> set = blockEntities.get(first);
-			if (set.contains(tile))
+			Map<BlockPos, Boolean> set = blockEntities.get(first);
+			if (set.containsKey(tile))
 				return cachedStates.get(first);
 		}
 		return SignalState.INVALID;
@@ -177,9 +183,13 @@ public class SignalBoundary extends TrackEdgePoint {
 
 	private void tickState(TrackGraph graph) {
 		for (boolean current : Iterate.trueAndFalse) {
-			Set<BlockPos> set = blockEntities.get(current);
+			Map<BlockPos, Boolean> set = blockEntities.get(current);
 			if (set.isEmpty())
 				continue;
+
+			boolean forcedRed = set.values()
+				.stream()
+				.anyMatch(Boolean::booleanValue);
 
 			UUID group = groups.get(current);
 			if (Objects.equal(group, groups.get(!current))) {
@@ -194,9 +204,20 @@ public class SignalBoundary extends TrackEdgePoint {
 				continue;
 			}
 
-			boolean occupiedUnlessBySelf = signalEdgeGroup.isOccupiedUnless(this);
+			boolean occupiedUnlessBySelf = forcedRed || signalEdgeGroup.isOccupiedUnless(this);
 			cachedStates.set(current, occupiedUnlessBySelf ? SignalState.RED : resolveSignalChain(graph, current));
 		}
+	}
+
+	public boolean isForcedRed(TrackNode side) {
+		return isForcedRed(isPrimary(side));
+	}
+
+	public boolean isForcedRed(boolean primary) {
+		return blockEntities.get(primary)
+			.values()
+			.stream()
+			.anyMatch(Boolean::booleanValue);
 	}
 
 	private SignalState resolveSignalChain(TrackGraph graph, boolean side) {
@@ -244,14 +265,14 @@ public class SignalBoundary extends TrackEdgePoint {
 		if (migration)
 			return;
 
-		blockEntities = Couple.create(HashSet::new);
+		blockEntities = Couple.create(HashMap::new);
 		groups = Couple.create(null, null);
 
 		for (int i = 1; i <= 2; i++)
 			if (nbt.contains("Tiles" + i)) {
 				boolean first = i == 1;
 				NBTHelper.iterateCompoundList(nbt.getList("Tiles" + i, Tag.TAG_COMPOUND), c -> blockEntities.get(first)
-					.add(NbtUtils.readBlockPos(c)));
+					.put(NbtUtils.readBlockPos(c), c.getBoolean("Power")));
 			}
 
 		for (int i = 1; i <= 2; i++)
@@ -280,7 +301,12 @@ public class SignalBoundary extends TrackEdgePoint {
 		for (int i = 1; i <= 2; i++)
 			if (!blockEntities.get(i == 1)
 				.isEmpty())
-				nbt.put("Tiles" + i, NBTHelper.writeCompoundList(blockEntities.get(i == 1), NbtUtils::writeBlockPos));
+				nbt.put("Tiles" + i, NBTHelper.writeCompoundList(blockEntities.get(i == 1)
+					.entrySet(), e -> {
+						CompoundTag c = NbtUtils.writeBlockPos(e.getKey());
+						c.putBoolean("Power", e.getValue());
+						return c;
+					}));
 		for (int i = 1; i <= 2; i++)
 			if (groups.get(i == 1) != null)
 				nbt.putUUID("Group" + i, groups.get(i == 1));
@@ -306,7 +332,7 @@ public class SignalBoundary extends TrackEdgePoint {
 
 	public void cycleSignalType(BlockPos pos) {
 		types.set(blockEntities.getFirst()
-			.contains(pos), SignalType.values()[(getTypeFor(pos).ordinal() + 1) % SignalType.values().length]);
+			.containsKey(pos), SignalType.values()[(getTypeFor(pos).ordinal() + 1) % SignalType.values().length]);
 	}
 
 }

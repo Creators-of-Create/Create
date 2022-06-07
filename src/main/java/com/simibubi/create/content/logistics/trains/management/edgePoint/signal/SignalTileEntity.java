@@ -15,11 +15,9 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.ticks.TickPriority;
 
 public class SignalTileEntity extends SmartTileEntity implements ITransformableTE {
 
@@ -48,11 +46,13 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 	private SignalState state;
 	private OverlayState overlay;
 	private int switchToRedAfterTrainEntered;
+	private boolean lastReportedPower;
 
 	public SignalTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.state = SignalState.INVALID;
 		this.overlay = OverlayState.SKIP;
+		this.lastReportedPower = false;
 	}
 
 	@Override
@@ -60,6 +60,7 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 		super.write(tag, clientPacket);
 		NBTHelper.writeEnum(tag, "State", state);
 		NBTHelper.writeEnum(tag, "Overlay", overlay);
+		tag.putBoolean("Power", lastReportedPower);
 	}
 
 	@Override
@@ -67,6 +68,7 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 		super.read(tag, clientPacket);
 		state = NBTHelper.readEnum(tag, "State", SignalState.class);
 		overlay = NBTHelper.readEnum(tag, "Overlay", OverlayState.class);
+		lastReportedPower = tag.getBoolean("Power");
 		invalidateRenderBoundingBox();
 	}
 
@@ -77,17 +79,6 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 
 	public boolean isPowered() {
 		return state == SignalState.RED;
-	}
-
-	protected void scheduleBlockTick() {
-		Block block = getBlockState().getBlock();
-		if (!level.getBlockTicks()
-			.willTickThisTick(worldPosition, block))
-			level.scheduleTick(worldPosition, block, 2, TickPriority.NORMAL);
-	}
-
-	public void updatePowerAfterDelay() {
-		level.blockUpdated(worldPosition, getBlockState().getBlock());
 	}
 
 	@Override
@@ -109,17 +100,31 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 			return;
 		}
 
-		getBlockState().getOptionalValue(SignalBlock.TYPE)
+		BlockState blockState = getBlockState();
+
+		blockState.getOptionalValue(SignalBlock.POWERED).ifPresent(powered -> {
+			if (lastReportedPower == powered)
+				return;
+			lastReportedPower = powered;
+			boundary.updateTilePower(this);
+			notifyUpdate();
+		});
+		
+		blockState.getOptionalValue(SignalBlock.TYPE)
 			.ifPresent(stateType -> {
 				SignalType targetType = boundary.getTypeFor(worldPosition);
 				if (stateType != targetType) {
-					level.setBlock(worldPosition, getBlockState().setValue(SignalBlock.TYPE, targetType), 3);
+					level.setBlock(worldPosition, blockState.setValue(SignalBlock.TYPE, targetType), 3);
 					refreshBlockState();
 				}
 			});
 
 		enterState(boundary.getStateFor(worldPosition));
 		setOverlay(boundary.getOverlayFor(worldPosition));
+	}
+
+	public boolean getReportedPower() {
+		return lastReportedPower;
 	}
 
 	public SignalState getState() {
@@ -147,7 +152,6 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 		this.state = state;
 		switchToRedAfterTrainEntered = state == SignalState.GREEN || state == SignalState.YELLOW ? 15 : 0;
 		notifyUpdate();
-		scheduleBlockTick();
 	}
 
 	@Override
