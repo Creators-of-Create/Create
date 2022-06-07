@@ -29,8 +29,10 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -125,10 +127,15 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			return false;
 		if (!entity.isPassenger())
 			return false;
+		if (entity instanceof Player p) {
+			ItemStack headItem = p.getItemBySlot(EquipmentSlot.HEAD);
+			if (!headItem.isEmpty())
+				return false;
+		}
 		Entity vehicle = entity.getVehicle();
 		if (!(vehicle instanceof CarriageContraptionEntity cce))
 			return false;
-		if (!cce.hasSchedule())
+		if (!cce.hasSchedule() && !(entity instanceof Player))
 			return false;
 		Contraption contraption = cce.getContraption();
 		if (!(contraption instanceof CarriageContraption cc))

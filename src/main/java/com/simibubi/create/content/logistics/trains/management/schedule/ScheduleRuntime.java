@@ -58,7 +58,7 @@ public class ScheduleRuntime {
 			return;
 		state = State.POST_TRANSIT;
 		conditionProgress.clear();
-		for (Carriage carriage : train.carriages) 
+		for (Carriage carriage : train.carriages)
 			carriage.storage.resetIdleCargoTracker();
 
 		if (ticksInTransit > 0) {
@@ -146,7 +146,7 @@ public class ScheduleRuntime {
 				conditionProgress.set(i, progress + 1);
 			}
 		}
-		
+
 		for (Carriage carriage : train.carriages)
 			carriage.storage.tickIdleCargoTracker();
 	}
@@ -156,14 +156,21 @@ public class ScheduleRuntime {
 		ScheduleInstruction instruction = entry.instruction;
 
 		if (instruction instanceof DestinationInstruction destination) {
-			String regex = destination.getFilter()
-				.replace("*", ".*");
+			String regex = destination.getFilterForRegex();
 			GlobalStation best = null;
 			double bestCost = Double.MAX_VALUE;
+			boolean anyMatch = false;
+
+			if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
+				train.status.missingConductor();
+				cooldown = INTERVAL;
+				return null;
+			}
 
 			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 				if (!globalStation.name.matches(regex))
 					continue;
+				anyMatch = true;
 				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);
 				double cost = matchesCurrent ? 0 : train.navigation.startNavigation(globalStation, bestCost, true);
 				if (cost < 0)
@@ -175,7 +182,10 @@ public class ScheduleRuntime {
 			}
 
 			if (best == null) {
-				train.status.failedNavigation();
+				if (anyMatch)
+					train.status.failedNavigation();
+				else
+					train.status.failedNavigationNoTarget(destination.getFilter());
 				cooldown = INTERVAL;
 				return null;
 			}

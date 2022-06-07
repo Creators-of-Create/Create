@@ -314,8 +314,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				continue;
 			if (destination == field)
 				continue;
-			String filter = destination.getFilter()
-				.replace("*", ".*");
+			String filter = destination.getFilterForRegex();
 			if (filter.isBlank())
 				continue;
 			Graphs: for (Iterator<TrackGraph> iterator = viableGraphs.iterator(); iterator.hasNext();) {
@@ -327,6 +326,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				iterator.remove();
 			}
 		}
+
+		if (viableGraphs.isEmpty())
+			viableGraphs = new HashSet<>(railwayManager.trackNetworks.values());
 
 		Vec3 position = minecraft.player.position();
 		Set<String> visited = new HashSet<>();

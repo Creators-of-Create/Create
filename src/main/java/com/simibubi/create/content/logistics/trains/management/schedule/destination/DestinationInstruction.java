@@ -44,6 +44,13 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	public String getFilter() {
 		return getLabelText();
 	}
+	
+	public String getFilterForRegex() {
+		String filter = getFilter();
+		if (filter.isBlank())
+			return filter;
+		return "\\Q" + filter.replace("*", "\\E.*\\Q") + "\\E";
+	}
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {

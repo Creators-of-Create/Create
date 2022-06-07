@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 631",
+	"_": "Missing Localizations: 632",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1422,6 +1422,7 @@
 	"create.schedule.auto_removed_from_train": "UNLOCALIZED: Auto-Schedule discarded",
 	"create.schedule.removed_from_train": "UNLOCALIZED: Schedule retrieved from Train",
 	"create.schedule.no_stops": "UNLOCALIZED: This Schedule does not have any Stops yet",
+	"create.schedule.continued": "UNLOCALIZED: Schedule resumed",
 
 	"create.track.selection_cleared": "UNLOCALIZED: Selection Cleared",
 	"create.track.valid_connection": "UNLOCALIZED: Can Connect ✔",

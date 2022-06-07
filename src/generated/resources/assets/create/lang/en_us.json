@@ -1421,6 +1421,7 @@
 	"create.schedule.auto_removed_from_train": "Auto-Schedule discarded",
 	"create.schedule.removed_from_train": "Schedule retrieved from Train",
 	"create.schedule.no_stops": "This Schedule does not have any Stops yet",
+	"create.schedule.continued": "Schedule resumed",
 
 	"create.track.selection_cleared": "Selection Cleared",
 	"create.track.valid_connection": "Can Connect ✔",

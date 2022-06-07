@@ -31,6 +31,13 @@ public class TrainStatus {
 		navigation = true;
 	}
 	
+	public void failedNavigationNoTarget(String filter) {
+		if (navigation)
+			return;
+		displayInformation("No Station on graph matches '" + filter + "'", false);
+		navigation = true;
+	}
+	
 	public void successfulNavigation() {
 		if (!navigation)
 			return;
@@ -55,7 +62,7 @@ public class TrainStatus {
 	public void missingBackwardsConductor() { // missingCorrectConductor
 		if (conductor)
 			return;
-		displayInformation("Path requires driver on the other controls block", false);
+		displayInformation("Path requires a driver facing the opposite direction", false);
 		conductor = true;
 	}
 	
@@ -124,6 +131,8 @@ public class TrainStatus {
 	public void displayInformation(String key, boolean itsAGoodThing, Object... args) {
 		queued.add(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
 			.append(new TextComponent(key).withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4))));
+		if (queued.size() > 3)
+			queued.remove(0);
 	}
 
 	public void newSchedule() {

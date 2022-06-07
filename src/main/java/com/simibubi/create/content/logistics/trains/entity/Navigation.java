@@ -469,9 +469,6 @@ public class Navigation {
 				results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath));
 				return true;
 			});
-
-			if (!train.doubleEnded || !train.manualTick && !train.hasBackwardConductor())
-				break;
 		}
 
 		DiscoveredPath front = results.getFirst();
@@ -479,20 +476,13 @@ public class Navigation {
 
 		boolean frontEmpty = front == null;
 		boolean backEmpty = back == null;
-		if (backEmpty)
-			return front;
-		if (frontEmpty)
-			return back;
-
 		boolean canDriveForward = train.hasForwardConductor() || train.runtime.paused;
-		boolean canDriveBackward = train.hasBackwardConductor() || train.runtime.paused;
-		if (!canDriveBackward)
-			return front;
-		if (!canDriveForward)
-			return back;
+		boolean canDriveBackward = train.doubleEnded && train.hasBackwardConductor() || train.runtime.paused;
 
-//		Debug.debugChat("Front: " + front.distance + ", Back: " + back.distance);
-//		Debug.debugChat("FrontCost: " + front.cost + ", BackCost: " + back.cost);
+		if (backEmpty || !canDriveBackward)
+			return canDriveForward ? front : null;
+		if (frontEmpty || !canDriveForward)
+			return canDriveBackward ? back : null;
 
 		boolean frontBetter = maxCost == -1 ? -back.distance > front.distance : back.cost > front.cost;
 		return frontBetter ? front : back;
@@ -527,6 +517,9 @@ public class Navigation {
 			TrackEdge edge = currentEntry.getSecond();
 			double position = edge.getLength() - globalStation.getLocationOn(edge);
 			if (distance - position < minDistance)
+				return false;
+			Train presentTrain = globalStation.getPresentTrain();
+			if (presentTrain != null && presentTrain != train)
 				return false;
 			result.setValue(globalStation);
 			return true;
