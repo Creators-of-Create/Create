@@ -36,6 +36,7 @@ import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTil
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
@@ -304,6 +305,10 @@ public abstract class Contraption {
 
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
+
+		if (AllBlocks.WINDMILL_BEARING.has(state)
+			&& world.getBlockEntity(pos) instanceof WindmillBearingTileEntity wbte)
+			wbte.disassembleForMovement();
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			moveGantryPinion(world, pos, frontier, visited, state);

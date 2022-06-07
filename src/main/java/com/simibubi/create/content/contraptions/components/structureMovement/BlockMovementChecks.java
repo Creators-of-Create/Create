@@ -207,11 +207,6 @@ public class BlockMovementChecks {
 			if (te instanceof MechanicalBearingTileEntity)
 				return !((MechanicalBearingTileEntity) te).isRunning();
 		}
-		if (block instanceof WindmillBearingBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof WindmillBearingTileEntity)
-				return !((WindmillBearingTileEntity) te).isRunning();
-		}
 		if (block instanceof ClockworkBearingBlock) {
 			BlockEntity te = world.getBlockEntity(pos);
 			if (te instanceof ClockworkBearingTileEntity)

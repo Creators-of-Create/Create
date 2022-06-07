@@ -20,6 +20,8 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	protected ScrollOptionBehaviour<RotationDirection> movementDirection;
 	protected float lastGeneratedSpeed;
 
+	protected boolean queuedReassembly;
+
 	public WindmillBearingTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -28,6 +30,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	public void updateGeneratedRotation() {
 		super.updateGeneratedRotation();
 		lastGeneratedSpeed = getGeneratedSpeed();
+		queuedReassembly = false;
 	}
 
 	@Override
@@ -38,13 +41,32 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+		if (level.isClientSide())
+			return;
+		if (!queuedReassembly)
+			return;
+		queuedReassembly = false;
+		if (!running)
+			assembleNextTick = true;
+	}
+	
+	public void disassembleForMovement() {
+		if (!running)
+			return;
+		disassemble();
+		queuedReassembly = true;
+	}
+
+	@Override
 	public float getGeneratedSpeed() {
 		if (!running)
 			return 0;
 		if (movedContraption == null)
 			return lastGeneratedSpeed;
 		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks()
-				/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
+			/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
 		return Mth.clamp(sails, 1, 16) * getAngleSpeedDirection();
 	}
 
@@ -61,6 +83,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putFloat("LastGenerated", lastGeneratedSpeed);
+		compound.putBoolean("QueueAssembly", queuedReassembly);
 		super.write(compound, clientPacket);
 	}
 
@@ -68,6 +91,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		if (!wasMoved)
 			lastGeneratedSpeed = compound.getFloat("LastGenerated");
+		queuedReassembly = compound.getBoolean("QueueAssembly");
 		super.read(compound, clientPacket);
 	}
 
