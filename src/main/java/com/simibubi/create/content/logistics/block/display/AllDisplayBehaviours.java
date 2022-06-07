@@ -8,8 +8,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.block.display.source.DeathCounterDataSource;
+import com.simibubi.create.content.logistics.block.display.source.DeathCounterDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.EnchantPowerDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ScoreboardDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.content.logistics.block.display.target.LecternDisplayTarget;
@@ -177,9 +178,8 @@ public class AllDisplayBehaviours {
 	public static void register() {
 		assign(register(Create.asResource("sign_display_target"), new SignDisplayTarget()), BlockEntityType.SIGN);
 		assign(register(Create.asResource("lectern_display_target"), new LecternDisplayTarget()), BlockEntityType.LECTERN);
-		assign(register(Create.asResource("death_count_display_source"), new DeathCounterDataSource()),
-			Blocks.RESPAWN_ANCHOR);
-		assign(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()),
-			BlockEntityType.COMMAND_BLOCK);
+		assign(register(Create.asResource("death_count_display_source"), new DeathCounterDisplaySource()), Blocks.RESPAWN_ANCHOR);
+		assign(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK);
+		assign(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE);
 	}
 }

@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.fluids.tank;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
@@ -50,6 +52,12 @@ public class BoilerData {
 	public float waterSupply;
 	public int attachedEngines;
 	public int attachedWhistles;
+
+	// display
+	private int maxHeatForSize = 0;
+	private int maxHeatForWater = 0;
+	private int minValue = 0;
+	private int maxValue = 0;
 
 	public LerpedFloat gauge = LerpedFloat.linear();
 
@@ -99,8 +107,13 @@ public class BoilerData {
 		return (int) Math.min(18, Mth.ceil(waterSupply) / waterSupplyPerLevel);
 	}
 
+	public boolean isPassive() {
+		return passiveHeat && maxHeatForSize > 0 && maxHeatForWater > 0;
+	}
+
 	public boolean isPassive(int boilerSize) {
-		return passiveHeat && getMaxHeatLevelForBoilerSize(boilerSize) > 0 && getMaxHeatLevelForWaterSupply() > 0;
+		calcMinMaxForSize(boilerSize);
+		return isPassive();
 	}
 
 	public float getEngineEfficiency(int boilerSize) {
@@ -119,77 +132,105 @@ public class BoilerData {
 		return actualHeat;
 	}
 
-	String spacing = "    ";
-	Component componentSpacing = new TextComponent(spacing);
-
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking, int boilerSize) {
 		if (!isActive())
 			return false;
 
-		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
-		int forWaterSupply = getMaxHeatLevelForWaterSupply();
-		int boilerLevel = Math.min(activeHeat, Math.min(forWaterSupply, forBoilerSize));
+		Component indent = new TextComponent(IHaveGoggleInformation.spacing);
+		Component indent2 = new TextComponent(IHaveGoggleInformation.spacing + " ");
 
-		int minValue = Math.min(passiveHeat ? 1 : activeHeat, Math.min(forWaterSupply, forBoilerSize));
-		int maxValue = Math.max(passiveHeat ? 1 : activeHeat, Math.max(forWaterSupply, forBoilerSize));
+		calcMinMaxForSize(boilerSize);
 
-		TextComponent heatLevel = isPassive(boilerSize) ? new TextComponent("Passive")
-			: (boilerLevel == 0 ? new TextComponent("Idle")
-				: boilerLevel == 18 ? new TextComponent("Max")
-					: new TextComponent("Lvl " + IHaveGoggleInformation.format(boilerLevel)));
-		tooltip.add(componentSpacing.plainCopy()
-			.append(new TextComponent("Boiler Status:  ").append(heatLevel.withStyle(ChatFormatting.GREEN))));
+		tooltip.add(indent.plainCopy().append(new TextComponent("Boiler Status:  ").append(getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
+		tooltip.add(indent2.plainCopy().append(getSizeComponent(true, false)));
+		tooltip.add(indent2.plainCopy().append(getWaterComponent(true, false)));
+		tooltip.add(indent2.plainCopy().append(getHeatComponent(true, false)));
 
-		Component h = levelComponent("Heat ...... ", passiveHeat ? 1 : activeHeat, minValue, maxValue);
-		Component w = levelComponent("Water ... ", forWaterSupply, minValue, maxValue);
-		Component s = levelComponent("Size ....... ", forBoilerSize, minValue, maxValue);
-
-		Component indent = new TextComponent(spacing);
-		Component indent2 = new TextComponent(spacing + " ");
-
-		tooltip.add(indent2.plainCopy()
-			.append(s));
-		tooltip.add(indent2.plainCopy()
-			.append(w));
-		tooltip.add(indent2.plainCopy()
-			.append(h));
-		
 		if (attachedEngines == 0)
 			return true;
-		
+
+		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
+
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
-			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
+				* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 		Component capacity =
-			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
-				.withStyle(ChatFormatting.AQUA);
+				new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
+						.withStyle(ChatFormatting.AQUA);
 		Component engines =
-			new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
+				new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
 
 		tooltip.add(indent);
 		tooltip.add(indent.plainCopy()
-			.append(Lang.translate("tooltip.capacityProvided")
-				.withStyle(ChatFormatting.GRAY)));
+				.append(Lang.translate("tooltip.capacityProvided")
+						.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(indent2.plainCopy()
-			.append(capacity)
-			.append(engines));
+				.append(capacity)
+				.append(engines));
 
 		return true;
 	}
 
-	private MutableComponent levelComponent(String text, int level, int min, int max) {
-		int indexOf = text.indexOf(".");
-		String label = text.substring(0, indexOf);
-		String dots = text.substring(indexOf);
-		MutableComponent c = new TextComponent(label).withStyle(ChatFormatting.GRAY)
-			.append(new TextComponent(dots).withStyle(ChatFormatting.DARK_GRAY));
+	public void calcMinMaxForSize(int boilerSize) {
+		maxHeatForSize = getMaxHeatLevelForBoilerSize(boilerSize);
+		maxHeatForWater = getMaxHeatLevelForWaterSupply();
 
-		c.append(bars(Math.max(0, min - 1), ChatFormatting.DARK_GREEN));
-		c.append(bars(min > 0 ? 1 : 0, ChatFormatting.GREEN));
-		c.append(bars(Math.max(0, level - min), ChatFormatting.DARK_GREEN));
-		c.append(bars(Math.max(0, max - level), ChatFormatting.DARK_RED));
-		c.append(bars(Math.max(0, Math.min(18 - max, ((max / 5 + 1) * 5) - max)), ChatFormatting.DARK_GRAY));
+		minValue = Math.min(passiveHeat ? 1 : activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
+		maxValue = Math.max(passiveHeat ? 1 : activeHeat, Math.max(maxHeatForWater, maxHeatForSize));
+	}
 
-		return c;
+	@NotNull
+	public TextComponent getHeatLevelTextComponent() {
+		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
+
+		return isPassive() ? new TextComponent("Passive")
+				: (boilerLevel == 0 ? new TextComponent("Idle")
+				: boilerLevel == 18 ? new TextComponent("Max")
+				: new TextComponent("Lvl " + IHaveGoggleInformation.format(boilerLevel)));
+	}
+
+	public MutableComponent getSizeComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
+		return componentHelper("Size ", "....... ", maxHeatForSize, forGoggles, useBlocksAsBars, styles);
+	}
+
+	public MutableComponent getWaterComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
+		return componentHelper("Water ", "... ", maxHeatForWater, forGoggles, useBlocksAsBars, styles);
+	}
+
+	public MutableComponent getHeatComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
+		return componentHelper("Heat ", "...... ", passiveHeat ? 1 : activeHeat, forGoggles, useBlocksAsBars, styles);
+	}
+
+	private MutableComponent componentHelper(String label, String dots, int level, boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
+		MutableComponent base = useBlocksAsBars ? blockComponent(level) : barComponent(level);
+
+		if (!forGoggles)
+			return base;
+
+		ChatFormatting style1 = styles.length >= 1 ? styles[0] : ChatFormatting.GRAY;
+		ChatFormatting style2 = styles.length >= 2 ? styles[1] : ChatFormatting.DARK_GRAY;
+
+		return new TextComponent(label).withStyle(style1)
+				.append(new TextComponent(dots).withStyle(style2))
+				.append(base);
+	}
+
+
+	private MutableComponent blockComponent(int level) {
+		return new TextComponent("" +
+				"\u2588".repeat(minValue) +
+				"\u2592".repeat(level - minValue) +
+				"\u2591".repeat(maxValue - level)
+		);
+	}
+
+	private MutableComponent barComponent(int level) {
+		return TextComponent.EMPTY.copy()
+				.append(bars(Math.max(0, minValue - 1), ChatFormatting.DARK_GREEN))
+				.append(bars(minValue > 0 ? 1 : 0, ChatFormatting.GREEN))
+				.append(bars(Math.max(0, level - minValue), ChatFormatting.DARK_GREEN))
+				.append(bars(Math.max(0, maxValue - level), ChatFormatting.DARK_RED))
+				.append(bars(Math.max(0, Math.min(18 - maxValue, ((maxValue / 5 + 1) * 5) - maxValue)), ChatFormatting.DARK_GRAY));
+
 	}
 
 	private MutableComponent bars(int level, ChatFormatting format) {
@@ -218,7 +259,7 @@ public class BoilerData {
 						if (AllBlocks.STEAM_ENGINE.has(attachedState) && SteamEngineBlock.getFacing(attachedState) == d)
 							attachedEngines++;
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
-							&& WhistleBlock.getAttachedDirection(attachedState)
+								&& WhistleBlock.getAttachedDirection(attachedState)
 								.getOpposite() == d)
 							attachedWhistles++;
 					}

@@ -163,11 +163,17 @@ import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.BoilerDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.EntityNameDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.FillLevelDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.FluidAmountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.FluidListDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemCountDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemListDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemNameDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemThoughputDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.KineticSpeedDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.KineticStressDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ObservedTrainNameSource;
 import com.simibubi.create.content.logistics.block.display.source.StationSummaryDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.StopWatchDisplaySource;
@@ -718,6 +724,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.transform(BlockStressDefaults.setNoImpact())
 		.blockstate(new GaugeGenerator()::generate)
+		.onRegister(assignDataBehaviour(new KineticSpeedDisplaySource(), "kinetic_speed"))
 		.item()
 		.transform(ModelGen.customItemModel("gauge", "_", "item"))
 		.register();
@@ -728,6 +735,10 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.transform(BlockStressDefaults.setNoImpact())
 		.blockstate(new GaugeGenerator()::generate)
+		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Current(), "kinetic_stress_current"))
+		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Percent(), "kinetic_stress_percent"))
+		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Max(), "kinetic_stress_max"))
+		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Remaining(), "kinetic_stress_remaining"))
 		.item()
 		.transform(ModelGen.customItemModel("gauge", "_", "item"))
 		.register();
@@ -897,6 +908,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate(new FluidTankGenerator()::generate)
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
+		.onRegister(assignDataBehaviour(new BoilerDisplaySource(), "boiler_status"))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.item(FluidTankItem::new)
 		.model(AssetLookup.<FluidTankItem>customBlockItemModel("_", "block_single_window"))
@@ -1297,6 +1309,7 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.onRegister(addMovementBehaviour(movementBehaviour))
 			.onRegister(addInteractionBehaviour(interactionBehaviour))
+			.onRegister(assignDataBehaviour(new EntityNameDisplaySource(), "entity_name"))
 			.blockstate((c, p) -> {
 				p.simpleBlock(c.get(), p.models()
 					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
@@ -1689,6 +1702,8 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.onRegister(assignDataBehaviour(new ItemCountDisplaySource(), "count_items"))
 			.onRegister(assignDataBehaviour(new ItemListDisplaySource(), "list_items"))
+			.onRegister(assignDataBehaviour(new FluidAmountDisplaySource(), "count_fluids"))
+			.onRegister(assignDataBehaviour(new FluidListDisplaySource(), "list_fluids"))
 			.item()
 			.transform(customItemModel("_", "block"))
 			.register();

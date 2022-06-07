@@ -42,9 +42,9 @@ public abstract class DisplaySource extends DisplayBehaviour {
 	}
 
 	public void onSignalReset(DisplayLinkContext context) {};
-	
+
 	public void populateData(DisplayLinkContext context) {};
-	
+
 	public int getPassiveRefreshTicks() {
 		return 100;
 	};
@@ -55,6 +55,10 @@ public abstract class DisplaySource extends DisplayBehaviour {
 
 	public Component getName() {
 		return new TranslatableComponent(id.getNamespace() + ".display_source." + getTranslationKey());
+	}
+
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout, int lineIndex) {
+		loadFlapDisplayLayout(context, flapDisplay, layout);
 	}
 
 	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay,

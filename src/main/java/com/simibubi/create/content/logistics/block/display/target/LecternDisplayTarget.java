@@ -40,13 +40,13 @@ public class LecternDisplayTarget extends DisplayTarget {
 		for (int i = 0; i - line < text.size() && i < 50; i++) {
 			if (tag.size() <= i)
 				tag.add(StringTag.valueOf(i < line ? "" : Component.Serializer.toJson(text.get(i - line))));
-			
+
 			else if (i >= line) {
 				if (i - line == 0)
 					reserve(i, lectern, context);
 				if (i - line > 0 && isReserved(i - line, lectern, context))
 					break;
-				
+
 				tag.set(i, StringTag.valueOf(Component.Serializer.toJson(text.get(i - line))));
 			}
 			changed = true;
@@ -56,8 +56,8 @@ public class LecternDisplayTarget extends DisplayTarget {
 			.put("pages", tag);
 		lectern.setBook(book);
 
-		if (changed && context.level()instanceof Level level)
-			level.sendBlockUpdated(context.getTargetPos(), lectern.getBlockState(), lectern.getBlockState(), 2);
+		if (changed)
+			context.level().sendBlockUpdated(context.getTargetPos(), lectern.getBlockState(), lectern.getBlockState(), 2);
 	}
 
 	@Override
