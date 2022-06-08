@@ -40,7 +40,8 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable {
+public class StockpileSwitchBlock extends HorizontalDirectionalBlock
+	implements ITE<StockpileSwitchTileEntity>, IWrenchable {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -146,25 +147,23 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 				}
 		}
 
-		if (preferredFacing != null) {
-			state = state.setValue(FACING, preferredFacing);
-		} else if (context.getClickedFace()
-			.getAxis()
-			.isHorizontal()) {
-			state = state.setValue(FACING, context.getClickedFace());
-		} else {
-			state = state.setValue(FACING, context.getHorizontalDirection()
-				.getOpposite());
-		}
+		if (preferredFacing != null)
+			return state.setValue(FACING, preferredFacing);
 
-		return state;
+		Direction facing = context.getClickedFace()
+			.getAxis()
+			.isHorizontal() ? context.getClickedFace()
+				: context.getHorizontalDirection()
+					.getOpposite();
+		return state.setValue(FACING, context.getPlayer() != null && context.getPlayer()
+			.isSteppingCarefully() ? facing.getOpposite() : facing);
 	}
 
 	@Override
 	public Class<StockpileSwitchTileEntity> getTileEntityClass() {
 		return StockpileSwitchTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends StockpileSwitchTileEntity> getTileEntityType() {
 		return AllTileEntities.STOCKPILE_SWITCH.get();

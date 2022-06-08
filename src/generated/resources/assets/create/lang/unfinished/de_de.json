@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 957",
+	"_": "Missing Localizations: 963",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1349,6 +1349,10 @@
 	"create.hint.empty_bearing": "_Rechts-Klicke_ das Lager mit einer _leeren_ _Hand_ um die Struktur die du davor gebaut hast _anzubringen_.",
 	"create.hint.full_deployer.title": "Einsatzgerät Gegenstand Überlauf",
 	"create.hint.full_deployer": "Es scheint, dieses _Einsatzgerät_ enthält _überflüssige_ _Gegenstände_ die _extrahiert_ werden müssen. Nutze _Trichter_ oder anderes um ihn von seinem Überfluss zu befreien.",
+
+	"create.backtank.low": "UNLOCALIZED: Backtank pressure low",
+	"create.backtank.depleted": "UNLOCALIZED: Backtank pressure depleted",
+
 	"create.hint.derailed_train.title": "UNLOCALIZED: Derailed Train",
 	"create.hint.derailed_train": "UNLOCALIZED: It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
@@ -1563,6 +1567,10 @@
 	"create.display_source.kinetic_stress.max": "UNLOCALIZED: Stress Capacity (Max)",
 	"create.display_source.kinetic_stress.percent": "UNLOCALIZED: Stress Impact (Percent)",
 	"create.display_source.kinetic_stress.remaining": "UNLOCALIZED: Stress Capacity (Remaining)",
+	"create.display_source.redstone_power": "UNLOCALIZED: Redstone Power",
+	"create.display_source.redstone_power.display": "UNLOCALIZED: Display Format",
+	"create.display_source.redstone_power.number": "UNLOCALIZED: Number",
+	"create.display_source.redstone_power.progress_bar": "UNLOCALIZED: Progress Bar",
 
 	"create.display_target.line": "UNLOCALIZED: Line %1$s",
 	"create.display_target.page": "UNLOCALIZED: Page %1$s",

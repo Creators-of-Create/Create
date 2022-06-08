@@ -2,11 +2,20 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,10 +42,37 @@ public class BackTankUtil {
 		return Math.min(tag.getFloat("Air"), maxAir(backtank));
 	}
 
-	public static void consumeAir(ItemStack backtank, float i) {
+	public static void consumeAir(LivingEntity entity, ItemStack backtank, float i) {
 		CompoundTag tag = backtank.getOrCreateTag();
-		tag.putFloat("Air", Math.min(getAir(backtank) - i, maxAir(backtank)));
+		int maxAir = maxAir(backtank);
+		float air = getAir(backtank);
+		float newAir = air - i;
+		tag.putFloat("Air", Math.min(newAir, maxAir));
 		backtank.setTag(tag);
+
+		if (!(entity instanceof ServerPlayer player))
+			return;
+		sendWarning(player, air, newAir, maxAir / 10f);
+		sendWarning(player, air, newAir, 1);
+	}
+
+	private static void sendWarning(ServerPlayer player, float air, float newAir, float threshold) {
+		if (newAir > threshold)
+			return;
+		if (air <= threshold)
+			return;
+
+		boolean depleted = threshold == 1;
+		MutableComponent component = Lang.translate(depleted ? "backtank.depleted" : "backtank.low");
+
+		AllSoundEvents.DENY.play(player.level, null, player.blockPosition(), 1, 1.25f);
+		AllSoundEvents.STEAM.play(player.level, null, player.blockPosition(), .5f, .5f);
+
+		player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 40, 10));
+		player.connection.send(new ClientboundSetSubtitleTextPacket(
+			new TextComponent("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
+				.append(component.withStyle(ChatFormatting.GRAY))));
+		player.connection.send(new ClientboundSetTitleTextPacket(new TextComponent("")));
 	}
 
 	public static int maxAir(ItemStack backtank) {
@@ -63,7 +99,7 @@ public class BackTankUtil {
 		if (!hasAirRemaining(backtank))
 			return false;
 		float cost = ((float) maxAirWithoutEnchants()) / usesPerTank;
-		consumeAir(backtank, cost);
+		consumeAir(entity, backtank, cost);
 		return true;
 	}
 
@@ -105,8 +141,8 @@ public class BackTankUtil {
 			return 0;
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return Mth.hsvToRgb(
-				Math.max(0.0F, 1.0F - (float) stack.getDamageValue() / stack.getMaxDamage()) / 3.0F, 1.0F, 1.0F);
+			return Mth.hsvToRgb(Math.max(0.0F, 1.0F - (float) stack.getDamageValue() / stack.getMaxDamage()) / 3.0F,
+				1.0F, 1.0F);
 		return backtank.getItem()
 			.getBarColor(backtank);
 	}

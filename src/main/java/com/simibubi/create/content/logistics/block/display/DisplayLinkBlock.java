@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.RedstonePowerDisplaySource;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -92,6 +93,11 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 		boolean isMoving) {
 		if (worldIn.isClientSide)
 			return;
+
+		if (fromPos.equals(pos.relative(state.getValue(FACING)
+			.getOpposite())))
+			sendToGatherers(worldIn, fromPos, (dlte, p) -> dlte.tickSource(), RedstonePowerDisplaySource.class);
+
 		boolean powered = shouldBePowered(state, worldIn, pos);
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != powered) {

@@ -557,6 +557,9 @@
 	"create.hint.full_deployer.title": "Deployer Item Overflow",
 	"create.hint.full_deployer": "It appears this _Deployer_ contains _excess_ _items_ that need to be _extracted._ Use a _hopper,_ _funnel_ or other means to free it from its overflow.",
 
+	"create.backtank.low": "Backtank pressure low",
+	"create.backtank.depleted": "Backtank pressure depleted",
+
 	"create.hint.derailed_train.title": "Derailed Train",
 	"create.hint.derailed_train": "It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
@@ -768,12 +771,16 @@
 	"create.display_source.boiler_status": "Boiler Status",
 	"create.display_source.entity_name": "Entity Name",
 	"create.display_source.kinetic_speed": "Rotation Speed (RPM)",
-  "create.display_source.kinetic_speed.absolute": "Ignore Direction",
-  "create.display_source.kinetic_speed.directional": "Include Direction",
-  "create.display_source.kinetic_stress.current": "Stress Impact (Amount)",
+	"create.display_source.kinetic_speed.absolute": "Ignore Direction",
+	"create.display_source.kinetic_speed.directional": "Include Direction",
+	"create.display_source.kinetic_stress.current": "Stress Impact (Amount)",
 	"create.display_source.kinetic_stress.max": "Stress Capacity (Max)",
 	"create.display_source.kinetic_stress.percent": "Stress Impact (Percent)",
 	"create.display_source.kinetic_stress.remaining": "Stress Capacity (Remaining)",
+	"create.display_source.redstone_power": "Redstone Power",
+	"create.display_source.redstone_power.display": "Display Format",
+	"create.display_source.redstone_power.number": "Number",
+	"create.display_source.redstone_power.progress_bar": "Progress Bar",
 
 	"create.display_target.line": "Line %1$s",
 	"create.display_target.page": "Page %1$s",

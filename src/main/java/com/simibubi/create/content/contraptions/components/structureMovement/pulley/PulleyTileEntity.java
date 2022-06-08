@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.LinearActuatorTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchObservable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PulleyTileEntity extends LinearActuatorTileEntity {
+public class PulleyTileEntity extends LinearActuatorTileEntity implements StockpileSwitchObservable {
 
 	protected int initialOffset;
 	private float prevAnimatedOffset;
@@ -90,7 +91,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			for (i = ((int) offset); i > 0; i--) {
 				BlockPos offset = worldPosition.below(i);
 				BlockState oldState = level.getBlockState(offset);
-				if (oldState.getBlock() instanceof SimpleWaterloggedBlock && oldState.hasProperty(BlockStateProperties.WATERLOGGED)
+				if (oldState.getBlock() instanceof SimpleWaterloggedBlock
+					&& oldState.hasProperty(BlockStateProperties.WATERLOGGED)
 					&& oldState.getValue(BlockStateProperties.WATERLOGGED)) {
 					level.setBlock(offset, Blocks.WATER.defaultBlockState(), 66);
 					continue;
@@ -98,7 +100,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 				level.setBlock(offset, Blocks.AIR.defaultBlockState(), 66);
 			}
 
-			if (!contraption.getBlocks().isEmpty()) {
+			if (!contraption.getBlocks()
+				.isEmpty()) {
 				contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
 				movedContraption = ControlledContraptionEntity.create(level, this, contraption);
 				movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
@@ -166,7 +169,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	protected Vec3 toPosition(float offset) {
 		if (movedContraption.getContraption() instanceof PulleyContraption) {
 			PulleyContraption contraption = (PulleyContraption) movedContraption.getContraption();
-			return Vec3.atLowerCornerOf(contraption.anchor).add(0, contraption.initialOffset - offset, 0);
+			return Vec3.atLowerCornerOf(contraption.anchor)
+				.add(0, contraption.initialOffset - offset, 0);
 
 		}
 		return Vec3.ZERO;
@@ -208,7 +212,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	protected int getExtensionRange() {
-		return Math.max(0, Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(), (worldPosition.getY() - 1) - level.getMinBuildHeight()));
+		return Math.max(0, Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(),
+			(worldPosition.getY() - 1) - level.getMinBuildHeight()));
 	}
 
 	@Override
@@ -236,5 +241,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	public void animateOffset(float forcedOffset) {
 		offset = forcedOffset;
+	}
+
+	@Override
+	public float getPercent() {
+		int distance = worldPosition.getY() - level.getMinBuildHeight();
+		if (distance <= 0)
+			return 100;
+		return 100 * getInterpolatedOffset(.5f) / distance;
 	}
 }

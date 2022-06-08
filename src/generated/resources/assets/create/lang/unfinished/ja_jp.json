@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 273",
+	"_": "Missing Localizations: 279",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1349,6 +1349,10 @@
 	"create.hint.empty_bearing": "_素手_でベアリングを_右クリック_して、その前に先ほど作った構造物を_接続_します。",
 	"create.hint.full_deployer.title": "デプロイヤーのアイテムが溢れています",
 	"create.hint.full_deployer": "この_デプロイヤー_には、_搬出_する必要がある余分なアイテムが含まれています。_ ホッパー_や_漏斗_などの手段を利用して、溢れないようにしてください。",
+
+	"create.backtank.low": "UNLOCALIZED: Backtank pressure low",
+	"create.backtank.depleted": "UNLOCALIZED: Backtank pressure depleted",
+
 	"create.hint.derailed_train.title": "UNLOCALIZED: Derailed Train",
 	"create.hint.derailed_train": "UNLOCALIZED: It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
@@ -1563,6 +1567,10 @@
 	"create.display_source.kinetic_stress.max": "UNLOCALIZED: Stress Capacity (Max)",
 	"create.display_source.kinetic_stress.percent": "UNLOCALIZED: Stress Impact (Percent)",
 	"create.display_source.kinetic_stress.remaining": "UNLOCALIZED: Stress Capacity (Remaining)",
+	"create.display_source.redstone_power": "UNLOCALIZED: Redstone Power",
+	"create.display_source.redstone_power.display": "UNLOCALIZED: Display Format",
+	"create.display_source.redstone_power.number": "UNLOCALIZED: Number",
+	"create.display_source.redstone_power.progress_bar": "UNLOCALIZED: Progress Bar",
 
 	"create.display_target.line": "UNLOCALIZED: Line %1$s",
 	"create.display_target.page": "UNLOCALIZED: Page %1$s",

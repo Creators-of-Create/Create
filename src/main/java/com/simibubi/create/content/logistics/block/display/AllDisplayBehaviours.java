@@ -11,6 +11,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.block.display.source.DeathCounterDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.EnchantPowerDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.RedstonePowerDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ScoreboardDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.content.logistics.block.display.target.LecternDisplayTarget;
@@ -181,5 +182,6 @@ public class AllDisplayBehaviours {
 		assign(register(Create.asResource("death_count_display_source"), new DeathCounterDisplaySource()), Blocks.RESPAWN_ANCHOR);
 		assign(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK);
 		assign(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE);
+		assign(register(Create.asResource("redstone_power_display_source"), new RedstonePowerDisplaySource()), Blocks.TARGET);
 	}
 }

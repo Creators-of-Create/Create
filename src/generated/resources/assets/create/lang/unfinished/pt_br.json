@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1141",
+	"_": "Missing Localizations: 1147",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1349,6 +1349,10 @@
 	"create.hint.empty_bearing": " _clique com o botão direito_ o rolamento com a _mão_ _vazia_ para _conectar_ a estrutura que você construiu não frente disso.",
 	"create.hint.full_deployer.title": "Implantador transbordando de itens",
 	"create.hint.full_deployer": "Aparenta que esse _inplantador_ contém _itens_ em _excesso_ que precisam ser _extraídos._ Use um _funil,_ _funil de andesito/latão_ ou outros meios para extrair os itens excedentes.",
+
+	"create.backtank.low": "UNLOCALIZED: Backtank pressure low",
+	"create.backtank.depleted": "UNLOCALIZED: Backtank pressure depleted",
+
 	"create.hint.derailed_train.title": "UNLOCALIZED: Derailed Train",
 	"create.hint.derailed_train": "UNLOCALIZED: It appears this _Train_ is no longer sitting on a connected track piece. _Right-Click_ using a _wrench_ in order to relocate it to a nearby track.",
 
@@ -1563,6 +1567,10 @@
 	"create.display_source.kinetic_stress.max": "UNLOCALIZED: Stress Capacity (Max)",
 	"create.display_source.kinetic_stress.percent": "UNLOCALIZED: Stress Impact (Percent)",
 	"create.display_source.kinetic_stress.remaining": "UNLOCALIZED: Stress Capacity (Remaining)",
+	"create.display_source.redstone_power": "UNLOCALIZED: Redstone Power",
+	"create.display_source.redstone_power.display": "UNLOCALIZED: Display Format",
+	"create.display_source.redstone_power.number": "UNLOCALIZED: Number",
+	"create.display_source.redstone_power.progress_bar": "UNLOCALIZED: Progress Bar",
 
 	"create.display_target.line": "UNLOCALIZED: Line %1$s",
 	"create.display_target.page": "UNLOCALIZED: Page %1$s",

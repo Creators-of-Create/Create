@@ -58,7 +58,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 
 		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
 		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));
-		BackTankUtil.consumeAir(backtank, 1);
+		BackTankUtil.consumeAir(entity, backtank, 1);
 	}
 
 }
