@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
+import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
@@ -113,7 +114,8 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		fixLighting(() -> Actions::experimentalLighting),
 		overlayReset(() -> Actions::overlayReset),
 		openPonder(() -> Actions::openPonder),
-		fabulousWarning(() -> Actions::fabulousWarning)
+		fabulousWarning(() -> Actions::fabulousWarning),
+		zoomMultiplier(() -> Actions::zoomMultiplier)
 
 		;
 
@@ -210,6 +212,19 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			Minecraft.getInstance().gui.handleChat(ChatType.CHAT,
 				new TextComponent("Disabled Fabulous graphics warning"),
 				Minecraft.getInstance().player.getUUID());
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void zoomMultiplier(String value) {
+			try {
+				float v = Float.parseFloat(value);
+				if (v <= 0)
+					return;
+
+				CameraDistanceModifier.zoomOut(v);
+			} catch (NumberFormatException ignored) {
+				Create.LOGGER.debug("Received non-float value {} in zoom packet, ignoring", value);
+			}
 		}
 
 		private static MutableComponent boolToText(boolean b) {

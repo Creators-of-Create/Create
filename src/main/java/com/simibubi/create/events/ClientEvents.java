@@ -35,6 +35,8 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingClient;
@@ -89,6 +91,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -165,6 +168,7 @@ public class ClientEvents {
 		TrainRelocator.clientTick();
 		DisplayLinkBlockItem.clientTick();
 		CurvedTrackInteraction.clientTick();
+		CameraDistanceModifier.tick();
 	}
 
 	@SubscribeEvent
@@ -273,6 +277,23 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		TurntableHandler.gameRenderTick();
+	}
+
+	@SubscribeEvent
+	public static void onMount(EntityMountEvent event) {
+		if (event.getEntityMounting() != Minecraft.getInstance().player)
+			return;
+
+		if (event.isDismounting()) {
+			CameraDistanceModifier.reset();
+			return;
+		}
+
+		if (!event.isMounting() || !(event.getEntityBeingMounted() instanceof CarriageContraptionEntity carriage)) {
+			return;
+		}
+
+		CameraDistanceModifier.zoomOut();
 	}
 
 	protected static boolean isGameActive() {
