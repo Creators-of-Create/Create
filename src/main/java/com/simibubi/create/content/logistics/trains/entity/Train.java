@@ -77,6 +77,9 @@ public class Train {
 	public double speed = 0;
 	public double targetSpeed = 0;
 	public Double speedBeforeStall = null;
+	
+	public double throttle = 1;
+	public boolean honk = false;
 
 	public UUID id;
 	public UUID owner;
@@ -886,15 +889,16 @@ public class Train {
 	}
 
 	public void approachTargetSpeed(float accelerationMod) {
-		if (Mth.equal(targetSpeed, speed))
+		double actualTarget = targetSpeed;
+		if (Mth.equal(actualTarget, speed))
 			return;
 		if (manualTick)
 			leaveStation();
 		double acceleration = acceleration();
-		if (speed < targetSpeed)
-			speed = Math.min(speed + acceleration * accelerationMod, targetSpeed);
-		else if (speed > targetSpeed)
-			speed = Math.max(speed - acceleration * accelerationMod, targetSpeed);
+		if (speed < actualTarget)
+			speed = Math.min(speed + acceleration * accelerationMod, actualTarget);
+		else if (speed > actualTarget)
+			speed = Math.max(speed - acceleration * accelerationMod, actualTarget);
 	}
 
 	public void collectInitiallyOccupiedSignalBlocks() {
@@ -1060,6 +1064,7 @@ public class Train {
 		tag.putIntArray("CarriageSpacing", carriageSpacing);
 		tag.putBoolean("DoubleEnded", doubleEnded);
 		tag.putDouble("Speed", speed);
+		tag.putDouble("Throttle", throttle);
 		if (speedBeforeStall != null)
 			tag.putDouble("SpeedBeforeStall", speedBeforeStall);
 		tag.putInt("Fuel", fuelTicks);
@@ -1113,6 +1118,7 @@ public class Train {
 		Train train = new Train(id, owner, graph, carriages, carriageSpacing, doubleEnded);
 
 		train.speed = tag.getDouble("Speed");
+		train.throttle = tag.getDouble("Throttle");
 		if (tag.contains("SpeedBeforeStall"))
 			train.speedBeforeStall = tag.getDouble("SpeedBeforeStall");
 		train.targetSpeed = tag.getDouble("TargetSpeed");

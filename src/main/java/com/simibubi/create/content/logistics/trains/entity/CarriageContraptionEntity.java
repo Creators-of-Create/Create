@@ -11,7 +11,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Strings;
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
@@ -21,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUDUpdatePacket;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
@@ -45,6 +45,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -279,7 +280,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (sounds == null)
 			sounds = new CarriageSounds(this);
 		sounds.tick(dce);
-		
+
 		if (particles == null)
 			particles = new CarriageParticles(this);
 		particles.tick(dce);
@@ -503,6 +504,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	double navDistanceTotal = 0;
+	int hudPacketCooldown = 0;
 
 	@Override
 	public boolean control(BlockPos controlsLocalPos, Collection<Integer> heldControls, Player player) {
@@ -526,6 +528,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (info != null && info.state.hasProperty(ControlsBlock.FACING))
 			inverted = !info.state.getValue(ControlsBlock.FACING)
 				.equals(initialOrientation);
+
+		if (hudPacketCooldown-- <= 0 && player instanceof ServerPlayer sp) {
+			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp), new TrainHUDUpdatePacket(carriage.train));
+			hudPacketCooldown = 5;
+		}
 
 		int targetSpeed = 0;
 		if (heldControls.contains(0))
@@ -584,6 +591,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					int targetColor = arrived ? 0x00_91EA44 : 0x00_ffffff;
 					player.displayClientMessage(greenComponent.withStyle(st -> st.withColor(mixedColor))
 						.append(whiteComponent.withStyle(st -> st.withColor(targetColor))), true);
+					carriage.train.manualTick = true;
 					return true;
 				}
 			}
@@ -609,14 +617,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
 
 		double topSpeed = carriage.train.maxSpeed() * AllConfigs.SERVER.trains.manualTrainSpeedModifier.getF();
+		double cappedTopSpeed = topSpeed * carriage.train.throttle;
 
 		if (carriage.getLeadingPoint().edge != null && carriage.getLeadingPoint().edge.isTurn()
 			|| carriage.getTrailingPoint().edge != null && carriage.getTrailingPoint().edge.isTurn())
 			topSpeed = carriage.train.maxTurnSpeed();
 
-		carriage.train.targetSpeed = topSpeed * targetSpeed;
 		if (slow)
-			carriage.train.targetSpeed /= 6;
+			topSpeed /= 4;
+		carriage.train.targetSpeed = Math.min(topSpeed, cappedTopSpeed) * targetSpeed;
 
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
 		carriage.train.manualTick = true;

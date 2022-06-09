@@ -1,6 +1,7 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
@@ -42,7 +43,7 @@ public class InputEvents {
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
 			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
-			|| ScrollValueHandler.onScroll(delta);
+			|| ScrollValueHandler.onScroll(delta) || TrainHUD.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 

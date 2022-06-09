@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.components.steam.SteamEngineBloc
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -44,7 +45,6 @@ import com.simibubi.create.content.logistics.trains.management.schedule.TrainHat
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
-import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -164,11 +164,11 @@ public class ClientEvents {
 		ToolboxHandlerClient.clientTick();
 		TrackTargetingClient.clientTick();
 		TrackPlacement.clientTick();
-		TrackRemoval.clientTick();
 		TrainRelocator.clientTick();
 		DisplayLinkBlockItem.clientTick();
 		CurvedTrackInteraction.clientTick();
 		CameraDistanceModifier.tick();
+		TrainHUD.tick();
 	}
 
 	@SubscribeEvent

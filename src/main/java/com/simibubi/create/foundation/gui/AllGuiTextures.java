@@ -161,6 +161,13 @@ public enum AllGuiTextures implements ScreenElement {
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets", 8, 24, 8, 8),
+	
+	TRAIN_HUD_SPEED_BG("widgets", 0, 190, 182, 5),
+	TRAIN_HUD_SPEED("widgets", 0, 185, 182, 5),
+	TRAIN_HUD_THROTTLE("widgets", 0, 195, 182, 5),
+	TRAIN_HUD_THROTTLE_POINTER("widgets", 0, 209, 6, 9),
+	TRAIN_HUD_FRAME("widgets", 0, 200, 186, 7),
+	TRAIN_HUD_DIRECTION("widgets", 77, 165, 28, 20),
 
 	// PlacementIndicator
 	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256);

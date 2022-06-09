@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -158,8 +157,8 @@ public class Navigation {
 
 						boolean primary = entering.equals(signal.groups.getFirst());
 						boolean crossSignal = signal.types.get(primary) == SignalType.CROSS_SIGNAL;
-						boolean occupied =
-							signal.isForcedRed(nodes.getSecond()) || signalEdgeGroup.isOccupiedUnless(train);
+						boolean occupied = !train.manualTick
+							&& (signal.isForcedRed(nodes.getSecond()) || signalEdgeGroup.isOccupiedUnless(train));
 
 						if (!crossSignalTracked) {
 							if (crossSignal) { // Now entering cross signal path
@@ -244,7 +243,6 @@ public class Navigation {
 		train.burnFuel();
 
 		double topSpeed = train.maxSpeed();
-		double turnTopSpeed = train.maxTurnSpeed();
 
 		if (targetDistance < 10) {
 			double target = topSpeed * ((targetDistance) / 10);
@@ -253,6 +251,9 @@ public class Navigation {
 				return;
 			}
 		}
+		
+		topSpeed *= train.throttle;
+		double turnTopSpeed = Math.min(topSpeed, train.maxTurnSpeed());
 
 		double targetSpeed = targetDistance > brakingDistance ? topSpeed * speedMod : 0;
 
@@ -279,6 +280,8 @@ public class Navigation {
 	}
 
 	private boolean currentSignalResolved() {
+		if (train.manualTick)
+			return true;
 		if (distanceToDestination < .5f)
 			return true;
 		SignalBoundary signal = train.graph.getPoint(EdgePointType.SIGNAL, waitingForSignal.getFirst());
