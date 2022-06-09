@@ -635,7 +635,7 @@
 	"advancement.create.infinite_water.desc": "Выкачивайте воду из резервуара, считающегося бесконечным.",
 	"advancement.create.infinite_lava": "Уничтожение ядра",
 	"advancement.create.infinite_lava.desc": "Выкачивайте лаву из бассейна, считающегося бесконечным.",
-	"advancement.create.infinite_chocolate": "Утопая в воображении",
+	"advancement.create.infinite_chocolate": "Сладкая жизнь",
 	"advancement.create.infinite_chocolate.desc": "Выкачивайте расплавленный шоколад из резервуара, считающегося бесконечным.",
 	"advancement.create.crafter": "Автоматизированная сборка",
 	"advancement.create.crafter.desc": "Поставьте и подключите механический крафтер",
@@ -712,10 +712,10 @@
 
 	"create.menu.return": "Вернуться в меню",
 	"create.menu.configure": "Настроить...",
-	"create.menu.ponder_index": "Содержание размышлений",
+	"create.menu.ponder_index": "Все размышления",
 	"create.menu.only_ingame": "Доступно в меню Паузы",
 	"create.menu.project_page": "Страница проекта",
-	"create.menu.report_bugs": "Сообщите об ошибке",
+	"create.menu.report_bugs": "Нашли ошибку?",
 	"create.menu.support": "Поддержите нас",
 
 	"create.recipe.crushing": "Измельчение",
