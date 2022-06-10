@@ -16,6 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -116,6 +117,11 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 			(i, l) -> i.forOptions(Lang.translatedOptions("schedule.condition.redstone_link", "powered", "unpowered"))
 				.titled(Lang.translate("schedule.condition.redstone_link.frequency_state")),
 			"Inverted");
+	}
+	
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		return Lang.translate("schedule.condition.redstone_link.status");
 	}
 
 }

@@ -23,7 +23,9 @@ public class ScheduledDelay extends TimedWaitCondition {
 		int time = context.getInt("Time");
 		if (time >= totalWaitTicks())
 			return true;
+		
 		context.putInt("Time", time + 1);
+		requestDisplayIfNecessary(context, time);
 		return false;
 	}
 

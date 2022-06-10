@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +36,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	protected boolean test(Level level, Train train) {
+	protected boolean test(Level level, Train train, CompoundTag context) {
 		Ops operator = getOperator();
 		int target = getThreshold();
 		boolean stacks = inStacks();
@@ -55,12 +56,10 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 					foundItems += stackInSlot.getCount() == stackInSlot.getMaxStackSize() ? 1 : 0;
 				else
 					foundItems += stackInSlot.getCount();
-
-				if (operator != Ops.GREATER && foundItems > target)
-					return false;
 			}
 		}
 
+		requestStatusToUpdate(foundItems, context);
 		return operator.test(foundItems, target);
 	}
 
@@ -121,5 +120,16 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 				Lang.translate("schedule.condition.threshold.stacks")))
 				.titled(Lang.translate("schedule.condition.threshold.item_measure"));
 		}, "Measure");
+	}
+
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
+		if (lastDisplaySnapshot == -1)
+			return TextComponent.EMPTY.copy();
+		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
+		return Lang.translate("schedule.condition.threshold.status", lastDisplaySnapshot,
+			Math.max(0, getThreshold() + offset),
+			Lang.translate("schedule.condition.threshold." + (inStacks() ? "stacks" : "items")));
 	}
 }

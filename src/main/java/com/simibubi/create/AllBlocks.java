@@ -133,11 +133,11 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
-import com.simibubi.create.content.curiosities.deco.TrapdoorCTBehaviour;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
+import com.simibubi.create.content.curiosities.deco.TrapdoorCTBehaviour;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
@@ -178,6 +178,7 @@ import com.simibubi.create.content.logistics.block.display.source.ObservedTrainN
 import com.simibubi.create.content.logistics.block.display.source.StationSummaryDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.StopWatchDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.TimeOfDayDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.TrainStatusDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayBoardTarget;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
@@ -1522,6 +1523,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 		.onRegister(assignDataBehaviour(new StationSummaryDisplaySource(), "station_summary"))
+		.onRegister(assignDataBehaviour(new TrainStatusDisplaySource(), "train_status"))
 		.lang("Train Station")
 		.item(TrackTargetingBlockItem.ofType(EdgePointType.STATION))
 		.transform(customItemModel())

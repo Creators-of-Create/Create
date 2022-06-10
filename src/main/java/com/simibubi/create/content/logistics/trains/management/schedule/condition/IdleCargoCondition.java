@@ -29,6 +29,8 @@ public class IdleCargoCondition extends TimedWaitCondition {
 		int idleTime = Integer.MAX_VALUE;
 		for (Carriage carriage : train.carriages) 
 			idleTime = Math.min(idleTime, carriage.storage.getTicksSinceLastExchange());
+		context.putInt("Time", idleTime);
+		requestDisplayIfNecessary(context, idleTime);
 		return idleTime > totalWaitTicks();
 	}
 	

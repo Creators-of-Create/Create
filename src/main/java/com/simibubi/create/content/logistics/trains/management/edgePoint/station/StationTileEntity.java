@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ass
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -219,6 +220,11 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		boolean trainHasAutoSchedule = trainHasSchedule && imminentTrain.runtime.isAutoSchedule;
 		boolean newlyArrived = this.trainPresent != trainPresent;
 
+		if (trainPresent && imminentTrain.runtime.displayLinkUpdateRequested) {
+			DisplayLinkBlock.notifyGatherers(level, worldPosition);
+			imminentTrain.runtime.displayLinkUpdateRequested = false;
+		}
+		
 		if (newlyArrived)
 			applyAutoSchedule();
 

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
@@ -60,10 +59,21 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		if (status == lastChecked)
 			return false;
 		context.putInt("LastChecked", status);
-		return test(level, train);
+		return test(level, train, context);
+	}
+	
+	protected void requestStatusToUpdate(int amount, CompoundTag context) {
+		context.putInt("CurrentDisplay", amount);
+		super.requestStatusToUpdate(context);
+	};
+	
+	protected int getLastDisplaySnapshot(CompoundTag context) {
+		if (!context.contains("CurrentDisplay"))
+			return -1;
+		return context.getInt("CurrentDisplay");
 	}
 
-	protected abstract boolean test(Level level, Train train);
+	protected abstract boolean test(Level level, Train train, CompoundTag context);
 
 	protected abstract Component getUnit();
 

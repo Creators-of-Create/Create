@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -48,6 +49,8 @@ public class ScheduleRuntime {
 	int ticksInTransit;
 	List<Integer> predictionTicks;
 
+	public boolean displayLinkUpdateRequested;
+
 	public ScheduleRuntime(Train train) {
 		this.train = train;
 		reset();
@@ -58,6 +61,7 @@ public class ScheduleRuntime {
 			return;
 		state = State.POST_TRANSIT;
 		conditionProgress.clear();
+		displayLinkUpdateRequested = true;
 		for (Carriage carriage : train.carriages)
 			carriage.storage.resetIdleCargoTracker();
 
@@ -141,10 +145,15 @@ public class ScheduleRuntime {
 
 			CompoundTag tag = conditionContext.get(i);
 			ScheduleWaitCondition condition = list.get(progress);
+			int prevVersion = tag.getInt("StatusVersion");
+
 			if (condition.tickCompletion(level, train, tag)) {
 				conditionContext.set(i, new CompoundTag());
 				conditionProgress.set(i, progress + 1);
+				displayLinkUpdateRequested |= i == 0;
 			}
+
+			displayLinkUpdateRequested |= i == 0 && prevVersion != tag.getInt("StatusVersion");
 		}
 
 		for (Carriage carriage : train.carriages)
@@ -212,6 +221,7 @@ public class ScheduleRuntime {
 		train.status.newSchedule();
 		predictionTicks = new ArrayList<>();
 		schedule.entries.forEach($ -> predictionTicks.add(-1));
+		displayLinkUpdateRequested = true;
 	}
 
 	public Schedule getSchedule() {
@@ -418,6 +428,22 @@ public class ScheduleRuntime {
 
 	public void setSchedulePresentClientside(boolean present) {
 		schedule = present ? new Schedule() : null;
+	}
+
+	public MutableComponent getWaitingStatus(Level level) {
+		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).conditions;
+		for (int i = 0; i < conditions.size(); i++) {
+			List<ScheduleWaitCondition> list = conditions.get(i);
+			int progress = conditionProgress.get(i);
+			if (progress >= list.size())
+				return TextComponent.EMPTY.copy();
+
+			CompoundTag tag = conditionContext.get(i);
+			ScheduleWaitCondition condition = list.get(progress);
+			return condition.getWaitingStatus(level, train, tag);
+		}
+
+		return TextComponent.EMPTY.copy();
 	}
 
 }

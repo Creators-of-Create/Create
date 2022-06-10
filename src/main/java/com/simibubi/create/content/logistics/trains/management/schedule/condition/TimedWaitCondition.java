@@ -3,15 +3,19 @@ package com.simibubi.create.content.logistics.trains.management.schedule.conditi
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,10 +41,18 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 		}
 	}
 
+	protected void requestDisplayIfNecessary(CompoundTag context, int time) {
+		int ticksUntilDeparture = totalWaitTicks() - time;
+		if (ticksUntilDeparture < 20 * 60 && ticksUntilDeparture % 100 == 0)
+			requestStatusToUpdate(context);
+		if (ticksUntilDeparture >= 20 * 60 && ticksUntilDeparture % (20 * 60) == 0)
+			requestStatusToUpdate(context);
+	}
+
 	public int totalWaitTicks() {
 		return getValue() * getUnit().ticksPer;
 	}
-	
+
 	public TimedWaitCondition() {
 		data.putInt("Value", 5);
 		data.putInt("TimeUnit", TimeUnit.SECONDS.ordinal());
@@ -93,6 +105,19 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 			i.forOptions(TimeUnit.translatedOptions())
 				.titled(Lang.translate("generic.timeUnit"));
 		}, "TimeUnit");
+	}
+
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		int time = tag.getInt("Time");
+		int ticksUntilDeparture = totalWaitTicks() - time;
+		boolean showInMinutes = ticksUntilDeparture >= 20 * 60;
+		int num =
+			(int) (showInMinutes ? Math.floor(ticksUntilDeparture / (20 * 60f)) : Math.ceil(ticksUntilDeparture / 100f) * 5);
+		String key = "generic." + (showInMinutes ? num == 1 ? "daytime.minute" : "unit.minutes"
+			: num == 1 ? "daytime.second" : "unit.seconds");
+		return Lang.translate("schedule.condition." + getId().getPath() + ".status",
+			new TextComponent(num + " ").append(Lang.translate(key)));
 	}
 
 }

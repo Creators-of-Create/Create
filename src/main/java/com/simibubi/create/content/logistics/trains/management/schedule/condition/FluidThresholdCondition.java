@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +40,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	protected boolean test(Level level, Train train) {
+	protected boolean test(Level level, Train train, CompoundTag context) {
 		Ops operator = getOperator();
 		int target = getThreshold();
 
@@ -54,11 +55,10 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 				if (!FilterItem.test(level, fluidInTank, compareStack))
 					continue;
 				foundFluid += fluidInTank.getAmount();
-				if (operator != Ops.GREATER && foundFluid > target)
-					return false;
 			}
 		}
 
+		requestStatusToUpdate(foundFluid / 1000, context);
 		return operator.test(foundFluid, target * 1000);
 	}
 
@@ -129,6 +129,16 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 			i.forOptions(ImmutableList.of(Lang.translate("schedule.condition.threshold.buckets")))
 				.titled(null);
 		}, "Measure");
+	}
+
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
+		if (lastDisplaySnapshot == -1)
+			return TextComponent.EMPTY.copy();
+		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
+		return Lang.translate("schedule.condition.threshold.status", lastDisplaySnapshot,
+			Math.max(0, getThreshold() + offset), Lang.translate("schedule.condition.threshold.buckets"));
 	}
 
 }
