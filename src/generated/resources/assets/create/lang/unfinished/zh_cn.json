@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 277",
+	"_": "Missing Localizations: 286",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1391,8 +1391,17 @@
 	"create.schedule.condition.time_of_day": "UNLOCALIZED: Time of Day",
 	"create.schedule.condition.time_of_day.scheduled": "UNLOCALIZED: Scheduled Time: %1$s",
 	"create.schedule.condition.time_of_day.digital_format": "UNLOCALIZED: %1$s:%3$s %4$s",
-	"create.schedule.condition.time_of_day.grace_period": "UNLOCALIZED: Grace Period",
-	"create.schedule.condition.time_of_day.grace_period.format": "UNLOCALIZED: +%1$s Hrs.",
+	"create.schedule.condition.time_of_day.rotation": "UNLOCALIZED: Rotation",
+	"create.schedule.condition.time_of_day.rotation.every_24": "UNLOCALIZED: Every Day",
+	"create.schedule.condition.time_of_day.rotation.every_12": "UNLOCALIZED: Every 12:00",
+	"create.schedule.condition.time_of_day.rotation.every_6": "UNLOCALIZED: Every 6:00",
+	"create.schedule.condition.time_of_day.rotation.every_4": "UNLOCALIZED: Every 4:00",
+	"create.schedule.condition.time_of_day.rotation.every_3": "UNLOCALIZED: Every 3:00",
+	"create.schedule.condition.time_of_day.rotation.every_2": "UNLOCALIZED: Every 2:00",
+	"create.schedule.condition.time_of_day.rotation.every_1": "UNLOCALIZED: Every 1:00",
+	"create.schedule.condition.time_of_day.rotation.every_0_45": "UNLOCALIZED: Every 0:45",
+	"create.schedule.condition.time_of_day.rotation.every_0_30": "UNLOCALIZED: Every 0:30",
+	"create.schedule.condition.time_of_day.rotation.every_0_15": "UNLOCALIZED: Every 0:15",
 	"create.schedule.condition.threshold.train_holds": "UNLOCALIZED: Train holds %1$s",
 	"create.schedule.condition.threshold.greater": "UNLOCALIZED: more than",
 	"create.schedule.condition.threshold.less": "UNLOCALIZED: less than",

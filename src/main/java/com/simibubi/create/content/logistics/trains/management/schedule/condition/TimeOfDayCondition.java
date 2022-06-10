@@ -20,6 +20,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -32,16 +33,34 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 
 	public TimeOfDayCondition() {
 		data.putInt("Hour", 8);
-		data.putInt("GracePeriod", 5);
+		data.putInt("Rotation", 5);
 	}
 
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		int maxTickDiff = Math.max(20, intData("GracePeriod") * 60 * 20);
-		int dayTime = (int) (level.getDayTime() % 24000);
-		int targetTicks = (int) (((intData("Hour") + 18) % 24) * 1000 + (intData("Minute") / 60f) * 100);
+		int maxTickDiff = 40;
+		int targetHour = intData("Hour");
+		int targetMinute = intData("Minute");
+		int dayTime = (int) (level.getDayTime() % getRotation());
+		int targetTicks = (int) ((((targetHour + 18) % 24) * 1000 + (targetMinute / 60f) * 100) % getRotation());
 		int diff = dayTime - targetTicks;
 		return diff >= 0 && maxTickDiff >= diff;
+	}
+
+	public int getRotation() {
+		int index = intData("Rotation");
+		return switch (index) {
+		case 9 -> 250;
+		case 8 -> 500;
+		case 7 -> 750;
+		case 6 -> 1000;
+		case 5 -> 2000;
+		case 4 -> 3000;
+		case 3 -> 4000;
+		case 2 -> 6000;
+		case 1 -> 12000;
+		default -> 24000;
+		};
 	}
 
 	@Override
@@ -60,8 +79,15 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 
 	@Override
 	public List<Component> getTitleAs(String type) {
-		return ImmutableList.of(Lang.translate("schedule.condition.time_of_day.scheduled",
-			getDigitalDisplay(intData("Hour"), intData("Minute"), false).withStyle(ChatFormatting.DARK_AQUA)));
+		return ImmutableList.of(Lang.translate("schedule.condition.time_of_day.scheduled"),
+			getDigitalDisplay(intData("Hour"), intData("Minute"), false).withStyle(ChatFormatting.DARK_AQUA)
+				.append(new TextComponent(" -> ").withStyle(ChatFormatting.DARK_GRAY))
+				.append(Lang
+					.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12", "every_6",
+						"every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15")
+					.get(intData("Rotation"))
+					.copy()
+					.withStyle(ChatFormatting.GRAY)));
 	}
 
 	public String twoDigits(int t) {
@@ -103,11 +129,11 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 			l.visible = false;
 		}, "Minute");
 
-		builder.addScrollInput(68, 49, (i, l) -> {
-			i.withRange(0, 12)
-				.titled(Lang.translate("schedule.condition.time_of_day.grace_period"))
-				.format(t -> Lang.translate("schedule.condition.time_of_day.grace_period.format", t));
-		}, "GracePeriod");
+		builder.addSelectionScrollInput(52, 62, (i, l) -> {
+			i.forOptions(Lang.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12",
+				"every_6", "every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15"))
+				.titled(Lang.translate("schedule.condition.time_of_day.rotation"));
+		}, "Rotation");
 
 		hourInput.getValue()
 			.titled(Lang.translate("generic.daytime.hour"))
@@ -138,8 +164,8 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 			.setState(intData("Minute"))
 			.onChanged();
 
-		builder.customArea(0, 60);
-		builder.customArea(65, 56);
+		builder.customArea(0, 52);
+		builder.customArea(52, 69);
 	}
 
 }

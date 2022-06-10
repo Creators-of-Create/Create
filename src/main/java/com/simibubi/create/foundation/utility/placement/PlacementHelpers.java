@@ -245,6 +245,7 @@ public class PlacementHelpers {
 		ms.popPose();
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void textured(PoseStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
 		RenderSystem.enableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
