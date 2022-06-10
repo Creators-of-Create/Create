@@ -13,16 +13,25 @@ public class BasinInventory extends SmartInventory {
 		super(slots, te, 16, true);
 		this.te = te;
 	}
-	
+
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		// Only insert if no other slot already has a stack of this item
-		for (int i = 0; i < getSlots(); i++) 
+		int firstEmpty = -1;
+		for (int i = 0; i < getSlots(); i++) {
 			if (i != slot && ItemHandlerHelper.canItemStacksStack(stack, inv.getStackInSlot(i)))
 				return stack;
+
+			if (inv.getStackInSlot(i).isEmpty() && firstEmpty == -1)
+				firstEmpty = i;
+		}
+
+		if (inv.getStackInSlot(slot).isEmpty() && slot != firstEmpty)
+			return stack;
+
 		return super.insertItem(slot, stack, simulate);
 	}
-	
+
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack extractItem = super.extractItem(slot, amount, simulate);
