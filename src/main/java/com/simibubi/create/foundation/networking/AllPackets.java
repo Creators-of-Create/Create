@@ -18,6 +18,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInputPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.HonkPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUDUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionFluidPacket;
@@ -140,6 +141,7 @@ public enum AllPackets {
 	GLUE_REMOVED(SuperGlueRemovalPacket.class, SuperGlueRemovalPacket::new, PLAY_TO_SERVER),
 	TRAIN_COLLISION(TrainCollisionPacket.class, TrainCollisionPacket::new, PLAY_TO_SERVER),
 	C_TRAIN_HUD(TrainHUDUpdatePacket.Serverbound.class, TrainHUDUpdatePacket.Serverbound::new, PLAY_TO_SERVER),
+	C_TRAIN_HONK(HonkPacket.Serverbound.class, HonkPacket.Serverbound::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
@@ -172,6 +174,7 @@ public enum AllPackets {
 	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
 	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
+	S_TRAIN_HONK(HonkPacket.class, HonkPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
 
 	;

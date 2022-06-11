@@ -57,6 +57,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -94,6 +95,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 	int flagYRot = -1;
 	boolean flagFlipped;
+	
+	public Component lastDisassembledTrainName;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -608,6 +611,11 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 		Train train = new Train(UUID.randomUUID(), playerUUID, graph, carriages, spacing, contraptions.stream()
 			.anyMatch(CarriageContraption::hasBackwardControls));
+		
+		if (lastDisassembledTrainName != null) {
+			train.name = lastDisassembledTrainName;
+			lastDisassembledTrainName = null;
+		}
 
 		for (int i = 0; i < contraptions.size(); i++)
 			carriages.get(i)

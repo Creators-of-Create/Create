@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.steam.whistle.Whistle
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -57,6 +58,31 @@ public class ArrivalSoundQueue {
 			play(entity, contraption.getBlocks()
 				.get(blockPos));
 		return backwards ? tick > min : tick < max;
+	}
+
+	public Pair<Boolean, Integer> getFirstWhistle(CarriageContraptionEntity entity) {
+		Integer firstTick = firstTick();
+		Integer lastTick = lastTick();
+		if (firstTick == null || lastTick == null || firstTick > lastTick)
+			return null;
+		for (int i = firstTick; i <= lastTick; i++) {
+			if (!sources.containsKey(i - offset))
+				continue;
+			Contraption contraption = entity.getContraption();
+			for (BlockPos blockPos : sources.get(i - offset)) {
+				StructureBlockInfo info = contraption.getBlocks()
+					.get(blockPos);
+				if (info == null)
+					continue;
+				BlockState state = info.state;
+				if (state.getBlock() instanceof WhistleBlock && info.nbt != null) {
+					int pitch = info.nbt.getInt("Pitch");
+					WhistleSize size = state.getValue(WhistleBlock.SIZE);
+					return Pair.of(size == WhistleSize.LARGE, (size == WhistleSize.SMALL ? 12 : 0) - pitch);
+				}
+			}
+		}
+		return null;
 	}
 
 	public void serialize(CompoundTag tagIn) {
@@ -117,7 +143,7 @@ public class ArrivalSoundQueue {
 			WhistleSize size = state.getValue(WhistleBlock.SIZE);
 			float f = (float) Math.pow(2, ((size == WhistleSize.SMALL ? 12 : 0) - pitch) / 12.0);
 			playSimple(entity,
-				(size == WhistleSize.LARGE ? AllSoundEvents.WHISTLE_TRAIN_LOW : AllSoundEvents.WHISTLE_TRAIN_MEDIUM)
+				(size == WhistleSize.LARGE ? AllSoundEvents.WHISTLE_TRAIN_LOW : AllSoundEvents.WHISTLE_TRAIN)
 					.getMainEvent(),
 				1, f);
 //			playSimple(entity, AllSoundEvents.WHISTLE_CHIFF.getMainEvent(), .75f,

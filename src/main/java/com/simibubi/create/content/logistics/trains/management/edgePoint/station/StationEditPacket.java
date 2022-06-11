@@ -110,27 +110,28 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			return;
 
 		Boolean isAssemblyMode = blockState.getValue(StationBlock.ASSEMBLING);
+		boolean assemblyComplete = false;
+
 		if (tryAssemble != null) {
 			if (!isAssemblyMode)
 				return;
 			if (tryAssemble) {
 				te.assemble(player.getUUID());
-				if (te.getStation() != null && te.getStation()
-					.getPresentTrain() != null) {
-					level.setBlock(blockPos, blockState.setValue(StationBlock.ASSEMBLING, false), 3);
-					te.refreshBlockState();
-				}
+				assemblyComplete = te.getStation() != null && te.getStation()
+					.getPresentTrain() != null;
 			} else {
 				if (disassembleAndEnterMode(player, te))
 					te.refreshAssemblyInfo();
 			}
-			return;
+			if (!assemblyComplete)
+				return;
 		}
 		if (isAssemblyMode == assemblyMode)
 			return;
 
 		BlockState newState = blockState.cycle(StationBlock.ASSEMBLING);
 		Boolean nowAssembling = newState.getValue(StationBlock.ASSEMBLING);
+
 		if (nowAssembling) {
 			if (!disassembleAndEnterMode(player, te))
 				return;

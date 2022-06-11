@@ -39,6 +39,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -77,7 +78,7 @@ public class Train {
 	public double speed = 0;
 	public double targetSpeed = 0;
 	public Double speedBeforeStall = null;
-	
+
 	public double throttle = 1;
 	public boolean honk = false;
 
@@ -114,6 +115,10 @@ public class Train {
 	public boolean derailed;
 
 	public int fuelTicks;
+	public int honkTicks;
+
+	public Boolean lowHonk;
+	public int honkPitch;
 
 	int tickOffset;
 	double[] stress;
@@ -675,12 +680,15 @@ public class Train {
 
 		int offset = 1;
 		boolean backwards = currentlyBackwards;
+		Level level = null;
+		
 		for (int i = 0; i < carriages.size(); i++) {
 
 			Carriage carriage = carriages.get(backwards ? carriages.size() - i - 1 : i);
 			CarriageContraptionEntity entity = carriage.anyAvailableEntity();
 			if (entity == null)
 				return false;
+			level = entity.level;
 
 			if (entity.getContraption() instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
@@ -695,8 +703,12 @@ public class Train {
 		}
 
 		GlobalStation currentStation = getCurrentStation();
-		if (currentStation != null)
+		if (currentStation != null) {
 			currentStation.cancelReservation(this);
+			BlockPos tilePos = currentStation.getTilePos();
+			if (level.getBlockEntity(tilePos) instanceof StationTileEntity ste)
+				ste.lastDisassembledTrainName = name.copy();
+		}
 
 		Create.RAILWAYS.removeTrain(id);
 		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
@@ -1141,6 +1153,25 @@ public class Train {
 				.reserveFor(train);
 
 		return train;
+	}
+
+	public void determineHonk(Level level) {
+		if (lowHonk != null)
+			return;
+		for (int index = 0; index < carriages.size(); index++) {
+			Carriage carriage = carriages.get(index);
+			DimensionalCarriageEntity dimensional = carriage.getDimensionalIfPresent(level.dimension());
+			if (dimensional == null)
+				return;
+			CarriageContraptionEntity entity = dimensional.entity.get();
+			if (entity == null || !(entity.getContraption() instanceof CarriageContraption otherCC))
+				break;
+			Pair<Boolean,Integer> first = otherCC.soundQueue.getFirstWhistle(entity);
+			if (first != null) {
+				lowHonk = first.getFirst();
+				honkPitch = first.getSecond();
+			}
+		}
 	}
 
 }

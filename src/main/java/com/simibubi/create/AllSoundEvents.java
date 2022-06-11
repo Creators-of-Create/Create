@@ -248,7 +248,7 @@ public class AllSoundEvents {
 			.attenuationDistance(128)
 			.build(),
 
-		TRAIN2 = create("train2").subtitle("Bogey wheels rumble")
+		TRAIN2 = create("train2").noSubtitle()
 			.category(SoundSource.NEUTRAL)
 			.attenuationDistance(128)
 			.build(),
@@ -258,16 +258,32 @@ public class AllSoundEvents {
 			.attenuationDistance(16)
 			.build(),
 
-		WHISTLE_TRAIN_HIGH = create("whistle_train_high").subtitle("High whistling")
-			.category(SoundSource.RECORDS)
-			.build(),
-
-		WHISTLE_TRAIN_MEDIUM = create("whistle_train").subtitle("Whistling")
+		WHISTLE_TRAIN = create("whistle_train").subtitle("Whistling")
 			.category(SoundSource.RECORDS)
 			.build(),
 
 		WHISTLE_TRAIN_LOW = create("whistle_train_low").subtitle("Low whistling")
 			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_TRAIN_MANUAL = create("whistle_train_manual").subtitle("Train honks")
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_TRAIN_MANUAL_LOW = create("whistle_train_manual_low").subtitle("Train honks")
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_TRAIN_MANUAL_END = create("whistle_train_manual_end").noSubtitle()
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_TRAIN_MANUAL_LOW_END = create("whistle_train_manual_low_end").noSubtitle()
+			.category(SoundSource.NEUTRAL)
+			.attenuationDistance(64)
 			.build(),
 
 		WHISTLE_CHIFF = create("chiff").noSubtitle()
@@ -640,7 +656,8 @@ public class AllSoundEvents {
 			}
 
 			entry.add("sounds", list);
-			entry.addProperty("subtitle", getSubtitleKey());
+			if (hasSubtitle())
+				entry.addProperty("subtitle", getSubtitleKey());
 			json.add(id.getPath(), entry);
 		}
 

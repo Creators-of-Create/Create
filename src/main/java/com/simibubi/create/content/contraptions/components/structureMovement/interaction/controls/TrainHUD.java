@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -34,10 +35,13 @@ public class TrainHUD {
 
 	static Double editedThrottle = null;
 	static int hudPacketCooldown = 5;
+	static int honkPacketCooldown = 5;
 
 	public static Component currentPrompt;
 	public static boolean currentPromptShadow;
 	public static int promptKeepAlive = 0;
+
+	static boolean usedToHonk;
 
 	public static void tick() {
 		if (promptKeepAlive > 0)
@@ -63,6 +67,20 @@ public class TrainHUD {
 		displayedThrottle.chase(editedThrottle != null ? editedThrottle : train.throttle, .75f, Chaser.EXP);
 		displayedThrottle.tickChaser();
 
+		boolean isSprintKeyPressed = ControlsUtil.isActuallyPressed(Minecraft.getInstance().options.keySprint);
+
+		if (isSprintKeyPressed && honkPacketCooldown-- <= 0) {
+			AllPackets.channel.sendToServer(new HonkPacket.Serverbound(train, true));
+			honkPacketCooldown = 5;
+			usedToHonk = true;
+		}
+
+		if (!isSprintKeyPressed && usedToHonk) {
+			AllPackets.channel.sendToServer(new HonkPacket.Serverbound(train, false));
+			honkPacketCooldown = 0;
+			usedToHonk = false;
+		}
+
 		if (editedThrottle == null)
 			return;
 		if (Mth.equal(editedThrottle, train.throttle)) {
@@ -71,10 +89,10 @@ public class TrainHUD {
 			return;
 		}
 
-		if (hudPacketCooldown-- > 0)
-			return;
-		AllPackets.channel.sendToServer(new TrainHUDUpdatePacket.Serverbound(train, editedThrottle));
-		hudPacketCooldown = 5;
+		if (hudPacketCooldown-- <= 0) {
+			AllPackets.channel.sendToServer(new TrainHUDUpdatePacket.Serverbound(train, editedThrottle));
+			hudPacketCooldown = 5;
+		}
 	}
 
 	private static Carriage getCarriage() {

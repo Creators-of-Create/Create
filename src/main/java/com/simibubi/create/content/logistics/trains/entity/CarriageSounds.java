@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -26,6 +27,7 @@ public class CarriageSounds {
 	LoopingSound minecartEsqueSound;
 	LoopingSound sharedWheelSound;
 	LoopingSound sharedWheelSoundSeated;
+	LoopingSound sharedHonkSound;
 
 	boolean arrived;
 
@@ -115,7 +117,7 @@ public class CarriageSounds {
 		volume = Math.min(volume, distanceFactor.getValue() / 800);
 
 		float pitch = Mth.clamp(speedFactor.getValue() * 2 + .25f, .75f, 1.95f) - pitchModifier;
-		float pitch2 = Mth.clamp(speedFactor.getValue() * 2, 0.75f, 1.25f) - pitchModifier;
+//		float pitch2 = Mth.clamp(speedFactor.getValue() * 2, 0.75f, 1.25f) - pitchModifier;
 
 		minecartEsqueSound.setPitch(pitch * 1.5f);
 
@@ -132,17 +134,54 @@ public class CarriageSounds {
 			if (mainEntity.sounds == null)
 				mainEntity.sounds = new CarriageSounds(mainEntity);
 			mainEntity.sounds.submitSharedSoundVolume(soundLocation, volume);
-			if (carriage != entity.getCarriage())
+			if (carriage != entity.getCarriage()) {
 				finalizeSharedVolume(0);
+				return;
+			}
+			break;
+		}
+
+//		finalizeSharedVolume(volume);
+//		minecartEsqueSound.setLocation(soundLocation);
+//		sharedWheelSound.setPitch(pitch2);
+//		sharedWheelSound.setLocation(soundLocation);
+//		sharedWheelSoundSeated.setPitch(pitch2);
+//		sharedWheelSoundSeated.setLocation(soundLocation);
+
+		if (train.honkTicks == 0) {
+			if (sharedHonkSound != null) {
+				sharedHonkSound.stopSound();
+				sharedHonkSound = null;
+			}
 			return;
 		}
 
-		finalizeSharedVolume(volume);
-		minecartEsqueSound.setLocation(soundLocation);
-		sharedWheelSound.setPitch(pitch2);
-		sharedWheelSound.setLocation(soundLocation);
-		sharedWheelSoundSeated.setPitch(pitch2);
-		sharedWheelSoundSeated.setLocation(soundLocation);
+		train.honkTicks--;
+		train.determineHonk(entity.level);
+
+		if (train.lowHonk == null)
+			return;
+
+		boolean low = train.lowHonk;
+		float honkPitch = (float) Math.pow(2, train.honkPitch / 12.0);
+
+		SoundEntry endSound =
+			!low ? AllSoundEvents.WHISTLE_TRAIN_MANUAL_END : AllSoundEvents.WHISTLE_TRAIN_MANUAL_LOW_END;
+		SoundEntry continuousSound =
+			!low ? AllSoundEvents.WHISTLE_TRAIN_MANUAL : AllSoundEvents.WHISTLE_TRAIN_MANUAL_LOW;
+
+		if (train.honkTicks == 5)
+			endSound.playAt(mc.level, soundLocation, 1, honkPitch, false);
+		if (train.honkTicks == 19)
+			endSound.playAt(mc.level, soundLocation, .5f, honkPitch, false);
+
+		sharedHonkSound = playIfMissing(mc, sharedHonkSound, continuousSound.getMainEvent());
+		sharedHonkSound.setLocation(soundLocation);
+		float fadeout = Mth.clamp((3 - train.honkTicks) / 3f, 0, 1);
+		float fadein = Mth.clamp((train.honkTicks - 17) / 3f, 0, 1);
+		sharedHonkSound.setVolume(1 - fadeout - fadein);
+		sharedHonkSound.setPitch(honkPitch);
+
 	}
 
 	private LoopingSound playIfMissing(Minecraft mc, LoopingSound loopingSound, SoundEvent sound) {
@@ -193,6 +232,8 @@ public class CarriageSounds {
 			sharedWheelSound.stopSound();
 		if (sharedWheelSoundSeated != null)
 			sharedWheelSoundSeated.stopSound();
+		if (sharedHonkSound != null)
+			sharedHonkSound.stopSound();
 	}
 
 	class LoopingSound extends AbstractTickableSoundInstance {
