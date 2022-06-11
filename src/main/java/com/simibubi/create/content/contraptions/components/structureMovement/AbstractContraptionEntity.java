@@ -125,6 +125,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				.get(seatIndex))) {
 				if (entity instanceof Player)
 					return;
+				if (!(passenger instanceof Player))
+					return;
 				entity.stopRiding();
 			}
 		}

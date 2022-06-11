@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -61,6 +62,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
@@ -681,7 +683,7 @@ public class Train {
 		int offset = 1;
 		boolean backwards = currentlyBackwards;
 		Level level = null;
-		
+
 		for (int i = 0; i < carriages.size(); i++) {
 
 			Carriage carriage = carriages.get(backwards ? carriages.size() - i - 1 : i);
@@ -1155,6 +1157,17 @@ public class Train {
 		return train;
 	}
 
+	public int countPlayerPassengers() {
+		AtomicInteger count = new AtomicInteger();
+		for (Carriage carriage : carriages)
+			carriage.forEachPresentEntity(e -> e.getIndirectPassengers()
+				.forEach(p -> {
+					if (p instanceof Player)
+						count.incrementAndGet();
+				}));
+		return count.intValue();
+	}
+
 	public void determineHonk(Level level) {
 		if (lowHonk != null)
 			return;
@@ -1166,7 +1179,7 @@ public class Train {
 			CarriageContraptionEntity entity = dimensional.entity.get();
 			if (entity == null || !(entity.getContraption() instanceof CarriageContraption otherCC))
 				break;
-			Pair<Boolean,Integer> first = otherCC.soundQueue.getFirstWhistle(entity);
+			Pair<Boolean, Integer> first = otherCC.soundQueue.getFirstWhistle(entity);
 			if (first != null) {
 				lowHonk = first.getFirst();
 				honkPitch = first.getSecond();

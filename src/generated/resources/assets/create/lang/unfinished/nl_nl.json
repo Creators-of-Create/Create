@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2222",
+	"_": "Missing Localizations: 2231",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1432,6 +1432,15 @@
 	"create.schedule.condition.redstone_link.frequency_state": "UNLOCALIZED: Frequency state:",
 	"create.schedule.condition.redstone_link.frequency_powered": "UNLOCALIZED: Frequency powered:",
 	"create.schedule.condition.redstone_link.frequency_unpowered": "UNLOCALIZED: Frequency not powered:",
+	"create.schedule.condition.player_count": "UNLOCALIZED: Players Seated",
+	"create.schedule.condition.player_count.summary": "UNLOCALIZED: %1$s Player",
+	"create.schedule.condition.player_count.summary_plural": "UNLOCALIZED: %1$s Players",
+	"create.schedule.condition.player_count.seated": "UNLOCALIZED: %1$s seated",
+	"create.schedule.condition.player_count.players": "UNLOCALIZED: Players",
+	"create.schedule.condition.player_count.condition": "UNLOCALIZED: Conditional",
+	"create.schedule.condition.player_count.exactly": "UNLOCALIZED: Exactly",
+	"create.schedule.condition.player_count.or_above": "UNLOCALIZED: Or above",
+	"create.schedule.condition.player_count.status": "UNLOCALIZED: Passengers: %1$s/%2$s",
 	"create.schedule.loop": "UNLOCALIZED: Loop Forever",
 	"create.schedule.loop1": "UNLOCALIZED: Schedule starts over",
 	"create.schedule.loop2": "UNLOCALIZED: when completed",
