@@ -89,11 +89,6 @@ public class ScheduleItem extends Item implements MenuProvider {
 			Train train = entity.getCarriage().train;
 			if (train == null)
 				return InteractionResult.SUCCESS;
-			if (train.heldForAssembly) {
-				pPlayer.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
-				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-				return InteractionResult.SUCCESS;
-			}
 
 			Integer seatIndex = contraption.getSeatMapping()
 				.get(pInteractionTarget.getUUID());

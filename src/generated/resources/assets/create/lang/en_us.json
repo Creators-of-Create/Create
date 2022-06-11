@@ -1436,7 +1436,6 @@
 	"create.schedule.loop2": "when completed",
 	"create.schedule.reset": "Reset Progress",
 	"create.schedule.skip": "Skip current Stop",
-	"create.schedule.train_still_assembling": "Confirm Train Assembly in the Station UI first",
 	"create.schedule.applied_to_train": "Train is now following this Schedule",
 	"create.schedule.non_controlling_seat": "Conductor needs to sit in front of a Controls block",
 	"create.schedule.remove_with_empty_hand": "Remove current Schedule with an Empty Hand",
@@ -1507,6 +1506,8 @@
 	"create.train.relocate.valid": "Can relocate to here, Click to Confirm",
 	"create.train.relocate.invalid": "Cannot relocate Train to here",
 	"create.train.relocate.too_far": "Cannot relocate Train this far away",
+	"create.train.departing_from": "Departing from %1$s",
+	"create.train.arrived_at": "Arrived at %1$s",
 
 	"create.track_signal.cannot_change_mode": "Unable to switch mode of this Signal",
 	"create.track_signal.mode_change.entry_signal": "-> Allow passage if section unoccupied",

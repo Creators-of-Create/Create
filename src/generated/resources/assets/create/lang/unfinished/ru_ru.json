@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 675",
+	"_": "Missing Localizations: 676",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1437,7 +1437,6 @@
 	"create.schedule.loop2": "UNLOCALIZED: when completed",
 	"create.schedule.reset": "UNLOCALIZED: Reset Progress",
 	"create.schedule.skip": "UNLOCALIZED: Skip current Stop",
-	"create.schedule.train_still_assembling": "UNLOCALIZED: Confirm Train Assembly in the Station UI first",
 	"create.schedule.applied_to_train": "UNLOCALIZED: Train is now following this Schedule",
 	"create.schedule.non_controlling_seat": "UNLOCALIZED: Conductor needs to sit in front of a Controls block",
 	"create.schedule.remove_with_empty_hand": "UNLOCALIZED: Remove current Schedule with an Empty Hand",
@@ -1508,6 +1507,8 @@
 	"create.train.relocate.valid": "UNLOCALIZED: Can relocate to here, Click to Confirm",
 	"create.train.relocate.invalid": "UNLOCALIZED: Cannot relocate Train to here",
 	"create.train.relocate.too_far": "UNLOCALIZED: Cannot relocate Train this far away",
+	"create.train.departing_from": "UNLOCALIZED: Departing from %1$s",
+	"create.train.arrived_at": "UNLOCALIZED: Arrived at %1$s",
 
 	"create.track_signal.cannot_change_mode": "UNLOCALIZED: Unable to switch mode of this Signal",
 	"create.track_signal.mode_change.entry_signal": "UNLOCALIZED: -> Allow passage if section unoccupied",

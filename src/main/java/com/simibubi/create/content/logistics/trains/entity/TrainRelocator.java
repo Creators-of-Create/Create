@@ -234,7 +234,6 @@ public class TrainRelocator {
 
 		train.leaveStation();
 		train.derailed = false;
-		train.heldForAssembly = false;
 		train.navigation.waitingForSignal = null;
 		train.occupiedSignalBlocks.clear();
 		train.graph = graph;

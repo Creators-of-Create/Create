@@ -432,18 +432,17 @@ public class ScheduleRuntime {
 
 	public MutableComponent getWaitingStatus(Level level) {
 		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).conditions;
-		for (int i = 0; i < conditions.size(); i++) {
-			List<ScheduleWaitCondition> list = conditions.get(i);
-			int progress = conditionProgress.get(i);
-			if (progress >= list.size())
-				return TextComponent.EMPTY.copy();
+		if (conditions.isEmpty() || conditionProgress.isEmpty() || conditionContext.isEmpty())
+			return TextComponent.EMPTY.copy();
 
-			CompoundTag tag = conditionContext.get(i);
-			ScheduleWaitCondition condition = list.get(progress);
-			return condition.getWaitingStatus(level, train, tag);
-		}
+		List<ScheduleWaitCondition> list = conditions.get(0);
+		int progress = conditionProgress.get(0);
+		if (progress >= list.size())
+			return TextComponent.EMPTY.copy();
 
-		return TextComponent.EMPTY.copy();
+		CompoundTag tag = conditionContext.get(0);
+		ScheduleWaitCondition condition = list.get(progress);
+		return condition.getWaitingStatus(level, train, tag);
 	}
 
 }

@@ -168,6 +168,9 @@ public enum AllGuiTextures implements ScreenElement {
 	TRAIN_HUD_THROTTLE_POINTER("widgets", 0, 209, 6, 9),
 	TRAIN_HUD_FRAME("widgets", 0, 200, 186, 7),
 	TRAIN_HUD_DIRECTION("widgets", 77, 165, 28, 20),
+	TRAIN_PROMPT_L("widgets", 8, 209, 3, 16),
+	TRAIN_PROMPT_R("widgets", 11, 209, 3, 16),
+	TRAIN_PROMPT("widgets", 0, 230, 256, 16),
 
 	// PlacementIndicator
 	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256);

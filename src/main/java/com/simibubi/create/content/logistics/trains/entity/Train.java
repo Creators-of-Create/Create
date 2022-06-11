@@ -98,10 +98,6 @@ public class Train {
 	public UUID currentStation;
 	public boolean currentlyBackwards;
 
-	// considered for removal
-	@Deprecated
-	public boolean heldForAssembly;
-
 	public boolean doubleEnded;
 	public List<Carriage> carriages;
 	public List<Integer> carriageSpacing;
@@ -140,7 +136,6 @@ public class Train {
 
 		navigation = new Navigation(this);
 		runtime = new ScheduleRuntime(this);
-		heldForAssembly = false;
 		migratingPoints = new ArrayList<>();
 		currentStation = null;
 		manualSteer = SteerDirection.NONE;
@@ -1074,7 +1069,6 @@ public class Train {
 		if (currentStation != null)
 			tag.putUUID("Station", currentStation);
 		tag.putBoolean("Backwards", currentlyBackwards);
-		tag.putBoolean("StillAssembling", heldForAssembly);
 		tag.putBoolean("Derailed", derailed);
 		tag.putBoolean("UpdateSignals", updateSignalBlocks);
 		tag.put("SignalBlocks", NBTHelper.writeCompoundList(occupiedSignalBlocks.entrySet(), e -> {
@@ -1126,7 +1120,6 @@ public class Train {
 		train.name = Component.Serializer.fromJson(tag.getString("Name"));
 		train.currentStation = tag.contains("Station") ? tag.getUUID("Station") : null;
 		train.currentlyBackwards = tag.getBoolean("Backwards");
-		train.heldForAssembly = tag.getBoolean("StillAssembling");
 		train.derailed = tag.getBoolean("Derailed");
 		train.updateSignalBlocks = tag.getBoolean("UpdateSignals");
 		train.fuelTicks = tag.getInt("Fuel");

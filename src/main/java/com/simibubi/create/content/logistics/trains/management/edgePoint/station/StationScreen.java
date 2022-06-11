@@ -330,8 +330,7 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
-			AllPackets.channel
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), false, train.icon.getId()));
+			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 	}
 
 	private void syncStationName() {
@@ -348,11 +347,10 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train == null)
 			return;
-		if (switchingToAssemblyMode)
-			train.heldForAssembly = true;
 		if (!switchingToAssemblyMode)
-			AllPackets.channel
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), false, train.icon.getId()));
+			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+		else
+			te.imminentTrain = null;
 	}
 
 	@Override

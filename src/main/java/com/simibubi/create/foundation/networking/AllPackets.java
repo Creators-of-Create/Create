@@ -53,6 +53,7 @@ import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.content.logistics.trains.TrackGraphSyncPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
+import com.simibubi.create.content.logistics.trains.entity.TrainPromptPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocationPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.CurvedTrackSelectionPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroupPacket;
@@ -171,6 +172,7 @@ public enum AllPackets {
 	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
 	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
+	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
 
 	;
 

@@ -41,6 +41,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -482,10 +483,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return false;
 		if (carriage.train.derailed)
 			return false;
-		if (carriage.train.heldForAssembly) {
-			player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
-			return false;
-		}
 
 		Train train = carriage.train;
 		if (train.runtime.getSchedule() != null && !train.runtime.paused)
@@ -558,8 +555,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
-			player.displayClientMessage(new TextComponent("<i> Arrived at ").withStyle(ChatFormatting.GREEN)
-				.append(new TextComponent(currentStation.name).withStyle(ChatFormatting.WHITE)), true);
+			sendPrompt(player, Lang.translate("train.arrived_at",
+				new TextComponent(currentStation.name).withStyle(ChatFormatting.DARK_GREEN)), false);
 			return true;
 		}
 
@@ -570,11 +567,12 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
-			player.displayClientMessage(new TextComponent("<i> Departing from ").withStyle(ChatFormatting.YELLOW)
-				.append(new TextComponent(currentStation.name).withStyle(ChatFormatting.WHITE)), true);
+			sendPrompt(player, Lang.translate("train.departing_from",
+				new TextComponent(currentStation.name).withStyle(ChatFormatting.DARK_GREEN)), false);
 		}
 
 		if (currentStation == null) {
+
 			Navigation nav = carriage.train.navigation;
 			if (nav.destination != null) {
 				if (!spaceDown)
@@ -583,14 +581,18 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					double f = (nav.distanceToDestination / navDistanceTotal);
 					int progress = (int) (Mth.clamp(1 - ((1 - f) * (1 - f)), 0, 1) * 30);
 					boolean arrived = progress == 0;
-					TextComponent whiteComponent =
-						new TextComponent(Strings.repeat("|", progress) + (arrived ? " ->" : " <-"));
-					TextComponent greenComponent =
-						new TextComponent((arrived ? "<- " : "-> ") + Strings.repeat("|", 30 - progress));
-					int mixedColor = Color.mixColors(0x00_91EA44, 0x00_FFC244, progress / 30f);
-					int targetColor = arrived ? 0x00_91EA44 : 0x00_ffffff;
-					player.displayClientMessage(greenComponent.withStyle(st -> st.withColor(mixedColor))
-						.append(whiteComponent.withStyle(st -> st.withColor(targetColor))), true);
+					TextComponent whiteComponent = new TextComponent(Strings.repeat("|", progress));
+					TextComponent greenComponent = new TextComponent(Strings.repeat("|", 30 - progress));
+
+					int fromColor = 0x00_FFC244;
+					int toColor = 0x00_529915;
+
+					int mixedColor = Color.mixColors(toColor, fromColor, progress / 30f);
+					int targetColor = arrived ? toColor : 0x00_544D45;
+
+					MutableComponent component = greenComponent.withStyle(st -> st.withColor(mixedColor))
+						.append(whiteComponent.withStyle(st -> st.withColor(targetColor)));
+					sendPrompt(player, component, true);
 					carriage.train.manualTick = true;
 					return true;
 				}
@@ -633,12 +635,17 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		return true;
 	}
 
+	private void sendPrompt(Player player, MutableComponent component, boolean shadow) {
+		if (player instanceof ServerPlayer sp)
+			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp), new TrainPromptPacket(component, shadow));
+	}
+
 	boolean stationMessage = false;
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
-		player.displayClientMessage(
+		sendPrompt(player,
 			Lang.translate("contraption.controls.approach_station", new KeybindComponent("key.jump"), station.name),
-			true);
+			false);
 		stationMessage = true;
 	}
 

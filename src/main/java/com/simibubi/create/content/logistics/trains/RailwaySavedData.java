@@ -25,7 +25,7 @@ public class RailwaySavedData extends SavedData {
 	@Override
 	public CompoundTag save(CompoundTag nbt) {
 		GlobalRailwayManager railways = Create.RAILWAYS;
-		Create.LOGGER.info("Saving Railway Information...");
+//		Create.LOGGER.info("Saving Railway Information...");
 		DimensionPalette dimensions = new DimensionPalette();
 		nbt.put("RailGraphs", NBTHelper.writeCompoundList(railways.trackNetworks.values(), tg -> tg.write(dimensions)));
 		nbt.put("SignalBlocks", NBTHelper.writeCompoundList(railways.signalEdgeGroups.values(), seg -> {
@@ -43,7 +43,7 @@ public class RailwaySavedData extends SavedData {
 		sd.trackNetworks = new HashMap<>();
 		sd.signalEdgeGroups = new HashMap<>();
 		sd.trains = new HashMap<>();
-		Create.LOGGER.info("Loading Railway Information...");
+//		Create.LOGGER.info("Loading Railway Information...");
 
 		DimensionPalette dimensions = DimensionPalette.read(nbt);
 		NBTHelper.iterateCompoundList(nbt.getList("RailGraphs", Tag.TAG_COMPOUND), c -> {

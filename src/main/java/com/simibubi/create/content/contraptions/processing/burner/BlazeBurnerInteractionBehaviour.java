@@ -82,11 +82,6 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 			Schedule schedule = ScheduleItem.getSchedule(itemInHand);
 			if (schedule == null)
 				return false;
-			if (train.heldForAssembly) {
-				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-				player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
-				return true;
-			}
 
 			if (schedule.entries.isEmpty()) {
 				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);

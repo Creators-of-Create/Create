@@ -224,7 +224,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			DisplayLinkBlock.notifyGatherers(level, worldPosition);
 			imminentTrain.runtime.displayLinkUpdateRequested = false;
 		}
-		
+
 		if (newlyArrived)
 			applyAutoSchedule();
 
@@ -279,7 +279,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			.getDestroySpeed(level, targetPos) == -1) {
 			return false;
 		}
-		
+
 		level.destroyBlock(targetPos, true);
 
 		BlockState bogeyAnchor = ProperWaterloggedBlock.withWater(level, track.getBogeyAnchor(level, pos, state), pos);
@@ -429,6 +429,9 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 	public void assemble(UUID playerUUID) {
 		refreshAssemblyInfo();
+
+		if (bogeyLocations == null)
+			return;
 
 		if (bogeyLocations[0] != 0) {
 			exception(new AssemblyException(Lang.translate("train_assembly.frontmost_bogey_at_station")), -1);

@@ -60,7 +60,6 @@ public class TrainPacket extends SimplePacketBase {
 		boolean doubleEnded = buffer.readBoolean();
 		train = new Train(trainId, owner, null, carriages, carriageSpacing, doubleEnded);
 
-		train.heldForAssembly = buffer.readBoolean();
 		train.name = Component.Serializer.fromJson(buffer.readUtf());
 		train.icon = TrainIconType.byId(buffer.readResourceLocation());
 	}
@@ -94,7 +93,6 @@ public class TrainPacket extends SimplePacketBase {
 		train.carriageSpacing.forEach(buffer::writeVarInt);
 
 		buffer.writeBoolean(train.doubleEnded);
-		buffer.writeBoolean(train.heldForAssembly);
 		buffer.writeUtf(Component.Serializer.toJson(train.name));
 		buffer.writeResourceLocation(train.icon.id);
 	}
