@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -40,7 +41,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (destroyProgress == -1)
 			destroyNextTick();
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -93,9 +94,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			return;
 		if (getSpeed() == 0)
 			return;
-		
+
 		breakingPos = getBreakingPos();
-		
+
 		if (ticksUntilNextProgress < 0)
 			return;
 		if (ticksUntilNextProgress-- > 0)
@@ -154,7 +155,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		});
 		if (level instanceof ServerLevel)
 			stateToBreak.spawnAfterBreak((ServerLevel) level, breakingPos, ItemStack.EMPTY);
-		level.setBlock(breakingPos, FluidState.createLegacyBlock(), 3);
+		if(!stateToBreak.is(AllTags.AllBlockTags.NO_BREAK_DROPS.tag)) {
+			level.setBlock(breakingPos, FluidState.createLegacyBlock(), 3);
+		}
 	}
 
 	protected float getBreakSpeed() {
