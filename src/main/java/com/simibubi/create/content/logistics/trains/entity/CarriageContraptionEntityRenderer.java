@@ -55,7 +55,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				: BlockPos.ZERO.relative(entity.getInitialOrientation()
 					.getCounterClockWise(), bogeySpacing);
 
-			if (!Backend.isOn() && !entity.getContraption()
+			if (!Backend.canUseInstancing(entity.level) && !entity.getContraption()
 				.isHiddenInPortal(bogeyPos)) {
 
 				ms.pushPose();

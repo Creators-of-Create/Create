@@ -142,10 +142,6 @@ public class BeltConnectorItem extends BlockItem {
 				failed = true;
 				break;
 			}
-			
-			if (!existingBlock.getMaterial()
-				.isReplaceable())
-				world.destroyBlock(pos, false);
 
 			BeltPart part = pos.equals(start) ? BeltPart.START : pos.equals(end) ? BeltPart.END : BeltPart.MIDDLE;
 			BlockState shaftState = world.getBlockState(pos);
@@ -154,15 +150,20 @@ public class BeltConnectorItem extends BlockItem {
 				part = BeltPart.PULLEY;
 			if (pulley && shaftState.getValue(AbstractSimpleShaftBlock.AXIS) == Axis.Y)
 				slope = BeltSlope.SIDEWAYS;
+
+			if (!existingBlock.getMaterial()
+					.isReplaceable())
+				world.destroyBlock(pos, false);
+
 			KineticTileEntity.switchToBlockState(world, pos, beltBlock.setValue(BeltBlock.SLOPE, slope)
 				.setValue(BeltBlock.PART, part)
 				.setValue(BeltBlock.HORIZONTAL_FACING, facing));
 		}
-		
+
 		if (!failed)
 			return;
-		
-		for (BlockPos pos : beltsToCreate) 
+
+		for (BlockPos pos : beltsToCreate)
 			if (AllBlocks.BELT.has(world.getBlockState(pos)))
 				world.destroyBlock(pos, false);
 	}

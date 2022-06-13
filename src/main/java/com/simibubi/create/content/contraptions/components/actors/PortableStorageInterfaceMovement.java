@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.FlwContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -55,7 +56,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		if (!Backend.isOn())
+		if (!FlwContraption.canInstance())
 			PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 
@@ -70,9 +71,9 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	@Override
 	public void tick(MovementContext context) {
-		if (context.world.isClientSide) 
+		if (context.world.isClientSide)
 			getAnimation(context).tickChaser();
-			
+
 		boolean onCarriage = context.contraption instanceof CarriageContraption;
 		if (onCarriage && context.motion.length() > 1 / 4f)
 			return;
@@ -152,7 +153,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 	public void stopMoving(MovementContext context) {
 //		reset(context);
 	}
-	
+
 	@Override
 	public void cancelStall(MovementContext context) {
 		reset(context);

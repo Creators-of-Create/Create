@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.error.GlError;
+import com.jozufozu.flywheel.config.BackendType;
 import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
@@ -48,7 +49,7 @@ public class ContraptionRenderDispatcher {
 
 	/**
 	 * Reset a contraption's renderer.
-	 * 
+	 *
 	 * @param contraption The contraption to invalidate.
 	 * @return true if there was a renderer associated with the given contraption.
 	 */
@@ -119,7 +120,12 @@ public class ContraptionRenderDispatcher {
 		BlockPos origin = c.anchor;
 		int height = contraptionWorld.getHeight();
 		int minBuildHeight = contraptionWorld.getMinBuildHeight();
-		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, origin, height, minBuildHeight);
+		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, origin, height, minBuildHeight) {
+			@Override
+			public boolean supportsFlywheel() {
+				return Backend.getBackendType() == BackendType.INSTANCING;
+			}
+		};
 
 		renderWorld.setBlockEntities(c.presentTileEntities.values());
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()

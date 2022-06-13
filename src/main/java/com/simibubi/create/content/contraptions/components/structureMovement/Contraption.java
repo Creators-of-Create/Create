@@ -849,35 +849,35 @@ public abstract class Contraption {
 
 			this.blocks.put(info.pos, info);
 
-			if (world.isClientSide) {
-				Block block = info.state.getBlock();
-				CompoundTag tag = info.nbt;
-				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
-				if (tag == null)
-					return;
+			if (!world.isClientSide)
+				return;
 
-				tag.putInt("x", info.pos.getX());
-				tag.putInt("y", info.pos.getY());
-				tag.putInt("z", info.pos.getZ());
+			Block block = info.state.getBlock();
+			CompoundTag tag = info.nbt;
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
+			if (tag == null)
+				return;
 
-				BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
-				if (te == null)
-					return;
-				te.setLevel(world);
-				if (te instanceof KineticTileEntity)
-					((KineticTileEntity) te).setSpeed(0);
-				te.getBlockState();
+			tag.putInt("x", info.pos.getX());
+			tag.putInt("y", info.pos.getY());
+			tag.putInt("z", info.pos.getZ());
 
-				if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
-					maybeInstancedTileEntities.add(te);
+			BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
+			if (te == null)
+				return;
+			te.setLevel(world);
+			if (te instanceof KineticTileEntity)
+				((KineticTileEntity) te).setSpeed(0);
+			te.getBlockState();
 
-				if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
-					return;
+			if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
+				maybeInstancedTileEntities.add(te);
 
-				presentTileEntities.put(info.pos, te);
-				specialRenderedTileEntities.add(te);
-			}
+			if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
+				return;
 
+			presentTileEntities.put(info.pos, te);
+			specialRenderedTileEntities.add(te);
 		});
 	}
 
