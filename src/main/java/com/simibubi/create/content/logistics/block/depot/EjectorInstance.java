@@ -21,7 +21,7 @@ public class EjectorInstance extends ShaftInstance implements DynamicInstance {
 		super(dispatcher, tile);
 		this.tile = tile;
 
-		plate = getTransformMaterial().getModel(AllBlockPartials.EJECTOR_TOP).createInstance();
+		plate = getTransformMaterial().getModel(AllBlockPartials.EJECTOR_TOP, blockState).createInstance();
 
 		pivotPlate();
 	}

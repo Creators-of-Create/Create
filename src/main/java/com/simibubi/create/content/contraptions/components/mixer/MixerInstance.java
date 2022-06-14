@@ -22,13 +22,13 @@ public class MixerInstance extends EncasedCogInstance implements DynamicInstance
 		super(dispatcher, tile, false);
 		this.mixer = tile;
 
-		mixerHead = getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD)
+		mixerHead = getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
 				.createInstance();
 
 		mixerHead.setRotationAxis(Direction.Axis.Y);
 
 		mixerPole = getOrientedMaterial()
-				.getModel(AllBlockPartials.MECHANICAL_MIXER_POLE)
+				.getModel(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState)
 				.createInstance();
 
 
@@ -42,7 +42,7 @@ public class MixerInstance extends EncasedCogInstance implements DynamicInstance
 	protected Instancer<RotatingData> getCogModel() {
 		return materialManager.defaultSolid()
 			.material(AllMaterialSpecs.ROTATING)
-			.getModel(AllBlockPartials.SHAFTLESS_COGWHEEL);
+			.getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockEntity.getBlockState());
 	}
 
 	@Override

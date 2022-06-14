@@ -38,7 +38,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 
         topInstance = materialManager.defaultSolid()
                 .material(Materials.ORIENTED)
-                .getModel(AllBlockPartials.BEARING_TOP)
+                .getModel(AllBlockPartials.BEARING_TOP, blockState)
 				.createInstance();
 
 		int blockLight = localBlockLight();
@@ -48,7 +48,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 
 		shaft = materialManager.defaultSolid()
 				.material(AllMaterialSpecs.ROTATING)
-				.getModel(AllBlockPartials.SHAFT_HALF, blockState.getValue(BlockStateProperties.FACING).getOpposite())
+				.getModel(AllBlockPartials.SHAFT_HALF, blockState, blockState.getValue(BlockStateProperties.FACING).getOpposite())
 				.createInstance();
 
 		// not rotating so no need to set speed, axis, etc.

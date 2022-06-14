@@ -39,14 +39,14 @@ public class DrillActorInstance extends ActorInstance {
         else
             eulerY = facing.toYRot() + ((axis == Direction.Axis.X) ? 180 : 0);
 
-        drillHead = material.getModel(AllBlockPartials.DRILL_HEAD)
-				.createInstance()
-				.setPosition(context.localPos)
-				.setBlockLight(localBlockLight())
-				.setRotationOffset(0)
-				.setRotationAxis(0, 0, 1)
-				.setLocalRotation(new Quaternion(eulerX, eulerY, 0, true))
-				.setSpeed(getSpeed(facing));
+        drillHead = material.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
+
+        drillHead.setPosition(context.localPos)
+                 .setBlockLight(localBlockLight())
+                 .setRotationOffset(0)
+                 .setRotationAxis(0, 0, 1)
+                 .setLocalRotation(new Quaternion(eulerX, eulerY, 0, true))
+                 .setSpeed(getSpeed(facing));
     }
 
     @Override

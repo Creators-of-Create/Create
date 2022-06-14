@@ -35,7 +35,7 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 		PartialModel top =
 				bearing.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
 
-		topInstance = getOrientedMaterial().getModel(top).createInstance();
+		topInstance = getOrientedMaterial().getModel(top, blockState).createInstance();
 
 		topInstance.setPosition(getInstancePosition()).setRotation(blockOrientation);
 	}

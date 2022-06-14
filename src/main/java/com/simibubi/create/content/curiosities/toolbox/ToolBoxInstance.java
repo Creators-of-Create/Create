@@ -32,12 +32,12 @@ public class ToolBoxInstance extends BlockEntityInstance<ToolboxTileEntity> impl
 
 		Instancer<ModelData> drawerModel = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.TOOLBOX_DRAWER);
+				.getModel(AllBlockPartials.TOOLBOX_DRAWER, blockState);
 
 		drawers = new ModelData[]{drawerModel.createInstance(), drawerModel.createInstance()};
 		lid = materialManager.defaultCutout()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.TOOLBOX_LIDS.get(blockEntity.getColor()))
+				.getModel(AllBlockPartials.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState)
 				.createInstance();
 
 	}

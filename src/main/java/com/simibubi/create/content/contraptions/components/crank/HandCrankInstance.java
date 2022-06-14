@@ -31,7 +31,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements Dynamic
 
 		facing = blockState.getValue(BlockStateProperties.FACING);
 		Direction opposite = facing.getOpposite();
-		Instancer<ModelData> model = getTransformMaterial().getModel(renderedHandle, opposite);
+		Instancer<ModelData> model = getTransformMaterial().getModel(renderedHandle, blockState, opposite);
 		crank = model.createInstance();
 
 		rotateCrank();

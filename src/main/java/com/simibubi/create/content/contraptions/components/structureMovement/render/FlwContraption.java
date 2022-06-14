@@ -186,7 +186,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		private final ContraptionInstanceManager tileInstanceManager;
 
 		public ContraptionInstanceWorld(FlwContraption parent) {
-			switch (Backend.getBackendType()) {
+			switch (Backend.getEngine()) {
 			case INSTANCING -> {
 				InstancingEngine<ContraptionProgram> engine = InstancingEngine.builder(CreateContexts.CWORLD)
 						.setGroupFactory(ContraptionGroup.forContraption(parent))

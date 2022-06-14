@@ -22,8 +22,8 @@ public class SchematicannonInstance extends BlockEntityInstance<SchematicannonTi
 
         Material<ModelData> mat = getTransformMaterial();
 
-        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR).createInstance();
-        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE).createInstance();
+        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
+        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
 	}
 
     @Override

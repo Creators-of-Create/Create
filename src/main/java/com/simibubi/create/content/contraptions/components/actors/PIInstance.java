@@ -33,11 +33,11 @@ public class PIInstance {
 		this.lit = lit;
 		middle = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit))
+				.getModel(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit), blockState)
 				.createInstance();
 		top = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(PortableStorageInterfaceRenderer.getTopForState(blockState))
+				.getModel(PortableStorageInterfaceRenderer.getTopForState(blockState), blockState)
 				.createInstance();
 	}
 
@@ -66,7 +66,7 @@ public class PIInstance {
 			this.lit = lit;
 			materialManager.defaultSolid()
 					.material(Materials.TRANSFORMED)
-					.getModel(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit))
+					.getModel(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit), blockState)
 					.stealInstance(middle);
 		}
 	}

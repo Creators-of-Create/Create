@@ -17,20 +17,20 @@ public class StickerInstance extends BlockEntityInstance<StickerTileEntity> impl
 	float lastOffset = Float.NaN;
 	final Direction facing;
 	final boolean fakeWorld;
-	final int extended;
+	final int offset;
 
 	private final ModelData head;
 
 	public StickerInstance(MaterialManager modelManager, StickerTileEntity tile) {
 		super(modelManager, tile);
 
-		head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD).createInstance();
+		head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
 
 		fakeWorld = tile.getLevel() != Minecraft.getInstance().level;
 		facing = blockState.getValue(StickerBlock.FACING);
-		extended = blockState.getValue(StickerBlock.EXTENDED) ? 1 : 0;
+		offset = blockState.getValue(StickerBlock.EXTENDED) ? 1 : 0;
 
-		animateHead(extended);
+		animateHead(offset);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class StickerInstance extends BlockEntityInstance<StickerTileEntity> impl
 		float offset = blockEntity.piston.getValue(AnimationTickHolder.getPartialTicks());
 
 		if (fakeWorld)
-			offset = this.extended;
+			offset = this.offset;
 
 		if (Mth.equal(offset, lastOffset))
 			return;

@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.Models;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlockPartials;
@@ -42,8 +41,7 @@ public class HarvesterActorInstance extends ActorInstance {
 
         facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
-		harvester = material.model(Models.partial(AllBlockPartials.HARVESTER_BLADE))
-				.createInstance();
+        harvester = material.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 

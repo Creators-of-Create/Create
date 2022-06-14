@@ -40,7 +40,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 			if (boxAxis == axis)
 				continue;
 
-			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, direction);
+			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
 
 			RotatingData key = shaft.createInstance();
 
