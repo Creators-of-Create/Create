@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "integrateddynamics:menril_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "integrateddynamics:menril_log_stripped"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "integrateddynamics",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

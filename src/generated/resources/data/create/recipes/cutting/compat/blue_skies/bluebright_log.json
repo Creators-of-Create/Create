@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "blue_skies:bluebright_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "blue_skies:stripped_bluebright_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "blue_skies",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

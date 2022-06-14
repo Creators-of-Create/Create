@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "biomesoplenty:stripped_umbran_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "biomesoplenty:umbran_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "biomesoplenty",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

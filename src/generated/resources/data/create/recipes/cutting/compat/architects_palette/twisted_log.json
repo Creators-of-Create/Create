@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "architects_palette:twisted_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "architects_palette:stripped_twisted_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "architects_palette",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "blue_skies:maple_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "blue_skies:stripped_maple_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "blue_skies",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

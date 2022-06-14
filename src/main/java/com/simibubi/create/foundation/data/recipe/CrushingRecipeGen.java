@@ -103,6 +103,16 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		RAW_IRON_ORE = rawOre(() -> Items.RAW_IRON, AllItems.CRUSHED_IRON::get, 1),
 		RAW_GOLD_ORE = rawOre(() -> Items.RAW_GOLD, AllItems.CRUSHED_GOLD::get, 1),
 
+		OSMIUM_ORE = moddedOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get),
+		PLATINUM_ORE = moddedOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get),
+		SILVER_ORE = moddedOre(SILVER, AllItems.CRUSHED_SILVER::get),
+		TIN_ORE = moddedOre(TIN, AllItems.CRUSHED_TIN::get),
+		QUICKSILVER_ORE = moddedOre(QUICKSILVER, AllItems.CRUSHED_QUICKSILVER::get),
+		LEAD_ORE = moddedOre(LEAD, AllItems.CRUSHED_LEAD::get),
+		ALUMINUM_ORE = moddedOre(ALUMINUM, AllItems.CRUSHED_BAUXITE::get),
+		URANIUM_ORE = moddedOre(URANIUM, AllItems.CRUSHED_URANIUM::get),
+		NICKEL_ORE = moddedOre(NICKEL, AllItems.CRUSHED_NICKEL::get),
+
 		OSMIUM_RAW_ORE = moddedRawOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get, 1),
 		PLATINUM_RAW_ORE = moddedRawOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get, 1),
 		SILVER_RAW_ORE = moddedRawOre(SILVER, AllItems.CRUSHED_SILVER::get, 1),
@@ -113,7 +123,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		URANIUM_RAW_ORE = moddedRawOre(URANIUM, AllItems.CRUSHED_URANIUM::get, 1),
 		NICKEL_RAW_ORE = moddedRawOre(NICKEL, AllItems.CRUSHED_NICKEL::get, 1),
 
-		RAW_COPPER_BLOCK = rawOre(() -> Items.RAW_COPPER_BLOCK,AllItems.CRUSHED_COPPER::get, 9),
+		RAW_COPPER_BLOCK = rawOre(() -> Items.RAW_COPPER_BLOCK, AllItems.CRUSHED_COPPER::get, 9),
 		RAW_ZINC_BLOCK = rawOre(AllBlocks.RAW_ZINC_BLOCK::get, AllItems.CRUSHED_ZINC::get, 9),
 		RAW_IRON_BLOCK = rawOre(() -> Items.RAW_IRON_BLOCK, AllItems.CRUSHED_IRON::get, 9),
 		RAW_GOLD_BLOCK = rawOre(() -> Items.RAW_GOLD_BLOCK, AllItems.CRUSHED_GOLD::get, 9),
@@ -139,7 +149,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		GLOWSTONE = create(() -> Blocks.GLOWSTONE, b -> b.duration(150)
 			.output(Items.GLOWSTONE_DUST, 3)
 			.output(.5f, Items.GLOWSTONE_DUST)),
-		
+
 		AMETHYST_BLOCK = create(() -> Blocks.AMETHYST_BLOCK, b -> b.duration(150)
 			.output(Items.AMETHYST_SHARD, 3)
 			.output(.5f, Items.AMETHYST_SHARD)),
@@ -229,12 +239,25 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result, int amount) {
 		String name = metal.getName();
 		return create("raw_" + name + (amount == 1 ? "_ore" : "_block"), b -> {
-			String prefix = amount == 1 ? "raw_ores/" : "raw_blocks/";
+			String prefix = amount == 1 ? "raw_materials/" : "storage_blocks/raw_";
 			return b.duration(400)
 				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
 				.require(AllTags.forgeItemTag(prefix + name))
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
+		});
+	}
+
+	protected GeneratedRecipe moddedOre(CompatMetals metal, Supplier<ItemLike> result) {
+		String name = metal.getName();
+		return create(name + "_ore", b -> {
+			String prefix = "ores/";
+			return b.duration(400)
+				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
+				.require(AllTags.forgeItemTag(prefix + name))
+				.output(result.get(), 1)
+				.output(.75f, result.get(), 1)
+				.output(.75f, AllItems.EXP_NUGGET.get(), 1);
 		});
 	}
 

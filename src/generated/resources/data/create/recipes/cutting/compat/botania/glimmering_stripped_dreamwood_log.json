@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "botania:glimmering_stripped_dreamwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "botania:dreamwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "botania",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

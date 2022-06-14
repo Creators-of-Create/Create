@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "ecologics:walnut_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "ecologics:stripped_walnut_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "ecologics",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

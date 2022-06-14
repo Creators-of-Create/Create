@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "byg:witch_hazel_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "byg:stripped_witch_hazel_wood"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

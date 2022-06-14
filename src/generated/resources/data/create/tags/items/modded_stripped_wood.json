@@ -1,0 +1,297 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "ars_nouveau:stripped_blue_archwood_wood",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:stripped_purple_archwood_wood",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:stripped_green_archwood_wood",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:stripped_red_archwood_wood",
+      "required": false
+    },
+    {
+      "id": "botania:stripped_livingwood",
+      "required": false
+    },
+    {
+      "id": "botania:stripped_dreamwood",
+      "required": false
+    },
+    {
+      "id": "forbidden_arcanus:stripped_cherrywood",
+      "required": false
+    },
+    {
+      "id": "forbidden_arcanus:stripped_mysterywood",
+      "required": false
+    },
+    {
+      "id": "hexcasting:akashic_wood_stripped",
+      "required": false
+    },
+    {
+      "id": "integrateddynamics:menril_wood_stripped",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_aspen_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_baobab_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_enchanted_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_cherry_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_cika_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_cypress_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_ebony_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_ether_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_fir_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_green_enchanted_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_holly_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_jacaranda_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_lament_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_mahogany_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_mangrove_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_maple_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_nightshade_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_palm_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_palo_verde_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_pine_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_rainbow_eucalyptus_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_redwood_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_skyris_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_willow_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_witch_hazel_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_zelkova_wood",
+      "required": false
+    },
+    {
+      "id": "silentgear:stripped_netherwood_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_twilight_oak_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_canopy_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_mangrove_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_dark_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_time_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_transformation_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_mining_wood",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_sorting_wood",
+      "required": false
+    },
+    {
+      "id": "tconstruct:stripped_greenheart_wood",
+      "required": false
+    },
+    {
+      "id": "tconstruct:stripped_skyroot_wood",
+      "required": false
+    },
+    {
+      "id": "tconstruct:stripped_bloodshroom_wood",
+      "required": false
+    },
+    {
+      "id": "architects_palette:stripped_twisted_wood",
+      "required": false
+    },
+    {
+      "id": "quark:stripped_azalea_wood",
+      "required": false
+    },
+    {
+      "id": "quark:stripped_blossom_wood",
+      "required": false
+    },
+    {
+      "id": "ecologics:stripped_coconut_wood",
+      "required": false
+    },
+    {
+      "id": "ecologics:stripped_walnut_wood",
+      "required": false
+    },
+    {
+      "id": "ecologics:stripped_azalea_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_fir_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_redwood_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_cherry_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_mahogany_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_jacaranda_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_palm_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_willow_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_dead_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_magic_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_umbran_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_hellbark_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_bluebright_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_starlit_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_frostbright_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_lunar_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_dusk_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_maple_wood",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_cherry_wood",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_bulbis_wood",
+      "required": false
+    }
+  ]
+}

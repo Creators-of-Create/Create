@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "biomesoplenty:stripped_redwood_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "biomesoplenty:redwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "biomesoplenty",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

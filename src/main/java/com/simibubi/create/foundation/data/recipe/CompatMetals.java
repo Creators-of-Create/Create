@@ -1,25 +1,21 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.Mods.EID;
 import static com.simibubi.create.foundation.data.recipe.Mods.IE;
-import static com.simibubi.create.foundation.data.recipe.Mods.INF;
 import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
-import static com.simibubi.create.foundation.data.recipe.Mods.MW;
-import static com.simibubi.create.foundation.data.recipe.Mods.SM;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
 
 import com.simibubi.create.foundation.utility.Lang;
 
 public enum CompatMetals {
-	ALUMINUM(IE, SM),
-	LEAD(MEK, TH, MW, IE, SM, EID),
-	NICKEL(TH, IE, SM),
+	ALUMINUM(IE),
+	LEAD(MEK, TH, IE),
+	NICKEL(TH, IE),
 	OSMIUM(MEK),
-	PLATINUM(SM),
-	QUICKSILVER(MW),
-	SILVER(TH, MW, IE, SM, INF),
-	TIN(TH, MEK, MW, SM),
-	URANIUM(MEK, IE, SM);
+	PLATINUM(),
+	QUICKSILVER(),
+	SILVER(TH, IE),
+	TIN(TH, MEK),
+	URANIUM(MEK, IE);
 
 	private final Mods[] mods;
 	private final String name;

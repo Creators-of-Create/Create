@@ -19,8 +19,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
@@ -195,6 +193,8 @@ public class BlockMovementChecks {
 		if (state.getDestroySpeed(world, pos) == -1)
 			return false;
 		if (AllBlockTags.RELOCATION_NOT_SUPPORTED.matches(state))
+			return false;
+		if (AllBlockTags.NON_MOVABLE.matches(state))
 			return false;
 		if (ContraptionMovementSetting.get(state.getBlock()) == ContraptionMovementSetting.UNMOVABLE)
 			return false;

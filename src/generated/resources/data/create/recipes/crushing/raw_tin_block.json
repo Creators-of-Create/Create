@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "forge:raw_blocks/tin"
+      "tag": "forge:storage_blocks/raw_tin"
     }
   ],
   "results": [
@@ -20,7 +20,7 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:raw_blocks/tin",
+        "tag": "forge:storage_blocks/raw_tin",
         "type": "forge:tag_empty"
       },
       "type": "forge:not"
