@@ -59,9 +59,6 @@ public class BracketBlockItem extends BlockItem {
 			.getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1);
 		behaviour.applyBracket(newBracket);
 		
-		if (!world.isClientSide && player != null)
-			behaviour.triggerAdvancements(world, player, state);
-		
 		if (player == null || !player.isCreative()) {
 			context.getItemInHand()
 				.shrink(1);

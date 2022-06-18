@@ -5,7 +5,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Debug;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -69,18 +68,21 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 				float damage = (float) Mth.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.hurt(damageSource, damage);
 			}
-			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) {
-				Vec3 motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
-				int maxBoost = 4;
-				if (motionBoost.length() > maxBoost) {
-					motionBoost = motionBoost.subtract(motionBoost.normalize()
-						.scale(motionBoost.length() - maxBoost));
-				}
-				entity.setDeltaMovement(entity.getDeltaMovement()
-					.add(motionBoost));
-				entity.hurtMarked = true;
-			}
+			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) 
+				throwEntity(context, entity);
 		}
+	}
+
+	protected void throwEntity(MovementContext context, Entity entity) {
+		Vec3 motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
+		int maxBoost = 4;
+		if (motionBoost.length() > maxBoost) {
+			motionBoost = motionBoost.subtract(motionBoost.normalize()
+				.scale(motionBoost.length() - maxBoost));
+		}
+		entity.setDeltaMovement(entity.getDeltaMovement()
+			.add(motionBoost));
+		entity.hurtMarked = true;
 	}
 
 	protected DamageSource getDamageSource() {

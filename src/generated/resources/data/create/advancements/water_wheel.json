@@ -8,6 +8,7 @@
       "translate": "advancement.create.water_wheel"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.water_wheel.desc"
     },
     "frame": "task",
@@ -17,22 +18,13 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:placed_block",
-      "conditions": {
-        "block": "create:water_wheel"
-      }
-    },
-    "1": {
-      "trigger": "create:water_wheel",
+      "trigger": "create:water_wheel_builtin",
       "conditions": {}
     }
   },
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
     ]
   ]
 }

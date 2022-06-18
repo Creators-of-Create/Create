@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
@@ -7,7 +9,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.LinearActuatorTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchObservable;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
@@ -40,11 +44,21 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 	}
 
 	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.PULLEY_MAXED);
+	}
+	
+	@Override
 	public void tick() {
+		float prevOffset = offset;
 		super.tick();
 		if (isVirtual())
 			prevAnimatedOffset = offset;
 		invalidateRenderBoundingBox();
+		
+		if (prevOffset < 200 && offset >= 200)
+			award(AllAdvancements.PULLEY_MAXED);
 	}
 
 	@Override
@@ -108,6 +122,9 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 				level.addFreshEntity(movedContraption);
 				forceMove = true;
 				needsContraption = true;
+				
+				if (contraption.containsBlockBreakers())
+					award(AllAdvancements.CONTRAPTION_ACTORS);
 			}
 		}
 

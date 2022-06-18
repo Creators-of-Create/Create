@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.core.BlockPos;
@@ -43,7 +44,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 			kineticTileEntity.preventSpeedUpdate = 2;
 		}
 	}
-
+	
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
@@ -78,6 +79,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		AdvancementBehaviour.setPlacedBy(worldIn, pos, placer);
 		if (worldIn.isClientSide)
 			return;
 

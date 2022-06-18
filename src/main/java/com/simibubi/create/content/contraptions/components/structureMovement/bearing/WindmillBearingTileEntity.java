@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import java.util.List;
 
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -104,6 +105,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		movementDirection.requiresWrench();
 		movementDirection.withCallback($ -> onDirectionChanged());
 		behaviours.add(movementDirection);
+		registerAwardables(behaviours, AllAdvancements.WINDMILL, AllAdvancements.WINDMILL_MAXED);
 	}
 
 	private void onDirectionChanged() {

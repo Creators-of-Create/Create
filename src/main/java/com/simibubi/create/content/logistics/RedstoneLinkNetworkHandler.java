@@ -17,13 +17,14 @@ import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 public class RedstoneLinkNetworkHandler {
 
 	static final Map<LevelAccessor, Map<Couple<Frequency>, Set<IRedstoneLinkable>>> connections =
 		new IdentityHashMap<>();
-	
+
 	public final AtomicInteger globalPowerVersion = new AtomicInteger();
 
 	public static class Frequency {
@@ -111,7 +112,7 @@ public class RedstoneLinkNetworkHandler {
 				iterator.remove();
 				continue;
 			}
-			if (!world.isAreaLoaded(other.getLocation(), 0)) {
+			if (!(world instanceof Level level) || !level.isLoaded(other.getLocation())) {
 				iterator.remove();
 				continue;
 			}

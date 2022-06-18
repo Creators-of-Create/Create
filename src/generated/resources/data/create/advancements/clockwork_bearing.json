@@ -1,5 +1,5 @@
 {
-  "parent": "create:brass_casing",
+  "parent": "create:haunted_bell",
   "display": {
     "icon": {
       "item": "create:clockwork_bearing"
@@ -8,16 +8,17 @@
       "translate": "advancement.create.clockwork_bearing"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.clockwork_bearing.desc"
     },
     "frame": "task",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": false
   },
   "criteria": {
     "0": {
-      "trigger": "create:clockwork_bearing",
+      "trigger": "create:clockwork_bearing_builtin",
       "conditions": {}
     }
   },

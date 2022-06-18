@@ -100,15 +100,15 @@ public class InWorldProcessing {
 		return recipe.isPresent();
 	}
 
-	public static void applyProcessing(ItemEntity entity, Type type) {
+	public static boolean applyProcessing(ItemEntity entity, Type type) {
 		if (decrementProcessingTime(entity, type) != 0)
-			return;
+			return false;
 		List<ItemStack> stacks = process(entity.getItem(), type, entity.level);
 		if (stacks == null)
-			return;
+			return false;
 		if (stacks.isEmpty()) {
 			entity.discard();
-			return;
+			return false;
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
@@ -116,6 +116,7 @@ public class InWorldProcessing {
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
 			entity.level.addFreshEntity(entityIn);
 		}
+		return true;
 	}
 
 	public static TransportedResult applyProcessing(TransportedItemStack transported, Level world, Type type) {

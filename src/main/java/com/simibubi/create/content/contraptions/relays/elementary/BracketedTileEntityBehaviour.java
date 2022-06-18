@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -15,7 +14,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -97,12 +95,6 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	public boolean canHaveBracket() {
 		return pred.test(tileEntity.getBlockState());
-	}
-
-	public void triggerAdvancements(Level world, Player player, BlockState state) {
-		if (trigger == null)
-			return;
-		AllTriggers.triggerFor(trigger.apply(state), player);
 	}
 
 	@Override

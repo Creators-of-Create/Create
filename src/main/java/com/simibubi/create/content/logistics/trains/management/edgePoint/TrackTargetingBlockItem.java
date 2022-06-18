@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -140,6 +141,10 @@ public class TrackTargetingBlockItem extends BlockItem {
 			itemInHand.setTag(null);
 		player.displayClientMessage(Lang.translate("track_target.success")
 			.withStyle(ChatFormatting.GREEN), true);
+		
+		if (type == EdgePointType.SIGNAL)
+			AllAdvancements.SIGNAL.awardTo(player);
+		
 		return useOn;
 	}
 

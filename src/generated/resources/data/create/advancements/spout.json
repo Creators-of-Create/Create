@@ -8,6 +8,7 @@
       "translate": "advancement.create.spout"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.spout.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:spout",
+      "trigger": "create:spout_builtin",
       "conditions": {}
     }
   },

@@ -2,8 +2,11 @@ package com.simibubi.create.content.curiosities.bell;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,6 +20,14 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	@Override
 	public BlockEntityType<? extends HauntedBellTileEntity> getTileEntityType() {
 		return AllTileEntities.HAUNTED_BELL.get();
+	}
+	
+	@Override
+	protected boolean ring(Level world, BlockPos pos, Direction direction, Player player) {
+		boolean ring = super.ring(world, pos, direction, player);
+		if (ring)
+			AllAdvancements.HAUNTED_BELL.awardTo(player);
+		return ring;
 	}
 
 	@Override

@@ -1,23 +1,24 @@
 {
-  "parent": "create:mechanical_arm",
+  "parent": "create:mechanical_crafter",
   "display": {
     "icon": {
-      "item": "minecraft:music_disc_13"
+      "item": "minecraft:jukebox"
     },
     "title": {
       "translate": "advancement.create.musical_arm"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.musical_arm.desc"
     },
-    "frame": "task",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": false
+    "hidden": true
   },
   "criteria": {
     "0": {
-      "trigger": "create:musical_arm",
+      "trigger": "create:musical_arm_builtin",
       "conditions": {}
     }
   },

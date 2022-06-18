@@ -1,0 +1,30 @@
+{
+  "parent": "create:arm_many_targets",
+  "display": {
+    "icon": {
+      "item": "minecraft:carrot"
+    },
+    "title": {
+      "translate": "advancement.create.potato_cannon_collide"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.potato_cannon_collide.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:potato_cannon_collide_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

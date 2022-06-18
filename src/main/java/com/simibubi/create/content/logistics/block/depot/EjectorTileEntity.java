@@ -163,7 +163,13 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 			if (!isPlayerEntity)
 				continue;
+
 			Player playerEntity = (Player) entity;
+
+			if (launcher.getHorizontalDistance() * launcher.getHorizontalDistance()
+				+ launcher.getVerticalDistance() * launcher.getVerticalDistance() >= 25 * 25)
+				AllPackets.channel.sendToServer(new EjectorAwardPacket(worldPosition));
+
 			if (!(playerEntity.getItemBySlot(EquipmentSlot.CHEST)
 				.getItem() instanceof ElytraItem))
 				continue;
@@ -352,8 +358,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		Vec3 source = getLaunchedItemLocation(time);
 		Vec3 target = getLaunchedItemLocation(time + 1);
 
-		BlockHitResult rayTraceBlocks =
-			level.clip(new ClipContext(source, target, Block.COLLIDER, Fluid.NONE, null));
+		BlockHitResult rayTraceBlocks = level.clip(new ClipContext(source, target, Block.COLLIDER, Fluid.NONE, null));
 		boolean miss = rayTraceBlocks.getType() == Type.MISS;
 
 		if (!miss && rayTraceBlocks.getType() == Type.BLOCK) {

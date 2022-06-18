@@ -1,7 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +11,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -92,6 +97,9 @@ public class BoilerData {
 				waterSupply = Math.max(i, waterSupply);
 		}
 
+		if (getActualHeat(controller.getTotalTankSize()) == 18)
+			controller.award(AllAdvancements.STEAM_ENGINE_MAXED);
+
 		controller.notifyUpdate();
 	}
 
@@ -141,10 +149,15 @@ public class BoilerData {
 
 		calcMinMaxForSize(boilerSize);
 
-		tooltip.add(indent.plainCopy().append(new TextComponent("Boiler Status:  ").append(getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
-		tooltip.add(indent2.plainCopy().append(getSizeComponent(true, false)));
-		tooltip.add(indent2.plainCopy().append(getWaterComponent(true, false)));
-		tooltip.add(indent2.plainCopy().append(getHeatComponent(true, false)));
+		tooltip.add(indent.plainCopy()
+			.append(new TextComponent("Boiler Status:  ")
+				.append(getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
+		tooltip.add(indent2.plainCopy()
+			.append(getSizeComponent(true, false)));
+		tooltip.add(indent2.plainCopy()
+			.append(getWaterComponent(true, false)));
+		tooltip.add(indent2.plainCopy()
+			.append(getHeatComponent(true, false)));
 
 		if (attachedEngines == 0)
 			return true;
@@ -152,20 +165,20 @@ public class BoilerData {
 		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
 
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
-				* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
+			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 		Component capacity =
-				new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
-						.withStyle(ChatFormatting.AQUA);
+			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
+				.withStyle(ChatFormatting.AQUA);
 		Component engines =
-				new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
+			new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
 
 		tooltip.add(indent);
 		tooltip.add(indent.plainCopy()
-				.append(Lang.translate("tooltip.capacityProvided")
-						.withStyle(ChatFormatting.GRAY)));
+			.append(Lang.translate("tooltip.capacityProvided")
+				.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(indent2.plainCopy()
-				.append(capacity)
-				.append(engines));
+			.append(capacity)
+			.append(engines));
 
 		return true;
 	}
@@ -183,9 +196,9 @@ public class BoilerData {
 		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
 
 		return isPassive() ? new TextComponent("Passive")
-				: (boilerLevel == 0 ? new TextComponent("Idle")
+			: (boilerLevel == 0 ? new TextComponent("Idle")
 				: boilerLevel == 18 ? new TextComponent("Max")
-				: new TextComponent("Lvl " + IHaveGoggleInformation.format(boilerLevel)));
+					: new TextComponent("Lvl " + IHaveGoggleInformation.format(boilerLevel)));
 	}
 
 	public MutableComponent getSizeComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
@@ -200,7 +213,8 @@ public class BoilerData {
 		return componentHelper("Heat ", "...... ", passiveHeat ? 1 : activeHeat, forGoggles, useBlocksAsBars, styles);
 	}
 
-	private MutableComponent componentHelper(String label, String dots, int level, boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
+	private MutableComponent componentHelper(String label, String dots, int level, boolean forGoggles,
+		boolean useBlocksAsBars, ChatFormatting... styles) {
 		MutableComponent base = useBlocksAsBars ? blockComponent(level) : barComponent(level);
 
 		if (!forGoggles)
@@ -210,26 +224,23 @@ public class BoilerData {
 		ChatFormatting style2 = styles.length >= 2 ? styles[1] : ChatFormatting.DARK_GRAY;
 
 		return new TextComponent(label).withStyle(style1)
-				.append(new TextComponent(dots).withStyle(style2))
-				.append(base);
+			.append(new TextComponent(dots).withStyle(style2))
+			.append(base);
 	}
 
-
 	private MutableComponent blockComponent(int level) {
-		return new TextComponent("" +
-				"\u2588".repeat(minValue) +
-				"\u2592".repeat(level - minValue) +
-				"\u2591".repeat(maxValue - level)
-		);
+		return new TextComponent(
+			"" + "\u2588".repeat(minValue) + "\u2592".repeat(level - minValue) + "\u2591".repeat(maxValue - level));
 	}
 
 	private MutableComponent barComponent(int level) {
 		return TextComponent.EMPTY.copy()
-				.append(bars(Math.max(0, minValue - 1), ChatFormatting.DARK_GREEN))
-				.append(bars(minValue > 0 ? 1 : 0, ChatFormatting.GREEN))
-				.append(bars(Math.max(0, level - minValue), ChatFormatting.DARK_GREEN))
-				.append(bars(Math.max(0, maxValue - level), ChatFormatting.DARK_RED))
-				.append(bars(Math.max(0, Math.min(18 - maxValue, ((maxValue / 5 + 1) * 5) - maxValue)), ChatFormatting.DARK_GRAY));
+			.append(bars(Math.max(0, minValue - 1), ChatFormatting.DARK_GREEN))
+			.append(bars(minValue > 0 ? 1 : 0, ChatFormatting.GREEN))
+			.append(bars(Math.max(0, level - minValue), ChatFormatting.DARK_GREEN))
+			.append(bars(Math.max(0, maxValue - level), ChatFormatting.DARK_RED))
+			.append(bars(Math.max(0, Math.min(18 - maxValue, ((maxValue / 5 + 1) * 5) - maxValue)),
+				ChatFormatting.DARK_GRAY));
 
 	}
 
@@ -259,7 +270,7 @@ public class BoilerData {
 						if (AllBlocks.STEAM_ENGINE.has(attachedState) && SteamEngineBlock.getFacing(attachedState) == d)
 							attachedEngines++;
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
-								&& WhistleBlock.getAttachedDirection(attachedState)
+							&& WhistleBlock.getAttachedDirection(attachedState)
 								.getOpposite() == d)
 							attachedWhistles++;
 					}
@@ -269,6 +280,41 @@ public class BoilerData {
 
 		needsHeatLevelUpdate = true;
 		return prevEngines != attachedEngines || prevWhistles != attachedWhistles;
+	}
+
+	public void checkPipeOrganAdvancement(FluidTankTileEntity controller) {
+		if (!controller.getBehaviour(AdvancementBehaviour.TYPE)
+			.isOwnerPresent())
+			return;
+
+		BlockPos controllerPos = controller.getBlockPos();
+		Level level = controller.getLevel();
+		Set<Integer> whistlePitches = new HashSet<>();
+
+		for (int yOffset = 0; yOffset < controller.height; yOffset++) {
+			for (int xOffset = 0; xOffset < controller.width; xOffset++) {
+				for (int zOffset = 0; zOffset < controller.width; zOffset++) {
+
+					BlockPos pos = controllerPos.offset(xOffset, yOffset, zOffset);
+					BlockState blockState = level.getBlockState(pos);
+					if (!FluidTankBlock.isTank(blockState))
+						continue;
+					for (Direction d : Iterate.directions) {
+						BlockPos attachedPos = pos.relative(d);
+						BlockState attachedState = level.getBlockState(attachedPos);
+						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
+							&& WhistleBlock.getAttachedDirection(attachedState)
+								.getOpposite() == d) {
+							if (level.getBlockEntity(attachedPos) instanceof WhistleTileEntity wte)
+								whistlePitches.add(wte.getPitchId());
+						}
+					}
+				}
+			}
+		}
+
+		if (whistlePitches.size() >= 12)
+			controller.award(AllAdvancements.PIPE_ORGAN);
 	}
 
 	public boolean updateTemperature(FluidTankTileEntity controller) {

@@ -39,11 +39,8 @@ public class BeltTunnelItem extends BlockItem {
 		boolean flag = super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, state);
 		if (!world.isClientSide) {
 			BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos.below());
-			if (belt != null) {
-				AllTriggers.triggerFor(AllTriggers.PLACE_TUNNEL, p_195943_3_);
-				if (belt.casing == CasingType.NONE)
-					belt.setCasingType(AllBlocks.ANDESITE_TUNNEL.has(state) ? CasingType.ANDESITE : CasingType.BRASS);
-			}
+			if (belt != null && belt.casing == CasingType.NONE)
+				belt.setCasingType(AllBlocks.ANDESITE_TUNNEL.has(state) ? CasingType.ANDESITE : CasingType.BRASS);
 		}
 		return flag;
 	}

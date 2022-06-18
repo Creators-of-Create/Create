@@ -18,6 +18,7 @@ import com.simibubi.create.content.contraptions.components.actors.HarvesterMovem
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
@@ -347,6 +348,10 @@ public class ContraptionCollider {
 							entity.hurt(pSource, (int) (damage * 16));
 							world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
 								SoundSource.NEUTRAL, 1, .75f);
+							if (!entity.isAlive())
+								contraptionEntity.getControllingPlayer()
+									.map(world::getPlayerByUUID)
+									.ifPresent(AllAdvancements.TRAIN_ROADKILL::awardTo);
 						}
 
 						Vec3 added = entityMotion.add(contraptionMotion.multiply(1, 0, 1)

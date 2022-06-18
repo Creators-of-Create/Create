@@ -12,7 +12,8 @@ import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -36,6 +37,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidPropagator {
+
+	public static CreateAdvancement[] getSharedTriggers() {
+		return new CreateAdvancement[] { AllAdvancements.WATER_SUPPLY, AllAdvancements.CROSS_STREAMS,
+			AllAdvancements.HONEY_DRAIN };
+	}
 
 	public static void propagateChangedPipe(LevelAccessor world, BlockPos pipePos, BlockState pipeState) {
 		List<Pair<Integer, BlockPos>> frontier = new ArrayList<>();

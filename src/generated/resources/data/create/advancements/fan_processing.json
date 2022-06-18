@@ -1,0 +1,30 @@
+{
+  "parent": "create:encased_fan",
+  "display": {
+    "icon": {
+      "item": "create:propeller"
+    },
+    "title": {
+      "translate": "advancement.create.fan_processing"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.fan_processing.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:fan_processing_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

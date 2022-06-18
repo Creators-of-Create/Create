@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -145,9 +144,6 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 			if (insertItem.isEmpty()) {
 				itemEntity.discard();
-				if (!itemEntity.level.isClientSide)
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.level,
-						itemEntity.blockPosition(), 3);
 				return;
 			}
 

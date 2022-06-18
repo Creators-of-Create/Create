@@ -4,8 +4,11 @@ import static com.simibubi.create.foundation.utility.AngleHelper.deg;
 import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngleDiff;
 import static com.simibubi.create.foundation.utility.AngleHelper.rad;
 
+import java.util.List;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -41,6 +44,12 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	public CuckooClockTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		animationType = Animation.NONE;
+	}
+	
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.CUCKOO_CLOCK);
 	}
 
 	@Override
@@ -167,7 +176,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		sendAnimationUpdate = true;
 
 		if (animation == Animation.CREEPER)
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.CUCKOO, level, worldPosition, 10);
+			awardIfNear(AllAdvancements.CUCKOO_CLOCK, 32);
 
 		sendData();
 	}

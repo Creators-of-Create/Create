@@ -17,7 +17,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -633,7 +632,6 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			if (adjacent != null && !level.isClientSide) {
 				adjacent.updateTunnelConnections();
 				adjacent.selectionMode.setValue(selectionMode.getValue());
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.CONNECT_TUNNEL, level, worldPosition, 4);
 			}
 		}
 

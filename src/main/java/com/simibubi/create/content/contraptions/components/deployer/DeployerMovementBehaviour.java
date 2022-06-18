@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -18,14 +17,17 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.FlwContraption;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -101,8 +103,13 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
 		player.setXRot(xRot);
+		player.placedTracks = false;
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
+
+		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
+			&& player.placedTracks && context.tileData != null && context.tileData.contains("Owner"))
+			AllAdvancements.SELF_DEPLOYING.awardTo(world.getPlayerByUUID(context.tileData.getUUID("Owner")));
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,

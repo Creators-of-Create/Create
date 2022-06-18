@@ -168,7 +168,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		callback.accept(passenger, transformedVector.x,
 			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) - 1 / 8f, transformedVector.z);
 	}
-
+	
 	protected Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
 		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {

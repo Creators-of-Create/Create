@@ -13,6 +13,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -438,6 +439,10 @@ public class TrackPlacement {
 			BlockItem paveItem = (BlockItem) offhandItem.getItem();
 			paveTracks(level, info, paveItem, false);
 		}
+		
+		if (info.curve != null && info.curve.getLength() > 29)
+			AllAdvancements.LONG_BEND.awardTo(player);
+		
 		return placeTracks(level, info, state1, state2, targetPos1, targetPos2, false);
 	}
 

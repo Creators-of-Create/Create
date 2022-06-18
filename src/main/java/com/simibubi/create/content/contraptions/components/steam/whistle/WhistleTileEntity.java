@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.steam.whistle.Whistle
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock.WhistleExtenderShape;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -46,7 +47,9 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.STEAM_WHISTLE);
+	}
 
 	public void updatePitch() {
 		BlockPos currentPos = worldPosition.above();
@@ -63,14 +66,22 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		}
 		if (prevPitch == pitch)
 			return;
+		
 		notifyUpdate();
+		
+		FluidTankTileEntity tank = getTank();
+		if (tank != null && tank.boiler != null)
+			tank.boiler.checkPipeOrganAdvancement(tank);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (!level.isClientSide())
+		if (!level.isClientSide()) {
+			if (isPowered())
+				award(AllAdvancements.STEAM_WHISTLE);
 			return;
+		}
 
 		FluidTankTileEntity tank = getTank();
 		boolean powered = isPowered() && tank != null && tank.boiler.isActive()
@@ -153,6 +164,12 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		Vec3 m = offset.subtract(Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(.75f));
 		level.addParticle(new SteamJetParticleData(1), v.x, v.y, v.z, m.x, m.y, m.z);
+	}
+
+	public int getPitchId() {
+		return pitch + 100 * getBlockState().getOptionalValue(WhistleBlock.SIZE)
+			.orElse(WhistleSize.MEDIUM)
+			.ordinal();
 	}
 
 	public FluidTankTileEntity getTank() {

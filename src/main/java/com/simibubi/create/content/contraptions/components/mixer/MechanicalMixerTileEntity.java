@@ -11,10 +11,11 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.advancement.ITriggerable;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -91,6 +92,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return speed / 2;
 	}
 
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.MIXER);
+	}
+	
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
@@ -279,8 +286,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
-		return Optional.of(AllTriggers.MIXER_MIX);
+	protected Optional<CreateAdvancement> getProcessedRecipeTrigger() {
+		return Optional.of(AllAdvancements.MIXER);
 	}
 
 	@Override

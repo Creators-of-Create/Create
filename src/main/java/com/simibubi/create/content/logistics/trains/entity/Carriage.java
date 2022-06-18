@@ -26,6 +26,7 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -741,6 +742,7 @@ public class Carriage {
 					.getLevel(other.getKey());
 				sp.teleportTo(level, loc.x, loc.y, loc.z, sp.getYRot(), sp.getXRot());
 				sp.setPortalCooldown();
+				AllAdvancements.TRAIN_PORTAL.awardTo(sp);
 			}
 		}
 

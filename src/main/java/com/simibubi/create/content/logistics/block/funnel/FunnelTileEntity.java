@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -236,6 +237,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
 			.setInsertionHandler(this::handleDirectBeltInput));
+		registerAwardables(behaviours, AllAdvancements.FUNNEL);
 	}
 
 	private boolean supportsAmountOnFilter() {
@@ -333,6 +335,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	public void onTransfer(ItemStack stack) {
 		AllBlocks.CONTENT_OBSERVER.get()
 			.onFunnelTransfer(level, worldPosition, stack);
+		award(AllAdvancements.FUNNEL);
 	}
 
 }

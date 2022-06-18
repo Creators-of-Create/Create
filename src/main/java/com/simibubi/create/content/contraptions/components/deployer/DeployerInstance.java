@@ -95,8 +95,12 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
     }
 
 	private float getProgress(float partialTicks) {
-        if (tile.state == DeployerTileEntity.State.EXPANDING)
-            return 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
+        if (tile.state == DeployerTileEntity.State.EXPANDING) {
+			float f = 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
+			if (tile.fistBump)
+				f *= f;
+			return f;
+		}
         if (tile.state == DeployerTileEntity.State.RETRACTING)
             return (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
         return 0;

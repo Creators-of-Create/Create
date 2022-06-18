@@ -1,0 +1,30 @@
+{
+  "parent": "create:andesite_casing",
+  "display": {
+    "icon": {
+      "item": "create:mechanical_press"
+    },
+    "title": {
+      "translate": "advancement.create.mechanical_press"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.mechanical_press.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:mechanical_press_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

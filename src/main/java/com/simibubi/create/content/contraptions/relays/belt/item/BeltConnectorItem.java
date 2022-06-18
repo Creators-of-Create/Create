@@ -13,7 +13,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -96,7 +96,7 @@ public class BeltConnectorItem extends BlockItem {
 
 			if (firstPulley != null && !firstPulley.equals(pos)) {
 				createBelts(world, firstPulley, pos);
-				AllTriggers.triggerFor(AllTriggers.CONNECT_BELT, playerEntity);
+				AllAdvancements.BELT.awardTo(playerEntity);
 				if (!playerEntity.isCreative())
 					context.getItemInHand()
 						.shrink(1);

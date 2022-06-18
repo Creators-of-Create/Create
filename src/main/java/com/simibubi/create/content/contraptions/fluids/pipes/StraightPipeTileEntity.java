@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -24,6 +25,7 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new StraightPipeFluidTransportBehaviour(this));
 		behaviours.add(new BracketedTileEntityBehaviour(this));
+		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
 	static class StraightPipeFluidTransportBehaviour extends FluidTransportBehaviour {

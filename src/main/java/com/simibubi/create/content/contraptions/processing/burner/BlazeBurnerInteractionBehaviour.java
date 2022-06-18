@@ -11,6 +11,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEn
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -90,6 +91,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 			}
 
 			train.runtime.setSchedule(schedule, false);
+			AllAdvancements.CONDUCTOR.awardTo(player);
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
 			player.displayClientMessage(Lang.translate("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);

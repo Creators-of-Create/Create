@@ -1,13 +1,14 @@
 {
-  "parent": "create:andesite_alloy",
+  "parent": "create:water_wheel",
   "display": {
     "icon": {
-      "item": "create:windmill_bearing"
+      "item": "create:sail_frame"
     },
     "title": {
       "translate": "advancement.create.windmill"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.windmill.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:windmill",
+      "trigger": "create:windmill_builtin",
       "conditions": {}
     }
   },

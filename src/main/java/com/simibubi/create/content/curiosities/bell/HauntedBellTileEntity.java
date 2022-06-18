@@ -34,7 +34,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	public PartialModel getBellModel() {
 		return AllBlockPartials.HAUNTED_BELL;
 	}
-
+	
 	@Override
 	public boolean ring(Level world, BlockPos pos, Direction direction) {
 		if (isRinging && ringingTicks < RECHARGE_TICKS)

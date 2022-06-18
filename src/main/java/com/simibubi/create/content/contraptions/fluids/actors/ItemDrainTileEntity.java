@@ -7,7 +7,7 @@ import java.util.Map;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -58,6 +58,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		behaviours.add(internalTank = SmartFluidTankBehaviour.single(this, 1500)
 			.allowExtraction()
 			.forbidInsertion());
+		registerAwardables(behaviours, AllAdvancements.DRAIN, AllAdvancements.CHAINED_DRAIN);
 	}
 
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
@@ -179,7 +180,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 			if (returned.isEmpty()) {
 				if (level.getBlockEntity(nextPosition) instanceof ItemDrainTileEntity)
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.CHAINED_ITEM_DRAIN, level, worldPosition, 5);
+					award(AllAdvancements.CHAINED_DRAIN);
 				heldItem = null;
 				notifyUpdate();
 				return;
@@ -230,7 +231,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		}
 
 		emptyItem = EmptyingByBasin.emptyItem(level, heldItem.stack.copy(), false);
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.ITEM_DRAIN, level, worldPosition, 5);
+		award(AllAdvancements.DRAIN);
 
 		// Process finished
 		ItemStack out = emptyItem.getSecond();

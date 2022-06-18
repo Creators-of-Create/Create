@@ -7,6 +7,7 @@
       "translate": "advancement.create.root"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.root.desc"
     },
     "frame": "task",

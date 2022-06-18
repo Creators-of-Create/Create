@@ -1,0 +1,30 @@
+{
+  "parent": "create:train_casing_00",
+  "display": {
+    "icon": {
+      "item": "create:track_station"
+    },
+    "title": {
+      "translate": "advancement.create.train"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.train.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:train_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
@@ -87,7 +86,6 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
 
-			AllTriggers.triggerFor(AllTriggers.CASING_SHAFT, player);
 			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
 				.setValue(AXIS, state.getValue(AXIS)));
 			return InteractionResult.SUCCESS;

@@ -1,7 +1,9 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -35,7 +37,9 @@ public class DivingHelmetItem extends CopperArmorItem {
 		if (!AllItems.DIVING_HELMET.get()
 			.isWornBy(entity))
 			return;
-		if (!entity.isEyeInFluid(FluidTags.WATER))
+
+		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
+		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
@@ -46,6 +50,12 @@ public class DivingHelmetItem extends CopperArmorItem {
 		if (!BackTankUtil.hasAirRemaining(backtank))
 			return;
 
+		if (lavaDiving) {
+			if (entity instanceof ServerPlayer sp)
+				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
+			return;
+		}
+
 		if (drowning)
 			entity.setAirSupply(10);
 
@@ -55,6 +65,9 @@ public class DivingHelmetItem extends CopperArmorItem {
 
 		if (!second)
 			return;
+
+		if (entity instanceof ServerPlayer sp)
+			AllAdvancements.DIVING_SUIT.awardTo(sp);
 
 		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
 		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));

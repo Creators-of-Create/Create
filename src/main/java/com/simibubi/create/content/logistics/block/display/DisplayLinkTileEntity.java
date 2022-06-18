@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -108,10 +109,14 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		activeSource.transferData(context, activeTarget, targetLine);
 		sendPulse = true;
 		sendData();
+		
+		award(AllAdvancements.DISPLAY_LINK);
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
+	}
 
 	@Override
 	public void writeSafe(CompoundTag tag, boolean clientPacket) {

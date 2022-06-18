@@ -134,6 +134,7 @@ public class Create {
 		BuiltinPotatoProjectileTypes.register();
 
 		event.enqueueWork(() -> {
+			AllAdvancements.register();
 			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();

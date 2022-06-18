@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -46,7 +47,9 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.STEAM_ENGINE);
+	}
 
 	@Override
 	public void tick() {
@@ -71,6 +74,9 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 			facing = blockState.getValue(SteamEngineBlock.FACING);
 
 		float efficiency = Mth.clamp(tank.boiler.getEngineEfficiency(tank.getTotalTankSize()), 0, 1);
+		if (efficiency > 0)
+			award(AllAdvancements.STEAM_ENGINE);
+		
 		int conveyedSpeedLevel =
 			efficiency == 0 ? 1 : verticalTarget ? 1 : (int) GeneratingKineticTileEntity.convertToDirection(1, facing);
 		if (targetAxis == Axis.Z)

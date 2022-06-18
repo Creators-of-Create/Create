@@ -1,10 +1,14 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -30,6 +34,12 @@ public class EncasedFanTileEntity extends KineticTileEntity implements IAirCurre
 		updateAirFlow = true;
 	}
 
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.ENCASED_FAN, AllAdvancements.FAN_PROCESSING);
+	}
+	
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
@@ -119,6 +129,8 @@ public class EncasedFanTileEntity extends KineticTileEntity implements IAirCurre
 		if (updateAirFlow) {
 			updateAirFlow = false;
 			airCurrent.rebuild();
+			if (airCurrent.maxDistance > 0)
+				award(AllAdvancements.ENCASED_FAN);
 			sendData();
 		}
 

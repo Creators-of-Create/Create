@@ -12,7 +12,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -24,6 +25,7 @@ import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -89,6 +91,12 @@ public class FluidPipeBlock extends PipeBlock
 		if (clickedFace.getAxis() == axis)
 			return InteractionResult.PASS;
 		if (!world.isClientSide) {
+			withTileEntityDo(world, pos, fpte -> fpte.getBehaviour(FluidTransportBehaviour.TYPE).interfaces.values()
+				.stream()
+				.filter(pc -> pc != null && pc.hasFlow())
+				.findAny()
+				.ifPresent($ -> AllAdvancements.GLASS_PIPE.awardTo(context.getPlayer())));
+			
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 				.setValue(GlassFluidPipeBlock.AXIS, axis)
@@ -99,18 +107,25 @@ public class FluidPipeBlock extends PipeBlock
 	}
 
 	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
+	}
+
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
 		if (!AllBlocks.COPPER_CASING.isIn(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
-		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
-		if (!world.isClientSide) {
-			FluidTransportBehaviour.cacheFlows(world, pos);
-			world.setBlockAndUpdate(pos,
-				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
-			FluidTransportBehaviour.loadFlows(world, pos);
-		}
+		if (world.isClientSide)
+			return InteractionResult.SUCCESS;
+		
+		FluidTransportBehaviour.cacheFlows(world, pos);
+		world.setBlockAndUpdate(pos,
+			EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
+		FluidTransportBehaviour.loadFlows(world, pos);
 		return InteractionResult.SUCCESS;
+
 	}
 
 	public BlockState getAxisState(Axis axis) {

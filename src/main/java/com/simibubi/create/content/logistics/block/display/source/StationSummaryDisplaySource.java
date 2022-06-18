@@ -14,6 +14,7 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -88,6 +89,10 @@ public class StationSummaryDisplaySource extends DisplaySource {
 				lines.add(new TextComponent(platform.trim()));
 				list.add(lines);
 			});
+
+		if (list.size() > 0)
+			context.te()
+				.award(AllAdvancements.DISPLAY_BOARD);
 
 		int toPad = stats.maxRows() - list.size();
 		for (int padding = 0; padding < toPad; padding++)

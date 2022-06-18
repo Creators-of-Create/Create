@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
@@ -190,7 +190,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 				.relative(facing));
 			if (opposite.getBlock() instanceof BeltFunnelBlock && opposite.getValue(SHAPE) == Shape.EXTENDED
 				&& opposite.getValue(HORIZONTAL_FACING) == facing.getOpposite())
-				AllTriggers.triggerFor(AllTriggers.BELT_FUNNEL_KISS, context.getPlayer());
+				AllAdvancements.FUNNEL_KISS.awardTo(context.getPlayer());
 		}
 		return InteractionResult.SUCCESS;
 	}

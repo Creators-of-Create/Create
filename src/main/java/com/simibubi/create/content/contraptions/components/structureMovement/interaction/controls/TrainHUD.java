@@ -49,8 +49,8 @@ public class TrainHUD {
 		else
 			currentPrompt = null;
 
-		displayedPromptSize.chase(currentPrompt != null ? Minecraft.getInstance().font.width(currentPrompt) + 17 : 0,
-			.5f, Chaser.EXP);
+		Minecraft mc = Minecraft.getInstance();
+		displayedPromptSize.chase(currentPrompt != null ? mc.font.width(currentPrompt) + 17 : 0, .5f, Chaser.EXP);
 		displayedPromptSize.tickChaser();
 
 		Carriage carriage = getCarriage();
@@ -67,12 +67,15 @@ public class TrainHUD {
 		displayedThrottle.chase(editedThrottle != null ? editedThrottle : train.throttle, .75f, Chaser.EXP);
 		displayedThrottle.tickChaser();
 
-		boolean isSprintKeyPressed = ControlsUtil.isActuallyPressed(Minecraft.getInstance().options.keySprint);
+		boolean isSprintKeyPressed = ControlsUtil.isActuallyPressed(mc.options.keySprint);
 
 		if (isSprintKeyPressed && honkPacketCooldown-- <= 0) {
-			AllPackets.channel.sendToServer(new HonkPacket.Serverbound(train, true));
-			honkPacketCooldown = 5;
-			usedToHonk = true;
+			train.determineHonk(mc.level);
+			if (train.lowHonk != null) {
+				AllPackets.channel.sendToServer(new HonkPacket.Serverbound(train, true));
+				honkPacketCooldown = 5;
+				usedToHonk = true;
+			}
 		}
 
 		if (!isSprintKeyPressed && usedToHonk) {

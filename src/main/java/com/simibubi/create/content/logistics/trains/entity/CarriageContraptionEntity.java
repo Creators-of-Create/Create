@@ -381,6 +381,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, v.x, v.y, v.z, 0, .04, 0);
 		}
 	}
+	
+	@Override
+	protected void addPassenger(Entity pPassenger) {
+		super.addPassenger(pPassenger);
+		if (!(pPassenger instanceof Player player))
+			return;
+		player.getPersistentData()
+			.put("ContraptionMountLocation", VecHelper.writeNBT(player.position()));
+	}
 
 	private Set<BlockPos> particleSlice = new HashSet<>();
 	private float particleAvgY = 0;
@@ -625,11 +634,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			|| carriage.getTrailingPoint().edge != null && carriage.getTrailingPoint().edge.isTurn())
 			topSpeed = carriage.train.maxTurnSpeed();
 
-		if (slow)
+		if (slow) 
 			topSpeed /= 4;
 		carriage.train.targetSpeed = Math.min(topSpeed, cappedTopSpeed) * targetSpeed;
 
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
+		
+		if (slow && !counteringAcceleration)
+			carriage.train.backwardsDriver = player;
+		
 		carriage.train.manualTick = true;
 		carriage.train.approachTargetSpeed(counteringAcceleration ? 2 : 1);
 		return true;

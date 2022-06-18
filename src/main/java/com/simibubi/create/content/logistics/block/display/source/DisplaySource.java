@@ -34,7 +34,6 @@ public abstract class DisplaySource extends DisplayBehaviour {
 		if (activeTarget instanceof DisplayBoardTarget fddt) {
 			List<List<MutableComponent>> flapDisplayText = provideFlapDisplayText(context, stats);
 			fddt.acceptFlapText(line, flapDisplayText, context);
-			return;
 		}
 
 		List<MutableComponent> text = provideText(context, stats);

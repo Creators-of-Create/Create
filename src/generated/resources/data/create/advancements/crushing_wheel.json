@@ -1,5 +1,5 @@
 {
-  "parent": "create:crafter",
+  "parent": "create:mechanical_crafter",
   "display": {
     "icon": {
       "item": "create:crushing_wheel"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.crushing_wheel"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.crushing_wheel.desc"
     },
     "frame": "task",
@@ -17,16 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "create:crushing_wheel"
-            ]
-          }
-        ]
-      }
+      "trigger": "create:crushing_wheel_builtin",
+      "conditions": {}
     }
   },
   "requirements": [

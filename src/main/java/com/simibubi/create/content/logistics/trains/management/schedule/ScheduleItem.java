@@ -9,6 +9,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -116,6 +117,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 			}
 
 			train.runtime.setSchedule(schedule, false);
+			AllAdvancements.CONDUCTOR.awardTo(pPlayer);
 			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
 			pPlayer.displayClientMessage(Lang.translate("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);

@@ -8,6 +8,7 @@
       "translate": "advancement.create.andesite_alloy"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.andesite_alloy.desc"
     },
     "frame": "task",

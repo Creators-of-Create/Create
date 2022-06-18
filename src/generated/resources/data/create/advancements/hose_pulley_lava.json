@@ -1,0 +1,30 @@
+{
+  "parent": "create:copper",
+  "display": {
+    "icon": {
+      "item": "create:hose_pulley"
+    },
+    "title": {
+      "translate": "advancement.create.hose_pulley_lava"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.hose_pulley_lava.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:hose_pulley_lava_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

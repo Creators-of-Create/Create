@@ -5,6 +5,7 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
@@ -14,6 +15,8 @@ import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -92,7 +95,7 @@ public class BeltDeployerCallbacks {
 
 	public static void activate(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
 		DeployerTileEntity deployerTileEntity, Recipe<?> recipe) {
-
+		
 		List<TransportedItemStack> collect =
 			InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
 				.stream()
@@ -110,14 +113,20 @@ public class BeltDeployerCallbacks {
 				})
 				.collect(Collectors.toList());
 
+		deployerTileEntity.award(AllAdvancements.DEPLOYER);
+		
 		TransportedItemStack left = transported.copy();
 		deployerTileEntity.player.spawnedItemEffects = transported.stack.copy();
 		left.stack.shrink(1);
+		ItemStack resultItem = null;
 
-		if (collect.isEmpty())
+		if (collect.isEmpty()) {
+			resultItem = left.stack.copy();
 			handler.handleProcessingOnItem(transported, TransportedResult.convertTo(left));
-		else
+		} else {
+			resultItem = collect.get(0).stack.copy();
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
+		}
 
 		ItemStack heldItem = deployerTileEntity.player.getMainHandItem();
 		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
@@ -133,6 +142,9 @@ public class BeltDeployerCallbacks {
 				heldItem.shrink(1);
 		}
 
+		if (resultItem != null && !resultItem.isEmpty())
+			awardAdvancements(deployerTileEntity, resultItem);
+
 		BlockPos pos = deployerTileEntity.getBlockPos();
 		Level world = deployerTileEntity.getLevel();
 		if (heldItem.isEmpty())
@@ -142,6 +154,23 @@ public class BeltDeployerCallbacks {
 			AllSoundEvents.SANDING_SHORT.playOnServer(world, pos, .35f, 1f);
 
 		deployerTileEntity.sendData();
+	}
+
+	private static void awardAdvancements(DeployerTileEntity deployerTileEntity, ItemStack created) {
+		CreateAdvancement advancement = null;
+
+		if (AllBlocks.ANDESITE_CASING.isIn(created))
+			advancement = AllAdvancements.ANDESITE_CASING;
+		else if (AllBlocks.BRASS_CASING.isIn(created))
+			advancement = AllAdvancements.BRASS_CASING;
+		else if (AllBlocks.COPPER_CASING.isIn(created))
+			advancement = AllAdvancements.COPPER_CASING;
+		else if (AllBlocks.RAILWAY_CASING.isIn(created))
+			advancement = AllAdvancements.TRAIN_CASING;
+		else
+			return;
+
+		deployerTileEntity.award(advancement);
 	}
 
 }
