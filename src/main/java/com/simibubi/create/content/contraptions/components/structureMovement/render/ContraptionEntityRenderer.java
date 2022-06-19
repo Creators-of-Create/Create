@@ -26,7 +26,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		double cameraZ) {
 		if (entity.getContraption() == null)
 			return false;
-		if (!entity.isAlive())
+		if (!entity.isAliveOrStale())
 			return false;
 		if (!entity.isReadyForRender())
 			return false;

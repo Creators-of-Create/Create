@@ -90,6 +90,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected boolean prevPosInvalid;
 	private boolean skipActorStop;
 
+	/*
+	 * staleTicks are a band-aid to prevent a frame or two of missing blocks between
+	 * contraption discard and off-thread block placement on disassembly
+	 * 
+	 * FIXME this timeout should be longer but then also cancelled early based on a
+	 * chunk rebuild listener
+	 */
+	public int staleTicks = 3;
+
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
 		prevPosInvalid = true;
@@ -168,7 +177,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		callback.accept(passenger, transformedVector.x,
 			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) - 1 / 8f, transformedVector.z);
 	}
-	
+
 	protected Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
 		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {
@@ -308,6 +317,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		contraption.tickStorage(this);
 		tickContraption();
 		super.tick();
+
+		if (level.isClientSide())
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				if (!contraption.deferInvalidate)
+					return;
+				contraption.deferInvalidate = false;
+				ContraptionRenderDispatcher.invalidate(contraption);
+			});
 
 		if (!(level instanceof ServerLevelAccessor sl))
 			return;
@@ -695,7 +712,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		StructureBlockInfo info = contraption.blocks.get(localPos);
 		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
 		if (info.state != newState && !(newState.getBlock() instanceof SlidingDoorBlock))
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ContraptionRenderDispatcher.invalidate(contraption));
+			contraption.deferInvalidate = true;
 		contraption.invalidateColliders();
 	}
 
@@ -849,6 +866,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public boolean isReadyForRender() {
 		return initialized;
+	}
+
+	public boolean isAliveOrStale() {
+		return isAlive() || level.isClientSide() ? staleTicks > 0 : false;
 	}
 
 }

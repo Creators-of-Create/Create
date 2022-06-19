@@ -45,10 +45,15 @@ public class ContraptionHandler {
 		for (Iterator<WeakReference<AbstractContraptionEntity>> iterator = values.iterator(); iterator.hasNext();) {
 			WeakReference<AbstractContraptionEntity> weakReference = iterator.next();
 			AbstractContraptionEntity contraptionEntity = weakReference.get();
-			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
+			if (contraptionEntity == null || !contraptionEntity.isAliveOrStale()) {
 				iterator.remove();
 				continue;
 			}
+			if (!contraptionEntity.isAlive()) {
+				contraptionEntity.staleTicks--;
+				continue;
+			}
+			
 			ContraptionCollider.collideEntities(contraptionEntity);
 		}
 	}

@@ -2,16 +2,11 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public abstract class MovingInteractionBehaviour {
 
@@ -22,7 +17,7 @@ public abstract class MovingInteractionBehaviour {
 		contraptionEntity.contraption.actors.remove(index);
 		contraptionEntity.contraption.actors.add(index, MutablePair.of(info, ctx));
 		if (contraptionEntity.level.isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
+			contraptionEntity.contraption.deferInvalidate = true;
 	}
 
 	protected void setContraptionBlockData(AbstractContraptionEntity contraptionEntity, BlockPos pos,
@@ -30,11 +25,6 @@ public abstract class MovingInteractionBehaviour {
 		if (contraptionEntity.level.isClientSide())
 			return;
 		contraptionEntity.setBlock(pos, info);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	protected void invalidate(Contraption contraption) {
-		ContraptionRenderDispatcher.invalidate(contraption);
 	}
 
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,

@@ -151,6 +151,7 @@ public abstract class Contraption {
 	public List<BlockEntity> specialRenderedTileEntities;
 
 	protected ContraptionWorld world;
+	public boolean deferInvalidate;
 
 	public Contraption() {
 		blocks = new HashMap<>();

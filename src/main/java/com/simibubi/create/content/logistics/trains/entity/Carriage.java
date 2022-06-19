@@ -762,7 +762,7 @@ public class Carriage {
 
 		@OnlyIn(Dist.CLIENT)
 		private void invalidate(CarriageContraptionEntity entity) {
-			ContraptionRenderDispatcher.invalidate(entity.getContraption());
+			entity.getContraption().deferInvalidate = true;
 			entity.updateRenderedPortalCutoff();
 		}
 
