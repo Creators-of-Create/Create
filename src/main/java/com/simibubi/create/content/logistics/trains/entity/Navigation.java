@@ -75,7 +75,7 @@ public class Navigation {
 			boolean backDriver = train.hasBackwardConductor();
 			if (destinationBehindTrain && !backDriver) {
 				if (frontDriver)
-					train.status.missingBackwardsConductor();
+					train.status.missingCorrectConductor();
 				else
 					train.status.missingConductor();
 				cancelNavigation();
@@ -401,7 +401,7 @@ public class Navigation {
 			boolean backDriver = train.hasBackwardConductor();
 			if (destinationBehindTrain && !backDriver) {
 				if (frontDriver)
-					train.status.missingBackwardsConductor();
+					train.status.missingCorrectConductor();
 				else
 					train.status.missingConductor();
 				return -1;
@@ -409,7 +409,7 @@ public class Navigation {
 
 			if (!destinationBehindTrain && !frontDriver) {
 				if (backDriver)
-					train.status.missingBackwardsConductor();
+					train.status.missingCorrectConductor();
 				else
 					train.status.missingConductor();
 				return -1;

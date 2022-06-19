@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -66,9 +67,9 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		}
 		if (prevPitch == pitch)
 			return;
-		
+
 		notifyUpdate();
-		
+
 		FluidTankTileEntity tank = getTank();
 		if (tank != null && tank.boiler != null)
 			tank.boiler.checkPipeOrganAdvancement(tank);
@@ -105,8 +106,11 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		String[] pitches = "F#;F;E;D#;D;C#;C;B;A#;A;G#;G".split(";");
-		tooltip.add(new TextComponent(spacing + "Pitch: " + pitches[pitch % pitches.length]));
+		String[] pitches = Lang.translate("generic.notes")
+			.getString()
+			.split(";");
+		TextComponent textComponent = new TextComponent(spacing);
+		tooltip.add(textComponent.append(Lang.translate("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}
 

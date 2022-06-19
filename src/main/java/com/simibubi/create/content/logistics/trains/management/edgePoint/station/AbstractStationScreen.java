@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
@@ -30,7 +29,9 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	private IconButton confirmButton;
 
 	public AbstractStationScreen(StationTileEntity te, GlobalStation station) {
-		super(new TextComponent("Station"));
+		super(te.getBlockState()
+			.getBlock()
+			.getName());
 		this.te = te;
 		this.station = station;
 		displayedTrain = new WeakReference<>(null);

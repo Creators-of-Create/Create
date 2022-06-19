@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 
@@ -237,7 +238,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Train train = displayedTrain.get();
 		if (train == null) {
-			TextComponent header = new TextComponent("Station is Idle");
+			MutableComponent header = Lang.translate("station.idle");
 			font.draw(ms, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A);
 			return;
 		}

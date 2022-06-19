@@ -398,12 +398,12 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	}
 
 	public boolean isValidBogeyOffset(int i) {
-		if ((i < 4 || bogeyCount == 0) && i != 0)
+		if ((i < 3 || bogeyCount == 0) && i != 0)
 			return false;
 		for (int j : bogeyLocations) {
 			if (j == -1)
 				break;
-			if (i >= j - 3 && i <= j + 3)
+			if (i >= j - 2 && i <= j + 2)
 				return false;
 		}
 		return true;
@@ -466,13 +466,21 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return;
 
 		List<Double> pointOffsets = new ArrayList<>();
+		int iPrevious = -100;
 		for (int i = 0; i < bogeyLocations.length; i++) {
 			int loc = bogeyLocations[i];
 			if (loc == -1)
 				break;
+			
+			if (loc - iPrevious < 3) {
+				exception(new AssemblyException(Lang.translate("train_assembly.bogeys_too_close", i, i + 1)), -1);
+				return;
+			}
+			
 			double bogeySize = bogeyTypes[i].getWheelPointSpacing();
 			pointOffsets.add(Double.valueOf(loc + .5 - bogeySize / 2));
 			pointOffsets.add(Double.valueOf(loc + .5 + bogeySize / 2));
+			iPrevious = loc;
 		}
 
 		List<TravellingPoint> points = new ArrayList<>();

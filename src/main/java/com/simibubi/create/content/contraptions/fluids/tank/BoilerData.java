@@ -150,8 +150,7 @@ public class BoilerData {
 		calcMinMaxForSize(boilerSize);
 
 		tooltip.add(indent.plainCopy()
-			.append(new TextComponent("Boiler Status:  ")
-				.append(getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
+			.append(Lang.translate("boiler.status", getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
 		tooltip.add(indent2.plainCopy()
 			.append(getSizeComponent(true, false)));
 		tooltip.add(indent2.plainCopy()
@@ -169,8 +168,8 @@ public class BoilerData {
 		Component capacity =
 			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
 				.withStyle(ChatFormatting.AQUA);
-		Component engines =
-			new TextComponent(" via " + attachedEngines + " engine(s)").withStyle(ChatFormatting.DARK_GRAY);
+		Component engines = (attachedEngines == 1 ? Lang.translate("boiler.via_one_engine")
+			: Lang.translate("boiler.via_engines", attachedEngines)).withStyle(ChatFormatting.DARK_GRAY);
 
 		tooltip.add(indent);
 		tooltip.add(indent.plainCopy()
@@ -192,29 +191,29 @@ public class BoilerData {
 	}
 
 	@NotNull
-	public TextComponent getHeatLevelTextComponent() {
+	public MutableComponent getHeatLevelTextComponent() {
 		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
 
-		return isPassive() ? new TextComponent("Passive")
-			: (boilerLevel == 0 ? new TextComponent("Idle")
-				: boilerLevel == 18 ? new TextComponent("Max")
-					: new TextComponent("Lvl " + IHaveGoggleInformation.format(boilerLevel)));
+		return isPassive() ? Lang.translate("boiler.passive")
+			: (boilerLevel == 0 ? Lang.translate("boiler.idle")
+				: boilerLevel == 18 ? Lang.translate("boiler.max_lvl")
+					: Lang.translate("boiler.lvl", IHaveGoggleInformation.format(boilerLevel)));
 	}
 
 	public MutableComponent getSizeComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
-		return componentHelper("Size ", "....... ", maxHeatForSize, forGoggles, useBlocksAsBars, styles);
+		return componentHelper("size", maxHeatForSize, forGoggles, useBlocksAsBars, styles);
 	}
 
 	public MutableComponent getWaterComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
-		return componentHelper("Water ", "... ", maxHeatForWater, forGoggles, useBlocksAsBars, styles);
+		return componentHelper("water", maxHeatForWater, forGoggles, useBlocksAsBars, styles);
 	}
 
 	public MutableComponent getHeatComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
-		return componentHelper("Heat ", "...... ", passiveHeat ? 1 : activeHeat, forGoggles, useBlocksAsBars, styles);
+		return componentHelper("heat", passiveHeat ? 1 : activeHeat, forGoggles, useBlocksAsBars, styles);
 	}
 
-	private MutableComponent componentHelper(String label, String dots, int level, boolean forGoggles,
-		boolean useBlocksAsBars, ChatFormatting... styles) {
+	private MutableComponent componentHelper(String label, int level, boolean forGoggles, boolean useBlocksAsBars,
+		ChatFormatting... styles) {
 		MutableComponent base = useBlocksAsBars ? blockComponent(level) : barComponent(level);
 
 		if (!forGoggles)
@@ -223,8 +222,10 @@ public class BoilerData {
 		ChatFormatting style1 = styles.length >= 1 ? styles[0] : ChatFormatting.GRAY;
 		ChatFormatting style2 = styles.length >= 2 ? styles[1] : ChatFormatting.DARK_GRAY;
 
-		return new TextComponent(label).withStyle(style1)
-			.append(new TextComponent(dots).withStyle(style2))
+		return Lang.translate("boiler." + label)
+			.withStyle(style1)
+			.append(Lang.translate("boiler." + label + "_dots")
+				.withStyle(style2))
 			.append(base);
 	}
 

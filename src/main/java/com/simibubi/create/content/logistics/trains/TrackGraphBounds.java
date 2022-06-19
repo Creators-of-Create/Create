@@ -14,12 +14,13 @@ public class TrackGraphBounds {
 	public AABB box;
 	public List<BezierConnection> beziers;
 
-	// TODO: filter nodes by dimensional coordinate
 	public TrackGraphBounds(TrackGraph graph, ResourceKey<Level> dimension) {
 		beziers = new ArrayList<>();
 		box = null;
 
 		for (TrackNode node : graph.nodes.values()) {
+			if (node.location.dimension != dimension)
+				continue;
 			include(node);
 			Map<TrackNode, TrackEdge> connections = graph.getConnectionsFrom(node);
 			for (TrackEdge edge : connections.values())
