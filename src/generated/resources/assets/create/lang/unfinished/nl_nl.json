@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2319",
+	"_": "Missing Localizations: 2323",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -415,6 +415,9 @@
 	"block.create.refined_radiance_casing": "UNLOCALIZED: Radiant Casing",
 	"block.create.rope": "UNLOCALIZED: Rope",
 	"block.create.rope_pulley": "UNLOCALIZED: Rope Pulley",
+	"block.create.rose_quartz_block": "UNLOCALIZED: Block of Rose Quartz",
+	"block.create.rose_quartz_lamp": "UNLOCALIZED: Rose Quartz Lamp",
+	"block.create.rose_quartz_tiles": "UNLOCALIZED: Rose Quartz Tiles",
 	"block.create.rotation_speed_controller": "UNLOCALIZED: Rotation Speed Controller",
 	"block.create.sail_frame": "UNLOCALIZED: Sail Frame",
 	"block.create.schematic_table": "Bouwtekening Tafel",
@@ -468,6 +471,7 @@
 	"block.create.small_ochrum_brick_stairs": "UNLOCALIZED: Small Ochrum Brick Stairs",
 	"block.create.small_ochrum_brick_wall": "UNLOCALIZED: Small Ochrum Brick Wall",
 	"block.create.small_ochrum_bricks": "UNLOCALIZED: Small Ochrum Bricks",
+	"block.create.small_rose_quartz_tiles": "UNLOCALIZED: Small Rose Quartz Tiles",
 	"block.create.small_scorchia_brick_slab": "UNLOCALIZED: Small Scorchia Brick Slab",
 	"block.create.small_scorchia_brick_stairs": "UNLOCALIZED: Small Scorchia Brick Stairs",
 	"block.create.small_scorchia_brick_wall": "UNLOCALIZED: Small Scorchia Brick Wall",

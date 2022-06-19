@@ -76,6 +76,12 @@ public class BlockStateGen {
 		boolean customItem) {
 		return (c, p) -> horizontalAxisBlock(c, p, getBlockModel(customItem, c, p));
 	}
+	
+	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> simpleCubeAll(
+		String path) {
+		return (c, p) -> p.simpleBlock(c.get(), p.models()
+			.cubeAll(c.getName(), p.modLoc("block/" + path)));
+	}
 
 	public static <T extends DirectionalAxisKineticBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> directionalAxisBlockProvider() {
 		return (c, p) -> directionalAxisBlock(c, p, ($, vertical) -> p.models()

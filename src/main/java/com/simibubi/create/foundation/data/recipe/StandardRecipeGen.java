@@ -99,6 +99,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			metalCompacting(ImmutableList.of(AllItems.ZINC_NUGGET, AllItems.ZINC_INGOT, AllBlocks.ZINC_BLOCK),
 				ImmutableList.of(I::zincNugget, I::zinc, I::zincBlock)),
 
+		ROSE_QUARTZ_CYCLE =
+			conversionCycle(ImmutableList.of(AllBlocks.ROSE_QUARTZ_TILES, AllBlocks.SMALL_ROSE_QUARTZ_TILES)),
+
 		ANDESITE_ALLOY = create(AllItems.ANDESITE_ALLOY).unlockedByTag(I::iron)
 			.viaShaped(b -> b.define('A', Blocks.ANDESITE)
 				.define('B', Tags.Items.NUGGETS_IRON)
@@ -329,6 +332,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.define('P', Tags.Items.RODS_WOODEN)
 				.pattern("P")
 				.pattern("S")),
+
+		ROSE_QUARTZ_LAMP = create(AllBlocks.ROSE_QUARTZ_LAMP).unlockedByTag(I::zinc)
+			.viaShapeless(b -> b.requires(AllItems.POLISHED_ROSE_QUARTZ.get())
+				.requires(I.redstone())
+				.requires(I.zinc())),
 
 		BELT_CONNECTOR = create(AllItems.BELT_CONNECTOR).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('D', Items.DRIED_KELP)

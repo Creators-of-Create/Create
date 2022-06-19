@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/rose_quartz_block_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/rose_quartz_block"
+    },
+    "axis=z": {
+      "model": "create:block/rose_quartz_block_horizontal",
+      "x": 90
+    }
+  }
+}

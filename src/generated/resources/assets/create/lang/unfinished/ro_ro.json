@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 486",
+	"_": "Missing Localizations: 490",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -415,6 +415,9 @@
 	"block.create.refined_radiance_casing": "Carcasă Radiantă",
 	"block.create.rope": "Sfoară",
 	"block.create.rope_pulley": "Scripete De Sfoară",
+	"block.create.rose_quartz_block": "UNLOCALIZED: Block of Rose Quartz",
+	"block.create.rose_quartz_lamp": "UNLOCALIZED: Rose Quartz Lamp",
+	"block.create.rose_quartz_tiles": "UNLOCALIZED: Rose Quartz Tiles",
 	"block.create.rotation_speed_controller": "Controlor De Viteză De Rotație",
 	"block.create.sail_frame": "Ramă De Velă",
 	"block.create.schematic_table": "Masă De Schemă",
@@ -468,6 +471,7 @@
 	"block.create.small_ochrum_brick_stairs": "Scări De Cărămizi Mici De Ochrum",
 	"block.create.small_ochrum_brick_wall": "Zid De Cărămizi Mici De Ochrum",
 	"block.create.small_ochrum_bricks": "Cărămizi Mici De Ochrum",
+	"block.create.small_rose_quartz_tiles": "UNLOCALIZED: Small Rose Quartz Tiles",
 	"block.create.small_scorchia_brick_slab": "Lespede De Cărămizi Mici De Scorchia",
 	"block.create.small_scorchia_brick_stairs": "Scări De Cărămizi Mici De Scorchia",
 	"block.create.small_scorchia_brick_wall": "Zid De Cărămizi Mici De Scorchia",

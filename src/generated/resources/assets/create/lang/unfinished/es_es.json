@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 483",
+	"_": "Missing Localizations: 487",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -415,6 +415,9 @@
 	"block.create.refined_radiance_casing": "Revestidor radiante",
 	"block.create.rope": "Cuerda",
 	"block.create.rope_pulley": "Polea de cuerda",
+	"block.create.rose_quartz_block": "UNLOCALIZED: Block of Rose Quartz",
+	"block.create.rose_quartz_lamp": "UNLOCALIZED: Rose Quartz Lamp",
+	"block.create.rose_quartz_tiles": "UNLOCALIZED: Rose Quartz Tiles",
 	"block.create.rotation_speed_controller": "Controlador de velocidad rotacional",
 	"block.create.sail_frame": "Marco de vela",
 	"block.create.schematic_table": "Tabla de esquemas",
@@ -468,6 +471,7 @@
 	"block.create.small_ochrum_brick_stairs": "Escalera de ladrillos pequeños de ocre",
 	"block.create.small_ochrum_brick_wall": "Muro de ladrillos pequeños de ocre",
 	"block.create.small_ochrum_bricks": "Ladrillos pequeños de ocre",
+	"block.create.small_rose_quartz_tiles": "UNLOCALIZED: Small Rose Quartz Tiles",
 	"block.create.small_scorchia_brick_slab": "Losa de ladrillos pequeños de escoria oscura",
 	"block.create.small_scorchia_brick_stairs": "Escaleras de ladrillos pequeños de escoria oscura",
 	"block.create.small_scorchia_brick_wall": "Muro de ladrillos pequeños de escoria oscura",

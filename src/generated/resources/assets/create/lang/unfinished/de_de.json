@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1169",
+	"_": "Missing Localizations: 1173",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -415,6 +415,9 @@
 	"block.create.refined_radiance_casing": "Glanzgehäuse",
 	"block.create.rope": "Seil",
 	"block.create.rope_pulley": "Seilrolle",
+	"block.create.rose_quartz_block": "UNLOCALIZED: Block of Rose Quartz",
+	"block.create.rose_quartz_lamp": "UNLOCALIZED: Rose Quartz Lamp",
+	"block.create.rose_quartz_tiles": "UNLOCALIZED: Rose Quartz Tiles",
 	"block.create.rotation_speed_controller": "Rotationsgeschwindigkeitsregler",
 	"block.create.sail_frame": "Segelrahmen",
 	"block.create.schematic_table": "Bauplantisch",
@@ -468,6 +471,7 @@
 	"block.create.small_ochrum_brick_stairs": "Kleine Ockrumziegeltreppe",
 	"block.create.small_ochrum_brick_wall": "Kleine Ockrumziegelmauer",
 	"block.create.small_ochrum_bricks": "Kleine Ockrumziegelsteine",
+	"block.create.small_rose_quartz_tiles": "UNLOCALIZED: Small Rose Quartz Tiles",
 	"block.create.small_scorchia_brick_slab": "Kleine Scorchiaziegelstufe",
 	"block.create.small_scorchia_brick_stairs": "Kleine Scorchiaziegeltreppe",
 	"block.create.small_scorchia_brick_wall": "Kleine Scorchiaziegelmauer",

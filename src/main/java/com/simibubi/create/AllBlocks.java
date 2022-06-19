@@ -9,6 +9,7 @@ import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
+import static com.simibubi.create.foundation.data.BlockStateGen.simpleCubeAll;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
@@ -198,6 +199,7 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
+import com.simibubi.create.content.logistics.block.redstone.RoseQuartzLampBlock;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
@@ -249,6 +251,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -1779,6 +1782,21 @@ public class AllBlocks {
 			.register();
 	});
 
+	public static final BlockEntry<RoseQuartzLampBlock> ROSE_QUARTZ_LAMP =
+		REGISTRATE.block("rose_quartz_lamp", RoseQuartzLampBlock::new)
+			.initialProperties(() -> Blocks.REDSTONE_LAMP)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK)
+				.lightLevel(s -> s.getValue(RoseQuartzLampBlock.POWERING) ? 15 : 0))
+			.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, s -> {
+				boolean powered = s.getValue(RoseQuartzLampBlock.POWERING);
+				String name = c.getName() + (powered ? "_powered" : "");
+				return p.models()
+					.cubeAll(name, p.modLoc("block/" + name));
+			}))
+			.transform(pickaxeOnly())
+			.simpleItem()
+			.register();
+
 	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
 		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
 			.initialProperties(SharedProperties::wooden)
@@ -2002,13 +2020,12 @@ public class AllBlocks {
 		.lang("Block of Zinc")
 		.register();
 
-	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", p -> new Block(p))
+	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 		.properties(p -> p.requiresCorrectToolForDrops())
 		.transform(pickaxeOnly())
-		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
-			.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
+		.blockstate(simpleCubeAll("brass_storage_block"))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
@@ -2017,6 +2034,41 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Brass")
 		.register();
+
+	public static final BlockEntry<RotatedPillarBlock> ROSE_QUARTZ_BLOCK =
+		REGISTRATE.block("rose_quartz_block", RotatedPillarBlock::new)
+			.initialProperties(() -> Blocks.AMETHYST_BLOCK)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK)
+				.requiresCorrectToolForDrops()
+				.sound(SoundType.DEEPSLATE))
+			.transform(pickaxeOnly())
+			.blockstate((c, p) -> p.axisBlock(c.get(), p.modLoc("block/palettes/rose_quartz_side"),
+				p.modLoc("block/palettes/rose_quartz_top")))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ROSE_QUARTZ), c::get, 2))
+			.simpleItem()
+			.lang("Block of Rose Quartz")
+			.register();
+
+	public static final BlockEntry<Block> ROSE_QUARTZ_TILES = REGISTRATE.block("rose_quartz_tiles", Block::new)
+		.initialProperties(() -> Blocks.DEEPSLATE)
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK))
+		.properties(p -> p.requiresCorrectToolForDrops())
+		.transform(pickaxeOnly())
+		.blockstate(simpleCubeAll("palettes/rose_quartz_tiles"))
+		.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.POLISHED_ROSE_QUARTZ), c::get, 2))
+		.simpleItem()
+		.register();
+
+	public static final BlockEntry<Block> SMALL_ROSE_QUARTZ_TILES =
+		REGISTRATE.block("small_rose_quartz_tiles", Block::new)
+			.initialProperties(() -> Blocks.DEEPSLATE)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK))
+			.properties(p -> p.requiresCorrectToolForDrops())
+			.transform(pickaxeOnly())
+			.blockstate(simpleCubeAll("palettes/small_rose_quartz_tiles"))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.POLISHED_ROSE_QUARTZ), c::get, 2))
+			.simpleItem()
+			.register();
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {

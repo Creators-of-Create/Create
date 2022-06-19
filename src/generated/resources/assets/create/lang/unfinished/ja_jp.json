@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 485",
+	"_": "Missing Localizations: 489",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -415,6 +415,9 @@
 	"block.create.refined_radiance_casing": "光輝ケーシング",
 	"block.create.rope": "ロープ",
 	"block.create.rope_pulley": "ローププーリー",
+	"block.create.rose_quartz_block": "UNLOCALIZED: Block of Rose Quartz",
+	"block.create.rose_quartz_lamp": "UNLOCALIZED: Rose Quartz Lamp",
+	"block.create.rose_quartz_tiles": "UNLOCALIZED: Rose Quartz Tiles",
 	"block.create.rotation_speed_controller": "回転速度コントローラー",
 	"block.create.sail_frame": "帆フレーム",
 	"block.create.schematic_table": "概略図台",
@@ -468,6 +471,7 @@
 	"block.create.small_ochrum_brick_stairs": "小さな黄土岩レンガの階段",
 	"block.create.small_ochrum_brick_wall": "小さな黄土岩レンガの塀",
 	"block.create.small_ochrum_bricks": "小さな黄土岩レンガ",
+	"block.create.small_rose_quartz_tiles": "UNLOCALIZED: Small Rose Quartz Tiles",
 	"block.create.small_scorchia_brick_slab": "小さなスコーチアレンガのハーフブロック",
 	"block.create.small_scorchia_brick_stairs": "小さなスコーチアレンガの階段",
 	"block.create.small_scorchia_brick_wall": "小さなスコーチアレンガの塀",
