@@ -20,7 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.FlwContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
@@ -298,7 +298,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!FlwContraption.canInstance())
+		if (!ContraptionRenderDispatcher.canInstance())
 			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
