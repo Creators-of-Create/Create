@@ -49,13 +49,13 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 		Material<ModelData> mat = getTransformMaterial();
 
-		base = mat.getModel(AllBlockPartials.ARM_BASE).createInstance();
-		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY).createInstance();
-		upperBody = mat.getModel(AllBlockPartials.ARM_UPPER_BODY).createInstance();
-		head = mat.getModel(AllBlockPartials.ARM_HEAD).createInstance();
-		claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE).createInstance();
+		base = mat.getModel(AllBlockPartials.ARM_BASE, blockState).createInstance();
+		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState).createInstance();
+		upperBody = mat.getModel(AllBlockPartials.ARM_UPPER_BODY, blockState).createInstance();
+		head = mat.getModel(AllBlockPartials.ARM_HEAD, blockState).createInstance();
+		claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE, blockState).createInstance();
 
-		Instancer<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP);
+		Instancer<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
 		ModelData clawGrip1 = clawHalfModel.createInstance();
 		ModelData clawGrip2 = clawHalfModel.createInstance();
 
@@ -172,7 +172,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 	@Override
 	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG);
+		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, blockEntity.getBlockState());
 	}
 
 	@Override

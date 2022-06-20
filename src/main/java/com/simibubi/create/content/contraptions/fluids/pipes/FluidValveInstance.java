@@ -40,7 +40,7 @@ public class FluidValveInstance extends ShaftInstance implements DynamicInstance
 
         pointer = materialManager.defaultSolid()
                 .material(Materials.TRANSFORMED)
-                .getModel(AllBlockPartials.FLUID_VALVE_POINTER).createInstance();
+                .getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
 
 		transformPointer();
     }

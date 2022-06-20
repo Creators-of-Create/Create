@@ -15,27 +15,27 @@ public class HosePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected Instancer<OrientedData> getRopeModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.HOSE);
+		return getOrientedMaterial().getModel(AllBlockPartials.HOSE, blockState);
 	}
 
 	protected Instancer<OrientedData> getMagnetModel() {
 		return materialManager.defaultCutout()
 				.material(Materials.ORIENTED)
-				.getModel(AllBlockPartials.HOSE_MAGNET);
+				.getModel(AllBlockPartials.HOSE_MAGNET, blockState);
 	}
 
 	protected Instancer<OrientedData> getHalfMagnetModel() {
 		return materialManager.defaultCutout()
 				.material(Materials.ORIENTED)
-				.getModel(AllBlockPartials.HOSE_HALF_MAGNET);
+				.getModel(AllBlockPartials.HOSE_HALF_MAGNET, blockState);
 	}
 
 	protected Instancer<OrientedData> getCoilModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_COIL, rotatingAbout);
+		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_COIL, blockState, rotatingAbout);
 	}
 
 	protected Instancer<OrientedData> getHalfRopeModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_HALF);
+		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_HALF, blockState);
 	}
 
 	protected float getOffset() {

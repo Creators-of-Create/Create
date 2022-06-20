@@ -47,11 +47,11 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE).createInstance();
+        pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
 		currentHand = this.tile.getHandPose();
 
-		hand = getOrientedMaterial().getModel(currentHand).createInstance();
+		hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
 
 		progress = getProgress(AnimationTickHolder.getPartialTicks());
         updateRotation(pole, hand, yRot, xRot, zRot);
@@ -64,7 +64,7 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
 
 		if (currentHand != handPose) {
 			currentHand = handPose;
-			getOrientedMaterial().getModel(currentHand)
+			getOrientedMaterial().getModel(currentHand, blockState)
 					.stealInstance(hand);
 		}
 	}

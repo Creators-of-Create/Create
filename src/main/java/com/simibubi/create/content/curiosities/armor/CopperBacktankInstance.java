@@ -15,7 +15,7 @@ public class CopperBacktankInstance extends SingleRotatingInstance {
 
 	@Override
 	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().getModel(AllBlockPartials.COPPER_BACKTANK_SHAFT);
+		return getRotatingMaterial().getModel(AllBlockPartials.COPPER_BACKTANK_SHAFT, blockState);
 	}
 
 }

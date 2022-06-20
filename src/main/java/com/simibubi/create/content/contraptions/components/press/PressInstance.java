@@ -21,9 +21,9 @@ public class PressInstance extends ShaftInstance implements DynamicInstance {
 		press = tile;
 
 		pressHead = dispatcher.defaultSolid()
-			.material(Materials.ORIENTED)
-			.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD)
-			.createInstance();
+				.material(Materials.ORIENTED)
+				.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
+				.createInstance();
 
 		Quaternion q = Vector3f.YP
 			.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));

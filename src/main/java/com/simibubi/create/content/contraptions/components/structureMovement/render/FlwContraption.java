@@ -13,7 +13,6 @@ import com.jozufozu.flywheel.backend.instancing.SerialTaskEngine;
 import com.jozufozu.flywheel.backend.instancing.batching.BatchingEngine;
 import com.jozufozu.flywheel.backend.instancing.instancing.InstancingEngine;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
-import com.jozufozu.flywheel.config.BackendType;
 import com.jozufozu.flywheel.core.model.Model;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
@@ -54,15 +53,11 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		var restoreState = GlStateTracker.getRestoreState();
 		buildLayers();
-		if (canInstance()) {
+		if (ContraptionRenderDispatcher.canInstance()) {
 			buildInstancedTiles();
 			buildActors();
 		}
 		restoreState.restore();
-	}
-
-	public static boolean canInstance() {
-		return Backend.getBackendType() == BackendType.INSTANCING;
 	}
 
 	public ContraptionLighter<?> getLighter() {

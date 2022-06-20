@@ -123,7 +123,7 @@ public class ContraptionRenderDispatcher {
 		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, origin, height, minBuildHeight) {
 			@Override
 			public boolean supportsFlywheel() {
-				return Backend.getBackendType() == BackendType.INSTANCING;
+				return canInstance();
 			}
 		};
 
@@ -203,5 +203,9 @@ public class ContraptionRenderDispatcher {
 		} else {
 			WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 		}
+	}
+
+	public static boolean canInstance() {
+		return Backend.getBackendType() == BackendType.INSTANCING;
 	}
 }
