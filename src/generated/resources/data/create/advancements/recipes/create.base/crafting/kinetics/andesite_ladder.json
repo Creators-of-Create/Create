@@ -2,11 +2,11 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:andesite_ladder_from_andesite_alloy_stonecutting"
+      "create:crafting/kinetics/andesite_ladder"
     ]
   },
   "criteria": {
-    "has_andesite_alloy": {
+    "has_item": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -21,13 +21,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:andesite_ladder_from_andesite_alloy_stonecutting"
+        "recipe": "create:crafting/kinetics/andesite_ladder"
       }
     }
   },
   "requirements": [
     [
-      "has_andesite_alloy",
+      "has_item",
       "has_the_recipe"
     ]
   ]

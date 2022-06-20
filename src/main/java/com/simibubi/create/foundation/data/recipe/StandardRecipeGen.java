@@ -161,16 +161,32 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShaped(b -> b.define('I', I.brassBlock())
 				.define('P', I.brassSheet())
 				.pattern("I")
-				.pattern("P"))
+				.pattern("P")),
+
+		CAKE = create(() -> Items.CAKE).unlockedByTag(() -> AllTags.forgeItemTag("dough"))
+			.viaShaped(b -> b.define('E', Tags.Items.EGGS)
+				.define('S', Items.SUGAR)
+				.define('P', AllTags.forgeItemTag("dough"))
+				.define('M', () -> Items.MILK_BUCKET)
+				.pattern(" M ")
+				.pattern("SES")
+				.pattern(" P "))
 
 	;
 
 	private Marker KINETICS = enterSection(AllSections.KINETICS);
 
-	GeneratedRecipe BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
+	GeneratedRecipe ANDESITE_LADDER = create(AllBlocks.ANDESITE_LADDER).returns(4)
+		.unlockedBy(I::andesite)
 		.viaShaped(b -> b.define('A', I.andesite())
 			.pattern("A A")
-			.pattern("AAA")),
+			.pattern("AAA")
+			.pattern("A A")),
+
+		BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('A', I.andesite())
+				.pattern("A A")
+				.pattern("AAA")),
 
 		GOGGLES = create(AllItems.GOGGLES).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
@@ -967,8 +983,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe
 
-	DOUGH = create(AllItems.DOUGH).unlockedBy(AllItems.WHEAT_FLOUR::get)
-		.viaShapeless(b -> b.requires(AllItems.WHEAT_FLOUR.get())
+	DOUGH = create(AllItems.DOUGH).unlockedByTag(I::wheatFlour)
+		.viaShapeless(b -> b.requires(I.wheatFlour())
 			.requires(Items.WATER_BUCKET)),
 
 		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedBy(I::copper)

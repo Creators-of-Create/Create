@@ -80,7 +80,9 @@ public class AllItems {
 		REGISTRATE.startSection(MATERIALS);
 	}
 
-	public static final ItemEntry<Item> WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
+	public static final ItemEntry<Item> WHEAT_FLOUR =
+		taggedIngredient("wheat_flour", forgeItemTag("flour/wheat"), forgeItemTag("flour")),
+		DOUGH = taggedIngredient("dough", forgeItemTag("dough"), forgeItemTag("dough/wheat")),
 		CINDER_FLOUR = ingredient("cinder_flour"), ROSE_QUARTZ = ingredient("rose_quartz"),
 		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
 		STURDY_SHEET = taggedIngredient("sturdy_sheet", forgeItemTag("plates/obsidian")),

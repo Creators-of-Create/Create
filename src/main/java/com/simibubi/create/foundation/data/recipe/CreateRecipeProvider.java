@@ -147,6 +147,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static TagKey<Item> zincBlock() {
 			return AllTags.forgeItemTag("storage_blocks/zinc");
 		}
+		
+		static TagKey<Item> wheatFlour() {
+			return AllTags.forgeItemTag("flour/wheat");
+		}
 
 		static ItemLike copper() {
 			return Items.COPPER_INGOT;

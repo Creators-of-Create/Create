@@ -23,6 +23,10 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), 250)
 			.require(Items.GLASS_BOTTLE)
 			.output(AllItems.BUILDERS_TEA.get())),
+		
+		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
+			.require(Items.GLASS_BOTTLE)
+			.output(1, Mods.FD, "milk_bottle", 1)),
 
 		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, 250)
 			.require(AllItems.BLAZE_CAKE_BASE.get())

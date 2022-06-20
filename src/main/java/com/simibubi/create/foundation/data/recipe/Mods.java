@@ -10,6 +10,7 @@ public enum Mods {
 	TH("thermal"),
 	IE("immersiveengineering", b -> b.reverseMetalPrefix()),
 
+	FD("farmersdelight"),
 	ARS_N("ars_nouveau"),
 	BSK("blue_skies"),
 	BTN("botania", b -> b.omitWoodSuffix()),
@@ -61,6 +62,10 @@ public enum Mods {
 
 	public ResourceLocation asResource(String id) {
 		return new ResourceLocation(this.id, id);
+	}
+	
+	public String recipeId(String id) {
+		return "compat/" + this.id + "/" + id;
 	}
 
 	public String getId() {

@@ -81,7 +81,8 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		CYAN_CONCRETE = convert(Blocks.CYAN_CONCRETE_POWDER, Blocks.CYAN_CONCRETE),
 		BLACK_CONCRETE = convert(Blocks.BLACK_CONCRETE_POWDER, Blocks.BLACK_CONCRETE),
 
-		FLOUR = create(AllItems.WHEAT_FLOUR::get, b -> b.output(AllItems.DOUGH.get()))
+		FLOUR = create("wheat_flour", b -> b.require(I.wheatFlour())
+			.output(AllItems.DOUGH.get()))
 
 	;
 

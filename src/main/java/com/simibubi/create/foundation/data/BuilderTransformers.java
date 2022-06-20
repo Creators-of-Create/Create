@@ -201,7 +201,11 @@ public class BuilderTransformers {
 			.transform(pickaxeOnly())
 			.tag(BlockTags.CLIMBABLE)
 			.item()
-			.recipe((c, p) -> p.stonecutting(ingredient.get(), c::get, 2))
+			.recipe((c, p) -> {
+				if (name.equals("andesite"))
+					return;
+				p.stonecutting(ingredient.get(), c::get, 2);
+			})
 			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
 			.build();
 	}
