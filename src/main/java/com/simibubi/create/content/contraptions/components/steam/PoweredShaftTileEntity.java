@@ -22,11 +22,20 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 	public BlockPos enginePos;
 	public float engineEfficiency;
 	public int movementDirection;
+	public int initialTicks;
 	public Block capacityKey;
 
 	public PoweredShaftTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
 		movementDirection = 1;
+		initialTicks = 3;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (initialTicks > 0)
+			initialTicks--;
 	}
 
 	public void update(BlockPos sourcePos, int direction, float efficiency) {
@@ -56,7 +65,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	public boolean canBePoweredBy(BlockPos globalPos) {
-		return enginePos == null || isPoweredBy(globalPos);
+		return initialTicks == 0 && (enginePos == null || isPoweredBy(globalPos));
 	}
 
 	public boolean isPoweredBy(BlockPos globalPos) {
@@ -67,10 +76,13 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("Direction", movementDirection);
+		if (initialTicks > 0)
+			compound.putInt("Warmup", initialTicks);
 		if (enginePos != null && capacityKey != null) {
 			compound.put("EnginePos", NbtUtils.writeBlockPos(enginePos));
 			compound.putFloat("EnginePower", engineEfficiency);
-			compound.putString("EngineType", capacityKey.getRegistryName().toString());
+			compound.putString("EngineType", capacityKey.getRegistryName()
+				.toString());
 		}
 		super.write(compound, clientPacket);
 	}
@@ -79,6 +91,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
 		movementDirection = compound.getInt("Direction");
+		initialTicks = compound.getInt("Warmup");
 		enginePos = null;
 		engineEfficiency = 0;
 		if (compound.contains("EnginePos")) {
@@ -113,7 +126,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 		int combinedCoords = axis.choose(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 		return super.getRotationAngleOffset(axis) + (combinedCoords % 2 == 0 ? 180 : 0);
 	}
-	
+
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;

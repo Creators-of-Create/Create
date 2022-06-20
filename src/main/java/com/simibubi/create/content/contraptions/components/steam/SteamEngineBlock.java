@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
@@ -202,6 +203,10 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 				s -> BlockHelper.copyProperties(s, AllBlocks.POWERED_SHAFT.getDefaultState())
 					.setValue(PoweredShaftBlock.AXIS, axis));
 		}
+	}
+	
+	public static Couple<Integer> getSpeedRange() {
+		return Couple.create(16, 64);
 	}
 
 }

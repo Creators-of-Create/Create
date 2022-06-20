@@ -3,21 +3,51 @@ package com.simibubi.create.content.logistics.block.display.source;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class KineticStressDisplaySource extends NumericSingleLineDisplaySource {
-
-	protected abstract double getValue(StressGaugeTileEntity gaugeTile);
+public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySource {
 
 	@Override
-	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceTE() instanceof StressGaugeTileEntity gaugeTile))
-			return ZERO;
+	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {
+		int mode = getMode(context);
+		if (mode == 1)
+			return super.formatNumeric(context, currentLevel);
+		TextComponent textComponent = new TextComponent(IHaveGoggleInformation.format(currentLevel));
+		if (context.getTargetTE() instanceof FlapDisplayTileEntity)
+			textComponent.append(" ");
+		return textComponent.append(Lang.translate("generic.unit.stress"));
+	}
 
-		return new TextComponent(IHaveGoggleInformation.format(getValue(gaugeTile)));
+	private int getMode(DisplayLinkContext context) {
+		return context.sourceConfig()
+			.getInt("Mode");
+	}
+
+	@Override
+	protected Float getProgress(DisplayLinkContext context) {
+		if (!(context.getSourceTE() instanceof StressGaugeTileEntity gaugeTile))
+			return null;
+
+		float capacity = gaugeTile.getNetworkCapacity();
+		float stress = gaugeTile.getNetworkStress();
+
+		if (capacity == 0)
+			return 0f;
+
+		return switch (getMode(context)) {
+		case 0, 1 -> stress / capacity;
+		case 2 -> stress;
+		case 3 -> capacity;
+		case 4 -> capacity - stress;
+		default -> 0f;
+		};
 	}
 
 	@Override
@@ -25,56 +55,29 @@ public abstract class KineticStressDisplaySource extends NumericSingleLineDispla
 		return true;
 	}
 
-	public static class Current extends KineticStressDisplaySource {
-
-		@Override
-		protected double getValue(StressGaugeTileEntity gaugeTile) {
-			return gaugeTile.getNetworkStress();
-		}
-
-		@Override
-		protected String getTranslationKey() {
-			return "kinetic_stress.current";
-		}
+	@Override
+	protected boolean progressBarActive(DisplayLinkContext context) {
+		return getMode(context) == 0;
 	}
 
-	public static class Max extends KineticStressDisplaySource {
-
-		@Override
-		protected double getValue(StressGaugeTileEntity gaugeTile) {
-			return gaugeTile.getNetworkCapacity();
-		}
-
-		@Override
-		protected String getTranslationKey() {
-			return "kinetic_stress.max";
-		}
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder,
+		boolean isFirstLine) {
+		super.initConfigurationWidgets(context, builder, isFirstLine);
+		if (isFirstLine)
+			return;
+		builder.addSelectionScrollInput(0, 120,
+			(si, l) -> si
+				.forOptions(Lang.translatedOptions("display_source.kinetic_stress", "progress_bar", "percent",
+					"current", "max", "remaining"))
+				.titled(Lang.translate("display_source.kinetic_stress.display")),
+			"Mode");
 	}
 
-	public static class Percent extends KineticStressDisplaySource {
-
-		@Override
-		protected double getValue(StressGaugeTileEntity gaugeTile) {
-			return gaugeTile.getNetworkStress() / gaugeTile.getNetworkCapacity() * 100;
-		}
-
-		@Override
-		protected String getTranslationKey() {
-			return "kinetic_stress.percent";
-		}
-	}
-
-	public static class Remaining extends KineticStressDisplaySource {
-
-		@Override
-		protected double getValue(StressGaugeTileEntity gaugeTile) {
-			return gaugeTile.getNetworkCapacity() - gaugeTile.getNetworkStress();
-		}
-
-		@Override
-		protected String getTranslationKey() {
-			return "kinetic_stress.remaining";
-		}
+	@Override
+	protected String getTranslationKey() {
+		return "kinetic_stress";
 	}
 
 }

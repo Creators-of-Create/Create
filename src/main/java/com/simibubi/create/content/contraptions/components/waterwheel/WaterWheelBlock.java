@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -213,6 +214,12 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	@Override
 	public BlockEntityType<? extends WaterWheelTileEntity> getTileEntityType() {
 		return AllTileEntities.WATER_WHEEL.get();
+	}
+
+	public static Couple<Integer> getSpeedRange() {
+		Integer base = AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get();
+		Integer flow = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
+		return Couple.create(base, base + 4 * flow);
 	}
 
 }

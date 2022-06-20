@@ -26,7 +26,8 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
 			.output(ForgeMod.MILK.get(), 250)
-			.output(Items.GLASS_BOTTLE))
+			.output(Items.GLASS_BOTTLE)
+			.whenModLoaded(Mods.FD.getId()))
 
 	;
 

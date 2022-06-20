@@ -38,6 +38,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	public void startTransferringTo(Contraption contraption, float distance) {
+		if (connectedEntity == contraption.entity)
+			return;
 		this.distance = Math.min(2, distance);
 		connectedEntity = contraption.entity;
 		startConnecting();
@@ -46,6 +48,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 
 	protected void stopTransferring() {
 		connectedEntity = null;
+		level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 	}
 
 	public boolean canTransfer() {

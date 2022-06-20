@@ -132,9 +132,9 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 				.renderInto(ms, solid);
 
 		draw(CachedBufferer.partial(rods, blockState)
-			.translate(0, offset1 + animation, 0), 0, modelTransform, ms, solid);
+			.translate(0, offset1 + animation + .125f, 0), 0, modelTransform, ms, solid);
 		draw(CachedBufferer.partial(rods2, blockState)
-			.translate(0, offset2 + animation - .25f, 0), 0, modelTransform, ms, solid);
+			.translate(0, offset2 + animation - 3 / 16f, 0), 0, modelTransform, ms, solid);
 
 		ms.popPose();
 	}

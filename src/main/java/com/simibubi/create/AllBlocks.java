@@ -493,6 +493,7 @@ public class AllBlocks {
 			.transform(pickaxeOnly())
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.transform(BlockStressDefaults.setCapacity(16384.0))
+			.transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0, 256)))
 			.item()
 			.properties(p -> p.rarity(Rarity.EPIC))
 			.transform(customItemModel())
@@ -506,6 +507,7 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(BlockStressDefaults.setCapacity(16.0))
+		.transform(BlockStressDefaults.setGeneratorSpeed(WaterWheelBlock::getSpeedRange))
 		.simpleItem()
 		.register();
 
@@ -546,6 +548,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(BlockStressDefaults.setCapacity(8.0))
+		.transform(BlockStressDefaults.setGeneratorSpeed(HandCrankBlock::getSpeedRange))
 		.tag(AllBlockTags.BRITTLE.tag)
 		.onRegister(ItemUseOverrides::addBlock)
 		.item()
@@ -739,10 +742,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.transform(BlockStressDefaults.setNoImpact())
 		.blockstate(new GaugeGenerator()::generate)
-		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Current(), "kinetic_stress_current"))
-		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Percent(), "kinetic_stress_percent"))
-		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Max(), "kinetic_stress_max"))
-		.onRegister(assignDataBehaviour(new KineticStressDisplaySource.Remaining(), "kinetic_stress_remaining"))
+		.onRegister(assignDataBehaviour(new KineticStressDisplaySource(), "kinetic_stress"))
 		.item()
 		.transform(ModelGen.customItemModel("gauge", "_", "item"))
 		.register();
@@ -909,6 +909,7 @@ public class AllBlocks {
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
 		.initialProperties(SharedProperties::copperMetal)
 		.properties(BlockBehaviour.Properties::noOcclusion)
+		.properties(p -> p.isRedstoneConductor((p1, p2, p3) -> true))
 		.transform(pickaxeOnly())
 		.blockstate(new FluidTankGenerator()::generate)
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
@@ -982,6 +983,7 @@ public class AllBlocks {
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.transform(BlockStressDefaults.setCapacity(1024.0))
+			.transform(BlockStressDefaults.setGeneratorSpeed(SteamEngineBlock::getSpeedRange))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -1094,6 +1096,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.bearing("windmill", "gearbox", true))
 			.transform(BlockStressDefaults.setCapacity(512.0))
+			.transform(BlockStressDefaults.setGeneratorSpeed(WindmillBearingBlock::getSpeedRange))
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 

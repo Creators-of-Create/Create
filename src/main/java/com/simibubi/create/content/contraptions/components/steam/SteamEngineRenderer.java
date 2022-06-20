@@ -77,5 +77,10 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90);
 	}
+	
+	@Override
+	public int getViewDistance() {
+		return 128;
+	}
 
 }

@@ -10,12 +10,15 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity.RotationDirection;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -37,6 +40,8 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
+	protected ScrollOptionBehaviour<RotationDirection> movementDirection;
+
 	public WeakReference<PoweredShaftTileEntity> target;
 	public WeakReference<FluidTankTileEntity> source;
 
@@ -48,8 +53,20 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
+			Lang.translate("contraptions.windmill.rotation_direction"), this, new SteamEngineValueBox());
+		movementDirection.requiresWrench();
+		movementDirection.onlyActiveWhen(() -> {
+			PoweredShaftTileEntity shaft = getShaft();
+			return shaft == null || !shaft.hasSource();
+		});
+		movementDirection.withCallback($ -> onDirectionChanged());
+		behaviours.add(movementDirection);
+
 		registerAwardables(behaviours, AllAdvancements.STEAM_ENGINE);
 	}
+
+	private void onDirectionChanged() {}
 
 	@Override
 	public void tick() {
@@ -76,11 +93,22 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 		float efficiency = Mth.clamp(tank.boiler.getEngineEfficiency(tank.getTotalTankSize()), 0, 1);
 		if (efficiency > 0)
 			award(AllAdvancements.STEAM_ENGINE);
-		
+
 		int conveyedSpeedLevel =
 			efficiency == 0 ? 1 : verticalTarget ? 1 : (int) GeneratingKineticTileEntity.convertToDirection(1, facing);
 		if (targetAxis == Axis.Z)
 			conveyedSpeedLevel *= -1;
+		if (movementDirection.get() == RotationDirection.COUNTER_CLOCKWISE)
+			conveyedSpeedLevel *= -1;
+
+		float shaftSpeed = shaft.getTheoreticalSpeed();
+		if (shaft.hasSource() && shaftSpeed != 0 && conveyedSpeedLevel != 0
+			&& (shaftSpeed > 0) != (conveyedSpeedLevel > 0)) {
+			movementDirection.setValue(1 - movementDirection.get()
+				.ordinal());
+			conveyedSpeedLevel *= -1;
+		}
+
 		shaft.update(worldPosition, conveyedSpeedLevel, efficiency);
 
 		if (!level.isClientSide)

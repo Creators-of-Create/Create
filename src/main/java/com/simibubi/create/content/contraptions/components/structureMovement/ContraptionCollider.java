@@ -88,10 +88,13 @@ public class ContraptionCollider {
 			if (playerType == PlayerType.REMOTE)
 				continue;
 
-			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayer) {
-				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
+			entity.getSelfAndPassengers().forEach(e -> {
+				if (e instanceof ServerPlayer) 
+					((ServerPlayer) e).connection.aboveGroundTickCount = 0;
+			});
+			
+			if (playerType == PlayerType.SERVER)
 				continue;
-			}
 
 			if (playerType == PlayerType.CLIENT)
 				if (skipClientPlayer)

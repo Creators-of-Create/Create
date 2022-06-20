@@ -120,7 +120,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		return true;
 	}
 
-	static enum RotationDirection implements INamedIconOptions {
+	public static enum RotationDirection implements INamedIconOptions {
 
 		CLOCKWISE(AllIcons.I_REFRESH), COUNTER_CLOCKWISE(AllIcons.I_ROTATE_CCW),
 

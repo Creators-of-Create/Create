@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.steam;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
-
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
@@ -11,16 +9,24 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -40,6 +46,21 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 		return AllTileEntities.POWERED_SHAFT.get();
 	}
 
+	@Override
+	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
+		BlockHitResult pHit) {
+		if (pPlayer.isShiftKeyDown() || !pPlayer.mayBuild())
+			return InteractionResult.PASS;
+
+		ItemStack heldItem = pPlayer.getItemInHand(pHand);
+		IPlacementHelper helper = PlacementHelpers.get(ShaftBlock.placementHelperId);
+		if (helper.matchesItem(heldItem))
+			return helper.getOffset(pPlayer, pLevel, pState, pPos, pHit)
+				.placeInWorld(pLevel, (BlockItem) heldItem.getItem(), pPlayer, pHand, pHit);
+		
+		return InteractionResult.PASS;
+	}
+	
 	@Override
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;

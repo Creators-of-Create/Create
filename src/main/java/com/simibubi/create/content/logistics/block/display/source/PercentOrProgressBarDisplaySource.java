@@ -22,7 +22,7 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 		if (currentLevel == null)
 			return EMPTY_LINE;
 		if (!progressBarActive(context))
-			return new TextComponent(formatNumeric(currentLevel));
+			return formatNumeric(context, currentLevel);
 
 		String label = context.sourceConfig()
 			.getString("Label");
@@ -50,13 +50,13 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 		return new TextComponent(s.toString());
 	}
 
-	protected String formatNumeric(Float currentLevel) {
-		return Mth.clamp((int) (currentLevel * 100), 0, 100) + "%";
+	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {
+		return new TextComponent(Mth.clamp((int) (currentLevel * 100), 0, 100) + "%");
 	}
 
 	@Nullable
 	protected abstract Float getProgress(DisplayLinkContext context);
-	
+
 	protected abstract boolean progressBarActive(DisplayLinkContext context);
 
 	@Override

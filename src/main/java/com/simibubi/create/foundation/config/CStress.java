@@ -2,12 +2,12 @@ package com.simibubi.create.foundation.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.BlockStressValues.IStressValueProvider;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -23,20 +23,20 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	protected void registerAll(Builder builder) {
 		builder.comment("", Comments.su, Comments.impact)
 			.push("impact");
-		BlockStressDefaults.DEFAULT_IMPACTS
-			.forEach((r, i) -> {
-				if (r.getNamespace().equals(Create.ID))
-					getImpacts().put(r, builder.define(r.getPath(), i));
-			});
+		BlockStressDefaults.DEFAULT_IMPACTS.forEach((r, i) -> {
+			if (r.getNamespace()
+				.equals(Create.ID))
+				getImpacts().put(r, builder.define(r.getPath(), i));
+		});
 		builder.pop();
 
 		builder.comment("", Comments.su, Comments.capacity)
 			.push("capacity");
-		BlockStressDefaults.DEFAULT_CAPACITIES
-			.forEach((r, i) -> {
-				if (r.getNamespace().equals(Create.ID))
-					getCapacities().put(r, builder.define(r.getPath(), i));
-			});
+		BlockStressDefaults.DEFAULT_CAPACITIES.forEach((r, i) -> {
+			if (r.getNamespace()
+				.equals(Create.ID))
+				getCapacities().put(r, builder.define(r.getPath(), i));
+		});
 		builder.pop();
 	}
 
@@ -45,9 +45,8 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 		block = redirectValues(block);
 		ResourceLocation key = block.getRegistryName();
 		ConfigValue<Double> value = getImpacts().get(key);
-		if (value != null) {
+		if (value != null)
 			return value.get();
-		}
 		return 0;
 	}
 
@@ -56,10 +55,19 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 		block = redirectValues(block);
 		ResourceLocation key = block.getRegistryName();
 		ConfigValue<Double> value = getCapacities().get(key);
-		if (value != null) {
+		if (value != null)
 			return value.get();
-		}
 		return 0;
+	}
+
+	@Override
+	public Couple<Integer> getGeneratedRPM(Block block) {
+		block = redirectValues(block);
+		ResourceLocation key = block.getRegistryName();
+		Supplier<Couple<Integer>> supplier = BlockStressDefaults.GENERATOR_SPEEDS.get(key);
+		if (supplier == null)
+			return null;
+		return supplier.get();
 	}
 
 	@Override
@@ -77,9 +85,6 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	}
 
 	protected Block redirectValues(Block block) {
-		if (block instanceof ValveHandleBlock) {
-			return AllBlocks.HAND_CRANK.get();
-		}
 		return block;
 	}
 

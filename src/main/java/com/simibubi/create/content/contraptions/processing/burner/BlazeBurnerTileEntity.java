@@ -263,7 +263,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			level = HeatLevel.SEETHING;
 			break;
 		case NORMAL:
-			boolean lowPercent = (double) remainingBurnTime / MAX_HEAT_CAPACITY < 0.1;
+			boolean lowPercent = (double) remainingBurnTime / MAX_HEAT_CAPACITY < 0.0125;
 			level = lowPercent ? HeatLevel.FADING : HeatLevel.KINDLED;
 			break;
 		default:

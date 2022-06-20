@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2323",
+	"_": "Missing Localizations: 2327",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1325,6 +1325,7 @@
 	"create.tooltip.stressImpact.medium": "Gemiddeld",
 	"create.tooltip.stressImpact.high": "Hoog",
 	"create.tooltip.stressImpact.overstressed": "UNLOCALIZED: Overstressed",
+	"create.tooltip.up_to": "UNLOCALIZED: Up to %1$s",
 	"create.tooltip.capacityProvided": "Stress Capacity: %1$s",
 	"create.tooltip.capacityProvided.low": "Klein",
 	"create.tooltip.capacityProvided.medium": "Gemiddeld",
@@ -1682,10 +1683,13 @@
 	"create.display_source.kinetic_speed": "UNLOCALIZED: Rotation Speed (RPM)",
 	"create.display_source.kinetic_speed.absolute": "UNLOCALIZED: Ignore Direction",
 	"create.display_source.kinetic_speed.directional": "UNLOCALIZED: Include Direction",
-	"create.display_source.kinetic_stress.current": "UNLOCALIZED: Stress Impact (Amount)",
-	"create.display_source.kinetic_stress.max": "UNLOCALIZED: Stress Capacity (Max)",
-	"create.display_source.kinetic_stress.percent": "UNLOCALIZED: Stress Impact (Percent)",
-	"create.display_source.kinetic_stress.remaining": "UNLOCALIZED: Stress Capacity (Remaining)",
+	"create.display_source.kinetic_stress": "UNLOCALIZED: Network Stress",
+	"create.display_source.kinetic_stress.display": "UNLOCALIZED: Displayed Info",
+	"create.display_source.kinetic_stress.progress_bar": "UNLOCALIZED: Progress Bar",
+	"create.display_source.kinetic_stress.percent": "UNLOCALIZED: Percentage",
+	"create.display_source.kinetic_stress.current": "UNLOCALIZED: Stress in SU",
+	"create.display_source.kinetic_stress.max": "UNLOCALIZED: Total Capacity",
+	"create.display_source.kinetic_stress.remaining": "UNLOCALIZED: Remaining SU",
 	"create.display_source.redstone_power": "UNLOCALIZED: Redstone Power",
 	"create.display_source.redstone_power.display": "UNLOCALIZED: Display Format",
 	"create.display_source.redstone_power.number": "UNLOCALIZED: Number",

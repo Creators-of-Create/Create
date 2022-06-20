@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import java.util.function.Predicate;
 
+import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -32,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ShaftBlock extends AbstractSimpleShaftBlock {
 
-	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+	public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public ShaftBlock(Properties properties) {
 		super(properties);
@@ -117,7 +118,8 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 		// shafts and cogs
 
 		private PlacementHelper() {
-			super(state -> state.getBlock() instanceof AbstractSimpleShaftBlock, state -> state.getValue(AXIS), AXIS);
+			super(state -> state.getBlock() instanceof AbstractSimpleShaftBlock
+				|| state.getBlock() instanceof PoweredShaftBlock, state -> state.getValue(AXIS), AXIS);
 		}
 
 		@Override
@@ -128,7 +130,7 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 
 		@Override
 		public Predicate<BlockState> getStatePredicate() {
-			return AllBlocks.SHAFT::has;
+			return Predicates.or(AllBlocks.SHAFT::has, AllBlocks.POWERED_SHAFT::has);
 		}
 
 		@Override

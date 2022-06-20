@@ -22,13 +22,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
-import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -86,41 +86,20 @@ public class ItemDescription {
 
 		CKinetics config = AllConfigs.SERVER.kinetics;
 		Component rpmUnit = Lang.translate("generic.unit.rpm");
+		Component suUnit = Lang.translate("generic.unit.stress");
 
 		boolean hasGoggles = GogglesItem.isWearingGoggles(Minecraft.getInstance().player);
 
-		SpeedLevel minimumRequiredSpeedLevel;
 		boolean showStressImpact;
 		if (!(block instanceof IRotate)) {
-			minimumRequiredSpeedLevel = SpeedLevel.NONE;
 			showStressImpact = true;
 		} else {
-			minimumRequiredSpeedLevel = ((IRotate) block).getMinimumRequiredSpeedLevel();
 			showStressImpact = !((IRotate) block).hideStressImpact();
 		}
 
-//		boolean hasSpeedRequirement =
-//			minimumRequiredSpeedLevel != SpeedLevel.NONE && minimumRequiredSpeedLevel != SpeedLevel.SLOW;
 		boolean hasStressImpact =
 			StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
-
-//		if (hasSpeedRequirement) {
-//			int index = minimumRequiredSpeedLevel.ordinal();
-//			MutableComponent level =
-//				new TextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
-//
-//			if (hasGoggles)
-//				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue()))
-//					.append(rpmUnit)
-//					.append("+");
-//			else
-//				level.append(Lang.translate("tooltip.speedRequirement." + Lang.asId(minimumRequiredSpeedLevel.name())));
-//
-//			list.add(Lang.translate("tooltip.speedRequirement")
-//				.withStyle(GRAY));
-//			list.add(level);
-//		}
 
 		if (hasStressImpact) {
 			double impact = BlockStressValues.getImpact(block);
@@ -130,7 +109,7 @@ public class ItemDescription {
 				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(impactId.getAbsoluteColor());
 
 			if (hasGoggles)
-				level.append(impact + "x ")
+				level.append(IHaveGoggleInformation.format(impact) + "x ")
 					.append(rpmUnit);
 			else
 				level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(impactId.name())));
@@ -142,25 +121,36 @@ public class ItemDescription {
 
 		if (hasStressCapacity) {
 			double capacity = BlockStressValues.getCapacity(block);
+			Couple<Integer> generatedRPM = BlockStressValues.getProvider(block)
+				.getGeneratedRPM(block);
+
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			StressImpact opposite = StressImpact.values()[StressImpact.values().length - 2 - impactId.ordinal()];
 			MutableComponent level =
 				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(opposite.getAbsoluteColor());
 
-			if (hasGoggles)
-				level.append(capacity + "x ")
-					.append(rpmUnit);
-			else
-				level.append(Lang.translate("tooltip.capacityProvided." + Lang.asId(opposite.name())));
-
-//			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
-//				level +=
-//					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
-
 			list.add(Lang.translate("tooltip.capacityProvided")
 				.withStyle(GRAY));
-			list.add(level);
+
+			if (hasGoggles) {
+				level.append(IHaveGoggleInformation.format(capacity) + "x ")
+					.append(rpmUnit);
+				list.add(level);
+
+				if (generatedRPM != null) {
+					MutableComponent amount =
+						new TextComponent(IHaveGoggleInformation.format(capacity * generatedRPM.getSecond()))
+							.append(suUnit);
+					MutableComponent component = !generatedRPM.getFirst()
+						.equals(generatedRPM.getSecond()) ? Lang.translate("tooltip.up_to", amount) : amount;
+					list.add(new TextComponent(" -> ").append(component)
+						.withStyle(DARK_GRAY));
+				}
+			} else {
+				level.append(Lang.translate("tooltip.capacityProvided." + Lang.asId(impactId.name())));
+				list.add(level);
+			}
 
 			MutableComponent genSpeed = generatorSpeed(block, rpmUnit);
 			if (!genSpeed.getString()
@@ -169,8 +159,6 @@ public class ItemDescription {
 					.withStyle(DARK_GRAY));
 		}
 
-		// if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
-		// add(linesOnShift, "");
 		return list;
 	}
 
@@ -297,16 +285,7 @@ public class ItemDescription {
 	}
 
 	private static MutableComponent generatorSpeed(Block block, Component unitRPM) {
-		String value = "";
-
-		if (block instanceof WaterWheelBlock) {
-			int baseSpeed = AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get();
-			int speedmod = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
-			value = (speedmod + baseSpeed) + "-" + (baseSpeed + (speedmod * 3));
-		}
-
-		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM)
-			: TextComponent.EMPTY.plainCopy();
+		return TextComponent.EMPTY.plainCopy();
 	}
 
 }
