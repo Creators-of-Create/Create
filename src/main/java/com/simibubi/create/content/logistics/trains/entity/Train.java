@@ -402,7 +402,6 @@ public class Train {
 			navigation.cancelNavigation();
 			runtime.tick(level);
 			derailed = true;
-			syncTrackGraphChanges();
 			status.highStress();
 
 		} else if (speed != 0)
@@ -683,7 +682,6 @@ public class Train {
 		speed = -Mth.clamp(speed, -.5, .5);
 		derailed = true;
 		graph = null;
-		syncTrackGraphChanges();
 		status.crash();
 
 		for (Carriage carriage : carriages)
@@ -840,7 +838,6 @@ public class Train {
 			migrationCooldown = 40;
 			status.failedMigration();
 			derailed = true;
-			syncTrackGraphChanges();
 			return;
 		}
 
@@ -859,14 +856,8 @@ public class Train {
 				currentStation.reserveFor(this);
 			updateSignalBlocks = true;
 			migrationCooldown = 0;
-			syncTrackGraphChanges();
 			return;
 		}
-	}
-
-	public void syncTrackGraphChanges() {
-		for (Carriage carriage : carriages)
-			carriage.forEachPresentEntity(e -> e.setGraph(graph == null ? null : graph.id));
 	}
 
 	public int getTotalLength() {

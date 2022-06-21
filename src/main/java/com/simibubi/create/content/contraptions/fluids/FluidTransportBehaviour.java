@@ -241,7 +241,8 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
 
-		if (facingState.getBlock() instanceof PumpBlock && facingState.getValue(PumpBlock.FACING) != direction)
+		if (facingState.getBlock() instanceof PumpBlock
+			&& facingState.getValue(PumpBlock.FACING) == direction.getOpposite())
 			return AttachmentTypes.NONE;
 
 		if (AllBlocks.ENCASED_FLUID_PIPE.has(facingState)

@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Strings;
 import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
@@ -124,7 +122,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (!level.isClientSide)
 			return;
 
-		if (TRACK_GRAPH.equals(key))
+		bindCarriage();
+
+		if (TRACK_GRAPH.equals(key)) 
 			updateTrackGraph();
 
 		if (CARRIAGE_DATA.equals(key)) {
@@ -212,21 +212,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			nonDamageTicks--;
 		if (!(contraption instanceof CarriageContraption cc))
 			return;
+
 		if (carriage == null) {
-			if (level.isClientSide) {
-				Train train = Create.RAILWAYS.sided(level).trains.get(trainId);
-				if (train == null || train.carriages.size() <= carriageIndex)
-					return;
-				carriage = train.carriages.get(carriageIndex);
-				if (carriage != null) {
-					DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
-					dimensional.entity = new WeakReference<>(this);
-					dimensional.pivot = null;
-					carriage.updateContraptionAnchors();
-					dimensional.updateRenderedCutoff();
-				}
-				updateTrackGraph();
-			} else
+			if (level.isClientSide)
+				bindCarriage();
+			else
 				discard();
 			return;
 		}
@@ -240,6 +230,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (!level.isClientSide) {
 
 			entityData.set(SCHEDULED, carriage.train.runtime.getSchedule() != null);
+
 			boolean shouldCarriageSyncThisTick =
 				carriage.train.shouldCarriageSyncThisTick(level.getGameTime(), getType().updateInterval());
 			if (shouldCarriageSyncThisTick && carriageData.isDirty()) {
@@ -259,6 +250,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 			if (arrivalSoundPlaying)
 				tickArrivalSound(cc);
+
+			entityData.set(TRACK_GRAPH, Optional.ofNullable(carriage.train.graph)
+				.map(g -> g.id));
+
 			return;
 		}
 
@@ -308,6 +303,23 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		firstPositionUpdate = false;
 		validForRender = true;
+	}
+
+	private void bindCarriage() {
+		if (carriage != null)
+			return;
+		Train train = Create.RAILWAYS.sided(level).trains.get(trainId);
+		if (train == null || train.carriages.size() <= carriageIndex)
+			return;
+		carriage = train.carriages.get(carriageIndex);
+		if (carriage != null) {
+			DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
+			dimensional.entity = new WeakReference<>(this);
+			dimensional.pivot = null;
+			carriage.updateContraptionAnchors();
+			dimensional.updateRenderedCutoff();
+		}
+		updateTrackGraph();
 	}
 
 	private void tickArrivalSound(CarriageContraption cc) {
@@ -381,7 +393,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, v.x, v.y, v.z, 0, .04, 0);
 		}
 	}
-	
+
 	@Override
 	protected void addPassenger(Entity pPassenger) {
 		super.addPassenger(pPassenger);
@@ -454,6 +466,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		super.readAdditional(compound, spawnPacket);
 		trainId = compound.getUUID("TrainId");
 		carriageIndex = compound.getInt("CarriageIndex");
+		if (spawnPacket) {
+			xOld = getX();
+			yOld = getY();
+			zOld = getZ();
+		}
 	}
 
 	@Override
@@ -634,15 +651,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			|| carriage.getTrailingPoint().edge != null && carriage.getTrailingPoint().edge.isTurn())
 			topSpeed = carriage.train.maxTurnSpeed();
 
-		if (slow) 
+		if (slow)
 			topSpeed /= 4;
 		carriage.train.targetSpeed = Math.min(topSpeed, cappedTopSpeed) * targetSpeed;
 
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
-		
+
 		if (slow && !counteringAcceleration)
 			carriage.train.backwardsDriver = player;
-		
+
 		carriage.train.manualTick = true;
 		carriage.train.approachTargetSpeed(counteringAcceleration ? 2 : 1);
 		return true;
@@ -706,11 +723,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.pivot = null;
 		carriage.updateContraptionAnchors();
 		dimensional.updateRenderedCutoff();
-	}
-
-	public void setGraph(@Nullable UUID graphId) {
-		entityData.set(TRACK_GRAPH, Optional.ofNullable(graphId));
-		prevPosInvalid = true;
 	}
 
 	@Override

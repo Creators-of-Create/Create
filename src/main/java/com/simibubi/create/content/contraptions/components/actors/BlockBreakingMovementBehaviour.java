@@ -144,8 +144,10 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		CompoundTag data = context.data;
 		if (context.world.isClientSide)
 			return;
-		if (!data.contains("BreakingPos"))
+		if (!data.contains("BreakingPos")) {
+			context.stall = false;
 			return;
+		}
 		if (context.relativeMotion.equals(Vec3.ZERO)) {
 			context.stall = false;
 			return;

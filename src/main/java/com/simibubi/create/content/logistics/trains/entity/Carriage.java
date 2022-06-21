@@ -19,7 +19,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -778,7 +777,6 @@ public class Carriage {
 			entity.moveTo(positionAnchor);
 			this.entity = new WeakReference<>(cce);
 
-			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
 

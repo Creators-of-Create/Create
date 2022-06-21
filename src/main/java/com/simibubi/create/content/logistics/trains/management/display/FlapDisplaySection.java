@@ -25,6 +25,7 @@ public class FlapDisplaySection {
 	boolean hasGap;
 	boolean rightAligned;
 	boolean wideFlaps;
+	boolean sendTransition;
 	String cycle;
 	Component component;
 
@@ -56,6 +57,7 @@ public class FlapDisplaySection {
 
 	public void setText(Component component) {
 		this.component = component;
+		sendTransition = true;
 	}
 
 	private void refresh(boolean transition) {
@@ -73,9 +75,9 @@ public class FlapDisplaySection {
 			newText = rightAligned ? whitespace + newText : newText + whitespace;
 			if (!text.isEmpty())
 				for (int i = 0; i < spinning.length; i++)
-					spinning[i] |= text.charAt(i) != newText.charAt(i);
+					spinning[i] |= transition && text.charAt(i) != newText.charAt(i);
 		} else if (!text.isEmpty())
-			spinning[0] |= !newText.equals(text);
+			spinning[0] |= transition && !newText.equals(text);
 
 		text = newText;
 		spinningTicks = 0;
@@ -131,6 +133,9 @@ public class FlapDisplaySection {
 			NBTHelper.putMarker(tag, "Wide");
 		if (component != null)
 			tag.putString("Text", Component.Serializer.toJson(component));
+		if (sendTransition)
+			NBTHelper.putMarker(tag, "Transition");
+		sendTransition = false;
 		return tag;
 	}
 
@@ -149,7 +154,7 @@ public class FlapDisplaySection {
 			return section;
 
 		section.component = Component.Serializer.fromJson(tag.getString("Text"));
-		section.refresh(false);
+		section.refresh(tag.getBoolean("Transition"));
 		return section;
 	}
 
@@ -157,7 +162,7 @@ public class FlapDisplaySection {
 		component = Component.Serializer.fromJson(tag.getString("Text"));
 		if (cyclingOptions == null)
 			cyclingOptions = getFlapCycle(cycle);
-		refresh(true);
+		refresh(tag.getBoolean("Transition"));
 	}
 
 	public boolean renderCharsIndividually() {

@@ -44,6 +44,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -165,6 +166,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			.remove(passenger.getUUID());
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
+	}
+
+	@Override
+	public Vec3 getDismountLocationForPassenger(LivingEntity pLivingEntity) {
+		Vec3 loc = super.getDismountLocationForPassenger(pLivingEntity);
+		CompoundTag data = pLivingEntity.getPersistentData();
+		if (!data.contains("ContraptionDismountLocation"))
+			return loc;
+		return VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
 	}
 
 	@Override

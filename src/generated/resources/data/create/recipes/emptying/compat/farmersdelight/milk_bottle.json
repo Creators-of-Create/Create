@@ -13,5 +13,11 @@
       "fluid": "minecraft:milk",
       "amount": 250
     }
+  ],
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
   ]
 }

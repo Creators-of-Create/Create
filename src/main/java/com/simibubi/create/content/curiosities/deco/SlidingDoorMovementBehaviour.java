@@ -80,6 +80,7 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 		if (info != null && info.state.hasProperty(DoorBlock.OPEN)) {
 			newState = info.state.cycle(DoorBlock.OPEN);
 			contraption.entity.setBlock(otherPos, new StructureBlockInfo(info.pos, newState, info.nbt));
+			contraption.invalidateColliders();
 		}
 	}
 

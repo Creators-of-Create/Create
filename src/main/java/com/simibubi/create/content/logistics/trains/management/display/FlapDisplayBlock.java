@@ -197,11 +197,9 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 		MutableBlockPos currentPos = new MutableBlockPos();
 		Axis axis = getConnectionAxis(state);
 
-		for (Direction connection : Iterate.directions) {
-			if (connection.getAxis() == axis)
-				continue;
-
+		for (Direction connection : Iterate.directionsInAxis(Axis.Y)) {
 			boolean connect = true;
+
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
@@ -334,8 +332,9 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 					.isReplaceable());
 
 			return directions.isEmpty() ? PlacementOffset.fail()
-				: PlacementOffset.success(pos.relative(directions.get(0)),
-					s -> s.setValue(HORIZONTAL_FACING, state.getValue(FlapDisplayBlock.HORIZONTAL_FACING)));
+				: PlacementOffset.success(pos.relative(directions.get(0)), s -> AllBlocks.DISPLAY_BOARD.get()
+					.updateColumn(world, pos.relative(directions.get(0)),
+						s.setValue(HORIZONTAL_FACING, state.getValue(FlapDisplayBlock.HORIZONTAL_FACING)), true));
 		}
 	}
 

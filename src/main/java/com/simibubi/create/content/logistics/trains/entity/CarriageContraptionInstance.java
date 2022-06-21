@@ -6,6 +6,7 @@ import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -37,7 +38,7 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 	public void setBogeyVisibility(boolean first, boolean visible) {
 		bogeyHidden.set(first, !visible);
 	}
-	
+
 	@Override
 	public void beginFrame() {
 		if (bogeys == null) {
@@ -54,18 +55,19 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 		ms.pushPose();
 
+		Vector3f instancePosition = getInstancePosition(partialTicks);
 		TransformStack.cast(ms)
-			.translate(getInstancePosition(partialTicks));
+			.translate(instancePosition);
 
 		for (boolean current : Iterate.trueAndFalse) {
 			BogeyInstance instance = bogeys.get(current);
-			if (instance == null) 
+			if (instance == null)
 				continue;
 			if (bogeyHidden.get(current)) {
 				instance.hiddenFrame();
 				continue;
 			}
-			
+
 			ms.pushPose();
 			CarriageBogey bogey = instance.bogey;
 

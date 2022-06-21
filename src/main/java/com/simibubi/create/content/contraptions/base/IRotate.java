@@ -141,7 +141,7 @@ public interface IRotate extends IWrenchable {
 	public Axis getRotationAxis(BlockState state);
 
 	public default SpeedLevel getMinimumRequiredSpeedLevel() {
-		return SpeedLevel.SLOW;
+		return SpeedLevel.NONE;
 	}
 
 	public default boolean hideStressImpact() {

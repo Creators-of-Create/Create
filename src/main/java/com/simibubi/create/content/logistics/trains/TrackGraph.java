@@ -263,7 +263,6 @@ public class TrackGraph {
 			if (train.graph != this)
 				continue;
 			train.graph = toOther;
-			train.syncTrackGraphChanges();
 		}
 	}
 
@@ -341,7 +340,6 @@ public class TrackGraph {
 				if (!train.isTravellingOn(node))
 					continue;
 				train.graph = target;
-				train.syncTrackGraphChanges();
 			}
 
 		nodes.remove(nodeLoc);
@@ -376,47 +374,39 @@ public class TrackGraph {
 		TrackEdge edge = new TrackEdge(node1, node2, turn);
 		TrackEdge edge2 = new TrackEdge(node2, node1, bezier ? turn.secondary() : null);
 
-		if (reader instanceof Level level) {
-			for (TrackGraph graph : Create.RAILWAYS.trackNetworks.values()) {
-				if (graph != this
-					&& !graph.getBounds(level).box.intersects(location.getLocation(), location2.getLocation()))
+		for (TrackGraph graph : Create.RAILWAYS.trackNetworks.values()) {
+			for (TrackNode otherNode1 : graph.nodes.values()) {
+				Map<TrackNode, TrackEdge> connections = graph.connectionsByNode.get(otherNode1);
+				if (connections == null)
 					continue;
+				for (Entry<TrackNode, TrackEdge> entry : connections.entrySet()) {
+					TrackNode otherNode2 = entry.getKey();
+					TrackEdge otherEdge = entry.getValue();
 
-				for (TrackNode otherNode1 : graph.nodes.values()) {
-					Map<TrackNode, TrackEdge> connections = graph.connectionsByNode.get(otherNode1);
-					if (connections == null)
+					if (graph == this)
+						if (otherNode1 == node1 || otherNode2 == node1 || otherNode1 == node2 || otherNode2 == node2)
+							continue;
+
+					if (edge == otherEdge)
 						continue;
-					for (Entry<TrackNode, TrackEdge> entry : connections.entrySet()) {
-						TrackNode otherNode2 = entry.getKey();
-						TrackEdge otherEdge = entry.getValue();
+					if (!bezier && !otherEdge.isTurn())
+						continue;
+					if (otherEdge.isTurn() && otherEdge.turn.isPrimary())
+						continue;
 
-						if (graph == this)
-							if (otherNode1 == node1 || otherNode2 == node1 || otherNode1 == node2
-								|| otherNode2 == node2)
-								continue;
+					Collection<double[]> intersections =
+						edge.getIntersection(node1, node2, otherEdge, otherNode1, otherNode2);
 
-						if (edge == otherEdge)
-							continue;
-						if (!bezier && !otherEdge.isTurn())
-							continue;
-						if (otherEdge.isTurn() && otherEdge.turn.isPrimary())
-							continue;
-
-						Collection<double[]> intersections =
-							edge.getIntersection(node1, node2, otherEdge, otherNode1, otherNode2);
-
-						UUID id = UUID.randomUUID();
-						for (double[] intersection : intersections) {
-							double s = intersection[0];
-							double t = intersection[1];
-							edge.edgeData.addIntersection(this, id, s, otherNode1, otherNode2, t);
-							edge2.edgeData.addIntersection(this, id, edge.getLength() - s, otherNode1, otherNode2, t);
-							otherEdge.edgeData.addIntersection(graph, id, t, node1, node2, s);
-							TrackEdge otherEdge2 = graph.getConnection(Couple.create(otherNode2, otherNode1));
-							if (otherEdge2 != null)
-								otherEdge2.edgeData.addIntersection(graph, id, otherEdge.getLength() - t, node1, node2,
-									s);
-						}
+					UUID id = UUID.randomUUID();
+					for (double[] intersection : intersections) {
+						double s = intersection[0];
+						double t = intersection[1];
+						edge.edgeData.addIntersection(this, id, s, otherNode1, otherNode2, t);
+						edge2.edgeData.addIntersection(this, id, edge.getLength() - s, otherNode1, otherNode2, t);
+						otherEdge.edgeData.addIntersection(graph, id, t, node1, node2, s);
+						TrackEdge otherEdge2 = graph.getConnection(Couple.create(otherNode2, otherNode1));
+						if (otherEdge2 != null)
+							otherEdge2.edgeData.addIntersection(graph, id, otherEdge.getLength() - t, node1, node2, s);
 					}
 				}
 			}

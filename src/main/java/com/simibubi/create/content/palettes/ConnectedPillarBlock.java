@@ -48,6 +48,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	private BlockState updateColumn(Level level, BlockPos pos, BlockState state, boolean present) {
 		MutableBlockPos currentPos = new MutableBlockPos();
 		Axis axis = state.getValue(AXIS);
+
 		for (Direction connection : Iterate.directions) {
 			if (connection.getAxis() == axis)
 				continue;
@@ -56,7 +57,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
-					if (!level.isAreaLoaded(currentPos, 1))
+					if (!level.isLoaded(currentPos))
 						break;
 
 					BlockState other1 = currentPos.equals(pos) ? state : level.getBlockState(currentPos);

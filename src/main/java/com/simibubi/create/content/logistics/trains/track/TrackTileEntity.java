@@ -38,6 +38,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,7 +49,6 @@ import net.minecraftforge.fml.DistExecutor;
 public class TrackTileEntity extends SmartTileEntity implements ITransformableTE, IMergeableTE {
 
 	Map<BlockPos, BezierConnection> connections;
-	boolean connectionsValidated;
 	boolean cancelDrops;
 
 	public Pair<ResourceKey<Level>, BlockPos> boundLocation;
@@ -55,13 +56,10 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	public TrackTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		connections = new HashMap<>();
-		connectionsValidated = false;
 		setLazyTickRate(100);
 	}
 
 	public Map<BlockPos, BezierConnection> getConnections() {
-		if (!level.isClientSide && !connectionsValidated)
-			validateConnections();
 		return connections;
 	}
 
@@ -79,7 +77,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 				manageFakeTracksAlong(connection, false);
 	}
 
-	private void validateConnections() {
+	public void validateConnections() {
 		Set<BlockPos> invalid = new HashSet<>();
 
 		for (Entry<BlockPos, BezierConnection> entry : connections.entrySet()) {
@@ -109,7 +107,6 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 				trackTE.addConnection(bc.secondary());
 		}
 
-		connectionsValidated = true;
 		for (BlockPos blockPos : invalid)
 			removeConnection(blockPos);
 	}
@@ -223,7 +220,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	public void accept(BlockEntity other) {
 		if (other instanceof TrackTileEntity track)
 			connections.putAll(track.connections);
-		connectionsValidated = false;
+		validateConnections();
 		level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
 	}
 
@@ -384,6 +381,10 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 				continue;
 			}
 
+			FluidState fluidState = stateAtPos.getFluidState();
+			if (!fluidState.isSourceOfType(Fluids.WATER))
+				continue;
+			
 			if (!present && stateAtPos.getMaterial()
 				.isReplaceable())
 				level.setBlock(targetPos,

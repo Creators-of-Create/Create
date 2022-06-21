@@ -44,7 +44,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 			kineticTileEntity.preventSpeedUpdate = 2;
 		}
 	}
-	
+
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
@@ -57,7 +57,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags, int count) {
+	public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags,
+		int count) {
 		if (worldIn.isClientSide())
 			return;
 
@@ -66,10 +67,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
 
-		if (kte.preventSpeedUpdate > 0) {
-			kte.preventSpeedUpdate--;
+		if (kte.preventSpeedUpdate > 0)
 			return;
-		}
 
 		// Remove previous information when block is added
 		kte.warnOfMovement();

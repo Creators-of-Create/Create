@@ -1509,8 +1509,8 @@ public class AllBlocks {
 			.nonSolid()
 			.replaceable()
 			.build())
-		.blockstate((c, p) -> p.models()
-			.withExistingParent(c.getName(), p.mcLoc("block/air")))
+		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+			.withExistingParent(c.getName(), p.mcLoc("block/air"))))
 		.lang("Track Marker for Maps")
 		.register();
 
