@@ -8,6 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.api.instance.TickableInstance;
+import com.jozufozu.flywheel.backend.instancing.AbstractInstance;
 import com.jozufozu.flywheel.backend.instancing.TaskEngine;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstanceManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
@@ -37,7 +39,7 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 	public void tick() {
 		actors.forEach(ActorInstance::tick);
 	}
-	
+
 	@Override
 	protected boolean canCreateInstance(BlockEntity blockEntity) {
 		return !contraption.isHiddenInPortal(blockEntity.getBlockPos());
@@ -59,7 +61,7 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 	public ActorInstance createActor(Pair<StructureBlockInfo, MovementContext> actor) {
 		StructureBlockInfo blockInfo = actor.getLeft();
 		MovementContext context = actor.getRight();
-		
+
 		if (contraption.isHiddenInPortal(context.localPos))
 			return null;
 
@@ -74,6 +76,46 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 		}
 
 		return null;
+	}
+
+	// -----------------------------------------------------------------
+	// The following methods should be identical to the base methods,
+	// but without reference to LightUpdater.
+	// -----------------------------------------------------------------
+
+	@Override
+	protected AbstractInstance createInternal(BlockEntity obj) {
+		AbstractInstance renderer = createRaw(obj);
+
+		if (renderer != null) {
+			renderer.init();
+			renderer.updateLight();
+			instances.put(obj, renderer);
+
+			if (renderer instanceof TickableInstance r) {
+				tickableInstances.put(obj, r);
+				r.tick();
+			}
+
+			if (renderer instanceof DynamicInstance r) {
+				dynamicInstances.put(obj, r);
+				r.beginFrame();
+			}
+		}
+
+		return renderer;
+	}
+
+	protected void removeInternal(BlockEntity obj, AbstractInstance instance) {
+		instance.remove();
+		instances.remove(obj);
+		dynamicInstances.remove(obj);
+		tickableInstances.remove(obj);
+	}
+
+	@Override
+	public void detachLightListeners() {
+		// noop
 	}
 }
 
