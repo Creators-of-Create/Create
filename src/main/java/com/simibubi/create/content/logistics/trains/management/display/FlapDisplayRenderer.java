@@ -81,7 +81,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 				w += section.getSize() + (section.hasGap ? 8 : 1);
 			}
 
-			ms.translate(flapTe.xSize * 16 - w / 2 + 1, 4, 0);
+			ms.translate(flapTe.xSize * 16 - w / 2 + 1, 4.5f, 0);
 
 			Pose transform = ms.last();
 			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(), light,
@@ -94,9 +94,9 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 				String text = section.renderCharsIndividually() || !section.spinning[0] ? section.text
 					: section.cyclingOptions[((ticks / 3) + i * 13) % section.cyclingOptions.length];
 				StringDecomposer.iterateFormatted(text, Style.EMPTY, renderOutput);
-				ms.translate(0, 0, -1 / 4f);
-				renderOutput.finish(0x55000000);
-				ms.translate(0, 0, 1 / 4f);
+//				ms.translate(0, 0, -1 / 4f);
+//				renderOutput.finish(0x55000000);
+//				ms.translate(0, 0, 1 / 4f);
 				ms.translate(section.size + (section.hasGap ? 8 : 1), 0, 0);
 			}
 
@@ -129,7 +129,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			boolean paused) {
 			this.bufferSource = buffer;
 			this.lineIndex = lineIndex;
-			this.a = (color >> 24 & 255) / 255f;
+			this.a = .75f;
 			this.r = (color >> 16 & 255) / 255f;
 			this.g = (color >> 8 & 255) / 255f;
 			this.b = (color & 255) / 255f;

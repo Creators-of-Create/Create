@@ -24,44 +24,56 @@ import net.minecraftforge.network.PacketDistributor;
 public class TrackGraphSync {
 
 	List<TrackGraphPacket> queuedPackets = new ArrayList<>();
+	int rollCallIn;
 
 	public void serverTick() {
-		flushGraphPacket(null);
-		if (queuedPackets.isEmpty())
-			return;
-		for (TrackGraphPacket packet : queuedPackets) {
-			if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
-				continue;
-			AllPackets.channel.send(PacketDistributor.ALL.noArg(), packet);
+		flushGraphPacket();
+
+		if (!queuedPackets.isEmpty()) {
+			for (TrackGraphPacket packet : queuedPackets) {
+				if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
+					continue;
+				AllPackets.channel.send(PacketDistributor.ALL.noArg(), packet);
+				rollCallIn = 3;
+			}
+
+			queuedPackets.clear();
 		}
-		queuedPackets.clear();
+
+		if (rollCallIn <= 0)
+			return;
+		rollCallIn--;
+		if (rollCallIn > 0)
+			return;
+
+		sendRollCall();
 	}
 
 	//
 
 	public void nodeAdded(TrackGraph graph, TrackNode node) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
 	}
 
 	public void edgeAdded(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedEdges
 			.add(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTurn()));
 	}
 
 	public void pointAdded(TrackGraph graph, TrackEdgePoint point) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedEdgePoints.add(point);
 	}
 
 	public void pointRemoved(TrackGraph graph, TrackEdgePoint point) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.removedEdgePoints.add(point.getId());
 	}
 
 	public void nodeRemoved(TrackGraph graph, TrackNode node) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		int nodeId = node.getNetId();
 		if (currentGraphSyncPacket.addedNodes.remove(nodeId) == null)
 			currentGraphSyncPacket.removedNodes.add(nodeId);
@@ -75,15 +87,15 @@ public class TrackGraphSync {
 	}
 
 	public void graphSplit(TrackGraph graph, Set<TrackGraph> additional) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		additional.forEach(rg -> currentGraphSyncPacket.splitSubGraphs.put(rg.nodesById.keySet()
 			.stream()
 			.findFirst()
-			.get(), rg.id));
+			.get(), Pair.of(rg.netId, rg.id)));
 	}
 
 	public void graphRemoved(TrackGraph graph) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.packetDeletesGraph = true;
 	}
 
@@ -106,18 +118,19 @@ public class TrackGraphSync {
 	//
 
 	public void edgeDataChanged(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.syncEdgeData(node1, node2, edge);
 	}
 
 	public void edgeDataChanged(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge, TrackEdge edge2) {
-		flushGraphPacket(graph.id);
+		flushGraphPacket(graph);
 		currentGraphSyncPacket.syncEdgeData(node1, node2, edge);
 		currentGraphSyncPacket.syncEdgeData(node2, node1, edge2);
 	}
 
 	public void sendFullGraphTo(TrackGraph graph, ServerPlayer player) {
-		TrackGraphSyncPacket packet = new TrackGraphSyncPacket(graph.id);
+		TrackGraphSyncPacket packet = new TrackGraphSyncPacket(graph.id, graph.netId);
+		packet.fullWipe = true;
 		int sent = 0;
 
 		for (TrackNode node : graph.nodes.values()) {
@@ -164,9 +177,13 @@ public class TrackGraphSync {
 			flushAndCreateNew(graph, player, packet);
 	}
 
+	private void sendRollCall() {
+		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
+	}
+
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {
 		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
-		packet = new TrackGraphSyncPacket(graph.id);
+		packet = new TrackGraphSyncPacket(graph.id, graph.netId);
 		return packet;
 	}
 
@@ -174,7 +191,15 @@ public class TrackGraphSync {
 
 	private TrackGraphSyncPacket currentGraphSyncPacket;
 
-	private void flushGraphPacket(@Nullable UUID graphId) {
+	private void flushGraphPacket() {
+		flushGraphPacket(null, 0);
+	}
+
+	private void flushGraphPacket(TrackGraph graph) {
+		flushGraphPacket(graph.id, graph.netId);
+	}
+
+	private void flushGraphPacket(@Nullable UUID graphId, int netId) {
 		if (currentGraphSyncPacket != null) {
 			if (currentGraphSyncPacket.graphId.equals(graphId))
 				return;
@@ -183,7 +208,7 @@ public class TrackGraphSync {
 		}
 
 		if (graphId != null)
-			currentGraphSyncPacket = new TrackGraphSyncPacket(graphId);
+			currentGraphSyncPacket = new TrackGraphSyncPacket(graphId, netId);
 	}
 
 }

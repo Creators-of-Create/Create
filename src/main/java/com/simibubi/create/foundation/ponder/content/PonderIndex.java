@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.ponder.content.fluid.HosePulleyScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.PipeScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.PumpScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.SpoutScenes;
+import com.simibubi.create.foundation.ponder.content.trains.TrackScenes;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
@@ -293,6 +294,11 @@ public class PonderIndex {
 			.addStoryBoard("nixie_tube", RedstoneScenes::nixieTube);
 		HELPER.forComponents(AllBlocks.REDSTONE_LINK)
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
+
+		// Trains
+		HELPER.forComponents(AllBlocks.TRACK)
+			.addStoryBoard("train_track/placement", TrackScenes::placement)
+			.addStoryBoard("train_track/portal", TrackScenes::portal);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (REGISTER_DEBUG_SCENES)

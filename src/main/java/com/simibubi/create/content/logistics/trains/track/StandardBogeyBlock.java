@@ -150,6 +150,7 @@ public class StandardBogeyBlock extends Block
 
 	private void renderBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
 		CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
+			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
 
@@ -176,6 +177,7 @@ public class StandardBogeyBlock extends Block
 				.renderInto(ms, vb);
 
 		CachedBufferer.partial(AllBlockPartials.BOGEY_DRIVE, air)
+			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
 		CachedBufferer.partial(AllBlockPartials.BOGEY_PISTON, air)

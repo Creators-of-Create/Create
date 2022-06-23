@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -74,7 +75,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	public float prevPitch;
 	public float pitch;
-	
+
 	public int nonDamageTicks;
 
 	public OrientedContraptionEntity(EntityType<?> type, Level world) {
@@ -596,5 +597,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		}
 
 		return Vec3.ZERO;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void handleRelocationPacket(ContraptionRelocationPacket packet) {
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof OrientedContraptionEntity oce)
+			oce.nonDamageTicks = 10;
 	}
 }

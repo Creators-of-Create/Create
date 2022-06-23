@@ -37,7 +37,7 @@ public class TrackGraphVisualizer {
 
 		Vec3 camera = cameraEntity.getEyePosition();
 		Outliner outliner = CreateClient.OUTLINER;
-		boolean ctrl = AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL);
+		boolean ctrl = false; // AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL);
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.sided(null).signalEdgeGroups;
 		float width = 1 / 8f;
 

@@ -124,7 +124,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		bindCarriage();
 
-		if (TRACK_GRAPH.equals(key)) 
+		if (TRACK_GRAPH.equals(key))
 			updateTrackGraph();
 
 		if (CARRIAGE_DATA.equals(key)) {
@@ -258,6 +258,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 
 		DimensionalCarriageEntity dce = carriage.getDimensional(level);
+		if (tickCount % 10 == 0)
+			updateTrackGraph();
 
 		if (!dce.pointsInitialised)
 			return;

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
@@ -25,13 +26,16 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 	List<Integer> removedNodes;
 	List<TrackEdgePoint> addedEdgePoints;
 	List<UUID> removedEdgePoints;
-	Map<Integer, UUID> splitSubGraphs;
+	Map<Integer, Pair<Integer, UUID>> splitSubGraphs;
 	Map<Couple<Integer>, Pair<Integer, List<UUID>>> updatedEdgeData;
+
+	boolean fullWipe;
 
 	static final int NULL_GROUP = 0, PASSIVE_GROUP = 1, GROUP = 2;
 
-	public TrackGraphSyncPacket(UUID graphId) {
+	public TrackGraphSyncPacket(UUID graphId, int netId) {
 		this.graphId = graphId;
+		this.netId = netId;
 		addedNodes = new HashMap<>();
 		addedEdges = new ArrayList<>();
 		removedNodes = new ArrayList<>();
@@ -46,7 +50,9 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		int size;
 
 		graphId = buffer.readUUID();
+		netId = buffer.readInt();
 		packetDeletesGraph = buffer.readBoolean();
+		fullWipe = buffer.readBoolean();
 
 		if (packetDeletesGraph)
 			return;
@@ -96,13 +102,15 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
-			splitSubGraphs.put(buffer.readVarInt(), buffer.readUUID());
+			splitSubGraphs.put(buffer.readVarInt(), Pair.of(buffer.readInt(), buffer.readUUID()));
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUUID(graphId);
+		buffer.writeInt(netId);
 		buffer.writeBoolean(packetDeletesGraph);
+		buffer.writeBoolean(fullWipe);
 
 		if (packetDeletesGraph)
 			return;
@@ -152,9 +160,10 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		}
 
 		buffer.writeVarInt(splitSubGraphs.size());
-		splitSubGraphs.forEach((node, uuid) -> {
+		splitSubGraphs.forEach((node, p) -> {
 			buffer.writeVarInt(node);
-			buffer.writeUUID(uuid);
+			buffer.writeInt(p.getFirst());
+			buffer.writeUUID(p.getSecond());
 		});
 	}
 
@@ -163,6 +172,12 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		if (packetDeletesGraph) {
 			manager.removeGraph(graph);
 			return;
+		}
+
+		if (fullWipe) {
+			manager.removeGraph(graph);
+			graph = Create.RAILWAYS.sided(null)
+				.getOrCreateGraph(graphId, netId);
 		}
 
 		for (int nodeId : removedNodes) {

@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +30,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +43,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrackGraph {
 
-	public static final AtomicInteger netIdGenerator = new AtomicInteger();
+	public static final AtomicInteger graphNetIdGenerator = new AtomicInteger();
+	public static final AtomicInteger nodeNetIdGenerator = new AtomicInteger();
 
 	public UUID id;
 	public Color color;
@@ -53,6 +56,9 @@ public class TrackGraph {
 	Map<ResourceKey<Level>, TrackGraphBounds> bounds;
 
 	List<TrackEdge> deferredIntersectionUpdates;
+
+	int netId;
+	int checksum = 0;
 
 	public TrackGraph() {
 		this(UUID.randomUUID());
@@ -66,6 +72,7 @@ public class TrackGraph {
 		connectionsByNode = new IdentityHashMap<>();
 		edgePoints = new EdgePointStorage();
 		deferredIntersectionUpdates = new ArrayList<>();
+		netId = nextGraphId();
 	}
 
 	//
@@ -106,6 +113,7 @@ public class TrackGraph {
 	}
 
 	public void invalidateBounds() {
+		checksum = 0;
 		bounds.clear();
 	}
 
@@ -230,7 +238,11 @@ public class TrackGraph {
 	}
 
 	public static int nextNodeId() {
-		return netIdGenerator.incrementAndGet();
+		return nodeNetIdGenerator.incrementAndGet();
+	}
+
+	public static int nextGraphId() {
+		return graphNetIdGenerator.incrementAndGet();
 	}
 
 	public void transferAll(TrackGraph toOther) {
@@ -267,7 +279,7 @@ public class TrackGraph {
 	}
 
 	public Set<TrackGraph> findDisconnectedGraphs(@Nullable LevelAccessor level,
-		@Nullable Map<Integer, UUID> preAssignedIds) {
+		@Nullable Map<Integer, Pair<Integer, UUID>> splitSubGraphs) {
 		Set<TrackGraph> dicovered = new HashSet<>();
 		Set<TrackNodeLocation> vertices = new HashSet<>(nodes.keySet());
 		List<TrackNodeLocation> frontier = new ArrayList<>();
@@ -293,8 +305,11 @@ public class TrackGraph {
 						frontier.add(connected.getLocation());
 
 				if (target != null) {
-					if (preAssignedIds != null && preAssignedIds.containsKey(currentNode.getNetId()))
-						target.setId(preAssignedIds.get(currentNode.getNetId()));
+					if (splitSubGraphs != null && splitSubGraphs.containsKey(currentNode.getNetId())) {
+						Pair<Integer, UUID> ids = splitSubGraphs.get(currentNode.getNetId());
+						target.setId(ids.getSecond());
+						target.netId = ids.getFirst();
+					}
 					transfer(level, currentNode, target);
 				}
 			}
@@ -309,6 +324,18 @@ public class TrackGraph {
 	public void setId(UUID id) {
 		this.id = id;
 		color = Color.rainbowColor(new Random(id.getLeastSignificantBits()).nextInt());
+	}
+
+	public void setNetId(int id) {
+		this.netId = id;
+	}
+
+	public int getChecksum() {
+		if (checksum == 0)
+			checksum = nodes.values()
+				.stream()
+				.collect(Collectors.summingInt(TrackNode::getNetId));
+		return checksum;
 	}
 
 	public void transfer(LevelAccessor level, TrackNode node, TrackGraph target) {

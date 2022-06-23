@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.TrainCollisionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionUpdatePacket;
@@ -54,6 +55,8 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
+import com.simibubi.create.content.logistics.trains.TrackGraphRequestPacket;
+import com.simibubi.create.content.logistics.trains.TrackGraphRollCallPacket;
 import com.simibubi.create.content.logistics.trains.TrackGraphSyncPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainPromptPacket;
@@ -144,6 +147,7 @@ public enum AllPackets {
 	C_TRAIN_HONK(HonkPacket.Serverbound.class, HonkPacket.Serverbound::new, PLAY_TO_SERVER),
 	OBSERVER_STRESSOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER),
 	EJECTOR_AWARD(EjectorAwardPacket.class, EjectorAwardPacket::new, PLAY_TO_SERVER),
+	TRACK_GRAPH_REQUEST(TrackGraphRequestPacket.class, TrackGraphRequestPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
@@ -178,6 +182,8 @@ public enum AllPackets {
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HONK(HonkPacket.class, HonkPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
+	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
 
 	;
 

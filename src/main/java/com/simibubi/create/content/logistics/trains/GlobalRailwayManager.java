@@ -119,8 +119,12 @@ public class GlobalRailwayManager {
 
 	//
 
-	public TrackGraph getOrCreateGraph(UUID graphID) {
-		return trackNetworks.computeIfAbsent(graphID, uid -> new TrackGraph(graphID));
+	public TrackGraph getOrCreateGraph(UUID graphID, int netId) {
+		return trackNetworks.computeIfAbsent(graphID, uid -> {
+			TrackGraph trackGraph = new TrackGraph(graphID);
+			trackGraph.netId = netId;
+			return trackGraph;
+		});
 	}
 
 	public void putGraphWithDefaultGroup(TrackGraph graph) {

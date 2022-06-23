@@ -125,6 +125,9 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		super.read(tag, clientPacket);
 		invalidateRenderBoundingBox();
 
+		if (tag.contains("PrevTrainName"))
+			lastDisassembledTrainName = Component.Serializer.fromJson(tag.getString("PrevTrainName"));
+
 		if (!clientPacket)
 			return;
 		if (!tag.contains("ImminentTrain")) {
@@ -147,6 +150,9 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		AssemblyException.write(tag, lastException);
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
+
+		if (lastDisassembledTrainName != null)
+			tag.putString("PrevTrainName", Component.Serializer.toJson(lastDisassembledTrainName));
 
 		super.write(tag, clientPacket);
 
@@ -471,12 +477,12 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			int loc = bogeyLocations[i];
 			if (loc == -1)
 				break;
-			
+
 			if (loc - iPrevious < 3) {
 				exception(new AssemblyException(Lang.translate("train_assembly.bogeys_too_close", i, i + 1)), -1);
 				return;
 			}
-			
+
 			double bogeySize = bogeyTypes[i].getWheelPointSpacing();
 			pointOffsets.add(Double.valueOf(loc + .5 - bogeySize / 2));
 			pointOffsets.add(Double.valueOf(loc + .5 + bogeySize / 2));

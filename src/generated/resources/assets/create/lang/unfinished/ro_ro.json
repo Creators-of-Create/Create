@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 494",
+	"_": "Missing Localizations: 511",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2004,6 +2004,11 @@
 	"item.create.copper_backtank.tooltip.condition2": "Când este plasat, Alimentat de Cinetice",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Colectează_ _Presiune de_ _Aer_ într-un ritm depinzând de Viteză de Rotație.",
 
+	"block.create.flywheel.tooltip": "UNLOCALIZED: FLYWHEEL",
+	"block.create.flywheel.tooltip.summary": "UNLOCALIZED: _Embellish_ your _Machines_ with this imposing Wheel of Brass.",
+	"block.create.flywheel.tooltip.condition1": "UNLOCALIZED: When Powered by Kinetics",
+	"block.create.flywheel.tooltip.behaviour1": "UNLOCALIZED: Starts spinning.",
+
 	"item.create.diving_boots.tooltip": "BOCANCI DE SCUFUNDARE",
 	"item.create.diving_boots.tooltip.summary": "O pereche de _bocanci_ _grei_, permițând traversare mai bună a fundului Oceanului.",
 	"item.create.diving_boots.tooltip.condition1": "Când sunt purtați",
@@ -2633,6 +2638,16 @@
 	"create.ponder.piston_pole.text_1": "Fără Brațe atașate, un Piston Mecanic nu se poate mișca",
 	"create.ponder.piston_pole.text_2": "Lungimea unui braț adăugat în spatele lui determină Raza De Extensie",
 
+	"create.ponder.placement.header": "UNLOCALIZED: Placing Train Tracks",
+	"create.ponder.placement.text_1": "UNLOCALIZED: A new type of rail designed for Train Contraptions",
+	"create.ponder.placement.text_2": "UNLOCALIZED: To place rows of track in bulk, click on an existing track",
+	"create.ponder.placement.text_3": "UNLOCALIZED: Then place or select a second track",
+	"create.ponder.placement.text_4": "UNLOCALIZED: Tracks can also be placed as turns or slopes",
+	"create.ponder.placement.text_5": "UNLOCALIZED: When connecting, tracks will try to make each turn equally sized",
+	"create.ponder.placement.text_6": "UNLOCALIZED: Holding the sprint key while connecting...",
+	"create.ponder.placement.text_7": "UNLOCALIZED: ...will create the longest fitting bend instead",
+	"create.ponder.placement.text_8": "UNLOCALIZED: Materials in the off-hand will be paved under tracks automatically",
+
 	"create.ponder.portable_fluid_interface.header": "Schimb De Fluide în Invenție",
 	"create.ponder.portable_fluid_interface.text_1": "Rezervoarele De Fluid pe invenții mișcătoare nu pot fi accesate de nicio conductă",
 	"create.ponder.portable_fluid_interface.text_2": "Acest component oate interacționa cu rezervoare de fluid fără nevoia de a opri invenția",
@@ -2655,6 +2670,11 @@
 
 	"create.ponder.portable_storage_interface_redstone.header": "Control Redstone",
 	"create.ponder.portable_storage_interface_redstone.text_1": "Puterea redstone va preveni interfața staționară de la angajare",
+
+	"create.ponder.portal.header": "UNLOCALIZED: Tracks and the Nether",
+	"create.ponder.portal.text_1": "UNLOCALIZED: Tracks placed up against a nether portal...",
+	"create.ponder.portal.text_2": "UNLOCALIZED: ...will attempt to create a paired track on the other side",
+	"create.ponder.portal.text_3": "UNLOCALIZED: Trains on this track are now able to travel across dimensions",
 
 	"create.ponder.powered_latch.header": "Controlarea semnalelor folosind Maneta Alimentată",
 	"create.ponder.powered_latch.text_1": "Manetele Alimentate sunt Manete controlabile cu redstone",
