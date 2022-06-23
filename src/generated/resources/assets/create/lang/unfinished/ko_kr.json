@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 510",
+	"_": "Missing Localizations: 519",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "움직이는 구조물에 부착되어 특정 기능을 수행하는 장치입니다.",
 	"create.ponder.tag.creative": "크리에이티브 모드",
 	"create.ponder.tag.creative.description": "서바이벌 모드에서는 얻을 수 없는 부품입니다.",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "아이템 수송",
 	"create.ponder.tag.logistics.description": "아이템을 옮기는데 도움을 줄 부품입니다.",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "아날로그 레버를 이용해 신호 조절하기",
 	"create.ponder.analog_lever.text_1": "아날로그 레버는 정확하고 간편하게 레드스톤 신호의 세기를 조절합니다.",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "우클릭해서 아이템을 놓거나 가져갑니다.",
 	"create.ponder.depot.text_3": "벨트처럼, 놓여진 아이템은 가공될 수 있습니다.",
 	"create.ponder.depot.text_4": "그리고 기계 팔의 목표가 될 수 있습니다.",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "빈 블레이즈 버너 사용하기",
 	"create.ponder.empty_blaze_burner.text_1": "블레이즈를 우클릭하여 버너에 가둡니다.",

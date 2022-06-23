@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 902",
+	"_": "Missing Localizations: 911",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "附加到移動裝置上時表現出特殊行為的方塊",
 	"create.ponder.tag.creative": "創造模式",
 	"create.ponder.tag.creative.description": "該裝置無法在生存模式中獲得",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "傳輸物品",
 	"create.ponder.tag.logistics.description": "該裝置用於物品的傳輸",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "使用可調式拉桿來控制訊號",
 	"create.ponder.analog_lever.text_1": "可調式拉桿是一種小巧而輕準的紅石能源",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "右擊可以手動放置或取下物品",
 	"create.ponder.depot.text_3": "與傳送帶一樣，它也可以將其內的物品轉送到其他設備中進行加工...",
 	"create.ponder.depot.text_4": "...同時物品也可以被機械手存取",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "使用空的烈焰人燃燒室",
 	"create.ponder.empty_blaze_burner.text_1": "手持空的烈焰人燃燒室右擊烈焰人來抓取烈焰人",

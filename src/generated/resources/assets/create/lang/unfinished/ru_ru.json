@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 888",
+	"_": "Missing Localizations: 897",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "Компоненты, проявляющие особое поведение когда прикреплены к двигающейся штуковине",
 	"create.ponder.tag.creative": "Творческий режим",
 	"create.ponder.tag.creative.description": "Компоненты обычно недоступные в Режиме Выживания",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "Транспортировка предметов",
 	"create.ponder.tag.logistics.description": "Компоненты, помогающие перемещать предметы",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "Управлении сигналами используя Аналоговый рычаг",
 	"create.ponder.analog_lever.text_1": "Аналоговый рычаг создан как компактный и точный источник Редстоун сигнала",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "ПКМ, что бы самостоятельно положить или забрать предметы с них",
 	"create.ponder.depot.text_3": "Так же, как Механические ремни, оно может предоставлять предметы для обработки",
 	"create.ponder.depot.text_4": "...а также поставлять предметы Механическим рукам",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "Использовании Пустых горелок всполохов",
 	"create.ponder.empty_blaze_burner.text_1": "ПКМ по Всполоху с пустой горелкой, чтобы захватить его",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 844",
+	"_": "Missing Localizations: 853",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "Componentes que exponen un comportamiento especial cuando se adjuntan a una contrapción en movimiento",
 	"create.ponder.tag.creative": "Modo Creativo",
 	"create.ponder.tag.creative.description": "Componentes no usualmente disponibles en Modo Supervivencia",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "Transportación de Objetos",
 	"create.ponder.tag.logistics.description": "Componentes que ayudan a mover objetos",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "Controlando señales usando la Palanca Análoga",
 	"create.ponder.analog_lever.text_1": "Las Palancas Análogas son una fuente compacta y precisa de redstone",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "Haz clic con el Click-Derecho para colocar o eliminar objetos manualmente",
 	"create.ponder.depot.text_3": "Al igual que las Cintas Mecánicas, pueden proporcionar objetos para procesar.",
 	"create.ponder.depot.text_4": "...así como proporcionar objetos a los brazos mecánicos",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "Usando Quemadores Blaze vacíos",
 	"create.ponder.empty_blaze_burner.text_1": "Haz Click-Derecho en un Blaze con el quemador vacío para capturarlo",

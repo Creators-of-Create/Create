@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 511",
+	"_": "Missing Localizations: 520",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "Componente ce expun comportament special când sunt atașate la o invenție mișcătoare",
 	"create.ponder.tag.creative": "Modul Creativ",
 	"create.ponder.tag.creative.description": "Componente care nu sunt valabile deobicei în Modul Supraviețuire",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "Transport de Obiecte",
 	"create.ponder.tag.logistics.description": "Componente ce ajută la mișcarea obiectelor în jur",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "Controlarea semnalelor folosind Maneta Analogică",
 	"create.ponder.analog_lever.text_1": "Manetele Analogice fac pentru o sursă de redstone compactă și precisă",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "Click-Dreapta pentru a plasa sau îndepărta manual Obiecte de la el",
 	"create.ponder.depot.text_3": "La fel ca Benzile Mecanice, poate oferi obiecte către procesare",
 	"create.ponder.depot.text_4": "...precum și oferirea Obiectelor Brațelor Mecanice",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "Folosirea Arzătorilor De Dogorală Goi",
 	"create.ponder.empty_blaze_burner.text_1": "Click-Dreapta pe Dogorală cu arzătorul gol pentru a-l captura",

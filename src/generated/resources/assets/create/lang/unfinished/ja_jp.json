@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 510",
+	"_": "Missing Localizations: 519",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "ブロックを動かす機械に取り付けたときに特別な動作をする機械です",
 	"create.ponder.tag.creative": "クリエイティブ限定",
 	"create.ponder.tag.creative.description": "サバイバルモードでは通常入手できない機械です",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "輸送機械",
 	"create.ponder.tag.logistics.description": "アイテムの運搬を補助する機械です",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "アナログレバーによる信号制御",
 	"create.ponder.analog_lever.text_1": "アナログレバーはコンパクトに正確なレッドストーン動力を出力できます。",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "右クリックして、手動でアイテム搬出入できます",
 	"create.ponder.depot.text_3": "メカニカルベルトのように、載せたアイテムを加工できます",
 	"create.ponder.depot.text_4": "また、メカニカルアームにアイテムを供給することもできます",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "空のブレイズバーナーの使い方",
 	"create.ponder.empty_blaze_burner.text_1": "空のバーナーでブレイズを右クリックすると捕獲できます",

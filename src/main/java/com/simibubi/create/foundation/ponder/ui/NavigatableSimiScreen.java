@@ -156,9 +156,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			Window window = minecraft.getWindow();
 			int dpx = window.getGuiScaledWidth() / 2;
 			int dpy = window.getGuiScaledHeight() / 2;
-			if (lastScreen instanceof AbstractSimiScreen) {
-				dpx = ((NavigatableSimiScreen) lastScreen).depthPointX;
-				dpy = ((NavigatableSimiScreen) lastScreen).depthPointY;
+			if (lastScreen instanceof NavigatableSimiScreen navigableScreen) {
+				dpx = navigableScreen.depthPointX;
+				dpy = navigableScreen.depthPointY;
 			}
 
 			ms.translate(dpx, dpy, 0);

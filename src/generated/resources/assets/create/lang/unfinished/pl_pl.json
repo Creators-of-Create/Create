@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 883",
+	"_": "Missing Localizations: 892",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "Komponenty, które posiadają specjalne zachowanie będąc podłączonymi do maszyny",
 	"create.ponder.tag.creative": "Tryb kreatywny",
 	"create.ponder.tag.creative.description": "Komponenty niedostępne na trybie przetrwania",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "Transport przedmiotów",
 	"create.ponder.tag.logistics.description": "Komponenty, które pomagają w transporcie przedmiotów",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "Kontrola sygnałów z wykorzystaniem dźwigni analogowej",
 	"create.ponder.analog_lever.text_1": "Dźwignie analogowe są kompaktowymi i dokładnymi źródłami sygnału Redstone",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "Kliknij PPM, aby ręcznie położyć lub podnieść z niej przedmiot",
 	"create.ponder.depot.text_3": "Podobnie jak taśmociągi, składnica może dostarczać przedmioty do obróbki...",
 	"create.ponder.depot.text_4": "…jak i również dla mechanicznych ramion",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "Używanie pustych płomiennych palników",
 	"create.ponder.empty_blaze_burner.text_1": "Kliknij PPM na Płomyka trzymają w ręce pusty palnik, aby uwięzić go w środku",

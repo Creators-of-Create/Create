@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1194",
+	"_": "Missing Localizations: 1203",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2092,8 +2092,12 @@
 	"create.ponder.tag.contraption_actor.description": "UNLOCALIZED: Components which expose special behaviour when attached to a moving contraption",
 	"create.ponder.tag.creative": "UNLOCALIZED: Creative Mode",
 	"create.ponder.tag.creative.description": "UNLOCALIZED: Components not usually available for Survival Mode",
+	"create.ponder.tag.display_sources": "UNLOCALIZED: Sources for Display Links",
+	"create.ponder.tag.display_sources.description": "UNLOCALIZED: Components or Blocks which offer some data that can be read with a Display Link",
 	"create.ponder.tag.logistics": "UNLOCALIZED: Item Transportation",
 	"create.ponder.tag.logistics.description": "UNLOCALIZED: Components which help moving items around",
+	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
+	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
 
 	"create.ponder.analog_lever.header": "UNLOCALIZED: Controlling signals using the Analog Lever",
 	"create.ponder.analog_lever.text_1": "UNLOCALIZED: Analog Levers make for a compact and precise source of redstone power",
@@ -2311,6 +2315,12 @@
 	"create.ponder.depot.text_2": "UNLOCALIZED: Right-Click to manually place or remove Items from it",
 	"create.ponder.depot.text_3": "UNLOCALIZED: Just like Mechanical Belts, it can provide items to processing",
 	"create.ponder.depot.text_4": "UNLOCALIZED: ...as well as provide Items to Mechanical Arms",
+
+	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
 
 	"create.ponder.empty_blaze_burner.header": "UNLOCALIZED: Using Empty Blaze Burners",
 	"create.ponder.empty_blaze_burner.text_1": "UNLOCALIZED: Right-click a Blaze with the empty burner to capture it",
