@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "quark:stripped_azalea_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "quark:azalea_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50
+}
