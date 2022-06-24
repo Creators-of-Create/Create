@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.simibubi.create.api.event.TileEntityBehaviourEvent;
+import com.simibubi.create.content.schematics.ISpecialBlockEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
@@ -23,7 +24,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker {
+public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker, ISpecialBlockEntityItemRequirement {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
@@ -172,9 +173,10 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 		behaviour.initialize();
 	}
 
-	public ItemRequirement getRequiredItems() {
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
 		return behaviours.values().stream()
-			.reduce(ItemRequirement.NONE, (r, b) -> r.with(b.getRequiredItems()), (r, r1) -> r.with(r1));
+			.reduce(ItemRequirement.NONE, (r, b) -> r.union(b.getRequiredItems()), (r, r1) -> r.union(r1));
 	}
 
 	protected void removeBehaviour(BehaviourType<?> type) {

@@ -236,7 +236,6 @@ public class BlockHelper {
 		if (world.dimensionType()
 			.ultraWarm()
 			&& state.getFluidState()
-				.getType()
 				.is(FluidTags.WATER)) {
 			int i = target.getX();
 			int j = target.getY();

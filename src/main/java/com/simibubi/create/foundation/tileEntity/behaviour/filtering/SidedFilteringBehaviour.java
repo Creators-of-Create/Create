@@ -124,8 +124,8 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	public ItemRequirement getRequiredItems() {
 		return sidedFilters.values().stream().reduce(
 				ItemRequirement.NONE,
-				(a, b) -> a.with(b.getRequiredItems()),
-				(a, b) -> a.with(b)
+				(a, b) -> a.union(b.getRequiredItems()),
+				(a, b) -> a.union(b)
 		);
 	}
 

@@ -115,21 +115,20 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 
 		List<ItemRequirement.StackRequirement> requiredItems = requirement.getRequiredItems();
-		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
+		ItemStack contextStack = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).stack;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
 			IItemHandler iItemHandler = context.contraption.inventory;
 			for (ItemRequirement.StackRequirement required : requiredItems) {
-				int amountFound = ItemHelper
-						.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
-								required.item.getCount(), true)
-						.getCount();
-				if (amountFound < required.item.getCount())
+				ItemStack stack = ItemHelper
+						.extract(iItemHandler, required::matches, ExtractionCountMode.EXACTLY,
+								required.stack.getCount(), true);
+				if (stack.isEmpty())
 					return;
 			}
 			for (ItemRequirement.StackRequirement required : requiredItems)
-				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
-						required.item.getCount(), false);
+				contextStack = ItemHelper.extract(iItemHandler, required::matches, ExtractionCountMode.EXACTLY,
+						required.stack.getCount(), false);
 		}
 
 		CompoundTag data = null;
@@ -142,7 +141,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		}
 
 		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
-		BlockHelper.placeSchematicBlock(world, blockState, pos, firstRequired, data);
+		BlockHelper.placeSchematicBlock(world, blockState, pos, contextStack, data);
 		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
 			blocksnapshot.restore(true, false);
 	}
