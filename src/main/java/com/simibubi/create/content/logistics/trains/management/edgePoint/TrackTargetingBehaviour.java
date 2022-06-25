@@ -22,6 +22,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -312,7 +313,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction,
 		BezierTrackPointLocation bezier, PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		RenderedTrackOverlayType type, float scale) {
-		if (level instanceof SchematicWorld)
+		if (level instanceof SchematicWorld && !(level instanceof PonderWorld))
 			return;
 
 		BlockState trackState = level.getBlockState(pos);

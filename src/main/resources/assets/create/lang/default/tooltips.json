@@ -212,6 +212,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
 	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"block.create.placard.tooltip": "PLACARD",
+	"block.create.placard.tooltip.summary": "_Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",
+	"block.create.placard.tooltip.condition1": "When R-Clicked with Item",
+	"block.create.placard.tooltip.behaviour1": "_Adds_ the held _item_ to the Placard. _Emits_ a brief _Redstone_ signal if a matching item was present already.",
+	"block.create.placard.tooltip.condition2": "When Punched",
+	"block.create.placard.tooltip.behaviour2": "_Removes_ the current _item_ in the frame.",
 	
 	"block.create.flywheel.tooltip": "FLYWHEEL",
 	"block.create.flywheel.tooltip.summary": "_Embellish_ your _Machines_ with this imposing Wheel of Brass.",

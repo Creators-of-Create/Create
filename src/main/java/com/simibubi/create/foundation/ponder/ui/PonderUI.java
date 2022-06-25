@@ -77,6 +77,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	public static final String PREVIOUS = LANG_PREFIX + "previous";
 	public static final String CLOSE = LANG_PREFIX + "close";
 	public static final String NEXT = LANG_PREFIX + "next";
+	public static final String NEXT_UP = LANG_PREFIX + "next_up";
 	public static final String REPLAY = LANG_PREFIX + "replay";
 	public static final String SLOW_TEXT = LANG_PREFIX + "slow_text";
 
@@ -97,7 +98,9 @@ public class PonderUI extends NavigatableSimiScreen {
 	private BlockPos copiedBlockPos;
 
 	private LerpedFloat finishingFlash;
+	private LerpedFloat nextUp;
 	private int finishingFlashWarmup = 0;
+	private int nextUpWarmup = 0;
 
 	private LerpedFloat lazyIndex;
 	private int index = 0;
@@ -155,6 +158,9 @@ public class PonderUI extends NavigatableSimiScreen {
 		finishingFlash = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(0, .1f, Chaser.EXP);
+		nextUp = LerpedFloat.linear()
+			.startWithValue(0)
+			.chase(0, .4f, Chaser.EXP);
 	}
 
 	@Override
@@ -284,6 +290,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
 		finishingFlash.tickChaser();
+		nextUp.tickChaser();
 		PonderScene activeScene = scenes.get(index);
 
 		extendedTickLength = 0;
@@ -307,14 +314,23 @@ public class PonderUI extends NavigatableSimiScreen {
 		} else
 			extendedTickTimer--;
 
-		if (activeScene.getCurrentTime() == activeScene.getTotalTime() - 1)
+		if (activeScene.getCurrentTime() == activeScene.getTotalTime() - 1) {
 			finishingFlashWarmup = 30;
+			nextUpWarmup = 50;
+		}
+
 		if (finishingFlashWarmup > 0) {
 			finishingFlashWarmup--;
 			if (finishingFlashWarmup == 0) {
 				finishingFlash.setValue(1);
 				finishingFlash.setValue(1);
 			}
+		}
+
+		if (nextUpWarmup > 0) {
+			nextUpWarmup--;
+			if (nextUpWarmup == 0)
+				nextUp.updateChaseTarget(1);
 		}
 
 		updateIdentifiedItem(activeScene);
@@ -544,6 +560,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		float indexDiff = Math.abs(lazyIndexValue - index);
 		PonderScene activeScene = scenes.get(index);
+		PonderScene nextScene = scenes.size() > index + 1 ? scenes.get(index + 1) : null;
 
 		boolean noWidgetsHovered = true;
 		for (GuiEventListener child : children())
@@ -671,6 +688,20 @@ public class PonderUI extends NavigatableSimiScreen {
 			ms.popPose();
 		}
 
+		boolean finished = activeScene.isFinished();
+
+		// Next up:
+		if (finished && nextScene != null && nextUp.getValue() > 1 / 16f) {
+			ms.pushPose();
+			ms.translate(right.x + 10, right.y - 6 + nextUp.getValue(partialTicks) * 5, 400);
+			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translate(NEXT_UP))) + 5);
+			renderSpeechBox(ms, 0, 0, boxWidth, 20, right.isHoveredOrFocused(), Pointing.DOWN, false);
+			ms.translate(0, -29, 100);
+			drawCenteredString(ms, font, Lang.translate(NEXT_UP), 0, 0, Theme.i(Theme.Key.TEXT_DARKER));
+			drawCenteredString(ms, font, nextScene.getTitle(), 0, 10, Theme.i(Theme.Key.TEXT));
+			ms.popPose();
+		}
+
 		// Widgets
 		renderables.forEach(w -> {
 			if (w instanceof PonderButton button) {
@@ -686,11 +717,12 @@ public class PonderUI extends NavigatableSimiScreen {
 			right.fade()
 				.startWithValue(scenes.size() - lazyIndexValue - 1);
 
-		boolean finished = activeScene.isFinished();
 		if (finished)
 			right.flash();
-		else
+		else {
 			right.dim();
+			nextUp.updateChaseTarget(0);
+		}
 
 		// Tags
 		List<PonderTag> sceneTags = activeScene.getTags();
@@ -862,7 +894,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		int divotSize = 8;
 		int distance = 1;
 		int divotRadius = divotSize / 2;
-		Couple<Color> borderColors = Theme.p(highlighted ? Theme.Key.PONDER_HIGHLIGHT : Theme.Key.PONDER_IDLE);
+		Couple<Color> borderColors = Theme.p(highlighted ? Theme.Key.PONDER_BUTTON_HOVER : Theme.Key.PONDER_IDLE);
 		Color c;
 
 		switch (pointing) {

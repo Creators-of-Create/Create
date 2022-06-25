@@ -125,6 +125,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		super.read(tag, clientPacket);
 		invalidateRenderBoundingBox();
 
+		if (tag.contains("ForceFlag"))
+			trainPresent = tag.getBoolean("ForceFlag");
 		if (tag.contains("PrevTrainName"))
 			lastDisassembledTrainName = Component.Serializer.fromJson(tag.getString("PrevTrainName"));
 

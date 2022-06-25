@@ -384,7 +384,11 @@ public class SceneBuilder {
 		}
 
 		public void showLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
-			addInstruction(new LineInstruction(color, start, end, duration));
+			addInstruction(new LineInstruction(color, start, end, duration, false));
+		}
+		
+		public void chaseLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
+			addInstruction(new LineInstruction(color, start, end, duration, true));
 		}
 
 		public void showOutline(PonderPalette color, Object slot, Selection selection, int duration) {

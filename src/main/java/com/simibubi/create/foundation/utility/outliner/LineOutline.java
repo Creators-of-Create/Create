@@ -26,10 +26,14 @@ public class LineOutline extends Outline {
 
 		float prevProgress = 0;
 		float progress = 0;
+		private boolean lockStart;
+
+		public EndChasingLineOutline(boolean lockStart) {
+			this.lockStart = lockStart;
+		}
 
 		@Override
-		public void tick() {
-		}
+		public void tick() {}
 
 		public EndChasingLineOutline setProgress(float progress) {
 			prevProgress = this.progress;
@@ -46,8 +50,13 @@ public class LineOutline extends Outline {
 
 		@Override
 		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
-			float distanceToTarget = 1 - Mth.lerp(pt, prevProgress, progress);
-			Vec3 start = end.add(this.start.subtract(end)
+			float distanceToTarget = Mth.lerp(pt, prevProgress, progress);
+			if (!lockStart)
+				distanceToTarget = 1 - distanceToTarget;
+			Vec3 start = lockStart ? this.end : this.start;
+			Vec3 end = lockStart ? this.start : this.end;
+			
+			start = end.add(this.start.subtract(end)
 				.scale(distanceToTarget));
 			renderCuboidLine(ms, buffer, start, end);
 		}
