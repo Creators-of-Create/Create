@@ -40,6 +40,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	protected LerpedFloat headAngle;
 	protected boolean isCreative;
 	protected boolean goggles;
+	protected boolean hat;
 
 	public BlazeBurnerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -142,6 +143,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			compound.putBoolean("isCreative", true);
 		if (goggles)
 			compound.putBoolean("Goggles", true);
+		if (hat)
+			compound.putBoolean("TrainHat", true);
 		super.write(compound, clientPacket);
 	}
 
@@ -151,6 +154,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		remainingBurnTime = compound.getInt("burnTimeRemaining");
 		isCreative = compound.getBoolean("isCreative");
 		goggles = compound.contains("Goggles");
+		hat = compound.contains("TrainHat");
 		super.read(compound, clientPacket);
 	}
 

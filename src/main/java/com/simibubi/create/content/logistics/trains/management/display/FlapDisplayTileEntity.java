@@ -105,7 +105,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 	public void tick() {
 		super.tick();
 		isRunning = super.isSpeedRequirementFulfilled();
-		if (!level.isClientSide || !isRunning)
+		if ((!level.isClientSide || !isRunning) && !isVirtual())
 			return;
 		int activeFlaps = 0;
 		for (FlapDisplayLayout line : lines)
@@ -139,10 +139,10 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 			layout.loadDefault(getMaxCharCount());
 		List<FlapDisplaySection> sections = layout.getSections();
 
+		FlapDisplaySection flapDisplaySection = sections.get(0);
 		if (rawComponentText == null) {
 			manualLines[lineIndex] = false;
-			sections.get(0)
-				.setText(new TextComponent(""));
+			flapDisplaySection.setText(new TextComponent(""));
 			notifyUpdate();
 			return;
 		}
@@ -152,10 +152,13 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 			return;
 
 		manualLines[lineIndex] = true;
-		Component text = DynamicComponent.parseCustomText(level, worldPosition, json);
-		sections.get(0)
-			.setText(text);
-		notifyUpdate();
+		Component text = isVirtual() ? Component.Serializer.fromJson(rawComponentText)
+			: DynamicComponent.parseCustomText(level, worldPosition, json);
+		flapDisplaySection.setText(text);
+		if (isVirtual())
+			flapDisplaySection.refresh(true);
+		else
+			notifyUpdate();
 	}
 
 	public void setColour(int lineIndex, DyeColor color) {

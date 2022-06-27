@@ -17,10 +17,13 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
@@ -73,9 +76,11 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -393,7 +398,7 @@ public class SceneBuilder {
 		public void showLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
 			addInstruction(new LineInstruction(color, start, end, duration, false));
 		}
-		
+
 		public void showBigLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
 			addInstruction(new LineInstruction(color, start, end, duration, true));
 		}
@@ -426,6 +431,11 @@ public class SceneBuilder {
 		public void changeBirbPose(ElementLink<ParrotElement> birb, Supplier<? extends ParrotPose> pose) {
 			addInstruction(scene -> scene.resolve(birb)
 				.setPose(pose.get()));
+		}
+
+		public void conductorBirb(ElementLink<ParrotElement> birb, boolean conductor) {
+			addInstruction(scene -> scene.resolve(birb)
+				.setConductor(conductor));
 		}
 
 		public void movePointOfInterest(Vec3 location) {
@@ -583,6 +593,10 @@ public class SceneBuilder {
 
 		public void movePulley(BlockPos pos, float distance, int duration) {
 			addInstruction(AnimateTileEntityInstruction.pulley(pos, distance, duration));
+		}
+
+		public void animateBogey(BlockPos pos, float distance, int duration) {
+			addInstruction(AnimateTileEntityInstruction.bogey(pos, distance, duration + 1));
 		}
 
 		public void moveDeployer(BlockPos pos, float distance, int duration) {
@@ -825,15 +839,33 @@ public class SceneBuilder {
 		public void toggleControls(BlockPos position) {
 			cycleBlockProperty(position, ControlsBlock.VIRTUAL);
 		}
-		
+
 		public void animateTrainStation(BlockPos position, boolean trainPresent) {
 			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), StationTileEntity.class,
 				c -> c.putBoolean("ForceFlag", trainPresent));
 		}
-		
+
+		public void conductorBlaze(BlockPos position, boolean conductor) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), BlazeBurnerTileEntity.class,
+				c -> c.putBoolean("TrainHat", conductor));
+		}
+
 		public void changeSignalState(BlockPos position, SignalState state) {
 			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), SignalTileEntity.class,
 				c -> NBTHelper.writeEnum(c, "State", state));
+		}
+
+		public void setDisplayBoardText(BlockPos position, int line, Component text) {
+			modifyTileEntity(position, FlapDisplayTileEntity.class,
+				t -> t.applyTextManually(line, Component.Serializer.toJson(text)));
+		}
+
+		public void dyeDisplayBoard(BlockPos position, int line, DyeColor color) {
+			modifyTileEntity(position, FlapDisplayTileEntity.class, t -> t.setColour(line, color));
+		}
+
+		public void flashDisplayLink(BlockPos position) {
+			modifyTileEntity(position, DisplayLinkTileEntity.class, linkTile -> linkTile.glow.setValue(2));
 		}
 
 	}

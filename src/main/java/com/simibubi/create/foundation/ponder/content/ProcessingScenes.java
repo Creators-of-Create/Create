@@ -451,12 +451,12 @@ public class ProcessingScenes {
 		scene.idle(60);
 		Vec3 filterPos = util.vector.of(1, 2.75f, 2.5f);
 		scene.overlay.showFilterSlotInput(filterPos, 100);
-		scene.overlay.showText(120)
+		scene.overlay.showText(100)
 			.pointAt(filterPos)
 			.placeNearTarget()
 			.attachKeyFrame()
 			.text("The filter slot can be used in case two recipes are conflicting.");
-		scene.idle(60);
+		scene.idle(80);
 	}
 
 	public static void compacting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -552,12 +552,12 @@ public class ProcessingScenes {
 		scene.idle(60);
 		Vec3 filterPos = util.vector.of(1, 2.75f, 2.5f);
 		scene.overlay.showFilterSlotInput(filterPos, 100);
-		scene.overlay.showText(120)
+		scene.overlay.showText(100)
 			.pointAt(filterPos)
 			.placeNearTarget()
 			.attachKeyFrame()
 			.text("The filter slot can be used in case two recipes are conflicting.");
-		scene.idle(60);
+		scene.idle(80);
 	}
 
 	public static void emptyBlazeBurner(SceneBuilder scene, SceneBuildingUtil util) {

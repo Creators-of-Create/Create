@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -85,12 +86,12 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 
 			Pose transform = ms.last();
 			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(), light,
-				j, !te.isSpeedRequirementFulfilled());
+				j, !te.isSpeedRequirementFulfilled(), te.getLevel());
 
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
 				renderOutput.nextSection(section);
-				int ticks = AnimationTickHolder.getTicks();
+				int ticks = AnimationTickHolder.getTicks(te.getLevel());
 				String text = section.renderCharsIndividually() || !section.spinning[0] ? section.text
 					: section.cyclingOptions[((ticks / 3) + i * 13) % section.cyclingOptions.length];
 				StringDecomposer.iterateFormatted(text, Style.EMPTY, renderOutput);
@@ -124,11 +125,13 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		FlapDisplaySection section;
 		float x;
 		private int lineIndex;
+		private Level level;
 
 		public FlapDisplayRenderOutput(MultiBufferSource buffer, int color, Matrix4f pose, int light, int lineIndex,
-			boolean paused) {
+			boolean paused, Level level) {
 			this.bufferSource = buffer;
 			this.lineIndex = lineIndex;
+			this.level = level;
 			this.a = .75f;
 			this.r = (color >> 16 & 255) / 255f;
 			this.g = (color >> 8 & 255) / 255f;
@@ -145,8 +148,8 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 
 		public boolean accept(int charIndex, Style style, int glyph) {
 			FontSet fontset = getFontSet();
-			int ticks = paused ? 0 : AnimationTickHolder.getTicks();
-			float time = paused ? 0 : AnimationTickHolder.getRenderTime();
+			int ticks = paused ? 0 : AnimationTickHolder.getTicks(level);
+			float time = paused ? 0 : AnimationTickHolder.getRenderTime(level);
 			float dim = 1;
 
 			if (section.renderCharsIndividually() && section.spinning[Math.min(charIndex, section.spinning.length)]) {

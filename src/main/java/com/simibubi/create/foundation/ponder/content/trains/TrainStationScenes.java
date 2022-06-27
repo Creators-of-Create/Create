@@ -250,6 +250,9 @@ public class TrainStationScenes {
 		scene.world.moveSection(controlsElement, util.vector.of(18, 0, 0), 70);
 		scene.world.moveSection(trainElement1, util.vector.of(18, 0, 0), 70);
 		scene.world.moveSection(trainElement2, util.vector.of(18, 0, 0), 70);
+		scene.world.animateBogey(util.grid.at(10, 2, 6), -18f, 70);
+		scene.world.animateBogey(util.grid.at(6, 2, 6), -18f, 70);
+		scene.world.animateBogey(util.grid.at(3, 2, 6), -18f, 70);
 		scene.special.moveParrot(birb, util.vector.of(18, 0, 0), 70);
 
 		scene.idle(10);
@@ -361,6 +364,7 @@ public class TrainStationScenes {
 		scene.world.showSection(redstone, Direction.SOUTH);
 
 		scene.world.moveSection(trainElement, util.vector.of(4, 0, 0), 20);
+		scene.world.animateBogey(util.grid.at(7, 2, 6), -4f, 20);
 		scene.special.moveParrot(birb, util.vector.of(4, 0, 0), 20);
 		scene.idle(20);
 
@@ -443,6 +447,7 @@ public class TrainStationScenes {
 		birb = scene.special.createBirb(target, FacePointOfInterestPose::new);
 		scene.idle(10);
 		scene.world.moveSection(trainElement, util.vector.of(4, 0, 0), 20);
+		scene.world.animateBogey(util.grid.at(7, 2, 6), -4f, 20);
 		scene.special.moveParrot(birb, util.vector.of(4, 0, 0), 20);
 		scene.idle(10);
 
@@ -461,6 +466,8 @@ public class TrainStationScenes {
 			.add(0, -.125, .45), target.add(0, 0, -.5), 40);
 		scene.idle(10);
 		scene.effects.indicateSuccess(util.grid.at(6, 3, 6));
+		scene.special.conductorBirb(birb, true);
+		scene.special.movePointOfInterest(util.grid.at(18, 4, 6));
 		scene.idle(25);
 
 		scene.overlay.showText(80)
@@ -472,6 +479,7 @@ public class TrainStationScenes {
 
 		scene.world.moveSection(trainElement, util.vector.of(8, 0, 0), 30);
 		scene.special.moveParrot(birb, util.vector.of(8, 0, 0), 30);
+		scene.world.animateBogey(util.grid.at(7, 2, 6), -8f, 30);
 		scene.world.animateTrainStation(stationPos, false);
 		scene.idle(10);
 		scene.world.hideIndependentSection(trainElement, null);

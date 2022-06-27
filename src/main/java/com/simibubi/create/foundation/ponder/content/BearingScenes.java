@@ -152,6 +152,7 @@ public class BearingScenes {
 			.pointAt(util.vector.topOf(windmill))
 			.placeNearTarget()
 			.text("Right-click the Bearing anytime to stop and edit the Structure again");
+		scene.idle(30);
 
 	}
 
@@ -370,8 +371,10 @@ public class BearingScenes {
 
 		scene.overlay.showText(120)
 			.colored(PonderPalette.GREEN)
+			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 3), Direction.UP))
 			.text("It can be configured never to revert to solid blocks, or only near the angle it started at");
+		scene.idle(90);
 
 	}
 

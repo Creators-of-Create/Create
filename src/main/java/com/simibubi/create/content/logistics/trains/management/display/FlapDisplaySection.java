@@ -60,7 +60,7 @@ public class FlapDisplaySection {
 		sendTransition = true;
 	}
 
-	private void refresh(boolean transition) {
+	public void refresh(boolean transition) {
 		if (component == null)
 			return;
 

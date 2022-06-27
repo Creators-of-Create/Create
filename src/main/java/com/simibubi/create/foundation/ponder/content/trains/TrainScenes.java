@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.ponder.content.trains;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -7,12 +8,17 @@ import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
+import com.simibubi.create.foundation.ponder.element.ParrotElement;
+import com.simibubi.create.foundation.ponder.element.ParrotElement.FacePointOfInterestPose;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class TrainScenes {
 
@@ -71,6 +77,7 @@ public class TrainScenes {
 		scene.idle(60);
 
 		scene.world.moveSection(trainElement, util.vector.of(4, 0, 0), 20);
+		scene.world.animateBogey(util.grid.at(3, 2, 4), -4f, 20);
 		scene.world.animateTrainStation(stationPos, false);
 		scene.idle(30);
 
@@ -81,6 +88,7 @@ public class TrainScenes {
 		scene.idle(60);
 
 		scene.world.moveSection(trainElement, util.vector.of(-4, 0, 0), 30);
+		scene.world.animateBogey(util.grid.at(3, 2, 4), 4f, 30);
 		scene.idle(40);
 
 		scene.overlay
@@ -94,9 +102,11 @@ public class TrainScenes {
 		scene.idle(90);
 
 		scene.world.moveSection(trainElement, util.vector.of(2, 0, 0), 30);
+		scene.world.animateBogey(util.grid.at(3, 2, 4), -2f, 30);
 		scene.idle(40);
 
 		scene.world.moveSection(trainElement, util.vector.of(-3, 0, 0), 60);
+		scene.world.animateBogey(util.grid.at(3, 2, 4), 3f, 60);
 		scene.idle(70);
 
 		scene.overlay.showText(50)
@@ -107,6 +117,7 @@ public class TrainScenes {
 		scene.idle(40);
 
 		scene.world.moveSection(trainElement, util.vector.of(1, 0, 0), 20);
+		scene.world.animateBogey(util.grid.at(3, 2, 4), -1f, 20);
 		scene.idle(20);
 		scene.effects.indicateSuccess(stationPos);
 		scene.world.animateTrainStation(stationPos, true);
@@ -153,14 +164,124 @@ public class TrainScenes {
 		scene.scaleSceneView(.75f);
 		scene.setSceneOffsetY(-1);
 		scene.showBasePlate();
-		scene.debug.debugSchematic();
 
 		for (int i = 10; i >= 0; i--) {
 			scene.world.showSection(util.select.position(i, 1, 4), Direction.DOWN);
 			scene.idle(1);
 		}
 
+		scene.world.toggleControls(util.grid.at(4, 3, 4));
+		scene.world.toggleControls(util.grid.at(4, 3, 7));
+
+		BlockPos stationPos = util.grid.at(5, 1, 1);
+		Selection train1 = util.select.fromTo(6, 2, 3, 2, 3, 5);
+		Selection train2 = util.select.fromTo(6, 2, 6, 2, 3, 8);
+
 		scene.idle(10);
+
+		scene.world.showSection(util.select.position(stationPos), Direction.DOWN);
+		scene.idle(5);
+		ElementLink<WorldSectionElement> trainElement1 = scene.world.showIndependentSection(train1, Direction.DOWN);
+		scene.idle(10);
+		scene.world.animateTrainStation(stationPos, true);
+		scene.idle(10);
+
+		scene.overlay.showText(70)
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 3, 4), Direction.WEST))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Schedules allow Trains to be controlled by other Drivers");
+		scene.idle(80);
+
+		Vec3 target = util.vector.topOf(util.grid.at(4, 0, 2));
+		scene.overlay.showControls(new InputWindowElement(target, Pointing.RIGHT).rightClick()
+			.withItem(AllItems.SCHEDULE.asStack()), 80);
+		scene.overlay.showText(80)
+			.pointAt(target)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.colored(PonderPalette.BLUE)
+			.text("Right-click with the item in hand to open its Interface");
+		scene.idle(100);
+
+		scene.overlay
+			.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(3, 3, 4)), Pointing.DOWN).rightClick()
+				.withItem(AllItems.SCHEDULE.asStack()), 80);
+		scene.idle(6);
+		scene.world.conductorBlaze(util.grid.at(3, 3, 4), true);
+		scene.overlay.showText(70)
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 3, 4), Direction.WEST))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Once programmed, the Schedule can be handed off to a Train Driver");
+		scene.idle(80);
+
+		scene.world.moveSection(trainElement1, util.vector.of(12, 0, 0), 60);
+		scene.world.animateBogey(util.grid.at(4, 2, 4), -12f, 60);
+		scene.world.animateTrainStation(stationPos, false);
+		scene.idle(20);
+		scene.world.hideIndependentSection(trainElement1, null);
+		scene.idle(25);
+
+		ElementLink<WorldSectionElement> trainElement2 = scene.world.showIndependentSection(train2, Direction.DOWN);
+		scene.world.moveSection(trainElement2, util.vector.of(0, 0, -3), 0);
+		scene.idle(10);
+		Vec3 birbVec = util.vector.topOf(util.grid.at(3, 0, 7));
+		ElementLink<ParrotElement> birb = scene.special.createBirb(birbVec, FacePointOfInterestPose::new);
+		scene.world.animateTrainStation(stationPos, true);
+
+		scene.overlay.showText(110)
+			.pointAt(birbVec)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Any mob or blaze burner sitting in front of Train Controls is an eligible conductor");
+		scene.idle(80);
+
+		scene.overlay.showControls(new InputWindowElement(util.vector.centerOf(util.grid.at(3, 1, 7)), Pointing.DOWN)
+			.withItem(new ItemStack(Items.LEAD)), 30);
+		scene.idle(40);
+		target = util.vector.centerOf(util.grid.at(3, 3, 4));
+		scene.overlay.showControls(new InputWindowElement(target.add(0.5, 0, 0), Pointing.RIGHT).rightClick()
+			.withItem(new ItemStack(Items.LEAD)), 30);
+		scene.idle(6);
+		scene.special.moveParrot(birb, target.subtract(birbVec), 5);
+		scene.effects.indicateSuccess(util.grid.at(3, 3, 4));
+		scene.idle(15);
+
+		scene.overlay.showText(70)
+			.pointAt(target)
+			.placeNearTarget()
+			.colored(PonderPalette.BLUE)
+			.attachKeyFrame()
+			.text("Creatures on a lead can be given their seat more conveniently");
+		scene.idle(80);
+
+		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(3, 3, 4)), Pointing.DOWN)
+			.withItem(AllItems.SCHEDULE.asStack()), 15);
+		scene.idle(6);
+		scene.special.conductorBirb(birb, true);
+		scene.special.movePointOfInterest(util.grid.at(16, 4, 4));
+		scene.idle(14);
+
+		scene.world.moveSection(trainElement2, util.vector.of(3, 0, 0), 30);
+		scene.world.animateBogey(util.grid.at(4, 2, 7), -3f, 30);
+		scene.special.moveParrot(birb, util.vector.of(3, 0, 0), 30);
+		scene.idle(40);
+
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.topOf(util.grid.at(6, 3, 4)), Pointing.DOWN).rightClick(), 70);
+		scene.idle(6);
+		scene.special.conductorBirb(birb, false);
+		scene.special.movePointOfInterest(util.grid.at(3, 4, 1));
+		scene.idle(19);
+		scene.overlay.showText(70)
+			.pointAt(target.add(3, 0, 0))
+			.placeNearTarget()
+			.colored(PonderPalette.BLUE)
+			.attachKeyFrame()
+			.text("Schedules can be retrieved from Drivers at any moment");
+		scene.idle(80);
+
 	}
 
 }

@@ -27,8 +27,6 @@ public class TrackScenes {
 		scene.configureBasePlate(0, 0, 15);
 		scene.scaleSceneView(.5f);
 		scene.showBasePlate();
-//		scene.debug.debugSchematic();
-
 		scene.idle(10);
 
 		ElementLink<WorldSectionElement> bgTrack =
@@ -265,7 +263,6 @@ public class TrackScenes {
 		scene.setSceneOffsetY(-1);
 		scene.showBasePlate();
 		scene.world.showSection(util.select.fromTo(2, 1, 7, 6, 6, 7), Direction.UP);
-//		scene.debug.debugSchematic();
 		scene.idle(10);
 
 		for (int i = 1; i <= 5; i++) {
@@ -301,6 +298,7 @@ public class TrackScenes {
 
 		ElementLink<ParrotElement> birb =
 			scene.special.createBirb(util.vector.centerOf(4, 3, 2), FacePointOfInterestPose::new);
+		scene.special.conductorBirb(birb, true);
 		scene.special.movePointOfInterest(util.grid.at(4, 4, 10));
 
 		scene.addKeyframe();
@@ -309,6 +307,7 @@ public class TrackScenes {
 		for (ElementLink<WorldSectionElement> e : List.of(t1, t2, t3))
 			scene.world.moveSection(e, util.vector.of(0, 0, 6), 30);
 		scene.special.moveParrot(birb, util.vector.of(0, 0, 5.6), 28);
+		scene.world.animateBogey(util.grid.at(4, 2, 3), -6, 30);
 
 		for (ElementLink<WorldSectionElement> e : List.of(t3, t2, t1)) {
 			scene.idle(2);
@@ -331,6 +330,7 @@ public class TrackScenes {
 		scene.world.moveSection(s1, util.vector.of(0, 0, 3.5f), 0);
 		scene.world.moveSection(s1, util.vector.of(0, 0, -3.5f), 18);
 		scene.special.moveParrot(birb, util.vector.of(0, 0, -3.5f), 18);
+		scene.world.animateBogey(util.grid.at(4, 2, 3), -3.5f, 18);
 		scene.idle(30);
 
 		scene.overlay.showText(70)
@@ -395,6 +395,7 @@ public class TrackScenes {
 		scene.world.moveSection(trackElement, util.vector.of(12, 0, 0), 120);
 		scene.world.moveSection(stationElement, util.vector.of(12, 0, 0), 120);
 		scene.world.moveSection(stationTrackElement, util.vector.of(12, 0, 0), 120);
+		scene.world.animateBogey(util.grid.at(4, 2, 4), 12f, 120);
 		scene.special.moveParrot(birb, util.vector.of(12, 0, 0), 120);
 		scene.idle(15);
 		scene.world.hideIndependentSection(stationElement, null);
@@ -424,6 +425,7 @@ public class TrackScenes {
 
 		scene.world.moveSection(trackElement, util.vector.of(19, 0, 0), 190);
 		scene.world.moveSection(stationTrackElement, util.vector.of(19, 0, 0), 190);
+		scene.world.animateBogey(util.grid.at(4, 2, 4), 19f, 190);
 
 		scene.idle(30);
 		scene.overlay.showText(90)

@@ -28,6 +28,7 @@ public class TrackObserverScenes {
 		scene.setSceneOffsetY(-1);
 		scene.showBasePlate();
 
+		scene.world.toggleControls(util.grid.at(5, 3, 7));
 		scene.special.movePointOfInterest(util.grid.at(-10, 2, 7));
 
 		Selection observer = util.select.position(5, 1, 4);
@@ -79,6 +80,7 @@ public class TrackObserverScenes {
 		ElementLink<WorldSectionElement> trainInstance1 = scene.world.showIndependentSection(train1, Direction.WEST);
 		scene.world.moveSection(trainInstance1, util.vector.of(6, 0, 0), 0);
 		scene.world.moveSection(trainInstance1, util.vector.of(-16, 0, 0), 80);
+		scene.world.animateBogey(util.grid.at(5, 2, 7), 16, 80);
 		ElementLink<ParrotElement> birb =
 			scene.special.createBirb(util.vector.centerOf(12, 3, 7), FacePointOfInterestPose::new);
 		scene.special.moveParrot(birb, util.vector.of(-16, 0, 0), 80);
@@ -87,6 +89,7 @@ public class TrackObserverScenes {
 		ElementLink<WorldSectionElement> trainInstance2 = scene.world.showIndependentSection(train2, Direction.WEST);
 		scene.world.moveSection(trainInstance2, util.vector.of(4, 0, 0), 0);
 		scene.world.moveSection(trainInstance2, util.vector.of(-14, 0, 0), 70);
+		scene.world.animateBogey(util.grid.at(9, 2, 7), 14, 70);
 
 		Selection add = redstone.add(observer);
 
@@ -123,6 +126,7 @@ public class TrackObserverScenes {
 		trainInstance1 = scene.world.showIndependentSection(train1, Direction.WEST);
 		scene.world.moveSection(trainInstance1, util.vector.of(6, 0, 0), 0);
 		scene.world.moveSection(trainInstance1, util.vector.of(-16, 0, 0), 80);
+		scene.world.animateBogey(util.grid.at(5, 2, 7), 16, 80);
 		birb = scene.special.createBirb(util.vector.centerOf(12, 3, 7), FacePointOfInterestPose::new);
 		scene.special.moveParrot(birb, util.vector.of(-16, 0, 0), 80);
 		scene.idle(10);
@@ -130,6 +134,7 @@ public class TrackObserverScenes {
 		trainInstance2 = scene.world.showIndependentSection(train2b, Direction.WEST);
 		scene.world.moveSection(trainInstance2, util.vector.of(4, 0, 6), 0);
 		scene.world.moveSection(trainInstance2, util.vector.of(-14, 0, 0), 70);
+		scene.world.animateBogey(util.grid.at(9, 2, 1), 14, 80);
 
 		scene.idle(33);
 		scene.world.hideIndependentSection(trainInstance1, Direction.WEST);
@@ -141,6 +146,7 @@ public class TrackObserverScenes {
 		trainInstance1 = scene.world.showIndependentSection(train1, Direction.WEST);
 		scene.world.moveSection(trainInstance1, util.vector.of(6, 0, 0), 0);
 		scene.world.moveSection(trainInstance1, util.vector.of(-16, 0, 0), 80);
+		scene.world.animateBogey(util.grid.at(5, 2, 7), 16, 80);
 		birb = scene.special.createBirb(util.vector.centerOf(12, 3, 7), FacePointOfInterestPose::new);
 		scene.special.moveParrot(birb, util.vector.of(-16, 0, 0), 80);
 		scene.idle(10);
@@ -148,6 +154,7 @@ public class TrackObserverScenes {
 		trainInstance2 = scene.world.showIndependentSection(train2a, Direction.WEST);
 		scene.world.moveSection(trainInstance2, util.vector.of(4, 0, 3), 0);
 		scene.world.moveSection(trainInstance2, util.vector.of(-14, 0, 0), 70);
+		scene.world.animateBogey(util.grid.at(9, 2, 4), 14, 70);
 
 		scene.idle(13);
 		scene.world.toggleRedstonePower(add);

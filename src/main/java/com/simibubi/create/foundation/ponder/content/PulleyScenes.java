@@ -177,6 +177,7 @@ public class PulleyScenes {
 			.pointAt(util.vector.blockSurface(flowerPos, Direction.WEST))
 			.placeNearTarget()
 			.text("It can be configured never to revert to solid blocks, or only at the location it started at");
+		scene.idle(90);
 	}
 
 	public static void attachment(SceneBuilder scene, SceneBuildingUtil util) {
@@ -229,6 +230,7 @@ public class PulleyScenes {
 			.pointAt(util.vector.topOf(pulleyPos.west(2)))
 			.placeNearTarget()
 			.text("Mind that pulleys are only movable while stopped");
+		scene.idle(50);
 	}
 
 }

@@ -136,6 +136,7 @@ public class ChuteScenes {
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 1, 1), Direction.NORTH), Pointing.RIGHT)
 				.withItem(stack),
 			50);
+		scene.markAsFinished();
 	}
 
 	public static void upward(SceneBuilder scene, SceneBuildingUtil util) {

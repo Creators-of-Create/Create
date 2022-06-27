@@ -168,6 +168,7 @@ public class BeltScenes {
 			.text("Mechanical Belts can be dyed for aesthetic purposes")
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(shaftLocation.east()));
+		scene.idle(50);
 	}
 
 	public static void directions(SceneBuilder scene, SceneBuildingUtil util) {

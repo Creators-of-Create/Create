@@ -45,7 +45,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		float animation = te.headAnimation.getValue(partialTicks) * .175f;
 		BlockState blockState = te.getBlockState();
 		boolean drawGoggles = te.goggles;
-		boolean drawHat = false;
+		boolean drawHat = te.hat;
 
 		renderShared(level, buffer, null, ms, blockState, horizontalAngle, animation, drawGoggles, drawHat, hashCode);
 	}
@@ -122,14 +122,16 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 			draw(CachedBufferer.partial(AllBlockPartials.BLAZE_GOGGLES, blockState)
 				.translate(0, headY + 8 / 16f, 0), horizontalAngle, modelTransform, ms, solid);
 
-		if (drawHat && modelTransform != null)
-			CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState)
-				.transform(modelTransform)
-				.translate(0, headY + 0.75f, 0)
+		if (drawHat) {
+			SuperByteBuffer partial = CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState);
+			if (modelTransform != null)
+				partial.transform(modelTransform);
+			partial.translate(0, headY + 0.75f, 0)
 				.rotateCentered(Direction.UP, horizontalAngle + Mth.PI)
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, solid);
+		}
 
 		draw(CachedBufferer.partial(rods, blockState)
 			.translate(0, offset1 + animation + .125f, 0), 0, modelTransform, ms, solid);

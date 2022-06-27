@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2072",
+	"_": "Missing Localizations: 2087",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2057,7 +2057,7 @@
 	"create.ponder.close": "UNLOCALIZED: Close",
 	"create.ponder.identify": "UNLOCALIZED: Identify",
 	"create.ponder.next": "UNLOCALIZED: Next Scene",
-	"create.ponder.next_up": "UNLOCALIZED: Next up:",
+	"create.ponder.next_up": "UNLOCALIZED: Up Next:",
 	"create.ponder.previous": "UNLOCALIZED: Previous Scene",
 	"create.ponder.replay": "UNLOCALIZED: Replay",
 	"create.ponder.think_back": "UNLOCALIZED: Think Back",
@@ -2106,6 +2106,8 @@
 	"create.ponder.tag.logistics.description": "UNLOCALIZED: Components which help moving items around",
 	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
 	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
+	"create.ponder.tag.train_related": "UNLOCALIZED: Railway Equipment",
+	"create.ponder.tag.train_related.description": "UNLOCALIZED: Components used in the construction or management of Train Contraptions",
 
 	"create.ponder.analog_lever.header": "UNLOCALIZED: Controlling signals using the Analog Lever",
 	"create.ponder.analog_lever.text_1": "UNLOCALIZED: Analog Levers make for a compact and precise source of redstone power",
@@ -2352,6 +2354,14 @@
 	"create.ponder.depot.text_2": "UNLOCALIZED: Right-Click to manually place or remove Items from it",
 	"create.ponder.depot.text_3": "UNLOCALIZED: Just like Mechanical Belts, it can provide items to processing",
 	"create.ponder.depot.text_4": "UNLOCALIZED: ...as well as provide Items to Mechanical Arms",
+
+	"create.ponder.display_board.header": "UNLOCALIZED: Using Display Boards",
+	"create.ponder.display_board.text_1": "UNLOCALIZED: Display Boards are a scalable alternative to the sign",
+	"create.ponder.display_board.text_2": "UNLOCALIZED: They require Rotational Force to operate",
+	"create.ponder.display_board.text_3": "UNLOCALIZED: Text can be displayed using Name Tags...",
+	"create.ponder.display_board.text_4": "UNLOCALIZED: ...or through the use of Display Links",
+	"create.ponder.display_board.text_5": "UNLOCALIZED: Dyes can be applied to individual lines of the board",
+	"create.ponder.display_board.text_6": "UNLOCALIZED: Lines can be reset by clicking them with an empty hand",
 
 	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
 	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
@@ -2898,6 +2908,12 @@
 	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
 
 	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
+	"create.ponder.train_schedule.text_1": "UNLOCALIZED: Schedules allow Trains to be controlled by other Drivers",
+	"create.ponder.train_schedule.text_2": "UNLOCALIZED: Right-click with the item in hand to open its Interface",
+	"create.ponder.train_schedule.text_3": "UNLOCALIZED: Once programmed, the Schedule can be handed off to a Train Driver",
+	"create.ponder.train_schedule.text_4": "UNLOCALIZED: Any mob or blaze burner sitting in front of Train Controls is an eligible conductor",
+	"create.ponder.train_schedule.text_5": "UNLOCALIZED: Creatures on a lead can be given their seat more conveniently",
+	"create.ponder.train_schedule.text_6": "UNLOCALIZED: Schedules can be retrieved from Drivers at any moment",
 
 	"create.ponder.valve_handle.header": "UNLOCALIZED: Generating Rotational Force using Valve Handles",
 	"create.ponder.valve_handle.text_1": "UNLOCALIZED: Valve Handles can be used by players to apply rotational force manually",

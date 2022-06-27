@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
@@ -28,12 +27,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -107,10 +103,11 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(shaft, 32);
 
 		scene.idle(10);
-		scene.overlay.showText(1000)
+		scene.overlay.showText(100)
 			.placeNearTarget()
 			.text("Brass or Andesite Casing can be used to decorate Shafts")
 			.pointAt(util.vector.topOf(1, 1, 2));
+		scene.idle(70);
 	}
 
 	public static void cogAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
@@ -148,7 +145,9 @@ public class KineticsScenes {
 		scene.overlay.showText(100)
 			.text("Neighbouring shafts connected like this will rotate in opposite directions")
 			.placeNearTarget()
+			.attachKeyFrame()
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.NORTH));
+		scene.idle(70);
 
 	}
 
@@ -197,6 +196,7 @@ public class KineticsScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 3), Direction.WEST));
 		scene.effects.rotationSpeedIndicator(util.grid.at(3, 1, 3));
 		scene.effects.rotationSpeedIndicator(util.grid.at(4, 2, 3));
+		scene.idle(60);
 
 	}
 

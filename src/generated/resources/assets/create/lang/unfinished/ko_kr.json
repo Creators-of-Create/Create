@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 586",
+	"_": "Missing Localizations: 601",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2057,7 +2057,7 @@
 	"create.ponder.close": "닫기",
 	"create.ponder.identify": "탐색",
 	"create.ponder.next": "다음 장면",
-	"create.ponder.next_up": "UNLOCALIZED: Next up:",
+	"create.ponder.next_up": "UNLOCALIZED: Up Next:",
 	"create.ponder.previous": "이전 장면",
 	"create.ponder.replay": "다시 재생",
 	"create.ponder.think_back": "되돌아가기",
@@ -2106,6 +2106,8 @@
 	"create.ponder.tag.logistics.description": "아이템을 옮기는데 도움을 줄 부품입니다.",
 	"create.ponder.tag.display_targets": "UNLOCALIZED: Targets for Display Links",
 	"create.ponder.tag.display_targets.description": "UNLOCALIZED: Components or Blocks which can process and display the data received from a Display Link",
+	"create.ponder.tag.train_related": "UNLOCALIZED: Railway Equipment",
+	"create.ponder.tag.train_related.description": "UNLOCALIZED: Components used in the construction or management of Train Contraptions",
 
 	"create.ponder.analog_lever.header": "아날로그 레버를 이용해 신호 조절하기",
 	"create.ponder.analog_lever.text_1": "아날로그 레버는 정확하고 간편하게 레드스톤 신호의 세기를 조절합니다.",
@@ -2352,6 +2354,14 @@
 	"create.ponder.depot.text_2": "우클릭해서 아이템을 놓거나 가져갑니다.",
 	"create.ponder.depot.text_3": "벨트처럼, 놓여진 아이템은 가공될 수 있습니다.",
 	"create.ponder.depot.text_4": "그리고 기계 팔의 목표가 될 수 있습니다.",
+
+	"create.ponder.display_board.header": "UNLOCALIZED: Using Display Boards",
+	"create.ponder.display_board.text_1": "UNLOCALIZED: Display Boards are a scalable alternative to the sign",
+	"create.ponder.display_board.text_2": "UNLOCALIZED: They require Rotational Force to operate",
+	"create.ponder.display_board.text_3": "UNLOCALIZED: Text can be displayed using Name Tags...",
+	"create.ponder.display_board.text_4": "UNLOCALIZED: ...or through the use of Display Links",
+	"create.ponder.display_board.text_5": "UNLOCALIZED: Dyes can be applied to individual lines of the board",
+	"create.ponder.display_board.text_6": "UNLOCALIZED: Lines can be reset by clicking them with an empty hand",
 
 	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
 	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
@@ -2898,6 +2908,12 @@
 	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
 
 	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
+	"create.ponder.train_schedule.text_1": "UNLOCALIZED: Schedules allow Trains to be controlled by other Drivers",
+	"create.ponder.train_schedule.text_2": "UNLOCALIZED: Right-click with the item in hand to open its Interface",
+	"create.ponder.train_schedule.text_3": "UNLOCALIZED: Once programmed, the Schedule can be handed off to a Train Driver",
+	"create.ponder.train_schedule.text_4": "UNLOCALIZED: Any mob or blaze burner sitting in front of Train Controls is an eligible conductor",
+	"create.ponder.train_schedule.text_5": "UNLOCALIZED: Creatures on a lead can be given their seat more conveniently",
+	"create.ponder.train_schedule.text_6": "UNLOCALIZED: Schedules can be retrieved from Drivers at any moment",
 
 	"create.ponder.valve_handle.header": "밸브 손잡이로 동력 생산하기",
 	"create.ponder.valve_handle.text_1": "밸브 손잡이를 사용하면 수동으로 동력을 생성할 수 있습니다.",

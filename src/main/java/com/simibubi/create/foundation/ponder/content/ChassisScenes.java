@@ -10,14 +10,12 @@ import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
@@ -87,6 +85,7 @@ public class ChassisScenes {
 
 		scene.world.rotateBearing(bearingPos, 360, 80);
 		scene.world.rotateSection(chassis, 0, 360, 0, 80);
+		scene.idle(50);
 	}
 
 	public static void linearAttachement(SceneBuilder scene, SceneBuildingUtil util) {
@@ -253,7 +252,8 @@ public class ChassisScenes {
 		scene.overlay.showControls(new InputWindowElement(glueSurface, Pointing.DOWN).rightClick()
 			.withItem(AllItems.SUPER_GLUE.asStack()), 30);
 		scene.idle(7);
-//		ElementLink<EntityElement> glueEntity = scene.world.createGlueEntity(chassisPos.west(), Direction.NORTH);TODO
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, glueSurface,
+			new AABB(util.grid.at(1, 2, 2)).expandTowards(0, 0, -1), 40);
 		scene.idle(20);
 		ElementLink<WorldSectionElement> gluedPlank =
 			scene.world.showIndependentSection(util.select.position(3, 3, 1), Direction.SOUTH);
@@ -262,7 +262,6 @@ public class ChassisScenes {
 		scene.effects.superGlue(chassisPos.west(), Direction.NORTH, true);
 		scene.idle(20);
 
-//		scene.world.modifyEntity(glueEntity, Entity::discard);
 		scene.world.hideIndependentSection(glassSection, Direction.UP);
 		scene.world.hideIndependentSection(gluedPlank, Direction.UP);
 		scene.world.hideIndependentSection(topGlassSection, Direction.UP);
@@ -463,7 +462,7 @@ public class ChassisScenes {
 		scene.world.rotateBearing(bearingPos, 360, 80);
 		scene.world.rotateSection(contraption, 0, 360, 0, 80);
 		scene.idle(90);
-		
+
 		scene.world.destroyBlock(util.grid.at(1, 2, 0));
 		scene.idle(1);
 		scene.world.destroyBlock(util.grid.at(1, 2, 1));

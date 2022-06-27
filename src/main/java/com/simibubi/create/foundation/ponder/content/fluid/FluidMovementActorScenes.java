@@ -191,9 +191,11 @@ public class FluidMovementActorScenes {
 		scene.world.modifyTileNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
 
 		scene.idle(15);
-		scene.markAsFinished();
 		scene.world.rotateBearing(bearing, 270, 120);
 		scene.world.rotateSection(contraption, 0, 270, 0, 120);
+		
+		scene.idle(100);
+		scene.markAsFinished();
 	}
 
 }

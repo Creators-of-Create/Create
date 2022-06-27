@@ -179,7 +179,7 @@ import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileE
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
-import com.simibubi.create.content.logistics.trains.IBogeyTileEntityRenderer;
+import com.simibubi.create.content.logistics.trains.BogeyTileEntityRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverRenderer;
@@ -788,7 +788,7 @@ public class AllTileEntities {
 
 	public static final BlockEntityEntry<StandardBogeyTileEntity> BOGEY = Create.registrate()
 		.tileEntity("bogey", StandardBogeyTileEntity::new)
-		.renderer(() -> IBogeyTileEntityRenderer::new)
+		.renderer(() -> BogeyTileEntityRenderer::new)
 		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
 		.register();
 

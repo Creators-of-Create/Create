@@ -48,6 +48,8 @@ public class TrainSignalScenes {
 		Selection secondNixie = util.select.position(8, 2, 9);
 		Selection thirdNixie = util.select.position(9, 4, 8);
 		Selection train = util.select.fromTo(5, 2, 5, 1, 3, 7);
+		
+		scene.world.toggleControls(util.grid.at(3, 3, 6));
 
 		Vec3 marker = util.vector.topOf(8, 0, 6)
 			.add(0, 3 / 16f, 0);
@@ -172,6 +174,7 @@ public class TrainSignalScenes {
 		scene.idle(20);
 
 		scene.world.moveSection(trainElement, util.vector.of(7, 0, 0), 25);
+		scene.world.animateBogey(util.grid.at(3, 2, 6), -7f, 25);
 		scene.special.moveParrot(birb, util.vector.of(7, 0, 0), 25);
 		scene.idle(25);
 
@@ -211,6 +214,10 @@ public class TrainSignalScenes {
 			scene.world.showSection(util.select.position(i, 1, 15 - i), Direction.DOWN);
 			scene.idle(1);
 		}
+		
+		scene.world.toggleControls(util.grid.at(13, 3, 7));
+		scene.world.toggleControls(util.grid.at(13, 3, 1));
+		scene.world.toggleControls(util.grid.at(13, 3, 4));
 
 		Selection train1 = util.select.fromTo(11, 2, 6, 15, 3, 8);
 		Selection train2a = util.select.fromTo(15, 2, 3, 11, 3, 5);
@@ -283,6 +290,7 @@ public class TrainSignalScenes {
 			scene.special.createBirb(util.vector.centerOf(18, 3, 7), FacePointOfInterestPose::new);
 		scene.world.moveSection(trainElement, util.vector.of(4, 0, 0), 0);
 		scene.world.moveSection(trainElement, util.vector.of(-9, 0, 0), 45);
+		scene.world.animateBogey(util.grid.at(13, 2, 7), 9f, 45);
 		scene.special.moveParrot(birb1, util.vector.of(-9, 0, 0), 45);
 		scene.idle(20);
 
@@ -307,6 +315,7 @@ public class TrainSignalScenes {
 			scene.special.createBirb(util.vector.centerOf(18, 3, 7), FacePointOfInterestPose::new);
 		scene.world.moveSection(trainElement2, util.vector.of(4, 0, 6), 0);
 		scene.world.moveSection(trainElement2, util.vector.of(-4.5, 0, 0), 35);
+		scene.world.animateBogey(util.grid.at(13, 2, 1), 4.5f, 35);
 		scene.special.moveParrot(birb2, util.vector.of(-4.5, 0, 0), 35);
 		scene.idle(40);
 		scene.special.movePointOfInterest(s1Pos.above(2));
@@ -397,6 +406,7 @@ public class TrainSignalScenes {
 
 		scene.world.moveSection(trainElement2, util.vector.of(4, 0, 6), 0);
 		scene.world.moveSection(trainElement2, util.vector.of(-4.5, 0, 0), 35);
+		scene.world.animateBogey(util.grid.at(13, 2, 1), 4.5f, 35);
 		scene.special.moveParrot(birb2, util.vector.of(-4.5, 0, 0), 35);
 
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb, bb.inflate(.45f, 0, .45f), 140);
@@ -436,6 +446,7 @@ public class TrainSignalScenes {
 		scene.world.rotateSection(trainElement3a, 0, 45, 0, 0);
 		scene.world.moveSection(trainElement3a, util.vector.of(4, 0, -6), 0);
 		scene.world.moveSection(trainElement3a, util.vector.of(-20, 0, 20), 40);
+		scene.world.animateBogey(util.grid.at(13, 2, 4), -20f, 40);
 		ElementLink<ParrotElement> birb3 =
 			scene.special.createBirb(util.vector.of(18, 3.5, -2), FacePointOfInterestPose::new);
 		scene.special.moveParrot(birb3, util.vector.of(-20, 0, 20), 40);
@@ -448,6 +459,7 @@ public class TrainSignalScenes {
 		scene.world.rotateSection(trainElement3b, 0, 45, 0, 0);
 		scene.world.moveSection(trainElement3b, util.vector.of(0.5, 0, -7), 0);
 		scene.world.moveSection(trainElement3b, util.vector.of(-20, 0, 20), 40);
+		scene.world.animateBogey(util.grid.at(17, 2, 4), -20f, 40);
 		scene.idle(10);
 
 		scene.effects.indicateRedstone(s4Pos.west());
@@ -530,6 +542,7 @@ public class TrainSignalScenes {
 			.text("Reversely, red signals emit a comparator output");
 		scene.idle(40);
 
+		scene.world.toggleControls(util.grid.at(6, 3, 5));
 		scene.world.showSection(train, Direction.DOWN);
 		scene.special.createBirb(util.vector.centerOf(util.grid.at(6, 3, 4)), DancePose::new);
 		scene.idle(10);

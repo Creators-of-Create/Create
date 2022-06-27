@@ -328,6 +328,8 @@ public class PonderIndex {
 		// Display Link
 		HELPER.forComponents(AllBlocks.DISPLAY_LINK)
 			.addStoryBoard("display/link", DisplayScenes::link);
+		HELPER.forComponents(AllBlocks.DISPLAY_BOARD)
+			.addStoryBoard("display_board", DisplayScenes::board);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (REGISTER_DEBUG_SCENES)
@@ -362,6 +364,17 @@ public class PonderIndex {
 			.add(AllBlocks.STEAM_ENGINE)
 			.add(AllBlocks.CREATIVE_MOTOR);
 
+		PonderRegistry.TAGS.forTag(PonderTag.TRAIN_RELATED)
+			.add(AllBlocks.TRACK)
+			.add(AllBlocks.TRACK_STATION)
+			.add(AllBlocks.TRACK_SIGNAL)
+			.add(AllBlocks.TRACK_OBSERVER)
+			.add(AllBlocks.CONTROLS)
+			.add(AllItems.SCHEDULE)
+			.add(AllBlocks.TRAIN_DOOR)
+			.add(AllBlocks.TRAIN_TRAPDOOR)
+			.add(AllBlocks.RAILWAY_CASING);
+
 		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_APPLIANCES)
 			.add(AllBlocks.MILLSTONE)
 			.add(AllBlocks.TURNTABLE)
@@ -381,6 +394,7 @@ public class PonderIndex {
 			.add(AllBlocks.GANTRY_SHAFT)
 			.add(AllBlocks.GANTRY_CARRIAGE)
 			.add(AllBlocks.CLOCKWORK_BEARING)
+			.add(AllBlocks.DISPLAY_BOARD)
 			.add(AllBlocks.CRUSHING_WHEEL);
 
 		PonderRegistry.TAGS.forTag(PonderTag.FLUIDS)
@@ -410,6 +424,7 @@ public class PonderIndex {
 			.add(AllBlocks.MECHANICAL_SAW)
 			.add(AllBlocks.BLAZE_BURNER)
 			.add(AllBlocks.CRUSHING_WHEEL)
+			.add(AllBlocks.TRACK_STATION)
 			.add(Blocks.COMPOSTER)
 			.add(Blocks.JUKEBOX);
 
@@ -434,12 +449,15 @@ public class PonderIndex {
 
 		PonderRegistry.TAGS.forTag(PonderTag.DECORATION)
 			.add(AllBlocks.ORANGE_NIXIE_TUBE)
+			.add(AllBlocks.DISPLAY_BOARD)
 			.add(AllBlocks.CUCKOO_CLOCK)
 			.add(AllBlocks.WOODEN_BRACKET)
 			.add(AllBlocks.METAL_BRACKET)
+			.add(AllBlocks.METAL_GIRDER)
 			.add(AllBlocks.ANDESITE_CASING)
 			.add(AllBlocks.BRASS_CASING)
-			.add(AllBlocks.COPPER_CASING);
+			.add(AllBlocks.COPPER_CASING)
+			.add(AllBlocks.RAILWAY_CASING);
 
 		PonderRegistry.TAGS.forTag(PonderTag.CREATIVE)
 			.add(AllBlocks.CREATIVE_CRATE)
@@ -459,7 +477,8 @@ public class PonderIndex {
 			.add(AllBlocks.PULSE_EXTENDER)
 			.add(AllBlocks.PULSE_REPEATER)
 			.add(AllBlocks.POWERED_LATCH)
-			.add(AllBlocks.POWERED_TOGGLE_LATCH);
+			.add(AllBlocks.POWERED_TOGGLE_LATCH)
+			.add(AllBlocks.ROSE_QUARTZ_LAMP);
 
 		PonderRegistry.TAGS.forTag(PonderTag.MOVEMENT_ANCHOR)
 			.add(AllBlocks.MECHANICAL_PISTON)
@@ -468,7 +487,8 @@ public class PonderIndex {
 			.add(AllBlocks.CLOCKWORK_BEARING)
 			.add(AllBlocks.ROPE_PULLEY)
 			.add(AllBlocks.GANTRY_CARRIAGE)
-			.add(AllBlocks.CART_ASSEMBLER);
+			.add(AllBlocks.CART_ASSEMBLER)
+			.add(AllBlocks.TRACK_STATION);
 
 		PonderRegistry.TAGS.forTag(PonderTag.CONTRAPTION_ASSEMBLY)
 			.add(AllBlocks.LINEAR_CHASSIS)
@@ -491,6 +511,7 @@ public class PonderIndex {
 			.add(AllBlocks.ANDESITE_FUNNEL)
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.SEATS.get(DyeColor.WHITE))
+			.add(AllBlocks.CONTROLS)
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)
