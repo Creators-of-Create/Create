@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 555",
+	"_": "Missing Localizations: 586",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2122,6 +2122,7 @@
 	"create.ponder.assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
 	"create.ponder.assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
 	"create.ponder.assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
 	"create.ponder.assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
@@ -2253,7 +2254,7 @@
 	"create.ponder.chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
 	"create.ponder.chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
 	"create.ponder.chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
-	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will visually re-appear",
+	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "シュートでの下方向へ運搬",
 	"create.ponder.chute.text_1": "シュートは、収納ブロックから垂直方向にアイテムを運搬できます",
@@ -2762,6 +2763,10 @@
 	"create.ponder.radial_chassis.text_8": "レンチを使って、シャーシの範囲の半径を正確に指定できます",
 	"create.ponder.radial_chassis.text_9": "どの粘着面とも繋がっていないブロックはくっつきません",
 
+	"create.ponder.redstone.header": "UNLOCALIZED: Signals & Redstone",
+	"create.ponder.redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
+	"create.ponder.redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+
 	"create.ponder.redstone_contact.header": "レッドストーンコンタクト",
 	"create.ponder.redstone_contact.text_1": "向かい合ったレッドストーンコンタクトは、レッドストーン信号を出力します",
 	"create.ponder.redstone_contact.text_2": "これは、片方のコンタクトがからくりの一部である場合でも同様です",
@@ -2786,6 +2791,14 @@
 	"create.ponder.rope_pulley_modes.header": "ローププーリーの動作モード",
 	"create.ponder.rope_pulley_modes.text_1": "プーリーの動きが止まると、移動した構造物はブロックに戻ります",
 	"create.ponder.rope_pulley_modes.text_2": "ブロックに戻らないように設定したり、動かし始めた場所でのみブロックに戻るように設定したりできます",
+
+	"create.ponder.rose_quartz_lamp.header": "UNLOCALIZED: Rose Quartz Lamps",
+	"create.ponder.rose_quartz_lamp.text_1": "UNLOCALIZED: Rose Quartz Lamps activate on a Redstone signal",
+	"create.ponder.rose_quartz_lamp.text_2": "UNLOCALIZED: They will continue to emit redstone power afterwards",
+	"create.ponder.rose_quartz_lamp.text_3": "UNLOCALIZED: When multiple lamps are arranged in a group...",
+	"create.ponder.rose_quartz_lamp.text_4": "UNLOCALIZED: ...activating a Lamp will focus the signal to it, deactivating all others",
+	"create.ponder.rose_quartz_lamp.text_5": "UNLOCALIZED: Comparators output based on the distance to a powered lamp",
+	"create.ponder.rose_quartz_lamp.text_6": "UNLOCALIZED: The Lamps can also be toggled manually using a Wrench",
 
 	"create.ponder.rotation_speed_controller.header": "回転速度コントローラーの使い方",
 	"create.ponder.rotation_speed_controller.text_1": "コントローラーは、側面の軸から上の大きな歯車に回転を伝達します",
@@ -2813,6 +2826,17 @@
 
 	"create.ponder.shaft_casing.header": "ケース入りシャフト",
 	"create.ponder.shaft_casing.text_1": "真鍮製、安山岩製ケーシングを使って、シャフトを装飾できます",
+
+	"create.ponder.signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
+	"create.ponder.signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
+	"create.ponder.signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
+	"create.ponder.signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
+	"create.ponder.signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
+	"create.ponder.signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
+	"create.ponder.signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
+	"create.ponder.signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
+	"create.ponder.signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "スマートシュートによるアイテムのフィルタリング",
 	"create.ponder.smart_chute.text_1": "スマートシュートは、垂直方向のシュートにフィルター機能を追加したものです",
@@ -2862,6 +2886,18 @@
 	"create.ponder.super_glue.text_3": "超粘着剤をオフハンドで持つと...",
 	"create.ponder.super_glue.text_4": "...設置したブロックは置いたブロックの面と接着されます",
 	"create.ponder.super_glue.text_5": "左クリックすれば超粘着剤を剥がせます",
+
+	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
+	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
+	"create.ponder.train_controls.text_2": "UNLOCALIZED: Once assembled, right-click the block to start driving",
+	"create.ponder.train_controls.text_3": "UNLOCALIZED: Accelerate and steer the Train using movement keybinds",
+	"create.ponder.train_controls.text_4": "UNLOCALIZED: If desired, the top speed can be fine-tuned using the mouse wheel",
+	"create.ponder.train_controls.text_5": "UNLOCALIZED: Hold space to approach a nearby Station",
+	"create.ponder.train_controls.text_6": "UNLOCALIZED: Trains can only be disassembled back into blocks at Stations",
+	"create.ponder.train_controls.text_7": "UNLOCALIZED: Assembled Whistles can be activated with the sprint key",
+	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
+
+	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
 
 	"create.ponder.valve_handle.header": "バルブハンドルによる回転力の生成",
 	"create.ponder.valve_handle.text_1": "バルブハンドルは手動で回転力を生み出す原動機です",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 889",
+	"_": "Missing Localizations: 920",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2122,6 +2122,7 @@
 	"create.ponder.assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
 	"create.ponder.assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
 	"create.ponder.assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
 	"create.ponder.assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
@@ -2253,7 +2254,7 @@
 	"create.ponder.chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
 	"create.ponder.chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
 	"create.ponder.chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
-	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will visually re-appear",
+	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "Transportando Objetos a través de Tolvoganes Verticales",
 	"create.ponder.chute.text_1": "Los tolvoganes pueden transportar artículos verticalmente desde y hacia los inventarios.",
@@ -2762,6 +2763,10 @@
 	"create.ponder.radial_chassis.text_8": "Usando una Llave Inglesa, se puede especificar un radio preciso para este chasis",
 	"create.ponder.radial_chassis.text_9": "Los bloques a los que no puede acceder ninguna cara adhesiva no se adhieren",
 
+	"create.ponder.redstone.header": "UNLOCALIZED: Signals & Redstone",
+	"create.ponder.redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
+	"create.ponder.redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+
 	"create.ponder.redstone_contact.header": "Contactos de Redstone",
 	"create.ponder.redstone_contact.text_1": "Los Contactos de Redstone  que estén uno frente al otro emitirán una señal de redstone.",
 	"create.ponder.redstone_contact.text_2": "Esto todavía se aplica cuando uno de ellos es parte de una contrapción en movimiento.",
@@ -2786,6 +2791,14 @@
 	"create.ponder.rope_pulley_modes.header": "Modos de Movimiento de las Poleas de Cuerda",
 	"create.ponder.rope_pulley_modes.text_1": "Siempre que las poleas dejan de moverse, la estructura movida se convierte en Bloques",
 	"create.ponder.rope_pulley_modes.text_2": "Puede configurarse que nunca vuelva a bloques, o que solo lo haga en la ubicación inicial",
+
+	"create.ponder.rose_quartz_lamp.header": "UNLOCALIZED: Rose Quartz Lamps",
+	"create.ponder.rose_quartz_lamp.text_1": "UNLOCALIZED: Rose Quartz Lamps activate on a Redstone signal",
+	"create.ponder.rose_quartz_lamp.text_2": "UNLOCALIZED: They will continue to emit redstone power afterwards",
+	"create.ponder.rose_quartz_lamp.text_3": "UNLOCALIZED: When multiple lamps are arranged in a group...",
+	"create.ponder.rose_quartz_lamp.text_4": "UNLOCALIZED: ...activating a Lamp will focus the signal to it, deactivating all others",
+	"create.ponder.rose_quartz_lamp.text_5": "UNLOCALIZED: Comparators output based on the distance to a powered lamp",
+	"create.ponder.rose_quartz_lamp.text_6": "UNLOCALIZED: The Lamps can also be toggled manually using a Wrench",
 
 	"create.ponder.rotation_speed_controller.header": "Usando el Controlador de Velocidad de Rotación",
 	"create.ponder.rotation_speed_controller.text_1": "Los Controladores de Vel. de Rotación transmiten la rotación desde su eje a un Engranaje Grande encima de ellos",
@@ -2813,6 +2826,17 @@
 
 	"create.ponder.shaft_casing.header": "Cubriendo Ejes",
 	"create.ponder.shaft_casing.text_1": "Puedes usar Cubiertas de Latón y Andesita para decorar tus Ejes",
+
+	"create.ponder.signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
+	"create.ponder.signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
+	"create.ponder.signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
+	"create.ponder.signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
+	"create.ponder.signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
+	"create.ponder.signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
+	"create.ponder.signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
+	"create.ponder.signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
+	"create.ponder.signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "Filtrando Objetos usando Tolvoganes Inteligentes",
 	"create.ponder.smart_chute.text_1": "Los Tolvoganes Inteligentes son conductos verticales con control adicional",
@@ -2862,6 +2886,18 @@
 	"create.ponder.super_glue.text_3": "Siempre que se sostenga La Gotita en la mano izquierda...",
 	"create.ponder.super_glue.text_4": "...los bloques añadidos se pegarán a la cara en la que se colocaron automáticamente",
 	"create.ponder.super_glue.text_5": "La Gotita se puede quitar con Click-Izquierdo",
+
+	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
+	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
+	"create.ponder.train_controls.text_2": "UNLOCALIZED: Once assembled, right-click the block to start driving",
+	"create.ponder.train_controls.text_3": "UNLOCALIZED: Accelerate and steer the Train using movement keybinds",
+	"create.ponder.train_controls.text_4": "UNLOCALIZED: If desired, the top speed can be fine-tuned using the mouse wheel",
+	"create.ponder.train_controls.text_5": "UNLOCALIZED: Hold space to approach a nearby Station",
+	"create.ponder.train_controls.text_6": "UNLOCALIZED: Trains can only be disassembled back into blocks at Stations",
+	"create.ponder.train_controls.text_7": "UNLOCALIZED: Assembled Whistles can be activated with the sprint key",
+	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
+
+	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
 
 	"create.ponder.valve_handle.header": "Generación Fuerza Rotacional mediante Válvulas de Cobre",
 	"create.ponder.valve_handle.text_1": "Los jugadores pueden usar las Válvulas para aplicar fuerza de rotación manualmente",

@@ -14,12 +14,16 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.foundation.ponder.element.AnimatedSceneElement;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.EntityElement;
@@ -165,7 +169,8 @@ public class SceneBuilder {
 	 * Use this in case you are not happy with the scale of the scene relative to
 	 * the overlay
 	 *
-	 * @param factor {@literal >}1 will make the scene appear larger, smaller otherwise
+	 * @param factor {@literal >}1 will make the scene appear larger, smaller
+	 *               otherwise
 	 */
 	public void scaleSceneView(float factor) {
 		scene.scaleFactor = factor;
@@ -186,10 +191,9 @@ public class SceneBuilder {
 	 * of the schematic's structure. Makes for a nice opener
 	 */
 	public void showBasePlate() {
-		world.showSection(
-			scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ()),
-				new Vec3i(scene.getBasePlateSize() - 1, 0, scene.getBasePlateSize() - 1)),
-			Direction.UP);
+		world.showSection(scene.getSceneBuildingUtil().select.cuboid(
+			new BlockPos(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ()),
+			new Vec3i(scene.getBasePlateSize() - 1, 0, scene.getBasePlateSize() - 1)), Direction.UP);
 	}
 
 	/**
@@ -282,8 +286,10 @@ public class SceneBuilder {
 
 		private void rotationIndicator(BlockPos pos, boolean direction) {
 			addInstruction(scene -> {
-				BlockState blockState = scene.getWorld().getBlockState(pos);
-				BlockEntity tileEntity = scene.getWorld().getBlockEntity(pos);
+				BlockState blockState = scene.getWorld()
+					.getBlockState(pos);
+				BlockEntity tileEntity = scene.getWorld()
+					.getBlockEntity(pos);
 
 				if (!(blockState.getBlock() instanceof KineticBlock))
 					return;
@@ -306,7 +312,8 @@ public class SceneBuilder {
 						.charAt(0));
 
 				for (int i = 0; i < 20; i++)
-					scene.getWorld().addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
+					scene.getWorld()
+						.addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
 			});
 		}
 
@@ -328,8 +335,8 @@ public class SceneBuilder {
 
 		public void createRedstoneParticles(BlockPos pos, int color, int amount) {
 			Vector3f rgb = new Color(color).asVectorF();
-			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos), Emitter.withinBlockSpace(
-				new DustParticleOptions(rgb, 1), Vec3.ZERO), amount, 2));
+			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos),
+				Emitter.withinBlockSpace(new DustParticleOptions(rgb, 1), Vec3.ZERO), amount, 2));
 		}
 
 	}
@@ -387,7 +394,7 @@ public class SceneBuilder {
 			addInstruction(new LineInstruction(color, start, end, duration, false));
 		}
 		
-		public void chaseLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
+		public void showBigLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
 			addInstruction(new LineInstruction(color, start, end, duration, true));
 		}
 
@@ -431,8 +438,7 @@ public class SceneBuilder {
 
 		public void rotateParrot(ElementLink<ParrotElement> link, double xRotation, double yRotation, double zRotation,
 			int duration) {
-			addInstruction(
-				AnimateParrotInstruction.rotate(link, new Vec3(xRotation, yRotation, zRotation), duration));
+			addInstruction(AnimateParrotInstruction.rotate(link, new Vec3(xRotation, yRotation, zRotation), duration));
 		}
 
 		public void moveParrot(ElementLink<ParrotElement> link, Vec3 offset, int duration) {
@@ -529,7 +535,8 @@ public class SceneBuilder {
 		}
 
 		public void restoreBlocks(Selection selection) {
-			addInstruction(scene -> scene.getWorld().restoreBlocks(selection));
+			addInstruction(scene -> scene.getWorld()
+				.restoreBlocks(selection));
 		}
 
 		public ElementLink<WorldSectionElement> makeSectionIndependent(Selection selection) {
@@ -775,7 +782,8 @@ public class SceneBuilder {
 
 		public <T extends BlockEntity> void modifyTileEntity(BlockPos position, Class<T> teType, Consumer<T> consumer) {
 			addInstruction(scene -> {
-				BlockEntity tileEntity = scene.getWorld().getBlockEntity(position);
+				BlockEntity tileEntity = scene.getWorld()
+					.getBlockEntity(position);
 				if (teType.isInstance(tileEntity))
 					consumer.accept(teType.cast(tileEntity));
 			});
@@ -812,6 +820,20 @@ public class SceneBuilder {
 				ConnectedInputHandler.toggleConnection(s.getWorld(), position1, position2);
 				s.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 			});
+		}
+
+		public void toggleControls(BlockPos position) {
+			cycleBlockProperty(position, ControlsBlock.VIRTUAL);
+		}
+		
+		public void animateTrainStation(BlockPos position, boolean trainPresent) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), StationTileEntity.class,
+				c -> c.putBoolean("ForceFlag", trainPresent));
+		}
+		
+		public void changeSignalState(BlockPos position, SignalState state) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), SignalTileEntity.class,
+				c -> NBTHelper.writeEnum(c, "State", state));
 		}
 
 	}

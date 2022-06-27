@@ -1581,9 +1581,11 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
-			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
+			s -> AssetLookup.partialBaseModel(c, p,
+				s.getValue(ControlsBlock.VIRTUAL) ? "virtual" : s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
 		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))
 		.onRegister(addInteractionBehaviour(new ControlsInteractionBehaviour()))
 		.lang("Train Controls")

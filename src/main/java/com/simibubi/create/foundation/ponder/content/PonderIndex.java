@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.ponder.content.fluid.PumpScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.SpoutScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrackObserverScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrackScenes;
+import com.simibubi.create.foundation.ponder.content.trains.TrainScenes;
+import com.simibubi.create.foundation.ponder.content.trains.TrainSignalScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainStationScenes;
 
 import net.minecraft.world.item.DyeColor;
@@ -296,6 +298,8 @@ public class PonderIndex {
 			.addStoryBoard("nixie_tube", RedstoneScenes::nixieTube);
 		HELPER.forComponents(AllBlocks.REDSTONE_LINK)
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
+		HELPER.forComponents(AllBlocks.ROSE_QUARTZ_LAMP)
+			.addStoryBoard("rose_quartz_lamp", RedstoneScenes2::roseQuartzLamp);
 
 		// Trains
 		HELPER.forComponents(AllBlocks.TRACK)
@@ -306,6 +310,17 @@ public class PonderIndex {
 		HELPER.forComponents(AllBlocks.TRACK_STATION)
 			.addStoryBoard("train_station/assembly", TrainStationScenes::assembly)
 			.addStoryBoard("train_station/schedule", TrainStationScenes::autoSchedule);
+
+		HELPER.forComponents(AllBlocks.TRACK_SIGNAL)
+			.addStoryBoard("train_signal/placement", TrainSignalScenes::placement)
+			.addStoryBoard("train_signal/signaling", TrainSignalScenes::signaling)
+			.addStoryBoard("train_signal/redstone", TrainSignalScenes::redstone);
+
+		HELPER.forComponents(AllItems.SCHEDULE)
+			.addStoryBoard("train_schedule", TrainScenes::schedule);
+
+		HELPER.forComponents(AllBlocks.CONTROLS)
+			.addStoryBoard("train_controls", TrainScenes::controls);
 
 		HELPER.forComponents(AllBlocks.TRACK_OBSERVER)
 			.addStoryBoard("train_observer", TrackObserverScenes::observe);

@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.ponder.content.trains;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -52,6 +51,7 @@ public class TrainStationScenes {
 		Selection train2 = util.select.fromTo(7, 2, 5, 2, 2, 7)
 			.substract(util.select.position(6, 2, 6))
 			.substract(util.select.position(3, 2, 6));
+		Selection train3 = util.select.fromTo(7, 2, 1, 3, 3, 3);
 
 		BlockPos stationPos = util.grid.at(11, 1, 3);
 		Vec3 marker = util.vector.topOf(11, 0, 6)
@@ -234,10 +234,11 @@ public class TrainStationScenes {
 			.text("Open the Station UI and confirm the Assembly process");
 		scene.idle(50);
 
+		scene.world.toggleControls(util.grid.at(10, 3, 6));
+		scene.world.toggleControls(util.grid.at(8, 3, 6));
 		scene.world.cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
 		scene.effects.indicateSuccess(stationPos);
-		scene.world.modifyTileNBT(util.select.position(stationPos), StationTileEntity.class,
-			c -> c.putBoolean("ForceFlag", true));
+		scene.world.animateTrainStation(stationPos, true);
 		scene.idle(20);
 
 		ElementLink<ParrotElement> birb =
@@ -245,8 +246,7 @@ public class TrainStationScenes {
 		scene.idle(15);
 		scene.special.movePointOfInterest(util.grid.at(18, 3, 6));
 		scene.idle(15);
-		scene.world.modifyTileNBT(util.select.position(stationPos), StationTileEntity.class,
-			c -> c.putBoolean("ForceFlag", false));
+		scene.world.animateTrainStation(stationPos, false);
 		scene.world.moveSection(controlsElement, util.vector.of(18, 0, 0), 70);
 		scene.world.moveSection(trainElement1, util.vector.of(18, 0, 0), 70);
 		scene.world.moveSection(trainElement2, util.vector.of(18, 0, 0), 70);
@@ -260,12 +260,43 @@ public class TrainStationScenes {
 		scene.world.hideIndependentSection(trainElement2, null);
 		scene.idle(20);
 
-		scene.overlay.showText(80)
+		scene.overlay.showText(70)
 			.pointAt(stationTop)
 			.placeNearTarget()
 			.attachKeyFrame()
 			.text("Trains can be disassembled back into blocks at stations only");
-		scene.idle(50);
+		scene.idle(60);
+
+		for (int i = 8; i >= 3; i--) {
+			scene.world.showSection(util.select.position(i, 1, 2), Direction.DOWN);
+			scene.idle(1);
+		}
+
+		scene.world.toggleControls(util.grid.at(5, 3, 2));
+		scene.idle(10);
+		ElementLink<WorldSectionElement> trainElement3 = scene.world.showIndependentSection(train3, Direction.DOWN);
+		scene.world.moveSection(trainElement3, util.vector.of(0, 0, 4), 0);
+		scene.idle(15);
+
+		Vec3 target = util.vector.topOf(util.grid.at(5, 3, 6));
+		scene.overlay.showControls(new InputWindowElement(target, Pointing.DOWN).rightClick()
+			.withWrench(), 75);
+		scene.idle(15);
+
+		scene.overlay.showText(70)
+			.pointAt(target)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.colored(PonderPalette.BLUE)
+			.text("Assembled Trains can be relocated to nearby Tracks using the Wrench");
+		scene.idle(60);
+
+		scene.overlay
+			.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(6, 0, 2)), Pointing.DOWN).rightClick()
+				.withWrench(), 15);
+		scene.idle(15);
+		scene.world.moveSection(trainElement3, util.vector.of(0, 0, -4), 5);
+
 	}
 
 	public static void autoSchedule(SceneBuilder scene, SceneBuildingUtil util) {
@@ -279,6 +310,8 @@ public class TrainStationScenes {
 			scene.world.showSection(util.select.position(i, 1, 6), Direction.DOWN);
 			scene.idle(1);
 		}
+
+		scene.world.toggleControls(util.grid.at(7, 3, 6));
 
 		scene.idle(4);
 		Selection redstone = util.select.fromTo(8, 1, 2, 8, 1, 1);
@@ -331,8 +364,7 @@ public class TrainStationScenes {
 		scene.special.moveParrot(birb, util.vector.of(4, 0, 0), 20);
 		scene.idle(20);
 
-		scene.world.modifyTileNBT(util.select.position(stationPos), StationTileEntity.class,
-			c -> c.putBoolean("ForceFlag", true));
+		scene.world.animateTrainStation(stationPos, true);
 		scene.world.toggleRedstonePower(redstone);
 		scene.effects.indicateRedstone(stationPos);
 		scene.idle(25);
@@ -345,8 +377,7 @@ public class TrainStationScenes {
 		scene.idle(90);
 
 		scene.world.hideSection(redstone, Direction.NORTH);
-		scene.world.modifyTileNBT(util.select.position(stationPos), StationTileEntity.class,
-			c -> c.putBoolean("ForceFlag", false));
+		scene.world.animateTrainStation(stationPos, false);
 		scene.world.moveSection(trainElement, util.vector.of(0, 1, 0), 5);
 		scene.special.moveParrot(birb, util.vector.of(0, 2, 0), 5);
 		scene.idle(7);
@@ -417,9 +448,7 @@ public class TrainStationScenes {
 
 		scene.world.createItemOnBelt(util.grid.at(11, 1, 3), Direction.DOWN, AllItems.SCHEDULE.asStack());
 		scene.idle(10);
-		scene.world.modifyTileNBT(util.select.position(stationPos), StationTileEntity.class,
-			c -> c.putBoolean("ForceFlag", true));
-
+		scene.world.animateTrainStation(stationPos, true);
 		scene.idle(10);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.topOf(stationPos), Pointing.DOWN).withItem(AllItems.SCHEDULE.asStack()),
@@ -443,8 +472,7 @@ public class TrainStationScenes {
 
 		scene.world.moveSection(trainElement, util.vector.of(8, 0, 0), 30);
 		scene.special.moveParrot(birb, util.vector.of(8, 0, 0), 30);
-		scene.world.modifyTileNBT(util.select.position(stationPos), StationTileEntity.class,
-			c -> c.putBoolean("ForceFlag", false));
+		scene.world.animateTrainStation(stationPos, false);
 		scene.idle(10);
 		scene.world.hideIndependentSection(trainElement, null);
 		scene.special.hideElement(birb, null);

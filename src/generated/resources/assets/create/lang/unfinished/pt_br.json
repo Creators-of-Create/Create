@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1386",
+	"_": "Missing Localizations: 1453",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2004,6 +2004,13 @@
 	"item.create.copper_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
 	"item.create.copper_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
+	"block.create.placard.tooltip": "UNLOCALIZED: PLACARD",
+	"block.create.placard.tooltip.summary": "UNLOCALIZED: _Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",
+	"block.create.placard.tooltip.condition1": "UNLOCALIZED: When R-Clicked with Item",
+	"block.create.placard.tooltip.behaviour1": "UNLOCALIZED: _Adds_ the held _item_ to the Placard. _Emits_ a brief _Redstone_ signal if a matching item was present already.",
+	"block.create.placard.tooltip.condition2": "UNLOCALIZED: When Punched",
+	"block.create.placard.tooltip.behaviour2": "UNLOCALIZED: _Removes_ the current _item_ in the frame.",
+
 	"block.create.flywheel.tooltip": "UNLOCALIZED: FLYWHEEL",
 	"block.create.flywheel.tooltip.summary": "UNLOCALIZED: _Embellish_ your _Machines_ with this imposing Wheel of Brass.",
 	"block.create.flywheel.tooltip.condition1": "UNLOCALIZED: When Powered by Kinetics",
@@ -2050,6 +2057,7 @@
 	"create.ponder.close": "UNLOCALIZED: Close",
 	"create.ponder.identify": "UNLOCALIZED: Identify",
 	"create.ponder.next": "UNLOCALIZED: Next Scene",
+	"create.ponder.next_up": "UNLOCALIZED: Next up:",
 	"create.ponder.previous": "UNLOCALIZED: Previous Scene",
 	"create.ponder.replay": "UNLOCALIZED: Replay",
 	"create.ponder.think_back": "UNLOCALIZED: Think Back",
@@ -2109,6 +2117,28 @@
 	"create.ponder.andesite_tunnel.text_2": "UNLOCALIZED: Whenever an Andesite Tunnel has connections to the sides...",
 	"create.ponder.andesite_tunnel.text_3": "UNLOCALIZED: ...they will split exactly one item off of any passing stacks",
 	"create.ponder.andesite_tunnel.text_4": "UNLOCALIZED: The remainder will continue on its path",
+
+	"create.ponder.assembly.header": "UNLOCALIZED: Assembling Trains",
+	"create.ponder.assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
+	"create.ponder.assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
+	"create.ponder.assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
+	"create.ponder.assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
+	"create.ponder.assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
+	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
+	"create.ponder.assembly.text_5": "UNLOCALIZED: Create new bogeys by using Train Casing on Tracks",
+	"create.ponder.assembly.text_6": "UNLOCALIZED: Click the track again to cycle between bogey designs",
+	"create.ponder.assembly.text_7": "UNLOCALIZED: Next, attach blocks to them with the help of chassis or super glue",
+	"create.ponder.assembly.text_8": "UNLOCALIZED: Every Train requires Train Controls on board",
+	"create.ponder.assembly.text_9": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
+
+	"create.ponder.auto_schedule.header": "UNLOCALIZED: Stations & Scheduling",
+	"create.ponder.auto_schedule.text_1": "UNLOCALIZED: Schedules can be used to provide drivers with a destination",
+	"create.ponder.auto_schedule.text_2": "UNLOCALIZED: Comparators will receive a signal whenever a Train is present",
+	"create.ponder.auto_schedule.text_3": "UNLOCALIZED: Mind that a Station can only be approached from the indicated direction",
+	"create.ponder.auto_schedule.text_4": "UNLOCALIZED: Stations can also be used to assign new Schedules automatically",
+	"create.ponder.auto_schedule.text_5": "UNLOCALIZED: The Schedule placed on a station will automatically copy itself to present trains",
+	"create.ponder.auto_schedule.text_6": "UNLOCALIZED: As opposed to manual scheduling, drivers will not take the item with them",
 
 	"create.ponder.basin.header": "UNLOCALIZED: Processing Items in the Basin",
 	"create.ponder.basin.text_1": "UNLOCALIZED: A Basin can hold Items and Fluids for Processing",
@@ -2218,6 +2248,13 @@
 	"create.ponder.chain_gearshift.text_4": "UNLOCALIZED: In both cases, Chain Drives in the row always run at 2x the speed of the Powered Gearshift",
 	"create.ponder.chain_gearshift.text_5": "UNLOCALIZED: Using analog signals, the ratio can be adjusted more precisely between 1 and 2",
 	"create.ponder.chain_gearshift.text_6": "UNLOCALIZED: 12 RPM",
+
+	"create.ponder.chunks.header": "UNLOCALIZED: Traversing unloaded Chunks",
+	"create.ponder.chunks.text_1": "UNLOCALIZED: Tracks stay functional outside of loaded chunks",
+	"create.ponder.chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
+	"create.ponder.chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
+	"create.ponder.chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
+	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "UNLOCALIZED: Transporting Items downward via Chutes",
 	"create.ponder.chute.text_1": "UNLOCALIZED: Chutes can transport items vertically from and to inventories",
@@ -2644,6 +2681,11 @@
 	"create.ponder.nixie_tube.text_2": "UNLOCALIZED: Using name tags edited with an anvil, custom text can be displayed",
 	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
+	"create.ponder.observe.header": "UNLOCALIZED: Detecting Trains",
+	"create.ponder.observe.text_1": "UNLOCALIZED: Select a Train Track then place the Observer nearby",
+	"create.ponder.observe.text_2": "UNLOCALIZED: The Observer will detect any Trains passing over the marker",
+	"create.ponder.observe.text_3": "UNLOCALIZED: Observers can be filtered to activate for matching cargo",
+
 	"create.ponder.piston_pole.header": "UNLOCALIZED: Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "UNLOCALIZED: Without attached Poles, a Mechanical Piston cannot move",
 	"create.ponder.piston_pole.text_2": "UNLOCALIZED: The Length of pole added at its back determines the Extension Range",
@@ -2721,6 +2763,10 @@
 	"create.ponder.radial_chassis.text_8": "UNLOCALIZED: Using a Wrench, a precise Radius can be specified for this chassis",
 	"create.ponder.radial_chassis.text_9": "UNLOCALIZED: Blocks not reachable by any sticky face will not attach",
 
+	"create.ponder.redstone.header": "UNLOCALIZED: Signals & Redstone",
+	"create.ponder.redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
+	"create.ponder.redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+
 	"create.ponder.redstone_contact.header": "UNLOCALIZED: Redstone Contacts",
 	"create.ponder.redstone_contact.text_1": "UNLOCALIZED: Redstone Contacts facing each other will emit a redstone signal",
 	"create.ponder.redstone_contact.text_2": "UNLOCALIZED: This still applies when one of them is part of a moving Contraption",
@@ -2745,6 +2791,14 @@
 	"create.ponder.rope_pulley_modes.header": "UNLOCALIZED: Movement Modes of the Rope Pulley",
 	"create.ponder.rope_pulley_modes.text_1": "UNLOCALIZED: Whenever Pulleys stop moving, the moved structure reverts to blocks",
 	"create.ponder.rope_pulley_modes.text_2": "UNLOCALIZED: It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.rose_quartz_lamp.header": "UNLOCALIZED: Rose Quartz Lamps",
+	"create.ponder.rose_quartz_lamp.text_1": "UNLOCALIZED: Rose Quartz Lamps activate on a Redstone signal",
+	"create.ponder.rose_quartz_lamp.text_2": "UNLOCALIZED: They will continue to emit redstone power afterwards",
+	"create.ponder.rose_quartz_lamp.text_3": "UNLOCALIZED: When multiple lamps are arranged in a group...",
+	"create.ponder.rose_quartz_lamp.text_4": "UNLOCALIZED: ...activating a Lamp will focus the signal to it, deactivating all others",
+	"create.ponder.rose_quartz_lamp.text_5": "UNLOCALIZED: Comparators output based on the distance to a powered lamp",
+	"create.ponder.rose_quartz_lamp.text_6": "UNLOCALIZED: The Lamps can also be toggled manually using a Wrench",
 
 	"create.ponder.rotation_speed_controller.header": "UNLOCALIZED: Using the Rotational Speed Controller",
 	"create.ponder.rotation_speed_controller.text_1": "UNLOCALIZED: Rot. Speed Controllers relay rotation from their axis to a Large Cogwheel above them",
@@ -2772,6 +2826,17 @@
 
 	"create.ponder.shaft_casing.header": "UNLOCALIZED: Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
+	"create.ponder.signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
+	"create.ponder.signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
+	"create.ponder.signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
+	"create.ponder.signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
+	"create.ponder.signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
+	"create.ponder.signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
+	"create.ponder.signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
+	"create.ponder.signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "UNLOCALIZED: Filtering Items using Smart Chutes",
 	"create.ponder.smart_chute.text_1": "UNLOCALIZED: Smart Chutes are vertical chutes with additional control",
@@ -2821,6 +2886,18 @@
 	"create.ponder.super_glue.text_3": "UNLOCALIZED: Whenever Super Glue is held in the off-hand...",
 	"create.ponder.super_glue.text_4": "UNLOCALIZED: ...added blocks will be glued to the face they were placed on automatically",
 	"create.ponder.super_glue.text_5": "UNLOCALIZED: Super Glue can be removed with Left-Click",
+
+	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
+	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
+	"create.ponder.train_controls.text_2": "UNLOCALIZED: Once assembled, right-click the block to start driving",
+	"create.ponder.train_controls.text_3": "UNLOCALIZED: Accelerate and steer the Train using movement keybinds",
+	"create.ponder.train_controls.text_4": "UNLOCALIZED: If desired, the top speed can be fine-tuned using the mouse wheel",
+	"create.ponder.train_controls.text_5": "UNLOCALIZED: Hold space to approach a nearby Station",
+	"create.ponder.train_controls.text_6": "UNLOCALIZED: Trains can only be disassembled back into blocks at Stations",
+	"create.ponder.train_controls.text_7": "UNLOCALIZED: Assembled Whistles can be activated with the sprint key",
+	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
+
+	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
 
 	"create.ponder.valve_handle.header": "UNLOCALIZED: Generating Rotational Force using Valve Handles",
 	"create.ponder.valve_handle.text_1": "UNLOCALIZED: Valve Handles can be used by players to apply rotational force manually",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 947",
+	"_": "Missing Localizations: 978",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2122,6 +2122,7 @@
 	"create.ponder.assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
 	"create.ponder.assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
 	"create.ponder.assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
 	"create.ponder.assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
@@ -2253,7 +2254,7 @@
 	"create.ponder.chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
 	"create.ponder.chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
 	"create.ponder.chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
-	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will visually re-appear",
+	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "使用滑道向下輸送物品",
 	"create.ponder.chute.text_1": "滑道可以在兩個垂直的儲物空間中輸送物品",
@@ -2762,6 +2763,10 @@
 	"create.ponder.radial_chassis.text_8": "使用扳手可以精確指定底盤的影響範圍",
 	"create.ponder.radial_chassis.text_9": "黏性面一側的不可及方塊不會被黏著",
 
+	"create.ponder.redstone.header": "UNLOCALIZED: Signals & Redstone",
+	"create.ponder.redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
+	"create.ponder.redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+
 	"create.ponder.redstone_contact.header": "接觸式紅石訊號發生器",
 	"create.ponder.redstone_contact.text_1": "當兩個接觸式紅石訊號發生器面對面時，它們會發出紅石訊號",
 	"create.ponder.redstone_contact.text_2": "並且，若有一方位於運動裝置上，此特性也能正常生效",
@@ -2786,6 +2791,14 @@
 	"create.ponder.rope_pulley_modes.header": "繩索滑輪的運動模式",
 	"create.ponder.rope_pulley_modes.text_1": "當繩索滑輪停止運動時，它所附屬的移動結構便會方塊化",
 	"create.ponder.rope_pulley_modes.text_2": "你可以調整整個結構永不方塊化，或者僅在結構的初始位置方塊化",
+
+	"create.ponder.rose_quartz_lamp.header": "UNLOCALIZED: Rose Quartz Lamps",
+	"create.ponder.rose_quartz_lamp.text_1": "UNLOCALIZED: Rose Quartz Lamps activate on a Redstone signal",
+	"create.ponder.rose_quartz_lamp.text_2": "UNLOCALIZED: They will continue to emit redstone power afterwards",
+	"create.ponder.rose_quartz_lamp.text_3": "UNLOCALIZED: When multiple lamps are arranged in a group...",
+	"create.ponder.rose_quartz_lamp.text_4": "UNLOCALIZED: ...activating a Lamp will focus the signal to it, deactivating all others",
+	"create.ponder.rose_quartz_lamp.text_5": "UNLOCALIZED: Comparators output based on the distance to a powered lamp",
+	"create.ponder.rose_quartz_lamp.text_6": "UNLOCALIZED: The Lamps can also be toggled manually using a Wrench",
 
 	"create.ponder.rotation_speed_controller.header": "使用轉速控制器",
 	"create.ponder.rotation_speed_controller.text_1": "轉速控制器將動能從其轉軸傳遞至它上方的大齒輪",
@@ -2813,6 +2826,17 @@
 
 	"create.ponder.shaft_casing.header": "包裹傳動軸",
 	"create.ponder.shaft_casing.text_1": "黃銅及安山岩機殼可以用來裝飾傳動軸",
+
+	"create.ponder.signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
+	"create.ponder.signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
+	"create.ponder.signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
+	"create.ponder.signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
+	"create.ponder.signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
+	"create.ponder.signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
+	"create.ponder.signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
+	"create.ponder.signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
+	"create.ponder.signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "使用智慧滑道來過濾物品",
 	"create.ponder.smart_chute.text_1": "智慧滑道是一種可以被控制的滑道",
@@ -2862,6 +2886,18 @@
 	"create.ponder.super_glue.text_3": "當強力膠在副手時...",
 	"create.ponder.super_glue.text_4": "...新放置的方塊會自動被黏附在所放置方塊的面上",
 	"create.ponder.super_glue.text_5": "左擊可以清除強力膠",
+
+	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
+	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
+	"create.ponder.train_controls.text_2": "UNLOCALIZED: Once assembled, right-click the block to start driving",
+	"create.ponder.train_controls.text_3": "UNLOCALIZED: Accelerate and steer the Train using movement keybinds",
+	"create.ponder.train_controls.text_4": "UNLOCALIZED: If desired, the top speed can be fine-tuned using the mouse wheel",
+	"create.ponder.train_controls.text_5": "UNLOCALIZED: Hold space to approach a nearby Station",
+	"create.ponder.train_controls.text_6": "UNLOCALIZED: Trains can only be disassembled back into blocks at Stations",
+	"create.ponder.train_controls.text_7": "UNLOCALIZED: Assembled Whistles can be activated with the sprint key",
+	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
+
+	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
 
 	"create.ponder.valve_handle.header": "使用閥門手輪產生動能",
 	"create.ponder.valve_handle.text_1": "玩家可以手動使用閥門手輪來產生動能",

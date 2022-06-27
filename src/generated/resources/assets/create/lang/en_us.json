@@ -2121,6 +2121,7 @@
 	"create.ponder.assembly.text_1": "Select a Train Track then place the Station nearby",
 	"create.ponder.assembly.text_10": "Open the Station UI and confirm the Assembly process",
 	"create.ponder.assembly.text_11": "Trains can be disassembled back into blocks at stations only",
+	"create.ponder.assembly.text_12": "Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.assembly.text_2": "Stations are the Waypoints of your Track Network",
 	"create.ponder.assembly.text_3": "To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.assembly.text_4": "During Assembly no scheduled trains will approach this station",
@@ -2252,7 +2253,7 @@
 	"create.ponder.chunks.text_2": "Trains will travel through inactive sections of the world without issue",
 	"create.ponder.chunks.text_3": "They will still stop at stations or red signals",
 	"create.ponder.chunks.text_4": "However, Drills and other on-board machines will not operate",
-	"create.ponder.chunks.text_5": "Once near a Player, the train will visually re-appear",
+	"create.ponder.chunks.text_5": "Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "Transporting Items downward via Chutes",
 	"create.ponder.chute.text_1": "Chutes can transport items vertically from and to inventories",
@@ -2761,6 +2762,10 @@
 	"create.ponder.radial_chassis.text_8": "Using a Wrench, a precise Radius can be specified for this chassis",
 	"create.ponder.radial_chassis.text_9": "Blocks not reachable by any sticky face will not attach",
 
+	"create.ponder.redstone.header": "Signals & Redstone",
+	"create.ponder.redstone.text_1": "Signals can be forced red by a redstone signal",
+	"create.ponder.redstone.text_2": "Reversely, red signals emit a comparator output",
+
 	"create.ponder.redstone_contact.header": "Redstone Contacts",
 	"create.ponder.redstone_contact.text_1": "Redstone Contacts facing each other will emit a redstone signal",
 	"create.ponder.redstone_contact.text_2": "This still applies when one of them is part of a moving Contraption",
@@ -2785,6 +2790,14 @@
 	"create.ponder.rope_pulley_modes.header": "Movement Modes of the Rope Pulley",
 	"create.ponder.rope_pulley_modes.text_1": "Whenever Pulleys stop moving, the moved structure reverts to blocks",
 	"create.ponder.rope_pulley_modes.text_2": "It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.rose_quartz_lamp.header": "Rose Quartz Lamps",
+	"create.ponder.rose_quartz_lamp.text_1": "Rose Quartz Lamps activate on a Redstone signal",
+	"create.ponder.rose_quartz_lamp.text_2": "They will continue to emit redstone power afterwards",
+	"create.ponder.rose_quartz_lamp.text_3": "When multiple lamps are arranged in a group...",
+	"create.ponder.rose_quartz_lamp.text_4": "...activating a Lamp will focus the signal to it, deactivating all others",
+	"create.ponder.rose_quartz_lamp.text_5": "Comparators output based on the distance to a powered lamp",
+	"create.ponder.rose_quartz_lamp.text_6": "The Lamps can also be toggled manually using a Wrench",
 
 	"create.ponder.rotation_speed_controller.header": "Using the Rotational Speed Controller",
 	"create.ponder.rotation_speed_controller.text_1": "Rot. Speed Controllers relay rotation from their axis to a Large Cogwheel above them",
@@ -2812,6 +2825,17 @@
 
 	"create.ponder.shaft_casing.header": "Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.signaling.header": "Collision Prevention with Signals",
+	"create.ponder.signaling.text_1": "Train Signals divide a track into segments",
+	"create.ponder.signaling.text_2": "If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.signaling.text_3": "Thus, each Segment will contain only one Train at a time",
+	"create.ponder.signaling.text_4": "A second Signal mode is available via the Wrench",
+	"create.ponder.signaling.text_5": "Segments of a brass signal usually lead into standard signals",
+	"create.ponder.signaling.text_6": "This special Signal can stop trains under a second condition",
+	"create.ponder.signaling.text_7": "It will stop Trains, which, upon entering...",
+	"create.ponder.signaling.text_8": "...would not be able to leave the Segment immediately",
+	"create.ponder.signaling.text_9": "This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "Filtering Items using Smart Chutes",
 	"create.ponder.smart_chute.text_1": "Smart Chutes are vertical chutes with additional control",
@@ -2861,6 +2885,18 @@
 	"create.ponder.super_glue.text_3": "Whenever Super Glue is held in the off-hand...",
 	"create.ponder.super_glue.text_4": "...added blocks will be glued to the face they were placed on automatically",
 	"create.ponder.super_glue.text_5": "Super Glue can be removed with Left-Click",
+
+	"create.ponder.train_controls.header": "Controlling Trains",
+	"create.ponder.train_controls.text_1": "Train Controls are required on every train contraption",
+	"create.ponder.train_controls.text_2": "Once assembled, right-click the block to start driving",
+	"create.ponder.train_controls.text_3": "Accelerate and steer the Train using movement keybinds",
+	"create.ponder.train_controls.text_4": "If desired, the top speed can be fine-tuned using the mouse wheel",
+	"create.ponder.train_controls.text_5": "Hold space to approach a nearby Station",
+	"create.ponder.train_controls.text_6": "Trains can only be disassembled back into blocks at Stations",
+	"create.ponder.train_controls.text_7": "Assembled Whistles can be activated with the sprint key",
+	"create.ponder.train_controls.text_8": "Sneak or click again to stop controlling the Train",
+
+	"create.ponder.train_schedule.header": "Using Train Schedules",
 
 	"create.ponder.valve_handle.header": "Generating Rotational Force using Valve Handles",
 	"create.ponder.valve_handle.text_1": "Valve Handles can be used by players to apply rotational force manually",

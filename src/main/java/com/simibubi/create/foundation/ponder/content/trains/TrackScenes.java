@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.ponder.content.trains;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -273,6 +272,8 @@ public class TrackScenes {
 			scene.world.showSection(util.select.position(4, 1, i), Direction.DOWN);
 			scene.idle(2);
 		}
+		
+		scene.world.toggleControls(util.grid.at(4, 3, 3));
 
 		scene.idle(15);
 		scene.overlay.showText(60)
@@ -325,7 +326,7 @@ public class TrackScenes {
 		scene.idle(25);
 
 		ElementLink<WorldSectionElement> s1 =
-			scene.world.showIndependentSection(util.select.fromTo(5, 2, 1, 3, 3, 5), Direction.NORTH);
+			scene.world.showIndependentSection(util.select.fromTo(5, 2, 1, 3, 3, 5), null);
 		scene.world.rotateSection(s1, 0, 180, 0, 0);
 		scene.world.moveSection(s1, util.vector.of(0, 0, 3.5f), 0);
 		scene.world.moveSection(s1, util.vector.of(0, 0, -3.5f), 18);
@@ -360,7 +361,8 @@ public class TrackScenes {
 		Selection train = util.select.fromTo(6, 2, 3, 2, 3, 5);
 		Selection track = util.select.fromTo(7, 1, 4, 37, 1, 4);
 
-		scene.world.modifyTileNBT(vStation, StationTileEntity.class, c -> c.putBoolean("ForceFlag", true));
+		scene.world.animateTrainStation(util.grid.at(7, 1, 1), true);
+		scene.world.toggleControls(util.grid.at(4, 3, 4));
 
 		for (int i = 6; i >= 2; i--) {
 			scene.world.showSectionAndMerge(util.select.position(i, 1, 4), Direction.DOWN, stationTrackElement);
@@ -389,7 +391,7 @@ public class TrackScenes {
 		scene.idle(60);
 
 		scene.idle(30);
-		scene.world.modifyTileNBT(vStation, StationTileEntity.class, c -> c.putBoolean("ForceFlag", false));
+		scene.world.animateTrainStation(util.grid.at(7, 1, 1), false);
 		scene.world.moveSection(trackElement, util.vector.of(12, 0, 0), 120);
 		scene.world.moveSection(stationElement, util.vector.of(12, 0, 0), 120);
 		scene.world.moveSection(stationTrackElement, util.vector.of(12, 0, 0), 120);
@@ -451,9 +453,9 @@ public class TrackScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 2, 4), Direction.WEST))
 			.placeNearTarget()
 			.attachKeyFrame()
-			.text("Once near a Player, the train will visually re-appear");
+			.text("Once near a Player, the train will re-appear");
 		scene.idle(30);
-		scene.world.modifyTileNBT(dStation, StationTileEntity.class, c -> c.putBoolean("ForceFlag", true));
+		scene.world.animateTrainStation(util.grid.at(1, 1, 1), true);
 		scene.idle(30);
 	}
 

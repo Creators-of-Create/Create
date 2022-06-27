@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 555",
+	"_": "Missing Localizations: 586",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2122,6 +2122,7 @@
 	"create.ponder.assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
 	"create.ponder.assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
 	"create.ponder.assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
 	"create.ponder.assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
@@ -2253,7 +2254,7 @@
 	"create.ponder.chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
 	"create.ponder.chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
 	"create.ponder.chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
-	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will visually re-appear",
+	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "슈트를 이용해 아이템을 아래로 옮기기",
 	"create.ponder.chute.text_1": "슈트는 보관함에 있는 아이템을 수직으로 옮깁니다.",
@@ -2762,6 +2763,10 @@
 	"create.ponder.radial_chassis.text_8": "렌치룰 이용하여, 섀시의 부착 반지름을 조절할 수 있습니다.",
 	"create.ponder.radial_chassis.text_9": "접착면 반지름 밖의 블록은 붙지 않습니다.",
 
+	"create.ponder.redstone.header": "UNLOCALIZED: Signals & Redstone",
+	"create.ponder.redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
+	"create.ponder.redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+
 	"create.ponder.redstone_contact.header": "동형 감지기",
 	"create.ponder.redstone_contact.text_1": "서로 마주보는 동형 감지기는 레드스톤 신호를 발생시킵니다.",
 	"create.ponder.redstone_contact.text_2": "어느 한쪽이 움직이는 장치의 일부라도 동일하게 작동합니다.",
@@ -2786,6 +2791,14 @@
 	"create.ponder.rope_pulley_modes.header": "밧줄 도르래의 이동 설정",
 	"create.ponder.rope_pulley_modes.text_1": "도르래가 움직임을 멈추면, 움직인 구조물은 블록으로 바뀝니다.",
 	"create.ponder.rope_pulley_modes.text_2": "블록으로 바뀌지 않게 하거나, 시작지점에서만 바뀌도록 설정할 수 있습니다.",
+
+	"create.ponder.rose_quartz_lamp.header": "UNLOCALIZED: Rose Quartz Lamps",
+	"create.ponder.rose_quartz_lamp.text_1": "UNLOCALIZED: Rose Quartz Lamps activate on a Redstone signal",
+	"create.ponder.rose_quartz_lamp.text_2": "UNLOCALIZED: They will continue to emit redstone power afterwards",
+	"create.ponder.rose_quartz_lamp.text_3": "UNLOCALIZED: When multiple lamps are arranged in a group...",
+	"create.ponder.rose_quartz_lamp.text_4": "UNLOCALIZED: ...activating a Lamp will focus the signal to it, deactivating all others",
+	"create.ponder.rose_quartz_lamp.text_5": "UNLOCALIZED: Comparators output based on the distance to a powered lamp",
+	"create.ponder.rose_quartz_lamp.text_6": "UNLOCALIZED: The Lamps can also be toggled manually using a Wrench",
 
 	"create.ponder.rotation_speed_controller.header": "회전 속도 컨트롤러 사용하기",
 	"create.ponder.rotation_speed_controller.text_1": "회전 속도 컨트롤러는 회전을 위 톱니바퀴로 회전을 전달합니다.",
@@ -2813,6 +2826,17 @@
 
 	"create.ponder.shaft_casing.header": "축에 케이스 씌우기",
 	"create.ponder.shaft_casing.text_1": "황동 케이스나 안산암 케이스로 축을 장식할 수 있습니다.",
+
+	"create.ponder.signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
+	"create.ponder.signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
+	"create.ponder.signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
+	"create.ponder.signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
+	"create.ponder.signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
+	"create.ponder.signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
+	"create.ponder.signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
+	"create.ponder.signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
+	"create.ponder.signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "스마트 슈트을 통한 아이템 필터",
 	"create.ponder.smart_chute.text_1": "스마트 슈트은 필터 기능이 있는 슈트입니다.",
@@ -2862,6 +2886,18 @@
 	"create.ponder.super_glue.text_3": "강력 접착제를 다른 손에 들고...",
 	"create.ponder.super_glue.text_4": "...블록을 설치하면 자동으로 블록을 붙일 수 있습니다.",
 	"create.ponder.super_glue.text_5": "왼쪽 버튼을 누르면 강력 접착제를 제거할 수 있습니다.",
+
+	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
+	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
+	"create.ponder.train_controls.text_2": "UNLOCALIZED: Once assembled, right-click the block to start driving",
+	"create.ponder.train_controls.text_3": "UNLOCALIZED: Accelerate and steer the Train using movement keybinds",
+	"create.ponder.train_controls.text_4": "UNLOCALIZED: If desired, the top speed can be fine-tuned using the mouse wheel",
+	"create.ponder.train_controls.text_5": "UNLOCALIZED: Hold space to approach a nearby Station",
+	"create.ponder.train_controls.text_6": "UNLOCALIZED: Trains can only be disassembled back into blocks at Stations",
+	"create.ponder.train_controls.text_7": "UNLOCALIZED: Assembled Whistles can be activated with the sprint key",
+	"create.ponder.train_controls.text_8": "UNLOCALIZED: Sneak or click again to stop controlling the Train",
+
+	"create.ponder.train_schedule.header": "UNLOCALIZED: Using Train Schedules",
 
 	"create.ponder.valve_handle.header": "밸브 손잡이로 동력 생산하기",
 	"create.ponder.valve_handle.text_1": "밸브 손잡이를 사용하면 수동으로 동력을 생성할 수 있습니다.",

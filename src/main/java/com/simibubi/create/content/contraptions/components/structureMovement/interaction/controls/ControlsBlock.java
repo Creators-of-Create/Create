@@ -23,16 +23,18 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class ControlsBlock extends HorizontalDirectionalBlock implements IWrenchable, ProperWaterloggedBlock {
 
 	public static final BooleanProperty OPEN = BooleanProperty.create("open");
+	public static final BooleanProperty VIRTUAL = BooleanProperty.create("virtual");
 
 	public ControlsBlock(Properties p_54120_) {
 		super(p_54120_);
 		registerDefaultState(defaultBlockState().setValue(OPEN, false)
-			.setValue(WATERLOGGED, false));
+			.setValue(WATERLOGGED, false)
+			.setValue(VIRTUAL, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
-		super.createBlockStateDefinition(pBuilder.add(FACING, OPEN, WATERLOGGED));
+		super.createBlockStateDefinition(pBuilder.add(FACING, OPEN, WATERLOGGED, VIRTUAL));
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class ControlsBlock extends HorizontalDirectionalBlock implements IWrench
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState.setValue(OPEN, pLevel instanceof ContraptionWorld);
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
