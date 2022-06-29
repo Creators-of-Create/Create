@@ -164,12 +164,12 @@ public class TrainStationScenes {
 			.add(util.select.position(6, 2, 6))
 			.add(util.select.position(3, 2, 6)), 40);
 
-		scene.overlay.showText(120)
+		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(3, 2, 6))
 			.placeNearTarget()
 			.attachKeyFrame()
 			.colored(PonderPalette.GREEN)
-			.text("Next, attach blocks to them with the help of chassis or super glue");
+			.text("Attach blocks with the help of Super Glue");
 		scene.idle(35);
 
 		scene.world.showSectionAndMerge(train1, Direction.DOWN, trainElement1);

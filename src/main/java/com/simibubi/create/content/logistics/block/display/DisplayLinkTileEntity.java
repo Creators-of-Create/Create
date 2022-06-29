@@ -47,6 +47,11 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		
+		if (isVirtual()) {
+			glow.tickChaser();
+			return;
+		}
 
 		if (activeSource == null)
 			return;

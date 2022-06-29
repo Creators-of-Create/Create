@@ -71,8 +71,7 @@ public class CartAssemblerScenes {
 			.placeNearTarget();
 		scene.idle(80);
 
-		ElementLink<MinecartElement> cart =
-			scene.special.createCart(util.vector.topOf(2, 0, 4), 90, Minecart::new);
+		ElementLink<MinecartElement> cart = scene.special.createCart(util.vector.topOf(2, 0, 4), 90, Minecart::new);
 		scene.world.showSection(util.select.position(assemblerPos.above()), Direction.DOWN);
 		scene.idle(10);
 		scene.special.moveCart(cart, util.vector.of(0, 0, -2), 20);
@@ -114,12 +113,20 @@ public class CartAssemblerScenes {
 
 		scene.world.destroyBlock(assemblerPos.above());
 		scene.idle(5);
+		scene.world.replaceBlocks(util.select.fromTo(3, 3, 2, 1, 4, 2), Blocks.OAK_PLANKS.defaultBlockState(), false);
 		ElementLink<WorldSectionElement> contraption =
 			scene.world.showIndependentSection(util.select.fromTo(1, 4, 2, 3, 3, 2), Direction.DOWN);
 		scene.world.moveSection(contraption, util.vector.of(0, -1, 0), 0);
 		scene.idle(10);
 		scene.world.showSectionAndMerge(util.select.position(3, 3, 1), Direction.SOUTH, contraption);
+
 		scene.idle(15);
+		scene.overlay.showOutline(PonderPalette.GREEN, "glue", util.select.position(1, 3, 2)
+			.add(util.select.fromTo(3, 2, 2, 1, 2, 2))
+			.add(util.select.position(3, 2, 1)), 40);
+		scene.overlay.showControls(new InputWindowElement(util.vector.centerOf(util.grid.at(3, 2, 2)), Pointing.RIGHT)
+			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+
 		scene.effects.superGlue(util.grid.at(3, 2, 1), Direction.SOUTH, true);
 		scene.overlay.showText(80)
 			.attachKeyFrame()

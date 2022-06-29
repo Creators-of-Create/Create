@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 974",
+	"_": "Missing Localizations: 1005",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2130,7 +2130,7 @@
 	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
 	"create.ponder.assembly.text_5": "UNLOCALIZED: Create new bogeys by using Train Casing on Tracks",
 	"create.ponder.assembly.text_6": "UNLOCALIZED: Click the track again to cycle between bogey designs",
-	"create.ponder.assembly.text_7": "UNLOCALIZED: Next, attach blocks to them with the help of chassis or super glue",
+	"create.ponder.assembly.text_7": "UNLOCALIZED: Attach blocks with the help of Super Glue",
 	"create.ponder.assembly.text_8": "UNLOCALIZED: Every Train requires Train Controls on board",
 	"create.ponder.assembly.text_9": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
 
@@ -2364,10 +2364,19 @@
 	"create.ponder.display_board.text_6": "UNLOCALIZED: Lines can be reset by clicking them with an empty hand",
 
 	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
-	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
-	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
-	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
-	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links can used to visualise dynamic information",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First, right-click the target display...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ...then attach it to the block to read from",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Open the Interface to select and configure what is sent",
+	"create.ponder.display_link.text_5": "UNLOCALIZED: The display will now receive information from the link",
+	"create.ponder.display_link.text_6": "UNLOCALIZED: Not every block can act as a source",
+	"create.ponder.display_link.text_7": "UNLOCALIZED: Each compatible block provides unique information",
+	"create.ponder.display_link.text_8": "UNLOCALIZED: The Display Link can work with several different displays",
+
+	"create.ponder.display_link_redstone.header": "UNLOCALIZED: Redstone Control",
+	"create.ponder.display_link_redstone.text_1": "UNLOCALIZED: When powered by Redstone, Display Links stop sending updates",
+	"create.ponder.display_link_redstone.text_2": "UNLOCALIZED: Once unpowered, the Timer is reset and new info is sent immediately",
+	"create.ponder.display_link_redstone.text_3": "UNLOCALIZED: Signals emitted from the source do not affect the Link",
 
 	"create.ponder.empty_blaze_burner.header": "Używanie pustych płomiennych palników",
 	"create.ponder.empty_blaze_burner.text_1": "Kliknij PPM na Płomyka trzymają w ręce pusty palnik, aby uwięzić go w środku",
@@ -2879,6 +2888,29 @@
 	"create.ponder.stabilized_bearings.text_3": "Znowu, łożysko przyłączy do siebie bloki znajdujące się przed nim",
 	"create.ponder.stabilized_bearings.text_4": "Rezultatem tego będzie to, że pod-maszyna będzie utrzymywała się w tej samej pozycji",
 
+	"create.ponder.steam_engine.header": "UNLOCALIZED: Setting up Steam Engines",
+	"create.ponder.steam_engine.text_1": "UNLOCALIZED: Steam Engines can be placed on a Fluid Tank",
+	"create.ponder.steam_engine.text_10": "UNLOCALIZED: Lvl 4",
+	"create.ponder.steam_engine.text_11": "UNLOCALIZED: 4 Engines",
+	"create.ponder.steam_engine.text_12": "UNLOCALIZED: Lvl 8",
+	"create.ponder.steam_engine.text_13": "UNLOCALIZED: 8 Engines",
+	"create.ponder.steam_engine.text_2": "UNLOCALIZED: Clicking the engine with a Shaft creates the Kinetic Output",
+	"create.ponder.steam_engine.text_3": "UNLOCALIZED: With sufficient Heat, Water and Boiler space...",
+	"create.ponder.steam_engine.text_4": "UNLOCALIZED: ...they will generate Rotational Force",
+	"create.ponder.steam_engine.text_5": "UNLOCALIZED: The minimal setup requires 4 Fluid Tanks",
+	"create.ponder.steam_engine.text_6": "UNLOCALIZED: With the help of Blaze Burners, the power output can be increased",
+	"create.ponder.steam_engine.text_7": "UNLOCALIZED: Higher power levels require more Water, Size and Heat",
+	"create.ponder.steam_engine.text_8": "UNLOCALIZED: The boiler's current power level can be inspected with Engineer's Goggles",
+	"create.ponder.steam_engine.text_9": "UNLOCALIZED: With each added power level, an additional Engine can output at full capacity",
+
+	"create.ponder.steam_whistle.header": "UNLOCALIZED: Setting up Steam Whistles",
+	"create.ponder.steam_whistle.text_1": "UNLOCALIZED: Steam Whistles can be placed on a Fluid Tank",
+	"create.ponder.steam_whistle.text_2": "UNLOCALIZED: If the tank receives sufficient heat...",
+	"create.ponder.steam_whistle.text_3": "UNLOCALIZED: ...the Whistle will play a note when activated",
+	"create.ponder.steam_whistle.text_4": "UNLOCALIZED: Use a Whistle item on the block to lower its pitch",
+	"create.ponder.steam_whistle.text_5": "UNLOCALIZED: Cycle between three different octaves using a Wrench",
+	"create.ponder.steam_whistle.text_6": "UNLOCALIZED: Engineer's Goggles can help to find out the current pitch of a Whistle",
+
 	"create.ponder.sticker.header": "Przyczepianie bloków z użyciem przyklejacza",
 	"create.ponder.sticker.text_1": "Przyklejacze są idealne do kontrolowanego przez Redstone przyczepiania bloków",
 	"create.ponder.sticker.text_2": "Po otrzymaniu sygnału, zmieni on swoje ułożenie",
@@ -2896,6 +2928,7 @@
 	"create.ponder.super_glue.text_3": "Kiedy Super Glue jest trzymany w drugiej ręce...",
 	"create.ponder.super_glue.text_4": "...stawiane bloki będą automatycznie przyklejane",
 	"create.ponder.super_glue.text_5": "Super Glue może zostać usunięty lewym kliknięciem",
+	"create.ponder.super_glue.text_6": "UNLOCALIZED: Blocks hanging on others usually do not require glue",
 
 	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
 	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
@@ -2965,6 +2998,7 @@
 	"create.ponder.windmill_source.text_4": "Ilość żagli ustala prędkość obrotu",
 	"create.ponder.windmill_source.text_5": "Użyj klucza, aby dostosować kierunek obrotu",
 	"create.ponder.windmill_source.text_6": "Kliknij PPM na łożysko, aby zatrzymać obrót i zmodyfikować dołączoną strukturę",
+	"create.ponder.windmill_source.text_7": "UNLOCALIZED: Right-click the Bearing anytime to stop and edit the Structure again",
 
 	"create.ponder.windmill_structure.header": "Wiatraki",
 	"create.ponder.windmill_structure.text_1": "Każda struktura jest uznawana za wiatrak w momencie, kiedy ma w sobie co najmniej 8 żaglo-podobnych bloków",

@@ -1,15 +1,19 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
@@ -68,16 +72,22 @@ public class GantryScenes {
 
 		scene.world.showSectionAndMerge(util.select.layersFrom(3)
 			.substract(planks), Direction.DOWN, gantry);
+		scene.world.replaceBlocks(util.select.fromTo(5, 3, 2, 3, 4, 2), Blocks.OAK_PLANKS.defaultBlockState(), false);
 		scene.idle(10);
 		scene.world.showSectionAndMerge(planks, Direction.SOUTH, gantry);
-		scene.idle(10);
-		scene.effects.superGlue(util.grid.at(5, 3, 1), Direction.SOUTH, true);
 
+		scene.idle(10);
+		scene.overlay.showOutline(PonderPalette.GREEN, "glue", util.select.position(3, 4, 2)
+			.add(util.select.fromTo(3, 3, 2, 5, 3, 2))
+			.add(util.select.position(5, 3, 1)), 40);
+		scene.overlay.showControls(new InputWindowElement(util.vector.centerOf(util.grid.at(3, 3, 2)), Pointing.UP)
+			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.effects.superGlue(util.grid.at(5, 3, 1), Direction.SOUTH, true);
 		scene.idle(20);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
 			.sharedText("movement_anchors")
-			.pointAt(gantryTop)
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 3, 2), Direction.WEST))
 			.placeNearTarget();
 		scene.idle(80);
 

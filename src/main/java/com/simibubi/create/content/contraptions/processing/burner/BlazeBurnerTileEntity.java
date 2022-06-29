@@ -73,7 +73,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 		if (level.isClientSide) {
 			tickAnimation();
-			spawnParticles(getHeatLevelFromBlock(), 1);
+			if (!isVirtual())
+				spawnParticles(getHeatLevelFromBlock(), 1);
 			return;
 		}
 

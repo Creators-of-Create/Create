@@ -18,7 +18,7 @@ public class SharedText {
 		add("rpm16_source", "Source: 16 RPM");
 		add("rpm32", "32 RPM");
 
-		add("movement_anchors", "With the help of Chassis or Super Glue, larger structures can be moved.");
+		add("movement_anchors", "With the help of Super Glue, larger structures can be moved.");
 		add("behaviour_modify_wrench", "This behaviour can be modified using a Wrench");
 		add("storage_on_contraption", "Inventories attached to the Contraption will pick up their drops automatically");
 	}

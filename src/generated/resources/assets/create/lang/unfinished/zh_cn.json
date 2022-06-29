@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 599",
+	"_": "Missing Localizations: 630",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2130,7 +2130,7 @@
 	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
 	"create.ponder.assembly.text_5": "UNLOCALIZED: Create new bogeys by using Train Casing on Tracks",
 	"create.ponder.assembly.text_6": "UNLOCALIZED: Click the track again to cycle between bogey designs",
-	"create.ponder.assembly.text_7": "UNLOCALIZED: Next, attach blocks to them with the help of chassis or super glue",
+	"create.ponder.assembly.text_7": "UNLOCALIZED: Attach blocks with the help of Super Glue",
 	"create.ponder.assembly.text_8": "UNLOCALIZED: Every Train requires Train Controls on board",
 	"create.ponder.assembly.text_9": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
 
@@ -2364,10 +2364,19 @@
 	"create.ponder.display_board.text_6": "UNLOCALIZED: Lines can be reset by clicking them with an empty hand",
 
 	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
-	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links should be assigned a target before they are placed",
-	"create.ponder.display_link.text_2": "UNLOCALIZED: First select a target by Right- Clicking while holding the Link ...",
-	"create.ponder.display_link.text_3": "UNLOCALIZED: ... then select the source by placing the Link against it",
-	"create.ponder.display_link.text_4": "UNLOCALIZED: Replacing Targets or Sources at a later time is possible as well",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links can used to visualise dynamic information",
+	"create.ponder.display_link.text_2": "UNLOCALIZED: First, right-click the target display...",
+	"create.ponder.display_link.text_3": "UNLOCALIZED: ...then attach it to the block to read from",
+	"create.ponder.display_link.text_4": "UNLOCALIZED: Open the Interface to select and configure what is sent",
+	"create.ponder.display_link.text_5": "UNLOCALIZED: The display will now receive information from the link",
+	"create.ponder.display_link.text_6": "UNLOCALIZED: Not every block can act as a source",
+	"create.ponder.display_link.text_7": "UNLOCALIZED: Each compatible block provides unique information",
+	"create.ponder.display_link.text_8": "UNLOCALIZED: The Display Link can work with several different displays",
+
+	"create.ponder.display_link_redstone.header": "UNLOCALIZED: Redstone Control",
+	"create.ponder.display_link_redstone.text_1": "UNLOCALIZED: When powered by Redstone, Display Links stop sending updates",
+	"create.ponder.display_link_redstone.text_2": "UNLOCALIZED: Once unpowered, the Timer is reset and new info is sent immediately",
+	"create.ponder.display_link_redstone.text_3": "UNLOCALIZED: Signals emitted from the source do not affect the Link",
 
 	"create.ponder.empty_blaze_burner.header": "使用空的烈焰人燃烧室",
 	"create.ponder.empty_blaze_burner.text_1": "手持空的烈焰人燃烧室右击烈焰人来抓取烈焰人",
@@ -2879,6 +2888,29 @@
 	"create.ponder.stabilized_bearings.text_3": "跟默认的一样，动力轴承会黏着它前方的方块",
 	"create.ponder.stabilized_bearings.text_4": "这种情况下，它所黏着的子装置的垂直朝向也不会改变",
 
+	"create.ponder.steam_engine.header": "UNLOCALIZED: Setting up Steam Engines",
+	"create.ponder.steam_engine.text_1": "UNLOCALIZED: Steam Engines can be placed on a Fluid Tank",
+	"create.ponder.steam_engine.text_10": "UNLOCALIZED: Lvl 4",
+	"create.ponder.steam_engine.text_11": "UNLOCALIZED: 4 Engines",
+	"create.ponder.steam_engine.text_12": "UNLOCALIZED: Lvl 8",
+	"create.ponder.steam_engine.text_13": "UNLOCALIZED: 8 Engines",
+	"create.ponder.steam_engine.text_2": "UNLOCALIZED: Clicking the engine with a Shaft creates the Kinetic Output",
+	"create.ponder.steam_engine.text_3": "UNLOCALIZED: With sufficient Heat, Water and Boiler space...",
+	"create.ponder.steam_engine.text_4": "UNLOCALIZED: ...they will generate Rotational Force",
+	"create.ponder.steam_engine.text_5": "UNLOCALIZED: The minimal setup requires 4 Fluid Tanks",
+	"create.ponder.steam_engine.text_6": "UNLOCALIZED: With the help of Blaze Burners, the power output can be increased",
+	"create.ponder.steam_engine.text_7": "UNLOCALIZED: Higher power levels require more Water, Size and Heat",
+	"create.ponder.steam_engine.text_8": "UNLOCALIZED: The boiler's current power level can be inspected with Engineer's Goggles",
+	"create.ponder.steam_engine.text_9": "UNLOCALIZED: With each added power level, an additional Engine can output at full capacity",
+
+	"create.ponder.steam_whistle.header": "UNLOCALIZED: Setting up Steam Whistles",
+	"create.ponder.steam_whistle.text_1": "UNLOCALIZED: Steam Whistles can be placed on a Fluid Tank",
+	"create.ponder.steam_whistle.text_2": "UNLOCALIZED: If the tank receives sufficient heat...",
+	"create.ponder.steam_whistle.text_3": "UNLOCALIZED: ...the Whistle will play a note when activated",
+	"create.ponder.steam_whistle.text_4": "UNLOCALIZED: Use a Whistle item on the block to lower its pitch",
+	"create.ponder.steam_whistle.text_5": "UNLOCALIZED: Cycle between three different octaves using a Wrench",
+	"create.ponder.steam_whistle.text_6": "UNLOCALIZED: Engineer's Goggles can help to find out the current pitch of a Whistle",
+
 	"create.ponder.sticker.header": "使用黏着器来黏附方块",
 	"create.ponder.sticker.text_1": "你可以用红石信号来控制黏着器的行为",
 	"create.ponder.sticker.text_2": "当接受红石信号时，黏着器会黏着前方的方块",
@@ -2896,6 +2928,7 @@
 	"create.ponder.super_glue.text_3": "当强力胶在副手时……",
 	"create.ponder.super_glue.text_4": "……新放置的方块会自动被黏附在所放置方块的面上",
 	"create.ponder.super_glue.text_5": "左击可以清除强力胶",
+	"create.ponder.super_glue.text_6": "UNLOCALIZED: Blocks hanging on others usually do not require glue",
 
 	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
 	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
@@ -2965,6 +2998,7 @@
 	"create.ponder.windmill_source.text_4": "风帆方块的数量决定了它的旋转速度",
 	"create.ponder.windmill_source.text_5": "使用扳手可以调整风车的旋转方向",
 	"create.ponder.windmill_source.text_6": "任何时候右击轴承，都可以将其停止，这样你就能再次修改风车的结构",
+	"create.ponder.windmill_source.text_7": "UNLOCALIZED: Right-click the Bearing anytime to stop and edit the Structure again",
 
 	"create.ponder.windmill_structure.header": "风车装置",
 	"create.ponder.windmill_structure.text_1": "任何有至少 8 个类风帆方块的结构，都被视为一个有效的风车",

@@ -327,9 +327,16 @@ public class PonderIndex {
 
 		// Display Link
 		HELPER.forComponents(AllBlocks.DISPLAY_LINK)
-			.addStoryBoard("display/link", DisplayScenes::link);
+			.addStoryBoard("display_link", DisplayScenes::link)
+			.addStoryBoard("display_link_redstone", DisplayScenes::redstone);
 		HELPER.forComponents(AllBlocks.DISPLAY_BOARD)
 			.addStoryBoard("display_board", DisplayScenes::board);
+
+		// Steam
+		HELPER.forComponents(AllBlocks.STEAM_WHISTLE)
+			.addStoryBoard("steam_whistle", SteamScenes::whistle);
+		HELPER.forComponents(AllBlocks.STEAM_ENGINE)
+			.addStoryBoard("steam_engine", SteamScenes::engine);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (REGISTER_DEBUG_SCENES)
