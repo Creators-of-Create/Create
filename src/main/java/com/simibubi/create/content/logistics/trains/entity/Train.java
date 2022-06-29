@@ -413,7 +413,7 @@ public class Train {
 	public IEdgePointListener frontSignalListener() {
 		return (distance, couple) -> {
 
-			if (couple.getFirst() instanceof GlobalStation station) {
+			if (couple.getFirst()instanceof GlobalStation station) {
 				if (!station.canApproachFrom(couple.getSecond()
 					.getSecond()) || navigation.destination != station)
 					return false;
@@ -425,12 +425,12 @@ public class Train {
 				return true;
 			}
 
-			if (couple.getFirst() instanceof TrackObserver observer) {
+			if (couple.getFirst()instanceof TrackObserver observer) {
 				occupiedObservers.add(observer.getId());
 				return false;
 			}
 
-			if (!(couple.getFirst() instanceof SignalBoundary signal))
+			if (!(couple.getFirst()instanceof SignalBoundary signal))
 				return false;
 			if (navigation.waitingForSignal != null && navigation.waitingForSignal.getFirst()
 				.equals(signal.getId())) {
@@ -480,12 +480,12 @@ public class Train {
 
 	public IEdgePointListener backSignalListener() {
 		return (distance, couple) -> {
-			if (couple.getFirst() instanceof TrackObserver observer) {
+			if (couple.getFirst()instanceof TrackObserver observer) {
 				occupiedObservers.remove(observer.getId());
 				cachedObserverFiltering.remove(observer.getId());
 				return false;
 			}
-			if (!(couple.getFirst() instanceof SignalBoundary signal))
+			if (!(couple.getFirst()instanceof SignalBoundary signal))
 				return false;
 			UUID groupId = signal.getGroup(couple.getSecond()
 				.getFirst());
@@ -716,7 +716,7 @@ public class Train {
 				return false;
 			level = entity.level;
 
-			if (entity.getContraption() instanceof CarriageContraption cc)
+			if (entity.getContraption()instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
 			entity.setPos(Vec3
 				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
@@ -732,7 +732,7 @@ public class Train {
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
 			BlockPos tilePos = currentStation.getTilePos();
-			if (level.getBlockEntity(tilePos) instanceof StationTileEntity ste)
+			if (level.getBlockEntity(tilePos)instanceof StationTileEntity ste)
 				ste.lastDisassembledTrainName = name.copy();
 		}
 
@@ -982,11 +982,11 @@ public class Train {
 
 		forEachTravellingPointBackwards((tp, d) -> {
 			signalScout.travel(graph, d, signalScout.follow(tp), (distance, couple) -> {
-				if (couple.getFirst() instanceof TrackObserver observer) {
+				if (couple.getFirst()instanceof TrackObserver observer) {
 					occupiedObservers.add(observer.getId());
 					return false;
 				}
-				if (!(couple.getFirst() instanceof SignalBoundary signal))
+				if (!(couple.getFirst()instanceof SignalBoundary signal))
 					return false;
 				couple.getSecond()
 					.map(signal::getGroup)
@@ -1194,7 +1194,7 @@ public class Train {
 			if (dimensional == null)
 				return;
 			CarriageContraptionEntity entity = dimensional.entity.get();
-			if (entity == null || !(entity.getContraption() instanceof CarriageContraption otherCC))
+			if (entity == null || !(entity.getContraption()instanceof CarriageContraption otherCC))
 				break;
 			Pair<Boolean, Integer> first = otherCC.soundQueue.getFirstWhistle(entity);
 			if (first != null) {
@@ -1202,6 +1202,17 @@ public class Train {
 				honkPitch = first.getSecond();
 			}
 		}
+	}
+
+	public float distanceToLocationSqr(Level level, Vec3 location) {
+		float distance = Float.MAX_VALUE;
+		for (Carriage carriage : carriages) {
+			DimensionalCarriageEntity dce = carriage.getDimensionalIfPresent(level.dimension());
+			if (dce == null || dce.positionAnchor == null)
+				continue;
+			distance = Math.min(distance, (float) dce.positionAnchor.distanceToSqr(location));
+		}
+		return distance;
 	}
 
 }

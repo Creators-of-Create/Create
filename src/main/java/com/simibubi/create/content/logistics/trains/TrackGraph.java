@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -463,6 +464,17 @@ public class TrackGraph {
 			.hasPoints())
 			return false;
 		return connections.put(node2, edge) == null;
+	}
+
+	public float distanceToLocationSqr(Level level, Vec3 location) {
+		float nearest = Float.MAX_VALUE;
+		for (TrackNodeLocation tnl : nodes.keySet()) {
+			if (!Objects.equals(tnl.dimension, level.dimension()))
+				continue;
+			nearest = Math.min(nearest, (float) tnl.getLocation()
+				.distanceToSqr(location));
+		}
+		return nearest;
 	}
 
 	public void deferIntersectionUpdate(TrackEdge edge) {

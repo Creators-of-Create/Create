@@ -223,13 +223,14 @@ public class GlobalRailwayManager {
 
 		for (Iterator<Train> iterator = waitingTrains.iterator(); iterator.hasNext();) {
 			Train train = iterator.next();
-			
+
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
+				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
-			
+
 			if (train.navigation.waitingForSignal != null)
 				continue;
 			movingTrains.add(train);
@@ -238,20 +239,20 @@ public class GlobalRailwayManager {
 
 		for (Iterator<Train> iterator = movingTrains.iterator(); iterator.hasNext();) {
 			Train train = iterator.next();
-			
+
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
+				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
-			
+
 			if (train.navigation.waitingForSignal == null)
 				continue;
 			waitingTrains.add(train);
 			iterator.remove();
 		}
-		
-		
+
 	}
 
 	public void tickSignalOverlay() {

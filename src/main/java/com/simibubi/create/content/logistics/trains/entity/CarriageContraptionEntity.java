@@ -157,7 +157,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	public boolean isLocalCoordWithin(BlockPos localPos, int min, int max) {
-		if (!(getContraption() instanceof CarriageContraption cc))
+		if (!(getContraption()instanceof CarriageContraption cc))
 			return false;
 		Direction facing = cc.getAssemblyDirection();
 		Axis axis = facing.getClockWise()
@@ -266,6 +266,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriageData.approach(this, carriage, 1f / getType().updateInterval());
 
+		if (!Create.RAILWAYS.sided(null).trains.containsKey(carriage.train.id)) {
+			discard();
+			return;
+		}
 		if (!carriage.train.derailed)
 			carriage.updateContraptionAnchors();
 

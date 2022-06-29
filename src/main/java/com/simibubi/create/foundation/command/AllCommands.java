@@ -29,6 +29,7 @@ public class AllCommands {
 				.then(DumpRailwaysCommand.register())
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
+				.then(KillTrainCommand.register())
 				.then(CouplingCommand.register())
 				.then(ConfigCommand.register())
 				.then(PonderCommand.register())
