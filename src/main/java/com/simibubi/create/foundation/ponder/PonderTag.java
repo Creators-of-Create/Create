@@ -76,7 +76,8 @@ public class PonderTag implements ScreenElement {
 				"Components which can be selected as inputs or outputs to the Mechanical Arm"),
 
 		TRAIN_RELATED = create("train_related").item(AllBlocks.TRACK.get())
-			.defaultLang("Railway Equipment", "Components used in the construction or management of Train Contraptions"),
+			.defaultLang("Railway Equipment", "Components used in the construction or management of Train Contraptions")
+			.addToIndex(),
 
 		DISPLAY_SOURCES = create("display_sources").item(AllBlocks.DISPLAY_LINK.get(), true, false)
 			.item(AllBlocks.DISPLAY_LINK.get(), false, true)

@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrackObserverScenes {
 
 	public static void observe(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("observe", "Detecting Trains");
+		scene.title("track_observer", "Detecting Trains");
 		scene.configureBasePlate(1, 1, 9);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);

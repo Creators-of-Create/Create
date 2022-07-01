@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1010",
+	"_": "Missing Localizations: 1016",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2120,20 +2120,6 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.assembly.header": "UNLOCALIZED: Assembling Trains",
-	"create.ponder.assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
-	"create.ponder.assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
-	"create.ponder.assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
-	"create.ponder.assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
-	"create.ponder.assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
-	"create.ponder.assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
-	"create.ponder.assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
-	"create.ponder.assembly.text_5": "UNLOCALIZED: Create new bogeys by using Train Casing on Tracks",
-	"create.ponder.assembly.text_6": "UNLOCALIZED: Click the track again to cycle between bogey designs",
-	"create.ponder.assembly.text_7": "UNLOCALIZED: Attach blocks with the help of Super Glue",
-	"create.ponder.assembly.text_8": "UNLOCALIZED: Every Train requires Train Controls on board",
-	"create.ponder.assembly.text_9": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
-
 	"create.ponder.auto_schedule.header": "UNLOCALIZED: Stations & Scheduling",
 	"create.ponder.auto_schedule.text_1": "UNLOCALIZED: Schedules can be used to provide drivers with a destination",
 	"create.ponder.auto_schedule.text_2": "UNLOCALIZED: Comparators will receive a signal whenever a Train is present",
@@ -2250,13 +2236,6 @@
 	"create.ponder.chain_gearshift.text_4": "В обоих случаях Цепные приводы в ряду всегда вращаются с 2x скоростью активированного Цепного механизма",
 	"create.ponder.chain_gearshift.text_5": "Используя аналоговые сигналы, это умножение может быть настроено более точно между 1 и 2",
 	"create.ponder.chain_gearshift.text_6": "12 об./мин.",
-
-	"create.ponder.chunks.header": "UNLOCALIZED: Traversing unloaded Chunks",
-	"create.ponder.chunks.text_1": "UNLOCALIZED: Tracks stay functional outside of loaded chunks",
-	"create.ponder.chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
-	"create.ponder.chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
-	"create.ponder.chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
-	"create.ponder.chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
 
 	"create.ponder.chute.header": "Транспортировке предметов вниз через Желоба",
 	"create.ponder.chute.text_1": "Желоба могут транспортировать предметы вертикально из и в инвентари",
@@ -2700,24 +2679,9 @@
 	"create.ponder.nixie_tube.text_2": "С помощью бирок, отредактированных на наковальне, вы можете отобразить любой текст.",
 	"create.ponder.nixie_tube.text_3": "Щелкните ПКМ с красителем, чтобы изменить цвет их дисплея",
 
-	"create.ponder.observe.header": "UNLOCALIZED: Detecting Trains",
-	"create.ponder.observe.text_1": "UNLOCALIZED: Select a Train Track then place the Observer nearby",
-	"create.ponder.observe.text_2": "UNLOCALIZED: The Observer will detect any Trains passing over the marker",
-	"create.ponder.observe.text_3": "UNLOCALIZED: Observers can be filtered to activate for matching cargo",
-
 	"create.ponder.piston_pole.header": "Удлинителях Поршня",
 	"create.ponder.piston_pole.text_1": "Без присоединённых Удлинителей, Механический поршень не может двигаться",
 	"create.ponder.piston_pole.text_2": "Длина стержня, добавленного к его задней части, определяет Диапазон выдвижения.",
-
-	"create.ponder.placement.header": "UNLOCALIZED: Placing Train Tracks",
-	"create.ponder.placement.text_1": "UNLOCALIZED: A new type of rail designed for Train Contraptions",
-	"create.ponder.placement.text_2": "UNLOCALIZED: To place rows of track in bulk, click on an existing track",
-	"create.ponder.placement.text_3": "UNLOCALIZED: Then place or select a second track",
-	"create.ponder.placement.text_4": "UNLOCALIZED: Tracks can also be placed as turns or slopes",
-	"create.ponder.placement.text_5": "UNLOCALIZED: When connecting, tracks will try to make each turn equally sized",
-	"create.ponder.placement.text_6": "UNLOCALIZED: Holding the sprint key while connecting...",
-	"create.ponder.placement.text_7": "UNLOCALIZED: ...will create the longest fitting bend instead",
-	"create.ponder.placement.text_8": "UNLOCALIZED: Materials in the off-hand will be paved under tracks automatically",
 
 	"create.ponder.portable_fluid_interface.header": "Портативном жидкостном интерфейсе на штуковинах",
 	"create.ponder.portable_fluid_interface.text_1": "Жидкостные баки на движущихся штуковинах не могут быть доступны ни каким трубам",
@@ -2741,11 +2705,6 @@
 
 	"create.ponder.portable_storage_interface_redstone.header": "Управлении редстоуном",
 	"create.ponder.portable_storage_interface_redstone.text_1": "Редстоун сигнал предотвратит включение стационарного интерфейса",
-
-	"create.ponder.portal.header": "UNLOCALIZED: Tracks and the Nether",
-	"create.ponder.portal.text_1": "UNLOCALIZED: Tracks placed up against a nether portal...",
-	"create.ponder.portal.text_2": "UNLOCALIZED: ...will attempt to create a paired track on the other side",
-	"create.ponder.portal.text_3": "UNLOCALIZED: Trains on this track are now able to travel across dimensions",
 
 	"create.ponder.powered_latch.header": "Управлении сигналами при помощи Питаемого рычага",
 	"create.ponder.powered_latch.text_1": "Питаемый рычаг - управляемый редстоуном рычаг",
@@ -2781,10 +2740,6 @@
 	"create.ponder.radial_chassis.text_7": "он присоединит все достижимые блоки в пределах радиуса на этом слое",
 	"create.ponder.radial_chassis.text_8": "При помощи ключа можно указать точный радиус для этого шасси",
 	"create.ponder.radial_chassis.text_9": "Блоки не достижимые ни одной липкой гранью не прикрепятся",
-
-	"create.ponder.redstone.header": "UNLOCALIZED: Signals & Redstone",
-	"create.ponder.redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
-	"create.ponder.redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
 
 	"create.ponder.redstone_contact.header": "Контактах редстоун сигнала",
 	"create.ponder.redstone_contact.text_1": "Контакты редстоун сигнала направленные друг на друга будут излучать редстоун сигнал",
@@ -2845,17 +2800,6 @@
 
 	"create.ponder.shaft_casing.header": "Обрамлении Валов",
 	"create.ponder.shaft_casing.text_1": "Латунный или андезитовый корпус можно использовать для декорации Валов",
-
-	"create.ponder.signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
-	"create.ponder.signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
-	"create.ponder.signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
-	"create.ponder.signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
-	"create.ponder.signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
-	"create.ponder.signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
-	"create.ponder.signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
-	"create.ponder.signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
-	"create.ponder.signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
-	"create.ponder.signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.smart_chute.header": "Фильтрации предметов при помощи Умных желобов",
 	"create.ponder.smart_chute.text_1": "Умные желоба - вертикальные желоба с дополнительным контролем",
@@ -2930,6 +2874,47 @@
 	"create.ponder.super_glue.text_5": "Супер-клей можно удалить левым кликом",
 	"create.ponder.super_glue.text_6": "UNLOCALIZED: Blocks hanging on others usually do not require glue",
 
+	"create.ponder.track_chunks.header": "UNLOCALIZED: Traversing unloaded Chunks",
+	"create.ponder.track_chunks.text_1": "UNLOCALIZED: Tracks stay functional outside of loaded chunks",
+	"create.ponder.track_chunks.text_2": "UNLOCALIZED: Trains will travel through inactive sections of the world without issue",
+	"create.ponder.track_chunks.text_3": "UNLOCALIZED: They will still stop at stations or red signals",
+	"create.ponder.track_chunks.text_4": "UNLOCALIZED: However, Drills and other on-board machines will not operate",
+	"create.ponder.track_chunks.text_5": "UNLOCALIZED: Once near a Player, the train will re-appear",
+
+	"create.ponder.track_observer.header": "UNLOCALIZED: Detecting Trains",
+	"create.ponder.track_observer.text_1": "UNLOCALIZED: Select a Train Track then place the Observer nearby",
+	"create.ponder.track_observer.text_2": "UNLOCALIZED: The Observer will detect any Trains passing over the marker",
+	"create.ponder.track_observer.text_3": "UNLOCALIZED: Observers can be filtered to activate for matching cargo",
+
+	"create.ponder.track_placement.header": "UNLOCALIZED: Placing Train Tracks",
+	"create.ponder.track_placement.text_1": "UNLOCALIZED: A new type of rail designed for Train Contraptions",
+	"create.ponder.track_placement.text_2": "UNLOCALIZED: To place rows of track in bulk, click on an existing track",
+	"create.ponder.track_placement.text_3": "UNLOCALIZED: Then place or select a second track",
+	"create.ponder.track_placement.text_4": "UNLOCALIZED: Tracks can also be placed as turns or slopes",
+	"create.ponder.track_placement.text_5": "UNLOCALIZED: When connecting, tracks will try to make each turn equally sized",
+	"create.ponder.track_placement.text_6": "UNLOCALIZED: Holding the sprint key while connecting...",
+	"create.ponder.track_placement.text_7": "UNLOCALIZED: ...will create the longest fitting bend instead",
+	"create.ponder.track_placement.text_8": "UNLOCALIZED: Materials in the off-hand will be paved under tracks automatically",
+
+	"create.ponder.track_portal.header": "UNLOCALIZED: Tracks and the Nether",
+	"create.ponder.track_portal.text_1": "UNLOCALIZED: Tracks placed up against a nether portal...",
+	"create.ponder.track_portal.text_2": "UNLOCALIZED: ...will attempt to create a paired track on the other side",
+	"create.ponder.track_portal.text_3": "UNLOCALIZED: Trains on this track are now able to travel across dimensions",
+
+	"create.ponder.train_assembly.header": "UNLOCALIZED: Assembling Trains",
+	"create.ponder.train_assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
+	"create.ponder.train_assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
+	"create.ponder.train_assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.train_assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
+	"create.ponder.train_assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
+	"create.ponder.train_assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
+	"create.ponder.train_assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
+	"create.ponder.train_assembly.text_5": "UNLOCALIZED: Create new bogeys by using Train Casing on Tracks",
+	"create.ponder.train_assembly.text_6": "UNLOCALIZED: Click the track again to cycle between bogey designs",
+	"create.ponder.train_assembly.text_7": "UNLOCALIZED: Attach blocks with the help of Super Glue",
+	"create.ponder.train_assembly.text_8": "UNLOCALIZED: Every Train requires Train Controls on board",
+	"create.ponder.train_assembly.text_9": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
+
 	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
 	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",
 	"create.ponder.train_controls.text_2": "UNLOCALIZED: Once assembled, right-click the block to start driving",
@@ -2947,6 +2932,28 @@
 	"create.ponder.train_schedule.text_4": "UNLOCALIZED: Any mob or blaze burner sitting in front of Train Controls is an eligible conductor",
 	"create.ponder.train_schedule.text_5": "UNLOCALIZED: Creatures on a lead can be given their seat more conveniently",
 	"create.ponder.train_schedule.text_6": "UNLOCALIZED: Schedules can be retrieved from Drivers at any moment",
+
+	"create.ponder.train_signal_placement.header": "UNLOCALIZED: Placing Train Signals",
+	"create.ponder.train_signal_placement.text_1": "UNLOCALIZED: Select a Train Track then place the Signal nearby",
+	"create.ponder.train_signal_placement.text_2": "UNLOCALIZED: Signals control the flow of Trains not driven by players",
+	"create.ponder.train_signal_placement.text_3": "UNLOCALIZED: Scheduled Trains will never cross signals in the opposite direction",
+	"create.ponder.train_signal_placement.text_4": "UNLOCALIZED: ...unless a second signal is added facing the opposite way.",
+	"create.ponder.train_signal_placement.text_5": "UNLOCALIZED: Nixie tubes can be attached to make a signal's lights more visible",
+
+	"create.ponder.train_signal_redstone.header": "UNLOCALIZED: Signals & Redstone",
+	"create.ponder.train_signal_redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
+	"create.ponder.train_signal_redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+
+	"create.ponder.train_signal_signaling.header": "UNLOCALIZED: Collision Prevention with Signals",
+	"create.ponder.train_signal_signaling.text_1": "UNLOCALIZED: Train Signals divide a track into segments",
+	"create.ponder.train_signal_signaling.text_2": "UNLOCALIZED: If a Segment is occupied, no other Trains will be allowed entry",
+	"create.ponder.train_signal_signaling.text_3": "UNLOCALIZED: Thus, each Segment will contain only one Train at a time",
+	"create.ponder.train_signal_signaling.text_4": "UNLOCALIZED: A second Signal mode is available via the Wrench",
+	"create.ponder.train_signal_signaling.text_5": "UNLOCALIZED: Segments of a brass signal usually lead into standard signals",
+	"create.ponder.train_signal_signaling.text_6": "UNLOCALIZED: This special Signal can stop trains under a second condition",
+	"create.ponder.train_signal_signaling.text_7": "UNLOCALIZED: It will stop Trains, which, upon entering...",
+	"create.ponder.train_signal_signaling.text_8": "UNLOCALIZED: ...would not be able to leave the Segment immediately",
+	"create.ponder.train_signal_signaling.text_9": "UNLOCALIZED: This helps keeping queued Trains out of a busy Segment",
 
 	"create.ponder.valve_handle.header": "Генерации силы вращения при помощи Вентилей",
 	"create.ponder.valve_handle.text_1": "Игроки могут использовать вентили для применения силы вращения вручную",

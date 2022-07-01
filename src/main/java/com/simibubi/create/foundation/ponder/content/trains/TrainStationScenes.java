@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrainStationScenes {
 
 	public static void assembly(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("assembly", "Assembling Trains");
+		scene.title("train_assembly", "Assembling Trains");
 		scene.configureBasePlate(1, 0, 12);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);

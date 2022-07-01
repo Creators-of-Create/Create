@@ -24,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrainSignalScenes {
 
 	public static void placement(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("placement", "Placing Train Signals");
+		scene.title("train_signal_placement", "Placing Train Signals");
 		scene.configureBasePlate(1, 0, 12);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);
@@ -203,7 +203,7 @@ public class TrainSignalScenes {
 	}
 
 	public static void signaling(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("signaling", "Collision Prevention with Signals");
+		scene.title("train_signal_signaling", "Collision Prevention with Signals");
 		scene.configureBasePlate(1, 0, 15);
 		scene.scaleSceneView(.5f);
 		scene.showBasePlate();
@@ -487,7 +487,7 @@ public class TrainSignalScenes {
 	}
 
 	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("redstone", "Signals & Redstone");
+		scene.title("train_signal_redstone", "Signals & Redstone");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.75f);
 		scene.setSceneOffsetY(-1);

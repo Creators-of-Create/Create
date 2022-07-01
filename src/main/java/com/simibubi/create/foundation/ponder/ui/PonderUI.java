@@ -219,6 +219,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				else
 					ponderPartialTicksPaused = minecraft.getFrameTime();
 			}));
+		scan.atZLevel(600);
 
 		addRenderableWidget(slowMode = new PonderButton(width - 20 - 31, bY).showing(AllIcons.I_MTD_SLOW_MODE)
 			.enableFade(0, 5)

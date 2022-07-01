@@ -397,7 +397,7 @@ public class Train {
 			runtime.tick(level);
 			status.endOfTrack();
 
-		} else if (maxStress > 2) {
+		} else if (maxStress > 4) {
 			speed = 0;
 			navigation.cancelNavigation();
 			runtime.tick(level);

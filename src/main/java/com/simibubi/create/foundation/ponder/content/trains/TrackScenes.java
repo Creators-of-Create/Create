@@ -23,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrackScenes {
 
 	public static void placement(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("placement", "Placing Train Tracks");
+		scene.title("track_placement", "Placing Train Tracks");
 		scene.configureBasePlate(0, 0, 15);
 		scene.scaleSceneView(.5f);
 		scene.showBasePlate();
@@ -257,7 +257,7 @@ public class TrackScenes {
 	}
 
 	public static void portal(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("portal", "Tracks and the Nether");
+		scene.title("track_portal", "Tracks and the Nether");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);
@@ -343,7 +343,7 @@ public class TrackScenes {
 	}
 
 	public static void chunks(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("chunks", "Traversing unloaded Chunks");
+		scene.title("track_chunks", "Traversing unloaded Chunks");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);
