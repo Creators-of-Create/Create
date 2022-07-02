@@ -104,8 +104,8 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);
 		int c1 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, true);
 		int c2 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, false);
-		GuiUtils.drawGradientRect(ms.last().pose(), 110, 0, 3, 1, 4, c1, c1);
-		GuiUtils.drawGradientRect(ms.last().pose(), 110, 0, 4, 1, 5, c2, c2);
+		GuiUtils.drawGradientRect(ms.last().pose(), 310, 0, 3, 1, 4, c1, c1);
+		GuiUtils.drawGradientRect(ms.last().pose(), 310, 0, 4, 1, 5, c2, c2);
 		ms.popPose();
 
 		renderKeyframes(ms, mouseX, partialTicks);

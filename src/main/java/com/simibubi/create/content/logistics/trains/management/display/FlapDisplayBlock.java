@@ -28,6 +28,8 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -138,12 +140,21 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 				.getOpposite()
 				.getNormal())
 				.scale(.125f)).y;
+
 		int lineIndex = flapTe.getLineIndexAt(yCoord);
 
 		if (heldItem.isEmpty()) {
 			if (!flapTe.isSpeedRequirementFulfilled())
 				return InteractionResult.PASS;
 			flapTe.applyTextManually(lineIndex, null);
+			return InteractionResult.SUCCESS;
+		}
+
+		if (heldItem.getItem() == Items.GLOW_INK_SAC) {
+			if (!world.isClientSide) {
+				world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+				flapTe.setGlowing(lineIndex);
+			}
 			return InteractionResult.SUCCESS;
 		}
 
@@ -162,8 +173,10 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 
 		if (display)
 			flapTe.applyTextManually(lineIndex, tagElement);
-		if (dye != null)
+		if (dye != null) {
+			world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
 			flapTe.setColour(lineIndex, dye);
+		}
 
 		return InteractionResult.SUCCESS;
 	}

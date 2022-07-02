@@ -3,8 +3,10 @@ package com.simibubi.create.content.contraptions.processing.burner;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -100,7 +102,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	@OnlyIn(Dist.CLIENT)
 	private void tickAnimation() {
-		boolean active = getHeatLevelFromBlock().isAtLeast(HeatLevel.FADING);
+		boolean active = getHeatLevelFromBlock().isAtLeast(HeatLevel.FADING) && isValidBlockAbove();
 
 		if (!active) {
 			float target = 0;
@@ -254,6 +256,11 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	public boolean isCreativeFuel(ItemStack stack) {
 		return AllItems.CREATIVE_BLAZE_CAKE.isIn(stack);
+	}
+
+	public boolean isValidBlockAbove() {
+		BlockState blockState = level.getBlockState(worldPosition.above());
+		return AllBlocks.BASIN.has(blockState) || blockState.getBlock() instanceof FluidTankBlock;
 	}
 
 	protected void playSound() {

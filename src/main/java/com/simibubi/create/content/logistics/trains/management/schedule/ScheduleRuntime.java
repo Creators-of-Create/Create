@@ -13,6 +13,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeThrottleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
@@ -37,6 +38,7 @@ public class ScheduleRuntime {
 
 	public boolean isAutoSchedule;
 	public boolean paused;
+	public boolean completed;
 	public int currentEntry;
 	public State state;
 
@@ -101,8 +103,10 @@ public class ScheduleRuntime {
 		}
 		if (currentEntry >= schedule.entries.size()) {
 			currentEntry = 0;
-			if (!schedule.cyclic)
+			if (!schedule.cyclic) {
 				paused = true;
+				completed = true;
+			}
 			return;
 		}
 
@@ -209,6 +213,13 @@ public class ScheduleRuntime {
 			return null;
 		}
 
+		if (instruction instanceof ChangeThrottleInstruction throttle) {
+			train.throttle = throttle.getThrottle();
+			state = State.PRE_TRANSIT;
+			currentEntry++;
+			return null;
+		}
+
 		return null;
 	}
 
@@ -235,6 +246,7 @@ public class ScheduleRuntime {
 
 	private void reset() {
 		paused = true;
+		completed = false;
 		isAutoSchedule = false;
 		currentEntry = 0;
 		currentTitle = "";
@@ -263,7 +275,8 @@ public class ScheduleRuntime {
 		} else {
 			GlobalStation destination = train.navigation.destination;
 			if (destination != null) {
-				double speed = (train.maxSpeed() + train.maxTurnSpeed()) / 2;
+				double speed =
+					Math.min(train.throttle * train.maxSpeed(), (train.maxSpeed() + train.maxTurnSpeed()) / 2);
 				int timeRemaining = (int) (train.navigation.distanceToDestination / speed) * 2;
 
 				if (predictionTicks.size() > current && train.navigation.distanceStartedAt != 0) {
@@ -384,6 +397,7 @@ public class ScheduleRuntime {
 		tag.putInt("CurrentEntry", currentEntry);
 		tag.putBoolean("AutoSchedule", isAutoSchedule);
 		tag.putBoolean("Paused", paused);
+		tag.putBoolean("Completed", completed);
 		if (schedule != null)
 			tag.put("Schedule", schedule.write());
 		NBTHelper.writeEnum(tag, "State", state);
@@ -396,6 +410,7 @@ public class ScheduleRuntime {
 	public void read(CompoundTag tag) {
 		reset();
 		paused = tag.getBoolean("Paused");
+		completed = tag.getBoolean("Completed");
 		isAutoSchedule = tag.getBoolean("AutoSchedule");
 		currentEntry = tag.getInt("CurrentEntry");
 		if (tag.contains("Schedule"))

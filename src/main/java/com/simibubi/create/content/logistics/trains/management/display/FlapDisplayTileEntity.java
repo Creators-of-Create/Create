@@ -35,6 +35,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 	public boolean isRunning;
 	public int xSize, ySize;
 	public DyeColor[] colour;
+	public boolean[] glowingLines;
 	public boolean[] manualLines;
 
 	public FlapDisplayTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -45,6 +46,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		ySize = 1;
 		colour = new DyeColor[2];
 		manualLines = new boolean[2];
+		glowingLines = new boolean[2];
 	}
 
 	@Override
@@ -96,6 +98,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		xSize = newXSize;
 		ySize = newYSize;
 		colour = Arrays.copyOf(colour, ySize * 2);
+		glowingLines = Arrays.copyOf(glowingLines, ySize * 2);
 		manualLines = new boolean[ySize * 2];
 		lines = null;
 		sendData();
@@ -165,6 +168,11 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		colour[lineIndex] = color == DyeColor.WHITE ? null : color;
 		notifyUpdate();
 	}
+	
+	public void setGlowing(int lineIndex) {
+		glowingLines[lineIndex] = true;
+		notifyUpdate();
+	}
 
 	public List<FlapDisplayLayout> getLines() {
 		if (lines == null)
@@ -197,6 +205,10 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		for (int j = 0; j < manualLines.length; j++)
 			if (manualLines[j])
 				NBTHelper.putMarker(tag, "CustomLine" + j);
+		
+		for (int j = 0; j < glowingLines.length; j++)
+			if (glowingLines[j])
+				NBTHelper.putMarker(tag, "GlowingLine" + j);
 
 		for (int j = 0; j < colour.length; j++)
 			if (colour[j] != null)
@@ -222,6 +234,10 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		manualLines = new boolean[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
 			manualLines[i] = tag.contains("CustomLine" + i);
+		
+		glowingLines = new boolean[ySize * 2];
+		for (int i = 0; i < ySize * 2; i++)
+			glowingLines[i] = tag.contains("GlowingLine" + i);
 
 		colour = new DyeColor[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
@@ -305,4 +321,9 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 			: DyeHelper.DYE_TABLE.get(color)
 				.getFirst() | 0xFF_000000;
 	}
+	
+	public boolean isLineGlowing(int line) {
+		return glowingLines[line];
+	}
+	
 }

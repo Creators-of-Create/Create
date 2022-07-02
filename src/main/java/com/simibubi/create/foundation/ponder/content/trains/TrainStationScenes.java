@@ -206,6 +206,23 @@ public class TrainStationScenes {
 			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
 		scene.idle(55);
 
+		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(5, 3, 5)), Pointing.DOWN)
+			.withItem(new ItemStack(Items.CHARCOAL)), 40);
+		scene.idle(10);
+		scene.overlay.showText(90)
+			.pointAt(util.vector.blockSurface(util.grid.at(5, 3, 5), Direction.WEST))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.colored(PonderPalette.BLUE)
+			.text("Assembled Trains will move faster if they can find fuel in assembled chests or barrels");
+		scene.idle(100);
+		scene.overlay.showSelectionWithText(util.select.fromTo(4, 3, 6, 5, 4, 7), 60)
+			.pointAt(util.vector.blockSurface(util.grid.at(5, 4, 6), Direction.UP))
+			.colored(PonderPalette.RED)
+			.placeNearTarget()
+			.text("Fuel stored in Vaults will not be consumed by the train");
+		scene.idle(75);
+
 		ElementLink<WorldSectionElement> controlsElement = scene.world.showIndependentSection(controls, Direction.DOWN);
 		scene.idle(15);
 		scene.overlay.showText(60)

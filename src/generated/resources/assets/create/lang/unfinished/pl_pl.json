@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1011",
+	"_": "Missing Localizations: 1017",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1442,6 +1442,10 @@
 	"create.schedule.instruction.name_edit_box": "UNLOCALIZED: Schedule Title",
 	"create.schedule.instruction.name_edit_box_1": "UNLOCALIZED: Affects text shown on displays",
 	"create.schedule.instruction.name_edit_box_2": "UNLOCALIZED: Defaults to next destination's name",
+	"create.schedule.instruction.throttle": "UNLOCALIZED: Change Throttle",
+	"create.schedule.instruction.throttle.summary": "UNLOCALIZED: Change Throttle to %1$s",
+	"create.schedule.instruction.throttle_edit_box": "UNLOCALIZED: Throttle",
+	"create.schedule.instruction.throttle_edit_box_1": "UNLOCALIZED: Affects the top speed of the Train",
 	"create.schedule.condition_type": "UNLOCALIZED: Continue if/after:",
 	"create.schedule.condition.editor": "UNLOCALIZED: Condition Editor",
 	"create.schedule.condition.delay": "UNLOCALIZED: Scheduled Delay",
@@ -2903,17 +2907,19 @@
 
 	"create.ponder.train_assembly.header": "UNLOCALIZED: Assembling Trains",
 	"create.ponder.train_assembly.text_1": "UNLOCALIZED: Select a Train Track then place the Station nearby",
-	"create.ponder.train_assembly.text_10": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
-	"create.ponder.train_assembly.text_11": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
-	"create.ponder.train_assembly.text_12": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
+	"create.ponder.train_assembly.text_10": "UNLOCALIZED: Every Train requires Train Controls on board",
+	"create.ponder.train_assembly.text_11": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
+	"create.ponder.train_assembly.text_12": "UNLOCALIZED: Open the Station UI and confirm the Assembly process",
+	"create.ponder.train_assembly.text_13": "UNLOCALIZED: Trains can be disassembled back into blocks at stations only",
+	"create.ponder.train_assembly.text_14": "UNLOCALIZED: Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.train_assembly.text_2": "UNLOCALIZED: Stations are the Waypoints of your Track Network",
 	"create.ponder.train_assembly.text_3": "UNLOCALIZED: To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.train_assembly.text_4": "UNLOCALIZED: During Assembly no scheduled trains will approach this station",
 	"create.ponder.train_assembly.text_5": "UNLOCALIZED: Create new bogeys by using Train Casing on Tracks",
 	"create.ponder.train_assembly.text_6": "UNLOCALIZED: Click the track again to cycle between bogey designs",
 	"create.ponder.train_assembly.text_7": "UNLOCALIZED: Attach blocks with the help of Super Glue",
-	"create.ponder.train_assembly.text_8": "UNLOCALIZED: Every Train requires Train Controls on board",
-	"create.ponder.train_assembly.text_9": "UNLOCALIZED: An optional second one allows departure from Stations in both directions",
+	"create.ponder.train_assembly.text_8": "UNLOCALIZED: Assembled Trains will move faster if they can find fuel in assembled chests or barrels",
+	"create.ponder.train_assembly.text_9": "UNLOCALIZED: Fuel stored in Vaults will not be consumed by the train",
 
 	"create.ponder.train_controls.header": "UNLOCALIZED: Controlling Trains",
 	"create.ponder.train_controls.text_1": "UNLOCALIZED: Train Controls are required on every train contraption",

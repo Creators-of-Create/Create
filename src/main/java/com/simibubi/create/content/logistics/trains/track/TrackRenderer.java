@@ -22,8 +22,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -63,7 +61,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		TransformStack.cast(ms)
 			.nudge((int) tePosition.asLong());
 
-		renderGirder(bc, ms, vb, tePosition);
+		renderGirder(level, bc, ms, vb, tePosition);
 
 		for (int i = 1; i < segments.length; i++) {
 			SegmentAngles segment = segments[i];
@@ -88,12 +86,12 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		ms.popPose();
 	}
 
-	private static void renderGirder(BezierConnection bc, PoseStack ms, VertexConsumer vb, BlockPos tePosition) {
+	private static void renderGirder(Level level, BezierConnection bc, PoseStack ms, VertexConsumer vb,
+		BlockPos tePosition) {
 		if (!bc.hasGirder)
 			return;
 
 		BlockState air = Blocks.AIR.defaultBlockState();
-		ClientLevel level = Minecraft.getInstance().level;
 		GirderAngles[] girders = bc.getBakedGirders();
 
 		for (int i = 1; i < girders.length; i++) {

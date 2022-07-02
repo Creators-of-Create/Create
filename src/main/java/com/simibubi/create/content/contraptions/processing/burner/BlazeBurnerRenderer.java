@@ -64,6 +64,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		PoseStack ms, BlockState blockState, float horizontalAngle, float animation, boolean drawGoggles,
 		boolean drawHat, int hashCode) {
 
+		boolean blockAbove = animation > 0.125f;
 		HeatLevel heatLevel = BlazeBurnerBlock.getHeatLevelOf(blockState);
 		float time = AnimationTickHolder.getRenderTime(level);
 		float renderTick = time + (hashCode % 13) * 16f;
@@ -77,7 +78,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 
 		ms.pushPose();
 
-		if (modelTransform == null && heatLevel.isAtLeast(HeatLevel.FADING)) {
+		if (modelTransform == null && heatLevel.isAtLeast(HeatLevel.FADING) && blockAbove) {
 			SpriteShiftEntry spriteShift =
 				heatLevel == HeatLevel.SEETHING ? AllSpriteShifts.SUPER_BURNER_FLAME : AllSpriteShifts.BURNER_FLAME;
 
@@ -106,12 +107,12 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 				cutout);
 		}
 
-		PartialModel blazeModel = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_SUPER
-			: heatLevel == HeatLevel.KINDLED ? AllBlockPartials.BLAZE_ACTIVE : AllBlockPartials.BLAZE_IDLE;
-		PartialModel rods = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS
-			: AllBlockPartials.BLAZE_BURNER_RODS;
-		PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
-			: AllBlockPartials.BLAZE_BURNER_RODS_2;
+		PartialModel blazeModel = modelTransform != null ? AllBlockPartials.BLAZE_IDLE : AllBlockPartials.BLAZE_INERT;
+		if (heatLevel.isAtLeast(HeatLevel.SEETHING))
+			blazeModel = blockAbove ? AllBlockPartials.BLAZE_SUPER_ACTIVE : AllBlockPartials.BLAZE_SUPER;
+		else if (heatLevel.isAtLeast(HeatLevel.FADING))
+			blazeModel = blockAbove && heatLevel.isAtLeast(HeatLevel.KINDLED) ? AllBlockPartials.BLAZE_ACTIVE
+				: AllBlockPartials.BLAZE_IDLE;
 
 		float headY = offset - (animation * .75f);
 
@@ -133,10 +134,16 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 				.renderInto(ms, solid);
 		}
 
-		draw(CachedBufferer.partial(rods, blockState)
-			.translate(0, offset1 + animation + .125f, 0), 0, modelTransform, ms, solid);
-		draw(CachedBufferer.partial(rods2, blockState)
-			.translate(0, offset2 + animation - 3 / 16f, 0), 0, modelTransform, ms, solid);
+		if (heatLevel.isAtLeast(HeatLevel.FADING) || modelTransform != null) {
+			PartialModel rods = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS
+				: AllBlockPartials.BLAZE_BURNER_RODS;
+			PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
+				: AllBlockPartials.BLAZE_BURNER_RODS_2;
+			draw(CachedBufferer.partial(rods, blockState)
+				.translate(0, offset1 + animation + .125f, 0), 0, modelTransform, ms, solid);
+			draw(CachedBufferer.partial(rods2, blockState)
+				.translate(0, offset2 + animation - 3 / 16f, 0), 0, modelTransform, ms, solid);
+		}
 
 		ms.popPose();
 	}

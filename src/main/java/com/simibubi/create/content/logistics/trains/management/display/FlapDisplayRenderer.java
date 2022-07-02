@@ -75,6 +75,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			List<FlapDisplaySection> line = lines.get(j)
 				.getSections();
 			int color = flapTe.getLineColor(j);
+			int lineLight = flapTe.isLineGlowing(j) ? 0xf000f0 : light;
 			ms.pushPose();
 
 			float w = 0;
@@ -85,8 +86,8 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			ms.translate(flapTe.xSize * 16 - w / 2 + 1, 4.5f, 0);
 
 			Pose transform = ms.last();
-			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(), light,
-				j, !te.isSpeedRequirementFulfilled(), te.getLevel());
+			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(),
+				lineLight, j, !te.isSpeedRequirementFulfilled(), te.getLevel());
 
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
@@ -95,9 +96,6 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 				String text = section.renderCharsIndividually() || !section.spinning[0] ? section.text
 					: section.cyclingOptions[((ticks / 3) + i * 13) % section.cyclingOptions.length];
 				StringDecomposer.iterateFormatted(text, Style.EMPTY, renderOutput);
-//				ms.translate(0, 0, -1 / 4f);
-//				renderOutput.finish(0x55000000);
-//				ms.translate(0, 0, 1 / 4f);
 				ms.translate(section.size + (section.hasGap ? 8 : 1), 0, 0);
 			}
 

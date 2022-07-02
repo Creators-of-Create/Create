@@ -65,8 +65,8 @@ public class ScheduleItemRetrieval {
 		Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
 		if (directions == null)
 			return;
-		
-		if (train.runtime.paused) {
+
+		if (train.runtime.paused && !train.runtime.completed) {
 			train.runtime.paused = false;
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
 			player.displayClientMessage(Lang.translate("schedule.continued"), true);

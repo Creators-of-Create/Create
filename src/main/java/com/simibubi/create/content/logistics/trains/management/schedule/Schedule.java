@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.trains.management.schedule.conditio
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationPoweredCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationUnloadedCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimeOfDayCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeThrottleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
@@ -38,6 +39,7 @@ public class Schedule {
 	static {
 		registerInstruction("destination", DestinationInstruction::new);
 		registerInstruction("rename", ChangeTitleInstruction::new);
+		registerInstruction("throttle", ChangeThrottleInstruction::new);
 		registerCondition("delay", ScheduledDelay::new);
 		registerCondition("time_of_day", TimeOfDayCondition::new);
 		registerCondition("fluid_threshold", FluidThresholdCondition::new);

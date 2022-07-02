@@ -137,6 +137,7 @@ public class AllBlockPartials {
 		SIGNAL_RED = block("track_signal/red_tube"), SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
 		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"), SIGNAL_YELLOW = block("track_signal/yellow_tube"),
 
+		BLAZE_INERT = block("blaze_burner/blaze/inert"), BLAZE_SUPER_ACTIVE = block("blaze_burner/blaze/super_active"),
 		BLAZE_GOGGLES = block("blaze_burner/goggles"), BLAZE_IDLE = block("blaze_burner/blaze/idle"),
 		BLAZE_ACTIVE = block("blaze_burner/blaze/active"), BLAZE_SUPER = block("blaze_burner/blaze/super"),
 		BLAZE_BURNER_FLAME = block("blaze_burner/flame"), BLAZE_BURNER_RODS = block("blaze_burner/rods_small"),
