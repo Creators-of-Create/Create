@@ -57,6 +57,7 @@ public class AllCommands {
 				.then(ReplaceInCommandBlocksCommand.register())
 				.then(ClearBufferCacheCommand.register())
 				.then(CameraDistanceCommand.register())
+				.then(CameraAngleCommand.register())
 				.then(FlySpeedCommand.register())
 				//.then(KillTPSCommand.register())
 				.build();

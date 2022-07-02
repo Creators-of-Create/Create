@@ -61,6 +61,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
@@ -168,6 +169,7 @@ public class ClientEvents {
 		DisplayLinkBlockItem.clientTick();
 		CurvedTrackInteraction.clientTick();
 		CameraDistanceModifier.tick();
+		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
 	}
 
@@ -227,6 +229,17 @@ public class ClientEvents {
 		RenderSystem.enableCull();
 
 		ms.popPose();
+	}
+
+	@SubscribeEvent
+	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+		float partialTicks = AnimationTickHolder.getPartialTicks();
+
+		if (CameraAngleAnimationService.isYawAnimating())
+			event.setYaw(CameraAngleAnimationService.getYaw(partialTicks));
+
+		if (CameraAngleAnimationService.isPitchAnimating())
+			event.setPitch(CameraAngleAnimationService.getPitch(partialTicks));
 	}
 
 	@SubscribeEvent

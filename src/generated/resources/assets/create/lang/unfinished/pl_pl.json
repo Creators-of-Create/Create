@@ -2347,7 +2347,7 @@
 	"create.ponder.display_board.text_6": "UNLOCALIZED: Lines can be reset by clicking them with an empty hand",
 
 	"create.ponder.display_link.header": "UNLOCALIZED: Setting up Display Links",
-	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links can used to visualise dynamic information",
+	"create.ponder.display_link.text_1": "UNLOCALIZED: Display Links can be used to visualise dynamic information",
 	"create.ponder.display_link.text_2": "UNLOCALIZED: First, right-click the target display...",
 	"create.ponder.display_link.text_3": "UNLOCALIZED: ...then attach it to the block to read from",
 	"create.ponder.display_link.text_4": "UNLOCALIZED: Open the Interface to select and configure what is sent",

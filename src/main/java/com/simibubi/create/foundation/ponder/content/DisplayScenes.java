@@ -55,7 +55,7 @@ public class DisplayScenes {
 
 		scene.overlay.showText(70)
 			.attachKeyFrame()
-			.text("Display Links can used to visualise dynamic information")
+			.text("Display Links can be used to visualise dynamic information")
 			.pointAt(util.vector.blockSurface(util.grid.at(2, 1, 2), Direction.WEST))
 			.placeNearTarget();
 		scene.idle(60);

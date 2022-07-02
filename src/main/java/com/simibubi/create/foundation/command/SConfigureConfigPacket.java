@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.ui.PonderIndexScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
+import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -115,7 +116,10 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		overlayReset(() -> Actions::overlayReset),
 		openPonder(() -> Actions::openPonder),
 		fabulousWarning(() -> Actions::fabulousWarning),
-		zoomMultiplier(() -> Actions::zoomMultiplier)
+		zoomMultiplier(() -> Actions::zoomMultiplier),
+		camAngleYawTarget(() -> value -> camAngleTarget(value, true)),
+		camAnglePitchTarget(() -> value -> camAngleTarget(value, false)),
+		camAngleFunction(() -> Actions::camAngleFunction)
 
 		;
 
@@ -225,6 +229,42 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			} catch (NumberFormatException ignored) {
 				Create.LOGGER.debug("Received non-float value {} in zoom packet, ignoring", value);
 			}
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void camAngleTarget(String value, boolean yaw) {
+			try {
+				float v = Float.parseFloat(value);
+
+				if (yaw) {
+					CameraAngleAnimationService.setYawTarget(v);
+				} else {
+					CameraAngleAnimationService.setPitchTarget(v);
+				}
+
+			} catch (NumberFormatException ignored) {
+				Create.LOGGER.debug("Received non-float value {} in camAngle packet, ignoring", value);
+			}
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void camAngleFunction(String value) {
+			CameraAngleAnimationService.Mode mode = CameraAngleAnimationService.Mode.LINEAR;
+			String modeString = value;
+			float speed = -1;
+			String[] split = value.split(":");
+			if (split.length > 1) {
+				modeString = split[0];
+				try {
+					speed = Float.parseFloat(split[1]);
+				} catch (NumberFormatException ignored) {}
+			}
+			try {
+				mode = CameraAngleAnimationService.Mode.valueOf(modeString);
+			} catch (IllegalArgumentException ignored) {}
+
+			CameraAngleAnimationService.setAnimationMode(mode);
+			CameraAngleAnimationService.setAnimationSpeed(speed);
 		}
 
 		private static MutableComponent boolToText(boolean b) {

@@ -2346,7 +2346,7 @@
 	"create.ponder.display_board.text_6": "Lines can be reset by clicking them with an empty hand",
 
 	"create.ponder.display_link.header": "Setting up Display Links",
-	"create.ponder.display_link.text_1": "Display Links can used to visualise dynamic information",
+	"create.ponder.display_link.text_1": "Display Links can be used to visualise dynamic information",
 	"create.ponder.display_link.text_2": "First, right-click the target display...",
 	"create.ponder.display_link.text_3": "...then attach it to the block to read from",
 	"create.ponder.display_link.text_4": "Open the Interface to select and configure what is sent",
