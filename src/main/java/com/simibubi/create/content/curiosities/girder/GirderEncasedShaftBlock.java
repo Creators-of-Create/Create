@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
@@ -53,11 +54,18 @@ public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
+	public VoxelShape getBlockSupportShape(BlockState pState, BlockGetter pReader, BlockPos pPos) {
+		return Shapes.or(super.getBlockSupportShape(pState, pReader, pPos), AllShapes.EIGHT_VOXEL_POLE.get(Axis.Y));
+	}
+
+	@Override
 	public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
 		return AllBlocks.METAL_GIRDER.getDefaultState()
 			.setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
 			.setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Axis.Z)
 			.setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Axis.X)
+			.setValue(GirderBlock.AXIS, originalState.getValue(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X)
 			.setValue(GirderBlock.BOTTOM, originalState.getValue(BOTTOM))
 			.setValue(GirderBlock.TOP, originalState.getValue(TOP));
 	}
@@ -96,7 +104,10 @@ public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
 		Property<Boolean> updateProperty = direction == Direction.UP ? TOP : BOTTOM;
 		if (direction.getAxis()
 			.isVertical()) {
-			state = state.setValue(updateProperty, false);
+			if (world.getBlockState(pos.relative(direction))
+				.getBlockSupportShape(world, pos.relative(direction))
+				.isEmpty())
+				state = state.setValue(updateProperty, false);
 			return GirderBlock.updateVerticalProperty(world, pos, state, updateProperty, neighbourState, direction);
 		}
 

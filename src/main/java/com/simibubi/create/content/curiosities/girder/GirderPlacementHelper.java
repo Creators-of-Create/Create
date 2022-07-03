@@ -67,7 +67,8 @@ public class GirderPlacementHelper implements IPlacementHelper {
 	private BlockState withAxis(BlockState state, Axis axis) {
 		if (state.getBlock() instanceof GirderBlock)
 			return state.setValue(GirderBlock.X, axis == Axis.X)
-				.setValue(GirderBlock.Z, axis == Axis.Z);
+				.setValue(GirderBlock.Z, axis == Axis.Z)
+				.setValue(GirderBlock.AXIS, axis);
 		if (state.getBlock() instanceof GirderEncasedShaftBlock && axis.isHorizontal())
 			return state.setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, axis == Axis.X ? Axis.Z : Axis.X);
 		return state;
