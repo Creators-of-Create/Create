@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.block.connected;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -16,7 +17,13 @@ public abstract class ConnectedTextureBehaviour {
 		boolean topLeft, topRight, bottomLeft, bottomRight;
 	}
 
-	public abstract CTSpriteShiftEntry get(BlockState state, Direction direction);
+	public CTSpriteShiftEntry get(BlockState state, Direction direction, TextureAtlasSprite sprite) {
+		return get(state, direction);
+	}
+	
+	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
+		return null;
+	}
 
 	protected boolean reverseUVs(BlockState state, Direction face) {
 		return false;

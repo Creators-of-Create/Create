@@ -135,6 +135,9 @@ public class TravellingPoint {
 						if (!visiteds.get(j)
 							.add(nextEdge))
 							continue;
+						if (!currentEntry.getValue()
+							.canTravelTo(nextEdge))
+							continue;
 
 						TrackNode nextNode = nextEntry.getKey();
 						if (nextNode == target) {

@@ -4,15 +4,27 @@ import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FluidTankCTBehaviour extends HorizontalCTBehaviour {
 
-	public FluidTankCTBehaviour(CTSpriteShiftEntry layerShift, CTSpriteShiftEntry topShift) {
+	private CTSpriteShiftEntry innerShift;
+
+	public FluidTankCTBehaviour(CTSpriteShiftEntry layerShift, CTSpriteShiftEntry topShift, CTSpriteShiftEntry innerShift) {
 		super(layerShift, topShift);
+		this.innerShift = innerShift;
+	}
+	
+	@Override
+	public CTSpriteShiftEntry get(BlockState state, Direction direction, TextureAtlasSprite sprite) {
+		if (direction.getAxis() == Axis.Y && innerShift.getOriginal() == sprite)
+			return innerShift;
+		return super.get(state, direction, sprite);
 	}
 
 	public boolean buildContextForOccludedDirections() {

@@ -935,6 +935,8 @@ public class AllBlocks {
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/fluid_tank/block_single_window"))
 				.texture("5", p.modLoc("block/creative_fluid_tank_window_single"))
 				.texture("1", p.modLoc("block/creative_fluid_tank"))
+				.texture("particle", p.modLoc("block/creative_fluid_tank"))
+				.texture("4", p.modLoc("block/creative_casing"))
 				.texture("0", p.modLoc("block/creative_casing")))
 			.build()
 			.register();
@@ -1694,12 +1696,14 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
 			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
+			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
 			.register();
 
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
+			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
 			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();

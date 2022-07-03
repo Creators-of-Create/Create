@@ -30,6 +30,7 @@ public class AllCommands {
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(KillTrainCommand.register())
+				.then(PassengerCommand.register())
 				.then(CouplingCommand.register())
 				.then(ConfigCommand.register())
 				.then(PonderCommand.register())

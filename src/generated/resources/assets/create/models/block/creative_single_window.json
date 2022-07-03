@@ -4,7 +4,8 @@
     "0": "create:block/creative_casing",
     "1": "create:block/creative_fluid_tank",
     "3": "create:block/creative_fluid_tank_window",
-    "4": "create:block/creative_fluid_tank_window_single",
+    "4": "create:block/creative_casing",
+    "5": "create:block/creative_fluid_tank_window_single",
     "particle": "create:block/creative_fluid_tank"
   }
 }
