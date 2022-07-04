@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
 
 public class CameraAngleAnimationService {
 
@@ -14,6 +15,9 @@ public class CameraAngleAnimationService {
 
 	public static void tick() {
 
+		yRotation.tickChaser();
+		xRotation.tickChaser();
+
 		if (Minecraft.getInstance().player != null) {
 			if (!yRotation.settled())
 				Minecraft.getInstance().player.setYRot(yRotation.getValue(1));
@@ -21,9 +25,6 @@ public class CameraAngleAnimationService {
 			if (!xRotation.settled())
 				Minecraft.getInstance().player.setXRot(xRotation.getValue(1));
 		}
-
-		yRotation.tickChaser();
-		xRotation.tickChaser();
 	}
 
 	public static boolean isYawAnimating() {
@@ -51,27 +52,28 @@ public class CameraAngleAnimationService {
 	}
 
 	public static void setYawTarget(float yaw) {
-		yRotation.startWithValue(getCurrentYaw());
-		setupChaser(yRotation, yaw);
+		float currentYaw = getCurrentYaw();
+		yRotation.startWithValue(currentYaw);
+		setupChaser(yRotation, currentYaw + AngleHelper.getShortestAngleDiff(currentYaw, Mth.wrapDegrees(yaw)));
 	}
 
 	public static void setPitchTarget(float pitch) {
-		xRotation.startWithValue(getCurrentPitch());
-		setupChaser(xRotation, pitch);
+		float currentPitch = getCurrentPitch();
+		xRotation.startWithValue(currentPitch);
+		setupChaser(xRotation, currentPitch + AngleHelper.getShortestAngleDiff(currentPitch, Mth.wrapDegrees(pitch)));
 	}
 
 	private static float getCurrentYaw() {
 		if (Minecraft.getInstance().player == null)
 			return 0;
-
-		return Minecraft.getInstance().player.getYRot();
+		return Mth.wrapDegrees(Minecraft.getInstance().player.getYRot());
 	}
 
 	private static float getCurrentPitch() {
 		if (Minecraft.getInstance().player == null)
 			return 0;
 
-		return Minecraft.getInstance().player.getXRot();
+		return Mth.wrapDegrees(Minecraft.getInstance().player.getXRot());
 	}
 
 	private static void setupChaser(LerpedFloat rotation, float target) {

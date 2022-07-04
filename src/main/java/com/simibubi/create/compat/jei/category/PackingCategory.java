@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.Arrays;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -10,22 +10,24 @@ import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
+@ParametersAreNonnullByDefault
 public class PackingCategory extends BasinCategory {
 
-	private AnimatedPress press = new AnimatedPress(true);
+	private final AnimatedPress press = new AnimatedPress(true);
 	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
-	private PackingType type;
+	private final PackingType type;
 
 	enum PackingType {
-		AUTO_SQUARE, COMPACTING;
+		AUTO_SQUARE, COMPACTING
 	}
 
 	public static PackingCategory standard() {
@@ -43,51 +45,49 @@ public class PackingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, BasinRecipe recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayoutBuilder builder, BasinRecipe recipe, IFocusGroup focuses) {
 		if (type == PackingType.COMPACTING) {
-			super.setRecipe(recipeLayout, recipe, ingredients);
+			super.setRecipe(builder, recipe, focuses);
 			return;
 		}
 
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		int i = 0;
-
-		NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
-		int size = ingredients2.size();
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		int size = ingredients.size();
 		int rows = size == 4 ? 2 : 3;
 		while (i < size) {
-			Ingredient ingredient = ingredients2.get(i);
-			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
-			itemStacks.set(i, Arrays.asList(ingredient.getItems()));
+			Ingredient ingredient = ingredients.get(i);
+			builder
+					.addSlot(RecipeIngredientRole.INPUT, (rows == 2 ? 27 : 18) + (i % rows) * 19, 51 - (i / rows) * 19)
+					.setBackground(getRenderedSlot(), -1, -1)
+					.addIngredients(ingredient);
+
 			i++;
 		}
 
-		itemStacks.init(i, false, 141, 50);
-		itemStacks.set(i, recipe.getResultItem());
+		builder
+				.addSlot(RecipeIngredientRole.OUTPUT, 142, 51)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addItemStack(recipe.getResultItem());
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		if (type == PackingType.COMPACTING) {
-			super.draw(recipe, matrixStack, mouseX, mouseY);
-
+			super.draw(recipe, iRecipeSlotsView, matrixStack, mouseX, mouseY);
 		} else {
-			NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
-			int size = ingredients2.size();
-			int rows = size == 4 ? 2 : 3;
-			for (int i = 0; i < size; i++)
-				AllGuiTextures.JEI_SLOT.render(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19,
-					50 - (i / rows) * 19);
-			AllGuiTextures.JEI_SLOT.render(matrixStack, 141, 50);
 			AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 136, 32);
 			AllGuiTextures.JEI_SHADOW.render(matrixStack, 81, 68);
 		}
+
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
 				.draw(matrixStack, getBackground().getWidth() / 2 + 3, 55);
 		press.draw(matrixStack, getBackground().getWidth() / 2 + 3, 34);
+
+
 	}
 
 }

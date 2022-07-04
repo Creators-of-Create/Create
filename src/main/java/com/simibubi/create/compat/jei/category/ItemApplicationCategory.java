@@ -1,7 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.Arrays;
 import java.util.Optional;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
+@ParametersAreNonnullByDefault
 public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicationRecipe> {
 
 	public ItemApplicationCategory() {
@@ -37,31 +39,27 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, ItemApplicationRecipe recipe, IFocusGroup focuses) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 27, 38)
-			.addItemStacks(Arrays.asList(recipe.getProcessedItem()
-				.getItems()));
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(recipe.getProcessedItem());
 
 		builder.addSlot(RecipeIngredientRole.INPUT, 51, 5)
-			.addItemStacks(Arrays.asList(recipe.getRequiredHeldItem()
-				.getItems()))
-			.addTooltipCallback(
-				recipe.shouldKeepHeldItem()
-					? (view, tooltip) -> tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
-						.withStyle(ChatFormatting.GOLD))
-					: (view, tooltip) -> {
-					});
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(recipe.getRequiredHeldItem())
+				.addTooltipCallback(
+					recipe.shouldKeepHeldItem()
+						? (view, tooltip) -> tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
+							.withStyle(ChatFormatting.GOLD))
+						: (view, tooltip) -> {}
+				);
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 132, 38)
-			.addItemStack(recipe.getResultItem())
-			.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults()
-				.get(0)));
+				.setBackground(getRenderedSlot(recipe.getRollableResults().get(0)), -1, -1)
+				.addItemStack(recipe.getResultItem())
+				.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults().get(0)));
 	}
 
 	@Override
-	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack,
-		double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 37);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 37);
+	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 47);
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 74, 10);
 

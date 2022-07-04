@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.jei.category;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
@@ -27,7 +29,7 @@ public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> 
 	}
 
 	@Override
-	protected void renderAttachedBlock(PoseStack matrixStack) {
+	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
 		GuiGameElement.of(Blocks.FIRE.defaultBlockState())
 			.scale(SCALE)
 			.atLocal(0, 0, 2)

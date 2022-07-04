@@ -1,11 +1,9 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -16,10 +14,10 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +30,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
+@ParametersAreNonnullByDefault
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
 	AnimatedItemDrain drain;
@@ -90,41 +89,24 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void setIngredients(EmptyingRecipe recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
-
-		if (!recipe.getRollableResults()
-			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-		if (!recipe.getFluidResults()
-			.isEmpty())
-			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
+	public void setRecipe(IRecipeLayoutBuilder builder, EmptyingRecipe recipe, IFocusGroup focuses) {
+		builder
+				.addSlot(RecipeIngredientRole.INPUT, 27, 8)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(recipe.getIngredients().get(0));
+		builder
+				.addSlot(RecipeIngredientRole.OUTPUT, 132, 8)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredient(VanillaTypes.FLUID, withImprovedVisibility(recipe.getResultingFluid()))
+				.addTooltipCallback(addFluidTooltip(recipe.getResultingFluid().getAmount()));
+		builder
+				.addSlot(RecipeIngredientRole.OUTPUT, 132, 27)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addItemStack(recipe.getResultItem());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, EmptyingRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
-		FluidStack fluidOutput = recipe.getResultingFluid();
-		List<ItemStack> matchingIngredients = Arrays.asList(recipe.getIngredients()
-			.get(0)
-			.getItems());
-
-		fluidStacks.init(0, false, 132, 8);
-		fluidStacks.set(0, withImprovedVisibility(fluidOutput));
-		itemStacks.init(0, true, 26, 7);
-		itemStacks.set(0, matchingIngredients);
-		itemStacks.init(1, false, 131, 26);
-		itemStacks.set(1, recipe.getResultItem());
-
-		addFluidTooltip(fluidStacks, Collections.emptyList(), ImmutableList.of(fluidOutput));
-	}
-
-	@Override
-	public void draw(EmptyingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 131, 7);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 7);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 26);
+	public void draw(EmptyingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 37);
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())

@@ -1,29 +1,28 @@
 package com.simibubi.create.compat.jei.category;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -31,9 +30,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
+@ParametersAreNonnullByDefault
 public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAssemblyRecipe> {
 
 	Map<ResourceLocation, SequencedAssemblySubCategory> subCategories = new HashMap<>();
@@ -48,31 +46,26 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	}
 
 	@Override
-	public void setIngredients(SequencedAssemblyRecipe recipe, IIngredients ingredients) {
-		List<Ingredient> assemblyIngredients = getAllItemIngredients(recipe);
-		List<FluidIngredient> assemblyFluidIngredients = getAllFluidIngredients(recipe);
-		ingredients.setInputIngredients(assemblyIngredients);
-		if (!assemblyFluidIngredients.isEmpty())
-			ingredients.setInputLists(VanillaTypes.FLUID, assemblyFluidIngredients.stream()
-				.map(FluidIngredient::getMatchingFluidStacks)
-				.collect(Collectors.toList()));
-		ingredients.setOutputs(VanillaTypes.ITEM,
-			ImmutableList.of(recipe.getResultItem(), recipe.getTransitionalItem()));
-	}
+	public void setRecipe(IRecipeLayoutBuilder builder, SequencedAssemblyRecipe recipe, IFocusGroup focuses) {
+		boolean noRandomOutput = recipe.getOutputChance() == 1;
+		int xOffset = noRandomOutput ? 0 : -7;
 
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, SequencedAssemblyRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
-		int xOffset = recipe.getOutputChance() == 1 ? 0 : -7;
+		builder
+				.addSlot(RecipeIngredientRole.INPUT, 27 + xOffset, 91)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addItemStacks(List.of(recipe.getIngredient().getItems()));
+		builder
+				.addSlot(RecipeIngredientRole.OUTPUT, 132 + xOffset, 91)
+				.setBackground(getRenderedSlot(recipe.getOutputChance()), -1 , -1)
+				.addItemStack(recipe.getResultItem())
+				.addTooltipCallback((recipeSlotView, tooltip) -> {
+					if (noRandomOutput)
+						return;
 
-		itemStacks.init(0, true, 26 + xOffset, 90);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredient()
-			.getItems()));
-
-		ItemStack result = recipe.getResultItem();
-		itemStacks.init(1, false, 131 + xOffset, 90);
-		itemStacks.set(1, result);
+					float chance = recipe.getOutputChance();
+					tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+							.withStyle(ChatFormatting.GOLD));
+				});
 
 		int width = 0;
 		int margin = 3;
@@ -80,34 +73,12 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			width += getSubCategory(sequencedRecipe).getWidth() + margin;
 		width -= margin;
 		int x = width / -2 + getBackground().getWidth() / 2;
-		int index = 2;
-		int fluidIndex = 0;
+
 		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence()) {
 			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
-			index += subCategory.addItemIngredients(sequencedRecipe, itemStacks, x, index);
-			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, fluidStacks, x, fluidIndex);
+			subCategory.setRecipe(builder, sequencedRecipe, focuses, x);
 			x += subCategory.getWidth() + margin;
 		}
-		
-		// In case machines should be displayed as ingredients
-		
-//		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-//		int catalystX = -2;
-//		int catalystY = 14;
-//		for (; index < inputs.size(); index++) {
-//			itemStacks.init(index, true, catalystX, catalystY);
-//			itemStacks.set(index, inputs.get(index));
-//			catalystY += 19;
-//		}
-
-		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-			if (slotIndex != 1)
-				return;
-			float chance = recipe.getOutputChance();
-			if (chance != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-					.withStyle(ChatFormatting.GOLD));
-		});
 	}
 
 	private SequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> sequencedRecipe) {
@@ -124,7 +95,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	final String[] romans = { "I", "II", "III", "IV", "V", "VI", "-" };
 
 	@Override
-	public void draw(SequencedAssemblyRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		Font font = Minecraft.getInstance().font;
 
 		matrixStack.pushPose();
@@ -133,8 +104,6 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		matrixStack.translate(0, 15, 0);
 		boolean singleOutput = recipe.getOutputChance() == 1;
 		int xOffset = singleOutput ? 0 : -7;
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26 + xOffset, 75);
-		(singleOutput ? AllGuiTextures.JEI_SLOT : AllGuiTextures.JEI_CHANCE_SLOT).render(matrixStack, 131 + xOffset, 75);
 		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52 + xOffset, 79);
 		if (!singleOutput) {
 			AllGuiTextures.JEI_CHANCE_SLOT.render(matrixStack, 150 + xOffset, 75);
@@ -178,8 +147,9 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(SequencedAssemblyRecipe recipe, double mouseX, double mouseY) {
-		List<Component> tooltip = new ArrayList<Component>();
+	@NotNull
+	public List<Component> getTooltipStrings(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, double mouseX, double mouseY) {
+		List<Component> tooltip = new ArrayList<>();
 
 		TranslatableComponent junk = Lang.translate("recipe.assembly.junk");
 
@@ -235,19 +205,4 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 		return tooltip;
 	}
-
-	private List<FluidIngredient> getAllFluidIngredients(SequencedAssemblyRecipe recipe) {
-		List<FluidIngredient> assemblyFluidIngredients = new ArrayList<>();
-		recipe.addAdditionalFluidIngredients(assemblyFluidIngredients);
-		return assemblyFluidIngredients;
-	}
-
-	private List<Ingredient> getAllItemIngredients(SequencedAssemblyRecipe recipe) {
-		List<Ingredient> assemblyIngredients = new ArrayList<>();
-		assemblyIngredients.add(recipe.getIngredient());
-		assemblyIngredients.add(Ingredient.of(recipe.getTransitionalItem()));
-		recipe.addAdditionalIngredientsAndMachines(assemblyIngredients);
-		return assemblyIngredients;
-	}
-
 }
