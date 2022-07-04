@@ -1134,4 +1134,61 @@ public class KineticsScenes {
 		scene.markAsFinished();
 	}
 
+	public static void creativeMotorMojang(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("creative_motor_mojang", "Mojang's Enigma");
+		scene.configureBasePlate(0, 0, 15);
+		scene.scaleSceneView(.55f);
+		scene.showBasePlate();
+		scene.idle(15);
+		scene.world.showSection(util.select.fromTo(12, 1, 7, 12, 1, 2), Direction.WEST);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(5, 1, 2, 7, 2, 1), Direction.EAST);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(7, 1, 3, 7, 1, 8), Direction.NORTH);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(7, 2, 8), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(4, 1, 4), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(4, 1, 6), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(3, 1, 10), Direction.SOUTH);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(1, 1, 11), Direction.EAST);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(11, 1, 3), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(11, 2, 3, 11, 2, 7), Direction.NORTH);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(8, 1, 2, 10, 1, 2), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(11, 1, 2), Direction.SOUTH);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(6, 1, 8, 5, 1, 8), Direction.EAST);
+		scene.rotateCameraY(-90);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(12, 1, 10), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(11, 1, 12), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(8, 1, 8, 11, 1, 8), Direction.WEST);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(5, 2, 8, 5, 3, 8), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(8, 1, 5, 8, 2, 7), Direction.WEST);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(7, 3, 9, 8, 3, 8), Direction.UP);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(6, 3, 7, 9, 3, 7)
+			.add(util.select.fromTo(6, 3, 8, 6, 3, 10))
+			.add(util.select.fromTo(7, 3, 10, 9, 3, 10))
+			.add(util.select.fromTo(9, 3, 7, 9, 3, 9)), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(10, 4, 7, 6, 4, 10), Direction.DOWN);
+		scene.idle(3);
+		scene.world.showSection(util.select.fromTo(8, 1, 13, 8, 2, 11), Direction.NORTH);
+		scene.idle(3);
+		scene.idle(20);
+	}
+
 }

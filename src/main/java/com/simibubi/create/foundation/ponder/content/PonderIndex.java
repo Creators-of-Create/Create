@@ -72,8 +72,9 @@ public class PonderIndex {
 			.addStoryBoard("fan/direction", FanScenes::direction, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("fan/processing", FanScenes::processing);
 
-		HELPER.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
-			PonderTag.KINETIC_SOURCES);
+		HELPER.forComponents(AllBlocks.CREATIVE_MOTOR)
+			.addStoryBoard("creative_motor", KineticsScenes::creativeMotor, PonderTag.KINETIC_SOURCES)
+			.addStoryBoard("creative_motor_mojang", KineticsScenes::creativeMotorMojang);
 		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
 			PonderTag.KINETIC_SOURCES);
 		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, PonderTag.KINETIC_SOURCES);

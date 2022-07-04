@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1017",
+	"_": "Missing Localizations: 1018",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "Generowanie siły obrotowej z użyciem kreatywnego silnika",
 	"create.ponder.creative_motor.text_1": "Kreatywny silnik to kompaktowe i regulowane źródło siły obrotowej",
 	"create.ponder.creative_motor.text_2": "Przewijanie patrząc na tylny panel zmienia prędkość obrotu",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "Kruszenie przedmiotów",
 	"create.ponder.crushing_wheels.text_1": "Para kół kruszących kruszy przedmioty niezwykle efektywnie",

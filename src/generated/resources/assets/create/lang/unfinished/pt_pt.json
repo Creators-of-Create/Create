@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2187",
+	"_": "Missing Localizations: 2188",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "UNLOCALIZED: Generating Rotational Force using Creative Motors",
 	"create.ponder.creative_motor.text_1": "UNLOCALIZED: Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "UNLOCALIZED: Scrolling on the back panel changes the RPM of the motors' rotational output",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "UNLOCALIZED: Processing Items with Crushing Wheels",
 	"create.ponder.crushing_wheels.text_1": "UNLOCALIZED: A pair of Crushing Wheels can grind items very effectively",

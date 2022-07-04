@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
 
+	"create.ponder.creative_motor_mojang.header": "Mojang's Enigma",
+
 	"create.ponder.crushing_wheels.header": "Processing Items with Crushing Wheels",
 	"create.ponder.crushing_wheels.text_1": "A pair of Crushing Wheels can grind items very effectively",
 	"create.ponder.crushing_wheels.text_2": "Their Rotational Input has to make them spin into each other",

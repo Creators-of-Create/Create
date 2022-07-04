@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1022",
+	"_": "Missing Localizations: 1023",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "Генерации силы вращения творческими моторами",
 	"create.ponder.creative_motor.text_1": "Творческие моторы - это компактные и настраиваемые источники Силы Вращения",
 	"create.ponder.creative_motor.text_2": "Прокрутка по задней панели изменяет кол-во об./мин. у вращающегося вала мотора",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "Обработке предметов Колёсами дробления",
 	"create.ponder.crushing_wheels.text_1": "Пара Колёс дробления может молоть предметы очень эффективно",

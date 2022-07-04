@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 644",
+	"_": "Missing Localizations: 645",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "크리에이티브 모터를 이용해 동력 생산하기",
 	"create.ponder.creative_motor.text_1": "크리에이티브 모터는 동력을 쉽게 생산, 조절합니다.",
 	"create.ponder.creative_motor.text_2": "모터 후면을 스크롤해서 모터의 RPM을 조절합니다.",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "분쇄 휠을 이용해 아이템 가공하기",
 	"create.ponder.crushing_wheels.text_1": "한 쌍의 분쇄 휠은 아이템을 매우 효과적으로 갈아버립니다.",

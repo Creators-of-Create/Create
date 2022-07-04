@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 978",
+	"_": "Missing Localizations: 979",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "Generando Energía Rotacional usando Motores del Creativo",
 	"create.ponder.creative_motor.text_1": "Los Motores del Creativo son una fuente compacta y configurable de fuerza rotacional.",
 	"create.ponder.creative_motor.text_2": "Rodar por el panel posterior cambia las RPM de salida de rotación de los motores",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "Procesando Objetos usando Ruedas Trituradoras",
 	"create.ponder.crushing_wheels.text_1": "Un par de Ruedas Trituradoras pueden triturar objetos muy efectivamente",

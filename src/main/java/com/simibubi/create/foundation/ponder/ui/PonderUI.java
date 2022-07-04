@@ -692,7 +692,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		boolean finished = activeScene.isFinished();
 
 		// Next up:
-		if (finished && nextScene != null && nextUp.getValue() > 1 / 16f) {
+		if (finished && nextScene != null && nextUp.getValue() > 1 / 16f && !nextScene.getId()
+			.equals(Create.asResource("creative_motor_mojang"))) {
 			ms.pushPose();
 			ms.translate(right.x + 10, right.y - 6 + nextUp.getValue(partialTicks) * 5, 400);
 			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translate(NEXT_UP))) + 5);

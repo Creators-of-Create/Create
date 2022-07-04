@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1036",
+	"_": "Missing Localizations: 1037",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "使用創造馬達產生動能",
 	"create.ponder.creative_motor.text_1": "創造馬達不僅能夠手動設定輸出動能，而且體積相當小巧",
 	"create.ponder.creative_motor.text_2": "對其背後面板滾動滾輪，可以改變馬達的轉速",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "使用粉碎輪處理物品",
 	"create.ponder.crushing_wheels.text_1": "一對粉碎輪，磨物快又準",

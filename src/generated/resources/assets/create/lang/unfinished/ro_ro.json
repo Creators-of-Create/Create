@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 645",
+	"_": "Missing Localizations: 646",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "Generarea Forței de Rotație folosind Motoare Creativ",
 	"create.ponder.creative_motor.text_1": "Motoarele Creativ sunt o sursă compactă și configurabilă de Forță de Rotație",
 	"create.ponder.creative_motor.text_2": "Derulând pe panoul din spate schimbă RPM a ieșirii rotaționale a motorului",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "Procesarea Obiectectelor cu Roți de Zdrobit",
 	"create.ponder.crushing_wheels.text_1": "O pereche de Roți de Zdrobit poate pisa obiecte foarte eficient",

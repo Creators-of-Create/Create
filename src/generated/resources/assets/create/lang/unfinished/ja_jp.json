@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 644",
+	"_": "Missing Localizations: 645",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2288,6 +2288,8 @@
 	"create.ponder.creative_motor.header": "クリエイティブモーターによる回転力の生成",
 	"create.ponder.creative_motor.text_1": "クリエイティブモーターは、コンパクトで出力を調整できる原動機です",
 	"create.ponder.creative_motor.text_2": "背面パネルを見ながらスクロールすると、モーターの回転速度を変更できます",
+
+	"create.ponder.creative_motor_mojang.header": "UNLOCALIZED: Mojang's Enigma",
 
 	"create.ponder.crushing_wheels.header": "破砕ホイールによるアイテム加工",
 	"create.ponder.crushing_wheels.text_1": "一対の破砕ホイールは、非常に効果的にアイテムを粉砕できます",
