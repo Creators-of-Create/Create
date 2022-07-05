@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
@@ -67,7 +66,7 @@ public class ToolboxHandler {
 			BlockPos pos = NbtUtils.readBlockPos(data.getCompound("Pos"));
 			int slot = data.getInt("Slot");
 
-			if (!world.isAreaLoaded(pos, 0))
+			if (!world.isLoaded(pos))
 				continue;
 			if (!(world.getBlockState(pos)
 				.getBlock() instanceof ToolboxBlock)) {

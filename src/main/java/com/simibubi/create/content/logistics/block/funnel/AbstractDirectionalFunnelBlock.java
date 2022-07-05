@@ -33,6 +33,7 @@ public class AbstractDirectionalFunnelBlock extends AbstractFunnelBlock {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}

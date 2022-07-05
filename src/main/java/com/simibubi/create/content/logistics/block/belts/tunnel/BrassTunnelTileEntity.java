@@ -335,7 +335,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!level.isAreaLoaded(adjacent.getBlockPos(), 1))
+				if (!level.isLoaded(adjacent.getBlockPos()))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)
@@ -477,7 +477,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!level.isAreaLoaded(adjacent.getBlockPos(), 1))
+				if (!level.isLoaded(adjacent.getBlockPos()))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)

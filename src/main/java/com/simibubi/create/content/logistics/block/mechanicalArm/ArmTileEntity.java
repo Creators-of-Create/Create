@@ -23,7 +23,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.InterpolatedAngle;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -57,11 +57,11 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 	// Client
 	ArmAngleTarget previousTarget;
-	InterpolatedAngle lowerArmAngle;
-	InterpolatedAngle upperArmAngle;
-	InterpolatedAngle baseAngle;
-	InterpolatedAngle headAngle;
-	InterpolatedAngle clawAngle;
+	LerpedFloat lowerArmAngle;
+	LerpedFloat upperArmAngle;
+	LerpedFloat baseAngle;
+	LerpedFloat headAngle;
+	LerpedFloat clawAngle;
 	float previousBaseAngle;
 	boolean updateInteractionPoints;
 
@@ -83,15 +83,15 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		heldItem = ItemStack.EMPTY;
 		phase = Phase.SEARCH_INPUTS;
 		previousTarget = ArmAngleTarget.NO_TARGET;
-		baseAngle = new InterpolatedAngle();
-		baseAngle.init(previousTarget.baseAngle);
-		lowerArmAngle = new InterpolatedAngle();
-		lowerArmAngle.init(previousTarget.lowerArmAngle);
-		upperArmAngle = new InterpolatedAngle();
-		upperArmAngle.init(previousTarget.upperArmAngle);
-		headAngle = new InterpolatedAngle();
-		headAngle.init(previousTarget.headAngle);
-		clawAngle = new InterpolatedAngle();
+		baseAngle = LerpedFloat.angular();
+		baseAngle.startWithValue(previousTarget.baseAngle);
+		lowerArmAngle = LerpedFloat.angular();
+		lowerArmAngle.startWithValue(previousTarget.lowerArmAngle);
+		upperArmAngle = LerpedFloat.angular();
+		upperArmAngle.startWithValue(previousTarget.upperArmAngle);
+		headAngle = LerpedFloat.angular();
+		headAngle.startWithValue(previousTarget.headAngle);
+		clawAngle = LerpedFloat.angular();
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
 		redstoneLocked = false;
@@ -191,7 +191,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		ArmAngleTarget target = targetedInteractionPoint == null ? ArmAngleTarget.NO_TARGET
 			: targetedInteractionPoint.getTargetAngles(worldPosition, isOnCeiling());
 
-		baseAngle.set(AngleHelper.angleLerp(chasedPointProgress, previousBaseAngle,
+		baseAngle.setValue(AngleHelper.angleLerp(chasedPointProgress, previousBaseAngle,
 			target == ArmAngleTarget.NO_TARGET ? previousBaseAngle : target.baseAngle));
 
 		// Arm's angles first backup to resting position and then continue
@@ -201,10 +201,10 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			previousTarget = ArmAngleTarget.NO_TARGET;
 		float progress = chasedPointProgress == 1 ? 1 : (chasedPointProgress % .5f) * 2;
 
-		lowerArmAngle.set(Mth.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
-		upperArmAngle.set(Mth.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
+		lowerArmAngle.setValue(Mth.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
+		upperArmAngle.setValue(Mth.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
+		headAngle.setValue(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
 
-		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
 		return false;
 	}
 
@@ -342,11 +342,11 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			ItemStack toInsert = heldItem.copy();
 			ItemStack remainder = armInteractionPoint.insert(toInsert, false);
 			heldItem = remainder;
-			
+
 			if (armInteractionPoint instanceof JukeboxPoint && remainder.isEmpty())
 				award(AllAdvancements.MUSICAL_ARM);
 		}
-		
+
 		phase = heldItem.isEmpty() ? Phase.SEARCH_INPUTS : Phase.SEARCH_OUTPUTS;
 		chasedPointProgress = 0;
 		chasedPointIndex = -1;

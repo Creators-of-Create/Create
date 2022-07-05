@@ -168,11 +168,13 @@ public abstract class SymmetryMirror {
 		return in.mirror(Mirror.LEFT_RIGHT);
 	}
 
+	@SuppressWarnings("deprecation")
 	protected BlockState flipD1(BlockState in) {
 		return in.rotate(Rotation.COUNTERCLOCKWISE_90)
 			.mirror(Mirror.FRONT_BACK);
 	}
 
+	@SuppressWarnings("deprecation")
 	protected BlockState flipD2(BlockState in) {
 		return in.rotate(Rotation.COUNTERCLOCKWISE_90)
 			.mirror(Mirror.LEFT_RIGHT);

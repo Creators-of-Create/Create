@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
@@ -96,7 +97,7 @@ public class SchematicPrinter {
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
 			.offset(-1, -1, -1));
-		blockReader.bounds.encapsulate(BoundingBox.fromCorners(extraBounds, extraBounds));
+		blockReader.bounds = BBHelper.encapsulate(blockReader.bounds, extraBounds);
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
@@ -237,7 +238,7 @@ public class SchematicPrinter {
 			BlockState required = blockReader.getBlockState(relPos);
 			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
 
-			if (!world.isAreaLoaded(pos.offset(schematicAnchor), 0)) {
+			if (!world.isLoaded(pos.offset(schematicAnchor))) {
 				checklist.warnBlockNotLoaded();
 				continue;
 			}

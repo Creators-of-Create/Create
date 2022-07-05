@@ -14,7 +14,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
@@ -37,7 +37,7 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelTileEntity
 
         tile.flaps.forEach((direction, flapValue) -> {
 
-            float flapness = flapValue.get(AnimationTickHolder.getPartialTicks());
+            float flapness = flapValue.getValue(AnimationTickHolder.getPartialTicks());
 
             float horizontalAngle = direction.getOpposite().toYRot();
 
@@ -76,12 +76,11 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelTileEntity
     @Override
     public void beginFrame() {
         tunnelFlaps.forEach((direction, keys) -> {
-            InterpolatedValue flapValue = blockEntity.flaps.get(direction);
-            if (flapValue == null) {
+            LerpedFloat lerpedFloat = blockEntity.flaps.get(direction);
+            if (lerpedFloat == null) 
                 return;
-            }
 
-            float flapness = flapValue.get(AnimationTickHolder.getPartialTicks());
+            float flapness = lerpedFloat.getValue(AnimationTickHolder.getPartialTicks());
             for (FlapData flap : keys) {
                 flap.setFlapness(flapness);
             }

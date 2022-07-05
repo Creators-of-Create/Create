@@ -73,10 +73,6 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 		withTileEntityDo(world, pos, StockpileSwitchTileEntity::updateCurrentLevel);
 	}
 
-	private boolean isObserving(BlockState state, BlockPos pos, BlockPos observing) {
-		return observing.equals(pos.relative(state.getValue(FACING)));
-	}
-
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != null && side.getOpposite() != state.getValue(FACING);

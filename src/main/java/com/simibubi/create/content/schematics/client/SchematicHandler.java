@@ -189,9 +189,9 @@ public class SchematicHandler {
 		if (!renderers.isEmpty()) {
 			float pt = AnimationTickHolder.getPartialTicks();
 			boolean lr = transformation.getScaleLR()
-				.get(pt) < 0;
+				.getValue(pt) < 0;
 			boolean fb = transformation.getScaleFB()
-				.get(pt) < 0;
+				.getValue(pt) < 0;
 			if (lr && !fb)
 				renderers.get(2)
 					.render(ms, buffer);

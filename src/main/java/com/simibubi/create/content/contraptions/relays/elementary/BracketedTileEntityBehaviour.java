@@ -1,12 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -27,7 +25,6 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	private boolean reRender;
 
 	private Predicate<BlockState> pred;
-	private Function<BlockState, ITriggerable> trigger;
 
 	public BracketedTileEntityBehaviour(SmartTileEntity te) {
 		this(te, state -> true);
@@ -37,11 +34,6 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		super(te);
 		this.pred = pred;
 		bracket = Optional.empty();
-	}
-
-	public BracketedTileEntityBehaviour withTrigger(Function<BlockState, ITriggerable> trigger) {
-		this.trigger = trigger;
-		return this;
 	}
 
 	@Override

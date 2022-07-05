@@ -67,6 +67,7 @@ import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ICoordinate;
@@ -309,8 +310,7 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.WINDMILL_BEARING.has(state)
-			&& world.getBlockEntity(pos) instanceof WindmillBearingTileEntity wbte)
+		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos)instanceof WindmillBearingTileEntity wbte)
 			wbte.disassembleForMovement();
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
@@ -337,7 +337,7 @@ public abstract class Contraption {
 		}
 
 		// Bogeys tend to have sticky sides
-		if (state.getBlock() instanceof IBogeyBlock bogey)
+		if (state.getBlock()instanceof IBogeyBlock bogey)
 			for (Direction d : bogey.getStickySurfaces(world, pos, state))
 				if (!visited.contains(pos.relative(d)))
 					frontier.add(pos.relative(d));
@@ -926,8 +926,7 @@ public abstract class Contraption {
 					if (minimisedGlue.get(i) == null)
 						minimisedGlue.set(i, new BoundingBox(block.pos));
 					else
-						minimisedGlue.get(i)
-							.encapsulate(block.pos);
+						minimisedGlue.set(i, BBHelper.encapsulate(minimisedGlue.get(i), block.pos));
 				}
 
 				BlockPos add = block.pos.offset(anchor)

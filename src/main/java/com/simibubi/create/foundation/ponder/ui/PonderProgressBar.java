@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.ponder.ui;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.BoxElement;

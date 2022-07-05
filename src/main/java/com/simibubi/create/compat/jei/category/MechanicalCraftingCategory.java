@@ -43,9 +43,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CraftingRecipe recipe, IFocusGroup focuses) {
-		builder
-				.addSlot(RecipeIngredientRole.OUTPUT, 134, 81)
-				.addItemStack(recipe.getResultItem());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 134, 81)
+			.addItemStack(recipe.getResultItem());
 
 		int x = getXPadding(recipe);
 		int y = getYPadding(recipe);
@@ -56,18 +55,15 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			float f = 19 * scale;
-			int slotSize = (int) (16 * scale);
 			int xPosition = (int) (x + 1 + (i % getWidth(recipe)) * f);
 			int yPosition = (int) (y + 1 + (i / getWidth(recipe)) * f);
 
-			builder
-					.addSlot(RecipeIngredientRole.INPUT, xPosition, yPosition)
-					.setCustomRenderer(VanillaTypes.ITEM, renderer)
-					.addIngredients(ingredient);
+			builder.addSlot(RecipeIngredientRole.INPUT, xPosition, yPosition)
+				.setCustomRenderer(VanillaTypes.ITEM, renderer)
+				.addIngredients(ingredient);
 
 			i++;
 		}
-
 
 	}
 
@@ -96,7 +92,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	@Override
-	public void draw(CraftingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CraftingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX,
+		double mouseY) {
 		matrixStack.pushPose();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);

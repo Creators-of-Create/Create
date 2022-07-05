@@ -179,8 +179,6 @@ public class RemovedGuiUtils {
 			.getBuilder());
 		pStack.translate(0.0D, 0.0D, zLevel);
 
-		int tooltipTop = tooltipY;
-
 		for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
 			ClientTooltipComponent line = list.get(lineNumber);
 			

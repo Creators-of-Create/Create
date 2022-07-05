@@ -74,7 +74,7 @@ public class CClient extends ConfigBase {
 			Comments.ambientVolumeCap);
 
 	//train group
-	public final ConfigGroup trains = group(1, "trains");
+	public final ConfigGroup trains = group(1, "trains", Comments.trains);
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 
 	@Override

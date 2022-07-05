@@ -29,7 +29,7 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState leverState = te.getBlockState();
-		float state = te.clientState.get(partialTicks);
+		float state = te.clientState.getValue(partialTicks);
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 

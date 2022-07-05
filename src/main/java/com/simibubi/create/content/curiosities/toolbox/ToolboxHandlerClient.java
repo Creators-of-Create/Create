@@ -5,7 +5,6 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_HOTBAR_
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_OFF;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_ON;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 

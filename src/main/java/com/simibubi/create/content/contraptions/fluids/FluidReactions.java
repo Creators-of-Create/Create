@@ -21,7 +21,7 @@ public class FluidReactions {
 	public static void handlePipeFlowCollision(Level world, BlockPos pos, FluidStack fluid, FluidStack fluid2) {
 		Fluid f1 = fluid.getFluid();
 		Fluid f2 = fluid2.getFluid();
-		
+
 		AdvancementBehaviour.tryAward(world, pos, AllAdvancements.CROSS_STREAMS);
 		BlockHelper.destroyBlock(world, pos, 1);
 
@@ -43,7 +43,7 @@ public class FluidReactions {
 	public static void handlePipeSpillCollision(Level world, BlockPos pos, Fluid pipeFluid, FluidState worldFluid) {
 		Fluid pf = FluidHelper.convertToStill(pipeFluid);
 		Fluid wf = worldFluid.getType();
-		if (pf.is(FluidTags.WATER) && wf == Fluids.LAVA)
+		if (FluidHelper.isTag(pf, FluidTags.WATER) && wf == Fluids.LAVA)
 			world.setBlockAndUpdate(pos, Blocks.OBSIDIAN.defaultBlockState());
 		else if (pf == Fluids.WATER && wf == Fluids.FLOWING_LAVA)
 			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());

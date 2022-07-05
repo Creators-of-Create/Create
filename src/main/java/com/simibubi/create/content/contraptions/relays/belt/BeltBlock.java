@@ -412,7 +412,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos nextSegmentPosition = nextSegmentPosition(currentState, currentPos, false);
 			if (nextSegmentPosition == null)
 				break;
-			if (!world.isAreaLoaded(nextSegmentPosition, 0))
+			if (!world.isLoaded(nextSegmentPosition))
 				return;
 			currentPos = nextSegmentPosition;
 		}

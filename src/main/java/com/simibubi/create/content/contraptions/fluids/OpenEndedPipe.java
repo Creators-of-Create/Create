@@ -174,7 +174,7 @@ public class OpenEndedPipe extends FlowSource {
 	private boolean provideFluidToSpace(FluidStack fluid, boolean simulate) {
 		if (world == null)
 			return false;
-		if (!world.isAreaLoaded(outputPos, 0))
+		if (!world.isLoaded(outputPos))
 			return false;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -202,9 +202,7 @@ public class OpenEndedPipe extends FlowSource {
 			return true;
 
 		if (world.dimensionType()
-			.ultraWarm()
-			&& fluid.getFluid()
-				.is(FluidTags.WATER)) {
+			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER)) {
 			int i = outputPos.getX();
 			int j = outputPos.getY();
 			int k = outputPos.getZ();
@@ -265,7 +263,7 @@ public class OpenEndedPipe extends FlowSource {
 
 			FluidStack containedFluidStack = getFluid();
 			boolean hasBlockState = FluidHelper.hasBlockState(containedFluidStack.getFluid());
-			
+
 			if (!containedFluidStack.isEmpty() && !containedFluidStack.isFluidEqual(resource))
 				setFluid(FluidStack.EMPTY);
 			if (wasPulling)
@@ -379,8 +377,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class MilkEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return fluid.getFluid()
-				.is(Tags.Fluids.MILK);
+			return FluidHelper.isTag(fluid, Tags.Fluids.MILK);
 		}
 
 		@Override
@@ -399,8 +396,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class WaterEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return fluid.getFluid()
-				.is(FluidTags.WATER);
+			return FluidHelper.isTag(fluid, FluidTags.WATER);
 		}
 
 		@Override
@@ -433,8 +429,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class LavaEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return fluid.getFluid()
-				.is(FluidTags.LAVA);
+			return FluidHelper.isTag(fluid, FluidTags.LAVA);
 		}
 
 		@Override

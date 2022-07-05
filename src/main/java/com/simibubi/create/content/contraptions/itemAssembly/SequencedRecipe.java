@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.common.crafting.conditions.ICondition.IContext;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class SequencedRecipe<T extends ProcessingRecipe<?>> {
@@ -43,7 +44,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 	public static SequencedRecipe<?> fromJson(JsonObject json, SequencedAssemblyRecipe parent, int index) {
 		ResourceLocation parentId = parent.getId();
 		Recipe<?> recipe = RecipeManager.fromJson(
-			new ResourceLocation(parentId.getNamespace(), parentId.getPath() + "_step_" + index), json);
+			new ResourceLocation(parentId.getNamespace(), parentId.getPath() + "_step_" + index), json, IContext.EMPTY);
 		if (recipe instanceof ProcessingRecipe<?> && recipe instanceof IAssemblyRecipe) {
 			ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe;
 			IAssemblyRecipe assemblyRecipe = (IAssemblyRecipe) recipe;

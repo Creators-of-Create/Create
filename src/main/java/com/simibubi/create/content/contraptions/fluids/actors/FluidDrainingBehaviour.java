@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
@@ -100,7 +101,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				if (blockState.getValue(LiquidBlock.LEVEL) == 0)
 					fluid = flowingFluid.getFluid();
 				else {
-					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
+					affectedArea = BBHelper.encapsulate(affectedArea, BoundingBox.fromCorners(currentPos, currentPos));
 					if (!tileEntity.isVirtual())
 						world.setBlock(currentPos, emptied, 2 | 16);
 					queue.dequeue();
@@ -144,7 +145,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 			if (!tileEntity.isVirtual())
 				world.setBlock(currentPos, emptied, 2 | 16);
-			affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
+			affectedArea = BBHelper.encapsulate(affectedArea, currentPos);
 
 			queue.dequeue();
 			if (queue.isEmpty()) {

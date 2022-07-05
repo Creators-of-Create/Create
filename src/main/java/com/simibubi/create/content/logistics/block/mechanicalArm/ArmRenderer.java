@@ -41,20 +41,21 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		boolean hasItem = !item.isEmpty();
 		boolean usingFlywheel = Backend.canUseInstancing(te.getLevel());
 
-		if (usingFlywheel && !hasItem) return;
+		if (usingFlywheel && !hasItem)
+			return;
 
 		ItemRenderer itemRenderer = Minecraft.getInstance()
-											 .getItemRenderer();
+			.getItemRenderer();
 
-		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
-				&& itemRenderer.getModel(item, te.getLevel(), null, 0)
-							   .isGui3d();
+		boolean isBlockItem =
+			hasItem && (item.getItem() instanceof BlockItem) && itemRenderer.getModel(item, te.getLevel(), null, 0)
+				.isGui3d();
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		BlockState blockState = te.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
-        TransformStack msr = TransformStack.cast(msLocal);
+		TransformStack msr = TransformStack.cast(msLocal);
 
 		float baseAngle;
 		float lowerArmAngle;
@@ -69,12 +70,13 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
-			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100).getRGB();
+			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100)
+				.getRGB();
 		} else {
-			baseAngle = arm.baseAngle.get(pt);
-			lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;
-			upperArmAngle = arm.upperArmAngle.get(pt) - 90;
-			headAngle = arm.headAngle.get(pt);
+			baseAngle = arm.baseAngle.getValue(pt);
+			lowerArmAngle = arm.lowerArmAngle.getValue(pt) - 135;
+			upperArmAngle = arm.upperArmAngle.getValue(pt) - 90;
+			headAngle = arm.headAngle.getValue(pt);
 			color = 0xFFFFFF;
 		}
 
@@ -86,7 +88,8 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		if (usingFlywheel)
 			doItemTransforms(msr, baseAngle, lowerArmAngle, upperArmAngle, headAngle);
 		else
-			renderArm(builder, ms, msLocal, msr, blockState, color, baseAngle, lowerArmAngle, upperArmAngle, headAngle, hasItem, isBlockItem, light);
+			renderArm(builder, ms, msLocal, msr, blockState, color, baseAngle, lowerArmAngle, upperArmAngle, headAngle,
+				hasItem, isBlockItem, light);
 
 		if (hasItem) {
 			ms.pushPose();
@@ -95,36 +98,45 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			msLocal.translate(0, -4 / 16f, 0);
 			msLocal.scale(itemScale, itemScale, itemScale);
 
-			ms.last().pose().multiply(msLocal.last().pose());
+			ms.last()
+				.pose()
+				.multiply(msLocal.last()
+					.pose());
 
-			itemRenderer
-				.renderStatic(item, TransformType.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.renderStatic(item, TransformType.FIXED, light, overlay, ms, buffer, 0);
 			ms.popPose();
 		}
 
 	}
 
-	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, TransformStack msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
-		SuperByteBuffer base = CachedBufferer.partial(AllBlockPartials.ARM_BASE, blockState).light(light);
-		SuperByteBuffer lowerBody = CachedBufferer.partial(AllBlockPartials.ARM_LOWER_BODY, blockState).light(light);
-		SuperByteBuffer upperBody = CachedBufferer.partial(AllBlockPartials.ARM_UPPER_BODY, blockState).light(light);
-		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.ARM_HEAD, blockState).light(light);
-		SuperByteBuffer claw = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_BASE, blockState).light(light);
+	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, TransformStack msr,
+		BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle,
+		boolean hasItem, boolean isBlockItem, int light) {
+		SuperByteBuffer base = CachedBufferer.partial(AllBlockPartials.ARM_BASE, blockState)
+			.light(light);
+		SuperByteBuffer lowerBody = CachedBufferer.partial(AllBlockPartials.ARM_LOWER_BODY, blockState)
+			.light(light);
+		SuperByteBuffer upperBody = CachedBufferer.partial(AllBlockPartials.ARM_UPPER_BODY, blockState)
+			.light(light);
+		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.ARM_HEAD, blockState)
+			.light(light);
+		SuperByteBuffer claw = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_BASE, blockState)
+			.light(light);
 		SuperByteBuffer clawGrip = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_GRIP, blockState);
 
 		transformBase(msr, baseAngle);
 		base.transform(msLocal)
-				.renderInto(ms, builder);
+			.renderInto(ms, builder);
 
 		transformLowerArm(msr, lowerArmAngle);
 		lowerBody.color(color)
-				.transform(msLocal)
-				.renderInto(ms, builder);
+			.transform(msLocal)
+			.renderInto(ms, builder);
 
 		transformUpperArm(msr, upperArmAngle);
 		upperBody.color(color)
-				 .transform(msLocal)
-				 .renderInto(ms, builder);
+			.transform(msLocal)
+			.renderInto(ms, builder);
 
 		transformHead(msr, headAngle);
 		head.transform(msLocal)
@@ -137,12 +149,15 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		for (int flip : Iterate.positiveAndNegative) {
 			msLocal.pushPose();
 			transformClawHalf(msr, hasItem, isBlockItem, flip);
-			clawGrip.light(light).transform(msLocal).renderInto(ms, builder);
+			clawGrip.light(light)
+				.transform(msLocal)
+				.renderInto(ms, builder);
 			msLocal.popPose();
 		}
 	}
 
-	private void doItemTransforms(TransformStack msr, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle) {
+	private void doItemTransforms(TransformStack msr, float baseAngle, float lowerArmAngle, float upperArmAngle,
+		float headAngle) {
 
 		transformBase(msr, baseAngle);
 		transformLowerArm(msr, lowerArmAngle);

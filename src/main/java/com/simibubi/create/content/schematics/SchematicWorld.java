@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
@@ -203,7 +204,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public boolean setBlock(BlockPos pos, BlockState arg1, int arg2) {
 		pos = pos.immutable()
 			.subtract(anchor);
-		bounds.encapsulate(BoundingBox.fromCorners(pos, pos));
+		bounds = BBHelper.encapsulate(bounds, pos);
 		blocks.put(pos, arg1);
 		if (tileEntities.containsKey(pos)) {
 			BlockEntity tileEntity = tileEntities.get(pos);

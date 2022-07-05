@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.display;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
@@ -25,8 +24,6 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.PonderTag;
-import com.simibubi.create.foundation.ponder.ui.NavigatableSimiScreen;
-import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.ponder.ui.PonderTagScreen;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;

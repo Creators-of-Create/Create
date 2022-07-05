@@ -15,19 +15,18 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 
-	public ChuteRenderer(BlockEntityRendererProvider.Context context) {
-	}
+	public ChuteRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(ChuteTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light, int overlay) {
+	protected void renderSafe(ChuteTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+		int overlay) {
 		if (te.item.isEmpty())
 			return;
 		BlockState blockState = te.getBlockState();
 		if (blockState.getValue(ChuteBlock.FACING) != Direction.DOWN)
 			return;
 		if (blockState.getValue(ChuteBlock.SHAPE) != Shape.WINDOW
-			&& (te.bottomPullDistance == 0 || te.itemPosition.get(partialTicks) > .5f))
+			&& (te.bottomPullDistance == 0 || te.itemPosition.getValue(partialTicks) > .5f))
 			return;
 
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
@@ -41,7 +40,7 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		ms.pushPose();
 		msr.centre();
 		float itemScale = .5f;
-		float itemPosition = te.itemPosition.get(partialTicks);
+		float itemPosition = te.itemPosition.getValue(partialTicks);
 		ms.translate(0, -.5 + itemPosition, 0);
 		ms.scale(itemScale, itemScale, itemScale);
 		msr.rotateX(itemPosition * 180);

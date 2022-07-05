@@ -5,8 +5,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
-// Can replace all Interpolated value classes
-// InterpolatedChasingValue, InterpolatedValue, InterpolatedChasingAngle, InterpolatedAngle
 public class LerpedFloat {
 
 	protected Interpolator interpolator;
@@ -16,6 +14,7 @@ public class LerpedFloat {
 	protected Chaser chaseFunction;
 	protected float chaseTarget;
 	protected float chaseSpeed;
+	protected boolean angularChase;
 
 	protected boolean forcedSync;
 
@@ -30,7 +29,9 @@ public class LerpedFloat {
 	}
 
 	public static LerpedFloat angular() {
-		return new LerpedFloat(AngleHelper::angleLerp);
+		LerpedFloat lerpedFloat = new LerpedFloat(AngleHelper::angleLerp);
+		lerpedFloat.angularChase = true;
+		return lerpedFloat;
 	}
 
 	public LerpedFloat startWithValue(double value) {
@@ -42,13 +43,15 @@ public class LerpedFloat {
 	}
 
 	public LerpedFloat chase(double value, double speed, Chaser chaseFunction) {
-		this.chaseTarget = (float) value;
+		updateChaseTarget((float) value);
 		this.chaseSpeed = (float) speed;
 		this.chaseFunction = chaseFunction;
 		return this;
 	}
 
 	public void updateChaseTarget(float target) {
+		if (angularChase)
+			target = value + AngleHelper.getShortestAngleDiff(value, target);
 		this.chaseTarget = target;
 	}
 
@@ -72,7 +75,7 @@ public class LerpedFloat {
 	public void setValueNoUpdate(double value) {
 		this.value = (float) value;
 	}
-	
+
 	public void setValue(double value) {
 		this.previousValue = this.value;
 		this.value = (float) value;

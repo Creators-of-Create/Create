@@ -82,6 +82,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public BlockState rotate(BlockState state, Rotation rotation) {
 		if (rotation == Rotation.NONE)
 			return state;

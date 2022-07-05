@@ -359,7 +359,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		// Check block
-		if (!getLevel().isAreaLoaded(printer.getCurrentTarget(), 0)) {
+		if (!getLevel().isLoaded(printer.getCurrentTarget())) {
 			positionNotLoaded = true;
 			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;

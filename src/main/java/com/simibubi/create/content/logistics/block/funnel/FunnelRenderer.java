@@ -36,18 +36,18 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 		BlockState blockState = te.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
-				: AllBlockPartials.BELT_FUNNEL_FLAP);
+			: AllBlockPartials.BELT_FUNNEL_FLAP);
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		TransformStack msr = TransformStack.cast(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
-				.getOpposite());
-		float f = te.flap.get(partialTicks);
+			.getOpposite());
+		float f = te.flap.getValue(partialTicks);
 
 		ms.pushPose();
 		msr.centre()
-				.rotateY(horizontalAngle)
+			.rotateY(horizontalAngle)
 			.unCentre();
 		ms.translate(0, 0, -te.getFlapOffset());
 

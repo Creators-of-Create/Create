@@ -5,7 +5,6 @@ import java.util.List;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 

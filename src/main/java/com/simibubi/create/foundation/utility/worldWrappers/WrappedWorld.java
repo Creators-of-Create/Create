@@ -172,11 +172,6 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public boolean hasChunkAt(BlockPos p_175667_1_) {
-		return world.hasChunkAt(p_175667_1_);
-	}
-
-	@Override
 	public void updateNeighbourForOutputSignal(BlockPos p_175666_1_, Block p_175666_2_) {}
 
 	@Override

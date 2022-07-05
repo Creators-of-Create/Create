@@ -96,6 +96,8 @@ public class DeployTool extends PlacementToolBase {
 				.putBoolean("Deployed", true);
 			item.getTag()
 				.put("Anchor", NbtUtils.writeBlockPos(target));
+			schematicHandler.getTransformation()
+				.startAt(target);
 		}
 
 		schematicHandler.getTransformation()
