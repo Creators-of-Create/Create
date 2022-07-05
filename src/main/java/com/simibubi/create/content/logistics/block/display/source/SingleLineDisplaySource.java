@@ -34,9 +34,9 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 	protected void addLabelingTextBox(ModularGuiLineBuilder builder) {
 		builder.addTextInput(0, 137, (e, t) -> {
 			e.setValue("");
-			t.withTooltip(ImmutableList.of(Lang.translate("display_source.label")
+			t.withTooltip(ImmutableList.of(Lang.translateDirect("display_source.label")
 				.withStyle(s -> s.withColor(0x5391E1)),
-				Lang.translate("gui.schedule.lmb_edit")
+				Lang.translateDirect("gui.schedule.lmb_edit")
 					.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
 		}, "Label");
 	}

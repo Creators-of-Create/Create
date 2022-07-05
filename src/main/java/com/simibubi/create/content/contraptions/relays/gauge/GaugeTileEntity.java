@@ -48,7 +48,7 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.gauge.info_header")));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translateDirect("gui.gauge.info_header")));
 
 		return true;
 	}

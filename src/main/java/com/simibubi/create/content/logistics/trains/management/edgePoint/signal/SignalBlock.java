@@ -108,10 +108,10 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 			if (signal != null) {
 				signal.cycleSignalType(pos);
 				if (player != null)
-					player.displayClientMessage(Lang.translate("track_signal.mode_change." + signal.getTypeFor(pos)
+					player.displayClientMessage(Lang.translateDirect("track_signal.mode_change." + signal.getTypeFor(pos)
 						.getSerializedName()), true);
 			} else if (player != null)
-				player.displayClientMessage(Lang.translate("track_signal.cannot_change_mode"), true);
+				player.displayClientMessage(Lang.translateDirect("track_signal.cannot_change_mode"), true);
 		});
 		return InteractionResult.SUCCESS;
 	}

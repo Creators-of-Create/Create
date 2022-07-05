@@ -40,7 +40,7 @@ public class ControlsHandler {
 		controlsPos = controllerLocalPos;
 
 		Minecraft.getInstance().player.displayClientMessage(
-			Lang.translate("contraption.controls.start_controlling", entity.getContraptionName()), true);
+			Lang.translateDirect("contraption.controls.start_controlling", entity.getContraptionName()), true);
 	}
 
 	public static void stopControlling() {
@@ -57,7 +57,7 @@ public class ControlsHandler {
 		controlsPos = null;
 		currentlyPressed.clear();
 
-		Minecraft.getInstance().player.displayClientMessage(Lang.translate("contraption.controls.stop_controlling"),
+		Minecraft.getInstance().player.displayClientMessage(Lang.translateDirect("contraption.controls.stop_controlling"),
 			true);
 	}
 

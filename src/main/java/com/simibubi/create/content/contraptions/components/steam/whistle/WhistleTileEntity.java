@@ -107,11 +107,11 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		String[] pitches = Lang.translate("generic.notes")
+		String[] pitches = Lang.translateDirect("generic.notes")
 			.getString()
 			.split(";");
 		TextComponent textComponent = new TextComponent(spacing);
-		tooltip.add(textComponent.append(Lang.translate("generic.pitch", pitches[pitch % pitches.length])));
+		tooltip.add(textComponent.append(Lang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}
 

@@ -67,7 +67,7 @@ public class FilteringRenderer {
 		boolean showCount = behaviour.isCountVisible();
 		boolean fluids = behaviour.fluidFilter;
 		Component label = isFilterSlotted ? TextComponent.EMPTY
-			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter"
+			: Lang.translateDirect(behaviour.recipeFilter ? "logistics.recipe_filter"
 				: fluids ? "logistics.fluid_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getLocation()
 			.subtract(Vec3.atLowerCornerOf(pos)));
@@ -80,7 +80,7 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-				.scrollTooltip(showCount && !isFilterSlotted ? new TextComponent("[").append(Lang.translate("action.scroll")).append("]") : TextComponent.EMPTY)
+				.scrollTooltip(showCount && !isFilterSlotted ? new TextComponent("[").append(Lang.translateDirect("action.scroll")).append("]") : TextComponent.EMPTY)
 				.passive(!hit);
 
 		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))

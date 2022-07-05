@@ -101,7 +101,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		super.addBehaviours(behaviours);
 		behaviours.remove(movementMode);
 		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
-			Lang.translate("contraptions.windmill.rotation_direction"), this, getMovementModeSlot());
+			Lang.translateDirect("contraptions.windmill.rotation_direction"), this, getMovementModeSlot());
 		movementDirection.requiresWrench();
 		movementDirection.withCallback($ -> onDirectionChanged());
 		behaviours.add(movementDirection);

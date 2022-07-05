@@ -81,7 +81,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 		if (state == State.DETACH) {
 
-			tip = Lang.translate("toolbox.outOfRange");
+			tip = Lang.translateDirect("toolbox.outOfRange");
 			if (hoveredX > -20 && hoveredX < 20 && hoveredY > -80 && hoveredY < -20)
 				hoveredSlot = UNEQUIP;
 
@@ -99,7 +99,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			ms.translate(0.5, -0.5, 0);
 			if (!scrollMode && hoveredSlot == UNEQUIP) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
-				tip = Lang.translate("toolbox.detach")
+				tip = Lang.translateDirect("toolbox.detach")
 					.withStyle(ChatFormatting.GOLD);
 			}
 			ms.popPose();
@@ -117,7 +117,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			ms.translate(0.5, -0.5, 0);
 			if (!scrollMode && hoveredSlot == DEPOSIT) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
-				tip = Lang.translate(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
+				tip = Lang.translateDirect(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
 					.withStyle(ChatFormatting.GOLD);
 			}
 			ms.popPose();
@@ -179,7 +179,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				(scrollMode ? AllIcons.I_REFRESH : AllIcons.I_FLIP).render(ms, -9, -9, this);
 				if (!scrollMode && UNEQUIP == hoveredSlot) {
 					AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
-					tip = Lang.translate("toolbox.unequip", minecraft.player.getMainHandItem()
+					tip = Lang.translateDirect("toolbox.unequip", minecraft.player.getMainHandItem()
 						.getHoverName())
 						.withStyle(ChatFormatting.GOLD);
 				}

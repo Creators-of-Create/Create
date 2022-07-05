@@ -99,7 +99,7 @@ public class FilteringHandler {
 				.getBlock()
 				.getDescriptionId();
 			Component formattedText = new TranslatableComponent(translationKey);
-			player.displayClientMessage(Lang.createTranslationTextComponent("logistics.filter." + feedback, formattedText)
+			player.displayClientMessage(Lang.translateDirect("logistics.filter." + feedback, formattedText)
 				.withStyle(ChatFormatting.WHITE), true);
 		}
 

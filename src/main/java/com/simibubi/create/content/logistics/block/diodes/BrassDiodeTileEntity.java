@@ -29,7 +29,7 @@ public abstract class BrassDiodeTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		maxState = new ScrollValueBehaviour(Lang.translate("generic.delay"), this, new BrassDiodeScrollSlot())
+		maxState = new ScrollValueBehaviour(Lang.translateDirect("generic.delay"), this, new BrassDiodeScrollSlot())
 			.between(2, 60 * 20 * 30);
 		maxState.withStepFunction(this::step);
 		maxState.withFormatter(this::format);
@@ -98,10 +98,10 @@ public abstract class BrassDiodeTileEntity extends SmartTileEntity {
 
 	private Component getUnit(int value) {
 		if (value < 20)
-			return Lang.translate("generic.unit.ticks");
+			return Lang.translateDirect("generic.unit.ticks");
 		if (value < 20 * 60)
-			return Lang.translate("generic.unit.seconds");
-		return Lang.translate("generic.unit.minutes");
+			return Lang.translateDirect("generic.unit.seconds");
+		return Lang.translateDirect("generic.unit.minutes");
 	}
 
 }

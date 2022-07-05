@@ -15,7 +15,7 @@ public class ScheduledDelay extends TimedWaitCondition {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(ItemStack.EMPTY, Lang.translate("schedule.condition.delay_short", formatTime(true)));
+		return Pair.of(ItemStack.EMPTY, Lang.translateDirect("schedule.condition.delay_short", formatTime(true)));
 	}
 
 	@Override

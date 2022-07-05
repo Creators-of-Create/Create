@@ -34,8 +34,8 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	private Label labelAlign;
 	private IconButton confirmButton;
 
-	private final Component mirrorType = Lang.translate("gui.symmetryWand.mirrorType");
-	private final Component orientation = Lang.translate("gui.symmetryWand.orientation");
+	private final Component mirrorType = Lang.translateDirect("gui.symmetryWand.mirrorType");
+	private final Component orientation = Lang.translateDirect("gui.symmetryWand.orientation");
 
 	private SymmetryMirror currentElement;
 	private ItemStack wand;

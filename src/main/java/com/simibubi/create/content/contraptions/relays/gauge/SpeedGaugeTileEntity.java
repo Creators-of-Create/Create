@@ -27,8 +27,8 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 
 		dialTarget = getDialTarget(speed);
 		color = Color.mixColors(SpeedLevel.of(speed)
-				.getColor(), 0xffffff, .25f);
-		
+			.getColor(), 0xffffff, .25f);
+
 		setChanged();
 	}
 
@@ -55,10 +55,11 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.speedometer.title").withStyle(ChatFormatting.GRAY)));
-		tooltip.add(componentSpacing.plainCopy().append(SpeedLevel.getFormattedSpeedText(speed, isOverStressed())));
-
+		Lang.translate("gui.speedometer.title")
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+		SpeedLevel.getFormattedSpeedText(speed, isOverStressed())
+			.forGoggles(tooltip);
 		return true;
 	}
 }

@@ -91,7 +91,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
-			Lang.translate("logistics.when_multiple_outputs_available"), this,
+			Lang.translateDirect("logistics.when_multiple_outputs_available"), this,
 			new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP)));
 		selectionMode.requiresWrench();
 
@@ -748,16 +748,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			return false;
 		
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translate("tooltip.brass_tunnel.contains"))
+			.append(Lang.translateDirect("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getItem()
+				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getItem()
 					.getDescriptionId(item)).getString(), item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translate("tooltip.brass_tunnel.retrieve"))
+			.append(Lang.translateDirect("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
 		
 		return true;

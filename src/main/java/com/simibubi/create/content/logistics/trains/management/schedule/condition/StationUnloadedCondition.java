@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 public class StationUnloadedCondition extends ScheduleWaitCondition {
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(ItemStack.EMPTY, Lang.translate("schedule.condition.unloaded"));
+		return Pair.of(ItemStack.EMPTY, Lang.translateDirect("schedule.condition.unloaded"));
 	}
 
 	@Override
@@ -43,6 +43,6 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		return Lang.translate("schedule.condition.unloaded.status");
+		return Lang.translateDirect("schedule.condition.unloaded.status");
 	}
 }

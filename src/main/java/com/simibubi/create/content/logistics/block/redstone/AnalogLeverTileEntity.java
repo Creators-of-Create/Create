@@ -79,7 +79,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("tooltip.analogStrength", this.state)));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translateDirect("tooltip.analogStrength", this.state)));
 
 		return true;
 	}

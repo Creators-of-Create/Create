@@ -47,7 +47,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 				.addIngredients(recipe.getRequiredHeldItem())
 				.addTooltipCallback(
 					recipe.shouldKeepHeldItem()
-						? (view, tooltip) -> tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
+						? (view, tooltip) -> tooltip.add(1, Lang.translateDirect("recipe.deploying.not_consumed")
 							.withStyle(ChatFormatting.GOLD))
 						: (view, tooltip) -> {}
 				);

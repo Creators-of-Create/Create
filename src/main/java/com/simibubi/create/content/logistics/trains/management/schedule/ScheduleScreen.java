@@ -127,10 +127,10 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		});
 
 		List<Component> tip = cyclicButton.getToolTip();
-		tip.add(Lang.translate("schedule.loop"));
-		tip.add(Lang.translate("schedule.loop1")
+		tip.add(Lang.translateDirect("schedule.loop"));
+		tip.add(Lang.translateDirect("schedule.loop1")
 			.withStyle(ChatFormatting.GRAY));
-		tip.add(Lang.translate("schedule.loop2")
+		tip.add(Lang.translateDirect("schedule.loop2")
 			.withStyle(ChatFormatting.GRAY));
 
 		addRenderableWidget(cyclicButton);
@@ -141,7 +141,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			resetProgress.active = false;
 		});
 		resetProgress.active = schedule.savedProgress > 0 && !schedule.entries.isEmpty();
-		resetProgress.setToolTip(Lang.translate("schedule.reset"));
+		resetProgress.setToolTip(Lang.translateDirect("schedule.reset"));
 		addRenderableWidget(resetProgress);
 
 		skipProgress = new IconButton(leftPos + 63, topPos + 202, AllIcons.I_PRIORITY_LOW);
@@ -151,7 +151,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			resetProgress.active = schedule.savedProgress > 0;
 		});
 		skipProgress.active = schedule.entries.size() > 1;
-		skipProgress.setToolTip(Lang.translate("schedule.skip"));
+		skipProgress.setToolTip(Lang.translateDirect("schedule.skip"));
 		addRenderableWidget(skipProgress);
 
 		stopEditing();
@@ -194,7 +194,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			editingDestination = instruction;
 			updateEditorSubwidgets(editingDestination);
 			scrollInput.forOptions(Schedule.getTypeOptions(Schedule.INSTRUCTION_TYPES))
-				.titled(Lang.translate("schedule.instruction_type"))
+				.titled(Lang.translateDirect("schedule.instruction_type"))
 				.writingTo(scrollInputLabel)
 				.calling(index -> {
 					ScheduleInstruction newlyCreated = Schedule.INSTRUCTION_TYPES.get(index)
@@ -219,7 +219,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			editingCondition = cond;
 			updateEditorSubwidgets(editingCondition);
 			scrollInput.forOptions(Schedule.getTypeOptions(Schedule.CONDITION_TYPES))
-				.titled(Lang.translate("schedule.condition_type"))
+				.titled(Lang.translateDirect("schedule.condition_type"))
 				.writingTo(scrollInputLabel)
 				.calling(index -> {
 					ScheduleWaitCondition newlyCreated = Schedule.CONDITION_TYPES.get(index)
@@ -633,9 +633,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		return fieldSize;
 	}
 
-	private Component clickToEdit = Lang.translate("gui.schedule.lmb_edit")
+	private Component clickToEdit = Lang.translateDirect("gui.schedule.lmb_edit")
 		.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
-	private Component rClickToDelete = Lang.translate("gui.schedule.rmb_remove")
+	private Component rClickToDelete = Lang.translateDirect("gui.schedule.rmb_remove")
 		.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
 
 	public boolean action(PoseStack ms, double mouseX, double mouseY, int click) {
@@ -686,7 +686,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 			if (x > 180 && x <= 192) {
 				if (y > 0 && y <= 14) {
-					renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.remove_entry")), Optional.empty(),
+					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.remove_entry")), Optional.empty(),
 						mx, my);
 					if (click == 0) {
 						entries.remove(entry);
@@ -695,7 +695,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					return true;
 				}
 				if (y > cardHeight - 14) {
-					renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.duplicate")), Optional.empty(), mx,
+					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.duplicate")), Optional.empty(), mx,
 						my);
 					if (click == 0) {
 						entries.add(entries.indexOf(entry), entry.clone());
@@ -707,7 +707,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 			if (x > 194) {
 				if (y > 7 && y <= 20 && i > 0) {
-					renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.move_up")), Optional.empty(), mx,
+					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.move_up")), Optional.empty(), mx,
 						my);
 					if (click == 0) {
 						entries.remove(entry);
@@ -717,7 +717,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					return true;
 				}
 				if (y > 20 && y <= 33 && i < entries.size() - 1) {
-					renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.move_down")), Optional.empty(), mx,
+					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.move_down")), Optional.empty(), mx,
 						my);
 					if (click == 0) {
 						entries.remove(entry);
@@ -767,7 +767,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				if (row < conditions.size() && row >= 0) {
 					boolean canRemove = conditions.size() > 1 || columns.size() > 1;
 					List<Component> components = new ArrayList<>();
-					components.add(Lang.translate("schedule.condition_type")
+					components.add(Lang.translateDirect("schedule.condition_type")
 						.withStyle(ChatFormatting.GRAY));
 					ScheduleWaitCondition condition = conditions.get(row);
 					components.addAll(condition.getTitleAs("condition"));
@@ -795,7 +795,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				}
 
 				if (y > 18 * conditions.size() && y <= 18 * conditions.size() + 10 && x >= w / 2 - 5 && x < w / 2 + 5) {
-					renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.add_condition")), Optional.empty(),
+					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_condition")), Optional.empty(),
 						mx, my);
 					if (click == 0)
 						startEditing(new ScheduledDelay(), confirmed -> {
@@ -811,7 +811,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			if (x < 0 || x > 15 || y > 20)
 				return false;
 
-			renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.alternative_condition")), Optional.empty(),
+			renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.alternative_condition")), Optional.empty(),
 				mx, my);
 			if (click == 0)
 				startEditing(new ScheduledDelay(), confirmed -> {
@@ -827,7 +827,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		if (x < 18 || x > 33 || y > 14)
 			return false;
 
-		renderTooltip(ms, ImmutableList.of(Lang.translate("gui.schedule.add_entry")), Optional.empty(), mx, my);
+		renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_entry")), Optional.empty(), mx, my);
 		if (click == 0)
 			startEditing(new DestinationInstruction(), confirmed -> {
 				if (!confirmed)
@@ -1036,9 +1036,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		AllGuiTextures.PLAYER_INVENTORY.render(pPoseStack, leftPos + 38, topPos + 122);
 		font.draw(pPoseStack, playerInventoryTitle, leftPos + 46, topPos + 128, 0x505050);
 
-		formattedcharsequence = editingCondition == null ? Lang.translate("schedule.instruction.editor")
+		formattedcharsequence = editingCondition == null ? Lang.translateDirect("schedule.instruction.editor")
 			.getVisualOrderText()
-			: Lang.translate("schedule.condition.editor")
+			: Lang.translateDirect("schedule.condition.editor")
 				.getVisualOrderText();
 		font.draw(pPoseStack, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
 			(float) topPos + 44, 0x505050);

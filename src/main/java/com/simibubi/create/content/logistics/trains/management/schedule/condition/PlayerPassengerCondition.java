@@ -29,7 +29,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 		int target = getTarget();
 		return Pair.of(AllBlocks.SEATS.get(DyeColor.YELLOW)
 			.asStack(),
-			Lang.translate("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"), target));
+			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"), target));
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	@Override
 	public List<Component> getTitleAs(String type) {
 		int target = getTarget();
-		return ImmutableList.of(Lang.translate("schedule.condition.player_count.seated",
-			Lang.translate("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
+		return ImmutableList.of(Lang.translateDirect("schedule.condition.player_count.seated",
+			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
 				new TextComponent("" + target).withStyle(ChatFormatting.DARK_AQUA))));
 	}
 
@@ -57,14 +57,14 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 31, (i, l) -> {
-			i.titled(Lang.translate("schedule.condition.player_count.players"))
+			i.titled(Lang.translateDirect("schedule.condition.player_count.players"))
 				.withShiftStep(5)
 				.withRange(0, 21);
 		}, "Count");
 
 		builder.addSelectionScrollInput(36, 85, (i, l) -> {
 			i.forOptions(Lang.translatedOptions("schedule.condition.player_count", "exactly", "or_above"))
-				.titled(Lang.translate("schedule.condition.player_count.condition"));
+				.titled(Lang.translateDirect("schedule.condition.player_count.condition"));
 		}, "Exact");
 	}
 
@@ -81,7 +81,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		return Lang.translate("schedule.condition.player_count.status", train.countPlayerPassengers(), getTarget());
+		return Lang.translateDirect("schedule.condition.player_count.status", train.countPlayerPassengers(), getTarget());
 	}
 
 }

@@ -38,7 +38,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	public static Supplier<ItemStack> getFan(String name) {
 		return () -> AllBlocks.ENCASED_FAN.asStack()
-			.setHoverName(Lang.translate("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
+			.setHoverName(Lang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
 	}
 
 	@Override

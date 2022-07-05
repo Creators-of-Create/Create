@@ -46,10 +46,10 @@ public class ChangeTitleInstruction extends TextScheduleInstruction {
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translate("schedule.instruction.name_edit_box"),
-			Lang.translate("schedule.instruction.name_edit_box_1")
+		return ImmutableList.of(Lang.translateDirect("schedule.instruction.name_edit_box"),
+			Lang.translateDirect("schedule.instruction.name_edit_box_1")
 				.withStyle(ChatFormatting.GRAY),
-			Lang.translate("schedule.instruction.name_edit_box_2")
+			Lang.translateDirect("schedule.instruction.name_edit_box_2")
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 

@@ -75,19 +75,16 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			List<FlapDisplaySection> line = lines.get(j)
 				.getSections();
 			int color = flapTe.getLineColor(j);
-			int lineLight = flapTe.isLineGlowing(j) ? 0xf000f0 : light;
 			ms.pushPose();
 
 			float w = 0;
-			for (FlapDisplaySection section : line) {
+			for (FlapDisplaySection section : line)
 				w += section.getSize() + (section.hasGap ? 8 : 1);
-			}
-
 			ms.translate(flapTe.xSize * 16 - w / 2 + 1, 4.5f, 0);
 
 			Pose transform = ms.last();
-			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(),
-				lineLight, j, !te.isSpeedRequirementFulfilled(), te.getLevel());
+			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(), light,
+				j, !te.isSpeedRequirementFulfilled(), te.getLevel(), flapTe.isLineGlowing(j));
 
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
@@ -126,16 +123,16 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		private Level level;
 
 		public FlapDisplayRenderOutput(MultiBufferSource buffer, int color, Matrix4f pose, int light, int lineIndex,
-			boolean paused, Level level) {
+			boolean paused, Level level, boolean glowing) {
 			this.bufferSource = buffer;
 			this.lineIndex = lineIndex;
 			this.level = level;
-			this.a = .75f;
+			this.a = glowing ? .975f : .75f;
 			this.r = (color >> 16 & 255) / 255f;
 			this.g = (color >> 8 & 255) / 255f;
 			this.b = (color & 255) / 255f;
 			this.pose = pose;
-			this.light = light;
+			this.light = glowing ? 0xf000f0 : light;
 			this.paused = paused;
 		}
 

@@ -54,7 +54,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		operationMode = new ScrollOptionBehaviour<>(ClockHands.class,
-			Lang.translate("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
+			Lang.translateDirect("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
 		operationMode.requiresWrench();
 		behaviours.add(operationMode);
 		registerAwardables(behaviours, AllAdvancements.CLOCKWORK_BEARING);

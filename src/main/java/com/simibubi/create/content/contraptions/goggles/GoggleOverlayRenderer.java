@@ -143,7 +143,7 @@ public class GoggleOverlayRenderer {
 				tooltip.add(TextComponent.EMPTY);
 
 			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-				.append(Lang.translate("gui.goggles.pole_length"))
+				.append(Lang.translateDirect("gui.goggles.pole_length"))
 				.append(new TextComponent(" " + poles)));
 		}
 

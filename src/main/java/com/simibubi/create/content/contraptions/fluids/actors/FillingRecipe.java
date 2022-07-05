@@ -72,7 +72,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 			.getMatchingFluidStacks();
 		if (matchingFluidStacks.size() == 0)
 			return new TextComponent("Invalid");
-		return Lang.translate("recipe.assembly.spout_filling_fluid",
+		return Lang.translateDirect("recipe.assembly.spout_filling_fluid",
 			new TranslatableComponent(matchingFluidStacks.get(0)
 				.getTranslationKey()).getString());
 	}

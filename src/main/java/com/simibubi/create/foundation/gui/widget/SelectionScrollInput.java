@@ -12,7 +12,7 @@ import net.minecraft.network.chat.TextComponent;
 
 public class SelectionScrollInput extends ScrollInput {
 
-	private final MutableComponent scrollToSelect = Lang.translate("gui.scrollInput.scrollToSelect");
+	private final MutableComponent scrollToSelect = Lang.translateDirect("gui.scrollInput.scrollToSelect");
 	protected List<? extends Component> options;
 
 	public SelectionScrollInput(int xIn, int yIn, int widthIn, int heightIn) {

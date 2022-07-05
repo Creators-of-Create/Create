@@ -24,7 +24,7 @@ public abstract class SingleLineDisplayTarget extends DisplayTarget {
 	
 	@Override
 	public Component getLineOptionText(int line) {
-		return Lang.translate("display_target.single_line");
+		return Lang.translateDirect("display_target.single_line");
 	}
 	
 	protected abstract int getWidth(DisplayLinkContext context);

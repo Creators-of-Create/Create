@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
@@ -26,7 +25,7 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 		CompoundTag conf = context.sourceConfig();
 		if (conf.contains("Inactive"))
 			return new TextComponent("0");
-		
+
 		double interval = 20 * Math.pow(60, conf.getInt("Interval"));
 		double rate = conf.getFloat("Rate") * interval;
 
@@ -45,7 +44,8 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 			}
 		}
 
-		return new TextComponent(IHaveGoggleInformation.format(rate));
+		return Lang.number(rate)
+			.component();
 	}
 
 	public void itemReceived(DisplayLinkTileEntity te, int amount) {
@@ -101,14 +101,15 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder,
+		boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)
 			return;
 
 		builder.addSelectionScrollInput(0, 80, (si, l) -> {
 			si.forOptions(Lang.translatedOptions("display_source.item_throughput.interval", "second", "minute", "hour"))
-				.titled(Lang.translate("display_source.item_throughput.interval"));
+				.titled(Lang.translateDirect("display_source.item_throughput.interval"));
 		}, "Interval");
 	}
 

@@ -26,7 +26,7 @@ public class DeathCounterDisplaySource extends StatTrackingDisplaySource {
 
 	@Override
 	protected Component getObjectiveDisplayName() {
-		return Lang.translate("display_source.scoreboard.objective.deaths");
+		return Lang.translateDirect("display_source.scoreboard.objective.deaths");
 	}
 
 }

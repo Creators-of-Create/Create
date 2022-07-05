@@ -45,8 +45,8 @@ public abstract class SymmetryMirror {
 	}
 
 	public static List<Component> getMirrors() {
-		return ImmutableList.of(Lang.translate("symmetry.mirror.plane"), Lang.translate("symmetry.mirror.doublePlane"),
-			Lang.translate("symmetry.mirror.triplePlane"));
+		return ImmutableList.of(Lang.translateDirect("symmetry.mirror.plane"), Lang.translateDirect("symmetry.mirror.doublePlane"),
+			Lang.translateDirect("symmetry.mirror.triplePlane"));
 	}
 
 	public StringRepresentable getOrientation() {

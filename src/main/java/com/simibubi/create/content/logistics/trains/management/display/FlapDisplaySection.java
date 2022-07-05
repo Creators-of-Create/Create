@@ -170,7 +170,7 @@ public class FlapDisplaySection {
 	}
 
 	public static String[] getFlapCycle(String key) {
-		return LOADED_FLAP_CYCLES.computeIfAbsent(key, k -> Lang.translate("flap_display.cycles." + key)
+		return LOADED_FLAP_CYCLES.computeIfAbsent(key, k -> Lang.translateDirect("flap_display.cycles." + key)
 			.getString()
 			.split(";"));
 	}

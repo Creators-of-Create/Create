@@ -54,7 +54,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
-			Lang.translate("contraptions.windmill.rotation_direction"), this, new SteamEngineValueBox());
+			Lang.translateDirect("contraptions.windmill.rotation_direction"), this, new SteamEngineValueBox());
 		movementDirection.requiresWrench();
 		movementDirection.onlyActiveWhen(() -> {
 			PoweredShaftTileEntity shaft = getShaft();

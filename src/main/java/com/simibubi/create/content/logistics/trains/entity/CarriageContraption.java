@@ -99,9 +99,9 @@ public class CarriageContraption extends Contraption {
 		if (bogeys == 0)
 			return false;
 		if (bogeys > 2)
-			throw new AssemblyException(Lang.translate("train_assembly.too_many_bogeys", bogeys));
+			throw new AssemblyException(Lang.translateDirect("train_assembly.too_many_bogeys", bogeys));
 		if (sidewaysControls)
-			throw new AssemblyException(Lang.translate("train_assembly.sideways_controls"));
+			throw new AssemblyException(Lang.translateDirect("train_assembly.sideways_controls"));
 
 		for (BlockPos blazePos : assembledBlazeBurners)
 			for (Direction direction : Iterate.directionsInAxis(assemblyDirection.getAxis()))

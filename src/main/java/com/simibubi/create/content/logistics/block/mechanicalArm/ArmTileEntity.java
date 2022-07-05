@@ -102,7 +102,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		super.addBehaviours(behaviours);
 
 		selectionMode = new ScrollOptionBehaviour<SelectionMode>(SelectionMode.class,
-			Lang.translate("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
+			Lang.translateDirect("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
 		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
 

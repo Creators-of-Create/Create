@@ -63,7 +63,7 @@ public class BackTankUtil {
 			return;
 
 		boolean depleted = threshold == 1;
-		MutableComponent component = Lang.translate(depleted ? "backtank.depleted" : "backtank.low");
+		MutableComponent component = Lang.translateDirect(depleted ? "backtank.depleted" : "backtank.low");
 
 		AllSoundEvents.DENY.play(player.level, null, player.blockPosition(), 1, 1.25f);
 		AllSoundEvents.STEAM.play(player.level, null, player.blockPosition(), .5f, .5f);

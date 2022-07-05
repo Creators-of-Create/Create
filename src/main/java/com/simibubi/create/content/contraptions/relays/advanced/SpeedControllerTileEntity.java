@@ -45,11 +45,11 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		Integer max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 
 		targetSpeed =
-			new ScrollValueBehaviour(Lang.translate("generic.speed"), this, new ControllerValueBoxTransform());
+			new ScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.moveText(new Vec3(9, 0, 10));
-		targetSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
+		targetSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);

@@ -150,7 +150,8 @@ public class BoilerData {
 		calcMinMaxForSize(boilerSize);
 
 		tooltip.add(indent.plainCopy()
-			.append(Lang.translate("boiler.status", getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
+			.append(
+				Lang.translateDirect("boiler.status", getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
 		tooltip.add(indent2.plainCopy()
 			.append(getSizeComponent(true, false)));
 		tooltip.add(indent2.plainCopy()
@@ -162,22 +163,22 @@ public class BoilerData {
 			return true;
 
 		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
-
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
-		Component capacity =
-			new TextComponent(IHaveGoggleInformation.format(totalSU)).append(Lang.translate("generic.unit.stress"))
-				.withStyle(ChatFormatting.AQUA);
-		Component engines = (attachedEngines == 1 ? Lang.translate("boiler.via_one_engine")
-			: Lang.translate("boiler.via_engines", attachedEngines)).withStyle(ChatFormatting.DARK_GRAY);
 
-		tooltip.add(indent);
-		tooltip.add(indent.plainCopy()
-			.append(Lang.translate("tooltip.capacityProvided")
-				.withStyle(ChatFormatting.GRAY)));
-		tooltip.add(indent2.plainCopy()
-			.append(capacity)
-			.append(engines));
+		tooltip.add(Lang.empty());
+
+		Lang.translate("tooltip.capacityProvided")
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+
+		Lang.number(totalSU)
+			.translate("generic.unit.stress")
+			.style(ChatFormatting.AQUA)
+			.space()
+			.add((attachedEngines == 1 ? Lang.translate("boiler.via_one_engine")
+				: Lang.translate("boiler.via_engines", attachedEngines)).style(ChatFormatting.DARK_GRAY))
+			.forGoggles(tooltip, 1);
 
 		return true;
 	}
@@ -194,10 +195,10 @@ public class BoilerData {
 	public MutableComponent getHeatLevelTextComponent() {
 		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
 
-		return isPassive() ? Lang.translate("boiler.passive")
-			: (boilerLevel == 0 ? Lang.translate("boiler.idle")
-				: boilerLevel == 18 ? Lang.translate("boiler.max_lvl")
-					: Lang.translate("boiler.lvl", IHaveGoggleInformation.format(boilerLevel)));
+		return isPassive() ? Lang.translateDirect("boiler.passive")
+			: (boilerLevel == 0 ? Lang.translateDirect("boiler.idle")
+				: boilerLevel == 18 ? Lang.translateDirect("boiler.max_lvl")
+					: Lang.translateDirect("boiler.lvl", String.valueOf(boilerLevel)));
 	}
 
 	public MutableComponent getSizeComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
@@ -222,9 +223,9 @@ public class BoilerData {
 		ChatFormatting style1 = styles.length >= 1 ? styles[0] : ChatFormatting.GRAY;
 		ChatFormatting style2 = styles.length >= 2 ? styles[1] : ChatFormatting.DARK_GRAY;
 
-		return Lang.translate("boiler." + label)
+		return Lang.translateDirect("boiler." + label)
 			.withStyle(style1)
-			.append(Lang.translate("boiler." + label + "_dots")
+			.append(Lang.translateDirect("boiler." + label + "_dots")
 				.withStyle(style2))
 			.append(base);
 	}
@@ -306,7 +307,7 @@ public class BoilerData {
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
 							&& WhistleBlock.getAttachedDirection(attachedState)
 								.getOpposite() == d) {
-							if (level.getBlockEntity(attachedPos) instanceof WhistleTileEntity wte)
+							if (level.getBlockEntity(attachedPos)instanceof WhistleTileEntity wte)
 								whistlePitches.add(wte.getPitchId());
 						}
 					}

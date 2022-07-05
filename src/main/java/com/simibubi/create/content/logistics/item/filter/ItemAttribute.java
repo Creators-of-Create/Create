@@ -122,7 +122,7 @@ public interface ItemAttribute {
 
 	@OnlyIn(value = Dist.CLIENT)
 	default TranslatableComponent format(boolean inverted) {
-		return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+		return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 			getTranslationParameters());
 	}
 
@@ -300,7 +300,7 @@ public interface ItemAttribute {
 		@Override
 		@OnlyIn(value = Dist.CLIENT)
 		public TranslatableComponent format(boolean inverted) {
-			return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+			return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 				group.getDisplayName());
 		}
 

@@ -137,20 +137,20 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bLongWidth = 200;
 
 		addRenderableWidget(
-			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"), $ -> linkTo(parent)));
-		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
+			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translateDirect("menu.return"), $ -> linkTo(parent)));
+		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translateDirect("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
-			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
+			Lang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
 
-		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
+		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translateDirect("menu.project_page"),
 			$ -> linkTo(PROJECT_LINK)));
-		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
+		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translateDirect("menu.report_bugs"),
 			$ -> linkTo(ISSUE_TRACKER_LINK)));
-		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
+		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translateDirect("menu.support"),
 			$ -> linkTo(SUPPORT_LINK)));
 	}
 
@@ -164,7 +164,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				return;
 			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
 				return;
-			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), ChatFormatting.GRAY,
+			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), ChatFormatting.GRAY,
 				ChatFormatting.GRAY), mouseX, mouseY);
 		}
 	}

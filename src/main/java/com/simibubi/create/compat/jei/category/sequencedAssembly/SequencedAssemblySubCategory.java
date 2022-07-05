@@ -111,7 +111,7 @@ public abstract class SequencedAssemblySubCategory {
 
 			if (recipe.getAsAssemblyRecipe() instanceof DeployerApplicationRecipe deployerRecipe && deployerRecipe.shouldKeepHeldItem()) {
 				slot.addTooltipCallback(
-						(recipeSlotView, tooltip) -> tooltip.add(1, Lang.translate("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD))
+						(recipeSlotView, tooltip) -> tooltip.add(1, Lang.translateDirect("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD))
 				);
 			}
 		}

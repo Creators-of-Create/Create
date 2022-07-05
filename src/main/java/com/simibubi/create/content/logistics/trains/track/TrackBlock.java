@@ -287,11 +287,11 @@ public class TrackBlock extends Block
 		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
 		if (player == null)
 			return;
-		player.displayClientMessage(new TextComponent("<!> ").append(Lang.translate("portal_track.failed"))
+		player.displayClientMessage(new TextComponent("<!> ").append(Lang.translateDirect("portal_track.failed"))
 			.withStyle(ChatFormatting.GOLD), false);
 		MutableComponent component =
-			failPos != null ? Lang.translate("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
-				: Lang.translate("portal_track." + fail);
+			failPos != null ? Lang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
+				: Lang.translateDirect("portal_track." + fail);
 		player.displayClientMessage(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}

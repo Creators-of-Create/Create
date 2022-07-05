@@ -1,14 +1,13 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,10 +18,11 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 		int mode = getMode(context);
 		if (mode == 1)
 			return super.formatNumeric(context, currentLevel);
-		TextComponent textComponent = new TextComponent(IHaveGoggleInformation.format(currentLevel));
+		LangBuilder builder = Lang.number(currentLevel);
 		if (context.getTargetTE() instanceof FlapDisplayTileEntity)
-			textComponent.append(" ");
-		return textComponent.append(Lang.translate("generic.unit.stress"));
+			builder.space();
+		return builder.translate("generic.unit.stress")
+			.component();
 	}
 
 	private int getMode(DisplayLinkContext context) {
@@ -32,7 +32,7 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 
 	@Override
 	protected Float getProgress(DisplayLinkContext context) {
-		if (!(context.getSourceTE() instanceof StressGaugeTileEntity gaugeTile))
+		if (!(context.getSourceTE()instanceof StressGaugeTileEntity gaugeTile))
 			return null;
 
 		float capacity = gaugeTile.getNetworkCapacity();
@@ -71,7 +71,7 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 			(si, l) -> si
 				.forOptions(Lang.translatedOptions("display_source.kinetic_stress", "progress_bar", "percent",
 					"current", "max", "remaining"))
-				.titled(Lang.translate("display_source.kinetic_stress.display")),
+				.titled(Lang.translateDirect("display_source.kinetic_stress.display")),
 			"Mode");
 	}
 

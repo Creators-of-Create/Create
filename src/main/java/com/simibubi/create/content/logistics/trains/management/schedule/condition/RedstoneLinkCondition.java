@@ -40,20 +40,20 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		return Pair.of(AllBlocks.REDSTONE_LINK.asStack(),
-			lowActivation() ? Lang.translate("schedule.condition.redstone_link_off")
-				: Lang.translate("schedule.condition.redstone_link_on"));
+			lowActivation() ? Lang.translateDirect("schedule.condition.redstone_link_off")
+				: Lang.translateDirect("schedule.condition.redstone_link_on"));
 	}
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translate(slot == 0 ? "logistics.firstFrequency" : "logistics.secondFrequency")
+		return ImmutableList.of(Lang.translateDirect(slot == 0 ? "logistics.firstFrequency" : "logistics.secondFrequency")
 			.withStyle(ChatFormatting.RED));
 	}
 
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
-			Lang.translate("schedule.condition.redstone_link.frequency_" + (lowActivation() ? "unpowered" : "powered")),
+			Lang.translateDirect("schedule.condition.redstone_link.frequency_" + (lowActivation() ? "unpowered" : "powered")),
 			new TextComponent(" #1 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getFirst()
 					.getStack()
@@ -115,13 +115,13 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addSelectionScrollInput(20, 101,
 			(i, l) -> i.forOptions(Lang.translatedOptions("schedule.condition.redstone_link", "powered", "unpowered"))
-				.titled(Lang.translate("schedule.condition.redstone_link.frequency_state")),
+				.titled(Lang.translateDirect("schedule.condition.redstone_link.frequency_state")),
 			"Inverted");
 	}
 	
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		return Lang.translate("schedule.condition.redstone_link.status");
+		return Lang.translateDirect("schedule.condition.redstone_link.status");
 	}
 
 }

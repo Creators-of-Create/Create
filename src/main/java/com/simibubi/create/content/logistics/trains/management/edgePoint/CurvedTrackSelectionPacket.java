@@ -62,7 +62,7 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 		if (!(stack.getItem() instanceof TrackTargetingBlockItem))
 			return;
 		if (player.isSteppingCarefully() && stack.hasTag()) {
-			player.displayClientMessage(Lang.translate("track_target.clear"), true);
+			player.displayClientMessage(Lang.translateDirect("track_target.clear"), true);
 			stack.setTag(null);
 			AllSoundEvents.CONTROLLER_CLICK.play(player.level, null, pos, 1, .5f);
 			return;
@@ -74,7 +74,7 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 			new BezierTrackPointLocation(targetPos, segment), type, (overlap, location) -> result.setValue(overlap));
 
 		if (result.getValue().feedback != null) {
-			player.displayClientMessage(Lang.translate(result.getValue().feedback)
+			player.displayClientMessage(Lang.translateDirect(result.getValue().feedback)
 				.withStyle(ChatFormatting.RED), true);
 			AllSoundEvents.DENY.play(player.level, null, pos, .5f, 1);
 			return;
@@ -90,7 +90,7 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 		bezierNbt.putBoolean("FromStack", true);
 		stackTag.put("Bezier", bezierNbt);
 
-		player.displayClientMessage(Lang.translate("track_target.set"), true);
+		player.displayClientMessage(Lang.translateDirect("track_target.set"), true);
 		stack.setTag(stackTag);
 		AllSoundEvents.CONTROLLER_CLICK.play(player.level, null, pos, 1, 1);
 	}

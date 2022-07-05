@@ -140,7 +140,7 @@ public class Train {
 		this.carriageSpacing = carriageSpacing;
 		this.icon = TrainIconType.getDefault();
 		this.stress = new double[carriageSpacing.size()];
-		this.name = Lang.translate("train.unnamed");
+		this.name = Lang.translateDirect("train.unnamed");
 		this.status = new TrainStatus(this);
 		this.doubleEnded = doubleEnded;
 

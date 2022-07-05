@@ -700,26 +700,26 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean downward = getItemMotion() < 0;
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translate("tooltip.chute.header")));
+			.append(Lang.translateDirect("tooltip.chute.header")));
 		if (pull == 0 && push == 0)
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.chute.no_fans_attached"))
+				.append(Lang.translateDirect("tooltip.chute.no_fans_attached"))
 				.withStyle(ChatFormatting.GRAY));
 		if (pull != 0)
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.chute.fans_" + (pull > 0 ? "pull_up" : "push_down"))
+				.append(Lang.translateDirect("tooltip.chute.fans_" + (pull > 0 ? "pull_up" : "push_down"))
 					.withStyle(ChatFormatting.GRAY)));
 		if (push != 0)
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.chute.fans_" + (push > 0 ? "push_up" : "pull_down"))
+				.append(Lang.translateDirect("tooltip.chute.fans_" + (push > 0 ? "push_up" : "pull_down"))
 					.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(componentSpacing.plainCopy()
 			.append("-> ")
-			.append(Lang.translate("tooltip.chute.items_move_" + (downward ? "down" : "up"))
+			.append(Lang.translateDirect("tooltip.chute.items_move_" + (downward ? "down" : "up"))
 				.withStyle(ChatFormatting.YELLOW)));
 		if (!item.isEmpty()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.chute.contains", new TranslatableComponent(item.getItem()
+				.append(Lang.translateDirect("tooltip.chute.contains", new TranslatableComponent(item.getItem()
 					.getDescriptionId(item)).getString(), item.getCount()))
 				.withStyle(ChatFormatting.GREEN));
 		}

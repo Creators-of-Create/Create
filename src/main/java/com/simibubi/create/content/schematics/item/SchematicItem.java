@@ -87,7 +87,7 @@ public class SchematicItem extends Item {
 				tooltip.add(new TextComponent(ChatFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
-			tooltip.add(Lang.translate("schematic.invalid").withStyle(ChatFormatting.RED));
+			tooltip.add(Lang.translateDirect("schematic.invalid").withStyle(ChatFormatting.RED));
 		}
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}

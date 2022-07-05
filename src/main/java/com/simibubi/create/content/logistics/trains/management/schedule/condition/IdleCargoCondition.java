@@ -16,7 +16,7 @@ public class IdleCargoCondition extends TimedWaitCondition {
 	
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(ItemStack.EMPTY, Lang.translate("schedule.condition.idle_short", formatTime(true)));
+		return Pair.of(ItemStack.EMPTY, Lang.translateDirect("schedule.condition.idle_short", formatTime(true)));
 	}
 
 	@Override

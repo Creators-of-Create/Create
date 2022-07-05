@@ -47,7 +47,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 				.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults().get(0)));
 
 		if (recipe.shouldKeepHeldItem()) {
-			handItemSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Lang.translate("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD)));
+			handItemSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Lang.translateDirect("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD)));
 		}
 
 	}

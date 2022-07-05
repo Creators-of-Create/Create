@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -178,25 +177,19 @@ public class ArmInteractionPoint {
 	}
 
 	public enum Mode {
-		DEPOSIT("mechanical_arm.deposit_to", ChatFormatting.GOLD, 0xFFCB74),
-		TAKE("mechanical_arm.extract_from", ChatFormatting.AQUA, 0x4F8A8B);
+		DEPOSIT("mechanical_arm.deposit_to", 0xDDC166),
+		TAKE("mechanical_arm.extract_from", 0x7FCDE0);
 
 		private final String translationKey;
-		private final ChatFormatting chatColor;
 		private final int color;
 
-		Mode(String translationKey, ChatFormatting chatColor, int color) {
+		Mode(String translationKey, int color) {
 			this.translationKey = translationKey;
-			this.chatColor = chatColor;
 			this.color = color;
 		}
 
 		public String getTranslationKey() {
 			return translationKey;
-		}
-
-		public ChatFormatting getChatColor() {
-			return chatColor;
 		}
 
 		public int getColor() {

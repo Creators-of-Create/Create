@@ -33,7 +33,7 @@ public class LogStrippingFakeRecipes {
 
 		ItemStack axe = new ItemStack(Items.IRON_AXE);
 		axe.hideTooltipPart(TooltipPart.MODIFIERS);
-		axe.setHoverName(Lang.translate("recipe.item_application.any_axe")
+		axe.setHoverName(Lang.translateDirect("recipe.item_application.any_axe")
 			.withStyle(style -> style.withItalic(false)));
 		ITagManager<Item> tags = ForgeRegistries.ITEMS.tags();
 		tags.getTag(ItemTags.LOGS)

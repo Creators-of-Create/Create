@@ -93,11 +93,11 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
-			Lang.translate("schedule.condition.threshold.train_holds",
-				Lang.translate("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
-			Lang.translate("schedule.condition.threshold.x_units_of_item", getThreshold(),
-				Lang.translate("schedule.condition.threshold." + (inStacks() ? "stacks" : "items")),
-				stack.getItem() instanceof FilterItem ? Lang.translate("schedule.condition.threshold.matching_content")
+			Lang.translateDirect("schedule.condition.threshold.train_holds",
+				Lang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
+			Lang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
+				Lang.translateDirect("schedule.condition.threshold." + (inStacks() ? "stacks" : "items")),
+				stack.getItem() instanceof FilterItem ? Lang.translateDirect("schedule.condition.threshold.matching_content")
 					: stack.getHoverName())
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
@@ -116,9 +116,9 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		super.initConfigurationWidgets(builder);
 		builder.addSelectionScrollInput(71, 50, (i, l) -> {
-			i.forOptions(ImmutableList.of(Lang.translate("schedule.condition.threshold.items"),
-				Lang.translate("schedule.condition.threshold.stacks")))
-				.titled(Lang.translate("schedule.condition.threshold.item_measure"));
+			i.forOptions(ImmutableList.of(Lang.translateDirect("schedule.condition.threshold.items"),
+				Lang.translateDirect("schedule.condition.threshold.stacks")))
+				.titled(Lang.translateDirect("schedule.condition.threshold.item_measure"));
 		}, "Measure");
 	}
 
@@ -128,8 +128,8 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 		if (lastDisplaySnapshot == -1)
 			return TextComponent.EMPTY.copy();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
-		return Lang.translate("schedule.condition.threshold.status", lastDisplaySnapshot,
+		return Lang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
 			Math.max(0, getThreshold() + offset),
-			Lang.translate("schedule.condition.threshold." + (inStacks() ? "stacks" : "items")));
+			Lang.translateDirect("schedule.condition.threshold." + (inStacks() ? "stacks" : "items")));
 	}
 }

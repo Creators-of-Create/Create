@@ -81,8 +81,7 @@ public class MaterialChecklist {
 
 		if (blocksNotLoaded) {
 			textComponent = new TextComponent("\n" + ChatFormatting.RED);
-			textComponent =
-				textComponent.append(Lang.createTranslationTextComponent("materialChecklist.blocksNotLoaded"));
+			textComponent = textComponent.append(Lang.translateDirect("materialChecklist.blocksNotLoaded"));
 			pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
 		}
 
@@ -136,7 +135,7 @@ public class MaterialChecklist {
 		tag.put("pages", pages);
 		tag.putString("author", "Schematicannon");
 		tag.putString("title", ChatFormatting.BLUE + "Material Checklist");
-		textComponent = Lang.createTranslationTextComponent("materialChecklist")
+		textComponent = Lang.translateDirect("materialChecklist")
 			.setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)
 				.withItalic(Boolean.FALSE));
 		book.getOrCreateTagElement("display")
@@ -161,8 +160,7 @@ public class MaterialChecklist {
 			tc.append(" \u2714");
 		tc.withStyle(unfinished ? ChatFormatting.BLUE : ChatFormatting.DARK_GREEN);
 		return tc.append(new TextComponent("\n" + " x" + amount).withStyle(ChatFormatting.BLACK))
-			.append(
-				new TextComponent(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
+			.append(new TextComponent(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
 	}
 
 }

@@ -38,7 +38,7 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 			return;
 		builder.addSelectionScrollInput(0, 120,
 			(si, l) -> si.forOptions(Lang.translatedOptions("display_source.fill_level", "percent", "progress_bar"))
-				.titled(Lang.translate("display_source.fill_level.display")),
+				.titled(Lang.translateDirect("display_source.fill_level.display")),
 			"Mode");
 	}
 

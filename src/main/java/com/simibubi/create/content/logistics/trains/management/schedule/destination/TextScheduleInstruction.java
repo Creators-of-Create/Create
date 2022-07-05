@@ -21,8 +21,8 @@ public abstract class TextScheduleInstruction extends ScheduleInstruction {
 
 	@Override
 	public List<Component> getTitleAs(String type) {
-		return ImmutableList.of(Lang.translate("schedule." + type + "." + getId().getPath() + ".summary")
-			.withStyle(ChatFormatting.GOLD), Lang.translate("generic.in_quotes", new TextComponent(getLabelText())));
+		return ImmutableList.of(Lang.translateDirect("schedule." + type + "." + getId().getPath() + ".summary")
+			.withStyle(ChatFormatting.GOLD), Lang.translateDirect("generic.in_quotes", new TextComponent(getLabelText())));
 	}
 
 	@Override

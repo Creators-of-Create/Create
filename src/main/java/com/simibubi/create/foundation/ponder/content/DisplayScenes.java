@@ -156,7 +156,7 @@ public class DisplayScenes {
 		scene.world.moveSection(stressElement, util.vector.of(0, -2, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent(1024 + " ").append(Lang.translate("generic.unit.stress")));
+			new TextComponent(1024 + " ").append(Lang.translateDirect("generic.unit.stress")));
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(40);
 		scene.world.hideIndependentSection(stressElement, Direction.SOUTH);
@@ -185,7 +185,7 @@ public class DisplayScenes {
 		scene.world.moveSection(cuckooElement, util.vector.of(0, -1, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent("6:00 ").append(Lang.translate("generic.daytime.pm")));
+			new TextComponent("6:00 ").append(Lang.translateDirect("generic.daytime.pm")));
 		scene.world.setDisplayBoardText(board, 2, TextComponent.EMPTY);
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(90);

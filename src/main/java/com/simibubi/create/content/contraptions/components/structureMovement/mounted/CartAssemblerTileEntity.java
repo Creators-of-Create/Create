@@ -234,7 +234,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		movementMode = new ScrollOptionBehaviour<>(CartMovementMode.class,
-			Lang.translate("contraptions.cart_movement_mode"), this, getMovementModeSlot());
+			Lang.translateDirect("contraptions.cart_movement_mode"), this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);

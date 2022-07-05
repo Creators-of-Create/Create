@@ -102,7 +102,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		super.addBehaviours(behaviours);
 		behaviours.add(depotBehaviour = new DepotBehaviour(this));
 
-		maxStackSize = new ScrollValueBehaviour(Lang.translate("weighted_ejector.stack_size"), this, new EjectorSlot())
+		maxStackSize = new ScrollValueBehaviour(Lang.translateDirect("weighted_ejector.stack_size"), this, new EjectorSlot())
 			.between(0, 64)
 			.withFormatter(i -> i == 0 ? "*" : String.valueOf(i))
 			.onlyActiveWhen(() -> state == State.CHARGED)

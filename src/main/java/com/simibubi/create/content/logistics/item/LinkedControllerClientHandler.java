@@ -59,7 +59,7 @@ public class LinkedControllerClientHandler {
 		if (MODE == Mode.IDLE) {
 			MODE = Mode.ACTIVE;
 			lecternPos = null;
-		}  else {
+		} else {
 			MODE = Mode.IDLE;
 			onReset();
 		}
@@ -84,7 +84,8 @@ public class LinkedControllerClientHandler {
 	}
 
 	protected static void onReset() {
-		ControlsUtil.getControls().forEach(kb -> kb.setDown(ControlsUtil.isActuallyPressed(kb)));
+		ControlsUtil.getControls()
+			.forEach(kb -> kb.setDown(ControlsUtil.isActuallyPressed(kb)));
 		packetCooldown = 0;
 		selectedLocation = BlockPos.ZERO;
 
@@ -126,7 +127,8 @@ public class LinkedControllerClientHandler {
 			}
 		}
 
-		if (inLectern() && AllBlocks.LECTERN_CONTROLLER.get().getTileEntityOptional(mc.level, lecternPos)
+		if (inLectern() && AllBlocks.LECTERN_CONTROLLER.get()
+			.getTileEntityOptional(mc.level, lecternPos)
 			.map(te -> !te.isUsedBy(mc.player))
 			.orElse(true)) {
 			deactivateInLectern();
@@ -139,7 +141,8 @@ public class LinkedControllerClientHandler {
 			return;
 		}
 
-		if (InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
+		if (InputConstants.isKeyDown(mc.getWindow()
+			.getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
 			MODE = Mode.IDLE;
 			onReset();
 			return;
@@ -206,13 +209,15 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1, int height1) {
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1,
+		int height1) {
 		if (MODE != Mode.BIND)
 			return;
 		Minecraft mc = Minecraft.getInstance();
 
 		poseStack.pushPose();
-		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {};
+		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {
+		};
 		tooltipScreen.init(mc, width1, height1);
 
 		Object[] keys = new Object[6];
@@ -224,11 +229,10 @@ public class LinkedControllerClientHandler {
 		}
 
 		List<Component> list = new ArrayList<>();
-		list.add(Lang.createTranslationTextComponent("linked_controller.bind_mode")
+		list.add(Lang.translateDirect("linked_controller.bind_mode")
 			.withStyle(ChatFormatting.GOLD));
-		list.addAll(
-			TooltipHelper.cutTextComponent(Lang.createTranslationTextComponent("linked_controller.press_keybind", keys),
-				ChatFormatting.GRAY, ChatFormatting.GRAY));
+		list.addAll(TooltipHelper.cutTextComponent(Lang.translateDirect("linked_controller.press_keybind", keys),
+			ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		int width = 0;
 		int height = list.size() * mc.font.lineHeight;

@@ -140,7 +140,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 			if (rows > 1) {
 				targetLineSelector = new ScrollInput(x + 61, y + 105, 135, 16).withRange(0, rows)
-						.titled(Lang.translate("display_link.display_on"))
+						.titled(Lang.translateDirect("display_link.display_on"))
 						.inverted()
 						.calling(i -> targetLineLabel.text = target.getLineOptionText(i))
 						.setState(startIndex);
@@ -157,11 +157,11 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 				});
 
 		sourceWidget.getToolTip().addAll(List.of(
-				Lang.translate("display_link.reading_from"),
+				Lang.translateDirect("display_link.reading_from"),
 				sourceState.getBlock().getName()
 						.withStyle(s -> s.withColor(sources.isEmpty() ? 0xF68989 : 0xF2C16D)),
-				Lang.translate("display_link.attached_side"),
-				Lang.translate("display_link.view_compatible")
+				Lang.translateDirect("display_link.attached_side"),
+				Lang.translateDirect("display_link.view_compatible")
 						.withStyle(ChatFormatting.GRAY)
 		));
 
@@ -174,11 +174,11 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 				});
 
 		targetWidget.getToolTip().addAll(List.of(
-				Lang.translate("display_link.writing_to"),
+				Lang.translateDirect("display_link.writing_to"),
 				targetState.getBlock().getName()
 						.withStyle(s -> s.withColor(target == null ? 0xF68989 : 0xF2C16D)),
-				Lang.translate("display_link.targeted_location"),
-				Lang.translate("display_link.view_compatible")
+				Lang.translateDirect("display_link.targeted_location"),
+				Lang.translateDirect("display_link.view_compatible")
 						.withStyle(ChatFormatting.GRAY)
 		));
 
@@ -197,7 +197,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 						.toList();
 				sourceTypeSelector = new SelectionScrollInput(x + 61, y + 26, 135, 16).forOptions(options)
 						.writingTo(sourceTypeLabel)
-						.titled(Lang.translate("display_link.information_type"))
+						.titled(Lang.translateDirect("display_link.information_type"))
 						.calling(this::initGathererSourceSubOptions)
 						.setState(startIndex);
 				sourceTypeSelector.onChanged();
@@ -216,8 +216,8 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 		if (targetLineSelector != null)
 			targetLineSelector
-					.titled(source instanceof SingleLineDisplaySource ? Lang.translate("display_link.display_on")
-							: Lang.translate("display_link.display_on_multiline"));
+					.titled(source instanceof SingleLineDisplaySource ? Lang.translateDirect("display_link.display_on")
+							: Lang.translateDirect("display_link.display_on_multiline"));
 
 		configWidgets.forEach(s -> {
 			s.forEach(this::removeWidget);
@@ -252,13 +252,13 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
-		MutableComponent header = Lang.translate("display_link.title");
+		MutableComponent header = Lang.translateDirect("display_link.title");
 		font.draw(ms, header, x + background.width / 2 - font.width(header) / 2, y + 4, 0x442000);
 
 		if (sources.isEmpty())
-			font.drawShadow(ms, Lang.translate("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
+			font.drawShadow(ms, Lang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
 		if (target == null)
-			font.drawShadow(ms, Lang.translate("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
+			font.drawShadow(ms, Lang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
 
 		ms.pushPose();
 		ms.translate(0, guiTop + 46, 0);

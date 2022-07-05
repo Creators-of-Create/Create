@@ -69,7 +69,7 @@ public class ScheduleItemRetrieval {
 		if (train.runtime.paused && !train.runtime.completed) {
 			train.runtime.paused = false;
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translate("schedule.continued"), true);
+			player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
 			event.setCanceled(true);
 			return;
 		}
@@ -77,14 +77,14 @@ public class ScheduleItemRetrieval {
 		ItemStack itemInHand = player.getItemInHand(event.getHand());
 		if (!itemInHand.isEmpty()) {
 			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
+			player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 			event.setCanceled(true);
 			return;
 		}
 
 		AllSoundEvents.playItemPickup(player);
 		player.displayClientMessage(
-			Lang.translate(
+			Lang.translateDirect(
 				train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 			true);
 

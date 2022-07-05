@@ -61,14 +61,14 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 	protected Component formatTime(boolean compact) {
 		if (compact)
 			return new TextComponent(getValue() + getUnit().suffix);
-		return new TextComponent(getValue() + " ").append(Lang.translate(getUnit().key));
+		return new TextComponent(getValue() + " ").append(Lang.translateDirect(getUnit().key));
 	}
 
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
 			new TranslatableComponent(getId().getNamespace() + ".schedule." + type + "." + getId().getPath()),
-			Lang.translate("schedule.condition.for_x_time", formatTime(false))
+			Lang.translateDirect("schedule.condition.for_x_time", formatTime(false))
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
 
@@ -79,7 +79,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translate("generic.duration"));
+		return ImmutableList.of(Lang.translateDirect("generic.duration"));
 	}
 
 	public int getValue() {
@@ -94,7 +94,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 31, (i, l) -> {
-			i.titled(Lang.translate("generic.duration"))
+			i.titled(Lang.translateDirect("generic.duration"))
 				.withShiftStep(15)
 				.withRange(0, 121);
 			i.lockedTooltipX = -15;
@@ -103,7 +103,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 
 		builder.addSelectionScrollInput(36, 85, (i, l) -> {
 			i.forOptions(TimeUnit.translatedOptions())
-				.titled(Lang.translate("generic.timeUnit"));
+				.titled(Lang.translateDirect("generic.timeUnit"));
 		}, "TimeUnit");
 	}
 
@@ -116,8 +116,8 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 			(int) (showInMinutes ? Math.floor(ticksUntilDeparture / (20 * 60f)) : Math.ceil(ticksUntilDeparture / 100f) * 5);
 		String key = "generic." + (showInMinutes ? num == 1 ? "daytime.minute" : "unit.minutes"
 			: num == 1 ? "daytime.second" : "unit.seconds");
-		return Lang.translate("schedule.condition." + getId().getPath() + ".status",
-			new TextComponent(num + " ").append(Lang.translate(key)));
+		return Lang.translateDirect("schedule.condition." + getId().getPath() + ".status",
+			new TextComponent(num + " ").append(Lang.translateDirect(key)));
 	}
 
 }

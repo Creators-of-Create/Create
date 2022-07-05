@@ -196,7 +196,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		if (te.trainHasSchedule)
 			dropScheduleButton.setToolTip(
-				Lang.translate(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
+				Lang.translateDirect(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
 		else
 			dropScheduleButton.getToolTip()
 				.clear();
@@ -211,16 +211,16 @@ public class StationScreen extends AbstractStationScreen {
 
 	private void updateAssemblyTooltip(String key) {
 		if (key == null) {
-			disassembleTrainButton.setToolTip(Lang.translate("station.disassemble_train"));
-			newTrainButton.setToolTip(Lang.translate("station.create_train"));
+			disassembleTrainButton.setToolTip(Lang.translateDirect("station.disassemble_train"));
+			newTrainButton.setToolTip(Lang.translateDirect("station.create_train"));
 			return;
 		}
 		for (IconButton ib : new IconButton[] { disassembleTrainButton, newTrainButton }) {
 			List<Component> toolTip = ib.getToolTip();
 			toolTip.clear();
-			toolTip.add(Lang.translate("station." + key)
+			toolTip.add(Lang.translateDirect("station." + key)
 				.withStyle(ChatFormatting.GRAY));
-			toolTip.add(Lang.translate("station." + key + "_1")
+			toolTip.add(Lang.translateDirect("station." + key + "_1")
 				.withStyle(ChatFormatting.GRAY));
 		}
 	}
@@ -238,7 +238,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Train train = displayedTrain.get();
 		if (train == null) {
-			MutableComponent header = Lang.translate("station.idle");
+			MutableComponent header = Lang.translateDirect("station.idle");
 			font.draw(ms, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A);
 			return;
 		}

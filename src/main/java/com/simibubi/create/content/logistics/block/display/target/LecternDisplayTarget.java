@@ -65,7 +65,7 @@ public class LecternDisplayTarget extends DisplayTarget {
 	}
 
 	public Component getLineOptionText(int line) {
-		return Lang.translate("display_target.page", line + 1);
+		return Lang.translateDirect("display_target.page", line + 1);
 	}
 
 	private ItemStack signBook(ItemStack book) {

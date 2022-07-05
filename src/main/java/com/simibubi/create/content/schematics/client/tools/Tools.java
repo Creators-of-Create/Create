@@ -32,7 +32,7 @@ public enum Tools {
 	}
 
 	public TranslatableComponent getDisplayName() {
-		return Lang.translate("schematic.tool." + Lang.asId(name()));
+		return Lang.translateDirect("schematic.tool." + Lang.asId(name()));
 	}
 
 	public AllIcons getIcon() {

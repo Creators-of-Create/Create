@@ -198,7 +198,7 @@ public class ValueBox extends ChasingAABBOutline {
 
 		public IconValueBox(Component label, INamedIconOptions iconValue, AABB bb, BlockPos pos) {
 			super(label, bb, pos);
-			subLabel(Lang.translate(iconValue.getTranslationKey()));
+			subLabel(Lang.translateDirect(iconValue.getTranslationKey()));
 			icon = iconValue.getIcon();
 		}
 

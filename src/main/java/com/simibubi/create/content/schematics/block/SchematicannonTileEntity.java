@@ -780,7 +780,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translate("gui.schematicannon.title");
+		return Lang.translateDirect("gui.schematicannon.title");
 	}
 
 	public void updateChecklist() {

@@ -592,7 +592,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				.at(x - 39, y - 11)
 				.render(ms);
 
-			font.draw(ms, Lang.translate(PONDERING), x, y - 6, tooltipColor);
+			font.draw(ms, Lang.translateDirect(PONDERING), x, y - 6, tooltipColor);
 			y += 8;
 			x += 0;
 			ms.translate(x, y, 0);
@@ -609,7 +609,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.translate(chap.x - 4 - 4, chap.y, 0);
 				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
 
-				drawRightAlignedString(font, ms, Lang.translate(IN_CHAPTER)
+				drawRightAlignedString(font, ms, Lang.translateDirect(IN_CHAPTER)
 					.getString(), 0, 0, tooltipColor);
 				drawRightAlignedString(font, ms, chapter.getTitle(), 0, 12, Theme.i(Theme.Key.TEXT));
 
@@ -634,7 +634,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.translate(mouseX, mouseY, 100);
 				if (hoveredTooltipItem.isEmpty()) {
 					MutableComponent text = Lang
-						.translate(IDENTIFY_MODE,
+						.translateDirect(IDENTIFY_MODE,
 							((MutableComponent) minecraft.options.keyDrop.getTranslatedKeyMessage())
 								.withStyle(ChatFormatting.WHITE))
 						.withStyle(ChatFormatting.GRAY);
@@ -696,10 +696,10 @@ public class PonderUI extends NavigatableSimiScreen {
 			.equals(Create.asResource("creative_motor_mojang"))) {
 			ms.pushPose();
 			ms.translate(right.x + 10, right.y - 6 + nextUp.getValue(partialTicks) * 5, 400);
-			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translate(NEXT_UP))) + 5);
+			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translateDirect(NEXT_UP))) + 5);
 			renderSpeechBox(ms, 0, 0, boxWidth, 20, right.isHoveredOrFocused(), Pointing.DOWN, false);
 			ms.translate(0, -29, 100);
-			drawCenteredString(ms, font, Lang.translate(NEXT_UP), 0, 0, Theme.i(Theme.Key.TEXT_DARKER));
+			drawCenteredString(ms, font, Lang.translateDirect(NEXT_UP), 0, 0, Theme.i(Theme.Key.TEXT_DARKER));
 			drawCenteredString(ms, font, nextScene.getTitle(), 0, 10, Theme.i(Theme.Key.TEXT));
 			ms.popPose();
 		}
@@ -771,17 +771,17 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.translate(0, 0, 500);
 		int tooltipY = height - 16;
 		if (scan.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translate(IDENTIFY), scan.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(IDENTIFY), scan.x + 10, tooltipY, tooltipColor);
 		if (index != 0 && left.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translate(PREVIOUS), left.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(PREVIOUS), left.x + 10, tooltipY, tooltipColor);
 		if (close.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translate(CLOSE), close.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(CLOSE), close.x + 10, tooltipY, tooltipColor);
 		if (index != scenes.size() - 1 && right.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translate(NEXT), right.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(NEXT), right.x + 10, tooltipY, tooltipColor);
 		if (replay.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translate(REPLAY), replay.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(REPLAY), replay.x + 10, tooltipY, tooltipColor);
 		if (slowMode.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translate(SLOW_TEXT), slowMode.x + 5, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(SLOW_TEXT), slowMode.x + 5, tooltipY, tooltipColor);
 		if (PonderIndex.editingModeActive() && userMode.isHoveredOrFocused())
 			drawCenteredString(ms, font, "Editor View", userMode.x + 10, tooltipY, tooltipColor);
 		ms.popPose();

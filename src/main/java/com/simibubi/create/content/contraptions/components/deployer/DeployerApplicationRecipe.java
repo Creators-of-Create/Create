@@ -60,7 +60,7 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
 			.getItems();
 		if (matchingStacks.length == 0)
 			return new TextComponent("Invalid");
-		return Lang.translate("recipe.assembly.deploying_item",
+		return Lang.translateDirect("recipe.assembly.deploying_item",
 			new TranslatableComponent(matchingStacks[0].getDescriptionId()).getString());
 	}
 

@@ -215,7 +215,7 @@ public class SchematicAndQuillHandler {
 		t.fillFromWorld(level, origin, bounds, true, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = Lang.translate("schematicAndQuill.fallbackName")
+			string = Lang.translateDirect("schematicAndQuill.fallbackName")
 				.getString();
 
 		String folderPath = "schematics";

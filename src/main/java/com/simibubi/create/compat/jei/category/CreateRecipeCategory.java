@@ -77,7 +77,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 
 	@Override
 	public Component getTitle() {
-		return Lang.translate("recipe." + name);
+		return Lang.translateDirect("recipe." + name);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return (view, tooltip) -> {
 			float chance = output.getChance();
 			if (chance != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+				tooltip.add(1, Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 					.withStyle(ChatFormatting.GOLD));
 		};
 	}
@@ -168,7 +168,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			}
 
 			int amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
-			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translate("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {

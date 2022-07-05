@@ -122,7 +122,7 @@ public class TrainStatus {
 		if (owner == null)
 			return;
 		if (owner instanceof Player player) {
-			player.displayClientMessage(Lang.translate("train.status", train.name)
+			player.displayClientMessage(Lang.translateDirect("train.status", train.name)
 				.withStyle(ChatFormatting.GOLD), false);
 			queued.forEach(c -> player.displayClientMessage(c, false));
 		}
@@ -131,7 +131,7 @@ public class TrainStatus {
 
 	public void displayInformation(String key, boolean itsAGoodThing, Object... args) {
 		queued.add(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
-			.append(Lang.translate("train.status." + key, args)
+			.append(Lang.translateDirect("train.status." + key, args)
 				.withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4))));
 		if (queued.size() > 3)
 			queued.remove(0);

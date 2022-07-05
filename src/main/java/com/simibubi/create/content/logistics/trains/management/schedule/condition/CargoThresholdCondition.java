@@ -40,7 +40,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 
 		public static List<? extends Component> translatedOptions() {
 			return Arrays.stream(values())
-				.map(op -> Lang.translate("schedule.condition.threshold." + Lang.asId(op.name())))
+				.map(op -> Lang.translateDirect("schedule.condition.threshold." + Lang.asId(op.name())))
 				.toList();
 		}
 	}
@@ -108,8 +108,8 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translate("schedule.condition.threshold.place_item"),
-			Lang.translate("schedule.condition.threshold.place_item_2")
+		return ImmutableList.of(Lang.translateDirect("schedule.condition.threshold.place_item"),
+			Lang.translateDirect("schedule.condition.threshold.place_item_2")
 				.withStyle(ChatFormatting.GRAY));
 	}
 
@@ -118,7 +118,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addSelectionScrollInput(0, 24, (i, l) -> {
 			i.forOptions(Ops.translatedOptions())
-				.titled(Lang.translate("schedule.condition.threshold.train_holds"))
+				.titled(Lang.translateDirect("schedule.condition.threshold.train_holds"))
 				.format(state -> new TextComponent(" " + Ops.values()[state].formatted));
 		}, "Operator");
 		builder.addIntegerTextInput(29, 41, (e, t) -> {

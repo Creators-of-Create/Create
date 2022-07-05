@@ -53,7 +53,7 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 			return;
 		builder.addSelectionScrollInput(0, 120,
 			(si, l) -> si.forOptions(Lang.translatedOptions("display_source.redstone_power", "number", "progress_bar"))
-				.titled(Lang.translate("display_source.redstone_power.display")),
+				.titled(Lang.translateDirect("display_source.redstone_power.display")),
 			"Mode");
 	}
 	

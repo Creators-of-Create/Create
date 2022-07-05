@@ -14,13 +14,13 @@ public class FluidFormatter {
 		if (shorten && amount >= 1000) {
 			return Couple.create(
 					new TextComponent(String.format("%.1f" , amount / 1000d)),
-					Lang.translate("generic.unit.buckets")
+					Lang.translateDirect("generic.unit.buckets")
 			);
 		}
 
 		return Couple.create(
 				new TextComponent(String.valueOf(amount)),
-				Lang.translate("generic.unit.millibuckets")
+				Lang.translateDirect("generic.unit.millibuckets")
 		);
 	}
 

@@ -99,27 +99,27 @@ public class ScheduleItem extends Item implements MenuProvider {
 				.get(seatIndex);
 			Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
 			if (directions == null) {
-				pPlayer.displayClientMessage(Lang.translate("schedule.non_controlling_seat"), true);
+				pPlayer.displayClientMessage(Lang.translateDirect("schedule.non_controlling_seat"), true);
 				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
 				return InteractionResult.SUCCESS;
 			}
 
 			if (train.runtime.getSchedule() != null) {
 				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-				pPlayer.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
+				pPlayer.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 				return InteractionResult.SUCCESS;
 			}
 
 			if (schedule.entries.isEmpty()) {
 				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-				pPlayer.displayClientMessage(Lang.translate("schedule.no_stops"), true);
+				pPlayer.displayClientMessage(Lang.translateDirect("schedule.no_stops"), true);
 				return InteractionResult.SUCCESS;
 			}
 
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(pPlayer);
 			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-			pPlayer.displayClientMessage(Lang.translate("schedule.applied_to_train")
+			pPlayer.displayClientMessage(Lang.translateDirect("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
 			pStack.shrink(1);
 			pPlayer.setItemInHand(pUsedHand, pStack.isEmpty() ? ItemStack.EMPTY : pStack);

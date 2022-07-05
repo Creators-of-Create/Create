@@ -32,7 +32,7 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 	}
 
 	public Component getLineOptionText(int line) {
-		return Lang.translate("display_target.line", line + 1);
+		return Lang.translateDirect("display_target.line", line + 1);
 	}
 
 	public static void reserve(int line, BlockEntity target, DisplayLinkContext context) {

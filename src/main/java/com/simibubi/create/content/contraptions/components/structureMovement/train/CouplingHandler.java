@@ -177,7 +177,7 @@ public class CouplingHandler {
 	public static void status(Player player, String key) {
 		if (player == null)
 			return;
-		player.displayClientMessage(Lang.translate("minecart_coupling." + key), true);
+		player.displayClientMessage(Lang.translateDirect("minecart_coupling." + key), true);
 	}
 
 }

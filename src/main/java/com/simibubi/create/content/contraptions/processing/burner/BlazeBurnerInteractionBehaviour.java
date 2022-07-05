@@ -59,18 +59,18 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 				if (train.runtime.paused && !train.runtime.completed) {
 					train.runtime.paused = false;
 					AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
-					player.displayClientMessage(Lang.translate("schedule.continued"), true);
+					player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
 					return true;
 				}
 
 				if (!itemInHand.isEmpty()) {
 					AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-					player.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
+					player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 					return true;
 				}
 
 				AllSoundEvents.playItemPickup(player);
-				player.displayClientMessage(Lang.translate(
+				player.displayClientMessage(Lang.translateDirect(
 					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 					true);
 				player.setItemInHand(activeHand, train.runtime.returnSchedule());
@@ -86,21 +86,21 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 
 			if (schedule.entries.isEmpty()) {
 				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-				player.displayClientMessage(Lang.translate("schedule.no_stops"), true);
+				player.displayClientMessage(Lang.translateDirect("schedule.no_stops"), true);
 				return true;
 			}
 
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(player);
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translate("schedule.applied_to_train")
+			player.displayClientMessage(Lang.translateDirect("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
 			itemInHand.shrink(1);
 			player.setItemInHand(activeHand, itemInHand.isEmpty() ? ItemStack.EMPTY : itemInHand);
 			return true;
 		}
 
-		player.displayClientMessage(Lang.translate("schedule.non_controlling_seat"), true);
+		player.displayClientMessage(Lang.translateDirect("schedule.non_controlling_seat"), true);
 		AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
 		return true;
 	}

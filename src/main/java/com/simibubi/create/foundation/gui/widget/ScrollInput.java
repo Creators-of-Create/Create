@@ -16,9 +16,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected Consumer<Integer> onScroll;
 	protected int state;
-	protected Component title = Lang.translate("gui.scrollInput.defaultTitle");
-	protected final Component scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
-	protected final Component shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
+	protected Component title = Lang.translateDirect("gui.scrollInput.defaultTitle");
+	protected final Component scrollToModify = Lang.translateDirect("gui.scrollInput.scrollToModify");
+	protected final Component shiftScrollsFaster = Lang.translateDirect("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 	protected boolean inverted;
 	protected Function<Integer, Component> formatter;

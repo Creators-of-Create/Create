@@ -96,7 +96,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			}
 
 			if (TrainRelocator.relocate(train, sender.level, pos, hoveredBezier, direction, lookAngle, false)) {
-				sender.displayClientMessage(Lang.translate("train.relocate.success")
+				sender.displayClientMessage(Lang.translateDirect("train.relocate.success")
 					.withStyle(ChatFormatting.GREEN), true);
 				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
 					e.nonDamageTicks = 10;

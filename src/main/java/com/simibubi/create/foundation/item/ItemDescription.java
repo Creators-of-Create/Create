@@ -24,12 +24,12 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -85,8 +85,8 @@ public class ItemDescription {
 		List<Component> list = new ArrayList<>();
 
 		CKinetics config = AllConfigs.SERVER.kinetics;
-		Component rpmUnit = Lang.translate("generic.unit.rpm");
-		Component suUnit = Lang.translate("generic.unit.stress");
+		LangBuilder rpmUnit = Lang.translate("generic.unit.rpm");
+		LangBuilder suUnit = Lang.translate("generic.unit.stress");
 
 		boolean hasGoggles = GogglesItem.isWearingGoggles(Minecraft.getInstance().player);
 
@@ -102,24 +102,32 @@ public class ItemDescription {
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
 		if (hasStressImpact) {
+			Lang.translate("tooltip.stressImpact")
+				.style(GRAY)
+				.addTo(list);
+
 			double impact = BlockStressValues.getImpact(block);
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
-			MutableComponent level =
-				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(impactId.getAbsoluteColor());
+			LangBuilder builder = Lang.builder()
+				.add(Lang.text(makeProgressBar(3, impactId.ordinal() + 1))
+					.style(impactId.getAbsoluteColor()));
 
-			if (hasGoggles)
-				level.append(IHaveGoggleInformation.format(impact) + "x ")
-					.append(rpmUnit);
-			else
-				level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(impactId.name())));
-
-			list.add(Lang.translate("tooltip.stressImpact")
-				.withStyle(GRAY));
-			list.add(level);
+			if (hasGoggles) {
+				builder.add(Lang.number(impact))
+					.text("x ")
+					.add(rpmUnit)
+					.addTo(list);
+			} else
+				builder.translate("tooltip.stressImpact." + Lang.asId(impactId.name()))
+					.addTo(list);
 		}
 
 		if (hasStressCapacity) {
+			Lang.translate("tooltip.capacityProvided")
+				.style(GRAY)
+				.addTo(list);
+
 			double capacity = BlockStressValues.getCapacity(block);
 			Couple<Integer> generatedRPM = BlockStressValues.getProvider(block)
 				.getGeneratedRPM(block);
@@ -127,36 +135,28 @@ public class ItemDescription {
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			StressImpact opposite = StressImpact.values()[StressImpact.values().length - 2 - impactId.ordinal()];
-			MutableComponent level =
-				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(opposite.getAbsoluteColor());
-
-			list.add(Lang.translate("tooltip.capacityProvided")
-				.withStyle(GRAY));
+			LangBuilder builder = Lang.builder()
+				.add(Lang.text(makeProgressBar(3, impactId.ordinal() + 1))
+					.style(opposite.getAbsoluteColor()));
 
 			if (hasGoggles) {
-				level.append(IHaveGoggleInformation.format(capacity) + "x ")
-					.append(rpmUnit);
-				list.add(level);
+				builder.add(Lang.number(capacity))
+					.text("x ")
+					.add(rpmUnit)
+					.addTo(list);
 
 				if (generatedRPM != null) {
-					MutableComponent amount =
-						new TextComponent(IHaveGoggleInformation.format(capacity * generatedRPM.getSecond()))
-							.append(suUnit);
-					MutableComponent component = !generatedRPM.getFirst()
-						.equals(generatedRPM.getSecond()) ? Lang.translate("tooltip.up_to", amount) : amount;
-					list.add(new TextComponent(" -> ").append(component)
-						.withStyle(DARK_GRAY));
+					LangBuilder amount = Lang.number(capacity * generatedRPM.getSecond())
+						.add(suUnit);
+					Lang.text(" -> ")
+						.add(!generatedRPM.getFirst()
+							.equals(generatedRPM.getSecond()) ? Lang.translate("tooltip.up_to", amount) : amount)
+						.style(DARK_GRAY)
+						.addTo(list);
 				}
-			} else {
-				level.append(Lang.translate("tooltip.capacityProvided." + Lang.asId(impactId.name())));
-				list.add(level);
-			}
-
-			MutableComponent genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.getString()
-				.isEmpty())
-				list.add(new TextComponent(" ").append(genSpeed)
-					.withStyle(DARK_GRAY));
+			} else
+				builder.translate("tooltip.capacityProvided." + Lang.asId(impactId.name()))
+					.addTo(list);
 		}
 
 		return list;
@@ -189,14 +189,14 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdDesc = Lang.translate("tooltip.holdForDescription", "$")
+			String[] holdDesc = Lang.translateDirect("tooltip.holdForDescription", "$")
 				.getString()
 				.split("\\$");
-			String[] holdCtrl = Lang.translate("tooltip.holdForControls", "$")
+			String[] holdCtrl = Lang.translateDirect("tooltip.holdForControls", "$")
 				.getString()
 				.split("\\$");
-			MutableComponent keyShift = Lang.translate("tooltip.keyShift");
-			MutableComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
+			MutableComponent keyShift = Lang.translateDirect("tooltip.keyShift");
+			MutableComponent keyCtrl = Lang.translateDirect("tooltip.keyCtrl");
 			for (List<Component> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {
 				boolean shift = list == linesOnShift;
 				boolean ctrl = list == linesOnCtrl;
@@ -282,10 +282,6 @@ public class ItemDescription {
 
 	public List<Component> getLinesOnShift() {
 		return linesOnShift;
-	}
-
-	private static MutableComponent generatorSpeed(Block block, Component unitRPM) {
-		return TextComponent.EMPTY.plainCopy();
 	}
 
 }

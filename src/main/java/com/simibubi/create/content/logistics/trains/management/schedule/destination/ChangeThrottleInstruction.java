@@ -51,7 +51,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(Lang
-			.translate("schedule." + type + "." + getId().getPath() + ".summary",
+			.translateDirect("schedule." + type + "." + getId().getPath() + ".summary",
 				formatted().withStyle(ChatFormatting.WHITE))
 			.withStyle(ChatFormatting.GOLD));
 	}
@@ -62,7 +62,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 		builder.addScrollInput(0, 50, (si, l) -> {
 			si.withRange(5, 101)
 				.withStepFunction(c -> c.shift ? 25 : 5)
-				.titled(Lang.translate("schedule.instruction.throttle_edit_box"));
+				.titled(Lang.translateDirect("schedule.instruction.throttle_edit_box"));
 			l.withSuffix("%");
 		}, "Value");
 	}
@@ -77,8 +77,8 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translate("schedule.instruction.throttle_edit_box"),
-			Lang.translate("schedule.instruction.throttle_edit_box_1")
+		return ImmutableList.of(Lang.translateDirect("schedule.instruction.throttle_edit_box"),
+			Lang.translateDirect("schedule.instruction.throttle_edit_box_1")
 				.withStyle(ChatFormatting.GRAY));
 	}
 

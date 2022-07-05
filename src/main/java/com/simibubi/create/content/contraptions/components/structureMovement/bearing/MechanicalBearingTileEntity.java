@@ -51,7 +51,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translate("contraptions.movement_mode"),
+		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);

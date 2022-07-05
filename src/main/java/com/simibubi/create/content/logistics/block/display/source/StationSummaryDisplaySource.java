@@ -57,7 +57,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 
 				} else if (prediction.ticks < 200) {
 					lines.add(WHITESPACE);
-					lines.add(Lang.translate("display_source.station_summary.now"));
+					lines.add(Lang.translateDirect("display_source.station_summary.now"));
 
 				} else {
 					int min = prediction.ticks / 1200;
@@ -68,8 +68,8 @@ public class StationSummaryDisplaySource extends DisplaySource {
 						sec = 0;
 					}
 					lines.add(min > 0 ? new TextComponent(String.valueOf(min)) : WHITESPACE);
-					lines.add(min > 0 ? Lang.translate("display_source.station_summary.minutes")
-						: Lang.translate("display_source.station_summary.seconds", sec));
+					lines.add(min > 0 ? Lang.translateDirect("display_source.station_summary.minutes")
+						: Lang.translateDirect("display_source.station_summary.seconds", sec));
 				}
 
 				lines.add(prediction.train.name.copy());
@@ -187,16 +187,16 @@ public class StationSummaryDisplaySource extends DisplaySource {
 		if (isFirstLine) {
 			builder.addTextInput(0, 137, (e, t) -> {
 				e.setValue("");
-				t.withTooltip(ImmutableList.of(Lang.translate("display_source.station_summary.filter")
+				t.withTooltip(ImmutableList.of(Lang.translateDirect("display_source.station_summary.filter")
 					.withStyle(s -> s.withColor(0x5391E1)),
-					Lang.translate("gui.schedule.lmb_edit")
+					Lang.translateDirect("gui.schedule.lmb_edit")
 						.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
 			}, "Filter");
 			return;
 		}
 
 		builder.addScrollInput(0, 32, (si, l) -> {
-			si.titled(Lang.translate("display_source.station_summary.train_name_column"))
+			si.titled(Lang.translateDirect("display_source.station_summary.train_name_column"))
 				.withRange(0, 73)
 				.withShiftStep(12);
 			si.setState(50);
@@ -204,7 +204,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 		}, "NameColumn");
 
 		builder.addScrollInput(36, 22, (si, l) -> {
-			si.titled(Lang.translate("display_source.station_summary.platform_column"))
+			si.titled(Lang.translateDirect("display_source.station_summary.platform_column"))
 				.withRange(0, 16)
 				.withShiftStep(4);
 			si.setState(3);

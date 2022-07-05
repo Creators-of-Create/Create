@@ -49,7 +49,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		movementMode = new ScrollOptionBehaviour<>(MovementMode.class, Lang.translate("contraptions.movement_mode"),
+		movementMode = new ScrollOptionBehaviour<>(MovementMode.class, Lang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		movementMode.withCallback(t -> waitingForSpeedChange = false);
