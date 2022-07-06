@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 
 import net.minecraft.core.BlockPos;
@@ -234,7 +233,7 @@ public class BlockHelper {
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
 
 		if (world.dimensionType()
-			.ultraWarm() && FluidHelper.isTag(state.getFluidState(), FluidTags.WATER)) {
+			.ultraWarm() && state.getFluidState().is(FluidTags.WATER)) {
 			int i = target.getX();
 			int j = target.getY();
 			int k = target.getZ();
