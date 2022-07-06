@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.Optional;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -14,14 +15,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	public static final BehaviourType<BracketedTileEntityBehaviour> TYPE = new BehaviourType<>();
 
-	private Optional<BlockState> bracket;
+	private BlockState bracket;
 	private boolean reRender;
 
 	private Predicate<BlockState> pred;
@@ -33,7 +33,6 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	public BracketedTileEntityBehaviour(SmartTileEntity te, Predicate<BlockState> pred) {
 		super(te);
 		this.pred = pred;
-		bracket = Optional.empty();
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	}
 
 	public void applyBracket(BlockState state) {
-		this.bracket = Optional.of(state);
+		this.bracket = state;
 		reRender = true;
 		tileEntity.notifyUpdate();
 		Level world = getWorld();
@@ -54,35 +53,42 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	public void transformBracket(StructureTransform transform) {
 		if (isBracketPresent()) {
-			BlockState bracket = getBracket();
 			BlockState transformedBracket = transform.apply(bracket);
 			applyBracket(transformedBracket);
 		}
 	}
 
-	public void removeBracket(boolean inOnReplacedContext) {
+	@Nullable
+	public BlockState removeBracket(boolean inOnReplacedContext) {
+		if (bracket == null) {
+			return null;
+		}
+
+		BlockState removed = this.bracket;
 		Level world = getWorld();
 		if (!world.isClientSide)
-			world.levelEvent(2001, getPos(), Block.getId(getBracket()));
-		this.bracket = Optional.empty();
+			world.levelEvent(2001, getPos(), Block.getId(bracket));
+		this.bracket = null;
 		reRender = true;
 		if (inOnReplacedContext) {
 			tileEntity.sendData();
-			return;
+			return removed;
 		}
 		tileEntity.notifyUpdate();
 		if (world.isClientSide)
-			return;
+			return removed;
 		tileEntity.getBlockState()
 			.updateNeighbourShapes(world, getPos(), 3);
+		return removed;
 	}
 
 	public boolean isBracketPresent() {
-		return bracket.isPresent();
+		return bracket != null;
 	}
 
+	@Nullable
 	public BlockState getBracket() {
-		return bracket.orElse(Blocks.AIR.defaultBlockState());
+		return bracket;
 	}
 
 	public boolean canHaveBracket() {
@@ -91,7 +97,10 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public ItemRequirement getRequiredItems() {
-		return ItemRequirement.of(getBracket(), null);
+		if (!isBracketPresent()) {
+			return ItemRequirement.NONE;
+		}
+		return ItemRequirement.of(bracket, null);
 	}
 
 	@Override
@@ -101,7 +110,9 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
-		bracket.ifPresent(p -> nbt.put("Bracket", NbtUtils.writeBlockState(p)));
+		if (isBracketPresent()) {
+			nbt.put("Bracket", NbtUtils.writeBlockState(bracket));
+		}
 		if (clientPacket && reRender) {
 			NBTHelper.putMarker(nbt, "Redraw");
 			reRender = false;
@@ -111,9 +122,8 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
-		bracket = Optional.empty();
 		if (nbt.contains("Bracket"))
-			bracket = Optional.of(NbtUtils.readBlockState(nbt.getCompound("Bracket")));
+			bracket = NbtUtils.readBlockState(nbt.getCompound("Bracket"));
 		if (clientPacket && nbt.contains("Redraw"))
 			getWorld().sendBlockUpdated(getPos(), tileEntity.getBlockState(), tileEntity.getBlockState(), 16);
 		super.read(nbt, clientPacket);

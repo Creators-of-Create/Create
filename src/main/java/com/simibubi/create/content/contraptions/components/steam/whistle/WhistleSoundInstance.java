@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
-import static com.simibubi.create.AllSoundEvents.WHISTLE_MEDIUM;
 import static com.simibubi.create.AllSoundEvents.WHISTLE_HIGH;
 import static com.simibubi.create.AllSoundEvents.WHISTLE_LOW;
+import static com.simibubi.create.AllSoundEvents.WHISTLE_MEDIUM;
 
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 

@@ -27,7 +27,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -350,11 +349,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 
 	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
 		this.spriteShiftFunc = (builder, u, v) -> {
-			float targetU = entry.getTarget()
-				.getU((getUnInterpolatedU(entry.getOriginal(), u)));
-			float targetV = entry.getTarget()
-				.getV((getUnInterpolatedV(entry.getOriginal(), v)));
-			builder.uv(targetU, targetV);
+			builder.uv(entry.getTargetU(u), entry.getTargetV(v));
 		};
 		return this;
 	}
@@ -381,9 +376,9 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = entry.getTarget()
-				.getU((getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
+				.getU((SpriteShiftEntry.getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
 			float targetV = entry.getTarget()
-				.getV((getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
+				.getV((SpriteShiftEntry.getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
 			builder.uv(targetU, targetV);
 		};
 		return this;
@@ -455,16 +450,6 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 
 	public static int transformColor(int component, float scale) {
 		return Mth.clamp((int) (component * scale), 0, 255);
-	}
-
-	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
-		float f = sprite.getU1() - sprite.getU0();
-		return (u - sprite.getU0()) / f * 16.0F;
-	}
-
-	public static float getUnInterpolatedV(TextureAtlasSprite sprite, float v) {
-		float f = sprite.getV1() - sprite.getV0();
-		return (v - sprite.getV0()) / f * 16.0F;
 	}
 
 	public static int maxLight(int packedLight1, int packedLight2) {

@@ -14,7 +14,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -48,9 +47,8 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
-		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.defaultBlockState())
+		BlockState bracket = behaviour.removeBracket(inOnReplacedContext);
+		if (bracket == null)
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}

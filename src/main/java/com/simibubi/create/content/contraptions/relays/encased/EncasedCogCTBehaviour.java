@@ -2,11 +2,14 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.utility.Couple;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -80,14 +83,14 @@ public class EncasedCogCTBehaviour extends EncasedCTBehaviour {
 	}
 
 	@Override
-	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
+	public CTSpriteShiftEntry getShift(BlockState state, Direction direction, @Nullable TextureAtlasSprite sprite) {
 		Axis axis = state.getValue(AXIS);
 		if (large || axis == direction.getAxis()) {
 			if (axis == direction.getAxis() && state
 				.getValue(direction.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
 					: EncasedCogwheelBlock.BOTTOM_SHAFT))
 				return null;
-			return super.get(state, direction);
+			return super.getShift(state, direction, sprite);
 		}
 		return sideShifts.get(axis == Axis.X || axis == Axis.Z && direction.getAxis() == Axis.X);
 	}

@@ -6,13 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,6 +20,8 @@ import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 
 public class BeltModel extends BakedModelWrapper<BakedModel> {
+
+	private static final SpriteShiftEntry SPRITE_SHIFT = AllSpriteShifts.ANDESIDE_BELT_CASING;
 
 	public BeltModel(BakedModel template) {
 		super(template);
@@ -36,37 +35,28 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 		CasingType type = extraData.getData(CASING_PROPERTY);
 		if (type == CasingType.NONE || type == CasingType.BRASS)
 			return quads;
-		quads = new ArrayList<>(quads);
 
-		SpriteShiftEntry spriteShift = AllSpriteShifts.ANDESIDE_BELT_CASING;
-		VertexFormat format = DefaultVertexFormat.BLOCK;
+		quads = new ArrayList<>(quads);
 
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
-			if (spriteShift == null)
-				continue;
-			if (quad.getSprite() != spriteShift.getOriginal())
+			TextureAtlasSprite original = quad.getSprite();
+			if (original != SPRITE_SHIFT.getOriginal())
 				continue;
 
-			TextureAtlasSprite original = quad.getSprite();
-			TextureAtlasSprite target = spriteShift.getTarget();
 			BakedQuad newQuad = QuadHelper.clone(quad);
 			int[] vertexData = newQuad.getVertices();
 
-			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
-				int uvOffset = 16 / 4;
-				int uIndex = vertex + uvOffset;
-				int vIndex = vertex + uvOffset + 1;
-				float u = Float.intBitsToFloat(vertexData[uIndex]);
-				float v = Float.intBitsToFloat(vertexData[vIndex]);
-				vertexData[uIndex] =
-					Float.floatToRawIntBits(target.getU(SuperByteBuffer.getUnInterpolatedU(original, u)));
-				vertexData[vIndex] =
-					Float.floatToRawIntBits(target.getV(SuperByteBuffer.getUnInterpolatedV(original, v)));
+			for (int vertex = 0; vertex < 4; vertex++) {
+				float u = QuadHelper.getU(vertexData, vertex);
+				float v = QuadHelper.getV(vertexData, vertex);
+				QuadHelper.setU(vertexData, vertex, SPRITE_SHIFT.getTargetU(u));
+				QuadHelper.setV(vertexData, vertex, SPRITE_SHIFT.getTargetV(v));
 			}
 
 			quads.set(i, newQuad);
 		}
+
 		return quads;
 	}
 

@@ -11,7 +11,7 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
-import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
+import com.simibubi.create.foundation.block.connected.SimpleCTBehaviour;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.WindowGen;
@@ -48,7 +48,7 @@ public class AllPaletteBlocks {
 		.register();
 
 	public static final BlockEntry<ConnectedGlassBlock> FRAMED_GLASS =
-		framedGlass("framed_glass", () -> new StandardCTBehaviour(AllSpriteShifts.FRAMED_GLASS)),
+		framedGlass("framed_glass", () -> new SimpleCTBehaviour(AllSpriteShifts.FRAMED_GLASS)),
 		HORIZONTAL_FRAMED_GLASS = framedGlass("horizontal_framed_glass",
 			() -> new HorizontalCTBehaviour(AllSpriteShifts.HORIZONTAL_FRAMED_GLASS, AllSpriteShifts.FRAMED_GLASS)),
 		VERTICAL_FRAMED_GLASS = framedGlass("vertical_framed_glass",

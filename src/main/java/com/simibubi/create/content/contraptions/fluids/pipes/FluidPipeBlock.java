@@ -35,7 +35,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -312,9 +311,8 @@ public class FluidPipeBlock extends PipeBlock
 			BracketedTileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
-		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.defaultBlockState())
+		BlockState bracket = behaviour.removeBracket(inOnReplacedContext);
+		if (bracket == null)
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}

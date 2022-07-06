@@ -2,11 +2,14 @@ package com.simibubi.create.content.contraptions.components.crafter;
 
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -14,7 +17,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
+public class CrafterCTBehaviour extends ConnectedTextureBehaviour.Base {
 
 	@Override
 	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
@@ -58,7 +61,7 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 	}
 
 	@Override
-	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
+	public CTSpriteShiftEntry getShift(BlockState state, Direction direction, @Nullable TextureAtlasSprite sprite) {
 		Direction facing = state.getValue(HORIZONTAL_FACING);
 		boolean isFront = facing.getAxis() == direction.getAxis();
 		boolean isVertical = direction.getAxis()

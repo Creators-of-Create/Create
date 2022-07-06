@@ -242,7 +242,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		if (behaviour == null)
 			return false;
 		BlockState bracket = behaviour.getBracket();
-		if (!bracket.hasProperty(BracketBlock.FACING))
+		if (bracket == null || !bracket.hasProperty(BracketBlock.FACING))
 			return false;
 		return bracket.getValue(BracketBlock.FACING) == d;
 	}

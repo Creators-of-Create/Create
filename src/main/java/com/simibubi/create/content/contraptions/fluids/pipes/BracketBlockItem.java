@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BracketBlockItem extends BlockItem {
@@ -62,7 +61,7 @@ public class BracketBlockItem extends BlockItem {
 		if (player == null || !player.isCreative()) {
 			context.getItemInHand()
 				.shrink(1);
-			if (bracket != Blocks.AIR.defaultBlockState()) {
+			if (bracket != null) {
 				ItemStack returnedStack = new ItemStack(bracket.getBlock());
 				if (player == null)
 					Block.popResource(world, pos, returnedStack);

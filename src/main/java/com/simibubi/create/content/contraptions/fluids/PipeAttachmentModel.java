@@ -98,9 +98,11 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		}
 
 		public void putBracket(BlockState state) {
-			this.bracket = Minecraft.getInstance()
-				.getBlockRenderer()
-				.getBlockModel(state);
+			if (state != null) {
+				this.bracket = Minecraft.getInstance()
+					.getBlockRenderer()
+					.getBlockModel(state);
+			}
 		}
 
 		public BakedModel getBracket() {
