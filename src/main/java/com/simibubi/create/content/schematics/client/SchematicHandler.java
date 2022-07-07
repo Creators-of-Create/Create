@@ -32,6 +32,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -78,11 +79,22 @@ public class SchematicHandler {
 	}
 
 	public void tick() {
-		LocalPlayer player = Minecraft.getInstance().player;
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR) {
+			if (active) {
+				active = false;
+				syncCooldown = 0;
+				activeHotbarSlot = 0;
+				activeSchematicItem = null;
+				renderers.forEach(r -> r.setActive(false));
+			}
+			return;
+		}
 
 		if (activeSchematicItem != null && transformation != null)
 			transformation.tick();
 
+		LocalPlayer player = mc.player;
 		ItemStack stack = findBlueprintInHand(player);
 		if (stack == null) {
 			active = false;
@@ -222,7 +234,7 @@ public class SchematicHandler {
 	}
 
 	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
-		if (!active)
+		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
 			this.overlay.renderOn(poseStack, activeHotbarSlot);

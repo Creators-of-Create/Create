@@ -108,8 +108,9 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 					.getItem()
 					.getRegistryName();
 
-			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10)
+			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 48, itemCenterY - 10)
 					.showing(tag.getMainItem());
+			b.withCustomBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_IMPORTANT));
 
 			if (PonderRegistry.ALL.containsKey(registryName)) {
 				b.withCallback((mouseX, mouseY) -> {

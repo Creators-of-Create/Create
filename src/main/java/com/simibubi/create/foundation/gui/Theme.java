@@ -95,6 +95,7 @@ public class Theme {
 		put(Key.PONDER_BUTTON_DISABLE, new Color(0x80_909090, true), new Color(0x20_909090, true));
 		put(Key.PONDER_BACKGROUND_TRANSPARENT, new Color(0xdd_000000, true));
 		put(Key.PONDER_BACKGROUND_FLAT, new Color(0xff_000000, false));
+		put(Key.PONDER_BACKGROUND_IMPORTANT, new Color(0xdd_0e0e20, true));
 		put(Key.PONDER_IDLE, new Color(0x40ffeedd, true), new Color(0x20ffeedd, true));
 		put(Key.PONDER_HOVER, new Color(0x70ffffff, true), new Color(0x30ffffff, true));
 		put(Key.PONDER_HIGHLIGHT, new Color(0xf0ffeedd, true), new Color(0x60ffeedd, true));
@@ -122,7 +123,7 @@ public class Theme {
 	}
 
 	protected void put(Key key, Color c1, Color c2) {
-		put(key.get(), c1 , c2);
+		put(key.get(), c1, c2);
 	}
 
 	protected void lookup(Key key, Key source) {
@@ -162,6 +163,7 @@ public class Theme {
 
 		public static final Key PONDER_BACKGROUND_TRANSPARENT = new Key();
 		public static final Key PONDER_BACKGROUND_FLAT = new Key();
+		public static final Key PONDER_BACKGROUND_IMPORTANT = new Key();
 		public static final Key PONDER_IDLE = new Key();
 		public static final Key PONDER_HOVER = new Key();
 		public static final Key PONDER_HIGHLIGHT = new Key();

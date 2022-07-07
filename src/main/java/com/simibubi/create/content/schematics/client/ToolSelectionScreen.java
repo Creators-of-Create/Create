@@ -134,7 +134,7 @@ public class ToolSelectionScreen extends Screen {
 			matrixStack.popPose();
 		}
 
-		RenderSystem.enableBlend();
+		RenderSystem.disableBlend();
 		matrixStack.popPose();
 	}
 

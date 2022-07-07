@@ -21,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
@@ -106,6 +107,10 @@ public class TrainHUD {
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
 		int height) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
 		if (!(ControlsHandler.entityRef.get() instanceof CarriageContraptionEntity cce))
 			return;
 		Carriage carriage = cce.getCarriage();
@@ -147,7 +152,7 @@ public class TrainHUD {
 
 			poseStack.popPose();
 
-			Font font = Minecraft.getInstance().font;
+			Font font = mc.font;
 			if (currentPrompt != null && font.width(currentPrompt) < promptSize - 10) {
 				poseStack.pushPose();
 				poseStack.translate(font.width(currentPrompt) / -2f + 82, -27, 100);

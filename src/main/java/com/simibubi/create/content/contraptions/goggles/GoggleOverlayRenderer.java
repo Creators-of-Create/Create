@@ -33,6 +33,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -51,8 +52,11 @@ public class GoggleOverlayRenderer {
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
 		int height) {
-		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
 
+		HitResult objectMouseOver = mc.hitResult;
 		if (!(objectMouseOver instanceof BlockHitResult)) {
 			lastHovered = null;
 			hoverTicks = 0;
@@ -68,7 +72,6 @@ public class GoggleOverlayRenderer {
 		}
 
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
-		Minecraft mc = Minecraft.getInstance();
 		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
 		BlockEntity te = world.getBlockEntity(pos);

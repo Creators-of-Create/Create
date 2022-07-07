@@ -107,7 +107,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		if (!active) {
 			float target = 0;
 			LocalPlayer player = Minecraft.getInstance().player;
-			if (player != null) {
+			if (player != null && !player.isInvisible()) {
 				double x;
 				double z;
 				if (isVirtual()) {

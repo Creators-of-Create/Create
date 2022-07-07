@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -60,13 +61,16 @@ public class BlueprintOverlayRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		HitResult mouseOver = mc.hitResult;
+
 		BlueprintSection last = lastTargetedSection;
-		boolean sneak = mc.player.isShiftKeyDown();
 		lastTargetedSection = null;
 		active = false;
 		noOutput = false;
 
+		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
+		HitResult mouseOver = mc.hitResult;
 		if (mouseOver == null)
 			return;
 		if (mouseOver.getType() != Type.ENTITY)
@@ -83,6 +87,7 @@ public class BlueprintOverlayRenderer {
 		lastTargetedSection = last;
 		active = true;
 
+		boolean sneak = mc.player.isShiftKeyDown();
 		if (sectionAt != lastTargetedSection || AnimationTickHolder.getTicks() % 10 == 0 || lastSneakState != sneak)
 			rebuild(sectionAt, sneak);
 
@@ -236,10 +241,13 @@ public class BlueprintOverlayRenderer {
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
 		int height) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui)
+			return;
+
 		if (!active || empty)
 			return;
 
-		Minecraft mc = Minecraft.getInstance();
 		int w = 21 * ingredients.size();
 
 		if (!noOutput)
@@ -275,6 +283,7 @@ public class BlueprintOverlayRenderer {
 				resultCraftable ? x - 1 : x, resultCraftable ? y - 1 : y);
 			drawItemStack(poseStack, mc, x, y, result, null);
 		}
+		RenderSystem.disableBlend();
 	}
 
 	public static void drawItemStack(PoseStack ms, Minecraft mc, int x, int y, ItemStack itemStack, String count) {

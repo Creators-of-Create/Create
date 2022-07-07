@@ -211,9 +211,12 @@ public class LinkedControllerClientHandler {
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1,
 		int height1) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui)
+			return;
+
 		if (MODE != Mode.BIND)
 			return;
-		Minecraft mc = Minecraft.getInstance();
 
 		poseStack.pushPose();
 		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {
@@ -239,7 +242,7 @@ public class LinkedControllerClientHandler {
 		for (Component iTextComponent : list)
 			width = Math.max(width, mc.font.width(iTextComponent));
 		int x = (width1 / 3) - width / 2;
-		int y = height1 - height;
+		int y = height1 - height - 24;
 
 		// TODO
 		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);

@@ -67,7 +67,7 @@ public class PonderTag implements ScreenElement {
 				"Tools and Components used to assemble structures moved as an animated Contraption")
 			.addToIndex(),
 
-		SAILS = create("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
+		SAILS = create("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get())
 			.defaultLang("Sails for Windmill Bearings",
 				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
 

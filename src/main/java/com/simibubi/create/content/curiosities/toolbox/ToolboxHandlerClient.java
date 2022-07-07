@@ -24,6 +24,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -101,11 +102,15 @@ public class ToolboxHandlerClient {
 	}
 
 	public static void onKeyInput(int key, boolean pressed) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
 		if (key != AllKeys.TOOLBELT.getBoundCode())
 			return;
 		if (COOLDOWN > 0)
 			return;
-		LocalPlayer player = Minecraft.getInstance().player;
+		LocalPlayer player = mc.player;
 		if (player == null)
 			return;
 		Level level = player.level;
@@ -151,11 +156,15 @@ public class ToolboxHandlerClient {
 	}
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui)
+			return;
+
 		int x = width / 2 - 90;
 		int y = height - 23;
 		RenderSystem.enableDepthTest();
 
-		Player player = Minecraft.getInstance().player;
+		Player player = mc.player;
 		CompoundTag persistentData = player.getPersistentData();
 		if (!persistentData.contains("CreateToolboxData"))
 			return;
