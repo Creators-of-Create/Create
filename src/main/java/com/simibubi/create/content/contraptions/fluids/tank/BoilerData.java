@@ -333,12 +333,12 @@ public class BoilerData {
 			for (int zOffset = 0; zOffset < controller.width; zOffset++) {
 				BlockPos pos = controllerPos.offset(xOffset, -1, zOffset);
 				BlockState blockState = level.getBlockState(pos);
-				float heat = BoilerHeaters.getActiveHeatOf(blockState);
+				float heat = BoilerHeaters.getActiveHeat(level, pos, blockState);
 				if (heat == 0) {
-					passiveHeat |= BoilerHeaters.canHeatPassively(blockState);
-					continue;
+					passiveHeat = true;
+				} else if (heat > 0) {
+					activeHeat += heat;
 				}
-				activeHeat += heat;
 			}
 		}
 

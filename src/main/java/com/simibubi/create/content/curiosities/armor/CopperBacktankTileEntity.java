@@ -19,7 +19,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -141,8 +140,8 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	@Override
 	public Component getName() {
 		return this.customName != null ? this.customName
-			: new TranslatableComponent(AllItems.COPPER_BACKTANK.get()
-				.getDescriptionId());
+			: AllItems.COPPER_BACKTANK.get()
+				.getDescription();
 	}
 
 	public int getAirLevel() {

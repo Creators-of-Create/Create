@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -73,10 +72,9 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 		if (matchingFluidStacks.size() == 0)
 			return new TextComponent("Invalid");
 		return Lang.translateDirect("recipe.assembly.spout_filling_fluid",
-			new TranslatableComponent(matchingFluidStacks.get(0)
-				.getTranslationKey()).getString());
+			matchingFluidStacks.get(0).getDisplayName().getString());
 	}
-	
+
 	@Override
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.SPOUT.get());

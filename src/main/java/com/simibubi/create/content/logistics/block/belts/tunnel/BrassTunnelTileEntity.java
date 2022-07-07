@@ -752,8 +752,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getItem()
-					.getDescriptionId(item)).getString(), item.getCount()))
+				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getDescriptionId())
+					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}
 		tooltip.add(componentSpacing.plainCopy()

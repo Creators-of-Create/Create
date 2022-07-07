@@ -88,9 +88,9 @@ public class MaterialChecklist {
 		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
-			String name1 = new TranslatableComponent(item1.getDescriptionId()).getString()
+			String name1 = item1.getDescription().getString()
 				.toLowerCase(locale);
-			String name2 = new TranslatableComponent(item2.getDescriptionId()).getString()
+			String name2 = item2.getDescription().getString()
 				.toLowerCase(locale);
 			return name1.compareTo(name2);
 		});

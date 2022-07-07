@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -95,10 +94,9 @@ public class FilteringHandler {
 				feedback = "apply";
 			else if (ItemHandlerHelper.canItemStacksStack(toApply, filter))
 				feedback = "apply_count";
-			String translationKey = world.getBlockState(pos)
+			Component formattedText = world.getBlockState(pos)
 				.getBlock()
-				.getDescriptionId();
-			Component formattedText = new TranslatableComponent(translationKey);
+				.getName();
 			player.displayClientMessage(Lang.translateDirect("logistics.filter." + feedback, formattedText)
 				.withStyle(ChatFormatting.WHITE), true);
 		}

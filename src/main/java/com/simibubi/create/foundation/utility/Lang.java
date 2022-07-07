@@ -29,12 +29,12 @@ public class Lang {
 
 	@Deprecated // use Lang.translate(...).sendStatus(player)
 	public static void sendStatus(Player player, String key, Object... args) {
-		player.displayClientMessage(translateDirect(key, args), true);
+		translate(key, args).sendStatus(player);
 	}
 
 	@Deprecated // use Lang.translate(...).color(color).sendStatus(player)
 	public static void sendStatus(Player player, int color, String key, Object... args) {
-		player.displayClientMessage(translateDirect(key, args).withStyle(p -> p.withColor(color)), true);
+		translate(key, args).color(color).sendStatus(player);
 	}
 
 	public static String asId(String name) {

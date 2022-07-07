@@ -1,39 +1,90 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.IRegistryDelegate;
 
-public class BoilerHeaters { // API?
+public class BoilerHeaters {
+	private static final Map<IRegistryDelegate<Block>, Heater> BLOCK_HEATERS = new HashMap<>();
+	private static final List<HeaterProvider> GLOBAL_HEATERS = new ArrayList<>();
 
-	public static boolean canHeatPassively(BlockState state) {
-		if (AllBlocks.BLAZE_BURNER.has(state))
-			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE;
-		if (AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state))
-			return true;
-		return false;
+	public static void registerHeater(IRegistryDelegate<Block> block, Heater heater) {
+		BLOCK_HEATERS.put(block, heater);
 	}
 
-	public static int getActiveHeatOf(BlockState state) {
-		if (AllBlocks.BLAZE_BURNER.has(state)) {
-			HeatLevel value = state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
-			switch (value) {
-			case FADING:
-			case KINDLED:
-				return 1;
-			case SEETHING:
-				return 2;
-			default:
-			case SMOULDERING:
-			case NONE:
-				return 0;
+	public static void registerHeaterProvider(HeaterProvider provider) {
+		GLOBAL_HEATERS.add(provider);
+	}
+
+	/**
+	 * A return value of {@code -1} represents no heat.
+	 * A return value of {@code 0} represents passive heat.
+	 * All other positive values are used as the amount of active heat.
+	 */
+	public static float getActiveHeat(Level level, BlockPos pos, BlockState state) {
+		Heater heater = BLOCK_HEATERS.get(state.getBlock().delegate);
+		if (heater != null) {
+			return heater.getActiveHeat(level, pos, state);
+		}
+
+		for (HeaterProvider provider : GLOBAL_HEATERS) {
+			heater = provider.getHeater(level, pos, state);
+			if (heater != null) {
+				return heater.getActiveHeat(level, pos, state);
 			}
 		}
-		return 0;
 
+		return -1;
 	}
 
+	public static void registerDefaults() {
+		registerHeater(AllBlocks.BLAZE_BURNER.get().delegate, (level, pos, state) -> {
+			HeatLevel value = state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
+			if (value == HeatLevel.NONE) {
+				return -1;
+			}
+			if (value == HeatLevel.SEETHING) {
+				return 2;
+			}
+			if (value.isAtLeast(HeatLevel.FADING)) {
+				return 1;
+			}
+			return 0;
+		});
+
+		registerHeaterProvider((level, pos, state) -> {
+			if (AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state)) {
+				return (level1, pos1, state1) -> 0;
+			}
+			return null;
+		});
+	}
+
+	public interface Heater {
+		/**
+		 * A return value of {@code -1} represents no heat.
+		 * A return value of {@code 0} represents passive heat.
+		 * All other positive values are used as the amount of active heat.
+		 */
+		float getActiveHeat(Level level, BlockPos pos, BlockState state);
+	}
+
+	public interface HeaterProvider {
+		@Nullable
+		Heater getHeater(Level level, BlockPos pos, BlockState state);
+	}
 }

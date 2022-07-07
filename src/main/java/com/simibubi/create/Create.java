@@ -12,6 +12,7 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
+import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
@@ -139,6 +140,7 @@ public class Create {
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
 			AllWorldFeatures.registerPlacementTypes();
+			BoilerHeaters.registerDefaults();
 		});
 	}
 

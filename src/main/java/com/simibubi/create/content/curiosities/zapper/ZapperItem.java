@@ -19,7 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -54,14 +54,14 @@ public abstract class ZapperItem extends Item {
 	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag() && stack.getTag()
 			.contains("BlockUsed")) {
-			String usedblock = NbtUtils.readBlockState(stack.getTag()
+			MutableComponent usedBlock = NbtUtils.readBlockState(stack.getTag()
 				.getCompound("BlockUsed"))
 				.getBlock()
-				.getDescriptionId();
+				.getName();
 			ItemDescription.add(tooltip,
 				Lang.translateDirect("terrainzapper.usingBlock",
-					new TranslatableComponent(usedblock).withStyle(ChatFormatting.GRAY))
-					.withStyle(ChatFormatting.DARK_GRAY));
+					usedBlock.withStyle(ChatFormatting.GRAY))
+						.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 

@@ -719,8 +719,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.withStyle(ChatFormatting.YELLOW)));
 		if (!item.isEmpty()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.contains", new TranslatableComponent(item.getItem()
-					.getDescriptionId(item)).getString(), item.getCount()))
+				.append(Lang.translateDirect("tooltip.chute.contains", new TranslatableComponent(item.getDescriptionId())
+					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GREEN));
 		}
 		return true;
