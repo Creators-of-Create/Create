@@ -28,6 +28,8 @@ public class ScheduleItemRetrieval {
 		Player player = event.getPlayer();
 		if (player == null || entity == null)
 			return;
+		if (player.isSpectator())
+			return;
 
 		Entity rootVehicle = entity.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))

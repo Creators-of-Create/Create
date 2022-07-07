@@ -79,6 +79,8 @@ public class TrainRelocator {
 		LocalPlayer player = mc.player;
 		if (player == null)
 			return;
+		if (player.isSpectator())
+			return;
 
 		if (!player.position()
 			.closerThan(relocatingOrigin, 24) || player.isSteppingCarefully()) {

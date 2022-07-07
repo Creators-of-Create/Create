@@ -75,6 +75,8 @@ public class ContraptionHandlerClient {
 
 		if (player == null)
 			return;
+		if (player.isSpectator())
+			return;
 		if (mc.level == null)
 			return;
 		if (!event.isUseItem())
