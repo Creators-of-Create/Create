@@ -129,6 +129,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			Vec3 lookVec = player.getLookAngle();
 			Vec3 motion = lookVec.add(correction)
 				.normalize()
+				.scale(2)
 				.scale(projectileType.getVelocityMultiplier());
 
 			float soundPitch = projectileType.getSoundPitch() + (Create.RANDOM.nextFloat() - .5f) / 4f;

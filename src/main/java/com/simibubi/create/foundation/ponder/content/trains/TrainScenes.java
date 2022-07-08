@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.ponder.content.trains;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -165,6 +166,8 @@ public class TrainScenes {
 		scene.setSceneOffsetY(-1);
 		scene.showBasePlate();
 
+		scene.world.cycleBlockProperty(util.grid.at(3, 3, 4), BlazeBurnerBlock.HEAT_LEVEL);
+		
 		for (int i = 10; i >= 0; i--) {
 			scene.world.showSection(util.select.position(i, 1, 4), Direction.DOWN);
 			scene.idle(1);

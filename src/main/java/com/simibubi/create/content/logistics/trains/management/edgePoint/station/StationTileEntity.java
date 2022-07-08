@@ -345,9 +345,11 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		if (!edgePoint.hasValidTrack())
 			return;
 
-		GlobalStation station = getStation();
-		if (station == null || station.getPresentTrain() != null)
-			return;
+		if (!isVirtual()) {
+			GlobalStation station = getStation();
+			if (station == null || station.getPresentTrain() != null)
+				return;
+		}
 
 		int prevLength = assemblyLength;
 		BlockPos targetPosition = edgePoint.getGlobalPosition();
@@ -397,6 +399,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		if (level.isClientSide)
 			return;
 		if (prevLength == assemblyLength)
+			return;
+		if (isVirtual())
 			return;
 
 		Map<BlockPos, BoundingBox> map = assemblyAreas.get(level);

@@ -285,7 +285,18 @@ public class TrainStationScenes {
 			.placeNearTarget()
 			.attachKeyFrame()
 			.text("Trains can be disassembled back into blocks at stations only");
-		scene.idle(60);
+		scene.idle(85);
+
+		scene.overlay.showControls(new InputWindowElement(stationTop, Pointing.DOWN).rightClick()
+			.withItem(new ItemStack(Items.FILLED_MAP)), 75);
+		scene.idle(15);
+		scene.overlay.showText(70)
+			.pointAt(stationTop)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.colored(PonderPalette.BLUE)
+			.text("When used on a station, maps will add a labeled marker at the location");
+		scene.idle(70);
 
 		for (int i = 8; i >= 3; i--) {
 			scene.world.showSection(util.select.position(i, 1, 2), Direction.DOWN);

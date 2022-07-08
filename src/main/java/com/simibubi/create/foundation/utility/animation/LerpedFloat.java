@@ -48,6 +48,11 @@ public class LerpedFloat {
 		this.chaseFunction = chaseFunction;
 		return this;
 	}
+	
+	public LerpedFloat disableSmartAngleChasing() {
+		angularChase = false;
+		return this;
+	}
 
 	public void updateChaseTarget(float target) {
 		if (angularChase)

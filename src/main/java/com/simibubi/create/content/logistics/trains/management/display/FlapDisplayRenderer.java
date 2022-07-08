@@ -127,7 +127,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			this.bufferSource = buffer;
 			this.lineIndex = lineIndex;
 			this.level = level;
-			this.a = glowing ? .975f : .75f;
+			this.a = glowing ? .975f : .85f;
 			this.r = (color >> 16 & 255) / 255f;
 			this.g = (color >> 8 & 255) / 255f;
 			this.b = (color & 255) / 255f;

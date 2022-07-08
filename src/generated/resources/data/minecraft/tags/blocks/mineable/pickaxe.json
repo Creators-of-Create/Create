@@ -134,6 +134,7 @@
     "create:content_observer",
     "create:stockpile_switch",
     "create:creative_crate",
+    "create:display_link",
     "create:display_board",
     "create:nixie_tube",
     "create:white_nixie_tube",

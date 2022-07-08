@@ -90,7 +90,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			}
 
 			BlockState blockState = level.getBlockState(key);
-			if (blockState.getBlock() instanceof ITrackBlock trackBlock && !blockState.getValue(TrackBlock.HAS_TE))
+			if (blockState.getBlock()instanceof ITrackBlock trackBlock && !blockState.getValue(TrackBlock.HAS_TE))
 				for (Vec3 v : trackBlock.getTrackAxes(level, key, blockState)) {
 					Vec3 bcEndAxis = bc.axes.getSecond();
 					if (v.distanceTo(bcEndAxis) < 1 / 1024f || v.distanceTo(bcEndAxis.scale(-1)) < 1 / 1024f)
@@ -382,9 +382,9 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			}
 
 			FluidState fluidState = stateAtPos.getFluidState();
-			if (!fluidState.isSourceOfType(Fluids.WATER))
+			if (!fluidState.isEmpty() && !fluidState.isSourceOfType(Fluids.WATER))
 				continue;
-			
+
 			if (!present && stateAtPos.getMaterial()
 				.isReplaceable())
 				level.setBlock(targetPos,

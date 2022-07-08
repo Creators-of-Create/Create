@@ -46,9 +46,10 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 			return;
 
 		GlobalStation station = te.getStation();
-
-		if (!te.getBlockState()
-			.getValue(StationBlock.ASSEMBLING) || station == null || station.getPresentTrain() != null) {
+		boolean isAssembling = te.getBlockState()
+			.getValue(StationBlock.ASSEMBLING);
+		
+		if (!isAssembling || (station == null || station.getPresentTrain() != null) && !te.isVirtual()) {
 			renderFlag(
 				te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF, te,
 				partialTicks, ms, buffer, light, overlay);
@@ -65,6 +66,9 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		ITrackBlock track = (ITrackBlock) block;
 		Direction direction = te.assemblyDirection;
 
+		if (te.isVirtual() && te.bogeyLocations == null)
+			te.refreshAssemblyInfo();
+		
 		if (direction == null || te.assemblyLength == 0 || te.bogeyLocations == null)
 			return;
 

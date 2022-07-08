@@ -15,6 +15,7 @@
     "accessor.ServerLevelAccessor"
   ],
   "client": [
+    "MapItemSavedDataMixinClient",
     "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",

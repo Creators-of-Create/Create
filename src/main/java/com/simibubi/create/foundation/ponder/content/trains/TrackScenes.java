@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content.trains;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -347,6 +348,9 @@ public class TrackScenes {
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);
+		
+		scene.world.cycleBlockProperty(util.grid.at(5, 3, 4), BlazeBurnerBlock.HEAT_LEVEL);
+		
 		ElementLink<WorldSectionElement> stationElement =
 			scene.world.showIndependentSection(util.select.fromTo(0, 0, 0, 8, 0, 8), Direction.UP);
 		ElementLink<WorldSectionElement> stationTrackElement =
