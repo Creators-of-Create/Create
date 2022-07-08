@@ -32,7 +32,7 @@ public enum InstructionSpeedModifiers {
 	static List<Component> getOptions() {
 		List<Component> options = new ArrayList<>();
 		for (InstructionSpeedModifiers entry : values())
-			options.add(Lang.translate(entry.translationKey));
+			options.add(Lang.translateDirect(entry.translationKey));
 		return options;
 	}
 

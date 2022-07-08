@@ -3,17 +3,16 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "create:block/glass_fluid_pipe",
-		"particle": "#0"
+		"particle": "create:block/copper_plating"
 	},
 	"elements": [
 		{
 			"name": "Outer",
 			"from": [4, 0, 4],
 			"to": [12, 16, 12],
-			"shade": false,
 			"faces": {
-				"north": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"},
-				"east": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"},
+				"north": {"uv": [0, 16, 16, 8], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0, 16, 16, 8], "rotation": 90, "texture": "#0"},
 				"south": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"},
 				"west": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"}
 			}
@@ -22,7 +21,6 @@
 			"name": "Inner",
 			"from": [4, 0, 11.9],
 			"to": [12, 16, 11.9],
-			"shade": false,
 			"faces": {
 				"north": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"}
 			}
@@ -31,7 +29,6 @@
 			"name": "Inner",
 			"from": [4.1, 0, 4],
 			"to": [4.1, 16, 12],
-			"shade": false,
 			"faces": {
 				"east": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"}
 			}
@@ -40,7 +37,6 @@
 			"name": "Inner",
 			"from": [4, 0, 4.1],
 			"to": [12, 16, 4.1],
-			"shade": false,
 			"faces": {
 				"south": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"}
 			}
@@ -49,7 +45,6 @@
 			"name": "Inner",
 			"from": [11.9, 0, 4],
 			"to": [11.9, 16, 12],
-			"shade": false,
 			"faces": {
 				"west": {"uv": [0, 8, 16, 16], "rotation": 90, "texture": "#0"}
 			}

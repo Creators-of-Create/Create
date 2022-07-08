@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -22,13 +22,13 @@ import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -60,18 +60,23 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 		BlockHitResult hit) {
 		if (!AllBlocks.COPPER_CASING.isIn(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
-		if (!world.isClientSide) {
-			BlockState newState = AllBlocks.ENCASED_FLUID_PIPE.getDefaultState();
-			for (Direction d : Iterate.directionsInAxis(getAxis(state)))
-				newState = newState.setValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
-			FluidTransportBehaviour.cacheFlows(world, pos);
-			world.setBlockAndUpdate(pos, newState);
-			FluidTransportBehaviour.loadFlows(world, pos);
-		}
-		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
+		if (world.isClientSide)
+			return InteractionResult.SUCCESS;
+		BlockState newState = AllBlocks.ENCASED_FLUID_PIPE.getDefaultState();
+		for (Direction d : Iterate.directionsInAxis(getAxis(state)))
+			newState = newState.setValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
+		FluidTransportBehaviour.cacheFlows(world, pos);
+		world.setBlockAndUpdate(pos, newState);
+		FluidTransportBehaviour.loadFlows(world, pos);
 		return InteractionResult.SUCCESS;
 	}
 
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
+	}
+	
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (world.isClientSide)
@@ -132,9 +137,8 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
-		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.defaultBlockState())
+		BlockState bracket = behaviour.removeBracket(inOnReplacedContext);
+		if (bracket == null)
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}

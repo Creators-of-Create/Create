@@ -126,7 +126,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 		return fluidIngredients;
 	}
 
-	public NonNullList<ProcessingOutput> getRollableResults() {
+	public List<ProcessingOutput> getRollableResults() {
 		return results;
 	}
 
@@ -145,8 +145,11 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	}
 
 	public List<ItemStack> rollResults() {
+		return rollResults(this.getRollableResults());
+	}
+	
+	public List<ItemStack> rollResults(List<ProcessingOutput> rollableResults) {
 		List<ItemStack> results = new ArrayList<>();
-		NonNullList<ProcessingOutput> rollableResults = getRollableResults();
 		for (int i = 0; i < rollableResults.size(); i++) {
 			ProcessingOutput output = rollableResults.get(i);
 			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput();

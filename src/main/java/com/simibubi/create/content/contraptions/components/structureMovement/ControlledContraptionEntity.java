@@ -50,11 +50,11 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-		public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
-			if (contraption instanceof TranslatingContraption)
-				return getDeltaMovement();
-			return super.getContactPointMotion(globalContactPoint);
-		}
+	public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
+		if (contraption instanceof TranslatingContraption)
+			return getDeltaMovement();
+		return super.getContactPointMotion(globalContactPoint);
+	}
 
 	@Override
 	protected void setContraption(Contraption contraption) {
@@ -68,7 +68,11 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected void readAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.readAdditional(compound, spawnPacket);
-		controllerPos = NbtUtils.readBlockPos(compound.getCompound("Controller"));
+		if (compound.contains("Controller")) // legacy
+			controllerPos = NbtUtils.readBlockPos(compound.getCompound("Controller"));
+		else
+			controllerPos = NbtUtils.readBlockPos(compound.getCompound("ControllerRelative"))
+				.offset(blockPosition());
 		if (compound.contains("Axis"))
 			rotationAxis = NBTHelper.readEnum(compound, "Axis", Axis.class);
 		angle = compound.getFloat("Angle");
@@ -77,7 +81,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.writeAdditional(compound, spawnPacket);
-		compound.put("Controller", NbtUtils.writeBlockPos(controllerPos));
+		compound.put("ControllerRelative", NbtUtils.writeBlockPos(controllerPos.subtract(blockPosition())));
 		if (rotationAxis != null)
 			NBTHelper.writeEnum(compound, "Axis", rotationAxis);
 		compound.putFloat("Angle", angle);
@@ -168,7 +172,8 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return false;
 		if (!VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis()))
 			return false;
-		context.motion = Vec3.atLowerCornerOf(facing.getNormal()).scale(angleDelta / 360.0);
+		context.motion = Vec3.atLowerCornerOf(facing.getNormal())
+			.scale(angleDelta / 360.0);
 		context.relativeMotion = context.motion;
 		int timer = context.data.getInt("StationaryTimer");
 		if (timer > 0) {
@@ -216,7 +221,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected void handleStallInformation(float x, float y, float z, float angle) {
 		setPosRaw(x, y, z);
-		this.angle = angle;
+		this.angle = this.prevAngle = angle;
 	}
 
 	@Override
@@ -227,9 +232,9 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 		for (PoseStack stack : matrixStacks)
 			TransformStack.cast(stack)
-					.nudge(getId())
-					.centre()
-					.rotate(angle, axis)
-					.unCentre();
+				.nudge(getId())
+				.centre()
+				.rotate(angle, axis)
+				.unCentre();
 	}
 }

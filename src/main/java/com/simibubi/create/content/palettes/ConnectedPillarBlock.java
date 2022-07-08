@@ -48,6 +48,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	private BlockState updateColumn(Level level, BlockPos pos, BlockState state, boolean present) {
 		MutableBlockPos currentPos = new MutableBlockPos();
 		Axis axis = state.getValue(AXIS);
+
 		for (Direction connection : Iterate.directions) {
 			if (connection.getAxis() == axis)
 				continue;
@@ -56,7 +57,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
-					if (!level.isAreaLoaded(currentPos, 1))
+					if (!level.isLoaded(currentPos))
 						break;
 
 					BlockState other1 = currentPos.equals(pos) ? state : level.getBlockState(currentPos);
@@ -78,7 +79,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 		}
 		return state;
 	}
-	
+
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this)
@@ -87,14 +88,15 @@ public class ConnectedPillarBlock extends LayeredBlock {
 		if (!blockTicks.hasScheduledTick(pPos, this))
 			pLevel.scheduleTick(pPos, this, 1);
 	}
-	
+
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
 		if (pState.getBlock() != this)
 			return;
-		BlockPos belowPos = pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
+		BlockPos belowPos =
+			pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
-		if (!canConnect(pState, belowState)) 
+		if (!canConnect(pState, belowState))
 			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), 3);
 	}
 

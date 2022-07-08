@@ -3,13 +3,13 @@ package com.simibubi.create.content.contraptions.components.waterwheel;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -131,14 +131,9 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 					flowStrength = flow.z > 0 ^ !clockwise ? -flow.z * clockwiseMultiplier : -flow.z;
 			}
 
-			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isClientSide()) {
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.WATER_WHEEL, world, pos, 5);
-				if (FluidHelper.isLava(fluid.getType()))
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.LAVA_WHEEL, world, pos, 5);
-				if (fluid.getType()
-					.isSame(AllFluids.CHOCOLATE.get()))
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.CHOCOLATE_WHEEL, world, pos, 5);
-			}
+			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isClientSide())
+				te.award(
+					FluidHelper.isLava(fluid.getType()) ? AllAdvancements.LAVA_WHEEL : AllAdvancements.WATER_WHEEL);
 
 			Integer flowModifier = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
 			te.setFlow(side, (float) (flowStrength * flowModifier / 2f));
@@ -219,6 +214,12 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	@Override
 	public BlockEntityType<? extends WaterWheelTileEntity> getTileEntityType() {
 		return AllTileEntities.WATER_WHEEL.get();
+	}
+
+	public static Couple<Integer> getSpeedRange() {
+		Integer base = AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get();
+		Integer flow = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
+		return Couple.create(base, base + 4 * flow);
 	}
 
 }

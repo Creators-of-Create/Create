@@ -60,7 +60,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 			return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 		}
 
-		InteractionHand otherHand = handIn == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+		InteractionHand otherHand =
+			handIn == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
 		ItemStack itemInOtherHand = playerIn.getItemInHand(otherHand);
 		if (SandPaperPolishingRecipe.canPolish(worldIn, itemInOtherHand)) {
 			ItemStack item = itemInOtherHand.copy();
@@ -137,7 +138,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 				if (player instanceof FakePlayer) {
 					player.drop(polished, false, false);
 				} else {
-					player.getInventory().placeItemBackInInventory(polished);
+					player.getInventory()
+						.placeItemBackInInventory(polished);
 				}
 			}
 			tag.remove("Polishing");
@@ -163,7 +165,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
-			player.getInventory().placeItemBackInInventory(toPolish);
+			player.getInventory()
+				.placeItemBackInInventory(toPolish);
 			tag.remove("Polishing");
 		}
 	}
@@ -176,14 +179,15 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		BlockPos pos = context.getClickedPos();
 		BlockState state = level.getBlockState(pos);
 
-		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
+		BlockState newState = state.getToolModifiedState(context, ToolActions.AXE_SCRAPE, false);
 		if (newState != null) {
 			AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 			level.levelEvent(player, 3005, pos, 0); // Spawn particles
 		} else {
-			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
+			newState = state.getToolModifiedState(context, ToolActions.AXE_WAX_OFF, false);
 			if (newState != null) {
-				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
+				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1,
+					1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 				level.levelEvent(player, 3004, pos, 0); // Spawn particles
 			}
 		}
@@ -219,7 +223,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 
 		// After 6 ticks play the sound every 7th
 		if ((entity.getTicksUsingItem() - 6) % 7 == 0)
-			entity.playSound(entity.getEatingSound(stack), 0.9F + 0.2F * random.nextFloat(), random.nextFloat() * 0.2F + 0.9F);
+			entity.playSound(entity.getEatingSound(stack), 0.9F + 0.2F * random.nextFloat(),
+				random.nextFloat() * 0.2F + 0.9F);
 
 		return true;
 	}

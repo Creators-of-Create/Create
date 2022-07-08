@@ -33,7 +33,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private Vector<Vector<ScrollInput>> inputs;
 
 	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
-		super(Lang.translate("gui.sequenced_gearshift.title"));
+		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
 		this.pos = te.getBlockPos();
 		compareTag = Instruction.serializeAll(instructions);
@@ -78,13 +78,13 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			new SelectionScrollInput(x, y + rowHeight * row, 50, 18).forOptions(SequencerInstructions.getOptions())
 				.calling(state -> instructionUpdated(index, state))
 				.setState(instruction.instruction.ordinal())
-				.titled(Lang.translate("gui.sequenced_gearshift.instruction"));
+				.titled(Lang.translateDirect("gui.sequenced_gearshift.instruction"));
 		ScrollInput value =
 			new ScrollInput(x + 58, y + rowHeight * row, 28, 18).calling(state -> instruction.value = state);
 		ScrollInput direction = new SelectionScrollInput(x + 88, y + rowHeight * row, 28, 18)
 			.forOptions(InstructionSpeedModifiers.getOptions())
 			.calling(state -> instruction.speedModifier = InstructionSpeedModifiers.values()[state])
-			.titled(Lang.translate("gui.sequenced_gearshift.speed"));
+			.titled(Lang.translateDirect("gui.sequenced_gearshift.speed"));
 
 		rowInputs.add(type);
 		rowInputs.add(value);
@@ -105,7 +105,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		value.active = value.visible = hasValue;
 		if (hasValue)
 			value.withRange(1, def.maxValue + 1)
-				.titled(Lang.translate(def.parameterKey))
+				.titled(Lang.translateDirect(def.parameterKey))
 				.withShiftStep(def.shiftStep)
 				.setState(instruction.value)
 				.onChanged();
@@ -146,7 +146,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			SequencerInstructions def = instruction.instruction;
 			def.background.render(ms, x, y + 14 + yOffset, this);
 
-			label(ms, 36, yOffset - 3, Lang.translate(def.translationKey));
+			label(ms, 36, yOffset - 3, Lang.translateDirect(def.translationKey));
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = font.width(text);

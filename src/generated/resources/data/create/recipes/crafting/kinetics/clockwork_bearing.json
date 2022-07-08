@@ -1,19 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " I "
+    "B",
+    "C",
+    "S"
   ],
   "key": {
-    "I": {
-      "item": "create:shaft"
-    },
     "S": {
       "item": "create:electron_tube"
     },
     "B": {
-      "item": "create:turntable"
+      "tag": "minecraft:wooden_slabs"
     },
     "C": {
       "item": "create:brass_casing"

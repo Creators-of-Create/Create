@@ -1,0 +1,95 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"1": "create:block/engine",
+		"2": "create:block/copper_redstone_plate",
+		"particle": "create:block/whistle_particle"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [1, 0, 1],
+			"to": [15, 3, 15],
+			"faces": {
+				"north": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"east": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"south": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"west": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"up": {"uv": [1, 0, 15, 14], "texture": "#2"},
+				"down": {"uv": [8.5, 8.5, 15.5, 15.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Pipe Medium",
+			"from": [5, 3, 5],
+			"to": [11, 11, 11],
+			"faces": {
+				"north": {"uv": [2.5, 2.5, 5.5, 6.5], "texture": "#1"},
+				"east": {"uv": [2.5, 2.5, 5.5, 6.5], "texture": "#1"},
+				"south": {"uv": [2.5, 2.5, 5.5, 6.5], "texture": "#1"},
+				"west": {"uv": [2.5, 2.5, 5.5, 6.5], "texture": "#1"},
+				"up": {"uv": [7.5, 1, 10.5, 4], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Whistle Medium Base",
+			"from": [4, 4, 4],
+			"to": [12, 16, 12],
+			"faces": {
+				"north": {"uv": [5, 4.5, 7, 7.5], "texture": "#0"},
+				"east": {"uv": [9, 4.5, 11, 7.5], "texture": "#0"},
+				"south": {"uv": [9, 4.5, 11, 7.5], "texture": "#0"},
+				"west": {"uv": [9, 4.5, 11, 7.5], "texture": "#0"},
+				"down": {"uv": [13, 13, 15, 15], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Whistle Medium Cap",
+			"from": [3, 16, 3],
+			"to": [13, 18, 13],
+			"faces": {
+				"north": {"uv": [12.75, 4.75, 15.25, 5.25], "texture": "#0", "cullface": "up"},
+				"east": {"uv": [12.75, 4.75, 15.25, 5.25], "texture": "#0", "cullface": "up"},
+				"south": {"uv": [12.75, 4.75, 15.25, 5.25], "texture": "#0", "cullface": "up"},
+				"west": {"uv": [12.75, 4.75, 15.25, 5.25], "texture": "#0", "cullface": "up"},
+				"up": {"uv": [4.75, 12.75, 7.25, 15.25], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [12.75, 12.75, 15.25, 15.25], "texture": "#0", "cullface": "up"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Bases",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				{
+					"name": "Base Flat",
+					"origin": [0, 0, 0],
+					"color": 3,
+					"children": [0, 1]
+				}
+			]
+		},
+		{
+			"name": "Whistle Medium",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [2]
+		},
+		{
+			"name": "medium_top_rim",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Whistle Medium",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [3]
+				}
+			]
+		}
+	]
+}

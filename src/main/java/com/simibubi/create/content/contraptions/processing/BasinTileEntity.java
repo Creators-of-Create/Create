@@ -9,6 +9,7 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
@@ -135,7 +136,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		fluidCapability = LazyOptional.of(() -> {
 			LazyOptional<? extends IFluidHandler> inputCap = inputTank.getCapability();
 			LazyOptional<? extends IFluidHandler> outputCap = outputTank.getCapability();
-			return new CombinedTankWrapper(inputCap.orElse(null), outputCap.orElse(null));
+			return new CombinedTankWrapper(outputCap.orElse(null), inputCap.orElse(null));
 		});
 	}
 
@@ -275,8 +276,39 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			&& preferredSpoutput != Direction.UP)
 			newFacing = preferredSpoutput;
 
-		if (newFacing != currentFacing)
-			level.setBlockAndUpdate(worldPosition, blockState.setValue(BasinBlock.FACING, newFacing));
+		if (newFacing == currentFacing)
+			return;
+
+		level.setBlockAndUpdate(worldPosition, blockState.setValue(BasinBlock.FACING, newFacing));
+
+		if (newFacing.getAxis()
+			.isVertical())
+			return;
+
+		for (int slot = 0; slot < outputInventory.getSlots(); slot++) {
+			ItemStack extractItem = outputInventory.extractItem(slot, 64, true);
+			if (extractItem.isEmpty())
+				continue;
+			if (acceptOutputs(ImmutableList.of(extractItem), Collections.emptyList(), true))
+				acceptOutputs(ImmutableList.of(outputInventory.extractItem(slot, 64, false)), Collections.emptyList(),
+					false);
+		}
+
+		IFluidHandler handler = outputTank.getCapability()
+			.orElse(null);
+		for (int slot = 0; slot < handler.getTanks(); slot++) {
+			FluidStack fs = handler.getFluidInTank(slot)
+				.copy();
+			if (fs.isEmpty())
+				continue;
+			if (acceptOutputs(Collections.emptyList(), ImmutableList.of(fs), true)) {
+				handler.drain(fs, FluidAction.EXECUTE);
+				acceptOutputs(Collections.emptyList(), ImmutableList.of(fs), false);
+			}
+		}
+
+		notifyChangeOfContents();
+		notifyUpdate();
 	}
 
 	@Override
@@ -664,8 +696,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				float angle = interval * (1 + currentSegment) + intervalOffset;
 				Vec3 vec = centerOf.add(VecHelper.rotate(pointer, angle, Axis.Y));
 				level.addAlwaysVisibleParticle(
-					new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), tankSegment.getRenderedFluid()),
-					vec.x(), surface, vec.z(), 1, 0, 0);
+					new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), tankSegment.getRenderedFluid()), vec.x(),
+					surface, vec.z(), 1, 0, 0);
 				currentSegment++;
 			}
 		}

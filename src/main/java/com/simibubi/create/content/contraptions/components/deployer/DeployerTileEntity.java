@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe.SandPaperInv;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
@@ -32,7 +33,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -65,7 +67,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected DeployerFakePlayer player;
 	protected int timer;
 	protected float reach;
-	protected boolean boop = false;
+	protected boolean fistBump = false;
 	protected List<ItemStack> overflowItems = new ArrayList<>();
 	protected FilteringBehaviour filtering;
 	protected boolean redstoneLocked;
@@ -103,6 +105,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 			new BeltProcessingBehaviour(this).whenItemEnters((s, i) -> BeltDeployerCallbacks.onItemReceived(s, i, this))
 				.whileItemHeld((s, i) -> BeltDeployerCallbacks.whenItemHeld(s, i, this));
 		behaviours.add(processingBehaviour);
+
+		registerAwardables(behaviours, AllAdvancements.TRAIN_CASING, AllAdvancements.ANDESITE_CASING,
+			AllAdvancements.BRASS_CASING, AllAdvancements.COPPER_CASING, AllAdvancements.FIST_BUMP,
+			AllAdvancements.DEPLOYER, AllAdvancements.SELF_DEPLOYING);
 	}
 
 	@Override
@@ -194,7 +200,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			}
 
 			// Check for advancement conditions
-			if (mode == Mode.PUNCH && !boop && startBoop(facing))
+			if (mode == Mode.PUNCH && !fistBump && startFistBump(facing))
 				return;
 			if (redstoneLocked)
 				return;
@@ -204,8 +210,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		}
 
 		if (state == State.EXPANDING) {
-			if (boop)
-				triggerBoop();
+			if (fistBump)
+				triggerFistBump();
 			activate();
 
 			state = State.RETRACTING;
@@ -239,51 +245,73 @@ public class DeployerTileEntity extends KineticTileEntity {
 		sendData();
 	}
 
-	public boolean startBoop(Direction facing) {
-		if (!level.isEmptyBlock(worldPosition.relative(facing, 1))
-			|| !level.isEmptyBlock(worldPosition.relative(facing, 2)))
-			return false;
-		BlockPos otherDeployer = worldPosition.relative(facing, 4);
-		if (!level.isLoaded(otherDeployer))
-			return false;
-		BlockEntity otherTile = level.getBlockEntity(otherDeployer);
-		if (!(otherTile instanceof DeployerTileEntity))
-			return false;
-		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-		if (level.getBlockState(otherDeployer)
-			.getValue(FACING)
-			.getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
+	public boolean startFistBump(Direction facing) {
+		int i = 0;
+		DeployerTileEntity partner = null;
+
+		for (i = 2; i < 5; i++) {
+			BlockPos otherDeployer = worldPosition.relative(facing, i);
+			if (!level.isLoaded(otherDeployer))
+				return false;
+			BlockEntity otherTile = level.getBlockEntity(otherDeployer);
+			if (otherTile instanceof DeployerTileEntity dpe) {
+				partner = dpe;
+				break;
+			}
+		}
+
+		if (partner == null)
 			return false;
 
-		boop = true;
-		reach = 1f;
-		timer = 1000;
-		state = State.EXPANDING;
-		sendData();
+		if (level.getBlockState(partner.getBlockPos())
+			.getValue(FACING)
+			.getOpposite() != facing || partner.mode != Mode.PUNCH)
+			return false;
+		if (partner.getSpeed() == 0)
+			return false;
+
+		for (DeployerTileEntity te : Arrays.asList(this, partner)) {
+			te.fistBump = true;
+			te.reach = ((i - 2)) * .5f;
+			te.timer = 1000;
+			te.state = State.EXPANDING;
+			te.sendData();
+		}
+
 		return true;
 	}
 
-	public void triggerBoop() {
-		BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(getBlockState().getValue(FACING), 4));
-		if (!(otherTile instanceof DeployerTileEntity))
-			return;
+	public void triggerFistBump() {
+		int i = 0;
+		DeployerTileEntity deployerTile = null;
+		for (i = 2; i < 5; i++) {
+			BlockPos pos = worldPosition.relative(getBlockState().getValue(FACING), i);
+			if (!level.isLoaded(pos))
+				return;
+			if (level.getBlockEntity(pos) instanceof DeployerTileEntity dpe) {
+				deployerTile = dpe;
+				break;
+			}
+		}
 
-		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-		if (!deployerTile.boop || deployerTile.state != State.EXPANDING)
+		if (deployerTile == null)
+			return;
+		if (!deployerTile.fistBump || deployerTile.state != State.EXPANDING)
 			return;
 		if (deployerTile.timer > 0)
 			return;
 
-		// everything should be met
-		boop = false;
-		deployerTile.boop = false;
+		fistBump = false;
+		deployerTile.fistBump = false;
 		deployerTile.state = State.RETRACTING;
 		deployerTile.timer = 1000;
 		deployerTile.sendData();
+		award(AllAdvancements.FIST_BUMP);
 
-		// award nearby players
-		List<ServerPlayer> players = level.getEntitiesOfClass(ServerPlayer.class, new AABB(worldPosition).inflate(9));
-		players.forEach(AllTriggers.DEPLOYER_BOOP::trigger);
+		BlockPos soundLocation = new BlockPos(Vec3.atCenterOf(worldPosition)
+			.add(Vec3.atCenterOf(deployerTile.getBlockPos()))
+			.scale(.5f));
+		level.playSound(null, soundLocation, SoundEvents.PLAYER_ATTACK_NODAMAGE, SoundSource.BLOCKS, .75f, .75f);
 	}
 
 	protected void activate() {
@@ -299,6 +327,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 			return; // Belt processing handled in BeltDeployerCallbacks
 
 		DeployerHandler.activate(player, center, clickedPos, movementVector, mode);
+		award(AllAdvancements.DEPLOYER);
+
 		if (player != null)
 			heldItem = player.getMainHandItem();
 	}
@@ -325,6 +355,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (!clientPacket)
 			return;
+		fistBump = compound.getBoolean("Fistbump");
 		reach = compound.getFloat("Reach");
 		if (compound.contains("Particle")) {
 			ItemStack particleStack = ItemStack.of(compound.getCompound("Particle"));
@@ -356,6 +387,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (!clientPacket)
 			return;
+		compound.putBoolean("Fistbump", fistBump);
 		compound.putFloat("Reach", reach);
 		if (player == null)
 			return;
@@ -436,8 +468,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 		int timerSpeed = getTimerSpeed();
 		PartialModel handPose = getHandPose();
 
-		if (state == State.EXPANDING)
+		if (state == State.EXPANDING) {
 			progress = 1 - (timer - partialTicks * timerSpeed) / 1000f;
+			if (fistBump)
+				progress *= progress;
+		}
 		if (state == State.RETRACTING)
 			progress = (timer - partialTicks * timerSpeed) / 1000f;
 		float handLength = handPose == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
@@ -456,11 +491,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Nullable
 	public Recipe<? extends Container> getRecipe(ItemStack stack) {
-		// safety checks
 		if (player == null || level == null)
 			return null;
 
-		// sandpaper = op
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
@@ -468,19 +501,16 @@ public class DeployerTileEntity extends KineticTileEntity {
 				.orElse(null);
 		}
 
-		// inventory
 		recipeInv.setItem(0, stack);
 		recipeInv.setItem(1, heldItemMainhand);
 
-		// event nonsense
 		DeployerRecipeSearchEvent event = new DeployerRecipeSearchEvent(this, recipeInv);
 
-		// creates deployer recipes
 		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
 			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
 		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
+		event.addRecipe(() -> AllRecipeTypes.ITEM_APPLICATION.find(event.getInventory(), level), 50);
 
-		// post the event, get result
 		MinecraftForge.EVENT_BUS.post(event);
 		return event.getRecipe();
 	}

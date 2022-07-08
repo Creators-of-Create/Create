@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "twilightforest:transformation_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "twilightforest:stripped_transformation_wood"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "twilightforest",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

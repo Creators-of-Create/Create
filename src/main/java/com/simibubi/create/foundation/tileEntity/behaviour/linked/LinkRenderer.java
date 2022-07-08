@@ -42,8 +42,8 @@ public class LinkRenderer {
 		if (behaviour == null)
 			return;
 
-		Component freq1 = Lang.translate("logistics.firstFrequency");
-		Component freq2 = Lang.translate("logistics.secondFrequency");
+		Component freq1 = Lang.translateDirect("logistics.firstFrequency");
+		Component freq2 = Lang.translateDirect("logistics.secondFrequency");
 
 		for (boolean first : Iterate.trueAndFalse) {
 			AABB bb = new AABB(Vec3.ZERO, Vec3.ZERO).inflate(.25f);

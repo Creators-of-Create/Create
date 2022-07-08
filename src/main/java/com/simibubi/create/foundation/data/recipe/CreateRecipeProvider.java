@@ -115,9 +115,17 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static TagKey<Item> ironSheet() {
 			return AllTags.forgeItemTag("plates/iron");
 		}
+		
+		static TagKey<Item> sturdySheet() {
+			return AllTags.forgeItemTag("plates/obsidian");
+		}
 
 		static ItemLike brassCasing() {
 			return AllBlocks.BRASS_CASING.get();
+		}
+		
+		static ItemLike railwayCasing() {
+			return AllBlocks.RAILWAY_CASING.get();
 		}
 
 		static ItemLike electronTube() {
@@ -138,6 +146,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 
 		static TagKey<Item> zincBlock() {
 			return AllTags.forgeItemTag("storage_blocks/zinc");
+		}
+		
+		static TagKey<Item> wheatFlour() {
+			return AllTags.forgeItemTag("flour/wheat");
 		}
 
 		static ItemLike copper() {

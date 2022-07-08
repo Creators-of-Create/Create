@@ -1,8 +1,11 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.CampfireMovementBehaviour;
@@ -11,54 +14,56 @@ import com.simibubi.create.content.contraptions.components.actors.dispenser.Drop
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllMovementBehaviours {
-	private static final HashMap<ResourceLocation, MovementBehaviour> MOVEMENT_BEHAVIOURS = new HashMap<>();
+	private static final Map<IRegistryDelegate<Block>, MovementBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
+	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
-	public static void addMovementBehaviour(ResourceLocation resourceLocation, MovementBehaviour movementBehaviour) {
-		if (MOVEMENT_BEHAVIOURS.containsKey(resourceLocation))
-			Create.LOGGER.warn("Movement behaviour for " + resourceLocation.toString() + " was overridden");
-		MOVEMENT_BEHAVIOURS.put(resourceLocation, movementBehaviour);
+	public static void registerBehaviour(IRegistryDelegate<Block> block, MovementBehaviour behaviour) {
+		BLOCK_BEHAVIOURS.put(block, behaviour);
 	}
 
-	public static void addMovementBehaviour(Block block, MovementBehaviour movementBehaviour) {
-		addMovementBehaviour(block.getRegistryName(), movementBehaviour);
-	}
-
-	@Nullable
-	public static MovementBehaviour of(ResourceLocation resourceLocation) {
-		return MOVEMENT_BEHAVIOURS.getOrDefault(resourceLocation, null);
+	public static void registerBehaviourProvider(BehaviourProvider provider) {
+		GLOBAL_BEHAVIOURS.add(provider);
 	}
 
 	@Nullable
-	public static MovementBehaviour of(Block block) {
-		return of(block.getRegistryName());
+	public static MovementBehaviour getBehaviour(BlockState state) {
+		MovementBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock().delegate);
+		if (behaviour != null) {
+			return behaviour;
+		}
+
+		for (BehaviourProvider provider : GLOBAL_BEHAVIOURS) {
+			behaviour = provider.getBehaviour(state);
+			if (behaviour != null) {
+				return behaviour;
+			}
+		}
+
+		return null;
 	}
 
-	@Nullable
-	public static MovementBehaviour of(BlockState state) {
-		return of(state.getBlock());
+	public static <B extends Block> NonNullConsumer<? super B> movementBehaviour(
+		MovementBehaviour behaviour) {
+		return b -> registerBehaviour(b.delegate, behaviour);
 	}
 
-	public static boolean contains(Block block) {
-		return MOVEMENT_BEHAVIOURS.containsKey(block.getRegistryName());
-	}
-
-	public static <B extends Block> NonNullConsumer<? super B> addMovementBehaviour(
-		MovementBehaviour movementBehaviour) {
-		return b -> addMovementBehaviour(b.getRegistryName(), movementBehaviour);
-	}
-
-	static void register() {
-		addMovementBehaviour(Blocks.BELL, new BellMovementBehaviour());
-		addMovementBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
+	static void registerDefaults() {
+		registerBehaviour(Blocks.BELL.delegate, new BellMovementBehaviour());
+		registerBehaviour(Blocks.CAMPFIRE.delegate, new CampfireMovementBehaviour());
 
 		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
-		addMovementBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());
-		addMovementBehaviour(Blocks.DROPPER, new DropperMovementBehaviour());
+		registerBehaviour(Blocks.DISPENSER.delegate, new DispenserMovementBehaviour());
+		registerBehaviour(Blocks.DROPPER.delegate, new DropperMovementBehaviour());
+	}
+
+	public interface BehaviourProvider {
+		@Nullable
+		MovementBehaviour getBehaviour(BlockState state);
 	}
 }

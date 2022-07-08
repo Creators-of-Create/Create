@@ -31,6 +31,7 @@ public class DestroyProgressMixin {
 			if (handler.renderDestroyProgress(self, levelRenderer, breakerId, pos, progress, state)) {
 				ci.cancel();
 			}
-		}
+		} else if (progress == -1)
+			levelRenderer.destroyBlockProgress(pos.hashCode(), pos, -1);
 	}
 }

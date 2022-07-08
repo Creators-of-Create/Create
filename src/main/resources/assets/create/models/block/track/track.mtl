@@ -1,0 +1,12 @@
+# Made in Blockbench 4.1.1
+
+newmtl m_0
+map_Kd #0
+
+newmtl m_1
+map_Kd #1
+
+newmtl m_2
+map_Kd #2
+
+newmtl none

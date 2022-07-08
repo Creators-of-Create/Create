@@ -1,5 +1,5 @@
 {
-  "parent": "create:mechanical_arm",
+  "parent": "create:linked_controller",
   "display": {
     "icon": {
       "item": "create:blaze_burner"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.arm_blaze_burner"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.arm_blaze_burner.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:arm_blaze_burner",
+      "trigger": "create:arm_blaze_burner_builtin",
       "conditions": {}
     }
   },

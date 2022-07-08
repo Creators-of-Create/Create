@@ -25,7 +25,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 		lightUpdater = LightUpdater.get(contraption.entity.level);
 
 		bounds = getContraptionBounds();
-		growBoundsForEdgeData();
+		growBoundsForEdgeData(bounds);
 
 		lightVolume = new GPULightVolume(bounds);
 
@@ -52,7 +52,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
         lightVolume.onLightPacket(world, chunkX, chunkZ);
     }
 
-    protected void growBoundsForEdgeData() {
+    protected static void growBoundsForEdgeData(GridAlignedBB bounds) {
         // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
         bounds.grow(2);
 	}

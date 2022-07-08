@@ -18,7 +18,7 @@ public class SmartChuteRenderer extends SmartTileEntityRenderer<SmartChuteTileEn
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 		if (tileEntityIn.item.isEmpty())
 			return;
-		if (tileEntityIn.itemPosition.get(partialTicks) > 0)
+		if (tileEntityIn.itemPosition.getValue(partialTicks) > 0)
 			return;
 		ChuteRenderer.renderItem(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 	}

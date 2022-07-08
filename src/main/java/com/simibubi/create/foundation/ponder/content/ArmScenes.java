@@ -263,6 +263,8 @@ public class ArmScenes {
 				scene.idle(2);
 			}
 		}
+		
+		scene.world.showSection(util.select.position(6, 1, 1), Direction.WEST);
 		scene.world.showSection(util.select.position(2, 1, 1), Direction.EAST);
 
 		ItemStack sand = new ItemStack(Items.SAND, 64);

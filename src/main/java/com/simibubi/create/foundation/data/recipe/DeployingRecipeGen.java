@@ -20,7 +20,17 @@ public class DeployingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-		CB1 = addWax(() -> Blocks.WAXED_COPPER_BLOCK, () -> Blocks.COPPER_BLOCK),
+	COGWHEEL = create("cogwheel", b -> b.require(I.shaft())
+		.require(I.planks())
+		.output(I.cog())),
+
+		LARGE_COGWHEEL = create("large_cogwheel", b -> b.require(I.cog())
+			.require(I.planks())
+			.output(I.largeCog()));
+
+	GeneratedRecipe
+
+	CB1 = addWax(() -> Blocks.WAXED_COPPER_BLOCK, () -> Blocks.COPPER_BLOCK),
 		CB2 = addWax(() -> Blocks.WAXED_EXPOSED_COPPER, () -> Blocks.EXPOSED_COPPER),
 		CB3 = addWax(() -> Blocks.WAXED_WEATHERED_COPPER, () -> Blocks.WEATHERED_COPPER),
 		CB4 = addWax(() -> Blocks.WAXED_OXIDIZED_COPPER, () -> Blocks.OXIDIZED_COPPER),

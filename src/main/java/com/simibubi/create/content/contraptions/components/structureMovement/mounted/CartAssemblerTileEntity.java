@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -172,6 +173,9 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 			nbt.putDouble("PushX", 0);
 			cart.deserializeNBT(nbt);
 		}
+		
+		if (contraption.containsBlockBreakers())
+			award(AllAdvancements.CONTRAPTION_ACTORS);
 	}
 
 	protected void disassemble(Level world, BlockPos pos, AbstractMinecart cart) {
@@ -230,9 +234,10 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		movementMode = new ScrollOptionBehaviour<>(CartMovementMode.class,
-			Lang.translate("contraptions.cart_movement_mode"), this, getMovementModeSlot());
+			Lang.translateDirect("contraptions.cart_movement_mode"), this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
+		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
 	}
 
 	@Override

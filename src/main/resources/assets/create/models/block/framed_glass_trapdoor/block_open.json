@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/glass_door_side",
+		"1": "create:block/palettes/framed_glass",
+		"particle": "create:block/palettes/framed_glass"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 13],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 3], "rotation": 90, "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 3], "rotation": 270, "texture": "#0", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 3], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 3], "rotation": 180, "texture": "#0", "cullface": "down"}
+			}
+		}
+	]
+}

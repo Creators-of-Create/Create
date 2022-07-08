@@ -1,16 +1,15 @@
 package com.simibubi.create.content.contraptions.components.clock;
 
-import static com.simibubi.create.foundation.utility.AngleHelper.deg;
-import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngleDiff;
-import static com.simibubi.create.foundation.utility.AngleHelper.rad;
+import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
-import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,9 +28,9 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 
 	public static DamageSource CUCKOO_SURPRISE = new DamageSource("create.cuckoo_clock_explosion").setExplosion();
 
-	public InterpolatedChasingValue hourHand = new InterpolatedChasingValue().withSpeed(.2f);
-	public InterpolatedChasingValue minuteHand = new InterpolatedChasingValue().withSpeed(.2f);
-	public InterpolatedValue animationProgress = new InterpolatedValue();
+	public LerpedFloat hourHand = LerpedFloat.angular();
+	public LerpedFloat minuteHand = LerpedFloat.angular();
+	public LerpedFloat animationProgress = LerpedFloat.linear();
 	public Animation animationType;
 	private boolean sendAnimationUpdate;
 
@@ -42,14 +42,19 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		super(type, pos, state);
 		animationType = Animation.NONE;
 	}
+	
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.CUCKOO_CLOCK);
+	}
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
 		if (clientPacket && compound.contains("Animation")) {
 			animationType = NBTHelper.readEnum(compound, "Animation", Animation.class);
-			animationProgress.lastValue = 0;
-			animationProgress.value = 0;
+			animationProgress.startWithValue(0);
 		}
 	}
 
@@ -92,12 +97,12 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 				if (hours == 18 && minutes < 36 && minutes > 31)
 					startAnimation(Animation.CREEPER);
 			} else {
-				float value = animationProgress.value;
-				animationProgress.set(value + 1);
+				float value = animationProgress.getValue();
+				animationProgress.setValue(value + 1);
 				if (value > 100)
 					animationType = Animation.NONE;
 
-				if (animationType == Animation.SURPRISE && animationProgress.value == 50) {
+				if (animationType == Animation.SURPRISE && Mth.equal(animationProgress.getValue(), 50)) {
 					Vec3 center = VecHelper.getCenterOf(worldPosition);
 					level.destroyBlock(worldPosition, false);
 					level.explode(null, CUCKOO_SURPRISE, null, center.x, center.y, center.z, 3, false,
@@ -118,8 +123,8 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 			} else {
 
 				boolean isSurprise = animationType == Animation.SURPRISE;
-				float value = animationProgress.value;
-				animationProgress.set(value + 1);
+				float value = animationProgress.getValue();
+				animationProgress.setValue(value + 1);
 				if (value > 100)
 					animationType = null;
 
@@ -162,12 +167,11 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		animationType = animation;
 		if (animation != null && CuckooClockBlock.containsSurprise(getBlockState()))
 			animationType = Animation.SURPRISE;
-		animationProgress.lastValue = 0;
-		animationProgress.value = 0;
+		animationProgress.startWithValue(0);
 		sendAnimationUpdate = true;
 
 		if (animation == Animation.CREEPER)
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.CUCKOO, level, worldPosition, 10);
+			awardIfNear(AllAdvancements.CUCKOO_CLOCK, 32);
 
 		sendData();
 	}
@@ -176,11 +180,11 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		float hourTarget = (float) (360 / 12 * (hours % 12));
 		float minuteTarget = (float) (360 / 60 * minutes);
 
-		hourHand.target(hourHand.value + rad(getShortestAngleDiff(deg(hourHand.value), hourTarget)));
-		minuteHand.target(minuteHand.value + rad(getShortestAngleDiff(deg(minuteHand.value), minuteTarget)));
+		hourHand.chase(hourTarget, .2f, Chaser.EXP);
+		minuteHand.chase(minuteTarget, .2f, Chaser.EXP);
 
-		hourHand.tick();
-		minuteHand.tick();
+		hourHand.tickChaser();
+		minuteHand.tickChaser();
 	}
 
 	private void playSound(SoundEvent sound, float volume, float pitch) {

@@ -15,7 +15,7 @@ public class FadeOutOfSceneInstruction<T extends AnimatedSceneElement> extends T
 
 	public FadeOutOfSceneInstruction(int fadeOutTicks, Direction fadeOutTo, ElementLink<T> link) {
 		super(false, fadeOutTicks);
-		this.fadeOutTo = fadeOutTo.getOpposite();
+		this.fadeOutTo = fadeOutTo == null ? null : fadeOutTo.getOpposite();
 		this.link = link;
 	}
 
@@ -27,7 +27,9 @@ public class FadeOutOfSceneInstruction<T extends AnimatedSceneElement> extends T
 			return;
 		element.setVisible(true);
 		element.setFade(1);
-		element.setFadeVec(Vec3.atLowerCornerOf(fadeOutTo.getNormal()).scale(.5f));
+		element.setFadeVec(fadeOutTo == null ? Vec3.ZERO
+			: Vec3.atLowerCornerOf(fadeOutTo.getNormal())
+				.scale(.5f));
 	}
 
 	@Override

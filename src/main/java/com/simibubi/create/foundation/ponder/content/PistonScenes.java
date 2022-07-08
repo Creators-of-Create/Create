@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -81,7 +82,8 @@ public class PistonScenes {
 				.withItem(new ItemStack(Items.SLIME_BALL)),
 			30);
 		scene.idle(7);
-		scene.world.modifyBlock(piston.north(), s -> s.setValue(MechanicalPistonHeadBlock.TYPE, PistonType.STICKY), false);
+		scene.world.modifyBlock(piston.north(), s -> s.setValue(MechanicalPistonHeadBlock.TYPE, PistonType.STICKY),
+			false);
 		scene.effects.superGlue(piston, Direction.WEST, true);
 
 		scene.idle(33);
@@ -108,6 +110,14 @@ public class PistonScenes {
 
 		scene.idle(50);
 		scene.world.setBlock(util.grid.at(2, 1, 1), Blocks.AIR.defaultBlockState(), false);
+
+		scene.world.replaceBlocks(util.select.fromTo(2, 3, 2, 2, 2, 0), Blocks.OAK_PLANKS.defaultBlockState(), false);
+		scene.overlay.showOutline(PonderPalette.GREEN, "glue", util.select.fromTo(2, 2, 3, 2, 1, 3)
+			.add(util.select.fromTo(2, 1, 3, 2, 1, 1))
+			.add(util.select.position(1, 1, 1)), 40);
+		scene.overlay.showControls(new InputWindowElement(util.vector.centerOf(util.grid.at(2, 2, 0)), Pointing.RIGHT)
+			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+
 		ElementLink<WorldSectionElement> chassis =
 			scene.world.showIndependentSection(util.select.fromTo(2, 2, 0, 2, 3, 2), Direction.DOWN);
 		scene.world.moveSection(chassis, util.vector.of(0, -1, 1), 0);

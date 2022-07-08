@@ -48,7 +48,7 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 	public Object[] getTranslationParameters() {
 		String parameter = "";
 		if (levels != null)
-			parameter = Lang.translate("item_attributes." + getTranslationKey() + "." + levels.key).getString();
+			parameter = Lang.translateDirect("item_attributes." + getTranslationKey() + "." + levels.key).getString();
 		return new Object[]{parameter};
 	}
 

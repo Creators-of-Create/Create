@@ -309,7 +309,7 @@ public class BuiltinPotatoProjectileTypes {
 				return true;
 
 			BlockPos hitPos = ray.getBlockPos();
-			if (!world.isAreaLoaded(hitPos, 1))
+			if (world instanceof Level l && !l.isLoaded(hitPos))
 				return true;
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
@@ -335,7 +335,7 @@ public class BuiltinPotatoProjectileTypes {
 				return true;
 
 			BlockPos hitPos = ray.getBlockPos();
-			if (!world.isAreaLoaded(hitPos, 1))
+			if (world instanceof Level l && !l.isLoaded(hitPos))
 				return true;
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);

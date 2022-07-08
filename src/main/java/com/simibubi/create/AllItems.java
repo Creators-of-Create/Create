@@ -51,6 +51,7 @@ import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerItem;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
@@ -79,29 +80,22 @@ public class AllItems {
 		REGISTRATE.startSection(MATERIALS);
 	}
 
-	public static final ItemEntry<Item> WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
+	public static final ItemEntry<Item> WHEAT_FLOUR =
+		taggedIngredient("wheat_flour", forgeItemTag("flour/wheat"), forgeItemTag("flour")),
+		DOUGH = taggedIngredient("dough", forgeItemTag("dough"), forgeItemTag("dough/wheat")),
 		CINDER_FLOUR = ingredient("cinder_flour"), ROSE_QUARTZ = ingredient("rose_quartz"),
-		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), PROPELLER = ingredient("propeller"),
-		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
+		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
+		STURDY_SHEET = taggedIngredient("sturdy_sheet", forgeItemTag("plates/obsidian")),
+		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
 
-	public static final ItemEntry<HiddenIngredientItem> POWDERED_OBSIDIAN = hiddenIngredient("powdered_obsidian");
+	public static final ItemEntry<SequencedAssemblyItem>
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_PRECISION_MECHANISM =
-		REGISTRATE.item("incomplete_precision_mechanism", SequencedAssemblyItem::new)
-			.register();
+	INCOMPLETE_PRECISION_MECHANISM = sequencedIngredient("incomplete_precision_mechanism"),
+		INCOMPLETE_REINFORCED_SHEET = sequencedIngredient("unprocessed_obsidian_sheet"),
+		INCOMPLETE_TRACK = sequencedIngredient("incomplete_track");
 
 	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
-
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
-		REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
-			.model(AssetLookup.existingItemModel())
-			.register();
-
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
-		REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
-			.model(AssetLookup.existingItemModel())
-			.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -154,7 +148,7 @@ public class AllItems {
 	public static final ItemEntry<Item> RAW_ZINC =
 		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), forgeItemTag("raw_materials"));
 
-	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
+	public static final ItemEntry<Item> ANDESITE_ALLOY = taggedIngredient("andesite_alloy", CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
 
@@ -274,6 +268,7 @@ public class AllItems {
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.stacksTo(1))
 		.model(AssetLookup.itemModelWithPartials())
+		.tag(AllItemTags.WRENCH.tag)
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
@@ -343,6 +338,10 @@ public class AllItems {
 			.model(AssetLookup.existingItemModel())
 			.register();
 
+	public static final ItemEntry<ScheduleItem> SCHEDULE = REGISTRATE.item("schedule", ScheduleItem::new)
+		.lang("Train Schedule")
+		.register();
+
 	// Schematics
 
 	static {
@@ -369,10 +368,15 @@ public class AllItems {
 			.register();
 	}
 
-	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
-		return REGISTRATE.item(name, HiddenIngredientItem::new)
+	private static ItemEntry<SequencedAssemblyItem> sequencedIngredient(String name) {
+		return REGISTRATE.item(name, SequencedAssemblyItem::new)
 			.register();
 	}
+
+//	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+//		return REGISTRATE.item(name, HiddenIngredientItem::new)
+//			.register();
+//	}
 
 	@SafeVarargs
 	private static ItemEntry<Item> taggedIngredient(String name, TagKey<Item>... tags) {

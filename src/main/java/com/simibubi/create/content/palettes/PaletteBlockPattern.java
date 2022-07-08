@@ -11,9 +11,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.block.connected.AllCTTypes;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
+import com.simibubi.create.foundation.block.connected.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.RotatedPillarCTBehaviour;
@@ -250,9 +251,9 @@ public class PaletteBlockPattern {
 
 	public enum CTs {
 
-		PILLAR(CTType.RECTANGLE, s -> toLocation(s, "pillar")),
-		CAP(CTType.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
-		LAYERED(CTType.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
+		PILLAR(AllCTTypes.RECTANGLE, s -> toLocation(s, "pillar")),
+		CAP(AllCTTypes.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
+		LAYERED(AllCTTypes.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
 
 		;
 

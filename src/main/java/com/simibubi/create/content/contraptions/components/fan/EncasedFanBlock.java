@@ -74,9 +74,6 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 		if (worldIn instanceof WrappedWorld)
 			return;
 		notifyFanTile(worldIn, pos);
-		if (worldIn.isClientSide())
-			return;
-		withTileEntityDo(worldIn, pos, te -> te.queueGeneratorUpdate());
 	}
 
 	protected void notifyFanTile(LevelAccessor world, BlockPos pos) {
@@ -99,11 +96,6 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.getValue(FACING)
 			.getOpposite();
-	}
-
-	@Override
-	public boolean showCapacityWithAnnotation() {
-		return true;
 	}
 
 	@Override

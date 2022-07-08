@@ -34,26 +34,14 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	public PartialModel getBellModel() {
 		return AllBlockPartials.HAUNTED_BELL;
 	}
-
+	
 	@Override
 	public boolean ring(Level world, BlockPos pos, Direction direction) {
 		if (isRinging && ringingTicks < RECHARGE_TICKS)
 			return false;
-
-		if (!super.ring(world, pos, direction))
-			return false;
-
-		if (!world.isClientSide)
-			HauntedBellPulser.sendPulse(world, pos, DISTANCE, false);
-
-		startEffect();
-
-		return true;
-	}
-
-	public void startEffect() {
+		HauntedBellPulser.sendPulse(world, pos, DISTANCE, false);
 		effectTicks = EFFECT_TICKS;
-		sendData();
+		return super.ring(world, pos, direction);
 	}
 
 	@Override

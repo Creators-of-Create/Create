@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#create:vanilla_stripped_logs",
+    "#create:modded_stripped_logs"
+  ]
+}

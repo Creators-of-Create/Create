@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " C ",
-    "SAS"
+    "C",
+    "A"
   ],
   "key": {
     "C": {
@@ -10,9 +10,6 @@
     },
     "A": {
       "item": "create:andesite_casing"
-    },
-    "S": {
-      "item": "create:shaft"
     }
   },
   "result": {

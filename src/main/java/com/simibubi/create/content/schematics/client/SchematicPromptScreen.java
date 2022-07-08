@@ -20,9 +20,9 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	private AllGuiTextures background;
 
-	private final Component convertLabel = Lang.translate("schematicAndQuill.convert");
-	private final Component abortLabel = Lang.translate("action.discard");
-	private final Component confirmLabel = Lang.translate("action.saveToFile");
+	private final Component convertLabel = Lang.translateDirect("schematicAndQuill.convert");
+	private final Component abortLabel = Lang.translateDirect("action.discard");
+	private final Component confirmLabel = Lang.translateDirect("action.saveToFile");
 
 	private EditBox nameField;
 	private IconButton confirm;
@@ -30,7 +30,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	private IconButton convert;
 
 	public SchematicPromptScreen() {
-		super(Lang.translate("schematicAndQuill.title"));
+		super(Lang.translateDirect("schematicAndQuill.title"));
 		background = AllGuiTextures.SCHEMATIC_PROMPT;
 	}
 

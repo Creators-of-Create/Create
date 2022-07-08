@@ -78,6 +78,7 @@ public class MechanicalDrillScenes {
 
 		scene.world.createItemEntity(util.vector.centerOf(breakingPos), util.vector.of(0, .1f, 0),
 			new ItemStack(Items.OAK_PLANKS));
+		scene.idle(50);
 	}
 
 	public static void contraption(SceneBuilder scene, SceneBuildingUtil util) {

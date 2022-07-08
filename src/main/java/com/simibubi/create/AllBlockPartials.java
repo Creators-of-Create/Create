@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -17,8 +16,7 @@ public class AllBlockPartials {
 
 	public static final PartialModel
 
-		SCHEMATICANNON_CONNECTOR = block("schematicannon/connector"),
-		SCHEMATICANNON_PIPE = block("schematicannon/pipe"),
+	SCHEMATICANNON_CONNECTOR = block("schematicannon/connector"), SCHEMATICANNON_PIPE = block("schematicannon/pipe"),
 
 		SHAFTLESS_COGWHEEL = block("cogwheel_shaftless"), SHAFTLESS_LARGE_COGWHEEL = block("large_cogwheel_shaftless"),
 		COGWHEEL_SHAFT = block("cogwheel_shaft"), SHAFT_HALF = block("shaft_half"),
@@ -31,7 +29,8 @@ public class AllBlockPartials {
 
 		ENCASED_FAN_INNER = block("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
 		MECHANICAL_PRESS_HEAD = block("mechanical_press/head"), MECHANICAL_MIXER_POLE = block("mechanical_mixer/pole"),
-		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"), MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
+		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"),
+		MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
 		MECHANICAL_CRAFTER_ARROW = block("mechanical_crafter/arrow"),
 		MECHANICAL_CRAFTER_BELT_FRAME = block("mechanical_crafter/belt"),
 		MECHANICAL_CRAFTER_BELT = block("mechanical_crafter/belt_animated"),
@@ -45,20 +44,16 @@ public class AllBlockPartials {
 		GAUGE_HEAD_STRESS = block("gauge/stressometer/head"), BEARING_TOP = block("bearing/top"),
 		BEARING_TOP_WOODEN = block("bearing/top_wooden"), DRILL_HEAD = block("mechanical_drill/head"),
 		HARVESTER_BLADE = block("mechanical_harvester/blade"), DEPLOYER_POLE = block("deployer/pole"),
-		DEPLOYER_HAND_POINTING = block("deployer/hand_pointing"), DEPLOYER_HAND_PUNCHING = block("deployer/hand_punching"),
+		DEPLOYER_HAND_POINTING = block("deployer/hand_pointing"),
+		DEPLOYER_HAND_PUNCHING = block("deployer/hand_punching"),
 		DEPLOYER_HAND_HOLDING = block("deployer/hand_holding"), ANALOG_LEVER_HANDLE = block("analog_lever/handle"),
 		ANALOG_LEVER_INDICATOR = block("analog_lever/indicator"), FUNNEL_FLAP = block("funnel/flap"),
 		BELT_FUNNEL_FLAP = block("belt_funnel/flap"), BELT_TUNNEL_FLAP = block("belt_tunnel/flap"),
-		FLEXPEATER_INDICATOR = block("diodes/indicator"), FLYWHEEL = block("flywheel/wheel"),
-		FLYWHEEL_UPPER_ROTATING = block("flywheel/upper_rotating_connector"),
+		FLEXPEATER_INDICATOR = block("diodes/indicator"),
 
-		FLYWHEEL_LOWER_ROTATING = block("flywheel/lower_rotating_connector"),
-		FLYWHEEL_UPPER_SLIDING = block("flywheel/upper_sliding_connector"),
-		FLYWHEEL_LOWER_SLIDING = block("flywheel/lower_sliding_connector"),
-		FURNACE_GENERATOR_FRAME = block("furnace_engine/frame"), CUCKOO_MINUTE_HAND = block("cuckoo_clock/minute_hand"),
-		CUCKOO_HOUR_HAND = block("cuckoo_clock/hour_hand"), CUCKOO_LEFT_DOOR = block("cuckoo_clock/left_door"),
-		CUCKOO_RIGHT_DOOR = block("cuckoo_clock/right_door"), CUCKOO_PIG = block("cuckoo_clock/pig"),
-		CUCKOO_CREEPER = block("cuckoo_clock/creeper"),
+		CUCKOO_MINUTE_HAND = block("cuckoo_clock/minute_hand"), CUCKOO_HOUR_HAND = block("cuckoo_clock/hour_hand"),
+		CUCKOO_LEFT_DOOR = block("cuckoo_clock/left_door"), CUCKOO_RIGHT_DOOR = block("cuckoo_clock/right_door"),
+		CUCKOO_PIG = block("cuckoo_clock/pig"), CUCKOO_CREEPER = block("cuckoo_clock/creeper"),
 
 		GANTRY_COGS = block("gantry_carriage/wheels"),
 
@@ -107,19 +102,68 @@ public class AllBlockPartials {
 		COPPER_BACKTANK_SHAFT = block("copper_backtank/block_shaft_input"),
 		COPPER_BACKTANK_COGS = block("copper_backtank/block_cogs"),
 
+		TRACK_SEGMENT_LEFT = block("track/segment_left"), TRACK_SEGMENT_RIGHT = block("track/segment_right"),
+		TRACK_TIE = block("track/tie"), GIRDER_SEGMENT_TOP = block("metal_girder/segment_top"),
+		GIRDER_SEGMENT_MIDDLE = block("metal_girder/segment_middle"),
+		GIRDER_SEGMENT_BOTTOM = block("metal_girder/segment_bottom"),
+
+		TRACK_STATION_OVERLAY = block("track_overlay/station"), TRACK_SIGNAL_OVERLAY = block("track_overlay/signal"),
+		TRACK_ASSEMBLING_OVERLAY = block("track_overlay/assembling"),
+		TRACK_SIGNAL_DUAL_OVERLAY = block("track_overlay/signal_dual"),
+		TRACK_OBSERVER_OVERLAY = block("track_overlay/observer"),
+
+		BOGEY_FRAME = block("track/bogey/bogey_frame"), SMALL_BOGEY_WHEELS = block("track/bogey/bogey_wheel"),
+		BOGEY_PIN = block("track/bogey/bogey_drive_wheel_pin"), BOGEY_PISTON = block("track/bogey/bogey_drive_piston"),
+		BOGEY_DRIVE = block("track/bogey/bogey_drive"), LARGE_BOGEY_WHEELS = block("track/bogey/bogey_drive_wheel"),
+
+		TRAIN_COUPLING_HEAD = block("track/bogey/coupling_head"),
+		TRAIN_COUPLING_CABLE = block("track/bogey/coupling_cable"),
+
+		TRAIN_CONTROLS_COVER = block("controls/train/cover"), TRAIN_CONTROLS_LEVER = block("controls/train/lever"),
+
+		ENGINE_PISTON = block("steam_engine/piston"), ENGINE_LINKAGE = block("steam_engine/linkage"),
+		ENGINE_CONNECTOR = block("steam_engine/shaft_connector"), BOILER_GAUGE = block("steam_engine/gauge"),
+		BOILER_GAUGE_DIAL = block("steam_engine/gauge_dial"),
+
+		SIGNAL_ON = block("track_signal/indicator_on"), SIGNAL_OFF = block("track_signal/indicator_off"),
+		DISPLAY_LINK_TUBE = block("display_link/tube"), DISPLAY_LINK_GLOW = block("display_link/glow"),
+
+		STATION_ON = block("track_station/flag_on"), STATION_OFF = block("track_station/flag_off"),
+		STATION_ASSEMBLE = block("track_station/flag_assemble"),
+
+		SIGNAL_PANEL = block("track_signal/panel"), SIGNAL_WHITE_CUBE = block("track_signal/white_cube"),
+		SIGNAL_WHITE_GLOW = block("track_signal/white_glow"), SIGNAL_WHITE = block("track_signal/white_tube"),
+		SIGNAL_RED_CUBE = block("track_signal/red_cube"), SIGNAL_RED_GLOW = block("track_signal/red_glow"),
+		SIGNAL_RED = block("track_signal/red_tube"), SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
+		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"), SIGNAL_YELLOW = block("track_signal/yellow_tube"),
+
+		BLAZE_INERT = block("blaze_burner/blaze/inert"), BLAZE_SUPER_ACTIVE = block("blaze_burner/blaze/super_active"),
+		BLAZE_GOGGLES = block("blaze_burner/goggles"), BLAZE_IDLE = block("blaze_burner/blaze/idle"),
+		BLAZE_ACTIVE = block("blaze_burner/blaze/active"), BLAZE_SUPER = block("blaze_burner/blaze/super"),
+		BLAZE_BURNER_FLAME = block("blaze_burner/flame"), BLAZE_BURNER_RODS = block("blaze_burner/rods_small"),
+		BLAZE_BURNER_RODS_2 = block("blaze_burner/rods_large"),
+		BLAZE_BURNER_SUPER_RODS = block("blaze_burner/superheated_rods_small"),
+		BLAZE_BURNER_SUPER_RODS_2 = block("blaze_burner/superheated_rods_large"),
+
+		WHISTLE_MOUTH_LARGE = block("steam_whistle/large_mouth"),
+		WHISTLE_MOUTH_MEDIUM = block("steam_whistle/medium_mouth"),
+		WHISTLE_MOUTH_SMALL = block("steam_whistle/small_mouth"),
+
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),
 		CRAFTING_BLUEPRINT_3x3 = entity("crafting_blueprint_large"),
 
-		COUPLING_ATTACHMENT = entity("minecart_coupling/attachment"),
-		COUPLING_RING = entity("minecart_coupling/ring"),
+		TRAIN_HAT = entity("train_hat"),
+
+		COUPLING_ATTACHMENT = entity("minecart_coupling/attachment"), COUPLING_RING = entity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = entity("minecart_coupling/connector")
 
 	;
 
 	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
 		new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.class);
-	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES = new EnumMap<>(BlazeBurnerBlock.HeatLevel.class);
+
+	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 
 	static {
@@ -133,13 +177,10 @@ public class AllBlockPartials {
 			}
 			PIPE_ATTACHMENTS.put(type, map);
 		}
-		for (BlazeBurnerBlock.HeatLevel heat : BlazeBurnerBlock.HeatLevel.values()) {
-			if (heat == BlazeBurnerBlock.HeatLevel.NONE)
-				continue;
-			BLAZES.put(heat, block("blaze_burner/blaze/" + heat.getSerializedName()));
-		}
 		for (DyeColor color : DyeColor.values())
 			TOOLBOX_LIDS.put(color, block("toolbox/lid/" + Lang.asId(color.name())));
+		for (Direction d : Iterate.horizontalDirections)
+			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
 	}
 
 	private static PartialModel block(String path) {

@@ -24,18 +24,23 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.require(Items.GLASS_BOTTLE)
 			.output(AllItems.BUILDERS_TEA.get())),
 
+		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
+			.require(Items.GLASS_BOTTLE)
+			.output(1, Mods.FD, "milk_bottle", 1)
+			.whenModLoaded(Mods.FD.getId())),
+
 		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, 250)
 			.require(AllItems.BLAZE_CAKE_BASE.get())
 			.output(AllItems.BLAZE_CAKE.get())),
-		
+
 		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, 250)
 			.require(Items.APPLE)
 			.output(AllItems.HONEYED_APPLE.get())),
-		
+
 		SWEET_ROLL = create("sweet_roll", b -> b.require(Tags.Fluids.MILK, 250)
 			.require(Items.BREAD)
 			.output(AllItems.SWEET_ROLL.get())),
-		
+
 		CHOCOLATE_BERRIES = create("chocolate_glazed_berries", b -> b.require(AllFluids.CHOCOLATE.get(), 250)
 			.require(Items.SWEET_BERRIES)
 			.output(AllItems.CHOCOLATE_BERRIES.get())),

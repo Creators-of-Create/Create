@@ -203,9 +203,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			: fluid.getAttributes()
 				.getEmptySound();
 		if (soundevent == null)
-			soundevent =
-				fluid.is(FluidTags.LAVA) ? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
-					: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
+			soundevent = FluidHelper.isTag(fluid, FluidTags.LAVA)
+				? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
+				: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
 
 		world.playSound(null, splooshPos, soundevent, SoundSource.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerLevel)
@@ -215,7 +215,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected boolean canDrainInfinitely(Fluid fluid) {
 		if (fluid == null)
 			return false;
-		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get().test(fluid);
+		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get()
+			.test(fluid);
 	}
 
 	@Override

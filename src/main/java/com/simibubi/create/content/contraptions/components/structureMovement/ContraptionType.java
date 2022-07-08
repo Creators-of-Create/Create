@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.gan
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyContraption;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 
 public class ContraptionType {
 
@@ -23,7 +24,8 @@ public class ContraptionType {
 		CLOCKWORK = register("clockwork", ClockworkContraption::new),
 		MOUNTED = register("mounted", MountedContraption::new),
 		STABILIZED = register("stabilized", StabilizedContraption::new),
-		GANTRY = register("gantry", GantryContraption::new);
+		GANTRY = register("gantry", GantryContraption::new),
+		CARRIAGE = register("carriage", CarriageContraption::new);
 
 	Supplier<? extends Contraption> factory;
 	String id;

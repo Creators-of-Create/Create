@@ -1,5 +1,5 @@
 {
-  "parent": "create:andesite_alloy",
+  "parent": "create:shifting_gears",
   "display": {
     "icon": {
       "item": "create:millstone"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.millstone"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.millstone.desc"
     },
     "frame": "task",
@@ -17,10 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:placed_block",
-      "conditions": {
-        "block": "create:millstone"
-      }
+      "trigger": "create:millstone_builtin",
+      "conditions": {}
     }
   },
   "requirements": [

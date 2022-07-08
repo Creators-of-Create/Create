@@ -1,21 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A",
-    "B",
-    "C"
-  ],
-  "key": {
-    "A": {
-      "item": "create:electron_tube"
-    },
-    "B": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "item": "create:encased_chain_drive"
     },
-    "C": {
-      "item": "create:large_cogwheel"
+    {
+      "item": "create:electron_tube"
     }
-  },
+  ],
   "result": {
     "item": "create:adjustable_chain_gearshift"
   }

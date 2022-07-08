@@ -11,9 +11,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -96,7 +96,7 @@ public class BeltConnectorItem extends BlockItem {
 
 			if (firstPulley != null && !firstPulley.equals(pos)) {
 				createBelts(world, firstPulley, pos);
-				AllTriggers.triggerFor(AllTriggers.CONNECT_BELT, playerEntity);
+				AllAdvancements.BELT.awardTo(playerEntity);
 				if (!playerEntity.isCreative())
 					context.getItemInHand()
 						.shrink(1);
@@ -134,19 +134,38 @@ public class BeltConnectorItem extends BlockItem {
 
 		List<BlockPos> beltsToCreate = getBeltChainBetween(start, end, slope, facing);
 		BlockState beltBlock = AllBlocks.BELT.getDefaultState();
+		boolean failed = false;
 
 		for (BlockPos pos : beltsToCreate) {
+			BlockState existingBlock = world.getBlockState(pos);
+			if (existingBlock.getDestroySpeed(world, pos) == -1) {
+				failed = true;
+				break;
+			}
+
 			BeltPart part = pos.equals(start) ? BeltPart.START : pos.equals(end) ? BeltPart.END : BeltPart.MIDDLE;
 			BlockState shaftState = world.getBlockState(pos);
 			boolean pulley = ShaftBlock.isShaft(shaftState);
 			if (part == BeltPart.MIDDLE && pulley)
 				part = BeltPart.PULLEY;
-			if (pulley && shaftState.getValue(AbstractShaftBlock.AXIS) == Axis.Y)
+			if (pulley && shaftState.getValue(AbstractSimpleShaftBlock.AXIS) == Axis.Y)
 				slope = BeltSlope.SIDEWAYS;
+
+			if (!existingBlock.getMaterial()
+					.isReplaceable())
+				world.destroyBlock(pos, false);
+
 			KineticTileEntity.switchToBlockState(world, pos, beltBlock.setValue(BeltBlock.SLOPE, slope)
 				.setValue(BeltBlock.PART, part)
 				.setValue(BeltBlock.HORIZONTAL_FACING, facing));
 		}
+
+		if (!failed)
+			return;
+
+		for (BlockPos pos : beltsToCreate)
+			if (AllBlocks.BELT.has(world.getBlockState(pos)))
+				world.destroyBlock(pos, false);
 	}
 
 	private static Direction getFacingFromTo(BlockPos start, BlockPos end) {
@@ -199,9 +218,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static boolean canConnect(Level world, BlockPos first, BlockPos second) {
-		if (!world.isAreaLoaded(first, 1))
-			return false;
-		if (!world.isAreaLoaded(second, 1))
+		if (!world.isLoaded(first) || !world.isLoaded(second))
 			return false;
 		if (!second.closerThan(first, maxLength()))
 			return false;
@@ -244,7 +261,7 @@ public class BeltConnectorItem extends BlockItem {
 		for (BlockPos currentPos = first.offset(step); !currentPos.equals(second) && limit-- > 0; currentPos =
 			currentPos.offset(step)) {
 			BlockState blockState = world.getBlockState(currentPos);
-			if (ShaftBlock.isShaft(blockState) && blockState.getValue(AbstractShaftBlock.AXIS) == shaftAxis)
+			if (ShaftBlock.isShaft(blockState) && blockState.getValue(AbstractSimpleShaftBlock.AXIS) == shaftAxis)
 				continue;
 			if (!blockState.getMaterial()
 				.isReplaceable())
@@ -260,7 +277,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static boolean validateAxis(Level world, BlockPos pos) {
-		if (!world.isAreaLoaded(pos, 1))
+		if (!world.isLoaded(pos))
 			return false;
 		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
 			return false;

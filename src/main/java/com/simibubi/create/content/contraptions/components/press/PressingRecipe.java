@@ -53,7 +53,7 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public Component getDescriptionForAssembly() {
-		return Lang.translate("recipe.assembly.pressing");
+		return Lang.translateDirect("recipe.assembly.pressing");
 	}
 	
 	@Override

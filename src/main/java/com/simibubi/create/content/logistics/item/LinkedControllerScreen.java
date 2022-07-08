@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -56,9 +57,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		addRenderableWidget(resetButton);
 		addRenderableWidget(confirmButton);
 
-		extraAreas = ImmutableList.of(
-			new Rect2i(x + background.width + 4, y + background.height - 44, 64, 56)
-		);
+		extraAreas = ImmutableList.of(new Rect2i(x + background.width + 4, y + background.height - 44, 64, 56));
 	}
 
 	@Override
@@ -73,8 +72,8 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0x442000);
 
-		GuiGameElement.of(menu.contentHolder)
-			.<GuiGameElement.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)
+		GuiGameElement.of(menu.contentHolder).<GuiGameElement
+			.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)
 			.scale(5)
 			.render(ms);
 	}
@@ -110,12 +109,10 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	private List<Component> addToTooltip(List<Component> list, int slot) {
 		if (slot < 0 || slot >= 12)
 			return list;
-		list.add(Lang
-			.createTranslationTextComponent("linked_controller.frequency_slot_" + ((slot % 2) + 1),
-				LinkedControllerClientHandler.getControls()
-					.get(slot / 2)
-					.getTranslatedKeyMessage()
-					.getString())
+		list.add(Lang.translateDirect("linked_controller.frequency_slot_" + ((slot % 2) + 1), ControlsUtil.getControls()
+			.get(slot / 2)
+			.getTranslatedKeyMessage()
+			.getString())
 			.withStyle(ChatFormatting.GOLD));
 		return list;
 	}

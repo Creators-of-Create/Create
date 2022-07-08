@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,26 +47,43 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 	}
 
 	@Override
+	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
+		boolean pIsMoving) {
+		if (pLevel.isClientSide)
+			return;
+		boolean shouldPower = pLevel.hasNeighborSignal(pPos);
+		if (shouldPower == pState.getValue(POWERED))
+			return;
+		pLevel.setBlock(pPos, pState.setValue(POWERED, shouldPower), 3);
+		if (!shouldPower)
+			return;
+		Direction facing = pState.getValue(FACING);
+		BellAttachType type = pState.getValue(ATTACHMENT);
+		ring(pLevel, pPos,
+			type == BellAttachType.CEILING || type == BellAttachType.FLOOR ? facing : facing.getClockWise(), null);
+	}
+
+	@Override
 	public boolean onHit(Level world, BlockState state, BlockHitResult hit, @Nullable Player player, boolean flag) {
 		BlockPos pos = hit.getBlockPos();
 		Direction direction = hit.getDirection();
 		if (direction == null)
 			direction = world.getBlockState(pos)
 				.getValue(FACING);
-
 		if (!this.canRingFrom(state, direction, hit.getLocation().y - pos.getY()))
 			return false;
+		return ring(world, pos, direction, player);
+	}
 
+	protected boolean ring(Level world, BlockPos pos, Direction direction, Player player) {
 		TE te = getTileEntity(world, pos);
+		if (world.isClientSide)
+			return true;
 		if (te == null || !te.ring(world, pos, direction))
 			return false;
-
-		if (!world.isClientSide) {
-			playSound(world, pos);
-			if (player != null)
-				player.awardStat(Stats.BELL_RING);
-		}
-
+		playSound(world, pos);
+		if (player != null)
+			player.awardStat(Stats.BELL_RING);
 		return true;
 	}
 

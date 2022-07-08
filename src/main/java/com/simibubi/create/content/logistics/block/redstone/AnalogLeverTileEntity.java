@@ -6,7 +6,8 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -19,10 +20,11 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	int state = 0;
 	int lastChange;
-	InterpolatedChasingValue clientState = new InterpolatedChasingValue().withSpeed(.2f);
+	LerpedFloat clientState;
 
 	public AnalogLeverTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		clientState = LerpedFloat.linear();
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		lastChange = compound.getInt("ChangeTimer");
-		clientState.target(state);
+		clientState.chase(state, 0.2f, Chaser.EXP);
 		super.read(compound, clientPacket);
 	}
 
@@ -49,7 +51,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 				updateOutput();
 		}
 		if (level.isClientSide)
-			clientState.tick();
+			clientState.tickChaser();
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("tooltip.analogStrength", this.state)));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translateDirect("tooltip.analogStrength", this.state)));
 
 		return true;
 	}

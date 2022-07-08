@@ -32,7 +32,7 @@ public class PonderButton extends BoxWidget {
 
 	public PonderButton(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		z = 400;
+		z = 420;
 		paddingX = 2;
 		paddingY = 2;
 	}
@@ -97,8 +97,10 @@ public class PonderButton extends BoxWidget {
 			return;
 
 		if (shortcut != null) {
-			ms.translate(0, 0, z + 50);
+			ms.pushPose();
+			ms.translate(0, 0, z + 10);
 			drawCenteredString(ms, Minecraft.getInstance().font, shortcut.getTranslatedKeyMessage(), x + width / 2 + 8, y + height - 6, Theme.c(Theme.Key.TEXT_DARKER).scaleAlpha(fadeValue).getRGB());
+			ms.popPose();
 		}
 	}
 

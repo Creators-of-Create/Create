@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class KineticTileInstance<T extends KineticTileEntity> extends BlockEntityInstance<T> {
@@ -18,8 +19,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends B
 
 	public KineticTileInstance(MaterialManager modelManager, T tile) {
 		super(modelManager, tile);
-
-		axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
+		axis = (blockState.getBlock()instanceof IRotate irotate) ? irotate.getRotationAxis(blockState) : Axis.Y;
 	}
 
 	protected final void updateRotation(RotatingData instance) {
@@ -36,9 +36,9 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends B
 
 	protected final void updateRotation(RotatingData instance, Direction.Axis axis, float speed) {
 		instance.setRotationAxis(axis)
-				.setRotationOffset(getRotationOffset(axis))
-				.setRotationalSpeed(speed)
-				.setColor(blockEntity);
+			.setRotationOffset(getRotationOffset(axis))
+			.setRotationalSpeed(speed)
+			.setColor(blockEntity);
 	}
 
 	protected final RotatingData setup(RotatingData key) {
@@ -55,10 +55,10 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends B
 
 	protected final RotatingData setup(RotatingData key, Direction.Axis axis, float speed) {
 		key.setRotationAxis(axis)
-				.setRotationalSpeed(speed)
-				.setRotationOffset(getRotationOffset(axis))
-				.setColor(blockEntity)
-				.setPosition(getInstancePosition());
+			.setRotationalSpeed(speed)
+			.setRotationOffset(getRotationOffset(axis))
+			.setColor(blockEntity)
+			.setPosition(getInstancePosition());
 
 		return key;
 	}
@@ -66,7 +66,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends B
 	protected float getRotationOffset(final Direction.Axis axis) {
 		float offset = ICogWheel.isLargeCog(blockState) ? 11.25f : 0;
 		double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
-				+ ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
+			+ ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
 		if (d == 0) {
 			offset = 22.5f;
 		}
@@ -87,11 +87,11 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends B
 
 	protected Material<RotatingData> getRotatingMaterial() {
 		return materialManager.defaultSolid()
-				.material(AllMaterialSpecs.ROTATING);
+			.material(AllMaterialSpecs.ROTATING);
 	}
 
 	public static BlockState shaft(Direction.Axis axis) {
 		return AllBlocks.SHAFT.getDefaultState()
-				.setValue(ShaftBlock.AXIS, axis);
+			.setValue(ShaftBlock.AXIS, axis);
 	}
 }

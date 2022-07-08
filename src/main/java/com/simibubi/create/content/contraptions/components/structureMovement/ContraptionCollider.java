@@ -17,9 +17,12 @@ import com.simibubi.create.content.contraptions.components.actors.BlockBreakingM
 import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -33,8 +36,11 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -75,15 +81,20 @@ public class ContraptionCollider {
 		List<Entity> entitiesWithinAABB = world.getEntitiesOfClass(Entity.class, bounds.inflate(2)
 			.expandTowards(0, 32, 0), contraptionEntity::canCollideWith);
 		for (Entity entity : entitiesWithinAABB) {
+			if (!entity.isAlive())
+				continue;
 
 			PlayerType playerType = getPlayerType(entity);
 			if (playerType == PlayerType.REMOTE)
 				continue;
 
-			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayer) {
-				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
+			entity.getSelfAndPassengers().forEach(e -> {
+				if (e instanceof ServerPlayer) 
+					((ServerPlayer) e).connection.aboveGroundTickCount = 0;
+			});
+			
+			if (playerType == PlayerType.SERVER)
 				continue;
-			}
 
 			if (playerType == PlayerType.CLIENT)
 				if (skipClientPlayer)
@@ -113,17 +124,18 @@ public class ContraptionCollider {
 
 			// Use simplified bbs when present
 			final Vec3 motionCopy = motion;
-			List<AABB> collidableBBs = contraption.simplifiedEntityColliders.orElseGet(() -> {
+			List<AABB> collidableBBs = contraption.getSimplifiedEntityColliders()
+				.orElseGet(() -> {
 
-				// Else find 'nearby' individual block shapes to collide with
-				List<AABB> bbs = new ArrayList<>();
-				List<VoxelShape> potentialHits =
-					getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
-				potentialHits.forEach(shape -> shape.toAabbs()
-					.forEach(bbs::add));
-				return bbs;
+					// Else find 'nearby' individual block shapes to collide with
+					List<AABB> bbs = new ArrayList<>();
+					List<VoxelShape> potentialHits =
+						getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
+					potentialHits.forEach(shape -> shape.toAabbs()
+						.forEach(bbs::add));
+					return bbs;
 
-			});
+				});
 
 			MutableObject<Vec3> collisionResponse = new MutableObject<>(Vec3.ZERO);
 			MutableObject<Vec3> normal = new MutableObject<>(Vec3.ZERO);
@@ -230,11 +242,28 @@ public class ContraptionCollider {
 					.scale(.5f));
 				if (temporalCollision)
 					collisionLocation = collisionLocation.add(0, motionResponse.y, 0);
-				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
+
+				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(entity.position(), 0));
 				if (contraption.getBlocks()
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()
 						.get(pos).state;
+					if (blockState.is(BlockTags.CLIMBABLE)) {
+						surfaceCollision.setTrue();
+						totalResponse = totalResponse.add(0, .1f, 0);
+					}
+				}
+
+				pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
+				if (contraption.getBlocks()
+					.containsKey(pos)) {
+					BlockState blockState = contraption.getBlocks()
+						.get(pos).state;
+
+					MovingInteractionBehaviour movingInteractionBehaviour = contraption.interactors.get(pos);
+					if (movingInteractionBehaviour != null)
+						movingInteractionBehaviour.handleEntityCollision(entity, pos, contraptionEntity);
+
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
 					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
 				}
@@ -275,6 +304,7 @@ public class ContraptionCollider {
 						.add(0, contraptionMotion.y, 0);
 				if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
 					entityMotion = entityMotion.multiply(1, 1, 0);
+
 			}
 
 			if (bounce == 0 && slide > 0 && hasNormal && anyCollision && rotation.hasVerticalRotation()) {
@@ -298,6 +328,44 @@ public class ContraptionCollider {
 			entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
+
+			if (contraptionEntity instanceof CarriageContraptionEntity cce && entity.isOnGround()
+				&& !(entity instanceof ItemEntity) && cce.nonDamageTicks == 0
+				&& AllConfigs.SERVER.trains.trainsCauseDamage.get()) {
+
+				Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
+				if (diffMotion.length() > 0.35f && contraptionMotion.length() > 0.35f) {
+
+					EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
+					double damage = diffMotion.length();
+					if (entity.getClassification(false) == MobCategory.MONSTER)
+						damage *= 2;
+
+					if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator()) {
+						if (playerType == PlayerType.CLIENT) {
+							AllPackets.channel
+								.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
+							world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
+								SoundSource.NEUTRAL, 1, .75f);
+						} else {
+							entity.hurt(pSource, (int) (damage * 16));
+							world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
+								SoundSource.NEUTRAL, 1, .75f);
+							if (!entity.isAlive())
+								contraptionEntity.getControllingPlayer()
+									.map(world::getPlayerByUUID)
+									.ifPresent(AllAdvancements.TRAIN_ROADKILL::awardTo);
+						}
+
+						Vec3 added = entityMotion.add(contraptionMotion.multiply(1, 0, 1)
+							.normalize()
+							.add(0, .25, 0)
+							.scale(damage * 4))
+							.add(diffMotion);
+						entityMotion = VecHelper.clamp(added, 3);
+					}
+				}
+			}
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
@@ -458,6 +526,7 @@ public class ContraptionCollider {
 
 		List<VoxelShape> potentialHits = BlockPos.betweenClosedStream(min, max)
 			.filter(contraption.getBlocks()::containsKey)
+			.filter(Predicates.not(contraption::isHiddenInPortal))
 			.map(p -> {
 				BlockState blockState = contraption.getBlocks()
 					.get(p).state;
@@ -548,8 +617,9 @@ public class ContraptionCollider {
 
 			if (collidedState.getBlock() instanceof CocoaBlock)
 				continue;
-			if (AllMovementBehaviours.contains(blockInfo.state.getBlock())) {
-				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state.getBlock());
+
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
+			if (movementBehaviour != null) {
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
 					BlockBreakingMovementBehaviour behaviour = (BlockBreakingMovementBehaviour) movementBehaviour;
 					if (!behaviour.canBreak(world, colliderPos, collidedState) && !emptyCollider)

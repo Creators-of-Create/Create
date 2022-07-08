@@ -1,0 +1,28 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/cam_linkage"
+	},
+	"elements": [
+		{
+			"from": [5, 3, 5],
+			"to": [11, 22, 11],
+			"faces": {
+				"north": {"uv": [4, 6.5, 7, 16], "texture": "#0"},
+				"east": {"uv": [1, 6.5, 4, 16], "texture": "#0"},
+				"south": {"uv": [4, 6.5, 7, 16], "texture": "#0"},
+				"west": {"uv": [1, 6.5, 4, 16], "texture": "#0"},
+				"up": {"uv": [4, 3.5, 7, 6.5], "texture": "#0"}
+			}
+		}
+	],
+	"display": {},
+	"groups": [
+		{
+			"name": "Piston",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

@@ -16,7 +16,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -64,11 +63,12 @@ public class ArmInteractionPointHandler {
 
 		selected.cycleMode();
 		if (player != null) {
-			String key = selected.getMode().getTranslationKey();
-			ChatFormatting colour = selected.getMode().getChatColor();
-			MutableComponent translatedBlock = state.getBlock().getName();
-			player.displayClientMessage((Lang.translate(key, translatedBlock.withStyle(ChatFormatting.WHITE, colour)).withStyle(colour)),
-				true);
+			Mode mode = selected.getMode();
+			Lang.builder()
+				.translate(mode.getTranslationKey(), Lang.blockName(state)
+					.style(ChatFormatting.WHITE))
+				.color(mode.getColor())
+				.sendStatus(player);
 		}
 
 		event.setCanceled(true);
@@ -95,7 +95,8 @@ public class ArmInteractionPointHandler {
 		int removed = 0;
 		for (Iterator<ArmInteractionPoint> iterator = currentSelection.iterator(); iterator.hasNext();) {
 			ArmInteractionPoint point = iterator.next();
-			if (point.getPos().closerThan(pos, ArmTileEntity.getRange()))
+			if (point.getPos()
+				.closerThan(pos, ArmTileEntity.getRange()))
 				continue;
 			iterator.remove();
 			removed++;
@@ -103,8 +104,10 @@ public class ArmInteractionPointHandler {
 
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (removed > 0) {
-			player.displayClientMessage(Lang.createTranslationTextComponent("mechanical_arm.points_outside_range", removed)
-				.withStyle(ChatFormatting.RED), true);
+			Lang.builder()
+				.translate("mechanical_arm.points_outside_range", removed)
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
 		} else {
 			int inputs = 0;
 			int outputs = 0;
@@ -115,8 +118,10 @@ public class ArmInteractionPointHandler {
 					inputs++;
 			}
 			if (inputs + outputs > 0)
-				player.displayClientMessage(Lang.createTranslationTextComponent("mechanical_arm.summary", inputs, outputs)
-					.withStyle(ChatFormatting.WHITE), true);
+				Lang.builder()
+					.translate("mechanical_arm.summary", inputs, outputs)
+					.style(ChatFormatting.WHITE)
+					.sendStatus(player);
 		}
 
 		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
@@ -194,11 +199,12 @@ public class ArmInteractionPointHandler {
 			if (shape.isEmpty())
 				continue;
 
-			int color = point.getMode().getColor();
+			int color = point.getMode()
+				.getColor();
 			CreateClient.OUTLINER.showAABB(point, shape.bounds()
-					.move(pos))
-					.colored(color)
-					.lineWidth(1 / 16f);
+				.move(pos))
+				.colored(color)
+				.lineWidth(1 / 16f);
 		}
 	}
 
@@ -215,7 +221,8 @@ public class ArmInteractionPointHandler {
 
 	private static ArmInteractionPoint getSelected(BlockPos pos) {
 		for (ArmInteractionPoint point : currentSelection)
-			if (point.getPos().equals(pos))
+			if (point.getPos()
+				.equals(pos))
 				return point;
 		return null;
 	}

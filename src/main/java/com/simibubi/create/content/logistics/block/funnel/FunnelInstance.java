@@ -30,15 +30,15 @@ public class FunnelInstance extends BlockEntityInstance<FunnelTileEntity> implem
 		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
         Instancer<FlapData> model = modelManager.defaultSolid()
-            .material(AllMaterialSpecs.FLAPS)
-            .getModel(flapPartial);
+                .material(AllMaterialSpecs.FLAPS)
+				.getModel(flapPartial, blockState);
 
         int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = world.getBrightness(LightLayer.SKY, pos);
 
         Direction direction = FunnelBlock.getFunnelFacing(blockState);
 
-        float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
+        float flapness = tile.flap.getValue(AnimationTickHolder.getPartialTicks());
         float horizontalAngle = direction.getOpposite().toYRot();
 
         for (int segment = 0; segment <= 3; segment++) {
@@ -65,7 +65,7 @@ public class FunnelInstance extends BlockEntityInstance<FunnelTileEntity> implem
     public void beginFrame() {
         if (flaps == null) return;
 
-        float flapness = blockEntity.flap.get(AnimationTickHolder.getPartialTicks());
+        float flapness = blockEntity.flap.getValue(AnimationTickHolder.getPartialTicks());
 
         for (FlapData flap : flaps) {
             flap.setFlapness(flapness);

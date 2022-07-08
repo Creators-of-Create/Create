@@ -40,7 +40,7 @@ public class TooltipHelper {
 	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static MutableComponent holdShift(Palette color, boolean highlighted) {
-		return Lang.translate("tooltip.holdForDescription", Lang.translate("tooltip.keyShift")
+		return Lang.translateDirect("tooltip.holdForDescription", Lang.translateDirect("tooltip.keyShift")
 			.withStyle(ChatFormatting.GRAY))
 			.withStyle(ChatFormatting.DARK_GRAY);
 	}
@@ -48,9 +48,9 @@ public class TooltipHelper {
 	public static void addHint(List<Component> tooltip, String hintKey, Object... messageParams) {
 		Component spacing = IHaveGoggleInformation.componentSpacing;
 		tooltip.add(spacing.plainCopy()
-			.append(Lang.translate(hintKey + ".title"))
+			.append(Lang.translateDirect(hintKey + ".title"))
 			.withStyle(ChatFormatting.GOLD));
-		Component hint = Lang.translate(hintKey);
+		Component hint = Lang.translateDirect(hintKey);
 		List<Component> cutComponent = TooltipHelper.cutTextComponent(hint, ChatFormatting.GRAY, ChatFormatting.WHITE);
 		for (Component component : cutComponent)
 			tooltip.add(spacing.plainCopy()

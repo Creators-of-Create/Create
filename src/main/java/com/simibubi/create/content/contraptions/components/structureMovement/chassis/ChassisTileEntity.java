@@ -41,7 +41,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		int max = AllConfigs.SERVER.kinetics.maxChassisRange.get();
-		range = new BulkScrollValueBehaviour(Lang.translate("generic.range"), this, new CenteredSideValueBoxTransform(),
+		range = new BulkScrollValueBehaviour(Lang.translateDirect("generic.range"), this, new CenteredSideValueBoxTransform(),
 				te -> ((ChassisTileEntity) te).collectChassisGroup());
 		range.requiresWrench();
 		range.between(1, max);
@@ -56,7 +56,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 	public void initialize() {
 		super.initialize();
 		if (getBlockState().getBlock() instanceof RadialChassisBlock)
-			range.setLabel(Lang.translate("generic.radius"));
+			range.setLabel(Lang.translateDirect("generic.radius"));
 	}
 
 	public int getRange() {

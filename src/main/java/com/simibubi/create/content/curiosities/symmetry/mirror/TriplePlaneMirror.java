@@ -66,7 +66,7 @@ public class TriplePlaneMirror extends SymmetryMirror {
 
 	@Override
 	public List<Component> getAlignToolTips() {
-		return ImmutableList.of(Lang.translate("orientation.horizontal"));
+		return ImmutableList.of(Lang.translateDirect("orientation.horizontal"));
 	}
 
 }

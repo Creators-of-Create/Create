@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "create:andesite_casing",
+    "create:brass_casing",
+    "create:copper_casing",
+    "create:shadow_steel_casing",
+    "create:refined_radiance_casing",
+    "create:railway_casing"
+  ]
+}

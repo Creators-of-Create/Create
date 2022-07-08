@@ -96,7 +96,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHoveredOrFocused()) {
-			TranslatableComponent translate = Lang.translate(backTrackingLangKey());
+			TranslatableComponent translate = Lang.translateDirect(backTrackingLangKey());
 			font.draw(ms, translate, 41 - font.width(translate) / 2, height - 16,
 				Theme.i(Theme.Key.TEXT_DARKER));
 			if (Mth.equal(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
@@ -156,9 +156,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			Window window = minecraft.getWindow();
 			int dpx = window.getGuiScaledWidth() / 2;
 			int dpy = window.getGuiScaledHeight() / 2;
-			if (lastScreen instanceof AbstractSimiScreen) {
-				dpx = ((NavigatableSimiScreen) lastScreen).depthPointX;
-				dpy = ((NavigatableSimiScreen) lastScreen).depthPointY;
+			if (lastScreen instanceof NavigatableSimiScreen navigableScreen) {
+				dpx = navigableScreen.depthPointX;
+				dpy = navigableScreen.depthPointY;
 			}
 
 			ms.translate(dpx, dpy, 0);

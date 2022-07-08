@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:block/metal_girder/block_x",
+	"textures": {
+		"0": "create:block/girder"
+	},
+	"elements": [
+		{
+			"from": [2.95, 0.95, 15],
+			"to": [13.05, 15.05, 18],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 9, 5, 16], "texture": "#0"},
+				"east": {"uv": [6.5, 9, 5, 16], "texture": "#0"},
+				"south": {"uv": [8, 8, 15, 13], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [5, 9, 6.5, 16], "texture": "#0"},
+				"up": {"uv": [6.5, 11, 8, 16], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [6.5, 11, 8, 16], "rotation": 270, "texture": "#0"}
+			}
+		}
+	]
+}

@@ -126,6 +126,7 @@ public class PonderLocalization {
 		addGeneral(object, PonderUI.CLOSE, "Close");
 		addGeneral(object, PonderUI.IDENTIFY, "Identify");
 		addGeneral(object, PonderUI.NEXT, "Next Scene");
+		addGeneral(object, PonderUI.NEXT_UP, "Up Next:");
 		addGeneral(object, PonderUI.PREVIOUS, "Previous Scene");
 		addGeneral(object, PonderUI.REPLAY, "Replay");
 		addGeneral(object, PonderUI.THINK_BACK, "Think Back");

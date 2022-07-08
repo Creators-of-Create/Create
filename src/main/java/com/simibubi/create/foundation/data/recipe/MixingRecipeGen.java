@@ -40,7 +40,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 			.output(AllFluids.HONEY.get(), 1000)
 			.requiresHeat(HeatCondition.HEATED)),
 
-		DOUGH = create("dough_by_mixing", b -> b.require(AllItems.WHEAT_FLOUR.get())
+		DOUGH = create("dough_by_mixing", b -> b.require(I.wheatFlour())
 			.require(Fluids.WATER, 1000)
 			.output(AllItems.DOUGH.get(), 1)),
 

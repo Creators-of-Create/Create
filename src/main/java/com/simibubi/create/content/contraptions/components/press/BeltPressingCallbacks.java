@@ -3,61 +3,53 @@ package com.simibubi.create.content.contraptions.components.press;
 import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
 import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.Mode;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraft.world.item.ItemStack;
 
 public class BeltPressingCallbacks {
 
 	static ProcessingResult onItemReceived(TransportedItemStack transported,
-		TransportedItemStackHandlerBehaviour handler, MechanicalPressTileEntity press) {
-		if (press.getSpeed() == 0)
+		TransportedItemStackHandlerBehaviour handler, PressingBehaviour behaviour) {
+		if (behaviour.specifics.getKineticSpeed() == 0)
 			return PASS;
-		if (press.running)
+		if (behaviour.running)
 			return HOLD;
-		if (!press.getRecipe(transported.stack)
-			.isPresent())
+		if (!behaviour.specifics.tryProcessOnBelt(transported, null, true))
 			return PASS;
 
-		press.start(Mode.BELT);
+		behaviour.start(Mode.BELT);
 		return HOLD;
 	}
 
 	static ProcessingResult whenItemHeld(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
-		MechanicalPressTileEntity pressTe) {
+		PressingBehaviour behaviour) {
 
-		if (pressTe.getSpeed() == 0)
+		if (behaviour.specifics.getKineticSpeed() == 0)
 			return PASS;
-		if (!pressTe.running)
+		if (!behaviour.running)
 			return PASS;
-		if (pressTe.runningTicks != MechanicalPressTileEntity.CYCLE / 2)
+		if (behaviour.runningTicks != PressingBehaviour.CYCLE / 2)
 			return HOLD;
 
-		Optional<PressingRecipe> recipe = pressTe.getRecipe(transported.stack);
-		pressTe.pressedItems.clear();
-		pressTe.pressedItems.add(transported.stack);
-
-		if (!recipe.isPresent())
+		behaviour.particleItems.clear();
+		ArrayList<ItemStack> results = new ArrayList<>();
+		if (!behaviour.specifics.tryProcessOnBelt(transported, results, false))
 			return PASS;
 
-		boolean bulk = MechanicalPressTileEntity.canProcessInBulk() || transported.stack.getCount() == 1;
+		boolean bulk = behaviour.specifics.canProcessInBulk() || transported.stack.getCount() == 1;
 
-		List<TransportedItemStack> collect = InWorldProcessing
-			.applyRecipeOn(bulk ? transported.stack : ItemHandlerHelper.copyStackWithSize(transported.stack, 1),
-				recipe.get())
-			.stream()
+		List<TransportedItemStack> collect = results.stream()
 			.map(stack -> {
 				TransportedItemStack copy = transported.copy();
 				boolean centered = BeltHelper.isItemUpright(stack);
@@ -84,8 +76,7 @@ public class BeltPressingCallbacks {
 				handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, pressTe.getLevel(), pressTe.getBlockPos(), 4);
-		pressTe.sendData();
+		behaviour.tileEntity.sendData();
 		return HOLD;
 	}
 

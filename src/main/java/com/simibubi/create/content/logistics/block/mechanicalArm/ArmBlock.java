@@ -65,7 +65,7 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 		BlockPos p_220069_5_, boolean p_220069_6_) {
 		withTileEntityDo(world, pos, ArmTileEntity::redstoneUpdate);
 	}
-
+	
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return Axis.Y;

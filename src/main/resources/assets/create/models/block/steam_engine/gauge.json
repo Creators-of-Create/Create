@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "create:block/boiler_gauge",
+		"2": "create:block/gauge",
+		"particle": "create:block/boiler_gauge"
+	},
+	"elements": [
+		{
+			"name": "GaugeButton",
+			"from": [15.5, 5.2, 5.2],
+			"to": [16.5, 6.3, 6.3],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 9.5, 0.5, 10], "texture": "#2"},
+				"east": {"uv": [0, 9.5, 0.5, 10], "texture": "#2"},
+				"south": {"uv": [0, 9.5, 0.5, 10], "texture": "#2"},
+				"west": {"uv": [0, 9.5, 0.5, 10], "texture": "#2"},
+				"up": {"uv": [0, 9.5, 0.5, 10], "texture": "#2"},
+				"down": {"uv": [0, 9.5, 0.5, 10], "texture": "#2"}
+			}
+		},
+		{
+			"name": "GuageMetalBack",
+			"from": [14, 3.05, 3.05],
+			"to": [15.95, 12.95, 12.95],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
+			"faces": {
+				"north": {"uv": [11, 0, 13, 10], "texture": "#1"},
+				"east": {"uv": [0, 0, 10, 10], "texture": "#1"},
+				"south": {"uv": [11, 0, 13, 10], "rotation": 180, "texture": "#1"},
+				"up": {"uv": [11, 0, 13, 10], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [11, 0, 13, 10], "rotation": 180, "texture": "#1"}
+			}
+		}
+	]
+}

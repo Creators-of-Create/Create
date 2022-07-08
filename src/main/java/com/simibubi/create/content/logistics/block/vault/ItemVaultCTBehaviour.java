@@ -1,10 +1,13 @@
 package com.simibubi.create.content.logistics.block.vault;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -12,10 +15,10 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ItemVaultCTBehaviour extends ConnectedTextureBehaviour {
+public class ItemVaultCTBehaviour extends ConnectedTextureBehaviour.Base {
 
 	@Override
-	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
+	public CTSpriteShiftEntry getShift(BlockState state, Direction direction, @Nullable TextureAtlasSprite sprite) {
 		Axis vaultBlockAxis = ItemVaultBlock.getVaultBlockAxis(state);
 		boolean small = !ItemVaultBlock.isLarge(state);
 		if (vaultBlockAxis == null)

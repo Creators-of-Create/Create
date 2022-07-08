@@ -78,6 +78,20 @@ public class RenderTypes extends RenderStateShard {
 				.createCompositeState(true));
 	}
 
+	private static final RenderType ADDITIVE = RenderType.create(createLayerName("additive"), DefaultVertexFormat.BLOCK,
+		VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
+			.setShaderState(BLOCK_SHADER)
+			.setTextureState(new RenderStateShard.TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
+			.setTransparencyState(ADDITIVE_TRANSPARENCY)
+			.setCullState(NO_CULL)
+			.setLightmapState(LIGHTMAP)
+			.setOverlayState(OVERLAY)
+			.createCompositeState(true));
+
+	public static RenderType getAdditive() {
+		return ADDITIVE;
+	}
+
 	private static final RenderType GLOWING_TRANSLUCENT_DEFAULT = getGlowingTranslucent(InventoryMenu.BLOCK_ATLAS);
 
 	public static RenderType getGlowingTranslucent() {

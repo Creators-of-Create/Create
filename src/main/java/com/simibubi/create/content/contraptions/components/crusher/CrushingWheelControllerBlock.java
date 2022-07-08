@@ -5,7 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -18,7 +18,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -147,10 +146,15 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 				if (neighbour.getValue(BlockStateProperties.AXIS) == d.getAxis())
 					continue;
 				BlockEntity adjTe = world.getBlockEntity(pos.relative(d));
-				if (!(adjTe instanceof KineticTileEntity))
+				if (!(adjTe instanceof CrushingWheelTileEntity cwte))
 					continue;
-				te.crushingspeed = Math.abs(((KineticTileEntity) adjTe).getSpeed() / 50f);
+				te.crushingspeed = Math.abs(cwte.getSpeed() / 50f);
 				te.sendData();
+				
+				cwte.award(AllAdvancements.CRUSHING_WHEEL);
+				if (cwte.getSpeed() > 255) 
+					cwte.award(AllAdvancements.CRUSHER_MAXED);
+				
 				break;
 			}
 		});

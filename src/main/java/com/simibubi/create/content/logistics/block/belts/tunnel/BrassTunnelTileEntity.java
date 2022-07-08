@@ -17,7 +17,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -92,7 +91,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
-			Lang.translate("logistics.when_multiple_outputs_available"), this,
+			Lang.translateDirect("logistics.when_multiple_outputs_available"), this,
 			new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP)));
 		selectionMode.requiresWrench();
 
@@ -336,7 +335,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!level.isAreaLoaded(adjacent.getBlockPos(), 1))
+				if (!level.isLoaded(adjacent.getBlockPos()))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)
@@ -478,7 +477,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!level.isAreaLoaded(adjacent.getBlockPos(), 1))
+				if (!level.isLoaded(adjacent.getBlockPos()))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)
@@ -633,7 +632,6 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			if (adjacent != null && !level.isClientSide) {
 				adjacent.updateTunnelConnections();
 				adjacent.selectionMode.setValue(selectionMode.getValue());
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.CONNECT_TUNNEL, level, worldPosition, 4);
 			}
 		}
 
@@ -750,16 +748,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			return false;
 		
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translate("tooltip.brass_tunnel.contains"))
+			.append(Lang.translateDirect("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getItem()
-					.getDescriptionId(item)).getString(), item.getCount()))
+				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getDescriptionId())
+					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translate("tooltip.brass_tunnel.retrieve"))
+			.append(Lang.translateDirect("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
 		
 		return true;

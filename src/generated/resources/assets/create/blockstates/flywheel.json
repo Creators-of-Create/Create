@@ -1,49 +1,17 @@
 {
   "variants": {
-    "connection=none,facing=north": {
-      "model": "create:block/flywheel/casing_none",
-      "y": 270
-    },
-    "connection=left,facing=north": {
-      "model": "create:block/flywheel/casing_left",
-      "y": 270
-    },
-    "connection=right,facing=north": {
-      "model": "create:block/flywheel/casing_right",
-      "y": 270
-    },
-    "connection=none,facing=south": {
-      "model": "create:block/flywheel/casing_none",
+    "axis=x": {
+      "model": "create:block/flywheel/block",
+      "x": 90,
       "y": 90
     },
-    "connection=left,facing=south": {
-      "model": "create:block/flywheel/casing_left",
-      "y": 90
+    "axis=y": {
+      "model": "create:block/flywheel/block"
     },
-    "connection=right,facing=south": {
-      "model": "create:block/flywheel/casing_right",
-      "y": 90
-    },
-    "connection=none,facing=west": {
-      "model": "create:block/flywheel/casing_none",
+    "axis=z": {
+      "model": "create:block/flywheel/block",
+      "x": 90,
       "y": 180
-    },
-    "connection=left,facing=west": {
-      "model": "create:block/flywheel/casing_left",
-      "y": 180
-    },
-    "connection=right,facing=west": {
-      "model": "create:block/flywheel/casing_right",
-      "y": 180
-    },
-    "connection=none,facing=east": {
-      "model": "create:block/flywheel/casing_none"
-    },
-    "connection=left,facing=east": {
-      "model": "create:block/flywheel/casing_left"
-    },
-    "connection=right,facing=east": {
-      "model": "create:block/flywheel/casing_right"
     }
   }
 }

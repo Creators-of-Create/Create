@@ -1,15 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "II",
-    "AA"
+    "A",
+    "I",
+    "A"
   ],
   "key": {
     "A": {
       "tag": "forge:plates/iron"
     },
     "I": {
-      "item": "create:andesite_alloy"
+      "tag": "forge:ingots/iron"
     }
   },
   "result": {

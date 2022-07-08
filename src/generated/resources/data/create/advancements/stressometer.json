@@ -1,5 +1,5 @@
 {
-  "parent": "create:goggles",
+  "parent": "create:wrench_goggles",
   "display": {
     "icon": {
       "item": "create:stressometer"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.stressometer"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.stressometer.desc"
     },
     "frame": "task",
@@ -17,10 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:placed_block",
-      "conditions": {
-        "block": "create:stressometer"
-      }
+      "trigger": "create:stressometer_builtin",
+      "conditions": {}
     }
   },
   "requirements": [

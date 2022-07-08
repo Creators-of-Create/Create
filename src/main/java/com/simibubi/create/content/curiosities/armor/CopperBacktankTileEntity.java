@@ -1,11 +1,15 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import java.util.List;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -15,7 +19,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -37,7 +40,20 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 		super(typeIn, pos, state);
 		enchantmentTag = new ListTag();
 	}
-
+	
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.BACKTANK);
+	}
+	
+	@Override
+	public void onSpeedChanged(float previousSpeed) {
+		super.onSpeedChanged(previousSpeed);
+		if (getSpeed() != 0)
+			award(AllAdvancements.BACKTANK);
+	}
+	
 	@Override
 	public void tick() {
 		super.tick();
@@ -124,8 +140,8 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	@Override
 	public Component getName() {
 		return this.customName != null ? this.customName
-			: new TranslatableComponent(AllItems.COPPER_BACKTANK.get()
-				.getDescriptionId());
+			: AllItems.COPPER_BACKTANK.get()
+				.getDescription();
 	}
 
 	public int getAirLevel() {

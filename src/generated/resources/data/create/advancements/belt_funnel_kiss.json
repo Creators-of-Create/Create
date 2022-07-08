@@ -1,5 +1,5 @@
 {
-  "parent": "create:belt_funnel",
+  "parent": "create:mechanical_mixer",
   "display": {
     "icon": {
       "item": "create:brass_funnel"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.belt_funnel_kiss"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.belt_funnel_kiss.desc"
     },
     "frame": "goal",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:belt_funnel_kiss",
+      "trigger": "create:belt_funnel_kiss_builtin",
       "conditions": {}
     }
   },

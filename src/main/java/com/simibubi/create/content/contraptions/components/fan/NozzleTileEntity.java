@@ -127,8 +127,6 @@ public class NozzleTileEntity extends SmartTileEntity {
 			return 0;
 
 		IAirCurrentSource source = (IAirCurrentSource) te;
-		if (source instanceof EncasedFanTileEntity && ((EncasedFanTileEntity) source).isGenerator)
-			return 0;
 		if (source.getAirCurrent() == null)
 			return 0;
 		if (source.getSpeed() == 0)

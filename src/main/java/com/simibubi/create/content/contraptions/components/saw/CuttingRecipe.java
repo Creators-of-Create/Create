@@ -53,7 +53,7 @@ public class CuttingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public Component getDescriptionForAssembly() {
-		return Lang.translate("recipe.assembly.cutting");
+		return Lang.translateDirect("recipe.assembly.cutting");
 	}
 	
 	@Override

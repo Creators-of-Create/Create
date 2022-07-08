@@ -3,6 +3,7 @@ package com.simibubi.create.events;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
@@ -11,6 +12,7 @@ import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManag
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
+import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -39,11 +41,13 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
@@ -63,6 +67,7 @@ public class CommonEvents {
 		Create.SCHEMATIC_RECEIVER.tick();
 		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick();
+		Create.RAILWAYS.sync.serverTick();
 	}
 
 	@SubscribeEvent
@@ -74,6 +79,13 @@ public class CommonEvents {
 	public static void playerLoggedIn(PlayerLoggedInEvent event) {
 		Player player = event.getPlayer();
 		ToolboxHandler.playerLogin(player);
+		Create.RAILWAYS.playerLogin(player);
+	}
+	
+	@SubscribeEvent
+	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
+		Player player = event.getPlayer();
+		Create.RAILWAYS.playerLogout(player);
 	}
 
 	@SubscribeEvent
@@ -108,6 +120,8 @@ public class CommonEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 		LinkedControllerServerHandler.tick(world);
+		ControlsServerHandler.tick(world);
+		Create.RAILWAYS.tick(world);
 	}
 
 	@SubscribeEvent
@@ -138,6 +152,11 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
+	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
+		CarriageEntityHandler.onEntityEnterSection(event);
+	}
+	
+	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
@@ -163,6 +182,7 @@ public class CommonEvents {
 		LevelAccessor world = event.getWorld();
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
+		Create.RAILWAYS.levelLoaded(world);
 	}
 
 	@SubscribeEvent

@@ -51,7 +51,7 @@ public class WorldshaperItem extends ZapperItem {
 	public Component validateUsage(ItemStack item) {
 		if (!item.getOrCreateTag()
 			.contains("BrushParams"))
-			return Lang.createTranslationTextComponent("terrainzapper.shiftRightClickToSet");
+			return Lang.translateDirect("terrainzapper.shiftRightClickToSet");
 		return super.validateUsage(item);
 	}
 
@@ -86,7 +86,8 @@ public class WorldshaperItem extends ZapperItem {
 		return true;
 	}
 
-	public static void configureSettings(ItemStack stack, PlacementPatterns pattern, TerrainBrushes brush, int brushParamX, int brushParamY, int brushParamZ, TerrainTools tool, PlacementOptions placement) {
+	public static void configureSettings(ItemStack stack, PlacementPatterns pattern, TerrainBrushes brush,
+		int brushParamX, int brushParamY, int brushParamZ, TerrainTools tool, PlacementOptions placement) {
 		ZapperItem.configureSettings(stack, pattern);
 		CompoundTag nbt = stack.getOrCreateTag();
 		NBTHelper.writeEnum(nbt, "Brush", brush);

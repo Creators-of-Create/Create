@@ -8,9 +8,20 @@
     ],
     "subtitle": "create.subtitle.blaze_munch"
   },
+  "chiff": {
+    "sounds": [
+      {
+        "name": "create:chiff",
+        "type": "file"
+      }
+    ]
+  },
   "cogs": {
     "sounds": [
-      "create:cogs"
+      {
+        "name": "create:cogs",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.cogs"
   },
@@ -199,19 +210,28 @@
   },
   "fwoomp": {
     "sounds": [
-      "create:fwoomp"
+      {
+        "name": "create:fwoomp",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.fwoomp"
   },
   "haunted_bell_convert": {
     "sounds": [
-      "create:haunted_bell_convert"
+      {
+        "name": "create:haunted_bell_convert",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.haunted_bell_convert"
   },
   "haunted_bell_use": {
     "sounds": [
-      "create:haunted_bell_use"
+      {
+        "name": "create:haunted_bell_use",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.haunted_bell_use"
   },
@@ -294,14 +314,23 @@
   },
   "sanding_long": {
     "sounds": [
-      "create:sanding_long"
+      {
+        "name": "create:sanding_long",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.sanding_long"
   },
   "sanding_short": {
     "sounds": [
-      "create:sanding_short",
-      "create:sanding_short_1"
+      {
+        "name": "create:sanding_short",
+        "type": "file"
+      },
+      {
+        "name": "create:sanding_short_1",
+        "type": "file"
+      }
     ],
     "subtitle": "create.subtitle.sanding_short"
   },
@@ -358,6 +387,131 @@
       }
     ],
     "subtitle": "create.subtitle.slime_added"
+  },
+  "steam": {
+    "sounds": [
+      {
+        "name": "create:steam",
+        "type": "file",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "create.subtitle.steam"
+  },
+  "train": {
+    "sounds": [
+      {
+        "name": "create:train",
+        "type": "file",
+        "attenuation_distance": 128
+      }
+    ],
+    "subtitle": "create.subtitle.train"
+  },
+  "train2": {
+    "sounds": [
+      {
+        "name": "create:train2",
+        "type": "file",
+        "attenuation_distance": 128
+      }
+    ]
+  },
+  "train3": {
+    "sounds": [
+      {
+        "name": "create:train3",
+        "type": "file",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "create.subtitle.train3"
+  },
+  "whistle": {
+    "sounds": [
+      {
+        "name": "create:whistle",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "create.subtitle.whistle"
+  },
+  "whistle_high": {
+    "sounds": [
+      {
+        "name": "create:whistle_high",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_high"
+  },
+  "whistle_low": {
+    "sounds": [
+      {
+        "name": "create:whistle_low",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_low"
+  },
+  "whistle_train": {
+    "sounds": [
+      {
+        "name": "create:whistle_train",
+        "type": "file"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train"
+  },
+  "whistle_train_low": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_low",
+        "type": "file"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train_low"
+  },
+  "whistle_train_manual": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_manual",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train_manual"
+  },
+  "whistle_train_manual_end": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_manual_end",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "whistle_train_manual_low": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_manual_low",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_train_manual_low"
+  },
+  "whistle_train_manual_low_end": {
+    "sounds": [
+      {
+        "name": "create:whistle_train_manual_low_end",
+        "type": "file",
+        "attenuation_distance": 64
+      }
+    ]
   },
   "worldshaper_place": {
     "sounds": [

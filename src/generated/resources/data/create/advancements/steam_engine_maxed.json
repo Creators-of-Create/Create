@@ -1,0 +1,30 @@
+{
+  "parent": "create:hose_pulley_lava",
+  "display": {
+    "icon": {
+      "item": "create:steam_engine"
+    },
+    "title": {
+      "translate": "advancement.create.steam_engine_maxed"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.steam_engine_maxed.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:steam_engine_maxed_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -8,6 +8,7 @@
       "translate": "advancement.create.speed_controller"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.speed_controller.desc"
     },
     "frame": "task",
@@ -17,10 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:placed_block",
-      "conditions": {
-        "block": "create:rotation_speed_controller"
-      }
+      "trigger": "create:speed_controller_builtin",
+      "conditions": {}
     }
   },
   "requirements": [

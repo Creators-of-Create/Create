@@ -5,26 +5,34 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
@@ -35,7 +43,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SeatBlock extends Block {
+public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	protected final DyeColor color;
 	protected final boolean inCreativeTab;
@@ -44,6 +52,29 @@ public class SeatBlock extends Block {
 		super(properties);
 		this.color = color;
 		this.inCreativeTab = inCreativeTab;
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+	}
+
+	@Override
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		super.createBlockStateDefinition(pBuilder.add(WATERLOGGED));
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		return withWater(super.getStateForPlacement(pContext), pContext);
+	}
+
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(pLevel, pState, pCurrentPos);
+		return pState;
+	}
+
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
 	}
 
 	@Override
@@ -131,13 +162,22 @@ public class SeatBlock extends Block {
 
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		sitDown(world, pos, player);
+		sitDown(world, pos, getLeashed(world, player).or(player));
 		return InteractionResult.SUCCESS;
 	}
 
 	public static boolean isSeatOccupied(Level world, BlockPos pos) {
 		return !world.getEntitiesOfClass(SeatEntity.class, new AABB(pos))
 			.isEmpty();
+	}
+
+	public static Optional<Entity> getLeashed(Level level, Player player) {
+		List<Entity> entities = player.level.getEntities((Entity) null, player.getBoundingBox()
+			.inflate(10), e -> true);
+		for (Entity e : entities)
+			if (e instanceof Mob mob && mob.getLeashHolder() == player && SeatBlock.canBePickedUp(e))
+				return Optional.of(mob);
+		return Optional.absent();
 	}
 
 	public static boolean canBePickedUp(Entity passenger) {
@@ -151,6 +191,8 @@ public class SeatBlock extends Block {
 		seat.setPos(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
 		world.addFreshEntity(seat);
 		entity.startRiding(seat, true);
+		if (entity instanceof TamableAnimal ta)
+			ta.setInSittingPose(true);
 	}
 
 	public DyeColor getColor() {

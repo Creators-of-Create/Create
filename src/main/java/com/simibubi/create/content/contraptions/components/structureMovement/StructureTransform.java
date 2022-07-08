@@ -40,11 +40,11 @@ import net.minecraft.world.phys.Vec3;
 public class StructureTransform {
 
 	// Assuming structures cannot be rotated around multiple axes at once
-	Rotation rotation;
-	int angle;
-	Axis rotationAxis;
-	BlockPos offset;
-	Mirror mirror;
+	public Axis rotationAxis;
+	public BlockPos offset;
+	public int angle;
+	public Rotation rotation;
+	public Mirror mirror;
 
 	private StructureTransform(BlockPos offset, int angle, Axis axis, Rotation rotation, Mirror mirror) {
 		this.offset = offset;
@@ -88,6 +88,15 @@ public class StructureTransform {
 		mirror = Mirror.NONE;
 	}
 
+	public Vec3 applyWithoutOffsetUncentered(Vec3 localVec) {
+		Vec3 vec = localVec;
+		if (mirror != null)
+			vec = VecHelper.mirror(vec, mirror);
+		if (rotationAxis != null)
+			vec = VecHelper.rotate(vec, angle, rotationAxis);
+		return vec;
+	}
+	
 	public Vec3 applyWithoutOffset(Vec3 localVec) {
 		Vec3 vec = localVec;
 		if (mirror != null)

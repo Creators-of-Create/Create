@@ -67,13 +67,27 @@ public class PonderTag implements ScreenElement {
 				"Tools and Components used to assemble structures moved as an animated Contraption")
 			.addToIndex(),
 
-		SAILS = create("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
+		SAILS = create("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get())
 			.defaultLang("Sails for Windmill Bearings",
 				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
 
 		ARM_TARGETS = create("arm_targets").item(AllBlocks.MECHANICAL_ARM.get())
 			.defaultLang("Targets for Mechanical Arms",
-				"Components which can be selected as inputs or outputs to the Mechanical Arm");
+				"Components which can be selected as inputs or outputs to the Mechanical Arm"),
+
+		TRAIN_RELATED = create("train_related").item(AllBlocks.TRACK.get())
+			.defaultLang("Railway Equipment", "Components used in the construction or management of Train Contraptions")
+			.addToIndex(),
+
+		DISPLAY_SOURCES = create("display_sources").item(AllBlocks.DISPLAY_LINK.get(), true, false)
+			.item(AllBlocks.DISPLAY_LINK.get(), false, true)
+			.defaultLang("Sources for Display Links",
+				"Components or Blocks which offer some data that can be read with a Display Link"),
+
+		DISPLAY_TARGETS = create("display_targets").item(AllBlocks.DISPLAY_LINK.get(), true, false)
+			.item(AllBlocks.DISPLAY_LINK.get(), false, true)
+			.defaultLang("Targets for Display Links",
+				"Components or Blocks which can process and display the data received from a Display Link");
 
 	public static class Highlight {
 		public static final PonderTag ALL = create("_all");
@@ -150,8 +164,6 @@ public class PonderTag implements ScreenElement {
 		if (icon != null) {
 			RenderSystem.setShaderTexture(0, icon);
 			ms.scale(0.25f, 0.25f, 1);
-			// x and y offset, blit z offset, tex x and y, tex width and height, entire tex
-			// sheet width and height
 			GuiComponent.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
 			ms.translate(-4, -4, 0);

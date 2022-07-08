@@ -58,7 +58,7 @@ public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
 		for (Direction d : Iterate.directionsInAxis(axis)) {
 			if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
 				continue;
-			RotatingData data = setup(getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, d)
+			RotatingData data = setup(getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, d)
 				.createInstance());
 			if (d.getAxisDirection() == AxisDirection.POSITIVE)
 				rotatingTopShaft = Optional.of(data);
@@ -94,7 +94,7 @@ public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
 			Direction.fromAxisAndDirection(referenceState.getValue(BlockStateProperties.AXIS), AxisDirection.POSITIVE);
 		PartialModel partial = large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL;
 
-		return getRotatingMaterial().getModel(partial, facing, () -> {
+		return getRotatingMaterial().getModel(partial, referenceState, facing, () -> {
 			PoseStack poseStack = new PoseStack();
 			TransformStack.cast(poseStack)
 				.centre()

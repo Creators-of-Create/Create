@@ -49,6 +49,12 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 	public void stopMoving(MovementContext context) {
 		deactivateLastVisitedContact(context);
 	}
+	
+	@Override
+	public void cancelStall(MovementContext context) {
+		MovementBehaviour.super.cancelStall(context);
+		deactivateLastVisitedContact(context);
+	}
 
 	public void deactivateLastVisitedContact(MovementContext context) {
 		if (context.data.contains("lastContact")) {

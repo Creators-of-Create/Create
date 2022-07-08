@@ -1,5 +1,5 @@
 {
-  "parent": "create:pipe_spill",
+  "parent": "create:water_supply",
   "display": {
     "icon": {
       "item": "create:hose_pulley"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.hose_pulley"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.hose_pulley.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:hose_pulley",
+      "trigger": "create:hose_pulley_builtin",
       "conditions": {}
     }
   },

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class SeatMovementBehaviour implements MovementBehaviour {
@@ -40,42 +38,34 @@ public class SeatMovementBehaviour implements MovementBehaviour {
 
 		Map<UUID, Integer> seatMapping = context.contraption.getSeatMapping();
 		BlockState blockState = context.world.getBlockState(pos);
-		boolean slab = blockState.getBlock() instanceof SlabBlock && blockState.getValue(SlabBlock.TYPE) == SlabType.BOTTOM;
+		boolean slab =
+			blockState.getBlock() instanceof SlabBlock && blockState.getValue(SlabBlock.TYPE) == SlabType.BOTTOM;
 		boolean solid = blockState.canOcclude() || slab;
 
 		// Occupied
-		if (seatMapping.containsValue(index)) {
-			if (!solid)
-				return;
-			Entity toDismount = null;
-			for (Map.Entry<UUID, Integer> entry : seatMapping.entrySet()) {
-				if (entry.getValue() != index)
+		if (!seatMapping.containsValue(index))
+			return;
+		if (!solid)
+			return;
+		Entity toDismount = null;
+		for (Map.Entry<UUID, Integer> entry : seatMapping.entrySet()) {
+			if (entry.getValue() != index)
+				continue;
+			for (Entity entity : contraptionEntity.getPassengers()) {
+				if (!entry.getKey()
+					.equals(entity.getUUID()))
 					continue;
-				for (Entity entity : contraptionEntity.getPassengers()) {
-					if (!entry.getKey()
-						.equals(entity.getUUID()))
-						continue;
-					toDismount = entity;
-				}
+				toDismount = entity;
 			}
-			if (toDismount != null) {
-				toDismount.stopRiding();
-				Vec3 position = VecHelper.getCenterOf(pos)
-					.add(0, slab ? .5f : 1f, 0);
-				toDismount.teleportTo(position.x, position.y, position.z);
-				toDismount.getPersistentData()
-					.remove("ContraptionDismountLocation");
-			}
-			return;
 		}
-
-		if (solid)
+		if (toDismount == null)
 			return;
-
-		List<Entity> nearbyEntities = context.world.getEntitiesOfClass(Entity.class,
-			new AABB(pos).deflate(1 / 16f), SeatBlock::canBePickedUp);
-		if (!nearbyEntities.isEmpty())
-			contraptionEntity.addSittingPassenger(nearbyEntities.get(0), index);
+		toDismount.stopRiding();
+		Vec3 position = VecHelper.getCenterOf(pos)
+			.add(0, slab ? .5f : 1f, 0);
+		toDismount.teleportTo(position.x, position.y, position.z);
+		toDismount.getPersistentData()
+			.remove("ContraptionDismountLocation");
 	}
 
 }

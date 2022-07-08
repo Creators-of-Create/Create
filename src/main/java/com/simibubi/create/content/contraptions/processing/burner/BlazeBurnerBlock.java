@@ -35,6 +35,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +58,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity>, IWrenchable {
+public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<BlazeBurnerTileEntity>, IWrenchable {
 
 	public static final EnumProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
@@ -69,7 +70,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(HEAT_LEVEL);
+		builder.add(HEAT_LEVEL, FACING);
 	}
 
 	@Override
@@ -111,8 +112,27 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
+		HeatLevel heat = state.getValue(HEAT_LEVEL);
 
-		if (state.getValue(HEAT_LEVEL) == HeatLevel.NONE) {
+		if (AllItems.GOGGLES.isIn(heldItem) && heat != HeatLevel.NONE)
+			return onTileEntityUse(world, pos, bbte -> {
+				if (bbte.goggles)
+					return InteractionResult.PASS;
+				bbte.goggles = true;
+				bbte.notifyUpdate();
+				return InteractionResult.SUCCESS;
+			});
+
+		if (heldItem.isEmpty() && heat != HeatLevel.NONE)
+			return onTileEntityUse(world, pos, bbte -> {
+				if (!bbte.goggles)
+					return InteractionResult.PASS;
+				bbte.goggles = false;
+				bbte.notifyUpdate();
+				return InteractionResult.SUCCESS;
+			});
+
+		if (heat == HeatLevel.NONE) {
 			if (heldItem.getItem() instanceof FlintAndSteelItem) {
 				world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F,
 					world.random.nextFloat() * 0.4F + 0.8F);
@@ -180,7 +200,9 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 			return defaultState;
 		HeatLevel initialHeat =
 			((BlazeBurnerBlockItem) item).hasCapturedBlaze() ? HeatLevel.SMOULDERING : HeatLevel.NONE;
-		return defaultState.setValue(HEAT_LEVEL, initialHeat);
+		return defaultState.setValue(HEAT_LEVEL, initialHeat)
+			.setValue(FACING, context.getHorizontalDirection()
+				.getOpposite());
 	}
 
 	@Override

@@ -2,8 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/copper_casing",
+		"0": "create:block/fluid_tank_top",
 		"1": "create:block/fluid_tank",
+		"4": "create:block/fluid_tank_inner",
 		"particle": "create:block/fluid_tank"
 	},
 	"elements": [
@@ -17,7 +18,7 @@
 				"east": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "east"},
 				"south": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "south"},
 				"west": {"uv": [0, 12, 16, 16], "texture": "#1", "cullface": "west"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#4"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
 			}
 		},
@@ -62,7 +63,7 @@
 				"south": {"uv": [0, 0, 16, 4], "texture": "#1", "cullface": "south"},
 				"west": {"uv": [0, 0, 16, 4], "texture": "#1", "cullface": "west"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "up"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"down": {"uv": [0, 0, 16, 16], "texture": "#4"}
 			}
 		},
 		{
@@ -80,15 +81,18 @@
 		{
 			"name": "tank",
 			"origin": [8, 8, -23],
+			"color": 0,
 			"children": []
 		},
 		{
 			"name": "block_middle",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "tank",
 					"origin": [8, 8, -23],
+					"color": 0,
 					"children": []
 				}
 			]
@@ -96,10 +100,12 @@
 		{
 			"name": "block_bottom",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "tank",
 					"origin": [8, 8, -23],
+					"color": 0,
 					"children": [0, 1, 2, 3]
 				}
 			]
@@ -107,10 +113,12 @@
 		{
 			"name": "block_top",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "tank",
 					"origin": [8, 8, -23],
+					"color": 0,
 					"children": [4, 5]
 				}
 			]

@@ -74,7 +74,7 @@ public class CylinderBrush extends ShapedBrush {
 
 	@Override
 	Component getParamLabel(int paramIndex) {
-		return paramIndex == 0 ? Lang.translate("generic.radius") : super.getParamLabel(paramIndex);
+		return paramIndex == 0 ? Lang.translateDirect("generic.radius") : super.getParamLabel(paramIndex);
 	}
 
 	@Override

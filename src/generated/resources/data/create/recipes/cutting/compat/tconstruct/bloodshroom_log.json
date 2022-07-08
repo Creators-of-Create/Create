@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "tconstruct:bloodshroom_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "tconstruct:stripped_bloodshroom_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "tconstruct",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

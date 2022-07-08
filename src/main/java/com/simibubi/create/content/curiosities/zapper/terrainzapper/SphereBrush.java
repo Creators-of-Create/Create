@@ -51,7 +51,7 @@ public class SphereBrush extends ShapedBrush {
 
 	@Override
 	Component getParamLabel(int paramIndex) {
-		return Lang.translate("generic.radius");
+		return Lang.translateDirect("generic.radius");
 	}
 
 	@Override

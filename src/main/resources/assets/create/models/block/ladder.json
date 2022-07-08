@@ -1,0 +1,108 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/ladder_andesite_hoop",
+		"1": "create:block/ladder_andesite",
+		"particle": "create:block/ladder_andesite"
+	},
+	"elements": [
+		{
+			"name": "ladder",
+			"from": [2, 0, 14],
+			"to": [14, 16, 16],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [12, 0, 14, 16], "texture": "#0"},
+				"west": {"uv": [14, 0, 12, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "ladder",
+			"from": [2, 0, 14],
+			"to": [14, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [2, 0, 14, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "ladder_backface",
+			"from": [2, 0, 16],
+			"to": [14, 16, 14],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [14, 0, 12, 16], "texture": "#0"},
+				"west": {"uv": [12, 0, 14, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "ladder_backface",
+			"from": [2, 0, 16],
+			"to": [14, 16, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"south": {"uv": [14, 0, 2, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "hoop_left",
+			"from": [12, 16, 14],
+			"to": [14, 18, 18],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [14, 4, 16, 6], "texture": "#0", "cullface": "up"},
+				"south": {"uv": [16, 4, 14, 6], "texture": "#0", "cullface": "up"},
+				"up": {"uv": [14, 0, 16, 4], "rotation": 180, "texture": "#0", "cullface": "up"}
+			}
+		},
+		{
+			"name": "hoop_left_backface",
+			"from": [12, 18, 14],
+			"to": [14, 16, 18],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 19, 16]},
+			"faces": {
+				"north": {"uv": [16, 4, 14, 6], "rotation": 180, "texture": "#0", "cullface": "up"},
+				"south": {"uv": [14, 4, 16, 6], "rotation": 180, "texture": "#0", "cullface": "up"},
+				"down": {"uv": [14, 0, 16, 4], "rotation": 180, "texture": "#0", "cullface": "up"}
+			}
+		},
+		{
+			"name": "hoop_right",
+			"from": [2, 16, 14],
+			"to": [4, 18, 18],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [14, 4, 16, 6], "texture": "#0", "cullface": "up"},
+				"south": {"uv": [16, 4, 14, 6], "texture": "#0", "cullface": "up"},
+				"up": {"uv": [14, 0, 16, 4], "rotation": 180, "texture": "#0", "cullface": "up"}
+			}
+		},
+		{
+			"name": "hoop_right_backface",
+			"from": [2, 18, 14],
+			"to": [4, 16, 18],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 19, 16]},
+			"faces": {
+				"north": {"uv": [16, 4, 14, 6], "rotation": 180, "texture": "#0", "cullface": "up"},
+				"south": {"uv": [14, 4, 16, 6], "rotation": 180, "texture": "#0", "cullface": "up"},
+				"down": {"uv": [14, 0, 16, 4], "rotation": 180, "texture": "#0", "cullface": "up"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Ladder",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1]
+		},
+		{
+			"name": "Hoops",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [2, 3, 4, 5]
+		}
+	]
+}

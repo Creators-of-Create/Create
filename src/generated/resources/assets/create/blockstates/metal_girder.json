@@ -1,0 +1,78 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "x": "false",
+        "z": "false"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_pole"
+      }
+    },
+    {
+      "when": {
+        "x": "true"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_x"
+      }
+    },
+    {
+      "when": {
+        "z": "true"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_z"
+      }
+    },
+    {
+      "when": {
+        "top": "true",
+        "x": "true",
+        "z": "false"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_top"
+      }
+    },
+    {
+      "when": {
+        "bottom": "true",
+        "x": "true",
+        "z": "false"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_bottom"
+      }
+    },
+    {
+      "when": {
+        "top": "true",
+        "x": "false",
+        "z": "true"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_top"
+      }
+    },
+    {
+      "when": {
+        "bottom": "true",
+        "x": "false",
+        "z": "true"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_bottom"
+      }
+    },
+    {
+      "when": {
+        "x": "true",
+        "z": "true"
+      },
+      "apply": {
+        "model": "create:block/metal_girder/block_cross"
+      }
+    }
+  ]
+}

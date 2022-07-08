@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import com.simibubi.create.content.logistics.block.redstone.DoubleFaceAttachedBlock.DoubleAttachFace;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
@@ -12,12 +13,15 @@ public class NixieTubeGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.getValue(NixieTubeBlock.CEILING) ? 180 : 0;
+		return state.getValue(NixieTubeBlock.FACE)
+			.xRot();
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.getValue(NixieTubeBlock.FACING));
+		DoubleAttachFace face = state.getValue(NixieTubeBlock.FACE);
+		return horizontalAngle(state.getValue(NixieTubeBlock.FACING))
+			+ (face == DoubleAttachFace.WALL || face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
 	}
 
 	@Override

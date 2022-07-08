@@ -1,0 +1,11 @@
+# Blender MTL File: 'Bogey.blend'
+# Material Count: 3
+
+newmtl Bogey_Body
+map_Kd #bogey
+
+newmtl Bogey_Body_2
+map_Kd #bogey2
+
+newmtl wheel_Large
+map_Kd #wheel

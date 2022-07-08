@@ -428,6 +428,8 @@ public class BeltInventory {
 		Function<TransportedItemStack, TransportedResult> processFunction) {
 		boolean dirty = false;
 		for (TransportedItemStack transported : items) {
+			if (toRemove.contains(transported))
+				continue;
 			ItemStack stackBefore = transported.stack.copy();
 			if (Math.abs(position - transported.beltPosition) >= maxDistanceToPosition)
 				continue;

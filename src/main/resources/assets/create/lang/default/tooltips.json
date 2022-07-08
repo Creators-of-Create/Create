@@ -163,9 +163,9 @@
 	"block.create.creative_crate.tooltip.behaviour1": "Anything _extracting_ from this container will provide an _endless supply_ of the item specified. Items _inserted_ into this crate will be _voided._",
 
 	"item.create.creative_blaze_cake.tooltip": "CREATIVE CAKE",
-	"item.create.creative_blaze_cake.tooltip.summary": "A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_blaze_cake.tooltip.condition1": "R-Click on Blaze Burner",
-	"item.create.creative_blaze_cake.tooltip.behaviour1": "_Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip.summary": "A very special treat for your _Blaze Burners_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "When Used",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "_Cycles_ a Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "CONTROLLER RAIL",
 	"block.create.controller_rail.tooltip.summary": "A _uni-directional powered rail_ capable of _fine control_ over a minecarts' _movement speed_.",
@@ -212,6 +212,18 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
 	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"block.create.placard.tooltip": "PLACARD",
+	"block.create.placard.tooltip.summary": "_Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",
+	"block.create.placard.tooltip.condition1": "When R-Clicked with Item",
+	"block.create.placard.tooltip.behaviour1": "_Adds_ the held _item_ to the Placard. _Emits_ a brief _Redstone_ signal if a matching item was present already.",
+	"block.create.placard.tooltip.condition2": "When Punched",
+	"block.create.placard.tooltip.behaviour2": "_Removes_ the current _item_ in the frame.",
+	
+	"block.create.flywheel.tooltip": "FLYWHEEL",
+	"block.create.flywheel.tooltip.summary": "_Embellish_ your _Machines_ with this imposing Wheel of Brass.",
+	"block.create.flywheel.tooltip.condition1": "When Powered by Kinetics",
+	"block.create.flywheel.tooltip.behaviour1": "Starts spinning.",
 
 	"item.create.diving_boots.tooltip": "DIVING BOOTS",
 	"item.create.diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",

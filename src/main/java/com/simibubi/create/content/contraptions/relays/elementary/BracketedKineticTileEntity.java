@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
@@ -19,8 +18,8 @@ public class BracketedKineticTileEntity extends SimpleKineticTileEntity implemen
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractShaftBlock)
-			.withTrigger(state -> AllTriggers.BRACKET_APPLY_TRIGGER.constructTriggerFor(state.getBlock())));
+		behaviours
+			.add(new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractSimpleShaftBlock));
 		super.addBehaviours(behaviours);
 	}
 

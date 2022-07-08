@@ -1,8 +1,7 @@
 package com.simibubi.create.content.logistics;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
 
@@ -16,7 +15,7 @@ public interface IRedstoneLinkable {
 	
 	public boolean isAlive();
 	
-	public Pair<Frequency, Frequency> getNetworkKey();
+	public Couple<Frequency> getNetworkKey();
 	
 	public BlockPos getLocation();
 	

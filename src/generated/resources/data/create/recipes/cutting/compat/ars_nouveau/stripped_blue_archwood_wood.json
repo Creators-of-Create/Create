@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:stripped_blue_archwood_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "ars_nouveau:archwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "ars_nouveau",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

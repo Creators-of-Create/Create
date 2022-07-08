@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.IBlockRenderProperties;
 
 public class ReducedDestroyEffects implements IBlockRenderProperties {
-	
+
 	@Override
 	public boolean addDestroyEffects(BlockState state, Level worldIn, BlockPos pos, ParticleEngine manager) {
 		if (!(worldIn instanceof ClientLevel))
@@ -27,34 +27,35 @@ public class ReducedDestroyEffects implements IBlockRenderProperties {
 		if (state.isAir())
 			return true;
 
-		voxelshape.forAllBoxes((p_172273_, p_172274_, p_172275_, p_172276_, p_172277_, p_172278_) -> {
-			double d1 = Math.min(1.0D, p_172276_ - p_172273_);
-			double d2 = Math.min(1.0D, p_172277_ - p_172274_);
-			double d3 = Math.min(1.0D, p_172278_ - p_172275_);
-			int i = Math.max(2, Mth.ceil(d1 / 0.25D));
-			int j = Math.max(2, Mth.ceil(d2 / 0.25D));
-			int k = Math.max(2, Mth.ceil(d3 / 0.25D));
+		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+			double w = x2 - x1;
+			double h = y2 - y1;
+			double l = z2 - z1;
+			int xParts = Math.max(2, Mth.ceil(Math.min(1, w) * 4));
+			int yParts = Math.max(2, Mth.ceil(Math.min(1, h) * 4));
+			int zParts = Math.max(2, Mth.ceil(Math.min(1, l) * 4));
 
-			for (int l = 0; l < i; ++l) {
-				for (int i1 = 0; i1 < j; ++i1) {
-					for (int j1 = 0; j1 < k; ++j1) {
+			for (int xIndex = 0; xIndex < xParts; ++xIndex) {
+				for (int yIndex = 0; yIndex < yParts; ++yIndex) {
+					for (int zIndex = 0; zIndex < zParts; ++zIndex) {
 						if (world.random.nextDouble() > chance)
 							continue;
 
-						double d4 = ((double) l + 0.5D) / (double) i;
-						double d5 = ((double) i1 + 0.5D) / (double) j;
-						double d6 = ((double) j1 + 0.5D) / (double) k;
-						double d7 = d4 * d1 + p_172273_;
-						double d8 = d5 * d2 + p_172274_;
-						double d9 = d6 * d3 + p_172275_;
-						manager.add(new TerrainParticle(world, pos.getX() + d7, pos.getY() + d8, pos.getZ() + d9,
-							d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state, pos).updateSprite(state, pos));
+						double d4 = (xIndex + .5) / xParts;
+						double d5 = (yIndex + .5) / yParts;
+						double d6 = (zIndex + .5) / zParts;
+						double x = pos.getX() + d4 * w + x1;
+						double y = pos.getY() + d5 * h + y1;
+						double z = pos.getZ() + d6 * l + z1;
+
+						manager.add(new TerrainParticle(world, x, y, z, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state, pos)
+							.updateSprite(state, pos));
 					}
 				}
 			}
 		});
-		
+
 		return true;
 	}
-	
+
 }

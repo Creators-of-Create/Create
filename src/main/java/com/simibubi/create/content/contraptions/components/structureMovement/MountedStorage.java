@@ -26,16 +26,16 @@ public class MountedStorage {
 	private static final ItemStackHandler dummyHandler = new ItemStackHandler();
 
 	ItemStackHandler handler;
+	boolean noFuel;
 	boolean valid;
+
 	private BlockEntity te;
 
 	public static boolean canUseAsStorage(BlockEntity te) {
 		if (te == null)
 			return false;
-
 		if (te instanceof MechanicalCrafterTileEntity)
 			return false;
-
 		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
 		if (te instanceof ShulkerBoxBlockEntity)
@@ -55,6 +55,7 @@ public class MountedStorage {
 	public MountedStorage(BlockEntity te) {
 		this.te = te;
 		handler = dummyHandler;
+		noFuel = te instanceof ItemVaultTileEntity;
 	}
 
 	public void removeStorageFromWorld() {
@@ -87,7 +88,7 @@ public class MountedStorage {
 			valid = true;
 			return;
 		}
-		
+
 		// te uses ItemStackHandler
 		if (teHandler instanceof ItemStackHandler) {
 			handler = (ItemStackHandler) teHandler;
@@ -124,7 +125,7 @@ public class MountedStorage {
 			te.load(tag);
 			return;
 		}
-		
+
 		if (te instanceof ItemVaultTileEntity) {
 			((ItemVaultTileEntity) te).applyInventoryToBlock(handler);
 			return;
@@ -147,14 +148,16 @@ public class MountedStorage {
 	public CompoundTag serialize() {
 		if (!valid)
 			return null;
+
 		CompoundTag tag = handler.serializeNBT();
+		if (noFuel)
+			NBTHelper.putMarker(tag, "NoFuel");
+		if (!(handler instanceof BottomlessItemHandler))
+			return tag;
 
-		if (handler instanceof BottomlessItemHandler) {
-			NBTHelper.putMarker(tag, "Bottomless");
-			tag.put("ProvidedStack", handler.getStackInSlot(0)
-				.serializeNBT());
-		}
-
+		NBTHelper.putMarker(tag, "Bottomless");
+		tag.put("ProvidedStack", handler.getStackInSlot(0)
+			.serializeNBT());
 		return tag;
 	}
 
@@ -164,6 +167,7 @@ public class MountedStorage {
 		if (nbt == null)
 			return storage;
 		storage.valid = true;
+		storage.noFuel = nbt.contains("NoFuel");
 
 		if (nbt.contains("Bottomless")) {
 			ItemStack providedStack = ItemStack.of(nbt.getCompound("ProvidedStack"));
@@ -177,6 +181,10 @@ public class MountedStorage {
 
 	public boolean isValid() {
 		return valid;
+	}
+	
+	public boolean canUseForFuel() {
+		return !noFuel;
 	}
 
 }

@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/powered_shaft",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/powered_shaft"
+    },
+    "axis=z": {
+      "model": "create:block/powered_shaft",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

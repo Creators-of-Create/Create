@@ -21,24 +21,26 @@ public class ContraptionRenderInfo {
 		this.renderWorld = renderWorld;
 	}
 
-    public int getEntityId() {
-        return contraption.entity.getId();
-    }
+	public int getEntityId() {
+		return contraption.entity.getId();
+	}
 
-    public boolean isDead() {
-        return !contraption.entity.isAlive();
-    }
+	public boolean isDead() {
+		return !contraption.entity.isAliveOrStale();
+	}
 
-    public void beginFrame(BeginFrameEvent event) {
+	public void beginFrame(BeginFrameEvent event) {
 		matrices.clear();
 
 		AbstractContraptionEntity entity = contraption.entity;
 
-		visible = event.getFrustum().isVisible(entity.getBoundingBoxForCulling().inflate(2));
+		visible = event.getFrustum()
+			.isVisible(entity.getBoundingBoxForCulling()
+				.inflate(2));
 	}
 
 	public boolean isVisible() {
-		return visible && contraption.entity.isAlive();
+		return visible && contraption.entity.isAliveOrStale() && contraption.entity.isReadyForRender();
 	}
 
 	/**

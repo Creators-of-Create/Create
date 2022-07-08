@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
@@ -47,6 +48,8 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	}
 
 	public void damageEntities(MovementContext context, BlockPos pos, Level world) {
+		if (context.contraption.entity instanceof OrientedContraptionEntity oce && oce.nonDamageTicks > 0)
+			return;
 		DamageSource damageSource = getDamageSource();
 		if (damageSource == null && !throwsEntities())
 			return;
@@ -58,23 +61,28 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 			if (entity instanceof AbstractMinecart)
 				for (Entity passenger : entity.getIndirectPassengers())
 					if (passenger instanceof AbstractContraptionEntity
-							&& ((AbstractContraptionEntity) passenger).getContraption() == context.contraption)
+						&& ((AbstractContraptionEntity) passenger).getContraption() == context.contraption)
 						continue Entities;
 
 			if (damageSource != null && !world.isClientSide) {
 				float damage = (float) Mth.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.hurt(damageSource, damage);
 			}
-			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) {
-				Vec3 motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
-				int maxBoost = 4;
-				if (motionBoost.length() > maxBoost) {
-					motionBoost = motionBoost.subtract(motionBoost.normalize().scale(motionBoost.length() - maxBoost));
-				}
-				entity.setDeltaMovement(entity.getDeltaMovement().add(motionBoost));
-				entity.hurtMarked = true;
-			}
+			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) 
+				throwEntity(context, entity);
 		}
+	}
+
+	protected void throwEntity(MovementContext context, Entity entity) {
+		Vec3 motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
+		int maxBoost = 4;
+		if (motionBoost.length() > maxBoost) {
+			motionBoost = motionBoost.subtract(motionBoost.normalize()
+				.scale(motionBoost.length() - maxBoost));
+		}
+		entity.setDeltaMovement(entity.getDeltaMovement()
+			.add(motionBoost));
+		entity.hurtMarked = true;
 	}
 
 	protected DamageSource getDamageSource() {
@@ -86,7 +94,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	public void stopMoving(MovementContext context) {
+	public void cancelStall(MovementContext context) {
 		CompoundTag data = context.data;
 		if (context.world.isClientSide)
 			return;
@@ -101,8 +109,13 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		data.remove("TicksUntilNextProgress");
 		data.remove("BreakingPos");
 
-		context.stall = false;
+		MovementBehaviour.super.cancelStall(context);
 		world.destroyBlockProgress(id, breakingPos, -1);
+	}
+
+	@Override
+	public void stopMoving(MovementContext context) {
+		cancelStall(context);
 	}
 
 	@Override
@@ -131,8 +144,10 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		CompoundTag data = context.data;
 		if (context.world.isClientSide)
 			return;
-		if (!data.contains("BreakingPos"))
+		if (!data.contains("BreakingPos")) {
+			context.stall = false;
 			return;
+		}
 		if (context.relativeMotion.equals(Vec3.ZERO)) {
 			context.stall = false;
 			return;
@@ -165,7 +180,8 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 		float breakSpeed = Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, 1 / 128f, 16f);
 		destroyProgress += Mth.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
-		world.playSound(null, breakingPos, stateToBreak.getSoundType().getHitSound(), SoundSource.NEUTRAL, .25f, 1);
+		world.playSound(null, breakingPos, stateToBreak.getSoundType()
+			.getHitSound(), SoundSource.NEUTRAL, .25f, 1);
 
 		if (destroyProgress >= 10) {
 			world.destroyBlockProgress(id, breakingPos, -1);
@@ -181,7 +197,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 			context.stall = false;
 			if (shouldDestroyStartBlock(stateToBreak))
-			BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
+				BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
 			onBlockBroken(context, ogPos, stateToBreak);
 			ticksUntilNextProgress = -1;
 			data.remove("Progress");

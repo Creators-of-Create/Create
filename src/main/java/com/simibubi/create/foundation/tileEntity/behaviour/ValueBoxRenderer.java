@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.tileEntity.behaviour;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ValueBoxRenderer {
 			return nudge;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
-			if (block instanceof AbstractShaftBlock)
+			if (block instanceof AbstractSimpleShaftBlock)
 				return nudge;
 			if (block instanceof FenceBlock)
 				return nudge;

@@ -19,11 +19,11 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
 
 		ImmutableBox contraptionBounds = getContraptionBounds();
 
-		if (bounds.sameAs(contraptionBounds)) {
+		if (bounds.sameAs(contraptionBounds, 2)) {
 			return false;
 		}
 		bounds.assign(contraptionBounds);
-		growBoundsForEdgeData();
+		growBoundsForEdgeData(bounds);
 
 		lightVolume.move(provider, bounds);
 

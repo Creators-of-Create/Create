@@ -23,7 +23,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
     protected Instancer<RotatingData> getModel() {
         Direction facing = blockState.getValue(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
-		return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, facing, rotateToFace(facing));
+		return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, rotateToFace(facing));
     }
 
 	private Supplier<PoseStack> rotateToFace(Direction facing) {

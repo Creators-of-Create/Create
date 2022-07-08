@@ -30,19 +30,19 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	private static final String PREFIX = "gui.attribute_filter.";
 
-	private Component addDESC = Lang.translate(PREFIX + "add_attribute");
-	private Component addInvertedDESC = Lang.translate(PREFIX + "add_inverted_attribute");
+	private Component addDESC = Lang.translateDirect(PREFIX + "add_attribute");
+	private Component addInvertedDESC = Lang.translateDirect(PREFIX + "add_inverted_attribute");
 
-	private Component allowDisN = Lang.translate(PREFIX + "allow_list_disjunctive");
-	private Component allowDisDESC = Lang.translate(PREFIX + "allow_list_disjunctive.description");
-	private Component allowConN = Lang.translate(PREFIX + "allow_list_conjunctive");
-	private Component allowConDESC = Lang.translate(PREFIX + "allow_list_conjunctive.description");
-	private Component denyN = Lang.translate(PREFIX + "deny_list");
-	private Component denyDESC = Lang.translate(PREFIX + "deny_list.description");
+	private Component allowDisN = Lang.translateDirect(PREFIX + "allow_list_disjunctive");
+	private Component allowDisDESC = Lang.translateDirect(PREFIX + "allow_list_disjunctive.description");
+	private Component allowConN = Lang.translateDirect(PREFIX + "allow_list_conjunctive");
+	private Component allowConDESC = Lang.translateDirect(PREFIX + "allow_list_conjunctive.description");
+	private Component denyN = Lang.translateDirect(PREFIX + "deny_list");
+	private Component denyDESC = Lang.translateDirect(PREFIX + "deny_list.description");
 
-	private Component referenceH = Lang.translate(PREFIX + "add_reference_item");
-	private Component noSelectedT = Lang.translate(PREFIX + "no_selected_attributes");
-	private Component selectedT = Lang.translate(PREFIX + "selected_attributes");
+	private Component referenceH = Lang.translateDirect(PREFIX + "add_reference_item");
+	private Component noSelectedT = Lang.translateDirect(PREFIX + "no_selected_attributes");
+	private Component selectedT = Lang.translateDirect(PREFIX + "selected_attributes");
 
 	private IconButton whitelistDis, whitelistCon, blacklist;
 	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;

@@ -1,20 +1,22 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "FFF",
-    "FWF",
-    "FFF"
+    "WS",
+    "SA"
   ],
   "key": {
-    "F": {
-      "item": "create:sail_frame"
-    },
     "W": {
       "tag": "minecraft:wool"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
     }
   },
   "result": {
     "item": "create:white_sail",
-    "count": 8
+    "count": 2
   }
 }

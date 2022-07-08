@@ -1,0 +1,30 @@
+{
+  "parent": "create:track_signal",
+  "display": {
+    "icon": {
+      "item": "create:display_board"
+    },
+    "title": {
+      "translate": "advancement.create.display_board_0"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.display_board_0.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:display_board_0_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

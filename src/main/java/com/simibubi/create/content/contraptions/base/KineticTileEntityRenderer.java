@@ -113,13 +113,13 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		return buffer;
 	}
 
-	protected static float getRotationOffsetForPosition(KineticTileEntity te, final BlockPos pos, final Axis axis) {
+	public static float getRotationOffsetForPosition(KineticTileEntity te, final BlockPos pos, final Axis axis) {
 		float offset = ICogWheel.isLargeCog(te.getBlockState()) ? 11.25f : 0;
 		double d = (((axis == Axis.X) ? 0 : pos.getX()) + ((axis == Axis.Y) ? 0 : pos.getY())
 			+ ((axis == Axis.Z) ? 0 : pos.getZ())) % 2;
 		if (d == 0)
 			offset = 22.5f;
-		return offset;
+		return offset + te.getRotationAngleOffset(axis);
 	}
 
 	public static BlockState shaft(Axis axis) {

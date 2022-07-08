@@ -1,0 +1,30 @@
+{
+  "parent": "create:extendo_grip",
+  "display": {
+    "icon": {
+      "item": "create:linked_controller"
+    },
+    "title": {
+      "translate": "advancement.create.linked_controller"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.linked_controller.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:linked_controller_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

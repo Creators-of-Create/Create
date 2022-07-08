@@ -7,12 +7,14 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 import java.util.Collections;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import net.minecraft.data.tags.TagsProvider.TagAppender;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -38,8 +40,10 @@ public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
-	public static <T extends IForgeRegistryEntry<T>> TagKey<T> optionalTag(IForgeRegistry<T> registry, ResourceLocation id) {
-		return registry.tags().createOptionalTagKey(id, Collections.emptySet());
+	public static <T extends IForgeRegistryEntry<T>> TagKey<T> optionalTag(IForgeRegistry<T> registry,
+		ResourceLocation id) {
+		return registry.tags()
+			.createOptionalTagKey(id, Collections.emptySet());
 	}
 
 	public static <T extends IForgeRegistryEntry<T>> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
@@ -85,9 +89,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true),
-		FORGE("forge"),
-		TIC("tconstruct")
+		MOD(Create.ID, false, true), FORGE("forge"), TIC("tconstruct")
 
 		;
 
@@ -120,6 +122,10 @@ public class AllTags {
 		WINDMILL_SAILS,
 		WINDOWABLE,
 		WRENCH_PICKUP,
+		CASING,
+		NON_MOVABLE,
+
+		PASSIVE_BOILER_HEATERS,
 
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
@@ -160,7 +166,8 @@ public class AllTags {
 
 		@SuppressWarnings("deprecation")
 		public boolean matches(Block block) {
-			return block.builtInRegistryHolder().is(tag);
+			return block.builtInRegistryHolder()
+				.is(tag);
 		}
 
 		public boolean matches(BlockState state) {
@@ -170,6 +177,14 @@ public class AllTags {
 		public void add(Block... values) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.add(values));
+		}
+
+		public void addOptional(Mods mod, String... ids) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> {
+				TagAppender<Block> builder = prov.tag(tag);
+				for (String id : ids)
+					builder.addOptional(mod.asResource(id));
+			});
 		}
 
 		public void includeIn(TagKey<Block> parent) {
@@ -199,9 +214,18 @@ public class AllTags {
 		TOOLBOXES,
 		UPRIGHT_ON_BELT,
 		VALVE_HANDLES,
+		VANILLA_STRIPPED_LOGS,
+		VANILLA_STRIPPED_WOOD,
+		MODDED_STRIPPED_LOGS,
+		MODDED_STRIPPED_WOOD,
+		CASING,
+		SLEEPERS,
 
+		STRIPPED_LOGS(FORGE),
+		STRIPPED_WOOD(FORGE),
 		BEACON_PAYMENT(FORGE),
-		PLATES(FORGE)
+		PLATES(FORGE),
+		WRENCH(FORGE, "tools/wrench")
 
 		;
 
@@ -237,7 +261,8 @@ public class AllTags {
 
 		@SuppressWarnings("deprecation")
 		public boolean matches(Item item) {
-			return item.builtInRegistryHolder().is(tag);
+			return item.builtInRegistryHolder()
+				.is(tag);
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -247,6 +272,14 @@ public class AllTags {
 		public void add(Item... values) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
 				.add(values));
+		}
+
+		public void addOptional(Mods mod, String... ids) {
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> {
+				TagAppender<Item> builder = prov.tag(tag);
+				for (String id : ids)
+					builder.addOptional(mod.asResource(id));
+			});
 		}
 
 		public void includeIn(TagKey<Item> parent) {
@@ -337,11 +370,25 @@ public class AllTags {
 	public static void register() {
 		AllFluidTags.BOTTOMLESS_ALLOW.add(Fluids.WATER, Fluids.LAVA);
 
+		AllItemTags.VANILLA_STRIPPED_LOGS.add(Items.STRIPPED_ACACIA_LOG, Items.STRIPPED_BIRCH_LOG,
+			Items.STRIPPED_CRIMSON_STEM, Items.STRIPPED_DARK_OAK_LOG, Items.STRIPPED_JUNGLE_LOG, Items.STRIPPED_OAK_LOG,
+			Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM);
+
+		AllItemTags.VANILLA_STRIPPED_LOGS.includeIn(AllItemTags.STRIPPED_LOGS);
+
+		AllItemTags.VANILLA_STRIPPED_WOOD.add(Items.STRIPPED_ACACIA_WOOD, Items.STRIPPED_BIRCH_WOOD,
+			Items.STRIPPED_CRIMSON_HYPHAE, Items.STRIPPED_DARK_OAK_WOOD, Items.STRIPPED_JUNGLE_WOOD,
+			Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE);
+
+		AllItemTags.VANILLA_STRIPPED_WOOD.includeIn(AllItemTags.STRIPPED_WOOD);
+
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 			Items.HONEY_BOTTLE, Items.CAKE);
+
+		AllItemTags.SLEEPERS.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 
@@ -350,11 +397,16 @@ public class AllTags {
 		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL, Blocks.COCOA);
 
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
-		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS, Blocks.CAMPFIRE, Blocks.SOUL_CAMPFIRE);
+		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.CAMPFIRES);
+		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
 
-		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
-			Blocks.SOUL_CAMPFIRE);
+		AllBlockTags.FAN_HEATERS.includeAll(BlockTags.FIRE);
+		AllBlockTags.FAN_HEATERS.includeAll(BlockTags.CAMPFIRES);
+		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.LAVA);
+		AllBlockTags.FAN_HEATERS.includeIn(AllBlockTags.PASSIVE_BOILER_HEATERS);
+
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
+		AllBlockTags.SAFE_NBT.includeAll(BlockTags.BANNERS);
 
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.RAILS);
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.BUTTONS);
@@ -364,6 +416,51 @@ public class AllTags {
 			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
 
 		AllBlockTags.ORE_OVERRIDE_STONE.includeAll(BlockTags.STONE_ORE_REPLACEABLES);
+
+		registerCompat();
+	}
+
+	private static void registerCompat() {
+		AllBlockTags.NON_MOVABLE.addOptional(Mods.IE, "connector_lv", "connector_lv_relay", "connector_mv",
+			"connector_mv_relay", "connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
+			"connector_redstone", "connector_probe", "breaker_switch");
+
+		strippedWoodCompat(Mods.ARS_N, "blue_archwood", "purple_archwood", "green_archwood", "red_archwood");
+		strippedWoodCompat(Mods.BTN, "livingwood", "dreamwood");
+		strippedWoodCompat(Mods.FA, "cherrywood", "mysterywood");
+		strippedWoodCompat(Mods.HEX, "akashic");
+		strippedWoodCompat(Mods.ID, "menril");
+		strippedWoodCompat(Mods.BYG, "aspen", "baobab", "enchanted", "cherry", "cika", "cypress", "ebony", "ether",
+			"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade",
+			"palm", "palo_verde", "pine", "rainbow_eucalyptus", "redwood", "skyris", "willow", "witch_hazel",
+			"zelkova");
+		strippedWoodCompat(Mods.SG, "netherwood");
+		strippedWoodCompat(Mods.TF, "twilight_oak", "canopy", "mangrove", "dark", "time", "transformation", "mining",
+			"sorting");
+		strippedWoodCompat(Mods.TIC, "greenheart", "skyroot", "bloodshroom");
+		strippedWoodCompat(Mods.AP, "twisted");
+		strippedWoodCompat(Mods.Q, "azalea", "blossom");
+		strippedWoodCompat(Mods.ECO, "coconut", "walnut", "azalea");
+		strippedWoodCompat(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
+			"magic", "umbran", "hellbark");
+		strippedWoodCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry");
+		
+		AllItemTags.MODDED_STRIPPED_LOGS.addOptional(Mods.BYG, "stripped_bulbis_stem");
+		AllItemTags.MODDED_STRIPPED_WOOD.addOptional(Mods.BYG, "stripped_bulbis_wood");
+
+		AllItemTags.MODDED_STRIPPED_LOGS.includeIn(AllItemTags.STRIPPED_LOGS);
+		AllItemTags.MODDED_STRIPPED_WOOD.includeIn(AllItemTags.STRIPPED_WOOD);
+	}
+
+	private static void strippedWoodCompat(Mods mod, String... woodtypes) {
+		for (int i = 0; i < woodtypes.length; i++) {
+			String type = woodtypes[i];
+			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
+			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+			AllItemTags.MODDED_STRIPPED_LOGS.addOptional(mod, strippedPre + type + "_log" + strippedPost);
+			AllItemTags.MODDED_STRIPPED_WOOD.addOptional(mod,
+				strippedPre + type + (mod.omitWoodSuffix ? "" : "_wood") + strippedPost);
+		}
 	}
 
 }

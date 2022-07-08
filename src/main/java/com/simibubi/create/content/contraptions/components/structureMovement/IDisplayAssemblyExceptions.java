@@ -22,7 +22,7 @@ public interface IDisplayAssemblyExceptions {
 			tooltip.add(TextComponent.EMPTY);
 
 		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-			.append(Lang.translate("gui.assembly.exception")
+			.append(Lang.translateDirect("gui.assembly.exception")
 				.withStyle(ChatFormatting.GOLD)));
 
 		String text = e.component.getString();

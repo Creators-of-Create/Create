@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS"
+    "B",
+    "C"
   ],
   "key": {
     "B": {
@@ -10,9 +10,6 @@
     },
     "C": {
       "item": "create:brass_casing"
-    },
-    "S": {
-      "item": "create:shaft"
     }
   },
   "result": {

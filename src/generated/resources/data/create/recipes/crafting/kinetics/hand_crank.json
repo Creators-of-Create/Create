@@ -1,7 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " S ",
     "CCC",
     "  A"
   ],
@@ -11,9 +10,6 @@
     },
     "C": {
       "tag": "minecraft:planks"
-    },
-    "S": {
-      "item": "create:shaft"
     }
   },
   "result": {

@@ -3,6 +3,8 @@
   "textures": {
     "5": "create:block/creative_fluid_tank_window_single",
     "1": "create:block/creative_fluid_tank",
+    "particle": "create:block/creative_fluid_tank",
+    "4": "create:block/creative_casing",
     "0": "create:block/creative_casing"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "parent": "create:deployer",
+  "parent": "create:mechanical_crafter",
   "display": {
     "icon": {
       "item": "create:deployer"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.fist_bump"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.fist_bump.desc"
     },
     "frame": "goal",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:deployer",
+      "trigger": "create:fist_bump_builtin",
       "conditions": {}
     }
   },

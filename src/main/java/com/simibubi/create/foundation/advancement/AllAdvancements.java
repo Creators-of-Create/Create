@@ -1,10 +1,17 @@
 package com.simibubi.create.foundation.advancement;
 
+import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskType.EXPERT;
+import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskType.NOISY;
+import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskType.SECRET;
+import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskType.SILENT;
+
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,403 +19,601 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.Advancement.Builder;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.PlacedBlockTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 
-@SuppressWarnings("unused") // dont warn about unused avancements
 public class AllAdvancements implements DataProvider {
 
-	static final String LANG = "advancement." + Create.ID + ".";
-
-	public void register(Consumer<Advancement> t) {
-		String id = Create.ID;
-
-		Advancement root = Advancement.Builder.advancement()
-			.display(AllItems.BRASS_HAND.asStack(), new TranslatableComponent(LANG + "root"),
-				new TranslatableComponent(LANG + "root.desc"),
-				new ResourceLocation(Create.ID, "textures/gui/advancements.png"), FrameType.TASK, false,
-				false, false)
-			.addCriterion("0", InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[] {}))
-			.save(t, id + ":root");
-
-		Advancement andesite_alloy =
-			advancement("andesite_alloy", AllItems.ANDESITE_ALLOY.get(), TaskType.NORMAL).parent(root)
-				.addCriterion("0", itemGathered(AllItems.ANDESITE_ALLOY.get()))
-				.save(t, id + ":andesite_alloy");
-
-		kineticsBranch(t, andesite_alloy);
-
-		Advancement aesthetics = advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL)
-			.parent(andesite_alloy)
-			.addCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
-			.addCriterion("1",
-				AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
-			.addCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
-			.save(t, id + ":aesthetics");
-
-		Advancement reinforced =
-			advancement("reinforced", AllBlocks.ANDESITE_ENCASED_SHAFT.get(), TaskType.NORMAL).parent(aesthetics)
-				.addCriterion("0", AllTriggers.CASING_SHAFT.instance())
-				.addCriterion("1", AllTriggers.CASING_BELT.instance())
-				.addCriterion("2", AllTriggers.CASING_PIPE.instance())
-				.save(t, id + ":reinforced");
-
-		Advancement water_wheel =
-			advancement("water_wheel", AllBlocks.WATER_WHEEL.get(), TaskType.NORMAL).parent(andesite_alloy)
-				.addCriterion("0", placeBlock(AllBlocks.WATER_WHEEL.get()))
-				.addCriterion("1", AllTriggers.WATER_WHEEL.instance())
-				.save(t, id + ":water_wheel");
-
-		Advancement lava_wheel = advancement("lava_wheel", Items.LAVA_BUCKET, TaskType.SECRET).parent(water_wheel)
-			.addCriterion("0", AllTriggers.LAVA_WHEEL.instance())
-			.save(t, id + ":lava_wheel");
-
-		Advancement chocolate_wheel = advancement("chocolate_wheel", AllFluids.CHOCOLATE.get()
-			.getBucket(), TaskType.SECRET).parent(water_wheel)
-				.addCriterion("0", AllTriggers.CHOCOLATE_WHEEL.instance())
-				.save(t, id + ":chocolate_wheel");
-
-		Advancement millstone =
-			kinecticAdvancement("millstone", AllBlocks.MILLSTONE.get(), TaskType.NORMAL).parent(andesite_alloy)
-				.save(t, id + ":millstone");
-
-		Advancement cuckoo =
-			advancement("cuckoo", AllBlocks.CUCKOO_CLOCK.get(), TaskType.NORMAL).parent(andesite_alloy)
-				.addCriterion("0", AllTriggers.CUCKOO.instance())
-				.save(t, id + ":cuckoo");
-
-		Advancement windmill =
-			advancement("windmill", AllBlocks.WINDMILL_BEARING.get(), TaskType.NORMAL).parent(andesite_alloy)
-				.addCriterion("0", AllTriggers.WINDMILL.instance())
-				.save(t, id + ":windmill");
-
-		Advancement maxed_windmill =
-			advancement("maxed_windmill", AllBlocks.WINDMILL_BEARING.get(), TaskType.GOAL).parent(windmill)
-				.addCriterion("0", AllTriggers.MAXED_WINDMILL.instance())
-				.save(t, id + ":maxed_windmill");
-
-		Advancement andesite_casing =
-			advancement("andesite_casing", AllBlocks.ANDESITE_CASING.get(), TaskType.GOAL).parent(andesite_alloy)
-				.addCriterion("0", itemGathered(AllBlocks.ANDESITE_CASING.get()))
-				.save(t, id + ":andesite_casing");
-
-		Advancement drill = kinecticAdvancement("mechanical_drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL)
-			.parent(andesite_casing)
-			.save(t, id + ":mechanical_drill");
-
-		Advancement press =
-			advancement("press", AllBlocks.MECHANICAL_PRESS.get(), TaskType.MILESTONE).parent(andesite_casing)
-				.addCriterion("0", AllTriggers.BONK.instance())
-				.save(t, id + ":press");
-
-		Advancement fan = advancement("fan", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).parent(press)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.NONE))
-			.save(t, id + ":fan");
-
-		Advancement fan_lava = advancement("fan_lava", Items.LAVA_BUCKET, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.BLASTING))
-			.save(t, id + ":fan_lava");
-
-		Advancement fan_smoke = advancement("fan_smoke", Items.CAMPFIRE, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SMOKING))
-			.save(t, id + ":fan_smoke");
-
-		Advancement fan_water = advancement("fan_water", Items.WATER_BUCKET, TaskType.NORMAL).parent(fan)
-			.addCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SPLASHING))
-			.save(t, id + ":fan_water");
-
-		Advancement rose_quartz =
-			itemAdvancement("polished_rose_quartz", AllItems.POLISHED_ROSE_QUARTZ, TaskType.NORMAL)
-				.parent(andesite_casing)
-				.save(t, id + ":polished_rose_quartz");
-
-		Advancement electron_tube =
-			itemAdvancement("electron_tube", AllItems.ELECTRON_TUBE, TaskType.NORMAL).parent(rose_quartz)
-				.save(t, id + ":electron_tube");
-
-		Advancement saw =
-			kinecticAdvancement("mechanical_saw", AllBlocks.MECHANICAL_SAW.get(), TaskType.NORMAL).parent(press)
-				.save(t, id + ":mechanical_saw");
-
-		Advancement basin = advancement("basin", AllBlocks.BASIN.get(), TaskType.NORMAL).parent(press)
-			.addCriterion("0", placeBlock(AllBlocks.BASIN.get()))
-			.addCriterion("1", AllTriggers.BASIN_THROW.instance())
-			.save(t, id + ":basin");
-
-		Advancement mixer = advancement("mixer", AllBlocks.MECHANICAL_MIXER.get(), TaskType.MILESTONE)
-			.addCriterion("0", placeBlock(AllBlocks.MECHANICAL_MIXER.get()))
-			.addCriterion("1", AllTriggers.MIXER_MIX.instance())
-			.parent(basin)
-			.save(t, id + ":mixer");
-
-		Advancement compact = advancement("compact", Blocks.IRON_BLOCK, TaskType.NORMAL)
-			.addCriterion("0", AllTriggers.PRESS_COMPACT.instance())
-			.parent(basin)
-			.save(t, id + ":compact");
-
-		Advancement blaze_burner =
-			itemAdvancement("blaze_burner", AllBlocks.BLAZE_BURNER, TaskType.NORMAL).parent(mixer)
-				.save(t, id + ":blaze_burner");
-
-		Advancement brass = itemAdvancement("brass", AllItems.BRASS_INGOT, TaskType.NORMAL).parent(blaze_burner)
-			.save(t, id + ":brass");
-
-		brassAge(t, brass);
-		copperAge(t, press);
-	}
-
-	void kineticsBranch(Consumer<Advancement> t, Advancement root) {
-		String id = Create.ID;
-
-		Advancement its_alive = advancement("its_alive", AllBlocks.COGWHEEL.get(), TaskType.NORMAL).parent(root)
-			.addCriterion("0", AllTriggers.ROTATION.instance())
-			.save(t, id + ":its_alive");
-
-		Advancement belt = advancement("belt", AllItems.BELT_CONNECTOR.get(), TaskType.NORMAL).parent(its_alive)
-			.addCriterion("0", AllTriggers.CONNECT_BELT.instance())
-			.save(t, id + ":belt");
-
-		Advancement tunnel = advancement("tunnel", AllBlocks.ANDESITE_TUNNEL.get(), TaskType.NORMAL).parent(belt)
-			.addCriterion("0", AllTriggers.PLACE_TUNNEL.instance())
-			.save(t, id + ":tunnel");
-
-		Advancement splitter_tunnel =
-			advancement("splitter_tunnel", AllBlocks.BRASS_TUNNEL.get(), TaskType.MILESTONE).parent(tunnel)
-				.addCriterion("0", AllTriggers.CONNECT_TUNNEL.instance())
-				.save(t, id + ":splitter_tunnel");
-
-		Advancement chute = advancement("chute", AllBlocks.CHUTE.get(), TaskType.NORMAL).parent(belt)
-			.addCriterion("0", placeBlock(AllBlocks.CHUTE.get()))
-			.save(t, id + ":chute");
-
-		Advancement upward_chute =
-			advancement("upward_chute", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).parent(chute)
-				.addCriterion("0", AllTriggers.UPWARD_CHUTE.instance())
-				.save(t, id + ":upward_chute");
-
-		Advancement belt_funnel =
-			advancement("belt_funnel", AllBlocks.ANDESITE_FUNNEL.get(), TaskType.NORMAL).parent(belt)
-				.addCriterion("0", AllTriggers.BELT_FUNNEL.instance())
-				.save(t, id + ":belt_funnel");
-
-		Advancement belt_funnel_kiss =
-			advancement("belt_funnel_kiss", AllBlocks.BRASS_FUNNEL.get(), TaskType.SECRET).parent(belt_funnel)
-				.addCriterion("0", AllTriggers.BELT_FUNNEL_KISS.instance())
-				.save(t, id + ":belt_funnel_kiss");
-
-		Advancement wrench = itemAdvancement("wrench", AllItems.WRENCH, TaskType.NORMAL).parent(its_alive)
-			.save(t, id + ":wrench");
-
-		Advancement goggles = itemAdvancement("goggles", AllItems.GOGGLES, TaskType.NORMAL).parent(its_alive)
-			.save(t, id + ":goggles");
-
-		Advancement speed_gauge =
-			kinecticAdvancement("speedometer", AllBlocks.SPEEDOMETER.get(), TaskType.NORMAL).parent(goggles)
-				.save(t, id + ":speedometer");
-
-		Advancement stress_gauge =
-			kinecticAdvancement("stressometer", AllBlocks.STRESSOMETER.get(), TaskType.NORMAL).parent(goggles)
-				.save(t, id + ":stressometer");
-
-		Advancement shifting_gears =
-			advancement("shifting_gears", AllBlocks.LARGE_COGWHEEL.get(), TaskType.NORMAL).parent(its_alive)
-				.addCriterion("0", AllTriggers.SHIFTING_GEARS.instance())
-				.save(t, id + ":shifting_gears");
-
-		Advancement overstressed = advancement("overstressed", Items.BARRIER, TaskType.SECRET).parent(its_alive)
-			.addCriterion("0", AllTriggers.OVERSTRESSED.instance())
-			.save(t, id + ":overstressed");
-
-	}
-
-	void copperAge(Consumer<Advancement> t, Advancement root) {
-		String id = Create.ID;
-
-		Advancement copper_casing =
-			advancement("copper_casing", AllBlocks.COPPER_CASING.get(), TaskType.GOAL).parent(root)
-				.addCriterion("0", itemGathered(AllBlocks.COPPER_CASING.get()))
-				.save(t, id + ":copper_casing");
-
-		Advancement item_drain =
-			advancement("item_drain", AllBlocks.ITEM_DRAIN.get(), TaskType.NORMAL).parent(copper_casing)
-				.addCriterion("0", AllTriggers.ITEM_DRAIN.instance())
-				.save(t, id + ":item_drain");
-
-		Advancement chained_item_drain =
-			advancement("chained_item_drain", AllBlocks.ITEM_DRAIN.get(), TaskType.SECRET).parent(item_drain)
-				.addCriterion("0", AllTriggers.CHAINED_ITEM_DRAIN.instance())
-				.save(t, id + ":chained_item_drain");
-
-		Advancement spout = advancement("spout", AllBlocks.SPOUT.get(), TaskType.NORMAL).parent(copper_casing)
-			.addCriterion("0", AllTriggers.SPOUT.instance())
-			.save(t, id + ":spout");
-
-		Advancement spout_potion = advancement("spout_potion", Items.POTION, TaskType.GOAL).parent(spout)
-			.addCriterion("0", AllTriggers.SPOUT_POTION.instance())
-			.save(t, id + ":spout_potion");
-
-		Advancement chocolate = itemAdvancement("chocolate", () -> AllFluids.CHOCOLATE.get()
-			.getBucket(), TaskType.GOAL).parent(spout)
-				.save(t, id + ":chocolate");
-
-		Advancement glass_pipe =
-			advancement("glass_pipe", AllBlocks.FLUID_PIPE.get(), TaskType.NORMAL).parent(copper_casing)
-				.addCriterion("0", AllTriggers.GLASS_PIPE.instance())
-				.save(t, id + ":glass_pipe");
-
-		Advancement pipe_collision =
-			advancement("pipe_collision", AllBlocks.FLUID_VALVE.get(), TaskType.NORMAL).parent(glass_pipe)
-				.addCriterion("0", AllTriggers.PIPE_COLLISION.instance())
-				.save(t, id + ":pipe_collision");
-
-		Advancement pipe_spill = advancement("pipe_spill", Items.BUCKET, TaskType.NORMAL).parent(glass_pipe)
-			.addCriterion("0", AllTriggers.PIPE_SPILL.instance())
-			.save(t, id + ":pipe_spill");
-
-		Advancement hose_pulley =
-			advancement("hose_pulley", AllBlocks.HOSE_PULLEY.get(), TaskType.NORMAL).parent(pipe_spill)
-				.addCriterion("0", AllTriggers.HOSE_PULLEY.instance())
-				.save(t, id + ":hose_pulley");
-
-		Advancement infinite_water =
-			advancement("infinite_water", Items.WATER_BUCKET, TaskType.NORMAL).parent(hose_pulley)
-				.addCriterion("0", isInfinite(Fluids.WATER))
-				.save(t, id + ":infinite_water");
-
-		Advancement infinite_lava =
-			advancement("infinite_lava", Items.LAVA_BUCKET, TaskType.GOAL).parent(hose_pulley)
-				.addCriterion("0", isInfinite(Fluids.LAVA))
-				.save(t, id + ":infinite_lava");
-
-		Advancement infinite_chocolate = advancement("infinite_chocolate", AllFluids.CHOCOLATE.get()
-			.getBucket(), TaskType.CHALLENGE).parent(hose_pulley)
-				.addCriterion("0", isInfinite(AllFluids.CHOCOLATE.get()))
-				.save(t, id + ":infinite_chocolate");
-	}
-
-	void brassAge(Consumer<Advancement> t, Advancement root) {
-		String id = Create.ID;
-
-		Advancement brass_casing =
-			advancement("brass_casing", AllBlocks.BRASS_CASING.get(), TaskType.GOAL).parent(root)
-				.addCriterion("0", itemGathered(AllBlocks.BRASS_CASING.get()))
-				.save(t, id + ":brass_casing");
-
-		Advancement nixie_tube =
-			advancement("nixie_tube", AllBlocks.ORANGE_NIXIE_TUBE.get(), TaskType.NORMAL).parent(brass_casing)
-				.addCriterion("0", placeBlock(AllBlocks.ORANGE_NIXIE_TUBE.get()))
-				.save(t, id + ":nixie_tube");
-
-		Advancement crafter = kinecticAdvancement("crafter", AllBlocks.MECHANICAL_CRAFTER.get(), TaskType.MILESTONE)
-			.parent(brass_casing)
-			.save(t, id + ":crafter");
-
-		Advancement flywheel = advancement("flywheel", AllBlocks.FLYWHEEL.get(), TaskType.NORMAL).parent(crafter)
-			.addCriterion("0", AllTriggers.FLYWHEEL.instance())
-			.save(t, id + ":flywheel");
-
-		Advancement overstress_flywheel =
-			advancement("overstress_flywheel", AllBlocks.FURNACE_ENGINE.get(), TaskType.CHALLENGE).parent(flywheel)
-				.addCriterion("0", AllTriggers.OVERSTRESS_FLYWHEEL.instance())
-				.save(t, id + ":overstress_flywheel");
-
-		Advancement clockwork_bearing =
-			advancement("clockwork_bearing", AllBlocks.CLOCKWORK_BEARING.get(), TaskType.NORMAL)
-				.parent(brass_casing)
-				.addCriterion("0", AllTriggers.CLOCKWORK_BEARING.instance())
-				.save(t, id + ":clockwork_bearing");
-
-		Advancement mechanical_arm = advancement("mechanical_arm", AllBlocks.MECHANICAL_ARM.get(), TaskType.MILESTONE)
-			.addCriterion("0", AllTriggers.MECHANICAL_ARM.instance())
-			.parent(brass_casing)
-			.save(t, id + ":mechanical_arm");
-
-		Advancement musical_arm = advancement("musical_arm", Items.MUSIC_DISC_13, TaskType.MILESTONE)
-			.addCriterion("0", AllTriggers.MUSICAL_ARM.instance())
-			.parent(mechanical_arm)
-			.save(t, id + ":musical_arm");
-
-		Advancement arm_many_targets = advancement("arm_many_targets", AllBlocks.BRASS_FUNNEL.get(), TaskType.MILESTONE)
-			.addCriterion("0", AllTriggers.ARM_MANY_TARGETS.instance())
-			.parent(mechanical_arm)
-			.save(t, id + ":arm_many_targets");
-
-		Advancement arm_blaze_burner = advancement("arm_blaze_burner", AllBlocks.BLAZE_BURNER.get(), TaskType.NORMAL)
-			.addCriterion("0", AllTriggers.ARM_BLAZE_BURNER.instance())
-			.parent(mechanical_arm)
-			.save(t, id + ":arm_blaze_burner");
-
-		Advancement deployer =
-			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.MILESTONE).parent(brass_casing)
-				.save(t, id + ":deployer");
-		
-		Advancement clockwork_component =
-			itemAdvancement("precision_mechanism", AllItems.PRECISION_MECHANISM, TaskType.NORMAL).parent(deployer)
-				.save(t, id + ":precision_mechanism");
-
-		Advancement clockwork_component_eob = deadEnd().parent(clockwork_component)
-			.addCriterion("0", itemGathered(AllItems.PRECISION_MECHANISM.get()))
-			.save(t, id + ":clockwork_component_eob");
-		
-		Advancement extendo_grip =
-			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).parent(clockwork_component)
-				.addCriterion("0", AllTriggers.EXTENDO.instance())
-				.save(t, id + ":extendo_grip");
-
-		Advancement potato_cannon =
-			advancement("potato_cannon", AllItems.POTATO_CANNON.get(), TaskType.GOAL).parent(clockwork_component)
-				.addCriterion("0", AllTriggers.POTATO_KILL.instance())
-				.save(t, id + ":potato_cannon");
-
-		Advancement dual_extendo_grip =
-			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).parent(extendo_grip)
-				.addCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
-				.save(t, id + ":dual_extendo_grip");
-
-		Advancement speed_controller =
-			kinecticAdvancement("speed_controller", AllBlocks.ROTATION_SPEED_CONTROLLER.get(), TaskType.NORMAL)
-				.parent(clockwork_component)
-				.save(t, id + ":speed_controller");
-
-		Advancement fist_bump = advancement("fist_bump", AllBlocks.DEPLOYER.get(), TaskType.SECRET).parent(deployer)
-			.addCriterion("0", AllTriggers.DEPLOYER_BOOP.instance())
-			.save(t, id + ":fist_bump");
-
-		Advancement crushing_wheel =
-			advancement("crushing_wheel", AllBlocks.CRUSHING_WHEEL.get(), TaskType.MILESTONE).parent(crafter)
-				.addCriterion("0", itemGathered(AllBlocks.CRUSHING_WHEEL.get()))
-				.save(t, id + ":crushing_wheel");
-
-		Advancement blaze_cake =
-			itemAdvancement("blaze_cake", AllItems.BLAZE_CAKE, TaskType.NORMAL).parent(crushing_wheel)
-				.save(t, id + ":blaze_cake");
-
-		Advancement symmetry_wand =
-			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).parent(clockwork_component)
-				.save(t, id + ":wand_of_symmetry");
-
+	public static final List<CreateAdvancement> ENTRIES = new ArrayList<>();
+	public static final CreateAdvancement START = null,
+
+		/*
+		 * Some ids have trailing 0's to modify their vertical position on the tree
+		 * (Advancement ordering seems to be deterministic but hash based)
+		 */
+
+		ROOT = create("root", b -> b.icon(AllItems.BRASS_HAND)
+			.title("Welcome to Create")
+			.description("Here be Contraptions")
+			.awardedForFree()
+			.special(SILENT)),
+
+		// Andesite - Central Branch
+
+		ANDESITE = create("andesite_alloy", b -> b.icon(AllItems.ANDESITE_ALLOY)
+			.title("Sturdier Rocks")
+			.description("Obtain some Andesite Alloy, Create's most important resource")
+			.after(ROOT)
+			.whenIconCollected()),
+
+		ANDESITE_CASING = create("andesite_casing", b -> b.icon(AllBlocks.ANDESITE_CASING)
+			.title("The Andesite Age")
+			.description("Apply Andesite Alloy to wood creating a basic casing for your machines")
+			.after(ANDESITE)
+			.special(NOISY)),
+
+		PRESS = create("mechanical_press", b -> b.icon(AllBlocks.MECHANICAL_PRESS)
+			.title("Bonk")
+			.description("Create some sheets in a Mechanical Press")
+			.after(ANDESITE_CASING)
+			.special(NOISY)),
+
+		ENCASED_FAN = create("encased_fan", b -> b.icon(AllBlocks.ENCASED_FAN)
+			.title("Wind maker")
+			.description("Place and activate an Encased Fan")
+			.after(PRESS)),
+
+		FAN_PROCESSING = create("fan_processing", b -> b.icon(AllItems.PROPELLER)
+			.title("Processing by Particle")
+			.description("Use an Encased Fan to process materials")
+			.after(ENCASED_FAN)),
+
+		SAW_PROCESSING = create("saw_processing", b -> b.icon(AllBlocks.MECHANICAL_SAW)
+			.title("Workshop's most feared")
+			.description("Use an upright Mechanical Saw to process materials")
+			.after(FAN_PROCESSING)),
+
+		COMPACTING = create("compacting", b -> b.icon(Blocks.IRON_BLOCK)
+			.title("Compactification")
+			.description("Use a Press and a Basin to create less items from more items")
+			.after(SAW_PROCESSING)),
+
+		BELT = create("belt", b -> b.icon(AllItems.BELT_CONNECTOR)
+			.title("Kelp Drive")
+			.description("Connect two Shafts with a Mechanical Belt")
+			.after(COMPACTING)),
+
+		FUNNEL = create("funnel", b -> b.icon(AllBlocks.ANDESITE_FUNNEL)
+			.title("Airport Aesthetic")
+			.description("Extract or insert items into a container using a Funnel")
+			.after(BELT)),
+
+		CHUTE = create("chute", b -> b.icon(AllBlocks.CHUTE)
+			.title("Vertical Logistics")
+			.description("Transport some items by Chute")
+			.after(FUNNEL)),
+
+		MIXER = create("mechanical_mixer", b -> b.icon(AllBlocks.MECHANICAL_MIXER)
+			.title("Mixing it up")
+			.description("Combine ingredients in a Mechanical Mixer")
+			.after(CHUTE)),
+
+		BLAZE_BURNER = create("burner", b -> b.icon(AllBlocks.BLAZE_BURNER)
+			.title("Sentient Fireplace")
+			.description("Obtain a Blaze Burner")
+			.whenIconCollected()
+			.after(MIXER)),
+
+		// Andesite - Top Branch
+
+		WATER_WHEEL = create("water_wheel", b -> b.icon(AllBlocks.WATER_WHEEL)
+			.title("Harnessed Hydraulics")
+			.description("Place a Water Wheel and use it to generate torque")
+			.after(ANDESITE)),
+
+		WINDMILL = create("windmill", b -> b.icon(AllBlocks.SAIL_FRAME)
+			.title("A Mild Breeze")
+			.description("Assemble a windmill and use it to generate torque")
+			.after(WATER_WHEEL)),
+
+		COGS = create("shifting_gears", b -> b.icon(AllBlocks.COGWHEEL)
+			.title("Shifting Gears")
+			.description(
+				"Connect a Large Cogwheel to a Small Cogwheel, allowing you to change the speed of your Contraption")
+			.after(WINDMILL)),
+
+		MILLSTONE = create("millstone", b -> b.icon(AllBlocks.MILLSTONE)
+			.title("Embrace the Grind")
+			.description("Use a Millstone to pulverise materials")
+			.after(COGS)),
+
+		SUPER_GLUE = create("super_glue", b -> b.icon(AllItems.SUPER_GLUE)
+			.title("Area of Connect")
+			.description("Super Glue some blocks into a group")
+			.after(MILLSTONE)),
+
+		CONTRAPTION_ACTORS = create("contraption_actors", b -> b.icon(AllBlocks.MECHANICAL_HARVESTER)
+			.title("Moving with Purpose")
+			.description("Create a contraption with drills, saws or harvesters on board")
+			.after(SUPER_GLUE)),
+
+		PSI = create("portable_storage_interface", b -> b.icon(AllBlocks.PORTABLE_STORAGE_INTERFACE)
+			.title("Drive-by exchange")
+			.description("Use a Portable Storage Interface to take or insert items into a contraption")
+			.after(CONTRAPTION_ACTORS)),
+
+		WRENCH_GOGGLES = create("wrench_goggles", b -> b.icon(AllItems.WRENCH)
+			.title("Kitted out")
+			.description("Equip Engineer's goggles and a Wrench")
+			.whenIconCollected()
+			.whenItemCollected(AllItems.GOGGLES)
+			.after(PSI)),
+
+		STRESSOMETER = create("stressometer", b -> b.icon(AllBlocks.STRESSOMETER)
+			.title("Stress for Nerds")
+			.description("Get an exact readout with the help of Goggles and a Stressometer")
+			.after(WRENCH_GOGGLES)),
+
+		CUCKOO_CLOCK = create("cuckoo_clock", b -> b.icon(AllBlocks.CUCKOO_CLOCK)
+			.title("Is it Time?")
+			.description("Witness your Cuckoo Clock announce bedtime")
+			.after(STRESSOMETER)
+			.special(NOISY)),
+
+		// Andesite - Expert Branch
+
+		WINDMILL_MAXED = create("windmill_maxed", b -> b.icon(AllBlocks.SAIL)
+			.title("A Strong Breeze")
+			.description("Assemble a windmill of maximum strength")
+			.after(ANDESITE)
+			.special(EXPERT)),
+
+		EJECTOR_MAXED = create("ejector_maxed", b -> b.icon(AllBlocks.WEIGHTED_EJECTOR)
+			.title("Springboard Champion")
+			.description("Get launched for more than 30 blocks by a Weighted Ejector")
+			.after(WINDMILL_MAXED)
+			.special(EXPERT)),
+
+		PULLEY_MAXED = create("pulley_maxed", b -> b.icon(AllBlocks.ROPE_PULLEY)
+			.title("Rope to Nowhere")
+			.description("Extend a Rope Pulley over 200 blocks deep")
+			.after(EJECTOR_MAXED)
+			.special(EXPERT)),
+
+		CART_PICKUP = create("cart_pickup", b -> b.icon(AllItems.CHEST_MINECART_CONTRAPTION)
+			.title("Strong Arms")
+			.description("Pick up a Minecart Contraption with at least 200 attached blocks")
+			.after(PULLEY_MAXED)
+			.special(EXPERT)),
+
+		ANVIL_PLOUGH = create("anvil_plough", b -> b.icon(Blocks.CHIPPED_ANVIL)
+			.title("Blacksmith Artillery")
+			.description("Launch an Anvil with Mechanical ploughs")
+			.after(CART_PICKUP)
+			.special(EXPERT)),
+
+		// Andesite - Hidden
+
+		LAVA_WHEEL = create("lava_wheel_00000", b -> b.icon(AllBlocks.WATER_WHEEL)
+			.title("Magma Wheel")
+			.description("This shouldn't have worked")
+			.after(MIXER)
+			.special(SECRET)),
+
+		HAND_CRANK = create("hand_crank_000", b -> b.icon(AllBlocks.HAND_CRANK)
+			.title("Workout Session")
+			.description("Use a Hand Crank until fully exhausted")
+			.after(MIXER)
+			.special(SECRET)),
+
+		FUNNEL_KISS = create("belt_funnel_kiss", b -> b.icon(AllBlocks.BRASS_FUNNEL)
+			.title("The Parrots and the Flaps")
+			.description("Make two Belt-mounted Funnels kiss")
+			.after(MIXER)
+			.special(SECRET)),
+
+		STRESSOMETER_MAXED = create("stressometer_maxed", b -> b.icon(AllBlocks.STRESSOMETER)
+			.title("Perfectly Stressed")
+			.description("Get a 100% readout from a Stressometer")
+			.after(MIXER)
+			.special(SECRET)),
+
+		// Copper - Central Branch
+
+		COPPER = create("copper", b -> b.icon(Items.COPPER_INGOT)
+			.title("More Sturdier Rocks")
+			.description("Amass some Copper for your exploits in Fluid Manipulation")
+			.whenIconCollected()
+			.after(BLAZE_BURNER)
+			.special(SILENT)),
+
+		COPPER_CASING = create("copper_casing", b -> b.icon(AllBlocks.COPPER_CASING)
+			.title("The Copper Age")
+			.description("Apply Copper Ingots to wood creating a waterproof casing for your machines")
+			.after(COPPER)
+			.special(NOISY)),
+
+		SPOUT = create("spout", b -> b.icon(AllBlocks.SPOUT)
+			.title("Sploosh")
+			.description("Watch a fluid containing item be filled using a Spout")
+			.after(COPPER_CASING)),
+
+		DRAIN = create("drain", b -> b.icon(AllBlocks.ITEM_DRAIN)
+			.title("Tumble Draining")
+			.description("Watch a fluid containing item be emptied by an Item Drain")
+			.after(SPOUT)),
+
+		STEAM_ENGINE = create("steam_engine", b -> b.icon(AllBlocks.STEAM_ENGINE)
+			.title("The Powerhouse")
+			.description("Use a Steam engine to generate torque")
+			.after(DRAIN)),
+
+		STEAM_WHISTLE = create("steam_whistle", b -> b.icon(AllBlocks.STEAM_WHISTLE)
+			.title("Voice of an Angel")
+			.description("Activate a Steam Whistle")
+			.after(STEAM_ENGINE)),
+
+		BACKTANK = create("backtank", b -> b.icon(AllItems.COPPER_BACKTANK)
+			.title("Pressure to Go")
+			.description("Create a copper backtank and make it accumulate Air Pressure")
+			.after(STEAM_WHISTLE)),
+
+		DIVING_SUIT = create("diving_suit", b -> b.icon(AllItems.DIVING_HELMET)
+			.title("Ready for the Depths")
+			.description("Equip a diving helmet together with your backtank and jump into water")
+			.after(BACKTANK)),
+
+		// Copper - Top Branch
+
+		PUMP = create("mechanical_pump_0", b -> b.icon(AllBlocks.MECHANICAL_PUMP)
+			.title("Under Pressure")
+			.description("Place and power a Mechanical Pump")
+			.after(COPPER)),
+
+		GLASS_PIPE = create("glass_pipe", b -> b.icon(AllBlocks.FLUID_PIPE)
+			.title("Flow Discovery")
+			.description("Use your Wrench on a pipe that contains a fluid")
+			.after(PUMP)),
+
+		WATER_SUPPLY = create("water_supply", b -> b.icon(Items.WATER_BUCKET)
+			.title("Puddle Collector")
+			.description("Use the pulling end of a pipe or pump to collect a water block")
+			.after(GLASS_PIPE)),
+
+		HOSE_PULLEY = create("hose_pulley", b -> b.icon(AllBlocks.HOSE_PULLEY)
+			.title("Industrial Spillage")
+			.description("Lower a Hose Pulley and watch it drain or fill a body of fluid")
+			.after(WATER_SUPPLY)),
+
+		CHOCOLATE_BUCKET = create("chocolate_bucket", b -> b.icon(AllFluids.CHOCOLATE.get()
+			.getBucket())
+			.title("A World of Imagination")
+			.description("Obtain a Bucket of Molten Chocolate")
+			.whenIconCollected()
+			.after(HOSE_PULLEY)),
+
+		HONEY_DRAIN = create("honey_drain", b -> b.icon(Items.BEEHIVE)
+			.title("Autonomous Bee-Keeping")
+			.description("Use pipes to pull honey from a Bee Nest or Bee House")
+			.after(CHOCOLATE_BUCKET)),
+
+		// Copper - Expert Branch
+
+		HOSE_PULLEY_LAVA = create("hose_pulley_lava", b -> b.icon(AllBlocks.HOSE_PULLEY)
+			.title("Tapping the Mantle")
+			.description("Pump from a body of Lava large enough to be considered infinite")
+			.after(COPPER)
+			.special(EXPERT)),
+
+		STEAM_ENGINE_MAXED = create("steam_engine_maxed", b -> b.icon(AllBlocks.STEAM_ENGINE)
+			.title("Full Steam")
+			.description("Run a boiler at the maximum level of power")
+			.after(HOSE_PULLEY_LAVA)
+			.special(EXPERT)),
+
+		FOODS = create("foods", b -> b.icon(AllItems.CHOCOLATE_BERRIES)
+			.title("Balanced Diet")
+			.description("Create Chocolate Berries, a Honeyed Apple and a Sweet Roll; all from the same Spout")
+			.after(STEAM_ENGINE_MAXED)
+			.special(EXPERT)),
+
+		// Copper - Hidden
+
+		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.DIVING_HELMET)
+			.title("Swimming with the Striders")
+			.description("Attempt to take a dive in lava with your Copper Diving Gear")
+			.after(BACKTANK)
+			.special(SECRET)),
+
+		CHAINED_DRAIN = create("chained_drain", b -> b.icon(AllBlocks.ITEM_DRAIN)
+			.title("On a Roll")
+			.description("Watch an Item move across a row of Item Drains")
+			.after(BACKTANK)
+			.special(SECRET)),
+
+		CROSS_STREAMS = create("cross_streams", b -> b.icon(Blocks.COBBLESTONE)
+			.title("Don't cross the Streams!")
+			.description("Watch two fluids meet in your pipe network")
+			.after(BACKTANK)
+			.special(SECRET)),
+
+		PIPE_ORGAN = create("pipe_organ", b -> b.icon(AllBlocks.STEAM_WHISTLE)
+			.title("The Pipe Organ")
+			.description("Attach 12 uniquely pitched Steam Whistles to a single fluid tank")
+			.after(BACKTANK)
+			.special(SECRET)),
+
+		// Brass - Central Branch
+
+		BRASS = create("brass", b -> b.icon(AllItems.BRASS_INGOT)
+			.title("Real Alloys")
+			.description("Create some Brass from Copper and Zinc ingots in your Blaze-powered Mixer")
+			.whenIconCollected()
+			.after(DIVING_SUIT)),
+
+		BRASS_CASING = create("brass_casing", b -> b.icon(AllBlocks.BRASS_CASING)
+			.title("The Brass Age")
+			.description("Apply Brass Ingots to wood creating a casing for more sophisticated machines")
+			.after(BRASS)
+			.special(NOISY)),
+
+		ROSE_QUARTZ = create("rose_quartz", b -> b.icon(AllItems.POLISHED_ROSE_QUARTZ)
+			.title("Pink Diamonds")
+			.description("Polish some Rose Quartz")
+			.whenIconCollected()
+			.after(BRASS_CASING)),
+
+		DEPLOYER = create("deployer", b -> b.icon(AllBlocks.DEPLOYER)
+			.title("Artificial Intelligence")
+			.description("Place and activate a Deployer, the perfect reflection of yourself")
+			.after(ROSE_QUARTZ)),
+
+		MECHANISM = create("precision_mechanism", b -> b.icon(AllItems.PRECISION_MECHANISM)
+			.title("Complex Curiosities")
+			.description("Assemble a Precision Mechanism")
+			.whenIconCollected()
+			.after(DEPLOYER)
+			.special(NOISY)),
+
+		SPEED_CONTROLLER = create("speed_controller", b -> b.icon(AllBlocks.ROTATION_SPEED_CONTROLLER)
+			.title("Engineers Hate Him!")
+			.description("Fine tune your contraption with a Rotation Speed Controller")
+			.after(MECHANISM)),
+
+		MECHANICAL_ARM = create("mechanical_arm", b -> b.icon(AllBlocks.MECHANICAL_ARM)
+			.title("Busy Hands")
+			.description("Watch your Mechanical Arm transport its first Item")
+			.after(SPEED_CONTROLLER)
+			.special(NOISY)),
+
+		CRAFTER = create("mechanical_crafter", b -> b.icon(AllBlocks.MECHANICAL_CRAFTER)
+			.title("Automated Assembly")
+			.description("Place and power some Mechanical Crafters")
+			.after(MECHANICAL_ARM)),
+
+		CRUSHING_WHEEL = create("crushing_wheel", b -> b.icon(AllBlocks.CRUSHING_WHEEL)
+			.title("A Pair of Giants")
+			.description("Place and power a set of Crushing Wheels")
+			.after(CRAFTER)
+			.special(NOISY)),
+
+		// Brass - Top Branch
+
+		HAUNTED_BELL = create("haunted_bell", b -> b.icon(AllBlocks.HAUNTED_BELL)
+			.title("Shadow Sense")
+			.description("Toll a Haunted Bell")
+			.after(BRASS)
+			.special(NOISY)),
+
+		CLOCKWORK_BEARING = create("clockwork_bearing", b -> b.icon(AllBlocks.CLOCKWORK_BEARING)
+			.title("Contraption O'Clock")
+			.description("Assemble a structure mounted on a Clockwork Bearing")
+			.after(HAUNTED_BELL)
+			.special(NOISY)),
+
+		DISPLAY_LINK = create("display_link", b -> b.icon(AllBlocks.DISPLAY_LINK)
+			.title("Big Data")
+			.description("Use a Display link to visualise information")
+			.after(CLOCKWORK_BEARING)
+			.special(NOISY)),
+
+		POTATO_CANNON = create("potato_cannon", b -> b.icon(AllItems.POTATO_CANNON)
+			.title("Fwoomp!")
+			.description("Defeat an enemy with your Potato Cannon")
+			.after(DISPLAY_LINK)
+			.special(NOISY)),
+
+		EXTENDO_GRIP = create("extendo_grip", b -> b.icon(AllItems.EXTENDO_GRIP)
+			.title("Boioioing!")
+			.description("Get hold of an Extendo Grip")
+			.after(POTATO_CANNON)),
+
+		LINKED_CONTROLLER = create("linked_controller", b -> b.icon(AllItems.LINKED_CONTROLLER)
+			.title("Remote Activation")
+			.description("Activate a Redstone Link using a Linked Controller")
+			.after(EXTENDO_GRIP)),
+
+		ARM_BLAZE_BURNER = create("arm_blaze_burner", b -> b.icon(AllBlocks.BLAZE_BURNER)
+			.title("Combust-o-Tron")
+			.description("Instruct a Mechanical Arm to feed your Blaze Burner")
+			.after(LINKED_CONTROLLER)),
+
+		// Brass - Expert Branch
+
+		CRUSHER_MAXED = create("crusher_maxed_0000", b -> b.icon(AllBlocks.CRUSHING_WHEEL)
+			.title("Crushing it")
+			.description("Operate a Pair of Crushing wheels at max speed")
+			.after(BRASS)
+			.special(EXPERT)),
+
+		ARM_MANY_TARGETS = create("arm_many_targets", b -> b.icon(AllBlocks.MECHANICAL_ARM)
+			.title("Organize-o-Tron")
+			.description("Program a Mechanical Arm with ten or more output locations")
+			.after(CRUSHER_MAXED)
+			.special(EXPERT)),
+
+		POTATO_CANNON_COLLIDE = create("potato_cannon_collide", b -> b.icon(Items.CARROT)
+			.title("Veggie Fireworks")
+			.description("Cause potato cannon projectiles of different types to collide with each other")
+			.after(ARM_MANY_TARGETS)
+			.special(EXPERT)),
+
+		SELF_DEPLOYING = create("self_deploying", b -> b.icon(Items.RAIL)
+			.title("Self-Driving Cart")
+			.description("Create a Minecart Contraption that places tracks in front of itself")
+			.after(POTATO_CANNON_COLLIDE)
+			.special(EXPERT)),
+
+		// Brass - Hidden
+
+		FIST_BUMP = create("fist_bump", b -> b.icon(AllBlocks.DEPLOYER)
+			.title("Pound It, Bro!")
+			.description("Make two Deployers fist-bump")
+			.after(CRAFTER)
+			.special(SECRET)),
+
+		CRAFTER_LAZY = create("crafter_lazy_000", b -> b.icon(AllBlocks.MECHANICAL_CRAFTER)
+			.title("Desperate Measures")
+			.description("Drastically slow down a Mechanical Crafter to procrastinate on proper infrastructure")
+			.after(CRAFTER)
+			.special(SECRET)),
+
+		EXTENDO_GRIP_DUAL = create("extendo_grip_dual", b -> b.icon(AllItems.EXTENDO_GRIP)
+			.title("To full Extent")
+			.description("Dual wield Extendo Grips for super-human reach")
+			.after(CRAFTER)
+			.special(SECRET)),
+
+		MUSICAL_ARM = create("musical_arm", b -> b.icon(Blocks.JUKEBOX)
+			.title("DJ Mechanico")
+			.description("Watch a Mechanical Arm operate your Jukebox")
+			.after(CRAFTER)
+			.special(SECRET)),
+
+		// Trains - Central Branch
+
+		STURDY_SHEET = create("sturdy_sheet", b -> b.icon(AllItems.STURDY_SHEET)
+			.title("The Sturdiest Rocks")
+			.description("Assemble a Sturdy Sheet from refining crushed Obsidian")
+			.whenIconCollected()
+			.after(CRUSHING_WHEEL)),
+
+		TRAIN_CASING = create("train_casing_00", b -> b.icon(AllBlocks.RAILWAY_CASING)
+			.title("The Logistical Age")
+			.description("Use Sturdy Sheets to create a Casing for Railway Components")
+			.after(STURDY_SHEET)
+			.special(NOISY)),
+
+		TRAIN = create("train", b -> b.icon(AllBlocks.TRACK_STATION)
+			.title("All Aboard!")
+			.description("Assemble your first Train")
+			.after(TRAIN_CASING)
+			.special(NOISY)),
+
+		CONDUCTOR = create("conductor", b -> b.icon(AllItems.SCHEDULE)
+			.title("Conductor Instructor")
+			.description("Instruct a Train driver with a Schedule")
+			.after(TRAIN)),
+
+		SIGNAL = create("track_signal", b -> b.icon(AllBlocks.TRACK_SIGNAL)
+			.title("Traffic Control")
+			.description("Place a Train Signal")
+			.after(CONDUCTOR)),
+
+		DISPLAY_BOARD = create("display_board_0", b -> b.icon(AllBlocks.DISPLAY_BOARD)
+			.title("Dynamic Timetables")
+			.description("Forecast a Train's arrival on your Display Board with the help of Display Links")
+			.after(SIGNAL)
+			.special(NOISY)),
+
+		// Trains - Top Branch
+
+		TRAIN_TRACK = create("track_0", b -> b.icon(AllBlocks.TRACK)
+			.title("A new Gauge")
+			.description("Obtain some Train Tracks")
+			.whenIconCollected()
+			.after(STURDY_SHEET)),
+
+		TRAIN_WHISTLE = create("train_whistle", b -> b.icon(AllBlocks.STEAM_WHISTLE)
+			.title("Choo choo!")
+			.description("Assemble a Steam Whistle to your Train and activate it while driving")
+			.after(TRAIN_TRACK)),
+
+		TRAIN_PORTAL = create("train_portal", b -> b.icon(Blocks.AMETHYST_BLOCK)
+			.title("Dimensional Commuter")
+			.description("Ride a train through a Nether Portal")
+			.after(TRAIN_WHISTLE)
+			.special(NOISY)),
+
+		// Trains - Expert Branch
+
+		TRACK_CRAFTING = create("track_crafting_factory", b -> b.icon(AllBlocks.MECHANICAL_PRESS)
+			.title("Track Factory")
+			.description("Produce more than 1000 train tracks in the same Mechanical Press")
+			.after(STURDY_SHEET)
+			.special(EXPERT)),
+
+		LONG_BEND = create("long_bend", b -> b.icon(AllBlocks.TRACK)
+			.title("The Longest Bend")
+			.description("Create a Curved track section that spans more than 30 blocks in length")
+			.after(TRACK_CRAFTING)
+			.special(EXPERT)),
+
+		LONG_TRAIN = create("long_train", b -> b.icon(Items.MINECART)
+			.title("Ambitious Endeavours")
+			.description("Create a Train with at least six Carriages")
+			.after(LONG_BEND)
+			.special(EXPERT)),
+
+		LONG_TRAVEL = create("long_travel", b -> b.icon(AllBlocks.SEATS.get(DyeColor.GREEN))
+			.title("Field Trip")
+			.description("Leave a Train Seat over 5000 blocks away from where you started travelling")
+			.after(LONG_TRAIN)
+			.special(EXPERT)),
+
+		// Trains - Hidden
+
+		TRAIN_ROADKILL = create("train_roadkill", b -> b.icon(Items.DIAMOND_SWORD)
+			.title("Road Kill")
+			.description("Run over an Enemy with your Train")
+			.after(SIGNAL)
+			.special(SECRET)),
+
+		RED_SIGNAL = create("red_signal", b -> b.icon(AllBlocks.TRACK_SIGNAL)
+			.title("Expert Driver")
+			.description("Run a Red Signal with your Train")
+			.after(SIGNAL)
+			.special(SECRET)),
+
+		TRAIN_CRASH = create("train_crash", b -> b.icon(AllItems.INCOMPLETE_TRACK)
+			.title("Terrible Service")
+			.description("Witness a Train Crash as a Passenger")
+			.after(SIGNAL)
+			.special(SECRET)),
+
+		TRAIN_CRASH_BACKWARDS = create("train_crash_backwards", b -> b.icon(AllItems.INCOMPLETE_TRACK)
+			.title("Blind Spot")
+			.description("Crash into another Train while driving backwards")
+			.after(SIGNAL)
+			.special(SECRET)),
+
+		//
+		END = null;
+
+	private static CreateAdvancement create(String id, UnaryOperator<Builder> b) {
+		return new CreateAdvancement(id, b);
 	}
 
 	// Datagen
@@ -440,7 +645,8 @@ public class AllAdvancements implements DataProvider {
 			}
 		};
 
-		register(consumer);
+		for (CreateAdvancement advancement : ENTRIES)
+			advancement.save(consumer);
 	}
 
 	private static Path getPath(Path pathIn, Advancement advancementIn) {
@@ -456,64 +662,13 @@ public class AllAdvancements implements DataProvider {
 		return "Create's Advancements";
 	}
 
-	public PlacedBlockTrigger.TriggerInstance placeBlock(Block block) {
-		return PlacedBlockTrigger.TriggerInstance.placedBlock(block);
+	public static JsonObject provideLangEntries() {
+		JsonObject object = new JsonObject();
+		for (CreateAdvancement advancement : ENTRIES)
+			advancement.appendToLang(object);
+		return object;
 	}
 
-	public RegistryTrigger.Instance<Fluid> isInfinite(FlowingFluid fluid) {
-		return AllTriggers.INFINITE_FLUID.forEntries(fluid.getSource());
-	}
-
-	public InventoryChangeTrigger.TriggerInstance itemGathered(ItemLike itemprovider) {
-		return InventoryChangeTrigger.TriggerInstance.hasItems(itemprovider);
-	}
-
-	static enum TaskType {
-
-		NORMAL(FrameType.TASK, true, false, false),
-		MILESTONE(FrameType.TASK, true, true, false),
-		GOAL(FrameType.GOAL, true, true, false),
-		SECRET(FrameType.GOAL, true, true, true),
-		SILENT_GATE(FrameType.CHALLENGE, false, false, false),
-		CHALLENGE(FrameType.CHALLENGE, true, true, false),
-
-		;
-
-		private FrameType frame;
-		private boolean toast;
-		private boolean announce;
-		private boolean hide;
-
-		private TaskType(FrameType frame, boolean toast, boolean announce, boolean hide) {
-			this.frame = frame;
-			this.toast = toast;
-			this.announce = announce;
-			this.hide = hide;
-		}
-	}
-
-	public Builder kinecticAdvancement(String name, Block block, TaskType type) {
-		return advancement(name, block, type).addCriterion("0", placeBlock(block));
-//			.withCriterion("1", isPowered(block)); Duplicate toast
-	}
-
-	public Builder advancement(String name, ItemLike icon, TaskType type) {
-		return advancement(name, new ItemStack(icon), type);
-	}
-
-	public Builder deadEnd() {
-		return advancement("eob", Items.OAK_SAPLING, TaskType.SILENT_GATE);
-	}
-
-	public Builder advancement(String name, ItemStack icon, TaskType type) {
-		return Advancement.Builder.advancement()
-			.display(icon, new TranslatableComponent(LANG + name),
-				new TranslatableComponent(LANG + name + ".desc"), null, type.frame, type.toast, type.announce,
-				type.hide);
-	}
-
-	public Builder itemAdvancement(String name, Supplier<? extends ItemLike> item, TaskType type) {
-		return advancement(name, item.get(), type).addCriterion("0", itemGathered(item.get()));
-	}
+	public static void register() {}
 
 }

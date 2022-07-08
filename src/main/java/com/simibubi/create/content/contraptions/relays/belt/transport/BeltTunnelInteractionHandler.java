@@ -9,6 +9,8 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -44,6 +46,7 @@ public class BeltTunnelInteractionHandler {
 		boolean onServer = !world.isClientSide || beltInventory.belt.isVirtual();
 		boolean removed = false;
 		BeltTunnelTileEntity nextTunnel = getTunnelOnSegment(beltInventory, upcomingSegment);
+		int transferred = current.stack.getCount();
 
 		if (nextTunnel instanceof BrassTunnelTileEntity) {
 			BrassTunnelTileEntity brassTunnel = (BrassTunnelTileEntity) nextTunnel;
@@ -82,7 +85,8 @@ public class BeltTunnelInteractionHandler {
 						continue;
 
 					ItemStack toinsert = ItemHandlerHelper.copyStackWithSize(current.stack, 1);
-					if (!behaviour.handleInsertion(toinsert, d, false).isEmpty())
+					if (!behaviour.handleInsertion(toinsert, d, false)
+						.isEmpty())
 						return true;
 					if (onServer)
 						flapTunnel(beltInventory, upcomingSegment, d, false);
@@ -98,6 +102,10 @@ public class BeltTunnelInteractionHandler {
 		if (onServer) {
 			flapTunnel(beltInventory, currentSegment, movementFacing, false);
 			flapTunnel(beltInventory, upcomingSegment, movementFacing.getOpposite(), true);
+
+			if (nextTunnel != null)
+				DisplayLinkBlock.sendToGatherers(world, nextTunnel.getBlockPos(),
+					(dgte, b) -> b.itemReceived(dgte, transferred), AccumulatedItemCountDisplaySource.class);
 		}
 
 		if (removed)
@@ -140,7 +148,8 @@ public class BeltTunnelInteractionHandler {
 
 	public static BeltTunnelTileEntity getTunnelOnPosition(Level world, BlockPos pos) {
 		pos = pos.above();
-		if (!(world.getBlockState(pos).getBlock() instanceof BeltTunnelBlock))
+		if (!(world.getBlockState(pos)
+			.getBlock() instanceof BeltTunnelBlock))
 			return null;
 		BlockEntity te = world.getBlockEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))

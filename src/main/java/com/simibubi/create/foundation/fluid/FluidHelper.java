@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,6 +47,18 @@ public class FluidHelper {
 
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
+	}
+	
+	public static boolean isTag(Fluid fluid, TagKey<Fluid> pTag) {
+		return fluid.is(pTag);
+	}
+	
+	public static boolean isTag(FluidState fluid, TagKey<Fluid> pTag) {
+		return isTag(fluid.getType(), pTag);
+	}
+	
+	public static boolean isTag(FluidStack fluid, TagKey<Fluid> pTag) {
+		return isTag(fluid.getFluid(), pTag);
 	}
 
 	public static boolean hasBlockState(Fluid fluid) {

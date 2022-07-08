@@ -13,14 +13,20 @@ import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.foundation.ponder.element.AnimatedSceneElement;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.EntityElement;
@@ -70,9 +76,11 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -166,7 +174,8 @@ public class SceneBuilder {
 	 * Use this in case you are not happy with the scale of the scene relative to
 	 * the overlay
 	 *
-	 * @param factor {@literal >}1 will make the scene appear larger, smaller otherwise
+	 * @param factor {@literal >}1 will make the scene appear larger, smaller
+	 *               otherwise
 	 */
 	public void scaleSceneView(float factor) {
 		scene.scaleFactor = factor;
@@ -187,10 +196,9 @@ public class SceneBuilder {
 	 * of the schematic's structure. Makes for a nice opener
 	 */
 	public void showBasePlate() {
-		world.showSection(
-			scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ()),
-				new Vec3i(scene.getBasePlateSize() - 1, 0, scene.getBasePlateSize() - 1)),
-			Direction.UP);
+		world.showSection(scene.getSceneBuildingUtil().select.cuboid(
+			new BlockPos(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ()),
+			new Vec3i(scene.getBasePlateSize() - 1, 0, scene.getBasePlateSize() - 1)), Direction.UP);
 	}
 
 	/**
@@ -283,8 +291,10 @@ public class SceneBuilder {
 
 		private void rotationIndicator(BlockPos pos, boolean direction) {
 			addInstruction(scene -> {
-				BlockState blockState = scene.getWorld().getBlockState(pos);
-				BlockEntity tileEntity = scene.getWorld().getBlockEntity(pos);
+				BlockState blockState = scene.getWorld()
+					.getBlockState(pos);
+				BlockEntity tileEntity = scene.getWorld()
+					.getBlockEntity(pos);
 
 				if (!(blockState.getBlock() instanceof KineticBlock))
 					return;
@@ -307,7 +317,8 @@ public class SceneBuilder {
 						.charAt(0));
 
 				for (int i = 0; i < 20; i++)
-					scene.getWorld().addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
+					scene.getWorld()
+						.addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
 			});
 		}
 
@@ -329,8 +340,8 @@ public class SceneBuilder {
 
 		public void createRedstoneParticles(BlockPos pos, int color, int amount) {
 			Vector3f rgb = new Color(color).asVectorF();
-			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos), Emitter.withinBlockSpace(
-				new DustParticleOptions(rgb, 1), Vec3.ZERO), amount, 2));
+			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos),
+				Emitter.withinBlockSpace(new DustParticleOptions(rgb, 1), Vec3.ZERO), amount, 2));
 		}
 
 	}
@@ -385,7 +396,11 @@ public class SceneBuilder {
 		}
 
 		public void showLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
-			addInstruction(new LineInstruction(color, start, end, duration));
+			addInstruction(new LineInstruction(color, start, end, duration, false));
+		}
+
+		public void showBigLine(PonderPalette color, Vec3 start, Vec3 end, int duration) {
+			addInstruction(new LineInstruction(color, start, end, duration, true));
 		}
 
 		public void showOutline(PonderPalette color, Object slot, Selection selection, int duration) {
@@ -418,6 +433,11 @@ public class SceneBuilder {
 				.setPose(pose.get()));
 		}
 
+		public void conductorBirb(ElementLink<ParrotElement> birb, boolean conductor) {
+			addInstruction(scene -> scene.resolve(birb)
+				.setConductor(conductor));
+		}
+
 		public void movePointOfInterest(Vec3 location) {
 			addInstruction(new MovePoiInstruction(location));
 		}
@@ -428,8 +448,7 @@ public class SceneBuilder {
 
 		public void rotateParrot(ElementLink<ParrotElement> link, double xRotation, double yRotation, double zRotation,
 			int duration) {
-			addInstruction(
-				AnimateParrotInstruction.rotate(link, new Vec3(xRotation, yRotation, zRotation), duration));
+			addInstruction(AnimateParrotInstruction.rotate(link, new Vec3(xRotation, yRotation, zRotation), duration));
 		}
 
 		public void moveParrot(ElementLink<ParrotElement> link, Vec3 offset, int duration) {
@@ -526,7 +545,8 @@ public class SceneBuilder {
 		}
 
 		public void restoreBlocks(Selection selection) {
-			addInstruction(scene -> scene.getWorld().restoreBlocks(selection));
+			addInstruction(scene -> scene.getWorld()
+				.restoreBlocks(selection));
 		}
 
 		public ElementLink<WorldSectionElement> makeSectionIndependent(Selection selection) {
@@ -573,6 +593,10 @@ public class SceneBuilder {
 
 		public void movePulley(BlockPos pos, float distance, int duration) {
 			addInstruction(AnimateTileEntityInstruction.pulley(pos, distance, duration));
+		}
+
+		public void animateBogey(BlockPos pos, float distance, int duration) {
+			addInstruction(AnimateTileEntityInstruction.bogey(pos, distance, duration + 1));
 		}
 
 		public void moveDeployer(BlockPos pos, float distance, int duration) {
@@ -659,11 +683,6 @@ public class SceneBuilder {
 				itemEntity.setDeltaMovement(motion);
 				return itemEntity;
 			});
-		}
-
-		public ElementLink<EntityElement> createGlueEntity(BlockPos pos, Direction face) {
-			effects.superGlue(pos, face, false);
-			return createEntity(world -> new SuperGlueEntity(world, pos, face.getOpposite()));
 		}
 
 		public void createItemOnBeltLike(BlockPos location, Direction insertionSide, ItemStack stack) {
@@ -777,7 +796,8 @@ public class SceneBuilder {
 
 		public <T extends BlockEntity> void modifyTileEntity(BlockPos position, Class<T> teType, Consumer<T> consumer) {
 			addInstruction(scene -> {
-				BlockEntity tileEntity = scene.getWorld().getBlockEntity(position);
+				BlockEntity tileEntity = scene.getWorld()
+					.getBlockEntity(position);
 				if (teType.isInstance(tileEntity))
 					consumer.accept(teType.cast(tileEntity));
 			});
@@ -814,6 +834,38 @@ public class SceneBuilder {
 				ConnectedInputHandler.toggleConnection(s.getWorld(), position1, position2);
 				s.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 			});
+		}
+
+		public void toggleControls(BlockPos position) {
+			cycleBlockProperty(position, ControlsBlock.VIRTUAL);
+		}
+
+		public void animateTrainStation(BlockPos position, boolean trainPresent) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), StationTileEntity.class,
+				c -> c.putBoolean("ForceFlag", trainPresent));
+		}
+
+		public void conductorBlaze(BlockPos position, boolean conductor) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), BlazeBurnerTileEntity.class,
+				c -> c.putBoolean("TrainHat", conductor));
+		}
+
+		public void changeSignalState(BlockPos position, SignalState state) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(position), SignalTileEntity.class,
+				c -> NBTHelper.writeEnum(c, "State", state));
+		}
+
+		public void setDisplayBoardText(BlockPos position, int line, Component text) {
+			modifyTileEntity(position, FlapDisplayTileEntity.class,
+				t -> t.applyTextManually(line, Component.Serializer.toJson(text)));
+		}
+
+		public void dyeDisplayBoard(BlockPos position, int line, DyeColor color) {
+			modifyTileEntity(position, FlapDisplayTileEntity.class, t -> t.setColour(line, color));
+		}
+
+		public void flashDisplayLink(BlockPos position) {
+			modifyTileEntity(position, DisplayLinkTileEntity.class, linkTile -> linkTile.glow.setValue(2));
 		}
 
 	}

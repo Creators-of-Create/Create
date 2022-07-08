@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:blue_archwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "ars_nouveau:stripped_blue_archwood_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "ars_nouveau",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "parent": "create:its_alive",
+  "parent": "create:compacting",
   "display": {
     "icon": {
       "item": "create:belt_connector"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.belt"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.belt.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:connect_belt",
+      "trigger": "create:belt_builtin",
       "conditions": {}
     }
   },

@@ -12,9 +12,11 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -24,14 +26,25 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableHa
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
+import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingClient;
+import com.simibubi.create.content.logistics.trains.management.schedule.TrainHatArmorLayer;
+import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
+import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -48,6 +61,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
@@ -69,6 +83,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -77,6 +92,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -100,6 +116,7 @@ public class ClientEvents {
 		Level world = Minecraft.getInstance().level;
 		if (event.phase == Phase.START) {
 			LinkedControllerClientHandler.tick();
+			ControlsHandler.tick();
 			AirCurrent.tickClientPlayerSounds();
 			return;
 		}
@@ -110,10 +127,12 @@ public class ClientEvents {
 
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
+		CreateClient.GLUE_HANDLER.tick();
 		CreateClient.SCHEMATIC_HANDLER.tick();
 		CreateClient.ZAPPER_RENDER_HANDLER.tick();
 		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
+		CreateClient.RAILWAYS.clientTick();
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -129,6 +148,7 @@ public class ClientEvents {
 		ScrollValueRenderer.tick();
 		ChassisRangeDisplay.tick();
 		EdgeInteractionRenderer.tick();
+		GirderWrenchBehavior.tick();
 		WorldshaperRenderHandler.tick();
 		CouplingHandlerClient.tick();
 		CouplingRenderer.tickDebugModeRenders();
@@ -143,11 +163,27 @@ public class ClientEvents {
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
+		TrackTargetingClient.clientTick();
+		TrackPlacement.clientTick();
+		TrainRelocator.clientTick();
+		DisplayLinkBlockItem.clientTick();
+		CurvedTrackInteraction.clientTick();
+		CameraDistanceModifier.tick();
+		CameraAngleAnimationService.tick();
+		TrainHUD.tick();
 	}
+
+	@SubscribeEvent
+	public static void onRenderSelection(DrawSelectionEvent event) {}
 
 	@SubscribeEvent
 	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
 		CreateClient.checkGraphicsFanciness();
+	}
+
+	@SubscribeEvent
+	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+		CreateClient.RAILWAYS.cleanUp();
 	}
 
 	@SubscribeEvent
@@ -161,12 +197,13 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld()
-			.isClientSide()) {
-			CreateClient.invalidateRenderers();
-			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
-			AnimationTickHolder.reset();
-		}
+		if (!event.getWorld()
+			.isClientSide())
+			return;
+		CreateClient.invalidateRenderers();
+		CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
+		AnimationTickHolder.reset();
+		ControlsHandler.levelUnloaded(event.getWorld());
 	}
 
 	@SubscribeEvent
@@ -180,16 +217,29 @@ public class ClientEvents {
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
+		TrackBlockOutline.drawCurveSelection(ms, buffer);
+		TrackTargetingClient.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
+		CarriageCouplingRenderer.renderAll(ms, buffer);
 		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
 		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
 		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
-		// LightVolumeDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
 		ms.popPose();
+	}
+
+	@SubscribeEvent
+	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+		float partialTicks = AnimationTickHolder.getPartialTicks();
+
+		if (CameraAngleAnimationService.isYawAnimating())
+			event.setYaw(CameraAngleAnimationService.getYaw(partialTicks));
+
+		if (CameraAngleAnimationService.isPitchAnimating())
+			event.setPitch(CameraAngleAnimationService.getPitch(partialTicks));
 	}
 
 	@SubscribeEvent
@@ -220,7 +270,7 @@ public class ClientEvents {
 
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof SteamEngineBlock) {
 				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
 				if (!kineticStats.isEmpty()) {
 					event.getToolTip()
@@ -242,6 +292,23 @@ public class ClientEvents {
 		TurntableHandler.gameRenderTick();
 	}
 
+	@SubscribeEvent
+	public static void onMount(EntityMountEvent event) {
+		if (event.getEntityMounting() != Minecraft.getInstance().player)
+			return;
+
+		if (event.isDismounting()) {
+			CameraDistanceModifier.reset();
+			return;
+		}
+
+		if (!event.isMounting() || !(event.getEntityBeingMounted() instanceof CarriageContraptionEntity carriage)) {
+			return;
+		}
+
+		CameraDistanceModifier.zoomOut();
+	}
+
 	protected static boolean isGameActive() {
 		return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
 	}
@@ -252,18 +319,20 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos)) 
-           return;
-        
+		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+			return;
+
 		Fluid fluid = fluidstate.getType();
 
-		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
+		if (AllFluids.CHOCOLATE.get()
+			.isSame(fluid)) {
 			event.setDensity(5f);
 			event.setCanceled(true);
 			return;
 		}
 
-		if (AllFluids.HONEY.get().isSame(fluid)) {
+		if (AllFluids.HONEY.get()
+			.isSame(fluid)) {
 			event.setDensity(1.5f);
 			event.setCanceled(true);
 			return;
@@ -283,18 +352,20 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
-           return;
+		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+			return;
 
 		Fluid fluid = fluidstate.getType();
 
-		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
+		if (AllFluids.CHOCOLATE.get()
+			.isSame(fluid)) {
 			event.setRed(98 / 256f);
 			event.setGreen(32 / 256f);
 			event.setBlue(32 / 256f);
 		}
 
-		if (AllFluids.HONEY.get().isSame(fluid)) {
+		if (AllFluids.HONEY.get()
+			.isSame(fluid)) {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);
@@ -319,8 +390,10 @@ public class ClientEvents {
 
 		@SubscribeEvent
 		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
-			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+			EntityRenderDispatcher dispatcher = Minecraft.getInstance()
+				.getEntityRenderDispatcher();
 			CopperBacktankArmorLayer.registerOnAll(dispatcher);
+			TrainHatArmorLayer.registerOnAll(dispatcher);
 		}
 
 		@SubscribeEvent
@@ -329,7 +402,8 @@ public class ClientEvents {
 				.getModContainerById(Create.ID)
 				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
 			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+				() -> new ConfigGuiHandler.ConfigGuiFactory(
+					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 		}
 
 	}

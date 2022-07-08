@@ -1,0 +1,50 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create:block/standard_track",
+		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+	},
+	"elements": [
+		{
+			"name": "tie1",
+			"from": [-2.1, 0, 0],
+			"to": [2.1, 0.05, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"up": {"uv": [0, 8.5, 4, 10.5], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [0, 8.5, 4, 10.5], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie2",
+			"from": [-2, 4.4, 0],
+			"to": [2, 4.45, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"up": {"uv": [7.5, 13.5, 3.5, 11.5], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [0, 8.5, 4, 10.5], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie3",
+			"from": [-1.55, 0.05, 0],
+			"to": [1.55, 4.45, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [11, 2, 12.5, 4], "texture": "#1"},
+				"east": {"uv": [0, 6, 4, 8], "texture": "#1"},
+				"south": {"uv": [11, 2, 12.5, 4], "texture": "#1"},
+				"west": {"uv": [0, 6, 4, 8], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1, 2]
+		}
+	]
+}

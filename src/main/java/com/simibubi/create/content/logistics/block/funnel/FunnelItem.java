@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import com.simibubi.create.foundation.advancement.AllTriggers;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -48,10 +46,8 @@ public class FunnelItem extends BlockItem {
 			.getBlock();
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
 			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, direction);
-		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos)) {
-			AllTriggers.triggerFor(AllTriggers.BELT_FUNNEL, ctx.getPlayer());
+		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos)) 
 			return equivalentBeltFunnel;
-		}
 
 		return state;
 	}

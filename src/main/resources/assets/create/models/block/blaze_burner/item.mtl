@@ -1,0 +1,9 @@
+# Blender MTL File: 'Burner V3blend.blend'
+# Material Count: 2
+
+newmtl m_0
+map_Kd #0
+
+newmtl m_1
+Ka 1.000000 1.000000 1.000000
+map_Kd #1

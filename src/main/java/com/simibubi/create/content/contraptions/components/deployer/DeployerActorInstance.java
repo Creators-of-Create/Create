@@ -61,8 +61,8 @@ public class DeployerActorInstance extends ActorInstance {
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = mat.getModel(AllBlockPartials.DEPLOYER_POLE).createInstance();
-        hand = mat.getModel(handPose).createInstance();
+        pole = mat.getModel(AllBlockPartials.DEPLOYER_POLE, state).createInstance();
+        hand = mat.getModel(handPose, state).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
         shaft = materialManager.defaultSolid()

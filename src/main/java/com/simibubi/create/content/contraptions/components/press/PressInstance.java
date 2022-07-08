@@ -13,51 +13,54 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class PressInstance extends ShaftInstance implements DynamicInstance {
 
-    private final OrientedData pressHead;
-    private final MechanicalPressTileEntity press;
+	private final OrientedData pressHead;
+	private final MechanicalPressTileEntity press;
 
-    public PressInstance(MaterialManager dispatcher, MechanicalPressTileEntity tile) {
-        super(dispatcher, tile);
-        press = tile;
+	public PressInstance(MaterialManager dispatcher, MechanicalPressTileEntity tile) {
+		super(dispatcher, tile);
+		press = tile;
 
-        pressHead = dispatcher.defaultSolid()
-                .material(Materials.ORIENTED)
-                .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD)
-                .createInstance();
+		pressHead = dispatcher.defaultSolid()
+				.material(Materials.ORIENTED)
+				.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
+				.createInstance();
 
-        Quaternion q = Vector3f.YP.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
+		Quaternion q = Vector3f.YP
+			.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
 
-        pressHead.setRotation(q);
+		pressHead.setRotation(q);
 
-        transformModels();
-    }
+		transformModels();
+	}
 
-    @Override
-    public void beginFrame() {
-        transformModels();
-    }
+	@Override
+	public void beginFrame() {
+		transformModels();
+	}
 
-    private void transformModels() {
-        float renderedHeadOffset = getRenderedHeadOffset(press);
+	private void transformModels() {
+		float renderedHeadOffset = getRenderedHeadOffset(press);
 
-        pressHead.setPosition(getInstancePosition())
-                .nudge(0, -renderedHeadOffset, 0);
-    }
+		pressHead.setPosition(getInstancePosition())
+			.nudge(0, -renderedHeadOffset, 0);
+	}
 
-    private float getRenderedHeadOffset(MechanicalPressTileEntity press) {
-        return press.getRenderedHeadOffset(AnimationTickHolder.getPartialTicks());
-    }
+	private float getRenderedHeadOffset(MechanicalPressTileEntity press) {
+		PressingBehaviour pressingBehaviour = press.getPressingBehaviour();
+		return pressingBehaviour.getRenderedHeadOffset(AnimationTickHolder.getPartialTicks())
+			* pressingBehaviour.mode.headOffset;
+	}
 
-    @Override
-    public void updateLight() {
-        super.updateLight();
+	@Override
+	public void updateLight() {
+		super.updateLight();
 
-        relight(pos, pressHead);
-    }
+		relight(pos, pressHead);
+	}
 
-    @Override
-    public void remove() {
-        super.remove();
-        pressHead.delete();
-    }
+	@Override
+	public void remove() {
+		super.remove();
+		pressHead.delete();
+	}
 }

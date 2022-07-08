@@ -1,29 +1,5 @@
 package com.simibubi.create.api.connectivity;
 
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
-import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
-
-import com.simibubi.create.foundation.utility.Iterate;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-
-import net.minecraftforge.fluids.capability.IFluidHandler;
-
-import net.minecraftforge.items.CapabilityItemHandler;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +8,26 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
+import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
+import com.simibubi.create.foundation.utility.Iterate;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ConnectivityHandler {
 
@@ -320,11 +316,13 @@ public class ConnectivityHandler {
 		for (int yOffset = 0; yOffset < height; yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
+					
 					BlockPos pos = switch (axis) {
 					case X -> origin.offset(yOffset, xOffset, zOffset);
 					case Y -> origin.offset(xOffset, yOffset, zOffset);
 					case Z -> origin.offset(xOffset, zOffset, yOffset);
 					};
+					
 					T partAt = partAt(be.getType(), level, pos);
 					if (partAt == null)
 						continue;
@@ -356,23 +354,21 @@ public class ConnectivityHandler {
 						frontier.add(partAt);
 						partAt.preventConnectivityUpdate();
 					}
-					if (cache != null) {
+					if (cache != null) 
 						cache.put(pos, partAt);
-					}
 				}
 			}
 		}
-		if (be instanceof IMultiTileContainer.Inventory iinv && iinv.hasInventory()) {
+		
+		if (be instanceof IMultiTileContainer.Inventory iinv && iinv.hasInventory())
 			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 				.invalidate();
-		}
-		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) {
+		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank())
 			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 				.invalidate();
-		}
-		if (tryReconnect) {
+		
+		if (tryReconnect)
 			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);
-		}
 	}
 
 	private static <T extends BlockEntity & IMultiTileContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue() {
@@ -383,9 +379,8 @@ public class ConnectivityHandler {
 	public static <T extends BlockEntity & IMultiTileContainer> T partAt(BlockEntityType<?> type, BlockGetter level,
 		BlockPos pos) {
 		BlockEntity be = level.getBlockEntity(pos);
-		if (be != null && be.getType() == type)
+		if (be != null && be.getType() == type && !be.isRemoved())
 			return checked(be);
-
 		return null;
 	}
 

@@ -1,0 +1,71 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"particle": "create:block/whistle"
+	},
+	"elements": [
+		{
+			"name": "Centre",
+			"from": [6, 7, 3.5],
+			"to": [10, 12, 5],
+			"faces": {
+				"north": {"uv": [1.5, 4, 2.5, 5.25], "texture": "#0"},
+				"up": {"uv": [13.5, 14.5, 14.5, 15], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Back",
+			"from": [6, 5, 5],
+			"to": [10, 12, 12.5],
+			"faces": {
+				"north": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"},
+				"south": {"uv": [1.5, 6, 2.5, 7.75], "texture": "#0"},
+				"up": {"uv": [13.5, 12.75, 14.5, 14.75], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Left",
+			"from": [3.5, 5, 3.5],
+			"to": [6, 12, 12.5],
+			"faces": {
+				"north": {"uv": [2.5, 4, 3, 5.75], "texture": "#0"},
+				"east": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"},
+				"south": {"uv": [1, 6, 1.5, 7.75], "texture": "#0"},
+				"west": {"uv": [1, 6, 3, 7.75], "texture": "#0"},
+				"up": {"uv": [14.5, 13, 15, 15], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 5.5, 5.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Right",
+			"from": [10, 5, 3.5],
+			"to": [12.5, 12, 12.5],
+			"faces": {
+				"north": {"uv": [1, 4, 1.5, 5.75], "texture": "#0"},
+				"east": {"uv": [1, 6, 3, 7.75], "texture": "#0"},
+				"south": {"uv": [2.5, 6, 3, 7.75], "texture": "#0"},
+				"west": {"uv": [5.5, 1.5, 5, 2], "texture": "#0"},
+				"up": {"uv": [13, 13, 13.5, 15], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [5, 1.5, 5.5, 2], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Whistle Medium",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Whistle Medium Mouth",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0, 1, 2, 3]
+				}
+			]
+		}
+	]
+}

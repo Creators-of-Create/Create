@@ -5,16 +5,20 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.element.ScreenElement;
 
 import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractSimiWidget {
 
-	private AllIcons icon;
+	protected ScreenElement icon;
 
-	public IconButton(int x, int y, AllIcons icon) {
-		super(x, y, 18, 18);
+	public IconButton(int x, int y, ScreenElement icon) {
+		this(x, y, 18, 18, icon);
+	}
+	
+	public IconButton(int x, int y, int w, int h, ScreenElement icon) {
+		super(x, y, w, h);
 		this.icon = icon;
 	}
 
@@ -27,10 +31,14 @@ public class IconButton extends AbstractSimiWidget {
 				: isHoveredOrFocused() ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			AllGuiTextures.BUTTON.bind();
-			blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
-			icon.render(matrixStack, x + 1, y + 1, this);
+			drawBg(matrixStack, button);
+			icon.render(matrixStack, x + 1, y + 1);
 		}
+	}
+
+	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
+		AllGuiTextures.BUTTON.bind();
+		blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
 	}
 
 	public void setToolTip(Component text) {
@@ -38,7 +46,7 @@ public class IconButton extends AbstractSimiWidget {
 		toolTip.add(text);
 	}
 
-	public void setIcon(AllIcons icon) {
+	public void setIcon(ScreenElement icon) {
 		this.icon = icon;
 	}
 }

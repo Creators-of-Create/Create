@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 * */
 public interface IHaveHoveringInformation {
 
-	default boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking){
+	default boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;
 	}
 

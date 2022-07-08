@@ -10,16 +10,15 @@ import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -87,6 +86,7 @@ public class ChassisScenes {
 
 		scene.world.rotateBearing(bearingPos, 360, 80);
 		scene.world.rotateSection(chassis, 0, 360, 0, 80);
+		scene.idle(50);
 	}
 
 	public static void linearAttachement(SceneBuilder scene, SceneBuildingUtil util) {
@@ -253,7 +253,8 @@ public class ChassisScenes {
 		scene.overlay.showControls(new InputWindowElement(glueSurface, Pointing.DOWN).rightClick()
 			.withItem(AllItems.SUPER_GLUE.asStack()), 30);
 		scene.idle(7);
-		ElementLink<EntityElement> glueEntity = scene.world.createGlueEntity(chassisPos.west(), Direction.NORTH);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, glueSurface,
+			new AABB(util.grid.at(1, 2, 2)).expandTowards(0, 0, -1), 40);
 		scene.idle(20);
 		ElementLink<WorldSectionElement> gluedPlank =
 			scene.world.showIndependentSection(util.select.position(3, 3, 1), Direction.SOUTH);
@@ -262,7 +263,6 @@ public class ChassisScenes {
 		scene.effects.superGlue(chassisPos.west(), Direction.NORTH, true);
 		scene.idle(20);
 
-		scene.world.modifyEntity(glueEntity, Entity::discard);
 		scene.world.hideIndependentSection(glassSection, Direction.UP);
 		scene.world.hideIndependentSection(gluedPlank, Direction.UP);
 		scene.world.hideIndependentSection(topGlassSection, Direction.UP);
@@ -463,7 +463,7 @@ public class ChassisScenes {
 		scene.world.rotateBearing(bearingPos, 360, 80);
 		scene.world.rotateSection(contraption, 0, 360, 0, 80);
 		scene.idle(90);
-		
+
 		scene.world.destroyBlock(util.grid.at(1, 2, 0));
 		scene.idle(1);
 		scene.world.destroyBlock(util.grid.at(1, 2, 1));
@@ -486,86 +486,169 @@ public class ChassisScenes {
 	public static void superGlue(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("super_glue", "Attaching blocks using Super Glue");
 		scene.configureBasePlate(0, 0, 5);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
-		scene.idle(5);
-		scene.world.showSection(util.select.layer(1), Direction.DOWN);
-		scene.idle(10);
-
-		BlockPos central = util.grid.at(2, 2, 2);
-		ElementLink<WorldSectionElement> plank =
-			scene.world.showIndependentSection(util.select.position(central), Direction.DOWN);
+		scene.showBasePlate();
+		scene.setSceneOffsetY(-1);
 		scene.idle(15);
-		Vec3 blockSurface = util.vector.blockSurface(central, Direction.NORTH);
-		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick()
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
-		scene.idle(7);
-		ElementLink<EntityElement> glueEntity = scene.world.createGlueEntity(central, Direction.NORTH);
-		scene.idle(10);
-		scene.overlay.showText(60)
-			.pointAt(blockSurface)
+
+		Selection slab = util.select.fromTo(0, 2, 2, 1, 2, 2);
+		Selection pulley = util.select.fromTo(2, 2, 2, 2, 4, 2);
+		BlockPos pulleyPos = util.grid.at(2, 4, 2);
+		Selection kinetics = util.select.fromTo(1, 4, 2, 2, 4, 2);
+		BlockPos crankPos = util.grid.at(1, 4, 2);
+		Selection torch = util.select.position(1, 2, 3);
+		Selection harvester = util.select.position(3, 2, 3);
+		Selection lever = util.select.position(1, 1, 1);
+
+		scene.world.setBlocks(util.select.fromTo(2, 2, 2, 2, 3, 2), Blocks.AIR.defaultBlockState(), false);
+
+		scene.world.showSection(util.select.fromTo(1, 1, 2, 2, 1, 2), Direction.DOWN);
+		scene.world.showSection(util.select.fromTo(2, 2, 3, 2, 1, 3), Direction.DOWN);
+		scene.idle(5);
+		scene.world.showSection(util.select.fromTo(4, 1, 2, 3, 1, 2), Direction.WEST);
+		scene.idle(20);
+
+		scene.overlay.showText(80)
+			.text("Super Glue groups blocks together into moving contraptions")
 			.placeNearTarget()
-			.text("Super Glue can be used between any two blocks")
-			.colored(PonderPalette.GREEN);
+			.attachKeyFrame()
+			.pointAt(util.vector.topOf(util.grid.at(2, 1, 2)));
+		scene.idle(70);
+
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.topOf(2, 2, 3), Pointing.DOWN).withItem(AllItems.SUPER_GLUE.asStack())
+				.rightClick(),
+			40);
+		scene.idle(6);
+		scene.effects.indicateSuccess(util.grid.at(2, 2, 3));
+
+		scene.idle(45);
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.DOWN), Pointing.UP)
+				.withItem(AllItems.SUPER_GLUE.asStack())
+				.rightClick(),
+			40);
+		scene.idle(6);
+
+		AABB bb = new AABB(util.grid.at(2, 2, 3));
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, lever, bb, 1);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, lever, bb.expandTowards(-1, -1, -1), 285);
+		scene.idle(25);
+
+		scene.overlay.showText(70)
+			.text("Clicking two endpoints creates a new 'glued' area")
+			.placeNearTarget()
+			.colored(PonderPalette.GREEN)
+			.attachKeyFrame()
+			.pointAt(util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.WEST));
+		scene.idle(80);
+
+		bb = new AABB(util.grid.at(3, 1, 3));
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, crankPos, bb, 1);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, crankPos, bb.expandTowards(0, 0, -2), 66);
+		scene.idle(20);
+
+		scene.overlay.showText(70)
+			.text("To remove a box, punch it with the glue item in hand")
+			.placeNearTarget()
+			.attachKeyFrame()
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 1), Direction.WEST));
+		scene.idle(40);
+
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.blockSurface(util.grid.at(3, 1, 1), Direction.UP), Pointing.DOWN)
+				.withItem(AllItems.SUPER_GLUE.asStack())
+				.leftClick(),
+			40);
 		scene.idle(50);
 
-		scene.world.glueBlockOnto(central.north(), Direction.SOUTH, plank);
+		Selection toMove = util.select.fromTo(1, 1, 2, 2, 1, 2)
+			.add(util.select.fromTo(2, 2, 3, 2, 1, 3));
+		scene.overlay.showSelectionWithText(toMove, 70)
+			.text("Adjacent blocks sharing an area will pull each other along")
+			.placeNearTarget()
+			.attachKeyFrame()
+			.pointAt(util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.WEST));
+		scene.idle(50);
+
+		scene.world.showSection(pulley, Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(crankPos), Direction.EAST);
 		scene.idle(20);
-		scene.world.modifyEntity(glueEntity, Entity::discard);
 
-		BlockPos bearingPos = util.grid.at(2, 1, 2);
-		scene.world.configureCenterOfRotation(plank, util.vector.centerOf(bearingPos));
-		scene.world.rotateBearing(bearingPos, 360, 80);
-		scene.world.rotateSection(plank, 0, 360, 0, 80);
-		scene.idle(30);
-		scene.overlay.showText(80)
-			.attachKeyFrame()
-			.pointAt(util.vector.topOf(central))
-			.placeNearTarget()
-			.text("The attached blocks will move together when assembled into a Contraption");
-		scene.idle(90);
-
-		scene.overlay.showText(50)
-			.attachKeyFrame()
-			.pointAt(util.vector.topOf(central))
-			.placeNearTarget()
-			.text("Whenever Super Glue is held in the off-hand...");
-		scene.idle(60);
-
-		scene.world.glueBlockOnto(central.south(), Direction.NORTH, plank);
-		scene.idle(5);
-		scene.world.glueBlockOnto(central.north()
-			.east(), Direction.WEST, plank);
-		scene.idle(5);
-		scene.world.glueBlockOnto(central.above(), Direction.DOWN, plank);
-		scene.idle(5);
-		scene.world.glueBlockOnto(central.south()
-			.west(), Direction.EAST, plank);
+		scene.world.movePulley(pulleyPos, -1, 20);
+		scene.world.setKineticSpeed(kinetics, -24);
+		ElementLink<WorldSectionElement> contraption = scene.world.makeSectionIndependent(toMove);
+		scene.world.moveSection(contraption, util.vector.of(0, 1, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
 		scene.idle(10);
 
-		scene.overlay.showText(80)
-			.pointAt(util.vector.topOf(central)
-				.subtract(.5, 0, 0))
-			.placeNearTarget()
-			.text("...added blocks will be glued to the face they were placed on automatically");
-		scene.idle(90);
-
-		scene.world.rotateBearing(bearingPos, 360, 80);
-		scene.world.rotateSection(plank, 0, 360, 0, 80);
-		scene.idle(90);
-
-		glueEntity = scene.world.createGlueEntity(central, Direction.UP);
-		scene.world.destroyBlock(central.above());
+		scene.world.movePulley(pulleyPos, 1, 20);
+		scene.world.setKineticSpeed(kinetics, 24);
+		scene.world.moveSection(contraption, util.vector.of(0, -1, 0), 20);
 		scene.idle(20);
-		scene.addKeyframe();
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(central), Pointing.DOWN).leftClick(), 40);
-		scene.idle(7);
-		scene.world.modifyEntity(glueEntity, Entity::discard);
-		scene.effects.superGlue(central, Direction.UP, false);
+		scene.world.setKineticSpeed(kinetics, 0);
 		scene.idle(10);
-		scene.overlay.showText(60)
-			.pointAt(util.vector.topOf(central))
+
+		bb = new AABB(util.grid.at(2, 2, 3));
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "0", bb.expandTowards(-1, -1, -1), 70);
+		scene.idle(15);
+		scene.world.showSection(slab, Direction.DOWN);
+		bb = new AABB(util.grid.at(2, 1, 2));
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "1", bb, 1);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "1", bb.expandTowards(2, 0, 0), 55);
+		scene.idle(15);
+		bb = new AABB(util.grid.at(1, 2, 2));
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "2", bb, 1);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "2", bb.expandTowards(-1, 0, 0), 40);
+
+		scene.overlay.showText(70)
+			.text("Overlapping glue volumes will move together")
 			.placeNearTarget()
-			.text("Super Glue can be removed with Left-Click");
+			.colored(PonderPalette.GREEN)
+			.attachKeyFrame()
+			.pointAt(util.vector.blockSurface(util.grid.at(0, 2, 2), Direction.WEST));
+		scene.idle(40);
+
+		ElementLink<WorldSectionElement> cogs = scene.world.makeSectionIndependent(util.select.fromTo(4, 1, 2, 3, 1, 2)
+			.add(util.select.fromTo(1, 2, 2, 0, 2, 2)));
+
+		scene.world.movePulley(pulleyPos, -1, 20);
+		scene.world.setKineticSpeed(kinetics, -24);
+		scene.world.moveSection(contraption, util.vector.of(0, 1, 0), 20);
+		scene.world.moveSection(cogs, util.vector.of(0, 1, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
+		scene.idle(10);
+
+		scene.overlay.showOutline(PonderPalette.GREEN, cogs, util.select.fromTo(4, 2, 2, 1, 2, 2)
+			.add(util.select.fromTo(2, 3, 3, 2, 2, 3))
+			.add(util.select.fromTo(1, 3, 2, 0, 3, 2)), 70);
+		ElementLink<WorldSectionElement> brittles = scene.world.showIndependentSection(lever, Direction.SOUTH);
+		scene.world.moveSection(brittles, util.vector.of(0, 1, 0), 0);
+		scene.idle(5);
+		scene.world.showSectionAndMerge(harvester, Direction.WEST, brittles);
+		scene.idle(5);
+		scene.world.showSectionAndMerge(torch, Direction.EAST, brittles);
+		scene.idle(25);
+
+		scene.overlay.showText(80)
+			.text("Blocks hanging on others usually do not require glue")
+			.placeNearTarget()
+			.colored(PonderPalette.BLUE)
+			.attachKeyFrame()
+			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 2), Direction.NORTH));
+		scene.idle(80);
+
+		scene.world.movePulley(pulleyPos, 1, 20);
+		scene.world.setKineticSpeed(kinetics, 24);
+		scene.world.moveSection(cogs, util.vector.of(0, -1, 0), 20);
+		scene.world.moveSection(brittles, util.vector.of(0, -1, 0), 20);
+		scene.world.moveSection(contraption, util.vector.of(0, -1, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
+		scene.idle(10);
+
 	}
 
 }

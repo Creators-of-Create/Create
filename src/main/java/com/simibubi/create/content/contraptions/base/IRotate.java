@@ -1,18 +1,15 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -49,9 +46,11 @@ public interface IRotate extends IWrenchable {
 		public float getSpeedValue() {
 			switch (this) {
 			case FAST:
-				return AllConfigs.SERVER.kinetics.fastSpeed.get().floatValue();
+				return AllConfigs.SERVER.kinetics.fastSpeed.get()
+					.floatValue();
 			case MEDIUM:
-				return AllConfigs.SERVER.kinetics.mediumSpeed.get().floatValue();
+				return AllConfigs.SERVER.kinetics.mediumSpeed.get()
+					.floatValue();
 			case SLOW:
 				return 1;
 			case NONE:
@@ -72,19 +71,26 @@ public interface IRotate extends IWrenchable {
 			return NONE;
 		}
 
-		public static Component getFormattedSpeedText(float speed, boolean overstressed) {
+		public static LangBuilder getFormattedSpeedText(float speed, boolean overstressed) {
 			SpeedLevel speedLevel = of(speed);
+			LangBuilder builder = Lang.text(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
 
-			MutableComponent level = new TextComponent(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
-			level.append(Lang.translate("tooltip.speedRequirement." + Lang.asId(speedLevel.name())));
-			level.append(" (" + IHaveGoggleInformation.format(Math.abs(speed))).append(Lang.translate("generic.unit.rpm")).append(") ");
+			builder.translate("tooltip.speedRequirement." + Lang.asId(speedLevel.name()))
+				.space()
+				.text("(")
+				.add(Lang.number(Math.abs(speed)))
+				.space()
+				.translate("generic.unit.rpm")
+				.text(")")
+				.space();
 
 			if (overstressed)
-				level.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.STRIKETHROUGH);
+				builder.style(ChatFormatting.DARK_GRAY)
+					.style(ChatFormatting.STRIKETHROUGH);
 			else
-				level.withStyle(speedLevel.getTextColor());
+				builder.style(speedLevel.getTextColor());
 
-			return level;
+			return builder;
 		}
 
 	}
@@ -125,14 +131,12 @@ public interface IRotate extends IWrenchable {
 			return !AllConfigs.SERVER.kinetics.disableStress.get();
 		}
 
-		public static Component getFormattedStressText(double stressPercent) {
+		public static LangBuilder getFormattedStressText(double stressPercent) {
 			StressImpact stressLevel = of(stressPercent);
-
-			MutableComponent level = new TextComponent(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)));
-			level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name())));
-			level.append(String.format(" (%s%%) ", (int) (stressPercent * 100)));
-
-			return level.withStyle(stressLevel.getRelativeColor());
+			return Lang.text(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)))
+				.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name()))
+				.text(String.format(" (%s%%) ", (int) (stressPercent * 100)))
+				.style(stressLevel.getRelativeColor());
 		}
 	}
 
@@ -141,7 +145,7 @@ public interface IRotate extends IWrenchable {
 	public Axis getRotationAxis(BlockState state);
 
 	public default SpeedLevel getMinimumRequiredSpeedLevel() {
-		return SpeedLevel.SLOW;
+		return SpeedLevel.NONE;
 	}
 
 	public default boolean hideStressImpact() {

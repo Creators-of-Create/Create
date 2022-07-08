@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -29,8 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<PortableStorageInterfaceTileEntity> {
 
-	public PortableStorageInterfaceRenderer(BlockEntityRendererProvider.Context context) {
-	}
+	public PortableStorageInterfaceRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
 	protected void renderSafe(PortableStorageInterfaceTileEntity te, float partialTicks, PoseStack ms,
@@ -48,24 +48,20 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState blockState = context.state;
-		PortableStorageInterfaceTileEntity te = getTargetPSI(context);
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
-		float progress = 0;
-		boolean lit = false;
-		if (te != null) {
-			progress = te.getExtensionDistance(renderPartialTicks);
-			lit = te.isConnected();
-		}
-
-		render(blockState, lit, progress, matrices.getModel(), sbb -> sbb.light(matrices.getWorld(),
-				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.getViewProjection(), vb));
+		LerpedFloat animation = PortableStorageInterfaceMovement.getAnimation(context);
+		float progress = animation.getValue(renderPartialTicks);
+		boolean lit = animation.settled();
+		render(blockState, lit, progress, matrices.getModel(),
+			sbb -> sbb
+				.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+				.renderInto(matrices.getViewProjection(), vb));
 	}
 
-	private static void render(BlockState blockState, boolean lit, float progress,
-		PoseStack local, Consumer<SuperByteBuffer> drawCallback) {
+	private static void render(BlockState blockState, boolean lit, float progress, PoseStack local,
+		Consumer<SuperByteBuffer> drawCallback) {
 		SuperByteBuffer middle = CachedBufferer.partial(getMiddleForState(blockState, lit), blockState);
 		SuperByteBuffer top = CachedBufferer.partial(getTopForState(blockState), blockState);
 
@@ -92,7 +88,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 
 	static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {
 		String _workingPos_ = PortableStorageInterfaceMovement._workingPos_;
-		if (!context.contraption.stalled || !context.data.contains(_workingPos_))
+		if (!context.data.contains(_workingPos_))
 			return null;
 
 		BlockPos pos = NbtUtils.readBlockPos(context.data.getCompound(_workingPos_));

@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ass
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkContraption.HandType;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
@@ -54,9 +54,10 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		operationMode = new ScrollOptionBehaviour<>(ClockHands.class,
-			Lang.translate("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
+			Lang.translateDirect("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
 		operationMode.requiresWrench();
 		behaviours.add(operationMode);
+		registerAwardables(behaviours, AllAdvancements.CLOCKWORK_BEARING);
 	}
 
 	@Override
@@ -177,23 +178,25 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	protected float getHourTarget(boolean cycle24) {
-		boolean isNatural = level.dimensionType().natural();
+		boolean isNatural = level.dimensionType()
+			.natural();
 		int dayTime = (int) ((level.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int offset = getBlockState().getValue(ClockworkBearingBlock.FACING)
-				.getAxisDirection()
-				.getStep();
+			.getAxisDirection()
+			.getStep();
 		float hourTarget = (float) (offset * -360 / (cycle24 ? 24f : 12f) * (hours % (cycle24 ? 24 : 12)));
 		return hourTarget;
 	}
 
 	protected float getMinuteTarget() {
-		boolean isNatural = level.dimensionType().natural();
+		boolean isNatural = level.dimensionType()
+			.natural();
 		int dayTime = (int) ((level.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int minutes = (dayTime % 1000) * 60 / 1000;
 		int offset = getBlockState().getValue(ClockworkBearingBlock.FACING)
-				.getAxisDirection()
-				.getStep();
+			.getAxisDirection()
+			.getStep();
 		float minuteTarget = (float) (offset * -360 / 60f * (minutes));
 		return minuteTarget;
 	}
@@ -238,8 +241,10 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		hourHand.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 		hourHand.setRotationAxis(direction.getAxis());
 		level.addFreshEntity(hourHand);
-
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.CLOCKWORK_BEARING, level, worldPosition, 5);
+		
+		if (contraption.getLeft()
+			.containsBlockBreakers())
+			award(AllAdvancements.CONTRAPTION_ACTORS);
 
 		if (contraption.getRight() != null) {
 			anchor = worldPosition.relative(direction, contraption.getRight().offset + 1);
@@ -249,7 +254,13 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 			minuteHand.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 			minuteHand.setRotationAxis(direction.getAxis());
 			level.addFreshEntity(minuteHand);
+			
+			if (contraption.getRight()
+				.containsBlockBreakers())
+				award(AllAdvancements.CONTRAPTION_ACTORS);
 		}
+		
+		award(AllAdvancements.CLOCKWORK_BEARING);
 
 		// Run
 		running = true;

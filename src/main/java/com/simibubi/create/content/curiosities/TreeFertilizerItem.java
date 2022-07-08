@@ -9,11 +9,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.AzaleaBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -87,12 +85,10 @@ public class TreeFertilizerItem extends Item {
 	}
 
 	private static class TreesDreamWorld extends PlacementSimulationServerWorld {
-		private final BlockPos saplingPos;
 		private final BlockState soil;
 
 		protected TreesDreamWorld(ServerLevel wrapped, BlockPos saplingPos) {
 			super(wrapped);
-			this.saplingPos = saplingPos;
 			soil = wrapped.getBlockState(saplingPos.below());
 		}
 

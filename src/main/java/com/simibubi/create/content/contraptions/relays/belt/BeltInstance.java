@@ -62,9 +62,9 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-			Instancer<BeltData> beltModel = materialManager.defaultSolid()
-					.material(AllMaterialSpecs.BELTS)
-					.getModel(beltPartial);
+            Instancer<BeltData> beltModel = materialManager.defaultSolid()
+                    .material(AllMaterialSpecs.BELTS)
+                    .getModel(beltPartial, blockState);
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
@@ -143,7 +143,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             return modelTransform;
         };
 
-        return getRotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, dir, ms);
+        return getRotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
     }
 
     private Direction getOrientation() {

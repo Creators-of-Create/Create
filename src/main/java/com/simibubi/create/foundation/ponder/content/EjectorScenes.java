@@ -209,6 +209,7 @@ public class EjectorScenes {
 			.text("Other Entities will always trigger an Ejector when stepping on it")
 			.pointAt(util.vector.topOf(targetPos))
 			.placeNearTarget();
+		scene.idle(50);
 
 	}
 

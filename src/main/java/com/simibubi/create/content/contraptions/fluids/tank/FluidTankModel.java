@@ -27,22 +27,25 @@ public class FluidTankModel extends CTModel {
 	protected static final ModelProperty<CullData> CULL_PROPERTY = new ModelProperty<>();
 
 	public static FluidTankModel standard(BakedModel originalModel) {
-		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);
+		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.FLUID_TANK_TOP,
+			AllSpriteShifts.FLUID_TANK_INNER);
 	}
 
 	public static FluidTankModel creative(BakedModel originalModel) {
-		return new FluidTankModel(originalModel, AllSpriteShifts.CREATIVE_FLUID_TANK, AllSpriteShifts.CREATIVE_CASING);
+		return new FluidTankModel(originalModel, AllSpriteShifts.CREATIVE_FLUID_TANK, AllSpriteShifts.CREATIVE_CASING,
+			AllSpriteShifts.CREATIVE_CASING);
 	}
 
-	private FluidTankModel(BakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top) {
-		super(originalModel, new FluidTankCTBehaviour(side, top));
+	private FluidTankModel(BakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top,
+		CTSpriteShiftEntry inner) {
+		super(originalModel, new FluidTankCTBehaviour(side, top, inner));
 	}
 
 	@Override
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
-			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d))); //FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(d)));
+			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d)));
 		return super.gatherModelData(builder, world, pos, state).withInitial(CULL_PROPERTY, cullData);
 	}
 

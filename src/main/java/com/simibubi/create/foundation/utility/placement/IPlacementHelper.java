@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.utility.placement;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -76,7 +77,7 @@ public interface IPlacementHelper {
 	 * @param pos the position of the Block the player is looking at or clicked on
 	 * @param state the Blockstate of the Block that the player is looking at or clicked on
 	 * @param ray the exact raytrace result
-	 * @param offset the PlacementOffset returned by {@link #getOffset(PlayerEntity, World, BlockState, BlockPos, BlockRayTraceResult)}<br>
+	 * @param offset the PlacementOffset returned by {@link #getOffset(Player, Level, BlockState, BlockPos, BlockHitResult)}<br>
 	 *               the offset will always be successful if this method is called
 	 */
 	default void renderAt(BlockPos pos, BlockState state, BlockHitResult ray, PlacementOffset offset) {
@@ -145,6 +146,15 @@ public interface IPlacementHelper {
 				.sorted(Comparator.comparingDouble(Pair::getSecond))
 				.map(Pair::getFirst)
 				.collect(Collectors.toList());
+	}
+
+	static List<Direction> orderedByDistance(BlockPos pos, Vec3 hit, Collection<Direction> directions) {
+		Vec3 centerToHit = hit.subtract(VecHelper.getCenterOf(pos));
+		return directions.stream()
+				.map(dir -> Pair.of(dir, Vec3.atLowerCornerOf(dir.getNormal()).distanceTo(centerToHit)))
+				.sorted(Comparator.comparingDouble(Pair::getSecond))
+				.map(Pair::getFirst)
+				.toList();
 	}
 
 	default boolean matchesItem(ItemStack item) {

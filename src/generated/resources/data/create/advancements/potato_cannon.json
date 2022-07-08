@@ -1,5 +1,5 @@
 {
-  "parent": "create:precision_mechanism",
+  "parent": "create:display_link",
   "display": {
     "icon": {
       "item": "create:potato_cannon",
@@ -9,16 +9,17 @@
       "translate": "advancement.create.potato_cannon"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.potato_cannon.desc"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
   },
   "criteria": {
     "0": {
-      "trigger": "create:potato_kill",
+      "trigger": "create:potato_cannon_builtin",
       "conditions": {}
     }
   },

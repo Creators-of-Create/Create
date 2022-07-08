@@ -33,7 +33,7 @@ public class BrassDiodeGenerator extends AbstractDiodeGenerator {
 
 	@Override
 	protected int getModelIndex(BlockState state) {
-		return (state.getValue(BrassDiodeBlock.POWERING) ? 2 : 0)
+		return (state.getValue(BrassDiodeBlock.POWERING) ^ state.getValue(BrassDiodeBlock.INVERTED) ? 2 : 0)
 			+ (state.getValue(BrassDiodeBlock.POWERED) ? 1 : 0);
 	}
 

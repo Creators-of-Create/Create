@@ -1,7 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -11,14 +12,15 @@ import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 
+@ParametersAreNonnullByDefault
 public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
-	private AnimatedPress press = new AnimatedPress(false);
+	private final AnimatedPress press = new AnimatedPress(false);
 
 	public PressingCategory() {
 		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get()), emptyBackground(177, 70));
@@ -30,38 +32,28 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	}
 
 	@Override
-	public void setIngredients(PressingRecipe recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, PressingRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 26, 50);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
-			.get(0)
-			.getItems()));
+	public void setRecipe(IRecipeLayoutBuilder builder, PressingRecipe recipe, IFocusGroup focuses) {
+		builder
+				.addSlot(RecipeIngredientRole.INPUT, 27, 51)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(recipe.getIngredients().get(0));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
-		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-			itemStacks.init(outputIndex + 1, false, 131 + 19 * outputIndex, 50);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex)
-				.getStack());
+		int i = 0;
+		for (ProcessingOutput output : results) {
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 131 + 19 * i, 50)
+					.setBackground(getRenderedSlot(output), -1, -1)
+					.addItemStack(output.getStack())
+					.addTooltipCallback(addStochasticTooltip(output));
+			i++;
 		}
-
-		addStochasticTooltip(itemStacks, results);
 	}
 
 	@Override
-	public void draw(PressingRecipe recipe, PoseStack matrixStack,  double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 50);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
-		if (recipe.getRollableResults()
-			.size() > 1)
-			getRenderedSlot(recipe, 1).render(matrixStack, 131 + 19, 50);
+	public void draw(PressingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack,  double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 61, 41);
 		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 54);
+
 		press.draw(matrixStack, getBackground().getWidth() / 2 - 17, 22);
 	}
 

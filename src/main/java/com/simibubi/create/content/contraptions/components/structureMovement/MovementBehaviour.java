@@ -23,14 +23,11 @@ public interface MovementBehaviour {
 		return true;
 	}
 
-	default void tick(MovementContext context) {
-	}
+	default void tick(MovementContext context) {}
 
-	default void startMoving(MovementContext context) {
-	}
+	default void startMoving(MovementContext context) {}
 
-	default void visitNewPosition(MovementContext context, BlockPos pos) {
-	}
+	default void visitNewPosition(MovementContext context, BlockPos pos) {}
 
 	default Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.ZERO;
@@ -39,7 +36,7 @@ public interface MovementBehaviour {
 	default void dropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
 		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get())
-			remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+			remainder = ItemHandlerHelper.insertItem(context.contraption.getSharedInventory(), stack, false);
 		else
 			remainder = stack;
 		if (remainder.isEmpty())
@@ -52,14 +49,15 @@ public interface MovementBehaviour {
 		context.world.addFreshEntity(itemEntity);
 	}
 
-	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
+	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {}
+
+	default void stopMoving(MovementContext context) {}
+	
+	default void cancelStall(MovementContext context) {
+		context.stall = false;
 	}
 
-	default void stopMoving(MovementContext context) {
-	}
-
-	default void writeExtraData(MovementContext context) {
-	}
+	default void writeExtraData(MovementContext context) {}
 
 	default boolean renderAsNormalTileEntity() {
 		return false;
@@ -71,12 +69,12 @@ public interface MovementBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-		ContraptionMatrices matrices, MultiBufferSource buffer) {
-	}
+		ContraptionMatrices matrices, MultiBufferSource buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+		MovementContext context) {
 		return null;
 	}
 }

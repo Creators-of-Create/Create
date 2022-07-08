@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UniqueLinkedList<E> extends LinkedList<E> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final HashSet<E> contained = new HashSet<>();
 
 	@Override

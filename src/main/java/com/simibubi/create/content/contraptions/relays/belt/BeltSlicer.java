@@ -470,7 +470,7 @@ public class BeltSlicer {
 			return;
 
 		if (feedback.langKey != null)
-			mc.player.displayClientMessage(Lang.translate(feedback.langKey)
+			mc.player.displayClientMessage(Lang.translateDirect(feedback.langKey)
 				.withStyle(feedback.formatting), true);
 		else
 			mc.player.displayClientMessage(new TextComponent(""), true);
