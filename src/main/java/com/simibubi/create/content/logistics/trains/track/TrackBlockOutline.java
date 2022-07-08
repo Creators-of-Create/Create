@@ -27,6 +27,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -142,6 +143,10 @@ public class TrackBlockOutline {
 	}
 
 	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
 		BezierPointSelection result = TrackBlockOutline.result;
 		if (result == null)
 			return;

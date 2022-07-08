@@ -1,7 +1,5 @@
 {
 	"parent": "block/block",
-	"ambientToFullbright": false,
-	"diffuseLighting": false,
 	"textures": {
 		"belt": "create:block/bogey/belt",
 		"bogey": "create:block/bogey/frame",

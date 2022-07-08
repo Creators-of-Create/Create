@@ -56,7 +56,7 @@ public class DisplayLinkRenderer extends SafeTileEntityRenderer<DisplayLinkTileE
 		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_GLOW, blockState)
 			.light(LightTexture.FULL_BRIGHT)
 			.color(color, color, color, 255)
-			.disableDiffuseMult()
+			.disableDiffuse()
 			.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 
 		ms.popPose();

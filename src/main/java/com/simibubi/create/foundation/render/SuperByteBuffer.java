@@ -337,7 +337,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	 * from the final transformed normal vector. Useful for entity rendering, when
 	 * diffuse is applied automatically later.
 	 */
-	public SuperByteBuffer disableDiffuseMult() {
+	public SuperByteBuffer disableDiffuse() {
 		disableDiffuseMult = true;
 		return this;
 	}
@@ -438,7 +438,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	public SuperByteBuffer forEntityRender() {
-		disableDiffuseMult();
+		disableDiffuse();
 		overlay();
 		fullNormalTransform();
 		return this;
