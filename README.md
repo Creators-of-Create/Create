@@ -21,5 +21,5 @@ Check out the in-game Documentation for further info on how to use the added fea
 [<img src="https://i.imgur.com/xj8o2xC.jpg" width="200">](https://www.patreon.com/simibubi "Support Us")
 
 <hr>
-<h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create">Project Page</a></h4>
+<h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create">Curseforge</a> or <a href="https://modrinth.com/mod/create">Modrinth</a> Page</h4>
 <h4 align="center">Looking for the Fabric port? <a href="https://github.com/Fabricators-of-Create/Create">Find it here</a></h4>
