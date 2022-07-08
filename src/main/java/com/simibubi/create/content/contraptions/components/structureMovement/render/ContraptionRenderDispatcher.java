@@ -155,7 +155,7 @@ public class ContraptionRenderDispatcher {
 				context.world = world;
 			StructureTemplate.StructureBlockInfo blockInfo = actor.getLeft();
 
-			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
 			if (movementBehaviour != null) {
 				if (c.isHiddenInPortal(blockInfo.pos))
 					continue;

@@ -127,6 +127,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return this.entity(self(), name, factory, classification);
 	}
 
+	@Override
 	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name,
 		EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {

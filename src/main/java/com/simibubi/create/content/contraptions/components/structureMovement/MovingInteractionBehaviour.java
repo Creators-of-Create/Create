@@ -10,8 +10,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public abstract class MovingInteractionBehaviour {
 
-	public MovingInteractionBehaviour() {}
-
 	protected void setContraptionActorData(AbstractContraptionEntity contraptionEntity, int index,
 		StructureBlockInfo info, MovementContext ctx) {
 		contraptionEntity.contraption.actors.remove(index);

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.AllInteractionBehaviours.addInteractionBehaviour;
-import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
+import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
+import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
 import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
@@ -103,7 +103,7 @@ public class BuilderTransformers {
 		})
 			.transform(pickaxeOnly())
 			.tag(BlockTags.TRAPDOORS)
-			.onRegister(addInteractionBehaviour(new TrapdoorMovingInteraction()))
+			.onRegister(interactionBehaviour(new TrapdoorMovingInteraction()))
 			.item()
 			.tag(ItemTags.TRAPDOORS)
 			.build();
@@ -120,8 +120,8 @@ public class BuilderTransformers {
 			})
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
-			.onRegister(addInteractionBehaviour(new DoorMovingInteraction()))
-			.onRegister(addMovementBehaviour(new SlidingDoorMovementBehaviour()))
+			.onRegister(interactionBehaviour(new DoorMovingInteraction()))
+			.onRegister(movementBehaviour(new SlidingDoorMovementBehaviour()))
 			.tag(BlockTags.DOORS)
 			.tag(BlockTags.WOODEN_DOORS) // for villager AI
 			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))

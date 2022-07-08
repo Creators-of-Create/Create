@@ -617,8 +617,9 @@ public class ContraptionCollider {
 
 			if (collidedState.getBlock() instanceof CocoaBlock)
 				continue;
-			if (AllMovementBehaviours.contains(blockInfo.state.getBlock())) {
-				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state.getBlock());
+
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
+			if (movementBehaviour != null) {
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
 					BlockBreakingMovementBehaviour behaviour = (BlockBreakingMovementBehaviour) movementBehaviour;
 					if (!behaviour.canBreak(world, colliderPos, collidedState) && !emptyCollider)

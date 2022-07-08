@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -26,51 +27,38 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllDisplayBehaviours {
 
-	public static final HashMap<ResourceLocation, DisplayBehaviour>
+	public static final Map<ResourceLocation, DisplayBehaviour> GATHERER_BEHAVIOURS = new HashMap<>();
 
-	GATHERER_BEHAVIOURS = new HashMap<>();
+	public static final Map<IRegistryDelegate<Block>, List<DisplaySource>> SOURCES_BY_BLOCK = new HashMap<>();
+	public static final Map<IRegistryDelegate<BlockEntityType<?>>, List<DisplaySource>> SOURCES_BY_TILE = new HashMap<>();
 
-	public static final HashMap<ResourceLocation, List<DisplaySource>>
-
-	SOURCES_BY_BLOCK = new HashMap<>(), SOURCES_BY_TILE = new HashMap<>();
-
-	public static final HashMap<ResourceLocation, DisplayTarget>
-
-	TARGETS_BY_BLOCK = new HashMap<>(), TARGETS_BY_TILE = new HashMap<>();
+	public static final Map<IRegistryDelegate<Block>, DisplayTarget> TARGETS_BY_BLOCK = new HashMap<>();
+	public static final Map<IRegistryDelegate<BlockEntityType<?>>, DisplayTarget> TARGETS_BY_TILE = new HashMap<>();
 
 	public static DisplayBehaviour register(ResourceLocation id, DisplayBehaviour behaviour) {
-		if (GATHERER_BEHAVIOURS.containsKey(id))
-			Create.LOGGER.warn("Data Gatherer Behaviour for " + id.toString() + " was overridden");
 		behaviour.id = id;
 		GATHERER_BEHAVIOURS.put(id, behaviour);
 		return behaviour;
 	}
 
-	public static void assign(DisplayBehaviour behaviour, Block block) {
-		assignBlock(behaviour, block.getRegistryName());
-	}
-
-	public static void assign(DisplayBehaviour behaviour, BlockEntityType<?> teType) {
-		assignTileEntity(behaviour, teType.getRegistryName());
-	}
-
-	public static void assignBlock(DisplayBehaviour behaviour, ResourceLocation blockId) {
+	public static void assignBlock(DisplayBehaviour behaviour, IRegistryDelegate<Block> block) {
 		if (behaviour instanceof DisplaySource source)
-			SOURCES_BY_BLOCK.computeIfAbsent(blockId, r -> new ArrayList<>())
+			SOURCES_BY_BLOCK.computeIfAbsent(block, r -> new ArrayList<>())
 				.add(source);
 		if (behaviour instanceof DisplayTarget target)
-			TARGETS_BY_BLOCK.put(blockId, target);
+			TARGETS_BY_BLOCK.put(block, target);
 	}
 
-	public static void assignTileEntity(DisplayBehaviour behaviour, ResourceLocation tileId) {
+	public static void assignTile(DisplayBehaviour behaviour, IRegistryDelegate<BlockEntityType<?>> teType) {
 		if (behaviour instanceof DisplaySource source)
-			SOURCES_BY_TILE.computeIfAbsent(tileId, r -> new ArrayList<>())
+			SOURCES_BY_TILE.computeIfAbsent(teType, r -> new ArrayList<>())
 				.add(source);
 		if (behaviour instanceof DisplayTarget target)
-			TARGETS_BY_TILE.put(tileId, target);
+			TARGETS_BY_TILE.put(teType, target);
 	}
 
 	public static <B extends Block> NonNullConsumer<? super B> assignDataBehaviour(DisplayBehaviour behaviour,
@@ -81,7 +69,7 @@ public class AllDisplayBehaviours {
 			if (suffix.length > 0)
 				idSuffix += "_" + suffix[0];
 			assignBlock(register(new ResourceLocation(registryName.getNamespace(), registryName.getPath() + idSuffix),
-				behaviour), registryName);
+				behaviour), b.delegate);
 		};
 	}
 
@@ -92,10 +80,10 @@ public class AllDisplayBehaviours {
 			String idSuffix = behaviour instanceof DisplaySource ? "_source" : "_target";
 			if (suffix.length > 0)
 				idSuffix += "_" + suffix[0];
-			assignTileEntity(
+			assignTile(
 				register(new ResourceLocation(registryName.getNamespace(), registryName.getPath() + idSuffix),
 					behaviour),
-				registryName);
+				b.delegate);
 		};
 	}
 
@@ -119,7 +107,42 @@ public class AllDisplayBehaviours {
 
 	//
 
+	public static List<DisplaySource> sourcesOf(Block block) {
+		return SOURCES_BY_BLOCK.getOrDefault(block.getRegistryName(), Collections.emptyList());
+	}
+
+	public static List<DisplaySource> sourcesOf(BlockState state) {
+		return sourcesOf(state.getBlock());
+	}
+
+	public static List<DisplaySource> sourcesOf(BlockEntityType<?> tileEntityType) {
+		return SOURCES_BY_TILE.getOrDefault(tileEntityType, Collections.emptyList());
+	}
+
+	public static List<DisplaySource> sourcesOf(BlockEntity tileEntity) {
+		return sourcesOf(tileEntity.getType());
+	}
+
 	@Nullable
+	public static DisplayTarget targetOf(Block block) {
+		return TARGETS_BY_BLOCK.get(block.delegate);
+	}
+
+	@Nullable
+	public static DisplayTarget targetOf(BlockState state) {
+		return targetOf(state.getBlock());
+	}
+
+	@Nullable
+	public static DisplayTarget targetOf(BlockEntityType<?> tileEntityType) {
+		return TARGETS_BY_TILE.get(tileEntityType.delegate);
+	}
+
+	@Nullable
+	public static DisplayTarget targetOf(BlockEntity tileEntity) {
+		return targetOf(tileEntity.getType());
+	}
+
 	public static List<DisplaySource> sourcesOf(LevelAccessor level, BlockPos pos) {
 		BlockState blockState = level.getBlockState(pos);
 		BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -145,43 +168,14 @@ public class AllDisplayBehaviours {
 		return targetOfTE;
 	}
 
-	public static List<DisplaySource> sourcesOf(BlockState state) {
-		return sourcesOf(state.getBlock());
-	}
-
-	public static List<DisplaySource> sourcesOf(BlockEntity tileEntity) {
-		return SOURCES_BY_TILE.getOrDefault(tileEntity.getType()
-			.getRegistryName(), Collections.emptyList());
-	}
-
-	public static List<DisplaySource> sourcesOf(Block block) {
-		return SOURCES_BY_BLOCK.getOrDefault(block.getRegistryName(), Collections.emptyList());
-	}
-
-	@Nullable
-	public static DisplayTarget targetOf(BlockState state) {
-		return targetOf(state.getBlock());
-	}
-
-	@Nullable
-	public static DisplayTarget targetOf(BlockEntity tileEntity) {
-		return TARGETS_BY_TILE.get(tileEntity.getType()
-			.getRegistryName());
-	}
-
-	@Nullable
-	public static DisplayTarget targetOf(Block block) {
-		return TARGETS_BY_BLOCK.get(block.getRegistryName());
-	}
-
 	//
 
-	public static void register() {
-		assign(register(Create.asResource("sign_display_target"), new SignDisplayTarget()), BlockEntityType.SIGN);
-		assign(register(Create.asResource("lectern_display_target"), new LecternDisplayTarget()), BlockEntityType.LECTERN);
-		assign(register(Create.asResource("death_count_display_source"), new DeathCounterDisplaySource()), Blocks.RESPAWN_ANCHOR);
-		assign(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK);
-		assign(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE);
-		assign(register(Create.asResource("redstone_power_display_source"), new RedstonePowerDisplaySource()), Blocks.TARGET);
+	public static void registerDefaults() {
+		assignTile(register(Create.asResource("sign_display_target"), new SignDisplayTarget()), BlockEntityType.SIGN.delegate);
+		assignTile(register(Create.asResource("lectern_display_target"), new LecternDisplayTarget()), BlockEntityType.LECTERN.delegate);
+		assignBlock(register(Create.asResource("death_count_display_source"), new DeathCounterDisplaySource()), Blocks.RESPAWN_ANCHOR.delegate);
+		assignTile(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK.delegate);
+		assignTile(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE.delegate);
+		assignBlock(register(Create.asResource("redstone_power_display_source"), new RedstonePowerDisplaySource()), Blocks.TARGET.delegate);
 	}
 }

@@ -21,7 +21,7 @@ public class DoorMovingInteraction extends SimpleBlockMovingInteraction {
 	protected BlockState handle(Player player, Contraption contraption, BlockPos pos, BlockState currentState) {
 		if (!(currentState.getBlock() instanceof DoorBlock))
 			return currentState;
-		
+
 		boolean trainDoor = currentState.getBlock() instanceof SlidingDoorBlock;
 		SoundEvent sound = currentState.getValue(DoorBlock.OPEN) ? trainDoor ? null : SoundEvents.WOODEN_DOOR_CLOSE
 			: trainDoor ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.WOODEN_DOOR_OPEN;

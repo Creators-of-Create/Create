@@ -463,7 +463,7 @@ public class Train {
 			c.forEachPresentEntity(cce -> cce.getContraption()
 				.getActors()
 				.forEach(pair -> {
-					MovementBehaviour behaviour = AllMovementBehaviours.of(pair.getKey().state);
+					MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.getKey().state);
 					if (behaviour != null)
 						behaviour.cancelStall(pair.getValue());
 				}));

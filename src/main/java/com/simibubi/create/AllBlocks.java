@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllInteractionBehaviours.addInteractionBehaviour;
-import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
+import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
+import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
 import static com.simibubi.create.AllTags.axeOnly;
 import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
@@ -640,7 +640,7 @@ public class AllBlocks {
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
 		.blockstate(new BasinGenerator()::generate)
-		.onRegister(addMovementBehaviour(new BasinMovementBehaviour()))
+		.onRegister(movementBehaviour(new BasinMovementBehaviour()))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();
@@ -655,8 +655,8 @@ public class AllBlocks {
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-			.onRegister(addMovementBehaviour(new BlazeBurnerMovementBehaviour()))
-			.onRegister(addInteractionBehaviour(new BlazeBurnerInteractionBehaviour()))
+			.onRegister(movementBehaviour(new BlazeBurnerMovementBehaviour()))
+			.onRegister(interactionBehaviour(new BlazeBurnerInteractionBehaviour()))
 			.item(BlazeBurnerBlockItem::withBlaze)
 			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block_with_blaze"))
 			.build()
@@ -974,7 +974,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_LIGHT_GRAY))
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
+			.onRegister(movementBehaviour(new PortableStorageInterfaceMovement()))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -1109,7 +1109,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.bearing("mechanical", "gearbox", false))
 			.transform(BlockStressDefaults.setImpact(4.0))
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.onRegister(addMovementBehaviour(new StabilizedBearingMovementBehaviour()))
+			.onRegister(movementBehaviour(new StabilizedBearingMovementBehaviour()))
 			.register();
 
 	public static final BlockEntry<ClockworkBearingBlock> CLOCKWORK_BEARING =
@@ -1235,7 +1235,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(BlockStressDefaults.setImpact(4.0))
-		.onRegister(addMovementBehaviour(new DrillMovementBehaviour()))
+		.onRegister(movementBehaviour(new DrillMovementBehaviour()))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -1246,7 +1246,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(new SawGenerator()::generate)
 		.transform(BlockStressDefaults.setImpact(4.0))
-		.onRegister(addMovementBehaviour(new SawMovementBehaviour()))
+		.onRegister(movementBehaviour(new SawMovementBehaviour()))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.item()
 		.transform(customItemModel())
@@ -1258,8 +1258,8 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(BlockStressDefaults.setImpact(4.0))
-		.onRegister(addMovementBehaviour(new DeployerMovementBehaviour()))
-		.onRegister(addInteractionBehaviour(new DeployerMovingInteraction()))
+		.onRegister(movementBehaviour(new DeployerMovementBehaviour()))
+		.onRegister(interactionBehaviour(new DeployerMovingInteraction()))
 		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
@@ -1270,7 +1270,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
+			.onRegister(movementBehaviour(new PortableStorageInterfaceMovement()))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -1280,7 +1280,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 			.transform(axeOrPickaxe())
-			.onRegister(addMovementBehaviour(new ContactMovementBehaviour()))
+			.onRegister(movementBehaviour(new ContactMovementBehaviour()))
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item()
 			.transform(customItemModel("_", "block"))
@@ -1291,7 +1291,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.METAL))
 			.transform(axeOrPickaxe())
-			.onRegister(addMovementBehaviour(new HarvesterMovementBehaviour()))
+			.onRegister(movementBehaviour(new HarvesterMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
@@ -1303,7 +1303,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 			.transform(axeOrPickaxe())
-			.onRegister(addMovementBehaviour(new PloughMovementBehaviour()))
+			.onRegister(movementBehaviour(new PloughMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(false))
 			.simpleItem()
 			.register();
@@ -1316,8 +1316,8 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::wooden)
 			.properties(p -> p.color(colour.getMaterialColor()))
 			.transform(axeOnly())
-			.onRegister(addMovementBehaviour(movementBehaviour))
-			.onRegister(addInteractionBehaviour(interactionBehaviour))
+			.onRegister(movementBehaviour(movementBehaviour))
+			.onRegister(interactionBehaviour(interactionBehaviour))
 			.onRegister(assignDataBehaviour(new EntityNameDisplaySource(), "entity_name"))
 			.blockstate((c, p) -> {
 				p.simpleBlock(c.get(), p.models()
@@ -1588,8 +1588,8 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.horizontalBlock(c.get(),
 			s -> AssetLookup.partialBaseModel(c, p,
 				s.getValue(ControlsBlock.VIRTUAL) ? "virtual" : s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
-		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))
-		.onRegister(addInteractionBehaviour(new ControlsInteractionBehaviour()))
+		.onRegister(movementBehaviour(new ControlsMovementBehaviour()))
+		.onRegister(interactionBehaviour(new ControlsInteractionBehaviour()))
 		.lang("Train Controls")
 		.item()
 		.transform(customItemModel())
@@ -1651,7 +1651,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.andesite()))
+			.onRegister(movementBehaviour(FunnelMovementBehaviour.andesite()))
 			.blockstate(new FunnelGenerator("andesite", false)::generate)
 			.item(FunnelItem::new)
 			.model(FunnelGenerator.itemModel("andesite"))
@@ -1674,7 +1674,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.brass()))
+			.onRegister(movementBehaviour(FunnelMovementBehaviour.brass()))
 			.blockstate(new FunnelGenerator("brass", true)::generate)
 			.item(FunnelItem::new)
 			.model(FunnelGenerator.itemModel("brass"))
@@ -1918,14 +1918,14 @@ public class AllBlocks {
 		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
 			.properties(p -> p.color(MaterialColor.GOLD))
 			.transform(BuilderTransformers.bell())
-			.onRegister(addMovementBehaviour(new BellMovementBehaviour()))
+			.onRegister(movementBehaviour(new BellMovementBehaviour()))
 			.register();
 
 	public static final BlockEntry<HauntedBellBlock> HAUNTED_BELL =
 		REGISTRATE.block("haunted_bell", HauntedBellBlock::new)
 			.properties(p -> p.color(MaterialColor.SAND))
 			.transform(BuilderTransformers.bell())
-			.onRegister(addMovementBehaviour(new HauntedBellMovementBehaviour()))
+			.onRegister(movementBehaviour(new HauntedBellMovementBehaviour()))
 			.register();
 
 	public static final DyedBlockList<ToolboxBlock> TOOLBOXES = new DyedBlockList<>(colour -> {

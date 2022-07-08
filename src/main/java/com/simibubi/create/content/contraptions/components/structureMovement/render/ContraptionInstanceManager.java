@@ -65,7 +65,7 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 		if (contraption.isHiddenInPortal(context.localPos))
 			return null;
 
-		MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
+		MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
 
 		if (movementBehaviour != null && movementBehaviour.hasSpecialInstancedRendering()) {
 			ActorInstance instance = movementBehaviour.createInstance(materialManager, renderWorld, context);
