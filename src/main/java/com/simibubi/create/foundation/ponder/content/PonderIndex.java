@@ -434,7 +434,10 @@ public class PonderIndex {
 			.add(AllBlocks.CRUSHING_WHEEL)
 			.add(AllBlocks.TRACK_STATION)
 			.add(Blocks.COMPOSTER)
-			.add(Blocks.JUKEBOX);
+			.add(Blocks.JUKEBOX)
+			.add(Blocks.CAMPFIRE)
+			.add(Blocks.SOUL_CAMPFIRE)
+			.add(Blocks.RESPAWN_ANCHOR);
 
 		PonderRegistry.TAGS.forTag(PonderTag.LOGISTICS)
 			.add(AllItems.BELT_CONNECTOR)
