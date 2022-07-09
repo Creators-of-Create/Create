@@ -2942,12 +2942,12 @@
 	"create.ponder.train_schedule.text_5": "UNLOCALIZED: Creatures on a lead can be given their seat more conveniently",
 	"create.ponder.train_schedule.text_6": "UNLOCALIZED: Schedules can be retrieved from Drivers at any moment",
 
-	"create.ponder.train_signal_placement.header": "UNLOCALIZED: Placing Train Signals",
-	"create.ponder.train_signal_placement.text_1": "UNLOCALIZED: Select a Train Track then place the Signal nearby",
-	"create.ponder.train_signal_placement.text_2": "UNLOCALIZED: Signals control the flow of Trains not driven by players",
-	"create.ponder.train_signal_placement.text_3": "UNLOCALIZED: Scheduled Trains will never cross signals in the opposite direction",
-	"create.ponder.train_signal_placement.text_4": "UNLOCALIZED: ...unless a second signal is added facing the opposite way.",
-	"create.ponder.train_signal_placement.text_5": "UNLOCALIZED: Nixie tubes can be attached to make a signal's lights more visible",
+	"create.ponder.train_signal_placement.header": "放置列车信号机",
+	"create.ponder.train_signal_placement.text_1": "选择一个列车轨道，然后将信号机放置在附近",
+	"create.ponder.train_signal_placement.text_2": "信号机控制不由玩家驾驶的列车的流动",
+	"create.ponder.train_signal_placement.text_3": "被调度的列车绝不会以相反方向穿过信号",
+	"create.ponder.train_signal_placement.text_4": "……除非添加第二个面向相反方向的信号",
+	"create.ponder.train_signal_placement.text_5": "可以连接辉光管让信号灯更加显眼",
 
 	"create.ponder.train_signal_redstone.header": "UNLOCALIZED: Signals & Redstone",
 	"create.ponder.train_signal_redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
