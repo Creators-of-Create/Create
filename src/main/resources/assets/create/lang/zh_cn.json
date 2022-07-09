@@ -2949,9 +2949,9 @@
 	"create.ponder.train_signal_placement.text_4": "……除非添加第二个面向相反方向的信号",
 	"create.ponder.train_signal_placement.text_5": "可以连接辉光管让信号灯更加显眼",
 
-	"create.ponder.train_signal_redstone.header": "UNLOCALIZED: Signals & Redstone",
-	"create.ponder.train_signal_redstone.text_1": "UNLOCALIZED: Signals can be forced red by a redstone signal",
-	"create.ponder.train_signal_redstone.text_2": "UNLOCALIZED: Reversely, red signals emit a comparator output",
+	"create.ponder.train_signal_redstone.header": "信号机和红石",
+	"create.ponder.train_signal_redstone.text_1": "信号机通入红石信号后可以保持为红色",
+	"create.ponder.train_signal_redstone.text_2": "相反，红色信号产生比较器输出",
 
 	"create.ponder.train_signal_signaling.header": "用信号机避免相撞",
 	"create.ponder.train_signal_signaling.text_1": "列车信号机将轨道分成多个区间",
