@@ -2887,10 +2887,10 @@
 	"create.ponder.track_chunks.text_4": "但是，钻头和其他机载机器将无法运行",
 	"create.ponder.track_chunks.text_5": "一旦靠近玩家，列车将重新出现",
 
-	"create.ponder.track_observer.header": "UNLOCALIZED: Detecting Trains",
-	"create.ponder.track_observer.text_1": "UNLOCALIZED: Select a Train Track then place the Observer nearby",
-	"create.ponder.track_observer.text_2": "UNLOCALIZED: The Observer will detect any Trains passing over the marker",
-	"create.ponder.track_observer.text_3": "UNLOCALIZED: Observers can be filtered to activate for matching cargo",
+	"create.ponder.track_observer.header": "侦测列车",
+	"create.ponder.track_observer.text_1": "选择一个列车轨道，然后将侦测器放在附近",
+	"create.ponder.track_observer.text_2": "侦测器将检测任何经过标记的列车",
+	"create.ponder.track_observer.text_3": "侦测器可以过滤为仅给匹配的货物激活",
 
 	"create.ponder.track_placement.header": "放置列车轨道",
 	"create.ponder.track_placement.text_1": "一种专为列车装置设计的新型轨道",
