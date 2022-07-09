@@ -1,5 +1,15 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
+import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
+
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -85,7 +95,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		DEEP_REDSTONE_ORE = deepslateOre(() -> Items.DEEPSLATE_REDSTONE_ORE, () -> Items.REDSTONE, 7.5f, 350),
 		DEEP_LAPIS_ORE = deepslateOre(() -> Items.DEEPSLATE_LAPIS_ORE, () -> Items.LAPIS_LAZULI, 12.5f, 350),
 
-		NETHER_GOLD_ORE = netherOre(() -> Items.NETHER_GOLD_ORE, () -> Items.GOLD_NUGGET, 7.5f, 350),
+		NETHER_GOLD_ORE = netherOre(() -> Items.NETHER_GOLD_ORE, () -> Items.GOLD_NUGGET, 18, 350),
 		NETHER_QUARTZ_ORE = netherOre(() -> Items.NETHER_QUARTZ_ORE, () -> Items.QUARTZ, 2.25f, 350),
 
 		RAW_COPPER_ORE = rawOre(() -> Items.RAW_COPPER, AllItems.CRUSHED_COPPER::get, 1),
@@ -93,30 +103,40 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		RAW_IRON_ORE = rawOre(() -> Items.RAW_IRON, AllItems.CRUSHED_IRON::get, 1),
 		RAW_GOLD_ORE = rawOre(() -> Items.RAW_GOLD, AllItems.CRUSHED_GOLD::get, 1),
 
-		OSMIUM_RAW_ORE = moddedRawOre("osmium", AllItems.CRUSHED_OSMIUM::get, 1),
-		PLATINUM_RAW_ORE = moddedRawOre("platinum", AllItems.CRUSHED_PLATINUM::get, 1),
-		SILVER_RAW_ORE = moddedRawOre("silver", AllItems.CRUSHED_SILVER::get, 1),
-		TIN_RAW_ORE = moddedRawOre("tin", AllItems.CRUSHED_TIN::get, 1),
-		QUICKSILVER_RAW_ORE = moddedRawOre("quicksilver", AllItems.CRUSHED_QUICKSILVER::get, 1),
-		LEAD_RAW_ORE = moddedRawOre("lead", AllItems.CRUSHED_LEAD::get, 1),
-		ALUMINUM_RAW_ORE = moddedRawOre("aluminum", AllItems.CRUSHED_BAUXITE::get, 1),
-		URANIUM_RAW_ORE = moddedRawOre("uranium", AllItems.CRUSHED_URANIUM::get, 1),
-		NICKEL_RAW_ORE = moddedRawOre("nickel", AllItems.CRUSHED_NICKEL::get, 1),
+		OSMIUM_ORE = moddedOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get),
+		PLATINUM_ORE = moddedOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get),
+		SILVER_ORE = moddedOre(SILVER, AllItems.CRUSHED_SILVER::get),
+		TIN_ORE = moddedOre(TIN, AllItems.CRUSHED_TIN::get),
+		QUICKSILVER_ORE = moddedOre(QUICKSILVER, AllItems.CRUSHED_QUICKSILVER::get),
+		LEAD_ORE = moddedOre(LEAD, AllItems.CRUSHED_LEAD::get),
+		ALUMINUM_ORE = moddedOre(ALUMINUM, AllItems.CRUSHED_BAUXITE::get),
+		URANIUM_ORE = moddedOre(URANIUM, AllItems.CRUSHED_URANIUM::get),
+		NICKEL_ORE = moddedOre(NICKEL, AllItems.CRUSHED_NICKEL::get),
 
-		RAW_COPPER_BLOCK = rawOre(() -> Items.RAW_COPPER_BLOCK,AllItems.CRUSHED_COPPER::get, 9),
+		OSMIUM_RAW_ORE = moddedRawOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get, 1),
+		PLATINUM_RAW_ORE = moddedRawOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get, 1),
+		SILVER_RAW_ORE = moddedRawOre(SILVER, AllItems.CRUSHED_SILVER::get, 1),
+		TIN_RAW_ORE = moddedRawOre(TIN, AllItems.CRUSHED_TIN::get, 1),
+		QUICKSILVER_RAW_ORE = moddedRawOre(QUICKSILVER, AllItems.CRUSHED_QUICKSILVER::get, 1),
+		LEAD_RAW_ORE = moddedRawOre(LEAD, AllItems.CRUSHED_LEAD::get, 1),
+		ALUMINUM_RAW_ORE = moddedRawOre(ALUMINUM, AllItems.CRUSHED_BAUXITE::get, 1),
+		URANIUM_RAW_ORE = moddedRawOre(URANIUM, AllItems.CRUSHED_URANIUM::get, 1),
+		NICKEL_RAW_ORE = moddedRawOre(NICKEL, AllItems.CRUSHED_NICKEL::get, 1),
+
+		RAW_COPPER_BLOCK = rawOre(() -> Items.RAW_COPPER_BLOCK, AllItems.CRUSHED_COPPER::get, 9),
 		RAW_ZINC_BLOCK = rawOre(AllBlocks.RAW_ZINC_BLOCK::get, AllItems.CRUSHED_ZINC::get, 9),
 		RAW_IRON_BLOCK = rawOre(() -> Items.RAW_IRON_BLOCK, AllItems.CRUSHED_IRON::get, 9),
 		RAW_GOLD_BLOCK = rawOre(() -> Items.RAW_GOLD_BLOCK, AllItems.CRUSHED_GOLD::get, 9),
 
-		OSMIUM_RAW_BLOCK = moddedRawOre("osmium", AllItems.CRUSHED_OSMIUM::get, 9),
-		PLATINUM_RAW_BLOCK = moddedRawOre("platinum", AllItems.CRUSHED_PLATINUM::get, 9),
-		SILVER_RAW_BLOCK = moddedRawOre("silver", AllItems.CRUSHED_SILVER::get, 9),
-		TIN_RAW_BLOCK = moddedRawOre("tin", AllItems.CRUSHED_TIN::get, 9),
-		QUICKSILVER_RAW_BLOCK = moddedRawOre("quicksilver", AllItems.CRUSHED_QUICKSILVER::get, 9),
-		LEAD_RAW_BLOCK = moddedRawOre("lead", AllItems.CRUSHED_LEAD::get, 9),
-		ALUMINUM_RAW_BLOCK = moddedRawOre("aluminum", AllItems.CRUSHED_BAUXITE::get, 9),
-		URANIUM_RAW_BLOCK = moddedRawOre("uranium", AllItems.CRUSHED_URANIUM::get, 9),
-		NICKEL_RAW_BLOCK = moddedRawOre("nickel", AllItems.CRUSHED_NICKEL::get, 9),
+		OSMIUM_RAW_BLOCK = moddedRawOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get, 9),
+		PLATINUM_RAW_BLOCK = moddedRawOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get, 9),
+		SILVER_RAW_BLOCK = moddedRawOre(SILVER, AllItems.CRUSHED_SILVER::get, 9),
+		TIN_RAW_BLOCK = moddedRawOre(TIN, AllItems.CRUSHED_TIN::get, 9),
+		QUICKSILVER_RAW_BLOCK = moddedRawOre(QUICKSILVER, AllItems.CRUSHED_QUICKSILVER::get, 9),
+		LEAD_RAW_BLOCK = moddedRawOre(LEAD, AllItems.CRUSHED_LEAD::get, 9),
+		ALUMINUM_RAW_BLOCK = moddedRawOre(ALUMINUM, AllItems.CRUSHED_BAUXITE::get, 9),
+		URANIUM_RAW_BLOCK = moddedRawOre(URANIUM, AllItems.CRUSHED_URANIUM::get, 9),
+		NICKEL_RAW_BLOCK = moddedRawOre(NICKEL, AllItems.CRUSHED_NICKEL::get, 9),
 
 		NETHER_WART = create("nether_wart_block", b -> b.duration(150)
 			.require(Blocks.NETHER_WART_BLOCK)
@@ -129,6 +149,10 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		GLOWSTONE = create(() -> Blocks.GLOWSTONE, b -> b.duration(150)
 			.output(Items.GLOWSTONE_DUST, 3)
 			.output(.5f, Items.GLOWSTONE_DUST)),
+
+		AMETHYST_BLOCK = create(() -> Blocks.AMETHYST_BLOCK, b -> b.duration(150)
+			.output(Items.AMETHYST_SHARD, 3)
+			.output(.5f, Items.AMETHYST_SHARD)),
 
 		LEATHER_HORSE_ARMOR = create(() -> Items.LEATHER_HORSE_ARMOR, b -> b.duration(200)
 			.output(Items.LEATHER, 2)
@@ -211,10 +235,11 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(result.get(), amount)
 			.output(.75f, AllItems.EXP_NUGGET.get(), amount));
 	}
-	
-	protected GeneratedRecipe moddedRawOre(String name, Supplier<ItemLike> result, int amount) {
+
+	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result, int amount) {
+		String name = metal.getName();
 		return create("raw_" + name + (amount == 1 ? "_ore" : "_block"), b -> {
-			String prefix = amount == 1 ? "raw_ores/" : "raw_blocks/";
+			String prefix = amount == 1 ? "raw_materials/" : "storage_blocks/raw_";
 			return b.duration(400)
 				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
 				.require(AllTags.forgeItemTag(prefix + name))
@@ -222,9 +247,22 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
 		});
 	}
-	
-	public CrushingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+
+	protected GeneratedRecipe moddedOre(CompatMetals metal, Supplier<ItemLike> result) {
+		String name = metal.getName();
+		return create(name + "_ore", b -> {
+			String prefix = "ores/";
+			return b.duration(400)
+				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
+				.require(AllTags.forgeItemTag(prefix + name))
+				.output(result.get(), 1)
+				.output(.75f, result.get(), 1)
+				.output(.75f, AllItems.EXP_NUGGET.get(), 1);
+		});
+	}
+
+	public CrushingRecipeGen(DataGenerator dataGenerator) {
+		super(dataGenerator);
 	}
 
 	@Override

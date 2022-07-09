@@ -5,9 +5,9 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
+import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -26,8 +26,8 @@ public class FluidPipeTileEntity extends SmartTileEntity implements ITransformab
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new StandardPipeFluidTransportBehaviour(this));
-		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket)
-			.withTrigger(state -> AllTriggers.BRACKET_APPLY_TRIGGER.constructTriggerFor(state.getBlock())));
+		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket));
+		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
 	@Override
@@ -59,16 +59,16 @@ public class FluidPipeTileEntity extends SmartTileEntity implements ITransformab
 			Direction direction) {
 			AttachmentTypes attachment = super.getRenderedRimAttachment(world, pos, state, direction);
 
-			if (attachment == AttachmentTypes.RIM && AllBlocks.ENCASED_FLUID_PIPE.has(state))
-				return AttachmentTypes.RIM;
-
 			BlockPos offsetPos = pos.relative(direction);
-			if (!FluidPipeBlock.isPipe(world.getBlockState(offsetPos))) {
+			BlockState otherState = world.getBlockState(offsetPos);
+
+			if (attachment == AttachmentTypes.RIM && !FluidPipeBlock.isPipe(otherState)
+				&& !AllBlocks.MECHANICAL_PUMP.has(otherState) && !AllBlocks.ENCASED_FLUID_PIPE.has(otherState)) {
 				FluidTransportBehaviour pipeBehaviour =
 					TileEntityBehaviour.get(world, offsetPos, FluidTransportBehaviour.TYPE);
-				if (pipeBehaviour != null
-					&& pipeBehaviour.canHaveFlowToward(world.getBlockState(offsetPos), direction.getOpposite()))
-					return AttachmentTypes.NONE;
+				if (pipeBehaviour != null)
+					if (pipeBehaviour.canHaveFlowToward(otherState, direction.getOpposite()))
+						return AttachmentTypes.NONE;
 			}
 
 			if (attachment == AttachmentTypes.RIM && !FluidPipeBlock.shouldDrawRim(world, pos, state, direction))

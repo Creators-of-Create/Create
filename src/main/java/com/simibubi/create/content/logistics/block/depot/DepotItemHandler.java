@@ -66,7 +66,7 @@ public class DepotItemHandler implements IItemHandler {
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		return slot == MAIN_SLOT;
+		return slot == MAIN_SLOT && te.isItemValid(stack);
 	}
 
 }

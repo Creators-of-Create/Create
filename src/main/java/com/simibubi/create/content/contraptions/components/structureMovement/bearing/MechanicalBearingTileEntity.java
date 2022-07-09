@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
@@ -51,10 +51,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translate("contraptions.movement_mode"),
+		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
+		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
 	}
 
 	@Override
@@ -92,8 +93,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		if (!clientPacket)
 			return;
 		if (running) {
-			clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
-			angle = angleBefore;
+			if (movedContraption == null || !movedContraption.isStalled()) {
+				clientAngleDiff = AngleHelper.getShortestAngleDiff(angleBefore, angle);
+				angle = angleBefore;
+			}
 		} else
 			movedContraption = null;
 	}
@@ -162,9 +165,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		}
 
 		if (isWindmill())
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.WINDMILL, level, worldPosition, 5);
+			award(AllAdvancements.WINDMILL);
 		if (contraption.getSailBlocks() >= 16 * 8)
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.MAXED_WINDMILL, level, worldPosition, 5);
+			award(AllAdvancements.WINDMILL_MAXED);
 
 		contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
 		movedContraption = ControlledContraptionEntity.create(level, this, contraption);
@@ -174,6 +177,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		level.addFreshEntity(movedContraption);
 
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
+		
+		if (contraption.containsBlockBreakers())
+			award(AllAdvancements.CONTRAPTION_ACTORS);
 
 		running = true;
 		angle = 0;

@@ -12,7 +12,7 @@
     },
     {
       "item": "minecraft:redstone",
-      "chance": 0.125
+      "chance": 0.75
     }
   ]
 }

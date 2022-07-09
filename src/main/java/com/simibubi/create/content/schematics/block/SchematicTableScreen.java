@@ -32,12 +32,12 @@ import net.minecraft.world.item.ItemStack;
 
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer> {
 
-	private final Component uploading = Lang.translate("gui.schematicTable.uploading");
-	private final Component finished = Lang.translate("gui.schematicTable.finished");
-	private final Component refresh = Lang.translate("gui.schematicTable.refresh");
-	private final Component folder = Lang.translate("gui.schematicTable.open_folder");
-	private final Component noSchematics = Lang.translate("gui.schematicTable.noSchematics");
-	private final Component availableSchematicsTitle = Lang.translate("gui.schematicTable.availableSchematics");
+	private final Component uploading = Lang.translateDirect("gui.schematicTable.uploading");
+	private final Component finished = Lang.translateDirect("gui.schematicTable.finished");
+	private final Component refresh = Lang.translateDirect("gui.schematicTable.refresh");
+	private final Component folder = Lang.translateDirect("gui.schematicTable.open_folder");
+	private final Component noSchematics = Lang.translateDirect("gui.schematicTable.noSchematics");
+	private final Component availableSchematicsTitle = Lang.translateDirect("gui.schematicTable.availableSchematics");
 
 	protected AllGuiTextures background;
 

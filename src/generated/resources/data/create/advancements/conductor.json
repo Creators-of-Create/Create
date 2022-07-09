@@ -1,0 +1,30 @@
+{
+  "parent": "create:train",
+  "display": {
+    "icon": {
+      "item": "create:schedule"
+    },
+    "title": {
+      "translate": "advancement.create.conductor"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.conductor.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:conductor_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

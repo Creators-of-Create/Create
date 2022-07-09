@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class ZapperScreen extends AbstractSimiScreen {
 
-	protected final Component patternSection = Lang.translate("gui.terrainzapper.patternSection");
+	protected final Component patternSection = Lang.translateDirect("gui.terrainzapper.patternSection");
 
 	protected AllGuiTextures background;
 	protected ItemStack zapper;
@@ -81,7 +81,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 					patternButton.active = false;
 					currentPattern = pattern;
 				});
-				patternButton.setToolTip(Lang.translate("gui.terrainzapper.pattern." + pattern.translationKey));
+				patternButton.setToolTip(Lang.translateDirect("gui.terrainzapper.pattern." + pattern.translationKey));
 				patternButtons.add(patternButton);
 			}
 		}

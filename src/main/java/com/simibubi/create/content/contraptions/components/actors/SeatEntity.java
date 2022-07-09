@@ -13,6 +13,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -46,6 +53,30 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
+	protected void positionRider(Entity pEntity, Entity.MoveFunction pCallback) {
+		if (!this.hasPassenger(pEntity))
+			return;
+		double d0 = this.getY() + this.getPassengersRidingOffset() + pEntity.getMyRidingOffset();
+		pCallback.accept(pEntity, this.getX(), d0 + getCustomEntitySeatOffset(pEntity), this.getZ());
+	}
+
+	public static double getCustomEntitySeatOffset(Entity entity) {
+		if (entity instanceof Slime)
+			return 0.25f;
+		if (entity instanceof Parrot)
+			return 1 / 16f;
+		if (entity instanceof Skeleton)
+			return 1 / 8f;
+		if (entity instanceof Creeper)
+			return 1 / 8f;
+		if (entity instanceof Cat)
+			return 1 / 8f;
+		if (entity instanceof Wolf)
+			return 1 / 16f;
+		return 0;
+	}
+
+	@Override
 	public void setDeltaMovement(Vec3 p_213317_1_) {}
 
 	@Override
@@ -69,6 +100,8 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	@Override
 	protected void removePassenger(Entity entity) {
 		super.removePassenger(entity);
+		if (entity instanceof TamableAnimal ta)
+			ta.setInSittingPose(false);
 	}
 
 	@Override

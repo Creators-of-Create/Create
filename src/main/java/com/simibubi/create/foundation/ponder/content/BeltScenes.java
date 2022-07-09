@@ -7,7 +7,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
+import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.Mode;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
@@ -79,7 +79,8 @@ public class BeltScenes {
 		scene.idle(7);
 
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, frontEnd, shaftBB.move(frontEnd), 17);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.BLACK, backEndCenter, connectBB.expandTowards(-4, 0, 0), 20);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.BLACK, backEndCenter, connectBB.expandTowards(-4, 0, 0),
+			20);
 		scene.idle(20);
 
 		scene.world.moveSection(shafts, util.vector.of(0, -2, 0), 0);
@@ -167,6 +168,7 @@ public class BeltScenes {
 			.text("Mechanical Belts can be dyed for aesthetic purposes")
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(shaftLocation.east()));
+		scene.idle(50);
 	}
 
 	public static void directions(SceneBuilder scene, SceneBuildingUtil util) {
@@ -534,8 +536,9 @@ public class BeltScenes {
 		scene.world.removeItemsFromBelt(depotPos);
 		scene.world.hideSection(util.select.position(depotPos.above(2)), Direction.SOUTH);
 		scene.idle(20);
-		ElementLink<WorldSectionElement> spout = scene.world.showIndependentSection(util.select.position(depotPos.above(2)
-			.west()), Direction.SOUTH);
+		ElementLink<WorldSectionElement> spout =
+			scene.world.showIndependentSection(util.select.position(depotPos.above(2)
+				.west()), Direction.SOUTH);
 		scene.world.moveSection(spout, util.vector.of(1, 0, 0), 0);
 
 		BlockPos pressPos = depotPos.above(2)
@@ -546,10 +549,11 @@ public class BeltScenes {
 		scene.idle(10);
 
 		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BELT));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BELT));
 		scene.idle(15);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
 		scene.world.removeItemsFromBelt(depotPos);
 		ItemStack sheet = AllItems.COPPER_SHEET.asStack();
 		scene.world.createItemOnBeltLike(depotPos, Direction.UP, sheet);

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
@@ -12,13 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HosePulleyTileEntity> {
 
@@ -85,13 +81,6 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 			TileEntityBehaviour.destroy(world, pos, FluidFillingBehaviour.TYPE);
 			world.removeBlockEntity(pos);
 		}
-	}
-
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return AllShapes.PULLEY.get(state.getValue(HORIZONTAL_FACING)
-			.getClockWise()
-			.getAxis());
 	}
 
 	@Override

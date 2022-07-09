@@ -7,12 +7,11 @@ import static com.simibubi.create.foundation.data.WindowGen.framedGlassPane;
 import static com.simibubi.create.foundation.data.WindowGen.woodenWindowBlock;
 import static com.simibubi.create.foundation.data.WindowGen.woodenWindowPane;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
-import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
+import com.simibubi.create.foundation.block.connected.SimpleCTBehaviour;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.WindowGen;
@@ -22,9 +21,11 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
@@ -37,7 +38,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
-		.addLayer(() -> RenderType::cutoutMipped)
+		.addLayer(() -> RenderType::cutout)
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
 		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
@@ -47,11 +48,11 @@ public class AllPaletteBlocks {
 		.register();
 
 	public static final BlockEntry<ConnectedGlassBlock> FRAMED_GLASS =
-		framedGlass("framed_glass", () -> new StandardCTBehaviour(AllSpriteShifts.FRAMED_GLASS)),
+		framedGlass("framed_glass", () -> new SimpleCTBehaviour(AllSpriteShifts.FRAMED_GLASS)),
 		HORIZONTAL_FRAMED_GLASS = framedGlass("horizontal_framed_glass",
 			() -> new HorizontalCTBehaviour(AllSpriteShifts.HORIZONTAL_FRAMED_GLASS, AllSpriteShifts.FRAMED_GLASS)),
-		VERTICAL_FRAMED_GLASS =
-			framedGlass("vertical_framed_glass", () -> new HorizontalCTBehaviour(AllSpriteShifts.VERTICAL_FRAMED_GLASS));
+		VERTICAL_FRAMED_GLASS = framedGlass("vertical_framed_glass",
+			() -> new HorizontalCTBehaviour(AllSpriteShifts.VERTICAL_FRAMED_GLASS));
 
 	public static final BlockEntry<GlassPaneBlock> TILED_GLASS_PANE =
 		WindowGen.standardGlassPane("tiled_glass", TILED_GLASS, Create.asResource("block/palettes/tiled_glass"),
@@ -61,8 +62,8 @@ public class AllPaletteBlocks {
 		framedGlassPane("framed_glass", FRAMED_GLASS, () -> AllSpriteShifts.FRAMED_GLASS),
 		HORIZONTAL_FRAMED_GLASS_PANE = framedGlassPane("horizontal_framed_glass", HORIZONTAL_FRAMED_GLASS,
 			() -> AllSpriteShifts.HORIZONTAL_FRAMED_GLASS),
-		VERTICAL_FRAMED_GLASS_PANE =
-			framedGlassPane("vertical_framed_glass", VERTICAL_FRAMED_GLASS, () -> AllSpriteShifts.VERTICAL_FRAMED_GLASS);
+		VERTICAL_FRAMED_GLASS_PANE = framedGlassPane("vertical_framed_glass", VERTICAL_FRAMED_GLASS,
+			() -> AllSpriteShifts.VERTICAL_FRAMED_GLASS);
 
 	public static final BlockEntry<WindowBlock> OAK_WINDOW = woodenWindowBlock(WoodType.OAK, Blocks.OAK_PLANKS),
 		SPRUCE_WINDOW = woodenWindowBlock(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS),
@@ -72,8 +73,9 @@ public class AllPaletteBlocks {
 		DARK_OAK_WINDOW = woodenWindowBlock(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS),
 		CRIMSON_WINDOW = woodenWindowBlock(WoodType.CRIMSON, Blocks.CRIMSON_PLANKS),
 		WARPED_WINDOW = woodenWindowBlock(WoodType.WARPED, Blocks.WARPED_PLANKS),
-		ORNATE_IRON_WINDOW = customWindowBlock("ornate_iron_window", AllItems.ANDESITE_ALLOY,
-			() -> AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::cutoutMipped);
+		ORNATE_IRON_WINDOW =
+			customWindowBlock("ornate_iron_window", () -> Items.IRON_NUGGET, () -> AllSpriteShifts.ORNATE_IRON_WINDOW,
+				() -> RenderType::cutout, () -> MaterialColor.TERRACOTTA_LIGHT_GRAY);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
 		woodenWindowPane(WoodType.OAK, OAK_WINDOW),
@@ -90,7 +92,7 @@ public class AllPaletteBlocks {
 	static {
 		AllPaletteStoneTypes.register(REGISTRATE);
 	}
-	
+
 	public static void register() {}
 
 }

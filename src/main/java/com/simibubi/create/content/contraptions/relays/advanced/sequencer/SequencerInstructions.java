@@ -48,13 +48,13 @@ public enum SequencerInstructions {
 	static List<Component> getOptions() {
 		List<Component> options = new ArrayList<>();
 		for (SequencerInstructions entry : values())
-			options.add(Lang.translate(entry.descriptiveTranslationKey));
+			options.add(Lang.translateDirect(entry.descriptiveTranslationKey));
 		return options;
 	}
 
 	String formatValue(int value) {
 		if (this == TURN_ANGLE)
-			return value + Lang.translate("generic.unit.degrees").getString();
+			return value + Lang.translateDirect("generic.unit.degrees").getString();
 		if (this == TURN_DISTANCE)
 			return value + "m";
 		if (this == DELAY) {

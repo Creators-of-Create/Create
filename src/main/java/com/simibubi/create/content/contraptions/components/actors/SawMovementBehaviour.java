@@ -36,17 +36,21 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
-		return Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING).getNormal()).scale(.65f);
+		return Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING)
+			.getNormal())
+			.scale(.65f);
 	}
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
-		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING).getNormal());
+		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING)
+			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
 
 		Direction closestToFacing = Direction.getNearest(facingVec.x, facingVec.y, facingVec.z);
-		if(closestToFacing.getAxis().isVertical() && context.data.contains("BreakingPos")) {
+		if (closestToFacing.getAxis()
+			.isVertical() && context.data.contains("BreakingPos")) {
 			context.data.remove("BreakingPos");
 			context.stall = false;
 		}
@@ -64,15 +68,17 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		Optional<AbstractBlockBreakQueue> dynamicTree = TreeCutter.findDynamicTree(brokenState.getBlock(), pos);
 		if (dynamicTree.isPresent()) {
-			dynamicTree.get().destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
+			dynamicTree.get()
+				.destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
 			return;
 		}
 
-		TreeCutter.findTree(context.world, pos).destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
+		TreeCutter.findTree(context.world, pos)
+			.destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
 	}
 
 	public void dropItemFromCutTree(MovementContext context, BlockPos pos, ItemStack stack) {
-		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.getSharedInventory(), stack, false);
 		if (remainder.isEmpty())
 			return;
 
@@ -87,7 +93,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-									ContraptionMatrices matrices, MultiBufferSource buffer) {
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 

@@ -55,7 +55,7 @@ public class CKinetics extends ConfigBase {
 		f(4, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
 	public final ConfigFloat highStressImpact = f(8, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
 	public final ConfigFloat mediumCapacity = f(128, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
-	public final ConfigFloat highCapacity = f(512, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
+	public final ConfigFloat highCapacity = f(1024, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
 
 	@Override
 	public String getName() {

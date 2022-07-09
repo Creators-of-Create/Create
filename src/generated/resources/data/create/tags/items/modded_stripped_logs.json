@@ -1,0 +1,297 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "ars_nouveau:stripped_blue_archwood_log",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:stripped_purple_archwood_log",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:stripped_green_archwood_log",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:stripped_red_archwood_log",
+      "required": false
+    },
+    {
+      "id": "botania:stripped_livingwood_log",
+      "required": false
+    },
+    {
+      "id": "botania:stripped_dreamwood_log",
+      "required": false
+    },
+    {
+      "id": "forbidden_arcanus:stripped_cherrywood_log",
+      "required": false
+    },
+    {
+      "id": "forbidden_arcanus:stripped_mysterywood_log",
+      "required": false
+    },
+    {
+      "id": "hexcasting:akashic_log_stripped",
+      "required": false
+    },
+    {
+      "id": "integrateddynamics:menril_log_stripped",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_aspen_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_baobab_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_enchanted_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_cherry_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_cika_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_cypress_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_ebony_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_ether_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_fir_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_green_enchanted_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_holly_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_jacaranda_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_lament_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_mahogany_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_mangrove_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_maple_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_nightshade_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_palm_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_palo_verde_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_pine_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_rainbow_eucalyptus_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_redwood_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_skyris_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_willow_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_witch_hazel_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_zelkova_log",
+      "required": false
+    },
+    {
+      "id": "silentgear:stripped_netherwood_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_twilight_oak_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_canopy_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_mangrove_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_dark_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_time_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_transformation_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_mining_log",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stripped_sorting_log",
+      "required": false
+    },
+    {
+      "id": "tconstruct:stripped_greenheart_log",
+      "required": false
+    },
+    {
+      "id": "tconstruct:stripped_skyroot_log",
+      "required": false
+    },
+    {
+      "id": "tconstruct:stripped_bloodshroom_log",
+      "required": false
+    },
+    {
+      "id": "architects_palette:stripped_twisted_log",
+      "required": false
+    },
+    {
+      "id": "quark:stripped_azalea_log",
+      "required": false
+    },
+    {
+      "id": "quark:stripped_blossom_log",
+      "required": false
+    },
+    {
+      "id": "ecologics:stripped_coconut_log",
+      "required": false
+    },
+    {
+      "id": "ecologics:stripped_walnut_log",
+      "required": false
+    },
+    {
+      "id": "ecologics:stripped_azalea_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_fir_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_redwood_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_cherry_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_mahogany_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_jacaranda_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_palm_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_willow_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_dead_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_magic_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_umbran_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_hellbark_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_bluebright_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_starlit_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_frostbright_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_lunar_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_dusk_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_maple_log",
+      "required": false
+    },
+    {
+      "id": "blue_skies:stripped_cherry_log",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_bulbis_stem",
+      "required": false
+    }
+  ]
+}

@@ -1,29 +1,53 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber
 public class SuperGlueItem extends Item {
+
+	@SubscribeEvent
+	public static void glueItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
+		if (event.getHitVec() != null) {
+			BlockState blockState = event.getWorld()
+				.getBlockState(event.getHitVec()
+					.getBlockPos());
+			if (blockState.getBlock()instanceof AbstractChassisBlock cb)
+				if (cb.getGlueableSide(blockState, event.getFace()) != null)
+					return;
+		}
+
+		if (event.getItemStack()
+			.getItem() instanceof SuperGlueItem)
+			event.setUseBlock(Result.DENY);
+	}
 
 	public SuperGlueItem(Properties properties) {
 		super(properties);
+	}
+
+	@Override
+	public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+		return false;
 	}
 
 	@Override
@@ -31,42 +55,7 @@ public class SuperGlueItem extends Item {
 		return true;
 	}
 
-	@Override
-	public InteractionResult useOn(UseOnContext context) {
-		BlockPos blockpos = context.getClickedPos();
-		Direction direction = context.getClickedFace();
-		BlockPos blockpos1 = blockpos.relative(direction);
-		Player playerentity = context.getPlayer();
-		ItemStack itemstack = context.getItemInHand();
-
-		if (playerentity == null || !this.canPlace(playerentity, direction, itemstack, blockpos1))
-			return InteractionResult.FAIL;
-
-		Level world = context.getLevel();
-		SuperGlueEntity entity = new SuperGlueEntity(world, blockpos1, direction);
-		CompoundTag compoundnbt = itemstack.getTag();
-		if (compoundnbt != null)
-			EntityType.updateCustomEntityTag(world, playerentity, entity, compoundnbt);
-
-		if (!entity.onValidSurface())
-			return InteractionResult.FAIL;
-
-		if (!world.isClientSide) {
-			entity.playPlaceSound();
-			world.addFreshEntity(entity);
-		}
-		itemstack.hurtAndBreak(1, playerentity, SuperGlueItem::onBroken);
-
-		return InteractionResult.SUCCESS;
-	}
-
-	public static void onBroken(Player player) {
-
-	}
-
-	protected boolean canPlace(Player entity, Direction facing, ItemStack stack, BlockPos pos) {
-		return !entity.level.isOutsideBuildHeight(pos) && entity.mayUseItemAt(pos, facing, stack);
-	}
+	public static void onBroken(Player player) {}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void spawnParticles(Level world, BlockPos pos, Direction direction, boolean fullBlock) {
@@ -84,8 +73,8 @@ public class SuperGlueItem extends Item {
 			Vec3 motion = offset.normalize()
 				.scale(1 / 16f);
 			if (fullBlock)
-				offset = new Vec3(Mth.clamp(offset.x, -.5, .5), Mth.clamp(offset.y, -.5, .5),
-					Mth.clamp(offset.z, -.5, .5));
+				offset =
+					new Vec3(Mth.clamp(offset.x, -.5, .5), Mth.clamp(offset.y, -.5, .5), Mth.clamp(offset.z, -.5, .5));
 			Vec3 particlePos = facePos.add(offset);
 			world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), particlePos.x, particlePos.y,
 				particlePos.z, motion.x, motion.y, motion.z);

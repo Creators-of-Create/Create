@@ -60,7 +60,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		disposeButton.withCallback(() -> {
 			AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
 		});
-		disposeButton.setToolTip(Lang.translate("toolbox.depositBox"));
+		disposeButton.setToolTip(Lang.translateDirect("toolbox.depositBox"));
 		addRenderableWidget(disposeButton);
 
 		extraAreas = ImmutableList.of(

@@ -18,8 +18,8 @@ import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingAngle;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -43,7 +43,8 @@ public class PlacementHelpers {
 
 	private static final List<IPlacementHelper> helpers = new ArrayList<>();
 	private static int animationTick = 0;
-	private static final InterpolatedChasingValue angle = new InterpolatedChasingAngle().withSpeed(0.25f);
+	private static final LerpedFloat angle = LerpedFloat.angular()
+		.chase(0, 0.25f, Chaser.EXP);
 	private static BlockPos target = null;
 	private static BlockPos lastTarget = null;
 
@@ -92,20 +93,25 @@ public class PlacementHelpers {
 		if (mc.player == null)
 			return;
 
-		if (mc.player.isShiftKeyDown())//for now, disable all helpers when sneaking TODO add helpers that respect sneaking but still show position
+		if (mc.player.isShiftKeyDown())// for now, disable all helpers when sneaking TODO add helpers that respect
+										// sneaking but still show position
 			return;
 
 		for (InteractionHand hand : InteractionHand.values()) {
 
 			ItemStack heldItem = mc.player.getItemInHand(hand);
-			List<IPlacementHelper> filteredForHeldItem = helpers.stream().filter(helper -> helper.matchesItem(heldItem)).collect(Collectors.toList());
+			List<IPlacementHelper> filteredForHeldItem = helpers.stream()
+				.filter(helper -> helper.matchesItem(heldItem))
+				.collect(Collectors.toList());
 			if (filteredForHeldItem.isEmpty())
 				continue;
 
 			BlockPos pos = ray.getBlockPos();
 			BlockState state = world.getBlockState(pos);
 
-			List<IPlacementHelper> filteredForState = filteredForHeldItem.stream().filter(helper -> helper.matchesState(state)).collect(Collectors.toList());
+			List<IPlacementHelper> filteredForState = filteredForHeldItem.stream()
+				.filter(helper -> helper.matchesState(state))
+				.collect(Collectors.toList());
 			if (filteredForState.isEmpty())
 				continue;
 
@@ -122,7 +128,8 @@ public class PlacementHelpers {
 
 			}
 
-			//at least one helper activated, no need to check the offhand if we are still in the mainhand
+			// at least one helper activated, no need to check the offhand if we are still
+			// in the mainhand
 			if (atLeastOneMatch)
 				return;
 
@@ -165,11 +172,12 @@ public class PlacementHelpers {
 	}
 
 	public static float getCurrentAlpha() {
-		return Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
+		return Math.min(animationTick / 10f/* + event.getPartialTicks() */, 1f);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void drawDirectionIndicator(PoseStack ms, float partialTicks, float centerX, float centerY, float progress) {
+	private static void drawDirectionIndicator(PoseStack ms, float partialTicks, float centerX, float centerY,
+		float progress) {
 		float r = .8f;
 		float g = .8f;
 		float b = .8f;
@@ -178,28 +186,24 @@ public class PlacementHelpers {
 		Vec3 projTarget = VecHelper.projectToPlayerView(VecHelper.getCenterOf(lastTarget), partialTicks);
 
 		Vec3 target = new Vec3(projTarget.x, projTarget.y, 0);
-		if (projTarget.z > 0) {
+		if (projTarget.z > 0)
 			target = target.reverse();
-		}
 
 		Vec3 norm = target.normalize();
 		Vec3 ref = new Vec3(0, 1, 0);
 		float targetAngle = AngleHelper.deg(Math.acos(norm.dot(ref)));
 
-		angle.withSpeed(0.25f);
-
-		if (norm.x < 0) {
+		if (norm.x < 0)
 			targetAngle = 360 - targetAngle;
-		}
 
 		if (animationTick < 10)
-			angle.set(targetAngle);
+			angle.setValue(targetAngle);
 
-		angle.target(targetAngle);
-		angle.tick();
+		angle.chase(targetAngle, .25f, Chaser.EXP);
+		angle.tickChaser();
 
 		float snapSize = 22.5f;
-		float snappedAngle = (snapSize * Math.round(angle.get(0f) / snapSize)) % 360f;
+		float snappedAngle = (snapSize * Math.round(angle.getValue(0f) / snapSize)) % 360f;
 
 		float length = 10;
 
@@ -210,7 +214,8 @@ public class PlacementHelpers {
 			textured(ms, centerX, centerY, a, snappedAngle);
 	}
 
-	private static void fadedArrow(PoseStack ms, float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
+	private static void fadedArrow(PoseStack ms, float centerX, float centerY, float r, float g, float b, float a,
+		float length, float snappedAngle) {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -218,8 +223,8 @@ public class PlacementHelpers {
 
 		ms.pushPose();
 		ms.translate(centerX, centerY, 5);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.get(0)));
-		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.getValue(0)));
+		// RenderSystem.rotatef(snappedAngle, 0, 0, 1);
 		double scale = AllConfigs.CLIENT.indicatorScale.get();
 		ms.scale((float) scale, (float) scale, 1);
 
@@ -227,17 +232,34 @@ public class PlacementHelpers {
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
-		Matrix4f mat = ms.last().pose();
+		Matrix4f mat = ms.last()
+			.pose();
 
-		bufferbuilder.vertex(mat, 0, -(10 + length), 0).color(r, g, b, a).endVertex();
+		bufferbuilder.vertex(mat, 0, -(10 + length), 0)
+			.color(r, g, b, a)
+			.endVertex();
 
-		bufferbuilder.vertex(mat, -9, -3, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, -6, -6, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, -3, -8, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 0, -8.5f, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 3, -8, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 6, -6, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 9, -3, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, -9, -3, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
+		bufferbuilder.vertex(mat, -6, -6, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
+		bufferbuilder.vertex(mat, -3, -8, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
+		bufferbuilder.vertex(mat, 0, -8.5f, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
+		bufferbuilder.vertex(mat, 3, -8, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
+		bufferbuilder.vertex(mat, 6, -6, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
+		bufferbuilder.vertex(mat, 9, -3, 0)
+			.color(r, g, b, 0f)
+			.endVertex();
 
 		tessellator.end();
 		RenderSystem.disableBlend();
@@ -245,7 +267,8 @@ public class PlacementHelpers {
 		ms.popPose();
 	}
 
-	private static void textured(PoseStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
+	@OnlyIn(Dist.CLIENT)
+	public static void textured(PoseStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
 		RenderSystem.enableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
 		RenderSystem.enableDepthTest();
@@ -255,12 +278,13 @@ public class PlacementHelpers {
 
 		ms.pushPose();
 		ms.translate(centerX, centerY, 50);
-		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue() * .75f;
+		float scale = AllConfigs.CLIENT.indicatorScale.get()
+			.floatValue() * .75f;
 		ms.scale(scale, scale, 1);
 		ms.scale(12, 12, 1);
 
 		float index = snappedAngle / 22.5f;
-		float tex_size = 16f/256f;
+		float tex_size = 16f / 256f;
 
 		float tx = 0;
 		float ty = index * tex_size;
@@ -271,11 +295,24 @@ public class PlacementHelpers {
 		BufferBuilder buffer = tessellator.getBuilder();
 		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
-		Matrix4f mat = ms.last().pose();
-		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty).endVertex();
-		buffer.vertex(mat, -1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty + th).endVertex();
-		buffer.vertex(mat, 1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty + th).endVertex();
-		buffer.vertex(mat, 1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty).endVertex();
+		Matrix4f mat = ms.last()
+			.pose();
+		buffer.vertex(mat, -1, -1, 0)
+			.color(1f, 1f, 1f, alpha)
+			.uv(tx, ty)
+			.endVertex();
+		buffer.vertex(mat, -1, 1, 0)
+			.color(1f, 1f, 1f, alpha)
+			.uv(tx, ty + th)
+			.endVertex();
+		buffer.vertex(mat, 1, 1, 0)
+			.color(1f, 1f, 1f, alpha)
+			.uv(tx + tw, ty + th)
+			.endVertex();
+		buffer.vertex(mat, 1, -1, 0)
+			.color(1f, 1f, 1f, alpha)
+			.uv(tx + tw, ty)
+			.endVertex();
 
 		tessellator.end();
 

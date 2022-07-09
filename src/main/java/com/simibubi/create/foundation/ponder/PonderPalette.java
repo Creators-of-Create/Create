@@ -15,8 +15,8 @@ public enum PonderPalette {
 	MEDIUM(0xFF_0084ff),
 	FAST(0xFF_ff55ff),
 
-	INPUT(0xFF_4f8a8b),
-	OUTPUT(0xFF_ffcb74),
+	INPUT(0xFF_7FCDE0),
+	OUTPUT(0xFF_DDC166),
 
 	;
 

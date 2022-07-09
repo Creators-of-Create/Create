@@ -10,7 +10,6 @@ import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-@SuppressWarnings("PointlessBitwiseExpression")
 public class Color {
 	public final static Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0).setImmutable();
 	public final static Color BLACK = new Color(0, 0, 0).setImmutable();

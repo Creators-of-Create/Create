@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " R "
+    "B",
+    "C",
+    "R"
   ],
   "key": {
     "B": {
@@ -14,9 +14,6 @@
     },
     "C": {
       "item": "create:brass_casing"
-    },
-    "S": {
-      "item": "create:cogwheel"
     }
   },
   "result": {

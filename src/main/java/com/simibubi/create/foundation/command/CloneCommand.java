@@ -8,13 +8,11 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -27,6 +25,7 @@ import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class CloneCommand {
 
@@ -89,22 +88,15 @@ public class CloneCommand {
 	private static int cloneGlue(BoundingBox sourceArea, ServerLevel world, BlockPos diffToTarget) {
 		int gluePastes = 0;
 
-		List<SuperGlueEntity> glue = world.getEntitiesOfClass(SuperGlueEntity.class, AABB.of(sourceArea));
-		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
-
-		for (SuperGlueEntity g : glue) {
-			BlockPos pos = g.getHangingPosition();
-			Direction direction = g.getFacingDirection();
-			newGlue.add(Pair.of(pos.offset(diffToTarget), direction));
+		AABB bb = new AABB(sourceArea.minX(), sourceArea.minY(), sourceArea.minZ(), sourceArea.maxX() + 1,
+			sourceArea.maxY() + 1, sourceArea.maxZ() + 1);
+		for (SuperGlueEntity g : SuperGlueEntity.collectCropped(world, bb)) {
+			g.setPos(g.position()
+				.add(Vec3.atLowerCornerOf(diffToTarget)));
+			world.addFreshEntity(g);
+			gluePastes++;
 		}
 
-		for (Pair<BlockPos, Direction> p : newGlue) {
-			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
-			if (g.onValidSurface()) {
-				world.addFreshEntity(g);
-				gluePastes++;
-			}
-		}
 		return gluePastes;
 	}
 

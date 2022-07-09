@@ -25,7 +25,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 public class PonderTooltipHandler {
 
 	public static boolean enable = true;
-	
+
 	static LerpedFloat holdWProgress = LerpedFloat.linear()
 		.startWithValue(0);
 	static ItemStack hoveredStack = ItemStack.EMPTY;
@@ -44,7 +44,7 @@ public class PonderTooltipHandler {
 		deferTick = false;
 		Minecraft instance = Minecraft.getInstance();
 		Screen currentScreen = instance.screen;
-		
+
 		if (hoveredStack.isEmpty() || trackingStack.isEmpty()) {
 			trackingStack = ItemStack.EMPTY;
 			holdWProgress.startWithValue(0);
@@ -75,7 +75,7 @@ public class PonderTooltipHandler {
 	public static void addToTooltip(List<Component> toolTip, ItemStack stack) {
 		if (!enable)
 			return;
-		
+
 		updateHovered(stack);
 
 		if (deferTick)
@@ -86,7 +86,7 @@ public class PonderTooltipHandler {
 
 		float renderPartialTicks = Minecraft.getInstance()
 			.getFrameTime();
-		Component component = subject ? Lang.createTranslationTextComponent(SUBJECT)
+		Component component = subject ? Lang.translateDirect(SUBJECT)
 			.withStyle(ChatFormatting.GREEN)
 			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
 		if (toolTip.size() < 2)
@@ -99,7 +99,7 @@ public class PonderTooltipHandler {
 		Minecraft instance = Minecraft.getInstance();
 		Screen currentScreen = instance.screen;
 		boolean inPonderUI = currentScreen instanceof PonderUI;
-		
+
 		ItemStack prevStack = trackingStack;
 		hoveredStack = ItemStack.EMPTY;
 		subject = false;
@@ -116,7 +116,7 @@ public class PonderTooltipHandler {
 			.getRegistryName()))
 			return;
 
-		if (prevStack.isEmpty() || !prevStack.sameItem(stack)) 
+		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
 			holdWProgress.startWithValue(0);
 
 		hoveredStack = stack;
@@ -149,7 +149,7 @@ public class PonderTooltipHandler {
 
 	private static Component makeProgressBar(float progress) {
 		MutableComponent holdW = Lang
-			.translate(HOLD_TO_PONDER,
+			.translateDirect(HOLD_TO_PONDER,
 				((MutableComponent) ponderKeybind().getTranslatedKeyMessage()).withStyle(ChatFormatting.GRAY))
 			.withStyle(ChatFormatting.DARK_GRAY);
 

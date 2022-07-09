@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.core.BlockPos;
@@ -56,7 +57,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags, int count) {
+	public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags,
+		int count) {
 		if (worldIn.isClientSide())
 			return;
 
@@ -65,10 +67,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
 
-		if (kte.preventSpeedUpdate > 0) {
-			kte.preventSpeedUpdate--;
+		if (kte.preventSpeedUpdate > 0)
 			return;
-		}
 
 		// Remove previous information when block is added
 		kte.warnOfMovement();
@@ -78,6 +78,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		AdvancementBehaviour.setPlacedBy(worldIn, pos, placer);
 		if (worldIn.isClientSide)
 			return;
 

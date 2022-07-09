@@ -1,5 +1,5 @@
 {
-  "parent": "create:copper_casing",
+  "parent": "create:mechanical_pump_0",
   "display": {
     "icon": {
       "item": "create:fluid_pipe"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.glass_pipe"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.glass_pipe.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:glass_pipe",
+      "trigger": "create:glass_pipe_builtin",
       "conditions": {}
     }
   },

@@ -10,6 +10,7 @@ import java.util.Optional;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -76,13 +77,9 @@ public class InWorldProcessing {
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
 
-				if (Type.valueOf(processing.getString("Type")) != type) {
-					boolean canProcess = type.canProcess(entity.getItem(), entity.level);
-					processing.putString("Type", type.name());
-					if (!canProcess)
-						processing.putInt("Time", -1);
-					return canProcess;
-				} else if (processing.getInt("Time") >= 0)
+				if (Type.valueOf(processing.getString("Type")) != type)
+					return type.canProcess(entity.getItem(), entity.level);
+				else if (processing.getInt("Time") >= 0)
 					return true;
 				else if (processing.getInt("Time") == -1)
 					return false;
@@ -103,15 +100,15 @@ public class InWorldProcessing {
 		return recipe.isPresent();
 	}
 
-	public static void applyProcessing(ItemEntity entity, Type type) {
+	public static boolean applyProcessing(ItemEntity entity, Type type) {
 		if (decrementProcessingTime(entity, type) != 0)
-			return;
+			return false;
 		List<ItemStack> stacks = process(entity.getItem(), type, entity.level);
 		if (stacks == null)
-			return;
+			return false;
 		if (stacks.isEmpty()) {
 			entity.discard();
-			return;
+			return false;
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
@@ -119,6 +116,7 @@ public class InWorldProcessing {
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
 			entity.level.addFreshEntity(entityIn);
 		}
+		return true;
 	}
 
 	public static TransportedResult applyProcessing(TransportedItemStack transported, Level world, Type type) {
@@ -241,11 +239,12 @@ public class InWorldProcessing {
 	public static List<ItemStack> applyRecipeOn(ItemStack stackIn, Recipe<?> recipe) {
 		List<ItemStack> stacks;
 
-		if (recipe instanceof ProcessingRecipe) {
+		if (recipe instanceof ProcessingRecipe<?> pr) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
-				List<ItemStack> rollResults = ((ProcessingRecipe<?>) recipe).rollResults();
-				for (ItemStack stack : rollResults) {
+				List<ProcessingOutput> outputs =
+					pr instanceof ManualApplicationRecipe mar ? mar.getRollableResults() : pr.getRollableResults();
+				for (ItemStack stack : pr.rollResults(outputs)) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())
 							continue;
@@ -296,8 +295,8 @@ public class InWorldProcessing {
 				}
 				if (entity.isOnFire()) {
 					entity.clearFire();
-					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL,
-						0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+						SoundSource.NEUTRAL, 0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
 				}
 			}
 
@@ -445,12 +444,10 @@ public class InWorldProcessing {
 		},
 		NONE {
 			@Override
-			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
-			}
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {}
 
 			@Override
-			public void affectEntity(Entity entity, Level level) {
-			}
+			public void affectEntity(Entity entity, Level level) {}
 
 			@Override
 			public boolean canProcess(ItemStack stack, Level level) {
@@ -473,14 +470,18 @@ public class InWorldProcessing {
 			if (block == Blocks.SOUL_FIRE
 				|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-					.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL).orElse(false))
+				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
+					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
+						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL)
+						.orElse(false))
 				return Type.HAUNTING;
 			if (block == Blocks.FIRE
-				|| BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
+				|| blockState.is(BlockTags.CAMPFIRES) && blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState) && blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-					.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR).orElse(false)
+				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
+					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
+						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR)
+						.orElse(false)
 				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))

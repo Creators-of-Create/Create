@@ -1,5 +1,5 @@
 {
-  "parent": "create:precision_mechanism",
+  "parent": "create:potato_cannon",
   "display": {
     "icon": {
       "item": "create:extendo_grip",
@@ -9,6 +9,7 @@
       "translate": "advancement.create.extendo_grip"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.extendo_grip.desc"
     },
     "frame": "task",
@@ -18,7 +19,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:extendo",
+      "trigger": "create:extendo_grip_builtin",
       "conditions": {}
     }
   },

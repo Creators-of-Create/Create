@@ -1,0 +1,30 @@
+{
+  "parent": "create:brass",
+  "display": {
+    "icon": {
+      "item": "create:haunted_bell"
+    },
+    "title": {
+      "translate": "advancement.create.haunted_bell"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.haunted_bell.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:haunted_bell_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

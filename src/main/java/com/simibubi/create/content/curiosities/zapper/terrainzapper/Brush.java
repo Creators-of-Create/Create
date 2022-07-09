@@ -53,7 +53,7 @@ public abstract class Brush {
 
 	Component getParamLabel(int paramIndex) {
 		return Lang
-			.translate(paramIndex == 0 ? "generic.width" : paramIndex == 1 ? "generic.height" : "generic.length");
+			.translateDirect(paramIndex == 0 ? "generic.width" : paramIndex == 1 ? "generic.height" : "generic.length");
 	}
 
 	public int get(int paramIndex) {

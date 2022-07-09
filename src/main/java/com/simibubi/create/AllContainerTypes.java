@@ -10,6 +10,8 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.FilterContainer;
 import com.simibubi.create.content.logistics.item.filter.FilterScreen;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleContainer;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.content.schematics.block.SchematicTableContainer;
 import com.simibubi.create.content.schematics.block.SchematicTableScreen;
 import com.simibubi.create.content.schematics.block.SchematicannonContainer;
@@ -45,6 +47,9 @@ public class AllContainerTypes {
 	
 	public static final MenuEntry<ToolboxContainer> TOOLBOX =
 		register("toolbox", ToolboxContainer::new, () -> ToolboxScreen::new);
+	
+	public static final MenuEntry<ScheduleContainer> SCHEDULE =
+		register("schedule", ScheduleContainer::new, () -> ScheduleScreen::new);
 
 	private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
 		String name, ForgeMenuFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {

@@ -5,12 +5,12 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IPlantable;
 
-public class HarvesterMovementBehaviour extends MovementBehaviour {
+public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
@@ -58,7 +58,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-        if (!Backend.isOn())
+        if (!ContraptionRenderDispatcher.canInstance())
 			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 

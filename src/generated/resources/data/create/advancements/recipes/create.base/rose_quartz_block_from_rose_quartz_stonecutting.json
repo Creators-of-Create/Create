@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:rose_quartz_block_from_rose_quartz_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_rose_quartz": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:rose_quartz"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:rose_quartz_block_from_rose_quartz_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_rose_quartz",
+      "has_the_recipe"
+    ]
+  ]
+}

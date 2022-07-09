@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -51,6 +52,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
 		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.MILLSTONE);
 	}
 
 	@Override
@@ -134,6 +136,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		inputInv.setStackInSlot(0, stackInSlot);
 		lastRecipe.rollResults()
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
+		award(AllAdvancements.MILLSTONE);
+		
 		sendData();
 		setChanged();
 	}

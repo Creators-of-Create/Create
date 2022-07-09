@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/girder",
+		"particle": "create:block/chute_block"
+	},
+	"elements": [
+		{
+			"from": [-4, -1, 0],
+			"to": [4, 1, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13, 8]},
+			"faces": {
+				"north": {"uv": [12, 1, 16, 2], "texture": "#0"},
+				"east": {"uv": [0, 4, 4, 5], "texture": "#0"},
+				"south": {"uv": [12, 1, 16, 2], "texture": "#0"},
+				"west": {"uv": [0, 4, 4, 5], "texture": "#0"},
+				"up": {"uv": [2, 0, 6, 4], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 0, 16, 4], "rotation": 270, "texture": "#0"}
+			}
+		}
+	]
+}

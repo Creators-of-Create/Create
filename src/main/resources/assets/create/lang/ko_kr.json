@@ -1230,7 +1230,7 @@
 	"create.tooltip.speedRequirement": "요구 회전속도: %1$s",
 	"create.tooltip.speedRequirement.none": "없음",
 	"create.tooltip.speedRequirement.medium": "보통",
-	"create.tooltip.speedRequirement.high": "빠름",
+	"create.tooltip.speedRequirement.fast": "빠름",
 	"create.tooltip.stressImpact": "피로도 부하: %1$s",
 	"create.tooltip.stressImpact.low": "낮음",
 	"create.tooltip.stressImpact.medium": "보통",

@@ -9,10 +9,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -34,7 +34,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class MountedContraption extends Contraption {
@@ -95,8 +94,8 @@ public class MountedContraption extends Contraption {
 		for (Axis axis : Iterate.axes) {
 			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
 				continue;
-			for (AbstractMinecart abstractMinecartEntity : world
-				.getEntitiesOfClass(AbstractMinecart.class, new AABB(pos))) {
+			for (AbstractMinecart abstractMinecartEntity : world.getEntitiesOfClass(AbstractMinecart.class,
+				new AABB(pos))) {
 				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 					break;
 				connectedCart = abstractMinecartEntity;
@@ -118,8 +117,8 @@ public class MountedContraption extends Contraption {
 		for (Axis axis : Iterate.axes) {
 			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
 				continue;
-			for (AbstractMinecart abstractMinecartEntity : world
-				.getEntitiesOfClass(AbstractMinecart.class, new AABB(pos))) {
+			for (AbstractMinecart abstractMinecartEntity : world.getEntitiesOfClass(AbstractMinecart.class,
+				new AABB(pos))) {
 				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 					break;
 				return true;
@@ -156,14 +155,11 @@ public class MountedContraption extends Contraption {
 		return true;
 	}
 
-	@Override
 	public void addExtraInventories(Entity cart) {
-		if (!(cart instanceof Container))
-			return;
-		IItemHandlerModifiable handlerFromInv = new ContraptionInvWrapper(true, new InvWrapper((Container) cart));
-		inventory = new ContraptionInvWrapper(handlerFromInv, inventory);
+		if (cart instanceof Container container)
+			storage.attachExternal(new ContraptionInvWrapper(true, new InvWrapper(container)));
 	}
-
+	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {

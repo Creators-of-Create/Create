@@ -268,6 +268,7 @@ public class ControllerRailBlock extends BaseRailBlock implements IWrenchable {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public BlockState rotate(BlockState state, Rotation rotation) {
 		if (rotation == Rotation.NONE)
 			return state;

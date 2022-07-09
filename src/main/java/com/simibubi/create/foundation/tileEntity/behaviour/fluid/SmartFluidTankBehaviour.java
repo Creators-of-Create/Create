@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
-	public static BehaviourType<SmartFluidTankBehaviour>
+	public static final BehaviourType<SmartFluidTankBehaviour>
 
 	TYPE = new BehaviourType<>(), INPUT = new BehaviourType<>("Input"), OUTPUT = new BehaviourType<>("Output");
 

@@ -1,17 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "EBE"
-  ],
-  "key": {
-    "E": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "item": "create:electron_tube"
     },
-    "B": {
-      "item": "create:brass_casing"
+    {
+      "item": "create:electron_tube"
     }
-  },
+  ],
   "result": {
-    "item": "create:nixie_tube"
+    "item": "create:nixie_tube",
+    "count": 4
   }
 }

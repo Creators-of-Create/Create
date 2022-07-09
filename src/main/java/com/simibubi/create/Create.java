@@ -8,11 +8,16 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
+import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
+import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
+import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
@@ -31,7 +36,7 @@ import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
-import com.tterrag.registrate.util.NonNullLazyValue;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
@@ -51,13 +56,14 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.DataSerializerEntry;
 
 @Mod(Create.ID)
 public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4d";
+	public static final String VERSION = "0.5-unstable";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -71,10 +77,11 @@ public class Create {
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
+	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
 	public static final Random RANDOM = new Random();
 
-	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
+	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
 	public Create() {
 		onCtor();
@@ -92,12 +99,13 @@ public class Create {
 		AllContainerTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
-		AllMovementBehaviours.register();
-		AllInteractionBehaviours.register();
+		AllMovementBehaviours.registerDefaults();
+		AllInteractionBehaviours.registerDefaults();
+		AllDisplayBehaviours.registerDefaults();
+		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		AllConfigs.register(modLoadingContext);
-		FurnaceEngineInteractions.registerDefaults();
 		BlockSpoutingBehaviour.register();
 
 		ForgeMod.enableMilkFluid();
@@ -114,9 +122,11 @@ public class Create {
 		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
+		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
+
+		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -125,10 +135,12 @@ public class Create {
 		BuiltinPotatoProjectileTypes.register();
 
 		event.enqueueWork(() -> {
+			AllAdvancements.register();
 			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
 			AllWorldFeatures.registerPlacementTypes();
+			BoilerHeaters.registerDefaults();
 		});
 	}
 

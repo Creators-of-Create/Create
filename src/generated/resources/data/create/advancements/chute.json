@@ -1,5 +1,5 @@
 {
-  "parent": "create:belt",
+  "parent": "create:funnel",
   "display": {
     "icon": {
       "item": "create:chute"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.chute"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.chute.desc"
     },
     "frame": "task",
@@ -17,10 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:placed_block",
-      "conditions": {
-        "block": "create:chute"
-      }
+      "trigger": "create:chute_builtin",
+      "conditions": {}
     }
   },
   "requirements": [

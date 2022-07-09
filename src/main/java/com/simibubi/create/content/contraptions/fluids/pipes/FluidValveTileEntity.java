@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -78,6 +79,7 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new ValvePipeBehaviour(this));
+		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
 	class ValvePipeBehaviour extends StraightPipeFluidTransportBehaviour {

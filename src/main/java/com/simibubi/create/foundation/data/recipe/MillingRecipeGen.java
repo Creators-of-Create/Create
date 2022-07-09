@@ -29,7 +29,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(.5f, Items.CLAY_BALL)),
 
 		CALCITE = create(() -> Items.CALCITE, b -> b.duration(250)
-			.output(.125f, Items.BONE_MEAL, 1)),
+			.output(.75f, Items.BONE_MEAL, 1)),
 		DRIPSTONE = create(() -> Items.DRIPSTONE_BLOCK, b -> b.duration(250)
 			.output(Items.CLAY_BALL, 1)),
 

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
@@ -12,6 +13,7 @@ import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -97,10 +99,14 @@ public class GenericItemFilling {
 	}
 
 	private static boolean canFillGlassBottleInternally(FluidStack availableFluid) {
-		return availableFluid.getFluid()
-			.isSame(Fluids.WATER)
-			|| availableFluid.getFluid()
-				.isSame(AllFluids.POTION.get());
+		Fluid fluid = availableFluid.getFluid();
+		if (fluid.isSame(Fluids.WATER))
+			return true;
+		if (fluid.isSame(AllFluids.POTION.get()))
+			return true;
+		if (fluid.isSame(AllFluids.TEA.get()))
+			return true;
+		return false;
 	}
 
 	private static boolean canFillBucketInternally(FluidStack availableFluid) {
@@ -114,14 +120,17 @@ public class GenericItemFilling {
 
 		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {
 			ItemStack fillBottle = ItemStack.EMPTY;
-			if (FluidHelper.isWater(toFill.getFluid()))
+			Fluid fluid = toFill.getFluid();
+			if (FluidHelper.isWater(fluid))
 				fillBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+			else if (fluid.isSame(AllFluids.TEA.get()))
+				fillBottle = AllItems.BUILDERS_TEA.asStack();
 			else
 				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
 			stack.shrink(1);
 			return fillBottle;
 		}
-		
+
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =

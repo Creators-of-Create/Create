@@ -10,7 +10,6 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -20,12 +19,10 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,46 +68,6 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 		return super.onItemUseFirst(stack, context);
-	}
-
-	@Override
-	// Trigger cogwheel criterion
-	protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
-		triggerShiftingGearsAdvancement(context.getLevel(), context.getClickedPos(), state, context.getPlayer());
-		return super.placeBlock(context, state);
-	}
-
-	protected void triggerShiftingGearsAdvancement(Level world, BlockPos pos, BlockState state, Player player) {
-		if (world.isClientSide || player == null)
-			return;
-
-		Axis axis = state.getValue(CogWheelBlock.AXIS);
-		for (Axis perpendicular1 : Iterate.axes) {
-			if (perpendicular1 == axis)
-				continue;
-			Direction d1 = Direction.get(AxisDirection.POSITIVE, perpendicular1);
-			for (Axis perpendicular2 : Iterate.axes) {
-				if (perpendicular1 == perpendicular2)
-					continue;
-				if (axis == perpendicular2)
-					continue;
-				Direction d2 = Direction.get(AxisDirection.POSITIVE, perpendicular2);
-				for (int offset1 : Iterate.positiveAndNegative) {
-					for (int offset2 : Iterate.positiveAndNegative) {
-						BlockPos connectedPos = pos.relative(d1, offset1)
-							.relative(d2, offset2);
-						BlockState blockState = world.getBlockState(connectedPos);
-						if (!(blockState.getBlock() instanceof CogWheelBlock))
-							continue;
-						if (blockState.getValue(CogWheelBlock.AXIS) != axis)
-							continue;
-						if (ICogWheel.isLargeCog(blockState) == large)
-							continue;
-						AllTriggers.triggerFor(AllTriggers.SHIFTING_GEARS, player);
-					}
-				}
-			}
-		}
 	}
 
 	@MethodsReturnNonnullByDefault

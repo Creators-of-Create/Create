@@ -118,8 +118,12 @@ public class ItemHelper {
 	}
 
 	public static boolean matchIngredients(Ingredient i1, Ingredient i2) {
+		if (i1 == i2)
+			return true;
 		ItemStack[] stacks1 = i1.getItems();
 		ItemStack[] stacks2 = i2.getItems();
+		if (stacks1 == stacks2)
+			return true;
 		if (stacks1.length == stacks2.length) {
 			for (int i = 0; i < stacks1.length; i++)
 				if (!ItemStack.isSame(stacks1[i], stacks2[i]))
@@ -127,6 +131,16 @@ public class ItemHelper {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean matchAllIngredients(NonNullList<Ingredient> ingredients) {
+		if (ingredients.size() <= 1)
+			return true;
+		Ingredient firstIngredient = ingredients.get(0);
+		for (int i = 1; i < ingredients.size(); i++)
+			if (!matchIngredients(firstIngredient, ingredients.get(i)))
+				return false;
+		return true;
 	}
 
 	public static enum ExtractionCountMode {
@@ -215,7 +229,7 @@ public class ItemHelper {
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
-				if (stackInSlot.isEmpty())
+				if (stackInSlot.isEmpty() || !test.test(stackInSlot))
 					continue;
 				int maxExtractionCountForItem = amountFunction.apply(stackInSlot);
 				if (maxExtractionCountForItem == 0)

@@ -18,7 +18,8 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,7 +42,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BeltTunnelTileEntity extends SmartTileEntity {
 
-	public Map<Direction, InterpolatedChasingValue> flaps;
+	public Map<Direction, LerpedFloat> flaps;
 	public Set<Direction> sides;
 
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
@@ -93,9 +94,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 			if (!newFlaps.contains(d))
 				flaps.remove(d);
 			else if (!flaps.containsKey(d))
-				flaps.put(d, new InterpolatedChasingValue().start(.25f)
-					.target(0)
-					.withSpeed(.05f));
+				flaps.put(d, createChasingFlap());
 
 		// Backwards compat
 		if (!compound.contains("Sides") && compound.contains("Flaps"))
@@ -103,6 +102,12 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		super.read(compound, clientPacket);
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+	}
+
+	private LerpedFloat createChasingFlap() {
+		return LerpedFloat.linear()
+			.startWithValue(.25f)
+			.chase(0, .05f, Chaser.EXP);
 	}
 
 	public void updateTunnelConnections() {
@@ -133,9 +138,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 					&& nextState.getValue(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
 					continue;
 
-			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
-															   .target(0)
-															   .withSpeed(.05f));
+			flaps.put(direction, createChasingFlap());
 		}
 		sendData();
 	}
@@ -144,7 +147,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		if (level.isClientSide) {
 			if (flaps.containsKey(side))
 				flaps.get(side)
-					.set(inward ^ side.getAxis() == Axis.Z ? -1 : 1);
+					.setValue(inward ^ side.getAxis() == Axis.Z ? -1 : 1);
 			return;
 		}
 
@@ -165,7 +168,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				sendFlaps();
 			return;
 		}
-		flaps.forEach((d, value) -> value.tick());
+		flaps.forEach((d, value) -> value.tickChaser());
 	}
 
 	private void sendFlaps() {

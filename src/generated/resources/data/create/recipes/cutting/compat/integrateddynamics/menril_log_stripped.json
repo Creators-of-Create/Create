@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "integrateddynamics:menril_log_stripped"
+    }
+  ],
+  "results": [
+    {
+      "item": "integrateddynamics:menril_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "integrateddynamics",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

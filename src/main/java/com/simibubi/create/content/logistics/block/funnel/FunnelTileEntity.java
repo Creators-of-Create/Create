@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -21,7 +22,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +46,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	private WeakReference<ItemEntity> lastObserved; // In-world Extractors only
 
-	InterpolatedChasingValue flap;
+	LerpedFloat flap;
 
 	static enum Mode {
 		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
@@ -53,9 +55,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	public FunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		extractionCooldown = 0;
-		flap = new InterpolatedChasingValue().start(.25f)
-			.target(0)
-			.withSpeed(.05f);
+		flap = createChasingFlap();
 	}
 
 	public Mode determineCurrentMode() {
@@ -87,7 +87,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	@Override
 	public void tick() {
 		super.tick();
-		flap.tick();
+		flap.tickChaser();
 		Mode mode = determineCurrentMode();
 		if (level.isClientSide)
 			return;
@@ -236,6 +236,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
 			.setInsertionHandler(this::handleDirectBeltInput));
+		registerAwardables(behaviours, AllAdvancements.FUNNEL);
 	}
 
 	private boolean supportsAmountOnFilter() {
@@ -285,7 +286,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		if (!level.isClientSide) {
 			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
 		} else {
-			flap.set(inward ? 1 : -1);
+			flap.setValue(inward ? 1 : -1);
 			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);
 		}
 	}
@@ -333,6 +334,13 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	public void onTransfer(ItemStack stack) {
 		AllBlocks.CONTENT_OBSERVER.get()
 			.onFunnelTransfer(level, worldPosition, stack);
+		award(AllAdvancements.FUNNEL);
+	}
+	
+	private LerpedFloat createChasingFlap() {
+		return LerpedFloat.linear()
+			.startWithValue(.25f)
+			.chase(0, .05f, Chaser.EXP);
 	}
 
 }

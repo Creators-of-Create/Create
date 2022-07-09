@@ -5,14 +5,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 
 public class KineticNetwork {
 
 	public Long id;
 	public boolean initialized;
-	public boolean containsFlywheel;
 	public Map<KineticTileEntity, Float> sources;
 	public Map<KineticTileEntity, Float> members;
 
@@ -25,7 +22,6 @@ public class KineticNetwork {
 	public KineticNetwork() {
 		sources = new HashMap<>();
 		members = new HashMap<>();
-		containsFlywheel = false;
 	}
 
 	public void initFromTE(float maxStress, float currentStress, int members) {
@@ -44,7 +40,6 @@ public class KineticNetwork {
 			unloadedCapacity -= lastCapacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
 			float addedStressCapacity = te.calculateAddedStressCapacity();
 			sources.put(te, addedStressCapacity);
-			containsFlywheel |= te instanceof FlywheelTileEntity;
 		}
 
 		unloadedStress -= lastStress * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
@@ -106,13 +101,7 @@ public class KineticNetwork {
 	}
 
 	private void updateFromNetwork(KineticTileEntity te) {
-		boolean wasOverStressed = te.isOverStressed();
 		te.updateFromNetwork(currentCapacity, currentStress, getSize());
-		if (!wasOverStressed && te.isOverStressed() && te.getTheoreticalSpeed() != 0) {
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, te.getLevel(), te.getBlockPos(), 4);
-			if (containsFlywheel)
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESS_FLYWHEEL, te.getLevel(), te.getBlockPos(), 4);
-		}
 	}
 
 	public void updateCapacity() {
@@ -143,7 +132,6 @@ public class KineticNetwork {
 
 	public float calculateCapacity() {
 		float presentCapacity = 0;
-		containsFlywheel = false;
 		for (Iterator<KineticTileEntity> iterator = sources.keySet()
 			.iterator(); iterator.hasNext();) {
 			KineticTileEntity te = iterator.next();
@@ -152,7 +140,6 @@ public class KineticNetwork {
 				iterator.remove();
 				continue;
 			}
-			containsFlywheel |= te instanceof FlywheelTileEntity;
 			presentCapacity += getActualCapacityOf(te);
 		}
 		float newMaxStress = presentCapacity + unloadedCapacity;

@@ -5,7 +5,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_HOTBAR_
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_OFF;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTED_ON;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -24,6 +24,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -101,20 +102,21 @@ public class ToolboxHandlerClient {
 	}
 
 	public static void onKeyInput(int key, boolean pressed) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
 		if (key != AllKeys.TOOLBELT.getBoundCode())
 			return;
 		if (COOLDOWN > 0)
 			return;
-		LocalPlayer player = Minecraft.getInstance().player;
+		LocalPlayer player = mc.player;
 		if (player == null)
 			return;
 		Level level = player.level;
 
 		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
-
-		if (!toolboxes.isEmpty())
-			Collections.sort(toolboxes, (te1, te2) -> te1.getUniqueId()
-				.compareTo(te2.getUniqueId()));
+		toolboxes.sort(Comparator.comparing(ToolboxTileEntity::getUniqueId));
 
 		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");
@@ -154,11 +156,15 @@ public class ToolboxHandlerClient {
 	}
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui)
+			return;
+
 		int x = width / 2 - 90;
 		int y = height - 23;
 		RenderSystem.enableDepthTest();
 
-		Player player = Minecraft.getInstance().player;
+		Player player = mc.player;
 		CompoundTag persistentData = player.getPersistentData();
 		if (!persistentData.contains("CreateToolboxData"))
 			return;

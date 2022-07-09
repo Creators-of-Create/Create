@@ -11,9 +11,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.block.connected.AllCTTypes;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
-import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
+import com.simibubi.create.foundation.block.connected.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.RotatedPillarCTBehaviour;
@@ -28,7 +29,7 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -71,8 +72,8 @@ public class PaletteBlockPattern {
 	private String[] textures;
 	private String id;
 	private boolean isTranslucent;
-	private Tag.Named<Block>[] blockTags;
-	private Tag.Named<Item>[] itemTags;
+	private TagKey<Block>[] blockTags;
+	private TagKey<Item>[] itemTags;
 	private Optional<Function<String, ConnectedTextureBehaviour>> ctFactory;
 
 	private IPatternBlockStateGenerator blockStateGenerator;
@@ -106,11 +107,11 @@ public class PaletteBlockPattern {
 		return isTranslucent;
 	}
 
-	public Tag.Named<Block>[] getBlockTags() {
+	public TagKey<Block>[] getBlockTags() {
 		return blockTags;
 	}
 
-	public Tag.Named<Item>[] getItemTags() {
+	public TagKey<Item>[] getItemTags() {
 		return itemTags;
 	}
 
@@ -250,9 +251,9 @@ public class PaletteBlockPattern {
 
 	public enum CTs {
 
-		PILLAR(CTType.RECTANGLE, s -> toLocation(s, "pillar")),
-		CAP(CTType.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
-		LAYERED(CTType.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
+		PILLAR(AllCTTypes.RECTANGLE, s -> toLocation(s, "pillar")),
+		CAP(AllCTTypes.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
+		LAYERED(AllCTTypes.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
 
 		;
 

@@ -12,7 +12,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -20,11 +21,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,7 +35,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,9 +46,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
-public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity> {
+public class FluidPipeBlock extends PipeBlock
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity> {
+
+	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -86,6 +90,12 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		if (clickedFace.getAxis() == axis)
 			return InteractionResult.PASS;
 		if (!world.isClientSide) {
+			withTileEntityDo(world, pos, fpte -> fpte.getBehaviour(FluidTransportBehaviour.TYPE).interfaces.values()
+				.stream()
+				.filter(pc -> pc != null && pc.hasFlow())
+				.findAny()
+				.ifPresent($ -> AllAdvancements.GLASS_PIPE.awardTo(context.getPlayer())));
+			
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 				.setValue(GlassFluidPipeBlock.AXIS, axis)
@@ -96,18 +106,25 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
+	}
+
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
 		if (!AllBlocks.COPPER_CASING.isIn(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
-		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
-		if (!world.isClientSide) {
-			FluidTransportBehaviour.cacheFlows(world, pos);
-			world.setBlockAndUpdate(pos,
-				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
-			FluidTransportBehaviour.loadFlows(world, pos);
-		}
+		if (world.isClientSide)
+			return InteractionResult.SUCCESS;
+		
+		FluidTransportBehaviour.cacheFlows(world, pos);
+		world.setBlockAndUpdate(pos,
+			EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
+		FluidTransportBehaviour.loadFlows(world, pos);
 		return InteractionResult.SUCCESS;
+
 	}
 
 	public BlockState getAxisState(Axis axis) {
@@ -179,23 +196,16 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		return transport.canHaveFlowToward(neighbour, direction.getOpposite());
 	}
 
-	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state,
-		Direction direction) {
+	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction direction) {
 		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
+		if (facingState.getBlock() instanceof EncasedPipeBlock)
+			return true;
 		if (!isPipe(facingState))
 			return true;
 		if (!canConnectTo(world, offsetPos, facingState, direction))
 			return true;
-		if (!isCornerOrEndPipe(world, pos, state))
-			return false;
-		if (FluidPropagator.getStraightPipeAxis(facingState) != null)
-			return true;
-		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
-			return true;
-		if (isCornerOrEndPipe(world, offsetPos, facingState))
-			return direction.getAxisDirection() == AxisDirection.POSITIVE;
-		return true;
+		return false;
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction direction) {
@@ -301,9 +311,8 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 			BracketedTileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
-		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.defaultBlockState())
+		BlockState bracket = behaviour.removeBracket(inOnReplacedContext);
+		if (bracket == null)
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}
@@ -321,6 +330,16 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	@Override
 	public BlockEntityType<? extends FluidPipeTileEntity> getTileEntityType() {
 		return AllTileEntities.FLUID_PIPE.get();
+	}
+
+	@Override
+	public boolean supportsExternalFaceHiding(BlockState state) {
+		return false;
+	}
+
+	@Override
+	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+		return OCCLUSION_BOX;
 	}
 
 }

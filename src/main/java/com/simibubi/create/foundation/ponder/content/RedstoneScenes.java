@@ -661,7 +661,7 @@ public class RedstoneScenes {
 		scene.idle(7);
 		scene.world.setBlocks(util.select.fromTo(1, 1, 3, 3, 1, 3), AllBlocks.NIXIE_TUBES.get(DyeColor.BLUE)
 			.getDefaultState()
-			.setValue(NixieTubeBlock.FACING, Direction.NORTH), false);
+			.setValue(NixieTubeBlock.FACING, Direction.WEST), false);
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.colored(PonderPalette.BLUE)

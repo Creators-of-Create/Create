@@ -1,5 +1,5 @@
 {
-  "parent": "create:brass_casing",
+  "parent": "create:speed_controller",
   "display": {
     "icon": {
       "item": "create:mechanical_arm"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.mechanical_arm"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.mechanical_arm.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:mechanical_arm",
+      "trigger": "create:mechanical_arm_builtin",
       "conditions": {}
     }
   },

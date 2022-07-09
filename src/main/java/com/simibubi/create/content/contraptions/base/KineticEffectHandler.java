@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -102,7 +101,6 @@ public class KineticEffectHandler {
 		particleSpeed *= Math.signum(speed);
 
 		if (world instanceof ServerLevel) {
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.ROTATION, world, pos, 5);
 			RotationIndicatorParticleData particleData =
 				new RotationIndicatorParticleData(color, particleSpeed, radius1, radius2, 10, axisChar);
 			((ServerLevel) world).sendParticles(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);

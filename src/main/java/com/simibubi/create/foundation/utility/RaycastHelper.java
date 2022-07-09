@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility;
 import java.util.function.Predicate;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -64,10 +65,10 @@ public class RaycastHelper {
 		int y = Mth.floor(start.y);
 		int z = Mth.floor(start.z);
 
-		BlockPos currentPos = new BlockPos(x, y, z);
+		MutableBlockPos currentPos = new BlockPos(x, y, z).mutable();
 
 		if (predicate.test(currentPos))
-			return new PredicateTraceResult(currentPos, Direction.getNearest(dx - x, dy - y, dz - z));
+			return new PredicateTraceResult(currentPos.immutable(), Direction.getNearest(dx - x, dy - y, dz - z));
 
 		int remainingDistance = 200;
 
@@ -158,10 +159,10 @@ public class RaycastHelper {
 			x = Mth.floor(start.x) - (enumfacing == Direction.EAST ? 1 : 0);
 			y = Mth.floor(start.y) - (enumfacing == Direction.UP ? 1 : 0);
 			z = Mth.floor(start.z) - (enumfacing == Direction.SOUTH ? 1 : 0);
-			currentPos = new BlockPos(x, y, z);
+			currentPos.set(x, y, z);
 
 			if (predicate.test(currentPos))
-				return new PredicateTraceResult(currentPos, enumfacing);
+				return new PredicateTraceResult(currentPos.immutable(), enumfacing);
 		}
 
 		return new PredicateTraceResult();

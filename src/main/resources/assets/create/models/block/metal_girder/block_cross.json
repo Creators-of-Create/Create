@@ -1,0 +1,42 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/girder",
+		"particle": "create:block/chute_block"
+	},
+	"elements": [
+		{
+			"from": [3, 11, 3],
+			"to": [13, 16, 13],
+			"faces": {
+				"north": {"uv": [13, 8, 15.5, 13], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [13, 8, 15.5, 13], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [13, 8, 15.5, 13], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [13, 8, 15.5, 13], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [8, 8, 13, 13], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [8, 8, 13, 13], "texture": "#0"}
+			}
+		},
+		{
+			"from": [3, 0, 3],
+			"to": [13, 5, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 2.5, 8]},
+			"faces": {
+				"north": {"uv": [13, 8, 15.5, 13], "rotation": 270, "texture": "#0"},
+				"east": {"uv": [13, 8, 15.5, 13], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [13, 8, 15.5, 13], "rotation": 270, "texture": "#0"},
+				"west": {"uv": [13, 8, 15.5, 13], "rotation": 270, "texture": "#0"},
+				"up": {"uv": [8, 8, 13, 13], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [8, 8, 13, 13], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Brace",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

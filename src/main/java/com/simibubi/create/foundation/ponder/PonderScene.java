@@ -478,8 +478,10 @@ public class PonderScene {
 
 		public SceneTransform() {
 			xRotation = LerpedFloat.angular()
+				.disableSmartAngleChasing()
 				.startWithValue(-35);
 			yRotation = LerpedFloat.angular()
+				.disableSmartAngleChasing()
 				.startWithValue(55 + 90);
 		}
 

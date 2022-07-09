@@ -1,0 +1,148 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create:block/standard_track",
+		"2": "create:block/standard_track_mip",
+		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+	},
+	"elements": [
+		{
+			"name": "cube1",
+			"from": [10, -2.01875, -13.95],
+			"to": [14, 2.08125, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [0, 2, 11, 4], "texture": "#1"},
+				"west": {"uv": [11, 2, 0, 4], "texture": "#1"},
+				"down": {"uv": [0, 4, 11, 6], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"name": "cube2",
+			"from": [2, -2.01875, -13.95],
+			"to": [6, 2.08125, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [0, 2, 11, 4], "texture": "#1"},
+				"west": {"uv": [11, 2, 0, 4], "texture": "#1"},
+				"down": {"uv": [0, 4, 11, 6], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"name": "cube3",
+			"from": [10, -2.01875, 8],
+			"to": [14, 2.08125, 29.95],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [11, 2, 0, 4], "texture": "#1"},
+				"west": {"uv": [0, 2, 11, 4], "texture": "#1"},
+				"down": {"uv": [0, 4, 11, 6], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"name": "cube4",
+			"from": [2, -2.01875, 8],
+			"to": [6, 2.08125, 29.95],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [11, 2, 0, 4], "texture": "#1"},
+				"west": {"uv": [0, 2, 11, 4], "texture": "#1"},
+				"down": {"uv": [0, 4, 11, 6], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"name": "cube5",
+			"from": [0, -2.01875, 8],
+			"to": [16, 2.08125, 29.95],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"south": {"uv": [11, 0.5, 13.05, 8.5], "rotation": 90, "texture": "#2"},
+				"up": {"uv": [0, 0.5, 10.975, 8.5], "rotation": 90, "texture": "#2"}
+			}
+		},
+		{
+			"name": "cube6",
+			"from": [0, -2.01875, -13.95],
+			"to": [16, 2.08125, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [11, 0.5, 13.05, 8.5], "rotation": 90, "texture": "#2"},
+				"up": {"uv": [0, 0.5, 10.975, 8.5], "rotation": 270, "texture": "#2"}
+			}
+		},
+		{
+			"name": "tie1",
+			"from": [0, 1.03125, -9.55],
+			"to": [16, 1.08125, -5.35],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"up": {"uv": [0, 8.5, 8, 10.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 8.5, 8, 10.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie2",
+			"from": [0, 5.43125, -9.45],
+			"to": [16, 5.48125, -5.45],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"up": {"uv": [0, 11.5, 8, 13.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 8.5, 8, 10.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie3",
+			"from": [0, 1.08125, -9],
+			"to": [16, 5.48125, -5.9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 8, 8], "texture": "#1"},
+				"east": {"uv": [11, 2, 12.5, 4], "texture": "#1"},
+				"south": {"uv": [0, 6, 8, 8], "texture": "#1"},
+				"west": {"uv": [11, 2, 12.5, 4], "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie4",
+			"from": [0, 5.43125, 21.45],
+			"to": [16, 5.48125, 25.45],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"up": {"uv": [0, 13.5, 8, 11.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 10.5, 8, 8.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie5",
+			"from": [0, 1.08125, 21.9],
+			"to": [16, 5.48125, 25],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [8, 6, 0, 8], "texture": "#1"},
+				"east": {"uv": [12.5, 2, 11, 4], "texture": "#1"},
+				"south": {"uv": [8, 6, 0, 8], "texture": "#1"},
+				"west": {"uv": [12.5, 2, 11, 4], "texture": "#1"}
+			}
+		},
+		{
+			"name": "tie6",
+			"from": [0, 1.03125, 21.35],
+			"to": [16, 1.08125, 25.55],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"up": {"uv": [0, 10.5, 8, 8.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 10.5, 8, 8.5], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+		}
+	]
+}

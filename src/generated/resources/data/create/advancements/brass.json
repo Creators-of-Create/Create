@@ -1,5 +1,5 @@
 {
-  "parent": "create:blaze_burner",
+  "parent": "create:diving_suit",
   "display": {
     "icon": {
       "item": "create:brass_ingot"
@@ -8,6 +8,7 @@
       "translate": "advancement.create.brass"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.brass.desc"
     },
     "frame": "task",

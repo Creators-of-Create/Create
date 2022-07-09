@@ -1,20 +1,20 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "create:block/fluid_pipe",
-		"particle": "create:block/fluid_pipe"
+		"0": "create:block/pipes",
+		"particle": "create:block/pipes"
 	},
 	"elements": [
 		{
-			"from": [2, 2, 2],
-			"to": [14, 14, 14],
+			"from": [3, 3, 3],
+			"to": [13, 13, 13],
 			"faces": {
-				"north": {"uv": [0, 0, 6, 6], "texture": "#0"},
-				"east": {"uv": [0, 0, 6, 6], "texture": "#0"},
-				"south": {"uv": [0, 0, 6, 6], "texture": "#0"},
-				"west": {"uv": [0, 0, 6, 6], "texture": "#0"},
-				"up": {"uv": [0, 0, 6, 6], "texture": "#0"},
-				"down": {"uv": [0, 0, 6, 6], "texture": "#0"}
+				"north": {"uv": [1, 11, 6, 16], "texture": "#0"},
+				"east": {"uv": [1, 11, 6, 16], "texture": "#0"},
+				"south": {"uv": [1, 11, 6, 16], "texture": "#0"},
+				"west": {"uv": [1, 11, 6, 16], "texture": "#0"},
+				"up": {"uv": [1, 11, 6, 16], "texture": "#0"},
+				"down": {"uv": [1, 11, 6, 16], "texture": "#0"}
 			}
 		}
 	]

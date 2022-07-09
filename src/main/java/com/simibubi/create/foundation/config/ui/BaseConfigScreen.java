@@ -8,6 +8,8 @@ import java.util.function.UnaryOperator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -144,7 +146,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		super.init();
 		returnOnClose = true;
 
-		TextStencilElement clientText = new TextStencilElement(minecraft.font, new TextComponent(clientTile)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(font, new TextComponent(clientTile)).centered(true, true);
 		addRenderableWidget(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (clientSpec != null) {
@@ -156,7 +158,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(minecraft.font, new TextComponent(commonTile)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(font, new TextComponent(commonTile)).centered(true, true);
 		addRenderableWidget(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		if (commonSpec != null) {
@@ -168,7 +170,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			commonText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement serverText = new TextStencilElement(minecraft.font, new TextComponent(serverTile)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(font, new TextComponent(serverTile)).centered(true, true);
 		addRenderableWidget(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		if (serverSpec == null) {
@@ -189,7 +191,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			serverText.withElementRenderer(BoxWidget.gradientFactory.apply(serverConfigWidget));
 		}
 
-		TextStencilElement titleText = new TextStencilElement(minecraft.font, modID.toUpperCase(Locale.ROOT))
+		TextStencilElement titleText = new TextStencilElement(font, modID.toUpperCase(Locale.ROOT))
 				.centered(true, true)
 				.withElementRenderer((ms, w, h, alpha) -> {
 					UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_A));
@@ -212,24 +214,23 @@ public class BaseConfigScreen extends ConfigScreen {
 		ConfigScreen.modID = this.modID;
 
 		goBack = new BoxWidget(width / 2 - 134, height / 2, 20, 20).withPadding(2, 2)
-				.withCallback(this::onClose);
+				.withCallback(() -> linkTo(parent));
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil()
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
 				.add(new TextComponent("Go Back"));
 		addRenderableWidget(goBack);
 
-		TextStencilElement othersText = new TextStencilElement(minecraft.font, new TextComponent("Access Configs of other Mods")).centered(true, true);
+		TextStencilElement othersText = new TextStencilElement(font, new TextComponent("Access Configs of other Mods")).centered(true, true);
 		others = new BoxWidget(width / 2 - 100, height / 2 - 15 + 90, 200, 16).showingElement(othersText);
 		othersText.withElementRenderer(BoxWidget.gradientFactory.apply(others));
 		others.withCallback(() -> linkTo(new ConfigModListScreen(this)));
 		addRenderableWidget(others);
-
 	}
 
 	@Override
 	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		drawCenteredString(ms, minecraft.font, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
+		drawCenteredString(ms, font, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
 	}
 
 	private void linkTo(Screen screen) {
@@ -238,9 +239,13 @@ public class BaseConfigScreen extends ConfigScreen {
 	}
 
 	@Override
-	public void onClose() {
-		super.onClose();
-		ScreenOpener.open(parent);
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (super.keyPressed(keyCode, scanCode, modifiers))
+			return true;
+		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+			linkTo(parent);
+		}
+		return false;
 	}
 
 }

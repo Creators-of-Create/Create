@@ -19,15 +19,15 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private Component allowN = Lang.translate(PREFIX + "allow_list");
-	private Component allowDESC = Lang.translate(PREFIX + "allow_list.description");
-	private Component denyN = Lang.translate(PREFIX + "deny_list");
-	private Component denyDESC = Lang.translate(PREFIX + "deny_list.description");
+	private Component allowN = Lang.translateDirect(PREFIX + "allow_list");
+	private Component allowDESC = Lang.translateDirect(PREFIX + "allow_list.description");
+	private Component denyN = Lang.translateDirect(PREFIX + "deny_list");
+	private Component denyDESC = Lang.translateDirect(PREFIX + "deny_list.description");
 
-	private Component respectDataN = Lang.translate(PREFIX + "respect_data");
-	private Component respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
-	private Component ignoreDataN = Lang.translate(PREFIX + "ignore_data");
-	private Component ignoreDataDESC = Lang.translate(PREFIX + "ignore_data.description");
+	private Component respectDataN = Lang.translateDirect(PREFIX + "respect_data");
+	private Component respectDataDESC = Lang.translateDirect(PREFIX + "respect_data.description");
+	private Component ignoreDataN = Lang.translateDirect(PREFIX + "ignore_data");
+	private Component ignoreDataDESC = Lang.translateDirect(PREFIX + "ignore_data.description");
 
 	private IconButton whitelist, blacklist;
 	private IconButton respectNBT, ignoreNBT;

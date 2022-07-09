@@ -1,0 +1,43 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/station",
+		"1": "create:entity/blueprint_small",
+		"particle": "create:block/station"
+	},
+	"elements": [
+		{
+			"name": "Flag Pole",
+			"from": [0, -1, -1],
+			"to": [1, 13, 1],
+			"rotation": {"angle": 0, "axis": "x", "origin": [14, 0, 0]},
+			"faces": {
+				"north": {"uv": [0.5, 1, 7.5, 1.5], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0.5, 0.5, 7.5, 1.5], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [0.5, 0.5, 7.5, 1], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [0.5, 0.5, 7.5, 1.5], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [7.5, 0.5, 7, 1.5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [1, 0.5, 0.5, 1.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Flag",
+			"from": [0.5, 9, -6.5],
+			"to": [0.5, 13, -0.5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [14, 0, 0]},
+			"faces": {
+				"east": {"uv": [2, 1, 6, 7], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [2, 1, 6, 7], "rotation": 90, "texture": "#1"}
+			}
+		}
+	],
+	"display": {},
+	"groups": [
+		{
+			"name": "Flag",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
@@ -11,10 +13,10 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,9 +24,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
+@ParametersAreNonnullByDefault
 public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCuttingRecipe> {
 
-	private AnimatedSaw saw = new AnimatedSaw();
+	private final AnimatedSaw saw = new AnimatedSaw();
 
 	public BlockCuttingCategory(Item symbol) {
 		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), symbol), emptyBackground(177, 70)); // Items.STONE_BRICK_STAIRS
@@ -34,38 +37,31 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	public Class<? extends CondensedBlockCuttingRecipe> getRecipeClass() {
 		return CondensedBlockCuttingRecipe.class;
 	}
-	
-	@Override
-	public void setIngredients(CondensedBlockCuttingRecipe recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getOutputs());
-	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, CondensedBlockCuttingRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 4, 4);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getItems()));
-
+	public void setRecipe(IRecipeLayoutBuilder builder, CondensedBlockCuttingRecipe recipe, IFocusGroup focuses) {
 		List<List<ItemStack>> results = recipe.getCondensedOutputs();
-		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-			int xOffset = (outputIndex % 5) * 19;
-			int yOffset = (outputIndex / 5) * -19;
 
-			itemStacks.init(outputIndex + 1, false, 77 + xOffset, 47 + yOffset);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex));
+		builder
+				.addSlot(RecipeIngredientRole.INPUT, 5, 5)
+				.setBackground(getRenderedSlot(), -1 , -1)
+				.addItemStacks(Arrays.asList(recipe.getIngredients().get(0).getItems()));
+
+		int i = 0;
+		for (List<ItemStack> itemStacks : results) {
+			int xPos = 78 + (i % 5) * 19;
+			int yPos = 48 + (i / 5) * -19;
+
+			builder
+					.addSlot(RecipeIngredientRole.OUTPUT, xPos, yPos)
+					.setBackground(getRenderedSlot(), -1 , -1)
+					.addItemStacks(itemStacks);
+			i++;
 		}
 	}
 
 	@Override
-	public void draw(CondensedBlockCuttingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 4, 4);
-		int size = Math.min(recipe.getOutputs().size(), 15);
-		for (int i = 0; i < size; i++) {
-			int xOffset = (i % 5) * 19;
-			int yOffset = (i / 5) * -19;
-			AllGuiTextures.JEI_SLOT.render(matrixStack, 77 + xOffset, 47 + yOffset);
-		}
+	public void draw(CondensedBlockCuttingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 31, 6);
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 33 - 17, 37 + 13);
 		saw.draw(matrixStack, 33, 37);
@@ -86,7 +82,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		public List<ItemStack> getOutputs() {
 			return outputs;
 		}
-		
+
 		public List<List<ItemStack>> getCondensedOutputs() {
 			List<List<ItemStack>> result = new ArrayList<>();
 			int index = 0;
@@ -104,6 +100,11 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 			return result;
 		}
 
+		@Override
+		public boolean isSpecial() {
+			return true;
+		}
+
 		public static List<CondensedBlockCuttingRecipe> condenseRecipes(List<Recipe<?>> stoneCuttingRecipes) {
 			List<CondensedBlockCuttingRecipe> condensed = new ArrayList<>();
 			Recipes: for (Recipe<?> recipe : stoneCuttingRecipes) {
@@ -119,11 +120,6 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 				condensed.add(cr);
 			}
 			return condensed;
-		}
-		
-		@Override
-		public boolean isSpecial() {
-			return true;
 		}
 
 	}

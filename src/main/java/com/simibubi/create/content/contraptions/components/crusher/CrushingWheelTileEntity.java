@@ -1,6 +1,10 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
+import java.util.List;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -27,6 +31,12 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 		setLazyTickRate(20);
 	}
 
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.CRUSHING_WHEEL, AllAdvancements.CRUSHER_MAXED);
+	}
+	
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);

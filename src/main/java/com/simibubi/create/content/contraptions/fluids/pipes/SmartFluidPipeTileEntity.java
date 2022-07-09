@@ -36,6 +36,7 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 		behaviours.add(new SmartPipeBehaviour(this));
 		behaviours.add(filter = new FilteringBehaviour(this, new SmartPipeFilterSlot()).forFluids()
 			.withCallback(this::onFilterChanged));
+		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
 	private void onFilterChanged(ItemStack newFilter) {

@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
@@ -40,6 +41,8 @@ import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.LevelTicks;
 
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
+
+	public static final BehaviourType<FluidFillingBehaviour> TYPE = new BehaviourType<>();
 
 	PriorityQueue<BlockPosEntry> queue;
 
@@ -72,7 +75,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
 		int maxBlocks = maxBlocks();
 
-		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1) {
+		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1 && !fillInfinite()) {
 			if (!infinite) {
 				reset();
 				infinite = true;
@@ -125,7 +128,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxRangeSq = maxRange * maxRange;
 		int maxBlocks = maxBlocks();
 		boolean evaporate = world.dimensionType()
-			.ultraWarm() && fluid.is(FluidTags.WATER);
+			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER);
 		boolean canPlaceSources = AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get();
 
 		if ((!fillInfinite() && infinite) || evaporate || !canPlaceSources) {
@@ -144,7 +147,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
 					2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 			} else if (!canPlaceSources)
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
+				tileEntity.award(AllAdvancements.HOSE_PULLEY);
 			return true;
 		}
 
@@ -163,9 +166,11 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 			if (visited.size() >= maxBlocks && maxBlocks != -1) {
 				infinite = true;
-				visited.clear();
-				queue.clear();
-				return false;
+				if (!fillInfinite()) {
+					visited.clear();
+					queue.clear();
+					return false;
+				}
 			}
 
 			SpaceType spaceType = getAtPos(world, currentPos, fluid);
@@ -196,7 +201,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 						serverTickList.clearArea(new BoundingBox(currentPos));
 					}
 
-					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
+					affectedArea = BBHelper.encapsulate(affectedArea, currentPos);
 				}
 			}
 
@@ -223,7 +228,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (!simulate && success)
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
+			tileEntity.award(AllAdvancements.HOSE_PULLEY);
 		return success;
 	}
 
@@ -297,8 +302,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		infinityCheckFrontier.clear();
 		infinityCheckVisited.clear();
 	}
-
-	public static BehaviourType<FluidFillingBehaviour> TYPE = new BehaviourType<>();
 
 	@Override
 	public BehaviourType<?> getType() {

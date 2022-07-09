@@ -40,8 +40,8 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		// Render Hands
 		SuperByteBuffer hourHand = CachedBufferer.partial(AllBlockPartials.CUCKOO_HOUR_HAND, blockState);
 		SuperByteBuffer minuteHand = CachedBufferer.partial(AllBlockPartials.CUCKOO_MINUTE_HAND, blockState);
-		float hourAngle = clock.hourHand.get(partialTicks);
-		float minuteAngle = clock.minuteHand.get(partialTicks);
+		float hourAngle = clock.hourHand.getValue(partialTicks);
+		float minuteAngle = clock.minuteHand.getValue(partialTicks);
 		rotateHand(hourHand, hourAngle, direction).light(light)
 				.renderInto(ms, vb);
 		rotateHand(minuteHand, minuteAngle, direction).light(light)
@@ -54,7 +54,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		float offset = 0;
 
 		if (clock.animationType != null) {
-			float value = clock.animationProgress.get(partialTicks);
+			float value = clock.animationProgress.getValue(partialTicks);
 			int step = clock.animationType == Animation.SURPRISE ? 3 : 15;
 			for (int phase = 30; phase <= 60; phase += step) {
 				float local = value - phase;
@@ -102,7 +102,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		float pivotZ = 8 / 16f;
 		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
 		buffer.translate(pivotX, pivotY, pivotZ);
-		buffer.rotate(Direction.EAST, angle);
+		buffer.rotate(Direction.EAST, AngleHelper.rad(angle));
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
 		return buffer;
 	}

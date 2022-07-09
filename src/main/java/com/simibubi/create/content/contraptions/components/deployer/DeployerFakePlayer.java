@@ -50,6 +50,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		new GameProfile(UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
+	public boolean placedTracks;
 
 	public DeployerFakePlayer(ServerLevel world) {
 		super(world, DEPLOYER_PROFILE);
@@ -63,7 +64,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translate("block.deployer.damage_source_name");
+		return Lang.translateDirect("block.deployer.damage_source_name");
 	}
 
 	@Override

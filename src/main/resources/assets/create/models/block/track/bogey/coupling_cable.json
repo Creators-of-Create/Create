@@ -1,0 +1,39 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:block/track/bogey/textures",
+	"textures": {
+		"0": "#wheel"
+	},
+	"elements": [
+		{
+			"from": [-1.5, -1.5, -2],
+			"to": [1.5, 1.5, 2],
+			"faces": {
+				"east": {"uv": [0, 10, 2, 12], "texture": "#0"},
+				"west": {"uv": [0, 10, 2, 12], "texture": "#0"},
+				"up": {"uv": [0, 10, 2, 12], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 10, 2, 12], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [-2, -2, -1],
+			"to": [2, 2, 1],
+			"faces": {
+				"east": {"uv": [2, 10, 3, 12], "texture": "#0"},
+				"west": {"uv": [2, 10, 3, 12], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [2, 10, 3, 12], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [2, 10, 3, 12], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [-2, -2, 1],
+			"to": [2, 2, -1],
+			"faces": {
+				"east": {"uv": [2, 10, 3, 12], "texture": "#0"},
+				"west": {"uv": [2, 10, 3, 12], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [2, 10, 3, 12], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [2, 10, 3, 12], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}

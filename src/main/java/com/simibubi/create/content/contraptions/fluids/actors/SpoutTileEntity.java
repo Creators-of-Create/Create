@@ -6,11 +6,13 @@ import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProce
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -19,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBe
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -27,8 +30,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -49,6 +50,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	SmartFluidTankBehaviour tank;
 
+	private boolean createdSweetRoll, createdHoneyApple, createdChocolateBerries;
+
 	public SpoutTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		processingTicks = -1;
@@ -68,6 +71,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			.whileItemHeld(this::whenItemHeld);
 		behaviours.add(beltProcessing);
 
+		registerAwardables(behaviours, AllAdvancements.SPOUT, AllAdvancements.FOODS);
 	}
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
@@ -115,10 +119,14 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, level, worldPosition, 5);
-		if (out.getItem() instanceof PotionItem && !PotionUtils.getMobEffects(out)
-			.isEmpty())
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, level, worldPosition, 5);
+		award(AllAdvancements.SPOUT);
+		if (trackFoods()) {
+			createdChocolateBerries |= AllItems.CHOCOLATE_BERRIES.isIn(out);
+			createdHoneyApple |= AllItems.HONEYED_APPLE.isIn(out);
+			createdSweetRoll |= AllItems.SWEET_ROLL.isIn(out);
+			if (createdChocolateBerries && createdHoneyApple && createdSweetRoll)
+				award(AllAdvancements.FOODS);
+		}
 
 		tank.getPrimaryHandler()
 			.setFluid(fluid);
@@ -141,12 +149,30 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			compound.putBoolean("Splash", true);
 			sendSplash = false;
 		}
+
+		if (!trackFoods())
+			return;
+		if (createdChocolateBerries)
+			NBTHelper.putMarker(compound, "ChocolateBerries");
+		if (createdHoneyApple)
+			NBTHelper.putMarker(compound, "HoneyApple");
+		if (createdSweetRoll)
+			NBTHelper.putMarker(compound, "SweetRoll");
+	}
+
+	private boolean trackFoods() {
+		return getBehaviour(AdvancementBehaviour.TYPE).isOwnerPresent();
 	}
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");
+
+		createdChocolateBerries = compound.contains("ChocolateBerries");
+		createdHoneyApple = compound.contains("HoneyApple");
+		createdSweetRoll = compound.contains("SweetRoll");
+
 		if (!clientPacket)
 			return;
 		if (compound.contains("Splash"))

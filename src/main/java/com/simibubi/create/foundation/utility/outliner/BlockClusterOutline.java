@@ -55,27 +55,47 @@ public class BlockClusterOutline extends Outline {
 		});
 	}
 
+	static Vec3 xyz = new Vec3(-.5, -.5, -.5);
+	static Vec3 Xyz = new Vec3(.5, -.5, -.5);
+	static Vec3 xYz = new Vec3(-.5, .5, -.5);
+	static Vec3 XYz = new Vec3(.5, .5, -.5);
+	static Vec3 xyZ = new Vec3(-.5, -.5, .5);
+	static Vec3 XyZ = new Vec3(.5, -.5, .5);
+	static Vec3 xYZ = new Vec3(-.5, .5, .5);
+	static Vec3 XYZ = new Vec3(.5, .5, .5);
+	
 	protected void renderBlockFace(PoseStack ms, VertexConsumer builder, BlockPos pos, Direction face) {
 		Vec3 center = VecHelper.getCenterOf(pos);
 		Vec3 offset = Vec3.atLowerCornerOf(face.getNormal());
-		Vec3 plane = VecHelper.axisAlingedPlaneOf(offset);
-		Axis axis = face.getAxis();
+		offset = offset.scale(1 / 128d);
+		center = center.add(offset);
 
-		offset = offset.scale(1 / 2f + 1 / 128d);
-		plane = plane.scale(1 / 2f)
-			.add(offset);
+		ms.pushPose();
+		ms.translate(center.x, center.y, center.z);
 
-		int deg = face.getAxisDirection()
-			.getStep() * 90;
-		Vec3 a1 = plane.add(center);
-		plane = VecHelper.rotate(plane, deg, axis);
-		Vec3 a2 = plane.add(center);
-		plane = VecHelper.rotate(plane, deg, axis);
-		Vec3 a3 = plane.add(center);
-		plane = VecHelper.rotate(plane, deg, axis);
-		Vec3 a4 = plane.add(center);
+		switch (face) {
+		case DOWN:
+			putQuad(ms, builder, xyz, Xyz, XyZ, xyZ, face);
+			break;
+		case EAST:
+			putQuad(ms, builder, XYz, XYZ, XyZ, Xyz, face);
+			break;
+		case NORTH:
+			putQuad(ms, builder, xYz, XYz, Xyz, xyz, face);
+			break;
+		case SOUTH:
+			putQuad(ms, builder, XYZ, xYZ, xyZ, XyZ, face);
+			break;
+		case UP:
+			putQuad(ms, builder, xYZ, XYZ, XYz, xYz, face);
+			break;
+		case WEST:
+			putQuad(ms, builder, xYZ, xYz, xyz, xyZ, face);
+		default:
+			break;
+		}
 
-		putQuad(ms, builder, a1, a2, a3, a4, face);
+		ms.popPose();
 	}
 
 	private static class Cluster {

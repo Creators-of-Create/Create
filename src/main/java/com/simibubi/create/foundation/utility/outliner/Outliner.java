@@ -40,9 +40,9 @@ public class Outliner {
 		return entry.outline.getParams();
 	}
 
-	public OutlineParams endChasingLine(Object slot, Vec3 start, Vec3 end, float chasingProgress) {
+	public OutlineParams endChasingLine(Object slot, Vec3 start, Vec3 end, float chasingProgress, boolean lockStart) {
 		if (!outlines.containsKey(slot)) {
-			EndChasingLineOutline outline = new EndChasingLineOutline();
+			EndChasingLineOutline outline = new EndChasingLineOutline(lockStart);
 			outlines.put(slot, new OutlineEntry(outline));
 		}
 		OutlineEntry entry = outlines.get(slot);
@@ -127,7 +127,8 @@ public class Outliner {
 	// Maintenance
 
 	public void tickOutlines() {
-		Iterator<OutlineEntry> iterator = outlines.values().iterator();
+		Iterator<OutlineEntry> iterator = outlines.values()
+			.iterator();
 		while (iterator.hasNext()) {
 			OutlineEntry entry = iterator.next();
 			entry.tick();

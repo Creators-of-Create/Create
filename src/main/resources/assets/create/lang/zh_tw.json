@@ -1114,7 +1114,7 @@
 	"create.tooltip.speedRequirement": "需求速度:%1$s",
 	"create.tooltip.speedRequirement.none": "無",
 	"create.tooltip.speedRequirement.medium": "適當",
-	"create.tooltip.speedRequirement.high": "快",
+	"create.tooltip.speedRequirement.fast": "快",
 	"create.tooltip.stressImpact": "動能消耗:%1$s",
 	"create.tooltip.stressImpact.low": "低",
 	"create.tooltip.stressImpact.medium": "中",

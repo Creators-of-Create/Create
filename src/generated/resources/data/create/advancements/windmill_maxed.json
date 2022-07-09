@@ -1,0 +1,30 @@
+{
+  "parent": "create:andesite_alloy",
+  "display": {
+    "icon": {
+      "item": "create:white_sail"
+    },
+    "title": {
+      "translate": "advancement.create.windmill_maxed"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.windmill_maxed.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:windmill_maxed_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

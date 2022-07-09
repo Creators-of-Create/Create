@@ -1,0 +1,10 @@
+{
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "create:block/flywheel",
+		"1": "create:block/axis",
+		"2": "create:block/axis_top",
+		"particle": "create:block/flywheel"
+	}
+}

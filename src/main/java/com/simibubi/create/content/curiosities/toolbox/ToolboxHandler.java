@@ -66,7 +66,7 @@ public class ToolboxHandler {
 			BlockPos pos = NbtUtils.readBlockPos(data.getCompound("Pos"));
 			int slot = data.getInt("Slot");
 
-			if (!world.isAreaLoaded(pos, 0))
+			if (!world.isLoaded(pos))
 				continue;
 			if (!(world.getBlockState(pos)
 				.getBlock() instanceof ToolboxBlock)) {
@@ -111,6 +111,7 @@ public class ToolboxHandler {
 			.sorted((p1, p2) -> Double.compare(distance(location, p1), distance(location, p2)))
 			.limit(maxAmount)
 			.map(toolboxes.get(world)::get)
+			.filter(ToolboxTileEntity::isFullyInitialized)
 			.collect(Collectors.toList());
 	}
 

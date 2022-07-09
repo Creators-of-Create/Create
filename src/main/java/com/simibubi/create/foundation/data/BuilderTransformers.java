@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
+import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
 import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
@@ -19,32 +21,46 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
+import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -60,6 +76,58 @@ public class BuilderTransformers {
 				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
 			.item()
 			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
+			.build();
+	}
+
+	public static <B extends StandardBogeyBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> bogey() {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.properties(p -> p.noOcclusion())
+			.transform(pickaxeOnly())
+			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
+				.getExistingFile(p.modLoc("block/track/bogey/top"))))
+			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
+			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
+	}
+
+	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
+		return b -> b.blockstate((c, p) -> {
+			ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
+			ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
+			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
+			if (orientable)
+				p.trapdoorBlock(c.get(), bottom, top, open, orientable);
+			else
+				BlockStateGen.uvLockedTrapdoorBlock(c.get(), bottom, top, open)
+					.accept(c, p);
+		})
+			.transform(pickaxeOnly())
+			.tag(BlockTags.TRAPDOORS)
+			.onRegister(interactionBehaviour(new TrapdoorMovingInteraction()))
+			.item()
+			.tag(ItemTags.TRAPDOORS)
+			.build();
+	}
+
+	public static <B extends SlidingDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> slidingDoor(String type) {
+		return b -> b.initialProperties(Material.NETHER_WOOD) // for villager AI..
+			.properties(p -> p.requiresCorrectToolForDrops()
+				.strength(3.0F, 6.0F))
+			.blockstate((c, p) -> {
+				ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
+				ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
+				p.doorBlock(c.get(), bottom, bottom, top, top);
+			})
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(pickaxeOnly())
+			.onRegister(interactionBehaviour(new DoorMovingInteraction()))
+			.onRegister(movementBehaviour(new SlidingDoorMovementBehaviour()))
+			.tag(BlockTags.DOORS)
+			.tag(BlockTags.WOODEN_DOORS) // for villager AI
+			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
+			.item()
+			.tag(ItemTags.DOORS)
+			.model((c, p) -> p.blockSprite(c, p.modLoc("item/" + type + "_door")))
 			.build();
 	}
 
@@ -79,8 +147,7 @@ public class BuilderTransformers {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
-		return encasedBase(b, drop)
-			.addLayer(() -> RenderType::cutoutMipped)
+		return encasedBase(b, drop).addLayer(() -> RenderType::cutoutMipped)
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
@@ -121,6 +188,28 @@ public class BuilderTransformers {
 			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
 	}
 
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
+		Supplier<DataIngredient> ingredient) {
+		return b -> b.initialProperties(() -> Blocks.LADDER)
+			.addLayer(() -> RenderType::cutout)
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
+				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
+				.texture("0", p.modLoc("block/ladder_" + name + "_hoop"))
+				.texture("1", p.modLoc("block/ladder_" + name))
+				.texture("particle", p.modLoc("block/ladder_" + name))))
+			.properties(p -> p.sound(SoundType.COPPER))
+			.transform(pickaxeOnly())
+			.tag(BlockTags.CLIMBABLE)
+			.item()
+			.recipe((c, p) -> {
+				if (name.equals("andesite"))
+					return;
+				p.stonecutting(ingredient.get(), c::get, 2);
+			})
+			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
+			.build();
+	}
+
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(
 		@Nullable DyeColor color) {
 		return b -> b.initialProperties(SharedProperties::copperMetal)
@@ -131,6 +220,8 @@ public class BuilderTransformers {
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
 			})
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
+			.transform(BlockStressDefaults.setCapacity(8.0))
+			.transform(BlockStressDefaults.setGeneratorSpeed(ValveHandleBlock::getSpeedRange))
 			.onRegister(ItemUseOverrides::addBlock)
 			.item()
 			.tag(AllItemTags.VALVE_HANDLES.tag)
@@ -140,11 +231,32 @@ public class BuilderTransformers {
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(
 		Supplier<CTSpriteShiftEntry> ct) {
 		return b -> b.initialProperties(SharedProperties::stone)
+			.properties(p -> p.sound(SoundType.WOOD))
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.onRegister(connectedTextures(() -> new EncasedCTBehaviour(ct.get())))
 			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
-			.simpleItem();
+			.tag(AllBlockTags.CASING.tag)
+			.item()
+			.tag(AllItemTags.CASING.tag)
+			.build();
+	}
+
+	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> layeredCasing(
+		Supplier<CTSpriteShiftEntry> ct, Supplier<CTSpriteShiftEntry> ct2) {
+		return b -> b.initialProperties(SharedProperties::stone)
+			.transform(axeOrPickaxe())
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+				.cubeColumn(c.getName(), ct.get()
+					.getOriginalResourceLocation(),
+					ct2.get()
+						.getOriginalResourceLocation())))
+			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get(), ct2.get())))
+			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
+			.tag(AllBlockTags.CASING.tag)
+			.item()
+			.tag(AllItemTags.CASING.tag)
+			.build();
 	}
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(

@@ -1,0 +1,9 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"0": "create:block/standard_track",
+		"1": "create:block/standard_track_mip",
+		"2": "create:block/standard_track_crossing",
+		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+	}
+}

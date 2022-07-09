@@ -73,6 +73,10 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap",
 			Comments.ambientVolumeCap);
 
+	//train group
+	public final ConfigGroup trains = group(1, "trains", Comments.trains);
+	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
+
 	@Override
 	public String getName() {
 		return "client";
@@ -138,6 +142,9 @@ public class CClient extends ConfigBase {
 		static String sound = "Sound settings";
 		static String enableAmbientSounds = "Make cogs rumble and machines clatter.";
 		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";
+
+		static String trains = "Railway related settings";
+		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
 	}
 
 }

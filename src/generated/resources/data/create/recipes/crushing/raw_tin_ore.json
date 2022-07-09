@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "forge:raw_ores/tin"
+      "tag": "forge:raw_materials/tin"
     }
   ],
   "results": [
@@ -18,7 +18,7 @@
   "conditions": [
     {
       "value": {
-        "tag": "forge:raw_ores/tin",
+        "tag": "forge:raw_materials/tin",
         "type": "forge:tag_empty"
       },
       "type": "forge:not"

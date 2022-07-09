@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Strings;
 import com.mojang.bridge.game.Language;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Couple;
@@ -25,7 +25,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +40,7 @@ public class TooltipHelper {
 	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static MutableComponent holdShift(Palette color, boolean highlighted) {
-		return Lang.translate("tooltip.holdForDescription", Lang.translate("tooltip.keyShift")
+		return Lang.translateDirect("tooltip.holdForDescription", Lang.translateDirect("tooltip.keyShift")
 			.withStyle(ChatFormatting.GRAY))
 			.withStyle(ChatFormatting.DARK_GRAY);
 	}
@@ -49,9 +48,9 @@ public class TooltipHelper {
 	public static void addHint(List<Component> tooltip, String hintKey, Object... messageParams) {
 		Component spacing = IHaveGoggleInformation.componentSpacing;
 		tooltip.add(spacing.plainCopy()
-			.append(Lang.translate(hintKey + ".title"))
+			.append(Lang.translateDirect(hintKey + ".title"))
 			.withStyle(ChatFormatting.GOLD));
-		Component hint = Lang.translate(hintKey);
+		Component hint = Lang.translateDirect(hintKey);
 		List<Component> cutComponent = TooltipHelper.cutTextComponent(hint, ChatFormatting.GRAY, ChatFormatting.WHITE);
 		for (Component component : cutComponent)
 			tooltip.add(spacing.plainCopy()
@@ -235,10 +234,10 @@ public class TooltipHelper {
 	public static boolean hasTooltip(ItemStack stack, Player player) {
 		checkLocale();
 
-		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemBySlot(EquipmentSlot.HEAD));
+		boolean hasGoggles = GogglesItem.isWearingGoggles(player);
 
-		if (hasGlasses != gogglesMode) {
-			gogglesMode = hasGlasses;
+		if (hasGoggles != gogglesMode) {
+			gogglesMode = hasGoggles;
 			cachedTooltips.clear();
 		}
 

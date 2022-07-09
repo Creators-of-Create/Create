@@ -4,7 +4,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -39,11 +38,8 @@ public class BeltTunnelItem extends BlockItem {
 		boolean flag = super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, state);
 		if (!world.isClientSide) {
 			BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos.below());
-			if (belt != null) {
-				AllTriggers.triggerFor(AllTriggers.PLACE_TUNNEL, p_195943_3_);
-				if (belt.casing == CasingType.NONE)
-					belt.setCasingType(AllBlocks.ANDESITE_TUNNEL.has(state) ? CasingType.ANDESITE : CasingType.BRASS);
-			}
+			if (belt != null && belt.casing == CasingType.NONE)
+				belt.setCasingType(AllBlocks.ANDESITE_TUNNEL.has(state) ? CasingType.ANDESITE : CasingType.BRASS);
 		}
 		return flag;
 	}

@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -14,6 +12,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
@@ -24,25 +23,9 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class CTModel extends BakedModelWrapperWithData {
 
-	protected static final ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
-	private ConnectedTextureBehaviour behaviour;
+	private static final ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
 
-	private class CTData {
-		int[] indices;
-
-		public CTData() {
-			indices = new int[6];
-			Arrays.fill(indices, -1);
-		}
-
-		void put(Direction face, int texture) {
-			indices[face.get3DDataValue()] = texture;
-		}
-
-		int get(Direction face) {
-			return indices[face.get3DDataValue()];
-		}
-	}
+	private final ConnectedTextureBehaviour behaviour;
 
 	public CTModel(BakedModel originalModel, ConnectedTextureBehaviour behaviour) {
 		super(originalModel);
@@ -56,15 +39,16 @@ public class CTModel extends BakedModelWrapperWithData {
 
 	protected CTData createCTData(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
+		MutableBlockPos mutablePos = new MutableBlockPos();
 		for (Direction face : Iterate.directions) {
-			if (!Block.shouldRenderFace(state, world, pos, face, pos.relative(face))
-				&& !behaviour.buildContextForOccludedDirections())
+			if (!behaviour.buildContextForOccludedDirections()
+				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face)))
 				continue;
-			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
-			if (spriteShift == null)
+			CTType dataType = behaviour.getDataType(state, face);
+			if (dataType == null)
 				continue;
-			CTContext ctContext = behaviour.buildContext(world, pos, state, face);
-			data.put(face, spriteShift.getTextureIndex(ctContext));
+			CTContext context = behaviour.buildContext(world, pos, state, face, dataType.getContextRequirement());
+			data.put(face, dataType.getTextureIndex(context));
 		}
 		return data;
 	}
@@ -74,39 +58,54 @@ public class CTModel extends BakedModelWrapperWithData {
 		List<BakedQuad> quads = super.getQuads(state, side, rand, extraData);
 		if (!extraData.hasProperty(CT_PROPERTY))
 			return quads;
+
 		CTData data = extraData.getData(CT_PROPERTY);
 		quads = new ArrayList<>(quads);
-
-		VertexFormat format = DefaultVertexFormat.BLOCK;
 
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
 
-			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.getDirection());
+			int index = data.get(quad.getDirection());
+			if (index == -1)
+				continue;
+
+			CTSpriteShiftEntry spriteShift = behaviour.getShift(state, quad.getDirection(), quad.getSprite());
 			if (spriteShift == null)
 				continue;
 			if (quad.getSprite() != spriteShift.getOriginal())
-				continue;
-			int index = data.get(quad.getDirection());
-			if (index == -1)
 				continue;
 
 			BakedQuad newQuad = QuadHelper.clone(quad);
 			int[] vertexData = newQuad.getVertices();
 
-			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
-				int uvOffset = 16 / 4;
-				int uIndex = vertex + uvOffset;
-				int vIndex = vertex + uvOffset + 1;
-				float u = Float.intBitsToFloat(vertexData[uIndex]);
-				float v = Float.intBitsToFloat(vertexData[vIndex]);
-				vertexData[uIndex] = Float.floatToRawIntBits(spriteShift.getTargetU(u, index));
-				vertexData[vIndex] = Float.floatToRawIntBits(spriteShift.getTargetV(v, index));
+			for (int vertex = 0; vertex < 4; vertex++) {
+				float u = QuadHelper.getU(vertexData, vertex);
+				float v = QuadHelper.getV(vertexData, vertex);
+				QuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
+				QuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
 			}
 
 			quads.set(i, newQuad);
 		}
+
 		return quads;
+	}
+
+	private static class CTData {
+		private final int[] indices;
+
+		public CTData() {
+			indices = new int[6];
+			Arrays.fill(indices, -1);
+		}
+
+		public void put(Direction face, int texture) {
+			indices[face.get3DDataValue()] = texture;
+		}
+
+		public int get(Direction face) {
+			return indices[face.get3DDataValue()];
+		}
 	}
 
 }

@@ -7,14 +7,15 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
-import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipes;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.advancement.ITriggerable;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -32,14 +33,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -90,6 +92,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return speed / 2;
 	}
 
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.MIXER);
+	}
+	
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
@@ -224,7 +232,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if (stack.isEmpty())
 				continue;
 
-			List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(stack.getItem());
+			List<MixingRecipe> list = PotionMixingRecipes.BY_ITEM.get(stack.getItem());
 			if (list == null)
 				continue;
 			for (MixingRecipe mixingRecipe : list)
@@ -237,10 +245,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
-		return ((r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE
-			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
+		return ((r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				 && AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-			&& !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.isManualRecipe(r)
+				 && !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(r)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 
@@ -278,8 +286,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
-		return Optional.of(AllTriggers.MIXER_MIX);
+	protected Optional<CreateAdvancement> getProcessedRecipeTrigger() {
+		return Optional.of(AllAdvancements.MIXER);
 	}
 
 	@Override
@@ -289,9 +297,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		// SoundEvents.BLOCK_STONE_BREAK
 		boolean slow = Math.abs(getSpeed()) < 65;
-		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
+		if (slow && AnimationTickHolder.getTicks() % 2 == 0)
 			return;
-		if (runningTicks == 20) 
+		if (runningTicks == 20)
 			AllSoundEvents.MIXING.playAt(level, worldPosition, .75f, 1, true);
 	}
 

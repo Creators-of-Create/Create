@@ -1118,7 +1118,7 @@
 	"create.tooltip.speedRequirement": "Требование к скорости: %1$s",
 	"create.tooltip.speedRequirement.none": "Нет",
 	"create.tooltip.speedRequirement.medium": "Умеренная",
-	"create.tooltip.speedRequirement.high": "Быстрая",
+	"create.tooltip.speedRequirement.fast": "Быстрая",
 	"create.tooltip.stressImpact": "Создаваемая нагрузка: %1$s",
 	"create.tooltip.stressImpact.low": "Низкая",
 	"create.tooltip.stressImpact.medium": "Средняя",

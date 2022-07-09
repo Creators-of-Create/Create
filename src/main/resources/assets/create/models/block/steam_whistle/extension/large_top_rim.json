@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"particle": "create:block/whistle_particle"
+	},
+	"elements": [
+		{
+			"name": "Whistle Large Cap",
+			"from": [2, 16, 2],
+			"to": [14, 18, 14],
+			"faces": {
+				"north": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"east": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"south": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"west": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"up": {"uv": [0.5, 12.5, 3.5, 15.5], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [12.5, 12.5, 15.5, 15.5], "texture": "#0", "cullface": "up"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Whistle Large",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Extension",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0]
+				}
+			]
+		}
+	]
+}

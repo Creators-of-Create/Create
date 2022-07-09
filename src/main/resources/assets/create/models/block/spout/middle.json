@@ -1,7 +1,9 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"textures": {
-		"0": "create:block/spout"
+		"0": "create:block/spout",
+		"particle": "create:block/copper_plating"
 	},
 	"elements": [
 		{

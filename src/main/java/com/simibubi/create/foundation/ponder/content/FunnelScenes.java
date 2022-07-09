@@ -345,6 +345,7 @@ public class FunnelScenes {
 			}
 		}
 
+		scene.idle(60);
 	}
 
 	public static void brass(SceneBuilder scene, SceneBuildingUtil util) {

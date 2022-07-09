@@ -1,121 +1,142 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface IRotate extends IWrenchable {
 
 	enum SpeedLevel {
-		NONE,
-		MEDIUM,
-		FAST;
+		NONE(ChatFormatting.DARK_GRAY, 0x000000, 0),
+		SLOW(ChatFormatting.GREEN, 0x22FF22, 10),
+		MEDIUM(ChatFormatting.AQUA, 0x0084FF, 20),
+		FAST(ChatFormatting.LIGHT_PURPLE, 0xFF55FF, 30);
+
+		private final ChatFormatting textColor;
+		private final int color;
+		private final int particleSpeed;
+
+		SpeedLevel(ChatFormatting textColor, int color, int particleSpeed) {
+			this.textColor = textColor;
+			this.color = color;
+			this.particleSpeed = particleSpeed;
+		}
 
 		public ChatFormatting getTextColor() {
-			return this == NONE ? ChatFormatting.GREEN
-					: this == MEDIUM ? ChatFormatting.AQUA : ChatFormatting.LIGHT_PURPLE;
+			return textColor;
 		}
 
 		public int getColor() {
-			return this == NONE ? 0x22FF22 : this == MEDIUM ? 0x0084FF : 0xFF55FF;
+			return color;
 		}
 
 		public int getParticleSpeed() {
-			return this == NONE ? 10 : this == MEDIUM ? 20 : 30;
-		}
-
-		public static SpeedLevel of(float speed) {
-			speed = Math.abs(speed);
-
-			if (speed >= AllConfigs.SERVER.kinetics.fastSpeed.get()) {
-				return FAST;
-			} else if (speed >= AllConfigs.SERVER.kinetics.mediumSpeed.get()) {
-				return MEDIUM;
-			}
-			return NONE;
+			return particleSpeed;
 		}
 
 		public float getSpeedValue() {
 			switch (this) {
 			case FAST:
-				return AllConfigs.SERVER.kinetics.fastSpeed.get().floatValue();
+				return AllConfigs.SERVER.kinetics.fastSpeed.get()
+					.floatValue();
 			case MEDIUM:
-				return AllConfigs.SERVER.kinetics.mediumSpeed.get().floatValue();
+				return AllConfigs.SERVER.kinetics.mediumSpeed.get()
+					.floatValue();
+			case SLOW:
+				return 1;
 			case NONE:
 			default:
 				return 0;
 			}
 		}
 
-		public static Component getFormattedSpeedText(float speed, boolean overstressed){
+		public static SpeedLevel of(float speed) {
+			speed = Math.abs(speed);
+
+			if (speed >= AllConfigs.SERVER.kinetics.fastSpeed.get())
+				return FAST;
+			if (speed >= AllConfigs.SERVER.kinetics.mediumSpeed.get())
+				return MEDIUM;
+			if (speed >= 1)
+				return SLOW;
+			return NONE;
+		}
+
+		public static LangBuilder getFormattedSpeedText(float speed, boolean overstressed) {
 			SpeedLevel speedLevel = of(speed);
+			LangBuilder builder = Lang.text(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
 
-			MutableComponent level = new TextComponent(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
-
-			if (speedLevel == SpeedLevel.MEDIUM)
-				level.append(Lang.translate("tooltip.speedRequirement.medium"));
-			if (speedLevel == SpeedLevel.FAST)
-				level.append(Lang.translate("tooltip.speedRequirement.high"));
-
-			level.append(" (" + IHaveGoggleInformation.format(Math.abs(speed))).append(Lang.translate("generic.unit.rpm")).append(") ");
+			builder.translate("tooltip.speedRequirement." + Lang.asId(speedLevel.name()))
+				.space()
+				.text("(")
+				.add(Lang.number(Math.abs(speed)))
+				.space()
+				.translate("generic.unit.rpm")
+				.text(")")
+				.space();
 
 			if (overstressed)
-				level.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.STRIKETHROUGH);
+				builder.style(ChatFormatting.DARK_GRAY)
+					.style(ChatFormatting.STRIKETHROUGH);
 			else
-				level.withStyle(speedLevel.getTextColor());
+				builder.style(speedLevel.getTextColor());
 
-			return level;
+			return builder;
 		}
 
 	}
 
 	enum StressImpact {
-		LOW,
-		MEDIUM,
-		HIGH,
-		OVERSTRESSED;
+		LOW(ChatFormatting.YELLOW, ChatFormatting.GREEN),
+		MEDIUM(ChatFormatting.GOLD, ChatFormatting.YELLOW),
+		HIGH(ChatFormatting.RED, ChatFormatting.GOLD),
+		OVERSTRESSED(ChatFormatting.RED, ChatFormatting.RED);
+
+		private final ChatFormatting absoluteColor;
+		private final ChatFormatting relativeColor;
+
+		StressImpact(ChatFormatting absoluteColor, ChatFormatting relativeColor) {
+			this.absoluteColor = absoluteColor;
+			this.relativeColor = relativeColor;
+		}
 
 		public ChatFormatting getAbsoluteColor() {
-			return this == LOW ? ChatFormatting.YELLOW : this == MEDIUM ? ChatFormatting.GOLD : ChatFormatting.RED;
+			return absoluteColor;
 		}
 
 		public ChatFormatting getRelativeColor() {
-			return this == LOW ? ChatFormatting.GREEN : this == MEDIUM ? ChatFormatting.YELLOW : this == HIGH ? ChatFormatting.GOLD : ChatFormatting.RED;
+			return relativeColor;
 		}
 
-		public static StressImpact of(double stressPercent){
-			if (stressPercent > 1) return StressImpact.OVERSTRESSED;
-			else if (stressPercent > .75d) return StressImpact.HIGH;
-			else if (stressPercent > .5d) return StressImpact.MEDIUM;
-			else return StressImpact.LOW;
+		public static StressImpact of(double stressPercent) {
+			if (stressPercent > 1)
+				return StressImpact.OVERSTRESSED;
+			if (stressPercent > .75d)
+				return StressImpact.HIGH;
+			if (stressPercent > .5d)
+				return StressImpact.MEDIUM;
+			return StressImpact.LOW;
 		}
-		
+
 		public static boolean isEnabled() {
 			return !AllConfigs.SERVER.kinetics.disableStress.get();
 		}
 
-		public static Component getFormattedStressText(double stressPercent){
+		public static LangBuilder getFormattedStressText(double stressPercent) {
 			StressImpact stressLevel = of(stressPercent);
-			ChatFormatting color = stressLevel.getRelativeColor();
-
-			MutableComponent level = new TextComponent(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal(), 2)));
-			level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name())));
-
-			level.append(String.format(" (%s%%) ", (int) (stressPercent * 100)));
-
-			return level.withStyle(color);
+			return Lang.text(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)))
+				.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name()))
+				.text(String.format(" (%s%%) ", (int) (stressPercent * 100)))
+				.style(stressLevel.getRelativeColor());
 		}
 	}
 

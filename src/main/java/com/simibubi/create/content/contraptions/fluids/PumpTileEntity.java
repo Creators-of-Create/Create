@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
@@ -53,6 +54,8 @@ public class PumpTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(new PumpFluidTransferBehaviour(this));
+		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
+		registerAwardables(behaviours, AllAdvancements.PUMP);
 	}
 
 	@Override
@@ -100,8 +103,10 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		if (previousSpeed == getSpeed())
 			return;
-		if (speed != 0)
+		if (speed != 0) {
 			reversed = speed < 0;
+			award(AllAdvancements.PUMP);
+		}
 		if (level.isClientSide && !isVirtual())
 			return;
 
@@ -152,7 +157,7 @@ public class PumpTileEntity extends KineticTileEntity {
 				int distance = entry.getFirst();
 				BlockPos currentPos = entry.getSecond();
 
-				if (!level.isAreaLoaded(currentPos, 0))
+				if (!level.isLoaded(currentPos))
 					continue;
 				if (visited.contains(currentPos))
 					continue;
@@ -166,7 +171,7 @@ public class PumpTileEntity extends KineticTileEntity {
 					BlockFace blockFace = new BlockFace(currentPos, face);
 					BlockPos connectedPos = blockFace.getConnectedPos();
 
-					if (!level.isAreaLoaded(connectedPos, 0))
+					if (!level.isLoaded(connectedPos))
 						continue;
 					if (blockFace.isEquivalent(start))
 						continue;

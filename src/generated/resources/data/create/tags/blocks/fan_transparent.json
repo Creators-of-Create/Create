@@ -5,8 +5,7 @@
     "create:lit_blaze_burner",
     "create:sail_frame",
     "#minecraft:fences",
-    "minecraft:iron_bars",
-    "minecraft:campfire",
-    "minecraft:soul_campfire"
+    "#minecraft:campfires",
+    "minecraft:iron_bars"
   ]
 }

@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,11 +18,11 @@ public class BeltHelper {
 
 	public static boolean isItemUpright(ItemStack stack) {
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-			.isPresent() || stack.is(AllItemTags.UPRIGHT_ON_BELT.tag);
+			.isPresent() || AllItemTags.UPRIGHT_ON_BELT.matches(stack);
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {
-		if (!world.isAreaLoaded(pos, 0))
+		if (world instanceof Level l && !l.isLoaded(pos))
 			return null;
 		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (!(tileEntity instanceof BeltTileEntity))

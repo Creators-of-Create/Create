@@ -1,0 +1,11 @@
+# Blender MTL File: 'Bogey.blend'
+# Material Count: 3
+
+newmtl 00_Shaft
+map_Kd #axis
+
+newmtl 00_Shaft_end
+map_Kd #axis_top
+
+newmtl wheel_Large
+map_Kd #wheel

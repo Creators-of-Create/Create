@@ -2,18 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "T",
-    "P",
-    "S"
+    "P"
   ],
   "key": {
     "T": {
-      "item": "create:fluid_tank"
+      "item": "create:copper_casing"
     },
     "P": {
       "item": "minecraft:dried_kelp"
-    },
-    "S": {
-      "tag": "forge:nuggets/copper"
     }
   },
   "result": {

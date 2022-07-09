@@ -8,11 +8,11 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.TagContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -39,8 +39,8 @@ public class WrappedWorld extends Level {
 	protected LevelEntityGetter<Entity> entityGetter = new DummyLevelEntityGetter<>();
 
 	public WrappedWorld(Level world) {
-		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionType(), world::getProfiler,
-				world.isClientSide, world.isDebug(), 0);
+		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionTypeRegistration(),
+			world::getProfiler, world.isClientSide, world.isDebug(), 0);
 		this.world = world;
 	}
 
@@ -136,8 +136,7 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public void setMapData(String pMapId, MapItemSavedData pData) {
-	}
+	public void setMapData(String pMapId, MapItemSavedData pData) {}
 
 	@Override
 	public int getFreeMapId() {
@@ -158,12 +157,7 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public TagContainer getTagManager() {
-		return world.getTagManager();
-	}
-
-	@Override
-	public Biome getUncachedNoiseBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
+	public Holder<Biome> getUncachedNoiseBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
 		return world.getUncachedNoiseBiome(p_225604_1_, p_225604_2_, p_225604_3_);
 	}
 
@@ -178,17 +172,10 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public boolean hasChunkAt(BlockPos p_175667_1_) {
-		return world.hasChunkAt(p_175667_1_);
-	}
+	public void updateNeighbourForOutputSignal(BlockPos p_175666_1_, Block p_175666_2_) {}
 
 	@Override
-	public void updateNeighbourForOutputSignal(BlockPos p_175666_1_, Block p_175666_2_) {
-	}
-
-	@Override
-	public void gameEvent(Entity pEntity, GameEvent pEvent, BlockPos pPos) {
-	}
+	public void gameEvent(Entity pEntity, GameEvent pEvent, BlockPos pPos) {}
 
 	@Override
 	public String gatherChunkSourceStats() {
@@ -200,9 +187,12 @@ public class WrappedWorld extends Level {
 		return entityGetter;
 	}
 
-	// Intentionally copied from LevelHeightAccessor. Workaround for issues caused when other mods (such as Lithium)
-	// override the vanilla implementations in ways which cause WrappedWorlds to return incorrect, default height info.
-	// WrappedWorld subclasses should implement their own getMinBuildHeight and getHeight overrides where they deviate
+	// Intentionally copied from LevelHeightAccessor. Workaround for issues caused
+	// when other mods (such as Lithium)
+	// override the vanilla implementations in ways which cause WrappedWorlds to
+	// return incorrect, default height info.
+	// WrappedWorld subclasses should implement their own getMinBuildHeight and
+	// getHeight overrides where they deviate
 	// from the defaults for their dimension.
 
 	@Override

@@ -1,29 +1,28 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 
+@ParametersAreNonnullByDefault
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
-	AnimatedDeployer deployer;
+	private final AnimatedDeployer deployer = new AnimatedDeployer();
 
 	public DeployingCategory() {
 		super(itemIcon(AllBlocks.DEPLOYER.get()), emptyBackground(177, 70));
-		deployer = new AnimatedDeployer();
 	}
 
 	@Override
@@ -32,49 +31,29 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	}
 
 	@Override
-	public void setIngredients(DeployerApplicationRecipe recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setInputLists(VanillaTypes.FLUID, recipe.getFluidIngredients()
-			.stream()
-			.map(FluidIngredient::getMatchingFluidStacks)
-			.collect(Collectors.toList()));
-
-		if (!recipe.getRollableResults()
-			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, DeployerApplicationRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 26, 50);
-		itemStacks.set(0, Arrays.asList(recipe.getProcessedItem()
-			.getItems()));
-		itemStacks.init(1, true, 50, 4);
-		itemStacks.set(1, Arrays.asList(recipe.getRequiredHeldItem()
-			.getItems()));
-		itemStacks.init(2, false, 131, 50);
-		itemStacks.set(2, recipe.getResultItem());
+	public void setRecipe(IRecipeLayoutBuilder builder, DeployerApplicationRecipe recipe, IFocusGroup focuses) {
+		builder
+				.addSlot(RecipeIngredientRole.INPUT, 27, 51)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(recipe.getProcessedItem());
+		IRecipeSlotBuilder handItemSlot = builder
+				.addSlot(RecipeIngredientRole.INPUT, 51, 5)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(recipe.getRequiredHeldItem());
+		builder
+				.addSlot(RecipeIngredientRole.OUTPUT, 132, 51)
+				.setBackground(getRenderedSlot(recipe.getRollableResults().get(0)), -1, -1)
+				.addItemStack(recipe.getResultItem())
+				.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults().get(0)));
 
 		if (recipe.shouldKeepHeldItem()) {
-			itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-				if (!input)
-					return;
-				if (slotIndex != 1)
-					return;
-				tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
-					.withStyle(ChatFormatting.GOLD));
-			});
+			handItemSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Lang.translateDirect("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD)));
 		}
 
-		addStochasticTooltip(itemStacks, recipe.getRollableResults(), 2);
 	}
 
 	@Override
-	public void draw(DeployerApplicationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 50);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
+	public void draw(DeployerApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
 		deployer.draw(matrixStack, getBackground().getWidth() / 2 - 13, 22);

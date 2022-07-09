@@ -127,6 +127,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		//PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
 
 		int brighterColor = Color.mixColors(color, 0xFFffffdd, 1 / 2f);
+		brighterColor = (0x00ffffff & brighterColor) | 0xff000000;
 		if (vec != null) {
 			ms.pushPose();
 			ms.translate(sceneToScreen.x, 0, 0);

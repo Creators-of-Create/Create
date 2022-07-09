@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "silentgear:stripped_netherwood_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgear:netherwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "silentgear",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

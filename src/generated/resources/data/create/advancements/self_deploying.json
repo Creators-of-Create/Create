@@ -1,0 +1,30 @@
+{
+  "parent": "create:potato_cannon_collide",
+  "display": {
+    "icon": {
+      "item": "minecraft:rail"
+    },
+    "title": {
+      "translate": "advancement.create.self_deploying"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.self_deploying.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:self_deploying_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

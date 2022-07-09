@@ -1,16 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " I "
+    "B",
+    "C",
+    "I"
   ],
   "key": {
     "B": {
-      "tag": "minecraft:planks"
-    },
-    "S": {
-      "item": "create:cogwheel"
+      "tag": "minecraft:wooden_slabs"
     },
     "C": {
       "item": "create:andesite_casing"

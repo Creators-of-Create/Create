@@ -1,22 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCP",
-    " I "
+    "B",
+    "C",
+    "I"
   ],
   "key": {
-    "S": {
-      "item": "create:shaft"
-    },
-    "P": {
-      "item": "create:fluid_pipe"
-    },
     "B": {
       "item": "create:copper_casing"
     },
     "C": {
-      "item": "minecraft:dried_kelp"
+      "item": "minecraft:dried_kelp_block"
     },
     "I": {
       "tag": "forge:plates/copper"

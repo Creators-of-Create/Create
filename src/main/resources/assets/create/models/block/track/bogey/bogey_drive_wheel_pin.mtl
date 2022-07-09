@@ -1,0 +1,5 @@
+# Blender MTL File: 'Bogey.blend'
+# Material Count: 1
+
+newmtl Bogey_Piston
+map_Kd #piston

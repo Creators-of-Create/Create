@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.mixin.accessor.ParticleEngineAccessor;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
@@ -24,7 +25,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -47,7 +47,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderWorld extends SchematicWorld {
@@ -61,7 +60,7 @@ public class PonderWorld extends SchematicWorld {
 	private Supplier<ClientLevel> asClientWorld = Suppliers.memoize(() -> WrappedClientWorld.of(this));
 
 	protected PonderWorldParticles particles;
-	private final Map<ResourceLocation, ParticleProvider<?>> particleFactories;
+	private final Map<ResourceLocation, ParticleProvider<?>> particleProviders;
 
 	int overrideLight;
 	Selection mask;
@@ -73,10 +72,7 @@ public class PonderWorld extends SchematicWorld {
 		blockBreakingProgressions = new HashMap<>();
 		originalEntities = new ArrayList<>();
 		particles = new PonderWorldParticles(this);
-
-		// ParticleManager.factories - ATs don't seem to like this one
-		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleEngine.class,
-			Minecraft.getInstance().particleEngine, "f_107293_"); // providers
+		particleProviders = ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).create$getProviders();
 	}
 
 	public void createBackup() {
@@ -233,9 +229,9 @@ public class PonderWorld extends SchematicWorld {
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
 		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
-		ParticleProvider<T> iparticlefactory = (ParticleProvider<T>) particleFactories.get(key);
-		return iparticlefactory == null ? null
-			: iparticlefactory.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);
+		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(key);
+		return particleProvider == null ? null
+			: particleProvider.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);
 	}
 
 	@Override

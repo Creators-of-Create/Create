@@ -23,7 +23,6 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -31,6 +30,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -55,9 +55,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		super(modid);
 	}
 
-	public static NonNullLazyValue<CreateRegistrate> lazy(String modid) {
-		return new NonNullLazyValue<>(
-			() -> new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
+	public static NonNullSupplier<CreateRegistrate> lazy(String modid) {
+		return NonNullSupplier
+			.lazy(() -> new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
 				.getModEventBus()));
 	}
 
@@ -127,6 +127,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return this.entity(self(), name, factory, classification);
 	}
 
+	@Override
 	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name,
 		EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
@@ -169,10 +170,24 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				Create.asResource("fluid/" + name + "_flow"), attributesFactory, factory));
 	}
 
+	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow,
+																						BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+																						NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+		return entry(name,
+				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
+						flow, attributesFactory, factory));
+	}
+
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
 				Create.asResource("fluid/" + name + "_flow"), null, VirtualFluid::new));
+	}
+
+	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow) {
+		return entry(name,
+				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
+						flow, null, VirtualFluid::new));
 	}
 
 	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name) {
@@ -187,7 +202,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(Supplier<ConnectedTextureBehaviour> behavior) {
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+		Supplier<ConnectedTextureBehaviour> behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 

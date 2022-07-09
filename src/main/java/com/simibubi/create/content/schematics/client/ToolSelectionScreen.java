@@ -18,7 +18,7 @@ import net.minecraft.network.chat.TextComponent;
 
 public class ToolSelectionScreen extends Screen {
 
-	public final String scrollToCycle = Lang.translate("gui.toolmenu.cycle")
+	public final String scrollToCycle = Lang.translateDirect("gui.toolmenu.cycle")
 		.getString();
 	public final String holdToFocus = "gui.toolmenu.focusKey";
 
@@ -103,7 +103,7 @@ public class ToolSelectionScreen extends Screen {
 			int width = minecraft.getWindow()
 				.getGuiScaledWidth();
 			if (!focused)
-				drawCenteredString(matrixStack, minecraft.font, Lang.translate(holdToFocus, keyName), width / 2,
+				drawCenteredString(matrixStack, minecraft.font, Lang.translateDirect(holdToFocus, keyName), width / 2,
 					y - 10, 0xCCDDFF);
 			else
 				drawCenteredString(matrixStack, minecraft.font, scrollToCycle, width / 2, y - 10, 0xCCDDFF);
@@ -134,7 +134,7 @@ public class ToolSelectionScreen extends Screen {
 			matrixStack.popPose();
 		}
 
-		RenderSystem.enableBlend();
+		RenderSystem.disableBlend();
 		matrixStack.popPose();
 	}
 

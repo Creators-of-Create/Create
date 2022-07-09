@@ -105,7 +105,7 @@ public class CrossPlaneMirror extends SymmetryMirror {
 
 	@Override
 	public List<Component> getAlignToolTips() {
-		return ImmutableList.of(Lang.translate("orientation.orthogonal"), Lang.translate("orientation.diagonal"));
+		return ImmutableList.of(Lang.translateDirect("orientation.orthogonal"), Lang.translateDirect("orientation.diagonal"));
 	}
 
 }

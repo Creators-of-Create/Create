@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -44,14 +45,16 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		Integer max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 
 		targetSpeed =
-			new ScrollValueBehaviour(Lang.translate("generic.speed"), this, new ControllerValueBoxTransform());
+			new ScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.moveText(new Vec3(9, 0, 10));
-		targetSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
+		targetSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
+		
+		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
 
 	private void updateTargetRotation() {
@@ -60,6 +63,9 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		RotationPropagator.handleRemoved(level, worldPosition, this);
 		removeSource();
 		attachKinetics();
+		
+		if (isCogwheelPresent() && getSpeed() != 0)
+			award(AllAdvancements.SPEED_CONTROLLER);
 	}
 
 	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
@@ -111,10 +117,13 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	}
 
 	public void updateBracket() {
-		if (level == null || !level.isClientSide)
-			return;
+		if (level != null && level.isClientSide)
+			hasBracket = isCogwheelPresent();
+	}
+
+	private boolean isCogwheelPresent() {
 		BlockState stateAbove = level.getBlockState(worldPosition.above());
-		hasBracket = ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
+		return ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
 			&& stateAbove.getValue(CogWheelBlock.AXIS).isHorizontal();
 	}
 

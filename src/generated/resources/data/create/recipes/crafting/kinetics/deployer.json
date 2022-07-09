@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " I "
+    "B",
+    "C",
+    "I"
   ],
   "key": {
     "I": {
@@ -11,9 +11,6 @@
     },
     "B": {
       "item": "create:electron_tube"
-    },
-    "S": {
-      "item": "create:cogwheel"
     },
     "C": {
       "item": "create:andesite_casing"

@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderLayer;
 import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
-import com.jozufozu.flywheel.config.FlwEngine;
+import com.jozufozu.flywheel.config.BackendType;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.compile.ProgramContext;
@@ -43,11 +43,12 @@ public class FlwContraptionManager extends ContraptionRenderingWorld<FlwContrapt
 		GlStateTracker.State restoreState = GlStateTracker.getRestoreState();
 		GlTextureUnit active = GlTextureUnit.getActive();
 
-		if (Backend.getEngine() != FlwEngine.BATCHING) {
+		var backendType = Backend.getBackendType();
+		if (backendType != BackendType.OFF) {
 			renderStructures(event);
 		}
 
-		if (event.getLayer() != null) {
+		if (backendType != BackendType.BATCHING && event.getLayer() != null) {
 			for (FlwContraption renderer : visible) {
 				renderer.renderInstanceLayer(event);
 			}

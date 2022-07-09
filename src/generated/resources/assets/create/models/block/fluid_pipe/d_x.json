@@ -1,0 +1,37 @@
+{
+  "parent": "create:block/fluid_pipe/core_x",
+  "elements": [
+    {
+      "from": [
+        4,
+        4,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ],
+      "faces": {
+        "west": {
+          "texture": "#0",
+          "uv": [
+            4.0,
+            0.0,
+            0.0,
+            4.0
+          ]
+        },
+        "east": {
+          "texture": "#0",
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            4.0
+          ]
+        }
+      }
+    }
+  ]
+}

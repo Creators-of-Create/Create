@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:item_frame"
+    },
+    {
+      "tag": "forge:plates/brass"
+    }
+  ],
+  "result": {
+    "item": "create:placard"
+  }
+}

@@ -47,6 +47,7 @@ public class WrenchableDirectionalBlock extends DirectionalBlock implements IWre
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}

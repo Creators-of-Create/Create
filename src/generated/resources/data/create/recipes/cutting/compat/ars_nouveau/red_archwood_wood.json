@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:red_archwood_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "ars_nouveau:stripped_red_archwood_wood"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "ars_nouveau",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

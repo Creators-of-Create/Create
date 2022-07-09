@@ -17,26 +17,26 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public abstract class MovementBehaviour {
+public interface MovementBehaviour {
 
-	public boolean isActive(MovementContext context) {
+	default boolean isActive(MovementContext context) {
 		return true;
 	}
 
-	public void tick(MovementContext context) {}
+	default void tick(MovementContext context) {}
 
-	public void startMoving(MovementContext context) {}
+	default void startMoving(MovementContext context) {}
 
-	public void visitNewPosition(MovementContext context, BlockPos pos) {}
+	default void visitNewPosition(MovementContext context, BlockPos pos) {}
 
-	public Vec3 getActiveAreaOffset(MovementContext context) {
+	default Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.ZERO;
 	}
 
-	public void dropItem(MovementContext context, ItemStack stack) {
+	default void dropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
 		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get())
-			remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+			remainder = ItemHandlerHelper.insertItem(context.contraption.getSharedInventory(), stack, false);
 		else
 			remainder = stack;
 		if (remainder.isEmpty())
@@ -49,32 +49,32 @@ public abstract class MovementBehaviour {
 		context.world.addFreshEntity(itemEntity);
 	}
 
-	public void stopMoving(MovementContext context) {
+	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {}
 
+	default void stopMoving(MovementContext context) {}
+	
+	default void cancelStall(MovementContext context) {
+		context.stall = false;
 	}
 
-	public void writeExtraData(MovementContext context) {
+	default void writeExtraData(MovementContext context) {}
 
-	}
-
-	public boolean renderAsNormalTileEntity() {
+	default boolean renderAsNormalTileEntity() {
 		return false;
 	}
 
-	public boolean hasSpecialInstancedRendering() {
+	default boolean hasSpecialInstancedRendering() {
 		return false;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
+	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+		MovementContext context) {
 		return null;
-	}
-
-	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
 	}
 }

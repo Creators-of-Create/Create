@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:wheat_flour"
-            ]
+            "tag": "forge:flour/wheat"
           }
         ]
       }

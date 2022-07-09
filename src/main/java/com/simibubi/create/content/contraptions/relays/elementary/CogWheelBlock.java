@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -17,6 +18,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -33,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
+public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel {
 
 	boolean isLarge;
 
@@ -71,6 +73,49 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	@Override
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(worldIn, pos, state, placer, stack);
+		if (placer instanceof Player player)
+			triggerShiftingGearsAdvancement(worldIn, pos, state, player);
+	}
+
+	protected void triggerShiftingGearsAdvancement(Level world, BlockPos pos, BlockState state, Player player) {
+		if (world.isClientSide || player == null)
+			return;
+
+		Axis axis = state.getValue(CogWheelBlock.AXIS);
+		for (Axis perpendicular1 : Iterate.axes) {
+			if (perpendicular1 == axis)
+				continue;
+
+			Direction d1 = Direction.get(AxisDirection.POSITIVE, perpendicular1);
+			for (Axis perpendicular2 : Iterate.axes) {
+				if (perpendicular1 == perpendicular2)
+					continue;
+				if (axis == perpendicular2)
+					continue;
+
+				Direction d2 = Direction.get(AxisDirection.POSITIVE, perpendicular2);
+				for (int offset1 : Iterate.positiveAndNegative) {
+					for (int offset2 : Iterate.positiveAndNegative) {
+						BlockPos connectedPos = pos.relative(d1, offset1)
+							.relative(d2, offset2);
+						BlockState blockState = world.getBlockState(connectedPos);
+						if (!(blockState.getBlock() instanceof CogWheelBlock))
+							continue;
+						if (blockState.getValue(CogWheelBlock.AXIS) != axis)
+							continue;
+						if (ICogWheel.isLargeCog(blockState) == isLarge)
+							continue;
+
+						AllAdvancements.COGS.awardTo(player);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
@@ -105,7 +150,7 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
 						: EncasedCogwheelBlock.BOTTOM_SHAFT);
 			}
-			
+
 			KineticTileEntity.switchToBlockState(world, pos, encasedState);
 			return InteractionResult.SUCCESS;
 		}

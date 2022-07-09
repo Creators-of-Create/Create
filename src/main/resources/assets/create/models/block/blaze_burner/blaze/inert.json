@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "create:block/blaze_inert",
+		"particle": "create:block/blaze_inert"
+	},
+	"elements": [
+		{
+			"name": "Blaze 3",
+			"from": [5, 6, 5],
+			"to": [11, 12, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 7, 7]},
+			"faces": {
+				"north": {"uv": [6, 0, 12, 6], "texture": "#2"},
+				"east": {"uv": [0, 0, 6, 6], "texture": "#2"},
+				"south": {"uv": [0, 0, 6, 6], "texture": "#2"},
+				"west": {"uv": [0, 0, 6, 6], "texture": "#2"},
+				"up": {"uv": [0, 6, 6, 12], "texture": "#2"},
+				"down": {"uv": [6, 6, 12, 12], "texture": "#2"}
+			}
+		}
+	]
+}

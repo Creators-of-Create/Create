@@ -13,7 +13,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -32,7 +32,7 @@ public class PalettesVariantEntry {
 		for (PaletteBlockPattern pattern : paletteStoneVariants.variantTypes) {
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
 				registrate.block(pattern.createName(name), pattern.getBlockFactory())
-					.initialProperties(baseBlock::get)
+					.initialProperties(baseBlock)
 					.transform(pickaxeOnly())
 					.blockstate(pattern.getBlockStateGenerator()
 						.apply(pattern)
@@ -41,10 +41,10 @@ public class PalettesVariantEntry {
 			ItemBuilder<BlockItem, ? extends BlockBuilder<? extends Block, CreateRegistrate>> itemBuilder =
 				builder.item();
 
-			Tag.Named<Block>[] blockTags = pattern.getBlockTags();
+			TagKey<Block>[] blockTags = pattern.getBlockTags();
 			if (blockTags != null)
 				builder.tag(blockTags);
-			Tag.Named<Item>[] itemTags = pattern.getItemTags();
+			TagKey<Item>[] itemTags = pattern.getItemTags();
 			if (itemTags != null)
 				itemBuilder.tag(itemTags);
 
@@ -56,7 +56,7 @@ public class PalettesVariantEntry {
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
 
 			builder.recipe((c, p) -> {
-				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c::get);
+				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c);
 				pattern.addRecipes(baseBlock, c, p);
 			});
 

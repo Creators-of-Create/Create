@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "ecologics:stripped_walnut_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "ecologics:walnut_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "ecologics",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

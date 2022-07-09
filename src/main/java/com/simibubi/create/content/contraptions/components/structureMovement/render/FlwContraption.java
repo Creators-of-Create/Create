@@ -22,7 +22,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -30,6 +29,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -53,7 +53,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		var restoreState = GlStateTracker.getRestoreState();
 		buildLayers();
-		if (Backend.isOn()) {
+		if (ContraptionRenderDispatcher.canInstance()) {
 			buildInstancedTiles();
 			buildActors();
 		}
@@ -138,25 +138,24 @@ public class FlwContraption extends ContraptionRenderInfo {
 		renderLayers.clear();
 
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
+		Collection<StructureBlockInfo> renderedBlocks = contraption.getRenderedBlocks();
 
 		for (RenderType layer : blockLayers) {
-			Model layerModel = new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
-
+			Model layerModel = new WorldModel(renderWorld, layer, renderedBlocks, layer + "_" + contraption.entity.getId());
 			renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 		}
 	}
 
 	private void buildInstancedTiles() {
-		Collection<BlockEntity> tileEntities = contraption.maybeInstancedTileEntities;
-		if (!tileEntities.isEmpty()) {
-			for (BlockEntity te : tileEntities) {
-				if (InstancedRenderRegistry.canInstance(te.getType())) {
-					Level world = te.getLevel();
-					te.setLevel(renderWorld);
-					instanceWorld.tileInstanceManager.add(te);
-					te.setLevel(world);
-				}
+		for (BlockEntity te : contraption.maybeInstancedTileEntities) {
+			if (!InstancedRenderRegistry.canInstance(te.getType())) {
+				continue;
 			}
+
+			Level world = te.getLevel();
+			te.setLevel(renderWorld);
+			instanceWorld.tileInstanceManager.add(te);
+			te.setLevel(world);
 		}
 	}
 
@@ -182,20 +181,20 @@ public class FlwContraption extends ContraptionRenderInfo {
 		private final ContraptionInstanceManager tileInstanceManager;
 
 		public ContraptionInstanceWorld(FlwContraption parent) {
-			switch (Backend.getEngine()) {
+			switch (Backend.getBackendType()) {
 			case INSTANCING -> {
 				InstancingEngine<ContraptionProgram> engine = InstancingEngine.builder(CreateContexts.CWORLD)
 						.setGroupFactory(ContraptionGroup.forContraption(parent))
 						.setIgnoreOriginCoordinate(true)
 						.build();
-				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld);
+				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
 				engine.addListener(tileInstanceManager);
 
 				this.engine = engine;
 			}
 			case BATCHING -> {
 				engine = new BatchingEngine();
-				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld);
+				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
 			}
 			default -> throw new IllegalArgumentException("Unknown engine type");
 			}

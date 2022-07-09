@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "architects_palette:stripped_twisted_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "architects_palette:twisted_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "architects_palette",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

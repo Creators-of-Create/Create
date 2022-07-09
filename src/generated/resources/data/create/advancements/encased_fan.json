@@ -1,0 +1,30 @@
+{
+  "parent": "create:mechanical_press",
+  "display": {
+    "icon": {
+      "item": "create:encased_fan"
+    },
+    "title": {
+      "translate": "advancement.create.encased_fan"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.encased_fan.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:encased_fan_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
@@ -65,10 +66,10 @@ public class WindowGen {
 	}
 
 	public static BlockEntry<WindowBlock> customWindowBlock(String name, Supplier<? extends ItemLike> ingredient,
-		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType) {
+		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, Supplier<MaterialColor> color) {
 		NonNullFunction<String, ResourceLocation> end_texture = n -> Create.asResource(palettesDir() + name + "_end");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
-		return windowBlock(name, ingredient, ct, renderType, end_texture, side_texture);
+		return windowBlock(name, ingredient, ct, renderType, end_texture, side_texture, color);
 	}
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType, Block planksBlock,
@@ -78,13 +79,14 @@ public class WindowGen {
 		NonNullFunction<String, ResourceLocation> end_texture =
 			$ -> new ResourceLocation("block/" + woodName + "_planks");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
-		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType, end_texture,
-			side_texture);
+		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType,
+			end_texture, side_texture, planksBlock::defaultMaterialColor);
 	}
 
 	public static BlockEntry<WindowBlock> windowBlock(String name, Supplier<? extends ItemLike> ingredient,
 		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType,
-		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture) {
+		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture,
+		Supplier<MaterialColor> color) {
 		return REGISTRATE.block(name, WindowBlock::new)
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
@@ -97,6 +99,7 @@ public class WindowGen {
 				.save(p::accept))
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
+			.properties(p -> p.color(color.get()))
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), sideTexture.apply(c.getName()), endTexture.apply(c.getName()))))
@@ -105,10 +108,11 @@ public class WindowGen {
 			.register();
 	}
 
-	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name, Supplier<ConnectedTextureBehaviour> behaviour) {
+	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name,
+		Supplier<ConnectedTextureBehaviour> behaviour) {
 		return REGISTRATE.block(name, ConnectedGlassBlock::new)
 			.onRegister(connectedTextures(behaviour))
-			.addLayer(() -> RenderType::translucent)
+			.addLayer(() -> RenderType::cutout)
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
@@ -128,7 +132,7 @@ public class WindowGen {
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + "framed_glass");
 		ResourceLocation itemSideTexture = Create.asResource(palettesDir() + name);
 		ResourceLocation topTexture = Create.asResource(palettesDir() + "framed_glass_pane_top");
-		Supplier<Supplier<RenderType>> renderType = () -> RenderType::translucent;
+		Supplier<Supplier<RenderType>> renderType = () -> RenderType::cutoutMipped;
 		return connectedGlassPane(name, parent, ctshift, sideTexture, itemSideTexture, topTexture, renderType);
 	}
 
@@ -150,8 +154,8 @@ public class WindowGen {
 		String name = woodName + "_window";
 		ResourceLocation topTexture = new ResourceLocation("block/" + woodName + "_planks");
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + name);
-		return connectedGlassPane(name, parent, () -> AllSpriteShifts.getWoodenWindow(woodType), sideTexture, sideTexture,
-			topTexture, renderType);
+		return connectedGlassPane(name, parent, () -> AllSpriteShifts.getWoodenWindow(woodType), sideTexture,
+			sideTexture, topTexture, renderType);
 	}
 
 	public static BlockEntry<GlassPaneBlock> standardGlassPane(String name, Supplier<? extends Block> parent,
@@ -203,6 +207,8 @@ public class WindowGen {
 			.onRegister(connectedTextures)
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS_PANE)
+			.properties(p -> p.color(parent.get()
+				.defaultMaterialColor()))
 			.blockstate(stateProvider)
 			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 16)
 				.pattern("###")

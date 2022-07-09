@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
+import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -200,15 +200,12 @@ public class BlockHelper {
 		int idx = chunk.getSectionIndex(target.getY());
 		LevelChunkSection chunksection = chunk.getSection(idx);
 		if (chunksection == null) {
-			chunksection = new LevelChunkSection(chunk.getSectionYFromSectionIndex(idx),
-					world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY));
+			chunksection = new LevelChunkSection(chunk.getSectionYFromSectionIndex(idx), world.registryAccess()
+				.registryOrThrow(Registry.BIOME_REGISTRY));
 			chunk.getSections()[idx] = chunksection;
 		}
-		BlockState old = chunksection.setBlockState(
-				SectionPos.sectionRelative(target.getX()),
-				SectionPos.sectionRelative(target.getY()),
-				SectionPos.sectionRelative(target.getZ()),
-				state);
+		BlockState old = chunksection.setBlockState(SectionPos.sectionRelative(target.getX()),
+			SectionPos.sectionRelative(target.getY()), SectionPos.sectionRelative(target.getZ()), state);
 		chunk.setUnsaved(true);
 		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
@@ -219,6 +216,8 @@ public class BlockHelper {
 
 	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,
 		@Nullable CompoundTag data) {
+		BlockEntity existingTile = world.getBlockEntity(target);
+
 		// Piston
 		if (state.hasProperty(BlockStateProperties.EXTENDED))
 			state = state.setValue(BlockStateProperties.EXTENDED, Boolean.FALSE);
@@ -234,10 +233,7 @@ public class BlockHelper {
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
 
 		if (world.dimensionType()
-			.ultraWarm()
-			&& state.getFluidState()
-				.getType()
-				.is(FluidTags.WATER)) {
+			.ultraWarm() && state.getFluidState().is(FluidTags.WATER)) {
 			int i = target.getX();
 			int j = target.getY();
 			int k = target.getZ();
@@ -259,6 +255,14 @@ public class BlockHelper {
 		}
 
 		if (data != null) {
+			if (existingTile instanceof IMergeableTE mergeable) {
+				BlockEntity loaded = BlockEntity.loadStatic(target, state, data);
+				if (existingTile.getType()
+					.equals(loaded.getType())) {
+					mergeable.accept(loaded);
+					return;
+				}
+			}
 			BlockEntity tile = world.getBlockEntity(target);
 			if (tile != null) {
 				data.putInt("x", target.getX());
@@ -280,7 +284,7 @@ public class BlockHelper {
 	public static double getBounceMultiplier(Block block) {
 		if (block instanceof SlimeBlock)
 			return 0.8D;
-		if (block instanceof BedBlock || block instanceof SeatBlock)
+		if (block instanceof BedBlock)
 			return 0.66 * 0.8D;
 		return 0;
 	}

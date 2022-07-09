@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AssemblyException extends Exception {
@@ -45,13 +45,12 @@ public class AssemblyException extends Exception {
 	}
 
 	public AssemblyException(String langKey, Object... objects) {
-		this(new TranslatableComponent("create.gui.assembly.exception." + langKey, objects));
+		this(Lang.translateDirect("gui.assembly.exception." + langKey, objects));
 	}
 
 	public static AssemblyException unmovableBlock(BlockPos pos, BlockState state) {
 		AssemblyException e = new AssemblyException("unmovableBlock", pos.getX(), pos.getY(), pos.getZ(),
-			new TranslatableComponent(state.getBlock()
-				.getDescriptionId()));
+			state.getBlock().getName());
 		e.position = pos;
 		return e;
 	}
@@ -73,7 +72,7 @@ public class AssemblyException extends Exception {
 	public static AssemblyException noPistonPoles() {
 		return new AssemblyException("noPistonPoles");
 	}
-
+	
 	public static AssemblyException notEnoughSails(int sails) {
 		return new AssemblyException("not_enough_sails", sails, AllConfigs.SERVER.kinetics.minimumWindmillSails.get());
 	}

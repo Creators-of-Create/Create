@@ -1,0 +1,31 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create:block/nixie_tube"
+	},
+	"elements": [
+		{
+			"from": [1.5, 3, 6.5],
+			"to": [6.5, 11, 7.5],
+			"faces": {
+				"north": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"up": {"uv": [7.5, 13.25, 7.25, 15.75], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"from": [9.5, 3, 6.5],
+			"to": [14.5, 11, 7.5],
+			"faces": {
+				"north": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [7.5, 13.25, 11.5, 15.75], "rotation": 90, "texture": "#1"},
+				"up": {"uv": [7.5, 13.25, 7.25, 15.75], "rotation": 90, "texture": "#1"}
+			}
+		}
+	]
+}

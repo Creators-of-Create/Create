@@ -5,9 +5,11 @@ import java.util.List;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,6 +35,7 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 		isRinging = true;
 		ringingTicks = 0;
 		ringDirection = direction;
+		sendData();
 		return true;
 	};
 
@@ -48,6 +51,24 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 			isRinging = false;
 			ringingTicks = 0;
 		}
+	}
+	
+	@Override
+	protected void write(CompoundTag tag, boolean clientPacket) {
+		super.write(tag, clientPacket);
+		if (!clientPacket || ringingTicks != 0 || !isRinging)
+			return;
+		NBTHelper.writeEnum(tag, "Ringing", ringDirection);
+	}
+	
+	@Override
+	protected void read(CompoundTag tag, boolean clientPacket) {
+		super.read(tag, clientPacket);
+		if (!clientPacket || !tag.contains("Ringing"))
+			return;
+		ringDirection = NBTHelper.readEnum(tag, "Ringing", Direction.class);
+		ringingTicks = 0;
+		isRinging = true;
 	}
 
 	@OnlyIn(Dist.CLIENT)

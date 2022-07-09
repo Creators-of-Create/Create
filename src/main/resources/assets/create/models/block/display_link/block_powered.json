@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/display_link/block",
+	"textures": {
+		"3": "create:block/display_link_side_powered"
+	}
+}

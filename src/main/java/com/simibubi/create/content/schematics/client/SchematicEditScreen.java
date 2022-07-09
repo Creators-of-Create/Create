@@ -31,8 +31,8 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180", "cw270");
 	private final List<Component> mirrorOptions =
 		Lang.translatedOptions("schematic.mirror", "none", "leftRight", "frontBack");
-	private final Component rotationLabel = Lang.translate("schematic.rotation");
-	private final Component mirrorLabel = Lang.translate("schematic.mirror");
+	private final Component rotationLabel = Lang.translateDirect("schematic.rotation");
+	private final Component mirrorLabel = Lang.translateDirect("schematic.mirror");
 
 	private AllGuiTextures background;
 

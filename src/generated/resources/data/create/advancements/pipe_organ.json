@@ -1,0 +1,30 @@
+{
+  "parent": "create:backtank",
+  "display": {
+    "icon": {
+      "item": "create:steam_whistle"
+    },
+    "title": {
+      "translate": "advancement.create.pipe_organ"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.pipe_organ.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:pipe_organ_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

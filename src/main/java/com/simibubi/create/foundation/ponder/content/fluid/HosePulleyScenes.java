@@ -152,6 +152,7 @@ public class HosePulleyScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.centerOf(util.grid.at(3, 1, 1)));
 		scene.idle(40);
+		scene.markAsFinished();
 
 	}
 

@@ -27,7 +27,7 @@ public class DynamicBrush extends Brush {
 	}
 
 	Component getParamLabel(int paramIndex) {
-		return Lang.translate("generic.range");
+		return Lang.translateDirect("generic.range");
 	}
 
 	@Override

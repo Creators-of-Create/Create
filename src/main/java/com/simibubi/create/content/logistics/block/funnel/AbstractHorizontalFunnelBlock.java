@@ -33,6 +33,7 @@ public abstract class AbstractHorizontalFunnelBlock extends AbstractFunnelBlock 
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
 		return p_185471_1_.rotate(p_185471_2_.getRotation(p_185471_1_.getValue(HORIZONTAL_FACING)));
 	}

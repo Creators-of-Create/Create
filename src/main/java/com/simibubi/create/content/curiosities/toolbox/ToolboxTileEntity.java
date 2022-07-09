@@ -22,7 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -380,6 +379,11 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		return uniqueId;
 	}
 
+	public boolean isFullyInitialized() {
+		// returns true when uniqueId has been initialized
+		return uniqueId != null;
+	}
+
 	public void setCustomName(Component customName) {
 		this.customName = customName;
 	}
@@ -387,9 +391,9 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	@Override
 	public Component getDisplayName() {
 		return customName != null ? customName
-			: new TranslatableComponent(AllBlocks.TOOLBOXES.get(getColor())
+			: AllBlocks.TOOLBOXES.get(getColor())
 				.get()
-				.getDescriptionId());
+				.getName();
 	}
 
 	@Override

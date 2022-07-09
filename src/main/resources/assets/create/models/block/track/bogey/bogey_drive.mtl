@@ -1,0 +1,14 @@
+# Blender MTL File: 'Bogey.blend'
+# Material Count: 4
+
+newmtl Belts
+map_Kd #belt
+
+newmtl Bogey_Body
+map_Kd #bogey
+
+newmtl Bogey_Piston
+map_Kd #piston
+
+newmtl wheel_Large
+map_Kd #wheel

@@ -31,7 +31,8 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(te.getLevel()))
+			return;
 
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
@@ -44,7 +45,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 
 			float horizontalAngle = AngleHelper.horizontalAngle(direction.getOpposite());
 			float f = te.flaps.get(direction)
-				.get(partialTicks);
+				.getValue(partialTicks);
 
 			ms.pushPose();
 			msr.centre()

@@ -1,0 +1,30 @@
+{
+  "parent": "create:brass",
+  "display": {
+    "icon": {
+      "item": "create:crushing_wheel"
+    },
+    "title": {
+      "translate": "advancement.create.crusher_maxed_0000"
+    },
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.crusher_maxed_0000.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:crusher_maxed_0000_builtin",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

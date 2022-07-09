@@ -129,6 +129,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			Vec3 lookVec = player.getLookAngle();
 			Vec3 motion = lookVec.add(correction)
 				.normalize()
+				.scale(2)
 				.scale(projectileType.getVelocityMultiplier());
 
 			float soundPitch = projectileType.getSoundPitch() + (Create.RANDOM.nextFloat() - .5f) / 4f;
@@ -242,13 +243,13 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			reloadTicks = reloadTicks.withStyle(darkGreen);
 
 			tooltip.add(spacing.plainCopy()
-				.append(Lang.translate(_attack, damage)
+				.append(Lang.translateDirect(_attack, damage)
 					.withStyle(darkGreen)));
 			tooltip.add(spacing.plainCopy()
-				.append(Lang.translate(_reload, reloadTicks)
+				.append(Lang.translateDirect(_reload, reloadTicks)
 					.withStyle(darkGreen)));
 			tooltip.add(spacing.plainCopy()
-				.append(Lang.translate(_knockback, knockback)
+				.append(Lang.translateDirect(_knockback, knockback)
 					.withStyle(darkGreen)));
 		});
 		super.appendHoverText(stack, world, tooltip, flag);

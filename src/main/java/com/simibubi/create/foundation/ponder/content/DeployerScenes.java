@@ -485,6 +485,7 @@ public class DeployerScenes {
 			.text("Thus, a negative pulse can be used to trigger exactly one activation cycle");
 		scene.idle(31);
 		scene.world.moveDeployer(deployerPos, -1, 30);
+		scene.idle(40);
 
 	}
 

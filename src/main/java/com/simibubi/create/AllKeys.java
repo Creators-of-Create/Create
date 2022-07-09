@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -58,9 +60,15 @@ public enum AllKeys {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(Minecraft.getInstance()
+		return InputConstants.isKeyDown(Minecraft.getInstance()
 			.getWindow()
-			.getWindow(), key) != 0;
+			.getWindow(), key);
+	}
+
+	public static boolean isMouseButtonDown(int button) {
+		return GLFW.glfwGetMouseButton(Minecraft.getInstance()
+			.getWindow()
+			.getWindow(), button) == 1;
 	}
 
 	public static boolean ctrlDown() {

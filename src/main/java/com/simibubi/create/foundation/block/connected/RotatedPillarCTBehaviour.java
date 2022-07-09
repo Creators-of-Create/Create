@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.block.connected;
 import com.simibubi.create.content.palettes.ConnectedPillarBlock;
 import com.simibubi.create.content.palettes.LayeredBlock;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -100,9 +101,9 @@ public class RotatedPillarCTBehaviour extends HorizontalCTBehaviour {
 	}
 
 	@Override
-	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
-		return super.get(state,
-			direction.getAxis() == state.getValue(LayeredBlock.AXIS) ? Direction.UP : Direction.SOUTH);
+	public CTSpriteShiftEntry getShift(BlockState state, Direction direction, TextureAtlasSprite sprite) {
+		return super.getShift(state,
+			direction.getAxis() == state.getValue(LayeredBlock.AXIS) ? Direction.UP : Direction.SOUTH, sprite);
 	}
 
 }

@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "create:block/blaze_idle",
+		"particle": "create:block/blaze_idle"
+	},
+	"elements": [
+		{
+			"name": "Blaze 4",
+			"from": [4, 6, 4],
+			"to": [12, 14, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 6, 6]},
+			"faces": {
+				"north": {"uv": [8, 0, 16, 8], "texture": "#2"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#2"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#2"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#2"},
+				"up": {"uv": [0, 8, 8, 16], "texture": "#2"},
+				"down": {"uv": [8, 8, 16, 16], "texture": "#2"}
+			}
+		}
+	]
+}

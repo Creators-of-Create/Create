@@ -255,10 +255,10 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		ArrayList<ItemStack> reuiredItems = new ArrayList<>();
-		reuiredItems.add(new ItemStack(getRailItem(state)));
-		reuiredItems.add(new ItemStack(asItem()));
-		return new ItemRequirement(ItemUseType.CONSUME, reuiredItems);
+		ArrayList<ItemStack> requiredItems = new ArrayList<>();
+		requiredItems.add(new ItemStack(getRailItem(state)));
+		requiredItems.add(new ItemStack(asItem()));
+		return new ItemRequirement(ItemUseType.CONSUME, requiredItems);
 	}
 
 	@Override
@@ -334,6 +334,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public BlockState rotate(BlockState state, Rotation rotation) {
 		if (rotation == Rotation.NONE)
 			return state;

@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -147,7 +148,7 @@ public class BuiltinPotatoProjectileTypes {
 			.knockback(0.1f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHit(potion(MobEffects.MOVEMENT_SLOWDOWN, 2,160, true))
+			.onEntityHit(potion(MobEffects.MOVEMENT_SLOWDOWN, 2, 160, true))
 			.registerAndAssign(AllItems.HONEYED_APPLE.get()),
 
 		GOLDEN_APPLE = create("golden_apple").damage(1)
@@ -160,8 +161,7 @@ public class BuiltinPotatoProjectileTypes {
 				Entity entity = ray.getEntity();
 				Level world = entity.level;
 
-				if (!(entity instanceof ZombieVillager)
-					|| !((ZombieVillager) entity).hasEffect(MobEffects.WEAKNESS))
+				if (!(entity instanceof ZombieVillager) || !((ZombieVillager) entity).hasEffect(MobEffects.WEAKNESS))
 					return foodEffects(Foods.GOLDEN_APPLE, false).test(ray);
 				if (world.isClientSide)
 					return false;
@@ -261,7 +261,8 @@ public class BuiltinPotatoProjectileTypes {
 
 	private static Predicate<EntityHitResult> setFire(int seconds) {
 		return ray -> {
-			ray.getEntity().setSecondsOnFire(seconds);
+			ray.getEntity()
+				.setSecondsOnFire(seconds);
 			return false;
 		};
 	}
@@ -294,8 +295,10 @@ public class BuiltinPotatoProjectileTypes {
 	}
 
 	private static void applyEffect(LivingEntity entity, MobEffectInstance effect) {
-		if (effect.getEffect().isInstantenous())
-			effect.getEffect().applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
+		if (effect.getEffect()
+			.isInstantenous())
+			effect.getEffect()
+				.applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
 		else
 			entity.addEffect(effect);
 	}
@@ -306,7 +309,7 @@ public class BuiltinPotatoProjectileTypes {
 				return true;
 
 			BlockPos hitPos = ray.getBlockPos();
-			if (!world.isAreaLoaded(hitPos, 1))
+			if (world instanceof Level l && !l.isLoaded(hitPos))
 				return true;
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
@@ -319,18 +322,20 @@ public class BuiltinPotatoProjectileTypes {
 			BlockState blockState = world.getBlockState(hitPos);
 			if (!blockState.canSustainPlant(world, hitPos, face, (IPlantable) cropBlock.get()))
 				return false;
-			world.setBlock(placePos, cropBlock.get().defaultBlockState(), 3);
+			world.setBlock(placePos, cropBlock.get()
+				.defaultBlockState(), 3);
 			return true;
 		};
 	}
 
-	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
+	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(
+		IRegistryDelegate<? extends Block> block) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
 
 			BlockPos hitPos = ray.getBlockPos();
-			if (!world.isAreaLoaded(hitPos, 1))
+			if (world instanceof Level l && !l.isLoaded(hitPos))
 				return true;
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
@@ -340,15 +345,16 @@ public class BuiltinPotatoProjectileTypes {
 				return false;
 
 			if (face == Direction.UP) {
-				world.setBlock(placePos, block.get().defaultBlockState(), 3);
-			} else if (world instanceof Level) {
+				world.setBlock(placePos, block.get()
+					.defaultBlockState(), 3);
+			} else if (world instanceof Level level) {
 				double y = ray.getLocation().y - 0.5;
 				if (!world.isEmptyBlock(placePos.above()))
 					y = Math.min(y, placePos.getY());
 				if (!world.isEmptyBlock(placePos.below()))
 					y = Math.max(y, placePos.getY());
 
-				FallingBlockEntity falling = new FallingBlockEntity((Level) world, placePos.getX() + 0.5, y,
+				FallingBlockEntity falling = FallingBlockEntityAccessor.create$callInit(level, placePos.getX() + 0.5, y,
 					placePos.getZ() + 0.5, block.get().defaultBlockState());
 				falling.time = 1;
 				world.addFreshEntity(falling);
@@ -373,18 +379,23 @@ public class BuiltinPotatoProjectileTypes {
 			double entityZ = livingEntity.getZ();
 
 			for (int teleportTry = 0; teleportTry < 16; ++teleportTry) {
-				double teleportX = entityX + (livingEntity.getRandom().nextDouble() - 0.5D) * teleportDiameter;
-				double teleportY = Mth.clamp(entityY + (livingEntity.getRandom().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
-				double teleportZ = entityZ + (livingEntity.getRandom().nextDouble() - 0.5D) * teleportDiameter;
+				double teleportX = entityX + (livingEntity.getRandom()
+					.nextDouble() - 0.5D) * teleportDiameter;
+				double teleportY = Mth.clamp(entityY + (livingEntity.getRandom()
+					.nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
+				double teleportZ = entityZ + (livingEntity.getRandom()
+					.nextDouble() - 0.5D) * teleportDiameter;
 
-				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
+				EntityTeleportEvent.ChorusFruit event =
+					ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
 				if (event.isCanceled())
 					return false;
 				if (livingEntity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
 
-					SoundEvent soundevent = livingEntity instanceof Fox ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
+					SoundEvent soundevent =
+						livingEntity instanceof Fox ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
 					world.playSound(null, entityX, entityY, entityZ, soundevent, SoundSource.PLAYERS, 1.0F, 1.0F);
 					livingEntity.playSound(soundevent, 1.0F, 1.0F);
 					livingEntity.setDeltaMovement(Vec3.ZERO);

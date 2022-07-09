@@ -25,7 +25,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
 		LazyOptional<IItemHandlerModifiable> oldCap = capability;
-		capability = LazyOptional.of(() -> new InterfaceItemHandler(contraption.inventory));
+		capability = LazyOptional.of(() -> new InterfaceItemHandler(contraption.getSharedInventory()));
 		oldCap.invalidate();
 		super.startTransferringTo(contraption, distance);
 	}
@@ -37,7 +37,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 		oldCap.invalidate();
 		super.stopTransferring();
 	}
-	
+
 	private LazyOptional<IItemHandlerModifiable> createEmptyHandler() {
 		return LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
 	}

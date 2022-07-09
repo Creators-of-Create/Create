@@ -1,0 +1,102 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"1": "create:block/engine",
+		"2": "create:block/copper_redstone_plate",
+		"particle": "create:block/whistle_particle"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [1, 0, 1],
+			"to": [15, 3, 15],
+			"faces": {
+				"north": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"east": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"south": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"west": {"uv": [1, 13, 15, 16], "texture": "#2"},
+				"up": {"uv": [1, 0, 15, 14], "texture": "#2"},
+				"down": {"uv": [8.5, 8.5, 15.5, 15.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Pipe Large",
+			"from": [4, 3, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
+				"east": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
+				"south": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
+				"west": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
+				"up": {"uv": [7, 0.5, 11, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Whistle Large Base",
+			"from": [3, 4, 3],
+			"to": [13, 16, 13],
+			"faces": {
+				"north": {"uv": [4.75, 0.5, 7.25, 3.5], "texture": "#0"},
+				"east": {"uv": [8.75, 0.5, 11.25, 3.5], "texture": "#0"},
+				"south": {"uv": [8.75, 0.5, 11.25, 3.5], "texture": "#0"},
+				"west": {"uv": [8.75, 0.5, 11.25, 3.5], "texture": "#0"},
+				"down": {"uv": [13, 13, 15, 15], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Whistle Large Cap",
+			"from": [2, 16, 2],
+			"to": [14, 18, 14],
+			"faces": {
+				"north": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"east": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"south": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"west": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0", "cullface": "up"},
+				"up": {"uv": [0.5, 12.5, 3.5, 15.5], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [12.5, 12.5, 15.5, 15.5], "texture": "#0", "cullface": "up"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Bases",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				{
+					"name": "Base Flat",
+					"origin": [0, 0, 0],
+					"color": 3,
+					"children": [0, 1]
+				}
+			]
+		},
+		{
+			"name": "Whistle Large",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [2]
+		},
+		{
+			"name": "large_top_rim",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Whistle Large",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [
+						{
+							"name": "Extension",
+							"origin": [8, 8, 8],
+							"color": 0,
+							"children": [3]
+						}
+					]
+				}
+			]
+		}
+	]
+}

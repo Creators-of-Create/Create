@@ -5,6 +5,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 public class PSIActorInstance extends ActorInstance {
 
@@ -22,9 +23,9 @@ public class PSIActorInstance extends ActorInstance {
 
 	@Override
 	public void beginFrame() {
-		PortableStorageInterfaceTileEntity psi = PortableStorageInterfaceRenderer.getTargetPSI(context);
-		instance.tick(psi != null && psi.isConnected());
-		instance.beginFrame(psi == null ? 0f : psi.getExtensionDistance(AnimationTickHolder.getPartialTicks()));
+		LerpedFloat lf = PortableStorageInterfaceMovement.getAnimation(context);
+		instance.tick(lf.settled());
+		instance.beginFrame(lf.getValue(AnimationTickHolder.getPartialTicks()));
 	}
 
 }

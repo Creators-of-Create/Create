@@ -22,7 +22,6 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
@@ -130,7 +129,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+		Player player) {
 		return AllItems.BELT_CONNECTOR.asStack();
 	}
 
@@ -249,7 +249,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
-		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
+		boolean isDye = heldItem.is(Tags.Items.DYES);
 		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
 			.getFirst()
 			.getFluid()
@@ -304,7 +304,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
 			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.BRASS));
 			return InteractionResult.SUCCESS;
 		}
@@ -312,7 +311,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
 			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.ANDESITE));
 			return InteractionResult.SUCCESS;
 		}
@@ -414,7 +412,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos nextSegmentPosition = nextSegmentPosition(currentState, currentPos, false);
 			if (nextSegmentPosition == null)
 				break;
-			if (!world.isAreaLoaded(nextSegmentPosition, 0))
+			if (!world.isLoaded(nextSegmentPosition))
 				return;
 			currentPos = nextSegmentPosition;
 		}
@@ -488,10 +486,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 					belt.getInventory()
 						.ejectAll();
 
-				belt.setRemoved();
 				hasPulley = belt.hasPulley();
 			}
 
+			world.removeBlockEntity(currentPos);
 			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()
 				.setValue(BlockStateProperties.AXIS, getRotationAxis(currentState));
 			world.setBlock(currentPos, hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), 3);
@@ -603,7 +601,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
 		@Override
-		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos, int progress, BlockState blockState) {
+		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
+			int progress, BlockState blockState) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof BeltTileEntity belt) {
 				for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {

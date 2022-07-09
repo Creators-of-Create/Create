@@ -14,7 +14,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.content.schematics.MaterialChecklist;
@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -358,7 +359,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		// Check block
-		if (!getLevel().isAreaLoaded(printer.getCurrentTarget(), 0)) {
+		if (!getLevel().isLoaded(printer.getCurrentTarget())) {
 			positionNotLoaded = true;
 			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;
@@ -382,7 +383,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		List<ItemRequirement.StackRequirement> requiredItems = requirement.getRequiredItems();
 		if (!requirement.isEmpty()) {
 			for (ItemRequirement.StackRequirement required : requiredItems) {
-				if (!grabItemsFromAttachedInventories(required.item, required.usage, true)) {
+				if (!grabItemsFromAttachedInventories(required, true)) {
 					if (skipMissing) {
 						statusMsg = "skipping";
 						blockSkipped = true;
@@ -393,7 +394,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 						return;
 					}
 
-					missingItem = required.item;
+					missingItem = required.stack;
 					state = State.PAUSED;
 					statusMsg = "missingBlock";
 					return;
@@ -401,12 +402,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			}
 
 			for (ItemRequirement.StackRequirement required : requiredItems)
-				grabItemsFromAttachedInventories(required.item, required.usage, false);
+				grabItemsFromAttachedInventories(required, false);
 		}
 
 		// Success
 		state = State.RUNNING;
-		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
+		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).stack;
 		printer.handleCurrentTarget((target, blockState, tile) -> {
 			// Launch block
 			statusMsg = blockState.getBlock() != Blocks.AIR ? "placing" : "clearing";
@@ -475,11 +476,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
 	}
 
-	protected boolean grabItemsFromAttachedInventories(ItemStack required, ItemUseType usage, boolean simulate) {
+	protected boolean grabItemsFromAttachedInventories(ItemRequirement.StackRequirement required, boolean simulate) {
 		if (hasCreativeCrate)
 			return true;
 
 		attachedInventories.removeIf(cap -> !cap.isPresent());
+
+		ItemUseType usage = required.usage;
 
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
@@ -487,7 +490,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
 				for (int slot = 0; slot < iItemHandler.getSlots(); slot++) {
 					ItemStack extractItem = iItemHandler.extractItem(slot, 1, true);
-					if (!ItemRequirement.validate(required, extractItem))
+					if (!required.matches(extractItem))
 						continue;
 					if (!extractItem.isDamageableItem())
 						continue;
@@ -507,36 +510,36 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 					return true;
 				}
 			}
+
+			return false;
 		}
 
 		// Find and remove
 		boolean success = false;
-		if (usage == ItemUseType.CONSUME) {
-			int amountFound = 0;
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				amountFound += ItemHelper
-					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-						required.getCount(), true)
-					.getCount();
+		int amountFound = 0;
+		for (LazyOptional<IItemHandler> cap : attachedInventories) {
+			IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
+			amountFound += ItemHelper
+				.extract(iItemHandler, required::matches, ExtractionCountMode.UPTO,
+					required.stack.getCount(), true)
+				.getCount();
 
-				if (amountFound < required.getCount())
-					continue;
+			if (amountFound < required.stack.getCount())
+				continue;
 
-				success = true;
-				break;
-			}
+			success = true;
+			break;
 		}
 
 		if (!simulate && success) {
-			int amountFound = 0;
+			amountFound = 0;
 			for (LazyOptional<IItemHandler> cap : attachedInventories) {
 				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
 				amountFound += ItemHelper
-					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-						required.getCount(), false)
+					.extract(iItemHandler, required::matches, ExtractionCountMode.UPTO,
+						required.stack.getCount(), false)
 					.getCount();
-				if (amountFound < required.getCount())
+				if (amountFound < required.stack.getCount())
 					continue;
 				break;
 			}
@@ -593,7 +596,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	protected boolean shouldIgnoreBlockState(BlockState state, BlockEntity te) {
-		// Block doesnt have a mapping (Water, lava, etc)
+		// Block doesn't have a mapping (Water, lava, etc)
 		if (state.getBlock() == Blocks.STRUCTURE_VOID)
 			return true;
 
@@ -603,7 +606,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (requirement.isInvalid())
 			return false;
 
-		// Block doesnt need to be placed twice (Doors, beds, double plants)
+		// Block doesn't need to be placed twice (Doors, beds, double plants)
 		if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
 			&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
@@ -612,6 +615,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;
+		if (AllBlocks.BELT.has(state))
+			return state.getValue(BeltBlock.PART) == BeltPart.MIDDLE;
 
 		return false;
 	}
@@ -687,13 +692,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	public static BlockState stripBeltIfNotLast(BlockState blockState) {
+		BeltPart part = blockState.getValue(BeltBlock.PART);
+		if (part == BeltPart.MIDDLE)
+			return Blocks.AIR.defaultBlockState();
+
 		// is highest belt?
 		boolean isLastSegment = false;
 		Direction facing = blockState.getValue(BeltBlock.HORIZONTAL_FACING);
 		BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
 		boolean positive = facing.getAxisDirection() == AxisDirection.POSITIVE;
-		boolean start = blockState.getValue(BeltBlock.PART) == BeltPart.START;
-		boolean end = blockState.getValue(BeltBlock.PART) == BeltPart.END;
+		boolean start = part == BeltPart.START;
+		boolean end = part == BeltPart.END;
 
 		switch (slope) {
 		case DOWNWARD:
@@ -702,17 +711,16 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		case UPWARD:
 			isLastSegment = end;
 			break;
-		case HORIZONTAL:
-		case VERTICAL:
 		default:
 			isLastSegment = positive && end || !positive && start;
 		}
-		if (!isLastSegment)
-			blockState = (blockState.getValue(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.defaultBlockState()
-				: AllBlocks.SHAFT.getDefaultState()
-					.setValue(AbstractShaftBlock.AXIS, facing.getClockWise()
-						.getAxis());
-		return blockState;
+		if (isLastSegment)
+			return blockState;
+
+		return AllBlocks.SHAFT.getDefaultState()
+			.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
+				facing.getClockWise()
+					.getAxis());
 	}
 
 	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity tile) {
@@ -720,7 +728,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			blockState = stripBeltIfNotLast(blockState);
 			if (tile instanceof BeltTileEntity && AllBlocks.BELT.has(blockState))
 				launchBelt(target, blockState, ((BeltTileEntity) tile).beltLength);
-			else
+			else if (blockState != Blocks.AIR.defaultBlockState())
 				launchBlock(target, icon, blockState, null);
 		} else {
 			CompoundTag data = null;
@@ -774,7 +782,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translate("gui.schematicannon.title");
+		return Lang.translateDirect("gui.schematicannon.title");
 	}
 
 	public void updateChecklist() {

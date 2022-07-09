@@ -86,8 +86,8 @@ public class ClientSchematicLoader {
 		if (size > maxSize * 1000) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
-				player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUUID());
-				player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUUID());
+				player.sendMessage(Lang.translateDirect("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUUID());
+				player.sendMessage(Lang.translateDirect("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUUID());
 			}
 			return false;
 		}

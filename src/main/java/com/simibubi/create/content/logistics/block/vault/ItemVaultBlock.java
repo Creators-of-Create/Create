@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -85,7 +86,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 				.getBlockEntity(context.getClickedPos());
 			if (te instanceof ItemVaultTileEntity) {
 				ItemVaultTileEntity vault = (ItemVaultTileEntity) te;
-				ItemVaultConnectivityHandler.splitVault(vault);
+				ConnectivityHandler.splitMulti(vault);
 				vault.removeController(true);
 			}
 			state = state.setValue(LARGE, false);
@@ -100,10 +101,10 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 			BlockEntity te = world.getBlockEntity(pos);
 			if (!(te instanceof ItemVaultTileEntity))
 				return;
-			ItemVaultTileEntity tankTE = (ItemVaultTileEntity) te;
-			ItemHelper.dropContents(world, pos, tankTE.inventory);
+			ItemVaultTileEntity vaultTE = (ItemVaultTileEntity) te;
+			ItemHelper.dropContents(world, pos, vaultTE.inventory);
 			world.removeBlockEntity(pos);
-			ItemVaultConnectivityHandler.splitVault(tankTE);
+			ConnectivityHandler.splitMulti(vaultTE);
 		}
 	}
 

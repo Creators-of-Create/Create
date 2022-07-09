@@ -1,13 +1,14 @@
 {
-  "parent": "create:its_alive",
+  "parent": "create:windmill",
   "display": {
     "icon": {
-      "item": "create:large_cogwheel"
+      "item": "create:cogwheel"
     },
     "title": {
       "translate": "advancement.create.shifting_gears"
     },
     "description": {
+      "color": "#DBA213",
       "translate": "advancement.create.shifting_gears.desc"
     },
     "frame": "task",
@@ -17,7 +18,7 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:shifting_gears",
+      "trigger": "create:shifting_gears_builtin",
       "conditions": {}
     }
   },

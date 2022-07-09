@@ -1,6 +1,11 @@
 {
-	"parent": "create:block/blaze_burner/block_with_fire",
+	"parent": "block/block",
+	"loader": "forge:obj",
+	"flip-v": true,
+	"model": "create:models/block/blaze_burner/campfire.obj",
 	"textures": {
-		"fire": "block/soul_campfire_fire"
+		"0": "create:block/blaze_heater_brazier_soul",
+		"1": "block/soul_campfire_fire",
+		"particle": "create:block/dark_metal_block"
 	}
 }

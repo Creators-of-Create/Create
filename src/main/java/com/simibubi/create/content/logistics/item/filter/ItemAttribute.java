@@ -29,7 +29,11 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -53,7 +57,7 @@ public interface ItemAttribute {
 	static List<ItemAttribute> types = new ArrayList<>();
 
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
-	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
+	static ItemAttribute inTag = register(new InTag(ItemTags.LOGS));
 	static ItemAttribute inItemGroup = register(new InItemGroup(CreativeModeTab.TAB_MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
@@ -73,6 +77,13 @@ public interface ItemAttribute {
 		return attributeType;
 	}
 
+	static ItemAttribute fromNBT(CompoundTag nbt) {
+		for (ItemAttribute itemAttribute : types)
+			if (itemAttribute.canRead(nbt))
+				return itemAttribute.readNBT(nbt.getCompound(itemAttribute.getNBTKey()));
+		return null;
+	}
+
 	default boolean appliesTo(ItemStack stack, Level world) {
 		return appliesTo(stack);
 	}
@@ -83,27 +94,18 @@ public interface ItemAttribute {
 		return listAttributesOf(stack);
 	}
 
-	public List<ItemAttribute> listAttributesOf(ItemStack stack);
+	List<ItemAttribute> listAttributesOf(ItemStack stack);
 
-	public String getTranslationKey();
+	String getTranslationKey();
 
 	void writeNBT(CompoundTag nbt);
 
 	ItemAttribute readNBT(CompoundTag nbt);
 
-	public default void serializeNBT(CompoundTag nbt) {
+	default void serializeNBT(CompoundTag nbt) {
 		CompoundTag compound = new CompoundTag();
 		writeNBT(compound);
 		nbt.put(getNBTKey(), compound);
-	}
-
-	public static ItemAttribute fromNBT(CompoundTag nbt) {
-		for (ItemAttribute itemAttribute : types) {
-			if (!itemAttribute.canRead(nbt))
-				continue;
-			return itemAttribute.readNBT(nbt.getCompound(itemAttribute.getNBTKey()));
-		}
-		return null;
 	}
 
 	default Object[] getTranslationParameters() {
@@ -120,7 +122,7 @@ public interface ItemAttribute {
 
 	@OnlyIn(value = Dist.CLIENT)
 	default TranslatableComponent format(boolean inverted) {
-		return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+		return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 			getTranslationParameters());
 	}
 
@@ -129,14 +131,16 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isEdible),
-		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
+		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+			.isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		RENAMED(ItemStack::hasCustomHoverName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
-		EQUIPABLE(s -> s.getEquipmentSlot() != null),
+		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s)
+			.getType() != EquipmentSlot.Type.HAND),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		HAUNTABLE(InWorldProcessing::isHauntable),
@@ -165,7 +169,8 @@ public interface ItemAttribute {
 			return EnchantmentHelper.getEnchantments(s)
 				.entrySet()
 				.stream()
-				.anyMatch(e -> e.getKey().getMaxLevel() <= e.getValue());
+				.anyMatch(e -> e.getKey()
+					.getMaxLevel() <= e.getValue());
 		}
 
 		private StandardTraits(BiPredicate<ItemStack, Level> test) {
@@ -225,24 +230,20 @@ public interface ItemAttribute {
 
 	public static class InTag implements ItemAttribute {
 
-		public ResourceLocation tagName;
+		public TagKey<Item> tag;
 
-		public InTag(ResourceLocation tagName) {
-			this.tagName = tagName;
+		public InTag(TagKey<Item> tag) {
+			this.tag = tag;
 		}
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return stack.getItem()
-				.getTags()
-				.contains(tagName);
+			return stack.is(tag);
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			return stack.getItem()
-				.getTags()
-				.stream()
+			return stack.getTags()
 				.map(InTag::new)
 				.collect(Collectors.toList());
 		}
@@ -254,18 +255,18 @@ public interface ItemAttribute {
 
 		@Override
 		public Object[] getTranslationParameters() {
-			return new Object[] { "#" + tagName.toString() };
+			return new Object[] { "#" + tag.location() };
 		}
 
 		@Override
 		public void writeNBT(CompoundTag nbt) {
-			nbt.putString("space", tagName.getNamespace());
-			nbt.putString("path", tagName.getPath());
+			nbt.putString("space", tag.location().getNamespace());
+			nbt.putString("path", tag.location().getPath());
 		}
 
 		@Override
 		public ItemAttribute readNBT(CompoundTag nbt) {
-			return new InTag(new ResourceLocation(nbt.getString("space"), nbt.getString("path")));
+			return new InTag(ItemTags.create(new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
 		}
 
 	}
@@ -299,7 +300,7 @@ public interface ItemAttribute {
 		@Override
 		@OnlyIn(value = Dist.CLIENT)
 		public TranslatableComponent format(boolean inverted) {
-			return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+			return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 				group.getDisplayName());
 		}
 

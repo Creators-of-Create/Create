@@ -19,7 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -54,14 +54,14 @@ public abstract class ZapperItem extends Item {
 	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag() && stack.getTag()
 			.contains("BlockUsed")) {
-			String usedblock = NbtUtils.readBlockState(stack.getTag()
+			MutableComponent usedBlock = NbtUtils.readBlockState(stack.getTag()
 				.getCompound("BlockUsed"))
 				.getBlock()
-				.getDescriptionId();
+				.getName();
 			ItemDescription.add(tooltip,
-				Lang.translate("terrainzapper.usingBlock",
-					new TranslatableComponent(usedblock).withStyle(ChatFormatting.GRAY))
-					.withStyle(ChatFormatting.DARK_GRAY));
+				Lang.translateDirect("terrainzapper.usingBlock",
+					usedBlock.withStyle(ChatFormatting.GRAY))
+						.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 
@@ -147,8 +147,8 @@ public abstract class ZapperItem extends Item {
 			.add(0, player.getEyeHeight(), 0);
 		Vec3 range = player.getLookAngle()
 			.scale(getZappingRange(item));
-		BlockHitResult raytrace = world
-			.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
+		BlockHitResult raytrace =
+			world.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
 		BlockPos pos = raytrace.getBlockPos();
 		BlockState stateReplaced = world.getBlockState(pos);
 
@@ -180,7 +180,7 @@ public abstract class ZapperItem extends Item {
 	public Component validateUsage(ItemStack item) {
 		CompoundTag tag = item.getOrCreateTag();
 		if (!canActivateWithoutSelectedBlock(item) && !tag.contains("BlockUsed"))
-			return Lang.createTranslationTextComponent("terrainzapper.leftClickToSet");
+			return Lang.translateDirect("terrainzapper.leftClickToSet");
 		return null;
 	}
 

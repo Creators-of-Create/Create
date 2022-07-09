@@ -59,7 +59,7 @@ public class EjectorTargetHandler {
 
 		String key = "weighted_ejector.target_set";
 		ChatFormatting colour = ChatFormatting.GOLD;
-		player.displayClientMessage(Lang.translate(key)
+		player.displayClientMessage(Lang.translateDirect(key)
 			.withStyle(colour), true);
 		currentSelection = pos;
 		launcher = null;
@@ -101,7 +101,7 @@ public class EjectorTargetHandler {
 
 		Direction validTargetDirection = getValidTargetDirection(pos);
 		if (validTargetDirection == null) {
-			player.displayClientMessage(Lang.translate(key)
+			player.displayClientMessage(Lang.translateDirect(key)
 				.withStyle(colour), true);
 			currentItem = null;
 			currentSelection = null;
@@ -112,7 +112,7 @@ public class EjectorTargetHandler {
 		colour = ChatFormatting.GREEN;
 
 		player.displayClientMessage(
-			Lang.translate(key, currentSelection.getX(), currentSelection.getY(), currentSelection.getZ())
+			Lang.translateDirect(key, currentSelection.getX(), currentSelection.getY(), currentSelection.getZ())
 				.withStyle(colour),
 			true);
 
@@ -254,12 +254,12 @@ public class EjectorTargetHandler {
 			drawOutline(currentSelection);
 	}
 
-	private static void drawOutline(BlockPos selection) {
+	public static void drawOutline(BlockPos selection) {
 		Level world = Minecraft.getInstance().level;
-		if (currentSelection == null)
+		if (selection == null)
 			return;
 
-		BlockPos pos = currentSelection;
+		BlockPos pos = selection;
 		BlockState state = world.getBlockState(pos);
 		VoxelShape shape = state.getShape(world, pos);
 		AABB boundingBox = shape.isEmpty() ? new AABB(BlockPos.ZERO) : shape.bounds();

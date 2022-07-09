@@ -15,6 +15,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -73,8 +74,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			ItemStack insertItem = super.insertItem(slot, stack, simulate);
 			if (insertItem.getCount() != stack.getCount() && !simulate)
 				te.getLevel()
-					.playSound(null, te.getBlockPos(), SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f,
-						.5f);
+					.playSound(null, te.getBlockPos(), SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .5f);
 			return insertItem;
 		}
 
@@ -83,7 +83,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	protected Inventory inventory;
 	protected GroupedItems groupedItems = new GroupedItems();
 	protected ConnectedInput input = new ConnectedInput();
-	protected LazyOptional<IItemHandler> invSupplier = LazyOptional.of(() -> input.getItemHandler(level, worldPosition));
+	protected LazyOptional<IItemHandler> invSupplier =
+		LazyOptional.of(() -> input.getItemHandler(level, worldPosition));
 	protected boolean reRender;
 	protected Phase phase;
 	protected int countDown;
@@ -116,6 +117,17 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			.require(AllItems.WRENCH.get());
 		behaviours.add(inserting);
 		behaviours.add(connectivity);
+		registerAwardables(behaviours, AllAdvancements.CRAFTER, AllAdvancements.CRAFTER_LAZY);
+	}
+
+	@Override
+	public void onSpeedChanged(float previousSpeed) {
+		super.onSpeedChanged(previousSpeed);
+		if (!Mth.equal(getSpeed(), 0)) {
+			award(AllAdvancements.CRAFTER);
+			if (Math.abs(getSpeed()) < 5)
+				award(AllAdvancements.CRAFTER_LAZY);
+		}
 	}
 
 	public void blockChanged() {
@@ -297,7 +309,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				groupedItems.mergeOnto(targetingCrafter.groupedItems, pointing);
 				groupedItems = new GroupedItems();
 
-				float pitch = targetingCrafter.groupedItems.grid.size() * 1/16f + .5f;
+				float pitch = targetingCrafter.groupedItems.grid.size() * 1 / 16f + .5f;
 				AllSoundEvents.CRAFTER_CLICK.playOnServer(level, worldPosition, 1, pitch);
 
 				phase = Phase.WAITING;

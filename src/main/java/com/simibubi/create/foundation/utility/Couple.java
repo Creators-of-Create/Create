@@ -6,9 +6,10 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,7 @@ import net.minecraft.nbt.ListTag;
 
 public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 
-	private static Couple<Boolean> TRUE_AND_FALSE = Couple.create(true, false);
+	private static final Couple<Boolean> TRUE_AND_FALSE = Couple.create(true, false);
 
 	protected Couple(T first, T second) {
 		super(first, second);
@@ -33,7 +34,7 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 	public static <T> Couple<T> createWithContext(Function<Boolean, T> factory) {
 		return new Couple<>(factory.apply(true), factory.apply(false));
 	}
-	
+
 	public T get(boolean first) {
 		return first ? getFirst() : getSecond();
 	}
@@ -60,6 +61,19 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 
 	public <S, R> Couple<S> mapWithParams(BiFunction<T, R, S> function, Couple<R> values) {
 		return Couple.create(function.apply(first, values.first), function.apply(second, values.second));
+	}
+
+	public <S, R> Couple<S> mapNotNullWithParam(BiFunction<T, R, S> function, R value) {
+		return Couple.create(first != null ? function.apply(first, value) : null,
+				second != null ? function.apply(second, value) : null);
+	}
+
+	public boolean both(Predicate<T> test) {
+		return test.test(getFirst()) && test.test(getSecond());
+	}
+
+	public boolean either(Predicate<T> test) {
+		return test.test(getFirst()) || test.test(getSecond());
 	}
 
 	public void replace(Function<T, T> function) {
@@ -116,7 +130,7 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 	private static class Couplerator<T> implements Iterator<T> {
 
 		int state;
-		private Couple<T> couple;
+		private final Couple<T> couple;
 
 		public Couplerator(Couple<T> couple) {
 			this.couple = couple;

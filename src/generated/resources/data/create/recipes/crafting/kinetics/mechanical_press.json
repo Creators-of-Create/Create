@@ -1,19 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
-    "SCS",
-    " I "
+    "S",
+    "C",
+    "I"
   ],
   "key": {
-    "B": {
-      "item": "create:andesite_alloy"
-    },
-    "S": {
-      "item": "create:cogwheel"
-    },
     "C": {
       "item": "create:andesite_casing"
+    },
+    "S": {
+      "item": "create:shaft"
     },
     "I": {
       "tag": "forge:storage_blocks/iron"

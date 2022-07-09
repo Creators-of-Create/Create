@@ -11,7 +11,6 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class FlySpeedCommand {
 
@@ -35,8 +34,7 @@ public class FlySpeedCommand {
 
 	private static int sendFlySpeedUpdate(CommandContext<CommandSourceStack> ctx, ServerPlayer player, float speed) {
 		ClientboundPlayerAbilitiesPacket packet = new ClientboundPlayerAbilitiesPacket(player.getAbilities());
-		// packet.setFlySpeed(speed);
-		ObfuscationReflectionHelper.setPrivateValue(ClientboundPlayerAbilitiesPacket.class, packet, speed, "f_132663_"); // flyingSpeed
+		packet.flyingSpeed = speed;
 		player.connection.send(packet);
 
 		ctx.getSource()

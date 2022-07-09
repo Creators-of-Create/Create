@@ -1,0 +1,42 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "create:block/axis_top",
+		"3": "create:block/axis",
+		"particle": "create:block/axis"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 2, 10],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [6, 0, 10, 2], "texture": "#3"},
+				"east": {"uv": [6, 0, 10, 2], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [6, 0, 10, 2], "texture": "#3"},
+				"west": {"uv": [6, 0, 10, 2], "texture": "#3"},
+				"down": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#2"}
+			}
+		},
+		{
+			"from": [6, 14, 6],
+			"to": [10, 16, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [6, 0, 10, 2], "rotation": 180, "texture": "#3"},
+				"east": {"uv": [6, 0, 10, 2], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [6, 0, 10, 2], "rotation": 180, "texture": "#3"},
+				"west": {"uv": [6, 0, 10, 2], "texture": "#3"},
+				"up": {"uv": [6, 6, 10, 10], "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Cam",
+			"origin": [-7.5, 18, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

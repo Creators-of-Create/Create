@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "CCC"
+  ],
+  "key": {
+    "P": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "item": "create:metal_girder",
+    "count": 8
+  }
+}

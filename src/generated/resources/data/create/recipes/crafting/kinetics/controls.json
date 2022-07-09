@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "B",
+    "C",
+    "I"
+  ],
+  "key": {
+    "I": {
+      "item": "create:precision_mechanism"
+    },
+    "B": {
+      "item": "minecraft:lever"
+    },
+    "C": {
+      "item": "create:railway_casing"
+    }
+  },
+  "result": {
+    "item": "create:controls"
+  }
+}

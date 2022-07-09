@@ -114,7 +114,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		int x = 31 + 20 + 8;
 		int y = 31;
 
-		String title = Lang.translate(WELCOME)
+		String title = Lang.translateDirect(WELCOME)
 			.getString();
 
 		int streakHeight = 35;
@@ -149,7 +149,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		x = (width - w) / 2;
 		y = getItemsY() - 10 + Math.max(itemArea.getHeight(), 48);
 
-		String desc = Lang.translate(DESCRIPTION)
+		String desc = Lang.translateDirect(DESCRIPTION)
 			.getString();
 		int h = font.wordWrapHeight(desc, w);
 
@@ -173,7 +173,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		int x = (int) (width * itemXmult);
 		int y = getItemsY();
 
-		String relatedTitle = Lang.translate(CATEGORIES)
+		String relatedTitle = Lang.translateDirect(CATEGORIES)
 			.getString();
 		int stringWidth = font.width(relatedTitle);
 
@@ -224,7 +224,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected String getBreadcrumbTitle() {
-		return Lang.translate(TITLE)
+		return Lang.translateDirect(TITLE)
 			.getString();
 	}
 

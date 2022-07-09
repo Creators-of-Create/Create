@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.vault;
 import java.util.List;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -25,7 +26,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer {
+public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileContainer.Inventory {
 
 	protected LazyOptional<IItemHandler> itemCapability;
 
@@ -62,7 +63,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			return;
 		if (!isController())
 			return;
-		ItemVaultConnectivityHandler.formVaults(this);
+		ConnectivityHandler.formMulti(this);
 	}
 
 	protected void updateComparators() {
@@ -94,7 +95,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		if (updateConnectivity)
 			updateConnectivity();
 	}
-	
+
 	@Override
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
@@ -105,7 +106,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		return controller == null || worldPosition.getX() == controller.getX()
 			&& worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
 	}
-	
+
 	private void onPositionChanged() {
 		removeController(true);
 		lastKnownPos = worldPosition;
@@ -155,7 +156,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 	public BlockPos getController() {
 		return isController() ? worldPosition : controller;
 	}
-	
+
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
@@ -209,11 +210,11 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			compound.put("Inventory", inventory.serializeNBT());
 		}
 	}
-	
+
 	public ItemStackHandler getInventoryOfBlock() {
 		return inventory;
 	}
-	
+
 	public void applyInventoryToBlock(ItemStackHandler handler) {
 		for (int i = 0; i < inventory.getSlots(); i++)
 			inventory.setStackInSlot(i, i < handler.getSlots() ? handler.getStackInSlot(i) : ItemStack.EMPTY);
@@ -248,7 +249,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 					BlockPos vaultPos = alongZ ? worldPosition.offset(xOffset, zOffset, yOffset)
 						: worldPosition.offset(yOffset, xOffset, zOffset);
 					ItemVaultTileEntity vaultAt =
-						ItemVaultConnectivityHandler.vaultAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
+						ConnectivityHandler.partAt(AllTileEntities.ITEM_VAULT.get(), level, vaultPos);
 					invs[yOffset * radius * radius + xOffset * radius + zOffset] =
 						vaultAt != null ? vaultAt.inventory : new ItemStackHandler();
 				}
@@ -263,4 +264,45 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		return radius * 3;
 	}
 
+	@Override
+	public void preventConnectivityUpdate() { updateConnectivity = false; }
+
+	@Override
+	public void notifyMultiUpdated() {
+		BlockState state = this.getBlockState();
+		if (ItemVaultBlock.isVault(state)) { // safety
+			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 6);
+		}
+		itemCapability.invalidate();
+		setChanged();
+	}
+
+	@Override
+	public Direction.Axis getMainConnectionAxis() { return getMainAxisOf(this); }
+
+	@Override
+	public int getMaxLength(Direction.Axis longAxis, int width) {
+		if (longAxis == Direction.Axis.Y) return getMaxWidth();
+		return getMaxLength(width);
+	}
+
+	@Override
+	public int getMaxWidth() {
+		return 3;
+	}
+
+	@Override
+	public int getHeight() { return length; }
+
+	@Override
+	public int getWidth() { return radius; }
+
+	@Override
+	public void setHeight(int height) { this.length = height; }
+
+	@Override
+	public void setWidth(int width) { this.radius = width; }
+
+	@Override
+	public boolean hasInventory() { return true; }
 }

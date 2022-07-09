@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.Couple;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
@@ -23,7 +25,8 @@ public class BlockStressValues {
 
 	@Nullable
 	public static IStressValueProvider getProvider(Block block) {
-		return getProvider(block.getRegistryName().getNamespace());
+		return getProvider(block.getRegistryName()
+			.getNamespace());
 	}
 
 	public static double getImpact(Block block) {
@@ -90,6 +93,14 @@ public class BlockStressValues {
 		boolean hasImpact(Block block);
 
 		boolean hasCapacity(Block block);
+
+		/**
+		 * 
+		 * @param block
+		 * @return min, max generated RPM; null if block does not have a stress capacity
+		 */
+		@Nullable
+		Couple<Integer> getGeneratedRPM(Block block);
 	}
 
 }

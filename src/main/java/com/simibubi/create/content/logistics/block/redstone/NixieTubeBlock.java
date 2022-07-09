@@ -1,6 +1,9 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
 import java.util.Random;
+import java.util.function.BiConsumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -14,6 +17,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,31 +29,31 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class NixieTubeBlock extends HorizontalDirectionalBlock
-	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
-
-	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
+public class NixieTubeBlock extends DoubleFaceAttachedBlock
+	implements ITE<NixieTubeTileEntity>, IWrenchable, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	protected final DyeColor color;
 
 	public NixieTubeBlock(Properties properties, DyeColor color) {
 		super(properties);
 		this.color = color;
-		registerDefaultState(defaultBlockState().setValue(CEILING, false));
+		registerDefaultState(defaultBlockState().setValue(FACE, DoubleAttachFace.FLOOR)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -76,15 +81,38 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;
-
-		Direction left = state.getValue(FACING)
-			.getClockWise();
-		Direction right = left.getOpposite();
-
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		BlockPos currentPos = pos;
+		CompoundTag tag = heldItem.getTagElement("display");
+		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
+
+		walkNixies(world, pos, (currentPos, rowPosition) -> {
+			if (display)
+				withTileEntityDo(world, currentPos, te -> te.displayCustomText(tagElement, rowPosition));
+			if (dye != null)
+				world.setBlockAndUpdate(currentPos, withColor(state, dye));
+		});
+
+		return InteractionResult.SUCCESS;
+	}
+
+	public static void walkNixies(LevelAccessor world, BlockPos start, BiConsumer<BlockPos, Integer> callback) {
+		BlockState state = world.getBlockState(start);
+		if (!(state.getBlock() instanceof NixieTubeBlock))
+			return;
+
+		BlockPos currentPos = start;
+		Direction left = state.getValue(FACING)
+			.getOpposite();
+
+		if (state.getValue(FACE) == DoubleAttachFace.WALL)
+			left = Direction.UP;
+		if (state.getValue(FACE) == DoubleAttachFace.WALL_REVERSED)
+			left = Direction.DOWN;
+
+		Direction right = left.getOpposite();
+
 		while (true) {
 			BlockPos nextPos = currentPos.relative(left);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
@@ -96,25 +124,18 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 
 		while (true) {
 			final int rowPosition = index;
-
-			if (display)
-				withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
-			if (dye != null)
-				world.setBlockAndUpdate(currentPos, withColor(state, dye));
-
+			callback.accept(currentPos, rowPosition);
 			BlockPos nextPos = currentPos.relative(right);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
 			currentPos = nextPos;
 			index++;
 		}
-
-		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder.add(CEILING, FACING));
+		super.createBlockStateDefinition(builder.add(FACE, FACING, WATERLOGGED));
 	}
 
 	@Override
@@ -128,7 +149,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
-	
+
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.ORANGE_NIXIE_TUBE.get()
@@ -136,11 +157,18 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
-		CollisionContext p_220053_4_) {
-		return (state.getValue(CEILING) ? AllShapes.NIXIE_TUBE_CEILING : AllShapes.NIXIE_TUBE)
-			.get(state.getValue(FACING)
+	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+		Direction facing = pState.getValue(FACING);
+		switch (pState.getValue(FACE)) {
+		case CEILING:
+			return AllShapes.NIXIE_TUBE_CEILING.get(facing.getClockWise()
 				.getAxis());
+		case FLOOR:
+			return AllShapes.NIXIE_TUBE.get(facing.getClockWise()
+				.getAxis());
+		default:
+			return AllShapes.NIXIE_TUBE_WALL.get(facing);
+		}
 	}
 
 	@Override
@@ -153,15 +181,29 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
+	}
+
+	@Override
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
+		BlockPos pos, BlockPos neighbourPos) {
+		if (state.getValue(WATERLOGGED))
+			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+		return state;
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		BlockPos pos = context.getClickedPos();
-		boolean ceiling = context.getClickedFace() == Direction.DOWN;
-		Vec3 hitVec = context.getClickLocation();
-		if (hitVec != null)
-			ceiling = hitVec.y - pos.getY() > .5f;
-		return defaultBlockState().setValue(FACING, context.getHorizontalDirection()
-			.getOpposite())
-			.setValue(CEILING, ceiling);
+		BlockState state = super.getStateForPlacement(context);
+		if (state == null)
+			return null;
+		if (state.getValue(FACE) != DoubleAttachFace.WALL && state.getValue(FACE) != DoubleAttachFace.WALL_REVERSED)
+			state = state.setValue(FACING, state.getValue(FACING)
+				.getClockWise());
+		return state.setValue(WATERLOGGED, Boolean.valueOf(context.getLevel()
+			.getFluidState(context.getClickedPos())
+			.getType() == Fluids.WATER));
 	}
 
 	@Override
@@ -229,7 +271,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	public BlockEntityType<? extends NixieTubeTileEntity> getTileEntityType() {
 		return AllTileEntities.NIXIE_TUBE.get();
 	}
-	
+
 	public DyeColor getColor() {
 		return color;
 	}
@@ -246,12 +288,17 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		return (color == DyeColor.ORANGE ? AllBlocks.ORANGE_NIXIE_TUBE : AllBlocks.NIXIE_TUBES.get(color))
 			.getDefaultState()
 			.setValue(FACING, state.getValue(FACING))
-			.setValue(CEILING, state.getValue(CEILING));
+			.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+			.setValue(FACE, state.getValue(FACE));
 	}
 
 	public static DyeColor colorOf(BlockState blockState) {
 		return blockState.getBlock() instanceof NixieTubeBlock ? ((NixieTubeBlock) blockState.getBlock()).color
 			: DyeColor.ORANGE;
+	}
+
+	public static Direction getFacing(BlockState sideState) {
+		return getConnectedDirection(sideState);
 	}
 
 }

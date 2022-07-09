@@ -269,37 +269,4 @@ public class FanScenes {
 
 	}
 
-	public static void source(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("fan_source", "Generating Rotational Force using Encased Fans");
-		scene.configureBasePlate(0, 0, 5);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
-		scene.idle(5);
-		scene.world.showSection(util.select.layer(1), Direction.DOWN);
-		scene.idle(10);
-		scene.world.showSection(util.select.layersFrom(2), Direction.DOWN);
-		scene.idle(10);
-		BlockPos rightFan = util.grid.at(1, 2, 2);
-		scene.overlay.showText(70)
-			.text("Fans facing down into a source of heat can provide Rotational Force")
-			.placeNearTarget()
-			.pointAt(util.vector.blockSurface(rightFan, Direction.WEST));
-		scene.idle(80);
-		scene.addKeyframe();
-
-		for (BlockPos pos : new BlockPos[] { rightFan, util.grid.at(3, 2, 2) }) {
-			scene.idle(10);
-			scene.world.toggleRedstonePower(util.select.position(pos.north()));
-			scene.effects.indicateRedstone(pos.north());
-			scene.world.setKineticSpeed(util.select.fromTo(pos, pos.above()), 4);
-			scene.effects.rotationSpeedIndicator(pos.above());
-		}
-
-		scene.overlay.showText(90)
-			.text("When given a Redstone Signal, the Fans will start providing power")
-			.colored(PonderPalette.RED)
-			.placeNearTarget()
-			.pointAt(util.vector.blockSurface(rightFan, Direction.WEST));
-		scene.markAsFinished();
-	}
-
 }

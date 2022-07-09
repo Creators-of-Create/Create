@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Parrot;
@@ -27,6 +28,7 @@ public class ParrotElement extends AnimatedSceneElement {
 	private Vec3 location;
 	private Parrot entity;
 	private ParrotPose pose;
+	private boolean deferConductor = false;
 	private Supplier<? extends ParrotPose> initialPose;
 
 	public static ParrotElement create(Vec3 location, Supplier<? extends ParrotPose> pose) {
@@ -52,6 +54,9 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.zOld = 0;
 		entity.setXRot(entity.xRotO = 0);
 		entity.setYRot(entity.yRotO = 180);
+		entity.getPersistentData()
+			.remove("TrainHat");
+		deferConductor = false;
 	}
 
 	@Override
@@ -60,6 +65,9 @@ public class ParrotElement extends AnimatedSceneElement {
 		if (entity == null) {
 			entity = pose.create(scene.getWorld());
 			entity.setYRot(entity.yRotO = 180);
+			if (deferConductor)
+				setConductor(deferConductor);
+			deferConductor = false;
 		}
 
 		entity.tickCount++;
@@ -101,6 +109,18 @@ public class ParrotElement extends AnimatedSceneElement {
 			return;
 		entity.xRotO = entity.getXRot();
 		entity.yRotO = entity.getYRot();
+	}
+	
+	public void setConductor(boolean isConductor) {
+		if (entity == null) {
+			deferConductor = isConductor;
+			return;
+		}
+		CompoundTag data = entity.getPersistentData();
+		if (isConductor)
+			data.putBoolean("TrainHat", true);
+		else
+			data.remove("TrainHat");
 	}
 
 	public Vec3 getPositionOffset() {

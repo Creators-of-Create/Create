@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "create:train_trapdoor",
+    "create:framed_glass_trapdoor"
+  ]
+}

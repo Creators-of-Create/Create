@@ -10,7 +10,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing.Type;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -111,12 +111,9 @@ public class AirCurrent {
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
-			if (entity instanceof ServerPlayer)
-				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType), (Player) entity);
 
-			if (processingType == null || processingType == Type.NONE) {
+			if (processingType == null || processingType == Type.NONE)
 				continue;
-			}
 
 			if (entity instanceof ItemEntity itemEntity) {
 				if (world.isClientSide) {
@@ -124,7 +121,9 @@ public class AirCurrent {
 					continue;
 				}
 				if (InWorldProcessing.canProcess(itemEntity, processingType))
-					InWorldProcessing.applyProcessing(itemEntity, processingType);
+					if (InWorldProcessing.applyProcessing(itemEntity, processingType)
+						&& source instanceof EncasedFanTileEntity fan)
+						fan.award(AllAdvancements.FAN_PROCESSING);
 				continue;
 			}
 
@@ -288,7 +287,10 @@ public class AirCurrent {
 						processingType.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported));
 					return TransportedResult.doNothing();
 				}
-				return InWorldProcessing.applyProcessing(transported, world, processingType);
+				TransportedResult applyProcessing = InWorldProcessing.applyProcessing(transported, world, processingType);
+				if (!applyProcessing.doesNothing() && source instanceof EncasedFanTileEntity fan)
+					fan.award(AllAdvancements.FAN_PROCESSING);
+				return applyProcessing;
 			});
 		}
 	}

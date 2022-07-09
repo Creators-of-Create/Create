@@ -11,11 +11,12 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllPaletteStoneTypes {
 
@@ -28,39 +29,46 @@ public enum AllPaletteStoneTypes {
 	TUFF(VANILLA_RANGE, r -> () -> Blocks.TUFF),
 
 	ASURINE(STANDARD_RANGE, r -> r.paletteStoneBlock("asurine", () -> Blocks.DEEPSLATE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.COLOR_BLUE))
 		.register()),
 
 	CRIMSITE(STANDARD_RANGE, r -> r.paletteStoneBlock("crimsite", () -> Blocks.DEEPSLATE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.COLOR_RED))
 		.register()),
 
 	LIMESTONE(STANDARD_RANGE, r -> r.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.SAND))
 		.register()),
 
 	OCHRUM(STANDARD_RANGE, r -> r.paletteStoneBlock("ochrum", () -> Blocks.CALCITE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.TERRACOTTA_YELLOW))
 		.register()),
 
 	SCORIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scoria", () -> Blocks.BLACKSTONE, true)
+		.properties(p -> p.color(MaterialColor.COLOR_BROWN))
 		.register()),
 
 	SCORCHIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scorchia", () -> Blocks.BLACKSTONE, true)
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_GRAY))
 		.register()),
 
 	VERIDIUM(STANDARD_RANGE, r -> r.paletteStoneBlock("veridium", () -> Blocks.TUFF, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.WARPED_NYLIUM))
 		.register())
 
 	;
 
 	private Function<CreateRegistrate, NonNullSupplier<Block>> factory;
 	private PalettesVariantEntry variants;
-	
+
 	public NonNullSupplier<Block> baseBlock;
 	public PaletteBlockPattern[] variantTypes;
-	public Tag.Named<Item> materialTag;
+	public TagKey<Item> materialTag;
 
 	private AllPaletteStoneTypes(PaletteBlockPattern[] variantTypes,
 		Function<CreateRegistrate, NonNullSupplier<Block>> factory) {
@@ -81,7 +89,8 @@ public enum AllPaletteStoneTypes {
 			NonNullSupplier<Block> baseBlock = paletteStoneVariants.factory.apply(registrate);
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
-			paletteStoneVariants.materialTag = AllTags.tag(ItemTags::createOptional, Create.ID, "stone_types/" + id);
+			paletteStoneVariants.materialTag =
+				AllTags.optionalTag(ForgeRegistries.ITEMS, Create.asResource("stone_types/" + id));
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}

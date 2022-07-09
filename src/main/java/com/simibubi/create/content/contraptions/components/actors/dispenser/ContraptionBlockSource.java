@@ -52,7 +52,7 @@ public class ContraptionBlockSource implements BlockSource {
 
 	@Override
 	public BlockState getBlockState() {
-		if(context.state.hasProperty(BlockStateProperties.FACING) && overrideFacing != null)
+		if (context.state.hasProperty(BlockStateProperties.FACING) && overrideFacing != null)
 			return context.state.setValue(BlockStateProperties.FACING, overrideFacing);
 		return context.state;
 	}

@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -173,7 +174,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		return basinRecipe;
 	}
 
-	protected BasinRecipe(AllRecipeTypes type, ProcessingRecipeParams params) {
+	protected BasinRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {
 		super(type, params);
 	}
 

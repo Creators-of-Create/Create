@@ -29,7 +29,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -544,8 +543,8 @@ public class BlueprintEntity extends HangingEntity
 
 		@Override
 		public Component getDisplayName() {
-			return new TranslatableComponent(AllItems.CRAFTING_BLUEPRINT.get()
-				.getDescriptionId());
+			return AllItems.CRAFTING_BLUEPRINT.get()
+				.getDescription();
 		}
 
 		@Override

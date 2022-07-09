@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
@@ -16,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -43,10 +45,15 @@ public class ContraptionHandler {
 		for (Iterator<WeakReference<AbstractContraptionEntity>> iterator = values.iterator(); iterator.hasNext();) {
 			WeakReference<AbstractContraptionEntity> weakReference = iterator.next();
 			AbstractContraptionEntity contraptionEntity = weakReference.get();
-			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
+			if (contraptionEntity == null || !contraptionEntity.isAliveOrStale()) {
 				iterator.remove();
 				continue;
 			}
+			if (!contraptionEntity.isAlive()) {
+				contraptionEntity.staleTicks--;
+				continue;
+			}
+			
 			ContraptionCollider.collideEntities(contraptionEntity);
 		}
 	}
@@ -67,6 +74,15 @@ public class ContraptionHandler {
 		if (entityLiving.getVehicle() == null)
 			entityLiving.teleportTo(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");
+		entityLiving.setOnGround(false);
+
+		if (!data.contains("ContraptionMountLocation"))
+			return;
+		Vec3 prevPosition = VecHelper.readNBT(data.getList("ContraptionMountLocation", Tag.TAG_DOUBLE));
+		data.remove("ContraptionMountLocation");
+		
+		if (entityLiving instanceof Player player && !prevPosition.closerThan(position, 5000)) 
+			AllAdvancements.LONG_TRAVEL.awardTo(player);
 	}
 
 }
