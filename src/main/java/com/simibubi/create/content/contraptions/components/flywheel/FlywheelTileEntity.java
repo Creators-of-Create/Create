@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import com.simibubi.create.content.contraptions.base.IVisualRotationWheel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -10,7 +11,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class FlywheelTileEntity extends KineticTileEntity {
+public class FlywheelTileEntity extends KineticTileEntity implements IVisualRotationWheel {
+
+	boolean hasForcedSpeed = false;
+	float forcedSpeed = 0;
 
 	LerpedFloat visualSpeed = LerpedFloat.linear();
 	float angle;
@@ -37,6 +41,11 @@ public class FlywheelTileEntity extends KineticTileEntity {
 	}
 
 	@Override
+	public float getSpeed() {
+		return hasForcedSpeed ? forcedSpeed : super.getSpeed();
+	}
+
+	@Override
 	public void tick() {
 		super.tick();
 
@@ -48,5 +57,31 @@ public class FlywheelTileEntity extends KineticTileEntity {
 		visualSpeed.tickChaser();
 		angle += visualSpeed.getValue() * 3 / 10f;
 		angle %= 360;
+	}
+
+	public void setForcedSpeed(float speed) {
+		hasForcedSpeed = true;
+		forcedSpeed = speed;
+		visualSpeed.updateChaseTarget(speed);
+		visualSpeed.tickChaser();
+	}
+
+	public void unsetForcedSpeed() {
+		hasForcedSpeed = false;
+	}
+
+	@Override
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+
+	@Override
+	public float getAngle() {
+		return angle;
+	}
+
+	@Override
+	public float getWheelRadius() {
+		return 22.5f / 16;
 	}
 }

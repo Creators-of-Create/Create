@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.components.crusher;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.base.IVisualRotationWheel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -15,13 +18,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public class CrushingWheelTileEntity extends KineticTileEntity {
+public class CrushingWheelTileEntity extends KineticTileEntity implements IVisualRotationWheel {
+
+	boolean hasForcedSpeed = false;
+	float forcedSpeed = 0;
 
 	public static final DamageSource DAMAGE_SOURCE = new DamageSource("create.crush").bypassArmor()
 			.setScalesWithDifficulty();
@@ -36,7 +44,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.CRUSHING_WHEEL, AllAdvancements.CRUSHER_MAXED);
 	}
-	
+
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
@@ -77,4 +85,24 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 		}
 	}
 
+	@Override
+	public float getSpeed() {
+		return hasForcedSpeed ? forcedSpeed : super.getSpeed();
+	}
+
+	@Override
+	public void setForcedSpeed(float speed) {
+		hasForcedSpeed = true;
+		forcedSpeed = speed;
+	}
+
+	@Override
+	public void unsetForcedSpeed() {
+		hasForcedSpeed = false;
+	}
+
+	@Override
+	public float getWheelRadius() {
+		return 22.5f / 16;
+	}
 }

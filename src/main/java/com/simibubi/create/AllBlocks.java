@@ -44,6 +44,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerMovi
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.CarriageVisualRotationMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
@@ -589,6 +590,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(pickaxeOnly())
+			.onRegister(movementBehaviour(new CarriageVisualRotationMovementBehaviour()))
 			.blockstate(BlockStateGen.axisBlockProvider(false))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(BlockStressDefaults.setImpact(8.0))
@@ -1453,6 +1455,7 @@ public class AllBlocks {
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(axeOrPickaxe())
 		.transform(BlockStressDefaults.setNoImpact())
+		.onRegister(movementBehaviour(new CarriageVisualRotationMovementBehaviour()))
 		.blockstate(BlockStateGen.axisBlockProvider(true))
 		.item()
 		.transform(customItemModel())
