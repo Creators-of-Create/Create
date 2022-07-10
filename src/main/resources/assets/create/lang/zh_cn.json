@@ -730,7 +730,7 @@
 	"advancement.create.belt_funnel_kiss.desc": "让两个安装在传送带上的漏斗深情相吻",
 	"advancement.create.stressometer_maxed": "完美消耗",
 	"advancement.create.stressometer_maxed.desc": "在应力表中得到100%的读数§7\n（隐藏进度）",
-	"advancement.create.copper": "UNLOCALIZED: More Sturdier Rocks（更硬的岩石？）",
+	"advancement.create.copper": "更坚固的岩石",
 	"advancement.create.copper.desc": "为你的流体操控技术积累一点铜",
 	"advancement.create.copper_casing": "铜器时代",
 	"advancement.create.copper_casing.desc": "使用铜和木头制作一个铜机壳",
@@ -1588,7 +1588,7 @@
 	"create.track_target.too_far": "目标轨道离此处太远",
 	"create.track_target.no_junctions": "目标轨道不能是交叉口",
 	"create.track_target.occupied": "目标轨道被占用",
-	"create.track_target.invalid": "无法在此处指定目标轨道UNLOCALIZED: Cannot target this track here",
+	"create.track_target.invalid": "无法在此处定位该轨道",
 
 	"create.train.unnamed": "未命名列车",
 	"create.train.cannot_relocate_moving": "无法重新安置移动中的列车",
