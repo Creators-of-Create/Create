@@ -2,9 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import com.jozufozu.flywheel.light.GPULightVolume;
 import com.jozufozu.flywheel.light.LightListener;
-import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.light.ListenerStatus;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -27,9 +25,9 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 		bounds = getContraptionBounds();
 		growBoundsForEdgeData(bounds);
 
-		lightVolume = new GPULightVolume(bounds);
+		lightVolume = new GPULightVolume(contraption.entity.level, bounds);
 
-		lightVolume.initialize(lightUpdater.getProvider());
+		lightVolume.initialize();
 		scheduleRebuild = true;
 
 		lightUpdater.addListener(this);
@@ -38,18 +36,18 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 	public abstract GridAlignedBB getContraptionBounds();
 
 	@Override
-	public ListenerStatus status() {
-		return ListenerStatus.OKAY;
+	public boolean isListenerInvalid() {
+		return lightVolume.isListenerInvalid();
 	}
 
 	@Override
-    public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
-        lightVolume.onLightUpdate(world, type, changed);
+    public void onLightUpdate(LightLayer type, ImmutableBox changed) {
+        lightVolume.onLightUpdate(type, changed);
     }
 
     @Override
-    public void onLightPacket(LightProvider world, int chunkX, int chunkZ) {
-        lightVolume.onLightPacket(world, chunkX, chunkZ);
+    public void onLightPacket(int chunkX, int chunkZ) {
+        lightVolume.onLightPacket(chunkX, chunkZ);
     }
 
     protected static void growBoundsForEdgeData(GridAlignedBB bounds) {

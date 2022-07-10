@@ -8,10 +8,8 @@ import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.LightPacking;
-import com.jozufozu.flywheel.light.LightProvider;
-import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.LightVolume;
-import com.jozufozu.flywheel.light.MovingListener;
+import com.jozufozu.flywheel.light.TickingLightListener;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.mojang.math.Vector3f;
@@ -22,7 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements DynamicInstance, MovingListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements DynamicInstance, TickingLightListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
@@ -55,8 +53,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 		updateOffset();
 		updateVolume();
 
-		light = new LightVolume(volume);
-		light.initialize(LightUpdater.get(world).getProvider());
+		light = new LightVolume(world, volume);
+		light.initialize();
 	}
 
 	@Override
@@ -139,9 +137,9 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 	protected abstract boolean isRunning();
 
 	@Override
-	public boolean update(LightProvider provider) {
+	public boolean tickLightListener() {
 		if (updateVolume()) {
-			light.move(provider, volume);
+			light.move(volume);
 			return true;
 		}
 		return false;
@@ -190,8 +188,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 	}
 
 	@Override
-	public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
-		super.onLightUpdate(world, type, changed);
-		light.onLightUpdate(world, type, changed);
+	public void onLightUpdate(LightLayer type, ImmutableBox changed) {
+		super.onLightUpdate(type, changed);
+		light.onLightUpdate(type, changed);
 	}
 }

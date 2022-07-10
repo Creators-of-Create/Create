@@ -78,44 +78,9 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 		return null;
 	}
 
-	// -----------------------------------------------------------------
-	// The following methods should be identical to the base methods,
-	// but without reference to LightUpdater.
-	// -----------------------------------------------------------------
-
-	@Override
-	protected AbstractInstance createInternal(BlockEntity obj) {
-		AbstractInstance renderer = createRaw(obj);
-
-		if (renderer != null) {
-			renderer.init();
-			renderer.updateLight();
-			instances.put(obj, renderer);
-
-			if (renderer instanceof TickableInstance r) {
-				tickableInstances.put(obj, r);
-				r.tick();
-			}
-
-			if (renderer instanceof DynamicInstance r) {
-				dynamicInstances.put(obj, r);
-				r.beginFrame();
-			}
-		}
-
-		return renderer;
-	}
-
-	protected void removeInternal(BlockEntity obj, AbstractInstance instance) {
-		instance.remove();
-		instances.remove(obj);
-		dynamicInstances.remove(obj);
-		tickableInstances.remove(obj);
-	}
-
 	@Override
 	public void detachLightListeners() {
-		// noop
+		// noop, no light updater for contraption levels
 	}
 }
 
