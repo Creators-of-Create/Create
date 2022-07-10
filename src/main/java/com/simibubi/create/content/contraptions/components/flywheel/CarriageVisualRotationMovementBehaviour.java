@@ -58,7 +58,7 @@ public class CarriageVisualRotationMovementBehaviour implements MovementBehaviou
 
 			//Now figure out speed to achieve this
 			float speed = (float) (angleDiff * 10 / 3f);
-			speedForcible.setForcedSpeed((float) angleDiff * 3 / 10f);
+			//speedForcible.setForcedSpeed((float) angleDiff * 3 / 10f); //TODO make this actually look good, and appear at all when instanced rendering is enabled
 			speedForcible.setAngle((float) ((speedForcible.getAngle() + (angleDiff * 3 / 10f)) % 360));
 		}
 	}
