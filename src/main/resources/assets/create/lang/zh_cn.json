@@ -332,7 +332,7 @@
 	"block.create.pink_toolbox": "粉红色工具箱",
 	"block.create.pink_valve_handle": "粉红色阀门手轮",
 	"block.create.piston_extension_pole": "活塞杆",
-	"block.create.placard": "展示板",
+	"block.create.placard": "置物板",
 	"block.create.polished_cut_andesite": "磨制切制安山岩",
 	"block.create.polished_cut_andesite_slab": "磨制切制安山岩台阶",
 	"block.create.polished_cut_andesite_stairs": "磨制切制安山岩楼梯",
@@ -2008,10 +2008,10 @@
 	"item.create.copper_backtank.tooltip.condition2": "放下并接入动力时",
 	"item.create.copper_backtank.tooltip.behaviour2": "基于转速从周围环境中_收集_并_加压空气_",
 
-	"block.create.placard.tooltip": "展示板",
+	"block.create.placard.tooltip": "置物板",
 	"block.create.placard.tooltip.summary": "用这个漂亮的墙板把你的物品用黄铜框起来，支持移动装置！",
 	"block.create.placard.tooltip.condition1": "手持物品右击时",
-	"block.create.placard.tooltip.behaviour1": "将手持的_物品__放入_展示板，当内部已经有物品，且手持的物品与其匹配时，_发出_短暂的_红石_信号",
+	"block.create.placard.tooltip.behaviour1": "将手持的_物品__放入_置物板，当内部已经有物品，且手持的物品与其匹配时，_发出_短暂的_红石_信号",
 	"block.create.placard.tooltip.condition2": "左击时",
 	"block.create.placard.tooltip.behaviour2": "_移除_内部的_物品_",
 
