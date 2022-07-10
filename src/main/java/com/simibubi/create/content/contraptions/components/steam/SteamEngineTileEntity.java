@@ -73,13 +73,28 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 		super.tick();
 		FluidTankTileEntity tank = getTank();
 		PoweredShaftTileEntity shaft = getShaft();
-		if (tank == null || shaft == null)
+
+		if (tank == null || shaft == null) {
+			if (level.isClientSide())
+				return;
+			if (shaft == null)
+				return;
+			if (!shaft.getBlockPos()
+				.subtract(worldPosition)
+				.equals(shaft.enginePos))
+				return;
+			if (shaft.engineEfficiency == 0)
+				return;
+			Direction facing = SteamEngineBlock.getFacing(getBlockState());
+			if (level.isLoaded(worldPosition.relative(facing.getOpposite())))
+				shaft.update(worldPosition, 0, 0);
 			return;
+		}
 
 		boolean verticalTarget = false;
 		BlockState shaftState = shaft.getBlockState();
 		Axis targetAxis = Axis.X;
-		if (shaftState.getBlock() instanceof IRotate ir)
+		if (shaftState.getBlock()instanceof IRotate ir)
 			targetAxis = ir.getRotationAxis(shaftState);
 		verticalTarget = targetAxis == Axis.Y;
 
@@ -92,6 +107,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 
 		float efficiency = Mth.clamp(tank.boiler.getEngineEfficiency(tank.getTotalTankSize()), 0, 1);
 		if (efficiency > 0)
+
 			award(AllAdvancements.STEAM_ENGINE);
 
 		int conveyedSpeedLevel =

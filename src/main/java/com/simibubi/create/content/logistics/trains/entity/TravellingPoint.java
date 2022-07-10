@@ -203,6 +203,8 @@ public class TravellingPoint {
 	public double travel(TrackGraph graph, double distance, ITrackSelector trackSelector,
 		IEdgePointListener signalListener, ITurnListener turnListener, IPortalListener portalListener) {
 		blocked = false;
+		if (edge == null)
+			return 0;
 		double edgeLength = edge.getLength();
 		if (Mth.equal(distance, 0))
 			return 0;

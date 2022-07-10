@@ -138,7 +138,8 @@ public abstract class AbstractSimiScreen extends Screen {
 
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		for (Widget widget : renderables) {
-			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
+			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()
+				&& simiWidget.visible) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (tooltip.isEmpty())
 					continue;
