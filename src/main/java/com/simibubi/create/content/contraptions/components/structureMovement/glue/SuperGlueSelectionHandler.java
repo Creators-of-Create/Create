@@ -115,7 +115,9 @@ public class SuperGlueSelectionHandler {
 		}
 
 		if (firstPos != null && !firstPos.closerThan(hovered, 24)) {
-			Lang.sendStatus(player, FAIL, "super_glue.too_far");
+			Lang.translate("super_glue.too_far")
+				.color(FAIL)
+				.sendStatus(player);
 			return;
 		}
 
@@ -131,15 +133,23 @@ public class SuperGlueSelectionHandler {
 			if (currentCluster != null) {
 				boolean canReach = currentCluster.contains(hovered);
 				boolean canAfford = SuperGlueSelectionHelper.collectGlueFromInventory(player, glueRequired, true);
+				int color = HIGHLIGHT;
+				String key = "super_glue.click_to_confirm";
 
-				if (!canReach)
-					Lang.sendStatus(player, FAIL, "super_glue.cannot_reach");
-				else if (!canAfford)
-					Lang.sendStatus(player, FAIL, "super_glue.not_enough");
-				else if (cancel)
-					Lang.sendStatus(player, FAIL, "super_glue.click_to_discard");
-				else
-					Lang.sendStatus(player, HIGHLIGHT, "super_glue.click_to_confirm");
+				if (!canReach) {
+					color = FAIL;
+					key = "super_glue.cannot_reach";
+				} else if (!canAfford) {
+					color = FAIL;
+					key = "super_glue.not_enough";
+				} else if (cancel) {
+					color = FAIL;
+					key = "super_glue.click_to_discard";
+				}
+
+				Lang.translate(key)
+					.color(color)
+					.sendStatus(player);
 
 				if (currentSelectionBox != null)
 					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
@@ -223,7 +233,8 @@ public class SuperGlueSelectionHandler {
 		firstPos = hoveredPos;
 		if (face != null)
 			SuperGlueItem.spawnParticles(level, firstPos, face, true);
-		Lang.sendStatus(player, "super_glue.first_pos");
+		Lang.translate("super_glue.first_pos")
+			.sendStatus(player);
 		AllSoundEvents.SLIME_ADDED.playAt(level, firstPos, 0.5F, 0.85F, false);
 		level.playSound(player, firstPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 		return true;
@@ -233,7 +244,8 @@ public class SuperGlueSelectionHandler {
 		LocalPlayer player = Minecraft.getInstance().player;
 		currentCluster = null;
 		firstPos = null;
-		Lang.sendStatus(player, "super_glue.abort");
+		Lang.translate("super_glue.abort")
+			.sendStatus(player);
 		clusterCooldown = 0;
 	}
 
@@ -251,7 +263,8 @@ public class SuperGlueSelectionHandler {
 				.lineWidth(1 / 24f);
 
 		discard();
-		Lang.sendStatus(player, "super_glue.sucess");
+		Lang.translate("super_glue.success")
+			.sendStatus(player);
 		clusterCooldown = 40;
 	}
 

@@ -43,8 +43,10 @@ public class TrackPaver {
 			for (Direction d : Iterate.horizontalDirections)
 				if (Vec3.atLowerCornerOf(d.getNormal())
 					.equals(direction))
-					defaultBlockState =
-						defaultBlockState.setValue(d.getAxis() == Axis.X ? GirderBlock.X : GirderBlock.Z, true);
+					defaultBlockState = defaultBlockState.setValue(GirderBlock.TOP, false)
+						.setValue(GirderBlock.BOTTOM, false)
+						.setValue(GirderBlock.AXIS, d.getAxis())
+						.setValue(d.getAxis() == Axis.X ? GirderBlock.X : GirderBlock.Z, true);
 
 		Set<BlockPos> toPlaceOn = new HashSet<>();
 		Vec3 start = VecHelper.getCenterOf(startPos);
