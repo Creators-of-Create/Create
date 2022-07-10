@@ -3009,12 +3009,12 @@
 
 	"create.ponder.windmill_source.header": "使用风车轴承产生旋转力",
 	"create.ponder.windmill_source.text_1": "风车轴承会黏附它前方的方块",
-	"create.ponder.windmill_source.text_2": "如果有足够多的类风帆方块黏附于其上，那么整体结构便可被视为风车",
-	"create.ponder.windmill_source.text_3": "右击启动后，风车轴承会开始产生旋转力",
-	"create.ponder.windmill_source.text_4": "风帆方块的数量决定了它的旋转速度",
-	"create.ponder.windmill_source.text_5": "使用扳手可以调整风车的旋转方向",
-	"create.ponder.windmill_source.text_6": "任何时候右击轴承，都可以将其停止，这样你就能再次修改风车的结构",
-	"create.ponder.windmill_source.text_7": "UNLOCALIZED: Right-click the Bearing anytime to stop and edit the Structure again",
+	"create.ponder.windmill_source.text_2": "在强力胶的帮助下创建一个可移动结构",
+	"create.ponder.windmill_source.text_3": "如果有足够多的类风帆方块黏附于其上，那么整体结构便可被视为风车",
+	"create.ponder.windmill_source.text_4": "右击启动后，风车轴承会开始产生旋转力",
+	"create.ponder.windmill_source.text_5": "风帆方块的数量决定了它的旋转速度",
+	"create.ponder.windmill_source.text_6": "使用扳手可以调整风车的旋转方向",
+	"create.ponder.windmill_source.text_7": "任何时候右击轴承，都可以将其停止，这样你就能再次修改风车的结构",
 
 	"create.ponder.windmill_structure.header": "风车装置",
 	"create.ponder.windmill_structure.text_1": "任何有至少 8 个类风帆方块的结构，都被视为一个有效的风车",
