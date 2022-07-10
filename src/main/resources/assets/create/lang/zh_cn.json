@@ -2876,7 +2876,7 @@
 	"create.ponder.super_glue.text_1": "强力胶用于将方块组合成移动装置",
 	"create.ponder.super_glue.text_2": "右键点击两个端点来创建一个新的“胶合”区域",
 	"create.ponder.super_glue.text_3": "手持强力胶左键点击可以移除选区",
-	"create.ponder.super_glue.text_4": "同一个选区内的方块会一起移动",
+	"create.ponder.super_glue.text_4": "同一个选区内相邻的方块会互相拉动对方",
 	"create.ponder.super_glue.text_5": "互相重叠的选区会一起移动",
 	"create.ponder.super_glue.text_6": "悬挂在其它方块上的方块通常不需要强力胶",
 
