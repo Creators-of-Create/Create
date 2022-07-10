@@ -129,8 +129,10 @@ public class ItemDescription {
 				.addTo(list);
 
 			double capacity = BlockStressValues.getCapacity(block);
-			Couple<Integer> generatedRPM = BlockStressValues.getProvider(block)
-				.getGeneratedRPM(block);
+			BlockStressValues.IStressValueProvider stressProvider = BlockStressValues.getProvider(block);
+			Couple<Integer> generatedRPM = stressProvider != null ?
+				stressProvider.getGeneratedRPM(block)
+                : null;
 
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
