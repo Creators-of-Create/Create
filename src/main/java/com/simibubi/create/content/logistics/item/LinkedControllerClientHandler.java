@@ -196,9 +196,10 @@ public class LinkedControllerClientHandler {
 				LinkBehaviour linkBehaviour = TileEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
 				if (linkBehaviour != null) {
 					AllPackets.channel.sendToServer(new LinkedControllerBindPacket(integer, selectedLocation));
-					Lang.sendStatus(mc.player, "linked_controller.key_bound", controls.get(integer)
+					Lang.translate("linked_controller.key_bound", controls.get(integer)
 						.getTranslatedKeyMessage()
-						.getString());
+						.getString())
+						.sendStatus(mc.player);
 				}
 				MODE = Mode.IDLE;
 				break;

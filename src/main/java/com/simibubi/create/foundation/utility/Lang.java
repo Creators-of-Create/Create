@@ -9,7 +9,6 @@ import com.simibubi.create.Create;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
@@ -25,16 +24,6 @@ public class Lang {
 	 */
 	public static TranslatableComponent translateDirect(String key, Object... args) {
 		return new TranslatableComponent(Create.ID + "." + key, resolveBuilders(args));
-	}
-
-	@Deprecated // use Lang.translate(...).sendStatus(player)
-	public static void sendStatus(Player player, String key, Object... args) {
-		translate(key, args).sendStatus(player);
-	}
-
-	@Deprecated // use Lang.translate(...).color(color).sendStatus(player)
-	public static void sendStatus(Player player, int color, String key, Object... args) {
-		translate(key, args).color(color).sendStatus(player);
 	}
 
 	public static String asId(String name) {
