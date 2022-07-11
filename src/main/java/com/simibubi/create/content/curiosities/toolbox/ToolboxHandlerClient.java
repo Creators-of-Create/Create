@@ -103,7 +103,7 @@ public class ToolboxHandlerClient {
 
 	public static void onKeyInput(int key, boolean pressed) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+		if (mc.gameMode == null || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
 		if (key != AllKeys.TOOLBELT.getBoundCode())

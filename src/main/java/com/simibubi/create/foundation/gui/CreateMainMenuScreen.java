@@ -17,12 +17,14 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -35,7 +37,11 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
 	public static final PanoramaRenderer PANORAMA = new PanoramaRenderer(PANORAMA_RESOURCES);
 
-	public static final String PROJECT_LINK = "https://www.curseforge.com/minecraft/mc-mods/create";
+	private static final Component CURSEFORGE_TOOLTIP = new TextComponent("CurseForge").withStyle(s -> s.withColor(0xFC785C).withBold(true));
+	private static final Component MODRINTH_TOOLTIP = new TextComponent("Modrinth").withStyle(s -> s.withColor(0x3FD32B).withBold(true));
+
+	public static final String CURSEFORGE_LINK = "https://www.curseforge.com/minecraft/mc-mods/create";
+	public static final String MODRINTH_LINK = "https://modrinth.com/mod/create";
 	public static final String ISSUE_TRACKER_LINK = "https://github.com/Creators-of-Create/Create/issues";
 	public static final String SUPPORT_LINK = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
@@ -146,11 +152,20 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
 
-		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translateDirect("menu.project_page"),
-			$ -> linkTo(PROJECT_LINK)));
-		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translateDirect("menu.report_bugs"),
+		addRenderableWidget(new PlatformIconButton(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight,
+			AllGuiTextures.CURSEFORGE_LOGO, 0.085f,
+			b -> linkTo(CURSEFORGE_LINK),
+			(b, ps, mx, my) -> renderTooltip(ps, CURSEFORGE_TOOLTIP, mx, my)));
+		addRenderableWidget(new PlatformIconButton(center - 50, yStart + 48 + -16, bShortWidth / 2, bHeight,
+			AllGuiTextures.MODRINTH_LOGO, 0.0575f,
+			b -> linkTo(MODRINTH_LINK),
+			(b, ps, mx, my) -> renderTooltip(ps, MODRINTH_TOOLTIP, mx, my)));
+
+		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight,
+			Lang.translateDirect("menu.report_bugs"),
 			$ -> linkTo(ISSUE_TRACKER_LINK)));
-		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translateDirect("menu.support"),
+		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight,
+			Lang.translateDirect("menu.support"),
 			$ -> linkTo(SUPPORT_LINK)));
 	}
 
@@ -187,6 +202,26 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	@Override
 	public boolean isPauseScreen() {
 		return true;
+	}
+
+	protected static class PlatformIconButton extends Button {
+		protected final AllGuiTextures icon;
+		protected final float scale;
+
+		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, OnTooltip pOnTooltip) {
+			super(pX, pY, pWidth, pHeight, TextComponent.EMPTY, pOnPress, pOnTooltip);
+			this.icon = icon;
+			this.scale = scale;
+		}
+
+		@Override
+		protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
+			pPoseStack.pushPose();
+			pPoseStack.translate(x + width / 2 - (icon.width * scale) / 2, y + height / 2 - (icon.height * scale) / 2, 0);
+			pPoseStack.scale(scale, scale, 1);
+			icon.render(pPoseStack, 0, 0);
+			pPoseStack.popPose();
+		}
 	}
 
 }

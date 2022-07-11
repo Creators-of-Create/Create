@@ -36,10 +36,7 @@ public class OpenCreateMenuButton extends Button {
 	}
 
 	@Override
-	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
-		if (!visible) 
-			return;
+	public void renderBg(PoseStack mstack, Minecraft mc, int mouseX, int mouseY) {
 		Minecraft.getInstance().getItemRenderer().renderGuiItem(ICON, x + 2, y + 2);
 	}
 

@@ -64,7 +64,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5-unstable";
+	public static final String VERSION = "0.5a";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 

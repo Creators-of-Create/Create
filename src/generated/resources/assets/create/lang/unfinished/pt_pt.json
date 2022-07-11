@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2189",
+	"_": "Missing Localizations: 2188",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -884,7 +884,6 @@
 	"create.menu.configure": "UNLOCALIZED: Configure...",
 	"create.menu.ponder_index": "UNLOCALIZED: Ponder Index",
 	"create.menu.only_ingame": "UNLOCALIZED: Available in the Pause Menu",
-	"create.menu.project_page": "UNLOCALIZED: Project Page",
 	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
 	"create.menu.support": "UNLOCALIZED: Support Us",
 
