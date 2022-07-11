@@ -736,11 +736,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.updateRenderedCutoff();
 	}
 
-	@Override
-	public boolean isReadyForRender() {
-		return super.isReadyForRender() && validForRender && !firstPositionUpdate;
-	}
-
 	@OnlyIn(Dist.CLIENT)
 	private WeakReference<CarriageContraptionInstance> instanceHolder;
 
