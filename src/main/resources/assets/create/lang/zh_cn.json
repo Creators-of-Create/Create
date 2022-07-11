@@ -1414,7 +1414,7 @@
 	"create.boiler.size_dots": "...... ",
 	"create.boiler.water": "水量",
 	"create.boiler.water_dots": "...... ",
-	"create.boiler.heat": "热度",
+	"create.boiler.heat": "热量",
 	"create.boiler.heat_dots": "...... ",
 	"create.boiler.via_one_engine": "通过1个引擎",
 	"create.boiler.via_engines": "通过%1$s个引擎",
