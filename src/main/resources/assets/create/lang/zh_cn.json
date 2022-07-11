@@ -2851,7 +2851,7 @@
 	"create.ponder.steam_engine.text_6": "在烈焰人燃烧室的帮助下，可以增加输出功率",
 	"create.ponder.steam_engine.text_7": "更高的功率等级需要更多水、空间和热量",
 	"create.ponder.steam_engine.text_8": "可以用工程师护目镜检查当前锅炉的功率等级",
-	"create.ponder.steam_engine.text_9": "每提升一个功率等级，额外添加一个引擎即可达到满负荷输出",
+	"create.ponder.steam_engine.text_9": "每提升一个功率等级，就可以多装一个满功率输出的蒸汽引擎",
 
 	"create.ponder.steam_whistle.header": "安装蒸汽笛",
 	"create.ponder.steam_whistle.text_1": "蒸汽笛能够被放置在流体储罐上",
