@@ -115,6 +115,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -147,6 +148,7 @@ public abstract class Contraption {
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
+	public Map<BlockPos, IModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentTileEntities;
 	public List<BlockEntity> maybeInstancedTileEntities;
 	public List<BlockEntity> specialRenderedTileEntities;
@@ -158,6 +160,7 @@ public abstract class Contraption {
 		blocks = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
@@ -871,8 +874,9 @@ public abstract class Contraption {
 			if (te == null)
 				return;
 			te.setLevel(world);
-			if (te instanceof KineticTileEntity)
-				((KineticTileEntity) te).setSpeed(0);
+			modelData.put(info.pos, te.getModelData());
+			if (te instanceof KineticTileEntity kte)
+				kte.setSpeed(0);
 			te.getBlockState();
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state);
