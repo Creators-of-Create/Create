@@ -2961,7 +2961,7 @@
 	"create.ponder.train_signal_signaling.text_6": "这种特殊的信号可以在第二种情况下停止列车",
 	"create.ponder.train_signal_signaling.text_7": "它会停止列车，该列车在进入时……",
 	"create.ponder.train_signal_signaling.text_8": "……将无法立即离开该区间",
-	"create.ponder.train_signal_signaling.text_9": "这有助于排队的列车远离繁忙的区间",
+	"create.ponder.train_signal_signaling.text_9": "这有助于排队等候的列车远离繁忙的区间",
 
 	"create.ponder.valve_handle.header": "使用阀门手轮产生旋转力",
 	"create.ponder.valve_handle.text_1": "玩家可以手动使用阀门手轮来产生旋转力",
