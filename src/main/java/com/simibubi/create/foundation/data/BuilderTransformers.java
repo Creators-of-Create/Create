@@ -124,6 +124,7 @@ public class BuilderTransformers {
 			.onRegister(movementBehaviour(new SlidingDoorMovementBehaviour()))
 			.tag(BlockTags.DOORS)
 			.tag(BlockTags.WOODEN_DOORS) // for villager AI
+			.tag(AllBlockTags.NON_DOUBLE_DOOR.tag)
 			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
 			.item()
 			.tag(ItemTags.DOORS)

@@ -5744,3 +5744,4 @@ e16d74571ae10007f06f3b86ddf05d3ca9b73559 data/minecraft/tags/items/doors.json
 bc0917bead5b198feeeaa5c5b92dddae48bbb6f5 data/minecraft/tags/items/stairs.json
 d622e97373b1e96632ffb0a312ef04696da0ed4d data/minecraft/tags/items/trapdoors.json
 0ec220675cbf8a6eeb47d42b7409395a0cb6ae6e data/minecraft/tags/items/walls.json
+e16d74571ae10007f06f3b86ddf05d3ca9b73559 data/quark/tags/blocks/non_double_door.json

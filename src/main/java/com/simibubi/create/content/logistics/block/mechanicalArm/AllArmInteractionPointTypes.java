@@ -85,8 +85,7 @@ public class AllArmInteractionPointTypes {
 		return type;
 	}
 
-	public static void register() {
-	}
+	public static void register() {}
 
 	//
 
@@ -229,7 +228,8 @@ public class AllArmInteractionPointTypes {
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
 			return state.getBlock() instanceof AbstractFunnelBlock
 				&& !(state.hasProperty(FunnelBlock.EXTRACTING) && state.getValue(FunnelBlock.EXTRACTING))
-				&& !(state.hasProperty(BeltFunnelBlock.SHAPE) && state.getValue(BeltFunnelBlock.SHAPE) == Shape.PUSHING);
+				&& !(state.hasProperty(BeltFunnelBlock.SHAPE)
+					&& state.getValue(BeltFunnelBlock.SHAPE) == Shape.PUSHING);
 		}
 
 		@Override
@@ -338,13 +338,13 @@ public class AllArmInteractionPointTypes {
 	//
 
 	public static class DepositOnlyArmInteractionPoint extends ArmInteractionPoint {
-		public DepositOnlyArmInteractionPoint(ArmInteractionPointType type, Level level, BlockPos pos, BlockState state) {
+		public DepositOnlyArmInteractionPoint(ArmInteractionPointType type, Level level, BlockPos pos,
+			BlockState state) {
 			super(type, level, pos, state);
 		}
 
 		@Override
-		public void cycleMode() {
-		}
+		public void cycleMode() {}
 
 		@Override
 		public ItemStack extract(int slot, int amount, boolean simulate) {
@@ -364,7 +364,8 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 1, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 1, .5f);
 		}
 	}
 
@@ -402,7 +403,8 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public ItemStack insert(ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
-			InteractionResultHolder<ItemStack> res = BlazeBurnerBlock.tryInsert(cachedState, level, pos, input, false, false, simulate);
+			InteractionResultHolder<ItemStack> res =
+				BlazeBurnerBlock.tryInsert(cachedState, level, pos, input, false, false, simulate);
 			ItemStack remainder = res.getObject();
 			if (input.isEmpty()) {
 				return remainder;
@@ -421,14 +423,15 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Direction getInteractionDirection() {
-			return cachedState.getValue(MechanicalCrafterBlock.HORIZONTAL_FACING)
+			return cachedState.getOptionalValue(MechanicalCrafterBlock.HORIZONTAL_FACING)
+				.orElse(Direction.SOUTH)
 				.getOpposite();
 		}
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return super.getInteractionPositionVector()
-				.add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal()).scale(.5f));
+			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal())
+				.scale(.5f));
 		}
 
 		@Override
@@ -460,14 +463,15 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Direction getInteractionDirection() {
-			return cachedState.getValue(DeployerBlock.FACING)
+			return cachedState.getOptionalValue(DeployerBlock.FACING)
+				.orElse(Direction.UP)
 				.getOpposite();
 		}
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return super.getInteractionPositionVector()
-				.add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal()).scale(.65f));
+			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal())
+				.scale(.65f));
 		}
 
 		@Override
@@ -486,7 +490,8 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 14 / 16f, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 14 / 16f, .5f);
 		}
 	}
 
@@ -499,7 +504,8 @@ public class AllArmInteractionPointTypes {
 		protected Vec3 getInteractionPositionVector() {
 			return VecHelper.getCenterOf(pos)
 				.add(Vec3.atLowerCornerOf(FunnelBlock.getFunnelFacing(cachedState)
-					.getNormal()).scale(-.15f));
+					.getNormal())
+					.scale(-.15f));
 		}
 
 		@Override
@@ -520,7 +526,8 @@ public class AllArmInteractionPointTypes {
 		public ItemStack insert(ItemStack stack, boolean simulate) {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(level, pos, FilteringBehaviour.TYPE);
 			InvManipulationBehaviour inserter = TileEntityBehaviour.get(level, pos, InvManipulationBehaviour.TYPE);
-			if (cachedState.getOptionalValue(BlockStateProperties.POWERED).orElse(false))
+			if (cachedState.getOptionalValue(BlockStateProperties.POWERED)
+				.orElse(false))
 				return stack;
 			if (inserter == null)
 				return stack;
@@ -570,7 +577,8 @@ public class AllArmInteractionPointTypes {
 				return remainder;
 			}
 			ItemStack remainder = stack.copy();
-			campfireBE.placeFood(remainder, recipe.get().getCookingTime());
+			campfireBE.placeFood(remainder, recipe.get()
+				.getCookingTime());
 			return remainder;
 		}
 	}
@@ -582,7 +590,8 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 13 / 16f, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 13 / 16f, .5f);
 		}
 
 		@Override
@@ -624,7 +633,8 @@ public class AllArmInteractionPointTypes {
 			Item item = stack.getItem();
 			if (!(item instanceof RecordItem))
 				return stack;
-			if (cachedState.getValue(JukeboxBlock.HAS_RECORD))
+			if (cachedState.getOptionalValue(JukeboxBlock.HAS_RECORD)
+				.orElse(true))
 				return stack;
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (!(blockEntity instanceof JukeboxBlockEntity jukeboxBE))
@@ -644,7 +654,8 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public ItemStack extract(int slot, int amount, boolean simulate) {
-			if (!cachedState.getValue(JukeboxBlock.HAS_RECORD))
+			if (!cachedState.getOptionalValue(JukeboxBlock.HAS_RECORD)
+				.orElse(false))
 				return ItemStack.EMPTY;
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (!(blockEntity instanceof JukeboxBlockEntity jukeboxBE))
@@ -668,14 +679,16 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return Vec3.atLowerCornerOf(pos).add(.5f, 1, .5f);
+			return Vec3.atLowerCornerOf(pos)
+				.add(.5f, 1, .5f);
 		}
 
 		@Override
 		public ItemStack insert(ItemStack stack, boolean simulate) {
 			if (!stack.is(Items.GLOWSTONE))
 				return stack;
-			if (cachedState.getValue(RespawnAnchorBlock.CHARGE) == 4)
+			if (cachedState.getOptionalValue(RespawnAnchorBlock.CHARGE)
+				.orElse(4) == 4)
 				return stack;
 			if (!simulate)
 				RespawnAnchorBlock.charge(level, pos, cachedState);

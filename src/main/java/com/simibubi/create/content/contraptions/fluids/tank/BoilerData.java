@@ -96,6 +96,9 @@ public class BoilerData {
 			for (float i : supplyOverTime)
 				waterSupply = Math.max(i, waterSupply);
 		}
+		
+		if (controller instanceof CreativeFluidTankTileEntity)
+			waterSupply = waterSupplyPerLevel * 20;
 
 		if (getActualHeat(controller.getTotalTankSize()) == 18)
 			controller.award(AllAdvancements.STEAM_ENGINE_MAXED);
