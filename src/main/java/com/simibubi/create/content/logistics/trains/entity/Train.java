@@ -1061,6 +1061,7 @@ public class Train {
 				ItemStack containerItem = stack.getContainerItem();
 				if (!containerItem.isEmpty())
 					ItemHandlerHelper.insertItemStacked(fuelItems, containerItem, false);
+				return;
 			}
 		}
 	}

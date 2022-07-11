@@ -49,7 +49,8 @@ public class CartAssemblerBlockItem extends BlockItem {
 		if (player == null)
 			return false;
 		if (!(block instanceof BaseRailBlock)) {
-			Lang.sendStatus(player, "block.cart_assembler.invalid");
+			Lang.translate("block.cart_assembler.invalid")
+				.sendStatus(player);
 			return false;
 		}
 
@@ -81,7 +82,7 @@ public class CartAssemblerBlockItem extends BlockItem {
 		if (!player.isCreative())
 			context.getItemInHand()
 				.shrink(1);
-		
+
 		AdvancementBehaviour.setPlacedBy(world, pos, player);
 		return true;
 	}

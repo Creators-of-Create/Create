@@ -496,6 +496,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		sides.setSecond(cc.blazeBurnerConductors.getSecond());
 
 		for (Entity entity : getPassengers()) {
+			if (entity instanceof Player)
+				continue;
 			BlockPos seatOf = cc.getSeatOf(entity.getUUID());
 			if (seatOf == null)
 				continue;

@@ -606,8 +606,8 @@
 	"create.schedule.instruction.name_edit_box": "Schedule Title",
 	"create.schedule.instruction.name_edit_box_1": "Affects text shown on displays",
 	"create.schedule.instruction.name_edit_box_2": "Defaults to next destination's name",
-	"create.schedule.instruction.throttle": "Change Throttle",
-	"create.schedule.instruction.throttle.summary": "Change Throttle to %1$s",
+	"create.schedule.instruction.throttle": "Limit Max Speed",
+	"create.schedule.instruction.throttle.summary": "Change Max Speed to %1$s",
 	"create.schedule.instruction.throttle_edit_box": "Throttle",
 	"create.schedule.instruction.throttle_edit_box_1": "Affects the top speed of the Train",
 

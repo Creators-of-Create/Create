@@ -46,7 +46,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class CarriageContraption extends Contraption {
 
@@ -69,6 +71,9 @@ public class CarriageContraption extends Contraption {
 	// render
 	public int portalCutoffMin;
 	public int portalCutoffMax;
+	
+	static final IItemHandlerModifiable fallbackItems = new ItemStackHandler();
+	static final IFluidHandler fallbackFluids = new FluidTank(0);
 
 	public CarriageContraption() {
 		conductorSeats = new HashMap<>();
@@ -326,12 +331,12 @@ public class CarriageContraption extends Contraption {
 
 	@Override
 	public IItemHandlerModifiable getSharedInventory() {
-		return storageProxy.getItems();
+		return storageProxy == null ? fallbackItems : storageProxy.getItems();
 	}
 
 	@Override
 	public IFluidHandler getSharedFluidTanks() {
-		return storageProxy.getFluids();
+		return storageProxy == null ? fallbackFluids : storageProxy.getFluids();
 	}
 
 	public void handleContraptionFluidPacket(BlockPos localPos, FluidStack containedFluid) {

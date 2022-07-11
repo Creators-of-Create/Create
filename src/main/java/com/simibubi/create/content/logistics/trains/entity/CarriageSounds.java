@@ -252,9 +252,19 @@ public class CarriageSounds {
 		public void setVolume(float volume) {
 			this.volume = volume;
 		}
+		
+		@Override
+		public float getVolume() {
+			return volume;
+		}
 
 		public void setPitch(float pitch) {
 			this.pitch = pitch;
+		}
+		
+		@Override
+		public float getPitch() {
+			return pitch;
 		}
 
 		public void setLocation(Vec3 location) {

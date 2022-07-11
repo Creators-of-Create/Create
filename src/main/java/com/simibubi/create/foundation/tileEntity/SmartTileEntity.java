@@ -177,7 +177,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 		behaviour.initialize();
 	}
 
-	public ItemRequirement getRequiredItems() {
+	public ItemRequirement getRequiredItems(BlockState state) {
 		return behaviours.values()
 			.stream()
 			.reduce(ItemRequirement.NONE, (r, b) -> r.union(b.getRequiredItems()), (r, r1) -> r.union(r1));

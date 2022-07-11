@@ -90,8 +90,10 @@ public class SchematicAndQuillHandler {
 
 		firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
 		secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.dimensions", (int) bb.getXsize() + 1,
-			(int) bb.getYsize() + 1, (int) bb.getZsize() + 1);
+		LocalPlayer player = Minecraft.getInstance().player;
+		Lang.translate("schematicAndQuill.dimensions", (int) bb.getXsize() + 1, (int) bb.getYsize() + 1,
+			(int) bb.getZsize() + 1)
+			.sendStatus(player);
 
 		return true;
 	}
@@ -115,25 +117,29 @@ public class SchematicAndQuillHandler {
 		}
 
 		if (selectedPos == null) {
-			Lang.sendStatus(player, "schematicAndQuill.noTarget");
+			Lang.translate("schematicAndQuill.noTarget")
+				.sendStatus(player);
 			return;
 		}
 
 		if (firstPos != null) {
 			secondPos = selectedPos;
-			Lang.sendStatus(player, "schematicAndQuill.secondPos");
+			Lang.translate("schematicAndQuill.secondPos")
+				.sendStatus(player);
 			return;
 		}
 
 		firstPos = selectedPos;
-		Lang.sendStatus(player, "schematicAndQuill.firstPos");
+		Lang.translate("schematicAndQuill.firstPos")
+			.sendStatus(player);
 	}
 
 	public void discard() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		firstPos = null;
 		secondPos = null;
-		Lang.sendStatus(player, "schematicAndQuill.abort");
+		Lang.translate("schematicAndQuill.abort")
+			.sendStatus(player);
 	}
 
 	public void tick() {
@@ -239,7 +245,9 @@ public class SchematicAndQuillHandler {
 		}
 		firstPos = null;
 		secondPos = null;
-		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.saved", filepath);
+		LocalPlayer player = Minecraft.getInstance().player;
+		Lang.translate("schematicAndQuill.saved", filepath)
+			.sendStatus(player);
 
 		if (!convertImmediately)
 			return;

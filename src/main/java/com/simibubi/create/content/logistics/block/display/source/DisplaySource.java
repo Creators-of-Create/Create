@@ -37,6 +37,8 @@ public abstract class DisplaySource extends DisplayBehaviour {
 		}
 
 		List<MutableComponent> text = provideText(context, stats);
+		if (text.isEmpty())
+			text = EMPTY;
 		activeTarget.acceptText(line, text, context);
 	}
 
@@ -73,6 +75,7 @@ public abstract class DisplaySource extends DisplayBehaviour {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {}
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder,
+		boolean isFirstLine) {}
 
 }

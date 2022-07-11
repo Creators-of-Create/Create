@@ -279,6 +279,10 @@ public class TrackPlacement {
 		if (skipCurve && !Mth.equal(ascend, 0)) {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
+				
+				if (axis1.y != 0 && axis1.y == -axis2.y)
+					return info.withMessage("ascending_s_curve");
+				
 				info.end1Extent = 0;
 				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6) / axis1.length();
 				if (hDistance < minHDistance)
@@ -558,6 +562,7 @@ public class TrackPlacement {
 	static int lastLineCount = 0;
 
 	static BlockPos hintPos;
+	static int hintAngle;
 	static Couple<List<BlockPos>> hints;
 
 	@OnlyIn(Dist.CLIENT)
@@ -612,8 +617,12 @@ public class TrackPlacement {
 				true);
 
 		if (bhr.getDirection() == Direction.UP) {
-			if (!pos.equals(hintPos)) {
+			Vec3 lookVec = player.getLookAngle();
+			int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
+			
+			if (!pos.equals(hintPos) || lookAngle != hintAngle) {
 				hints = Couple.create(ArrayList::new);
+				hintAngle = lookAngle;
 				hintPos = pos;
 
 				for (int xOffset = -2; xOffset <= 2; xOffset++) {

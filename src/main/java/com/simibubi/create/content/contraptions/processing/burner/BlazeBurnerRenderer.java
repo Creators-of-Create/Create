@@ -120,14 +120,24 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 			.translate(0, headY, 0), horizontalAngle, modelTransform, ms, solid);
 
 		if (drawGoggles)
-			draw(CachedBufferer.partial(AllBlockPartials.BLAZE_GOGGLES, blockState)
+			draw(CachedBufferer.partial(blazeModel == AllBlockPartials.BLAZE_INERT
+				? AllBlockPartials.BLAZE_GOGGLES_SMALL : AllBlockPartials.BLAZE_GOGGLES, blockState)
 				.translate(0, headY + 8 / 16f, 0), horizontalAngle, modelTransform, ms, solid);
 
 		if (drawHat) {
-			SuperByteBuffer partial = CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState);
+			SuperByteBuffer partial = CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState)
+				.translate(0, headY, 0);
+			if (blazeModel == AllBlockPartials.BLAZE_INERT) {
+				partial.translateY(0.5f)
+					.centre()
+					.scale(0.75f)
+					.unCentre();
+			} else {
+				partial.translateY(0.75f);
+			}
 			if (modelTransform != null)
 				partial.transform(modelTransform);
-			partial.translate(0, headY + 0.75f, 0)
+			partial
 				.rotateCentered(Direction.UP, horizontalAngle + Mth.PI)
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)

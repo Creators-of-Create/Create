@@ -5,8 +5,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface ISpecialBlockItemRequirement {
 
-	default ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.INVALID;
-	}
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te);
 
 }
