@@ -745,7 +745,7 @@
 	"advancement.create.backtank": "负重前行",
 	"advancement.create.backtank.desc": "制作一个铜制背罐并对其积累气压",
 	"advancement.create.diving_suit": "准备深潜",
-	"advancement.create.diving_suit.desc": "装备潜水头盔和铜制背罐，然后跳进水里",
+	"advancement.create.diving_suit.desc": "装备潜水头盔和铜背罐，然后跳进水里",
 	"advancement.create.mechanical_pump_0": "面临压力",
 	"advancement.create.mechanical_pump_0.desc": "放置一个动力泵并为其供能",
 	"advancement.create.glass_pipe": "流之观察者",
