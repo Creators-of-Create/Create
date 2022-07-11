@@ -2882,8 +2882,7 @@
 
 	"create.ponder.track_chunks.header": "横穿卸载的区块",
 	"create.ponder.track_chunks.text_1": "轨道在加载的区块之外仍然保持运作",
-	"create.ponder.track_chunks.text_2": "列车将毫无问题地横穿世界上不活跃的区块",
-	"create.ponder.track_chunks.text_3": "他们仍然会停在车站或红灯处",
+	"create.ponder.track_chunks.text_3": "它们仍然会停在车站或红灯处",
 	"create.ponder.track_chunks.text_4": "但是，钻头和其他机载机器将无法运行",
 	"create.ponder.track_chunks.text_5": "一旦靠近玩家，列车将重新出现",
 
