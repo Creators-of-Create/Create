@@ -2898,7 +2898,7 @@
 	"create.ponder.track_placement.text_3": "然后选择或放置第二个轨道",
 	"create.ponder.track_placement.text_4": "轨道也可以放置为转弯或斜坡",
 	"create.ponder.track_placement.text_5": "连接时，轨道将尝试使每个转弯的大小相等",
-	"create.ponder.track_placement.text_6": "连接时按住冲刺键……",
+	"create.ponder.track_placement.text_6": "连接时按住疾跑键……",
 	"create.ponder.track_placement.text_7": "……将创建最长的适合的弯道",
 	"create.ponder.track_placement.text_8": "副手的材料会自动铺在轨道下",
 
@@ -2931,7 +2931,7 @@
 	"create.ponder.train_controls.text_4": "如果需要，可以使用鼠标滚轮微调最高速度",
 	"create.ponder.train_controls.text_5": "按住空格键来接近最近的车站",
 	"create.ponder.train_controls.text_6": "列车只能在车站被拆解为方块",
-	"create.ponder.train_controls.text_7": "组装的蒸汽笛可以用冲刺键激活",
+	"create.ponder.train_controls.text_7": "组装的蒸汽笛可以用疾跑键激活",
 	"create.ponder.train_controls.text_8": "潜行或再次点击可以停止控制列车",
 
 	"create.ponder.train_schedule.header": "使用列车时刻表",
