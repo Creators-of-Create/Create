@@ -31,7 +31,7 @@ import net.minecraftforge.common.Tags;
 public class AllPaletteBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.PALETTES_CREATIVE_TAB)
+		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB) // Change back when creative tabs in Registrate are fixed
 		.startSection(AllSections.PALETTES);
 
 	// Windows and Glass
