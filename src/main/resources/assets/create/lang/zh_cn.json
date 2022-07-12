@@ -1719,7 +1719,7 @@
 	"create.super_glue.first_pos": "已选择第一坐标",
 	"create.super_glue.abort": "选择已取消",
 	"create.super_glue.not_enough": "物品栏内强力胶不足",
-	"create.super_glue.sucess": "正在上胶……",
+	"create.super_glue.success": "正在上胶……",
 
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "这是一个叠加层例子",
