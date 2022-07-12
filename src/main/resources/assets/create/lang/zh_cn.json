@@ -2292,7 +2292,7 @@
 
 	"create.ponder.crushing_wheels.header": "使用粉碎轮处理物品",
 	"create.ponder.crushing_wheels.text_1": "一对粉碎轮，磨物快又准",
-	"create.ponder.crushing_wheels.text_2": "接入的旋转必须使得这两个轮子从上到下啮合转动",
+	"create.ponder.crushing_wheels.text_2": "接入的旋转必须使得这两个轮子啮合转动",
 	"create.ponder.crushing_wheels.text_3": "扔入或者放入的物品都会被粉碎处理",
 	"create.ponder.crushing_wheels.text_4": "你也可以使用自动化方案进行物品的输入以及拾取",
 
