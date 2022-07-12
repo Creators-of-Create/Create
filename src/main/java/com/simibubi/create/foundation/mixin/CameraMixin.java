@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
@@ -26,15 +27,13 @@ public abstract class CameraMixin {
 		throw new AssertionError();
 	}
 
-	@Inject(
+	@ModifyArg(
 			method = "Lnet/minecraft/client/Camera;setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;move(DDD)V", ordinal = 0),
-			cancellable = true
+			index = 0
 	)
-	public void modifySetup(BlockGetter pLevel, Entity pEntity, boolean pDetached, boolean pThirdPersonReverse, float pPartialTick, CallbackInfo ci) {
-		move(-this.getMaxZoom(4.0D * CameraDistanceModifier.getMultiplier(AnimationTickHolder.getPartialTicks())), 0, 0);
-		ci.cancel();
+	public double modifyCameraOffset(double originalValue) {
+		return -this.getMaxZoom(4.0D * CameraDistanceModifier.getMultiplier(AnimationTickHolder.getPartialTicks()));
 	}
-
 
 }
