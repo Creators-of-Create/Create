@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 1",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1719,7 +1719,7 @@
 	"create.super_glue.first_pos": "Выбрана первая позиция",
 	"create.super_glue.abort": "Выбор отклонен",
 	"create.super_glue.not_enough": "Мало клея в инвентаре",
-	"create.super_glue.sucess": "Нанесение клея...",
+	"create.super_glue.success": "UNLOCALIZED: Applying Glue...",
 
 	"create.gui.config.overlay1": "Привет :)",
 	"create.gui.config.overlay2": "Это образец оверлея",

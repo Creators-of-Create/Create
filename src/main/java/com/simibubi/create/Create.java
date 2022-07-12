@@ -20,6 +20,7 @@ import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
@@ -63,7 +64,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5b";
+	public static final String VERSION = "0.5c";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 

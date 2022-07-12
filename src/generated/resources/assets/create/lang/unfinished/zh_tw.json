@@ -1719,7 +1719,7 @@
 	"create.super_glue.first_pos": "UNLOCALIZED: First position selected",
 	"create.super_glue.abort": "UNLOCALIZED: Selection discarded",
 	"create.super_glue.not_enough": "UNLOCALIZED: Not enough glue in inventory",
-	"create.super_glue.sucess": "UNLOCALIZED: Applying Glue...",
+	"create.super_glue.success": "UNLOCALIZED: Applying Glue...",
 
 	"create.gui.config.overlay1": "嗨 :)",
 	"create.gui.config.overlay2": "這是一個實例層",

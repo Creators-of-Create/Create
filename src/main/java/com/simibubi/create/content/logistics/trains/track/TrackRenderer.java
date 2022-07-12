@@ -8,7 +8,6 @@ import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_RIGHT;
 import static com.simibubi.create.AllBlockPartials.TRACK_TIE;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;

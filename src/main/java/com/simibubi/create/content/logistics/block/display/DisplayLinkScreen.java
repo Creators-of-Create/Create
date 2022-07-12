@@ -30,12 +30,12 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -99,24 +99,26 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			initGathererOptions();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initGathererOptions() {
-		sourceState = minecraft.level.getBlockState(te.getSourcePosition());
-		targetState = minecraft.level.getBlockState(te.getTargetPosition());
+		ClientLevel level = minecraft.level;
+		sourceState = level.getBlockState(te.getSourcePosition());
+		targetState = level.getBlockState(te.getTargetPosition());
 
-		Item asItem;
+		ItemStack asItem;
 		int x = guiLeft;
 		int y = guiTop;
 
 		Block sourceBlock = sourceState.getBlock();
 		Block targetBlock = targetState.getBlock();
 
-		asItem = sourceBlock.asItem();
-		ItemStack sourceIcon = asItem == null || asItem == Items.AIR ? FALLBACK : new ItemStack(asItem);
-		asItem = targetBlock.asItem();
-		ItemStack targetIcon = asItem == null || asItem == Items.AIR ? FALLBACK : new ItemStack(asItem);
+		asItem = sourceBlock.getCloneItemStack(level, te.getSourcePosition(), sourceState);
+		ItemStack sourceIcon = asItem == null || asItem.isEmpty() ? FALLBACK : asItem;
+		asItem = targetBlock.getCloneItemStack(level, te.getTargetPosition(), targetState);
+		ItemStack targetIcon = asItem == null || asItem.isEmpty() ? FALLBACK : asItem;
 
-		sources = AllDisplayBehaviours.sourcesOf(minecraft.level, te.getSourcePosition());
-		target = AllDisplayBehaviours.targetOf(minecraft.level, te.getTargetPosition());
+		sources = AllDisplayBehaviours.sourcesOf(level, te.getSourcePosition());
+		target = AllDisplayBehaviours.targetOf(level, te.getTargetPosition());
 
 		removeWidget(targetLineSelector);
 		removeWidget(targetLineLabel);
@@ -131,7 +133,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		sourceTypeSelector = null;
 
 		if (target != null) {
-			DisplayTargetStats stats = target.provideStats(new DisplayLinkContext(minecraft.level, te));
+			DisplayTargetStats stats = target.provideStats(new DisplayLinkContext(level, te));
 			int rows = stats.maxRows();
 			int startIndex = Math.min(te.targetLine, rows);
 
