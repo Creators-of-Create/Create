@@ -2943,7 +2943,7 @@
 
 	"create.ponder.train_signal_placement.header": "放置列车信号机",
 	"create.ponder.train_signal_placement.text_1": "选择一个列车轨道，然后将信号机放置在附近",
-	"create.ponder.train_signal_placement.text_2": "信号机控制不由玩家驾驶的列车的流动",
+	"create.ponder.train_signal_placement.text_2": "信号机控制不由玩家驾驶的列车的行驶",
 	"create.ponder.train_signal_placement.text_3": "被调度的列车绝不会以相反方向穿过信号",
 	"create.ponder.train_signal_placement.text_4": "……除非添加第二个面向相反方向的信号",
 	"create.ponder.train_signal_placement.text_5": "可以连接辉光管让信号灯更加显眼",
