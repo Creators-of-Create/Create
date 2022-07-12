@@ -126,7 +126,7 @@
 	"block.create.cut_diorite_stairs": "Резные диоритовые ступеньки",
 	"block.create.cut_diorite_wall": "Резной диорит",
 	"block.create.cut_dripstone": "Резной натёчный камень",
-	"block.create.cut_dripstone_brick_slab": "Плита из из натёчнокаменного кирпича",
+	"block.create.cut_dripstone_brick_slab": "Плита из натёчнокаменного кирпича",
 	"block.create.cut_dripstone_brick_stairs": "Ступеньки из натёчнокаменного кирпича ",
 	"block.create.cut_dripstone_brick_wall": "Ограда из натёчнокаменного кирпича",
 	"block.create.cut_dripstone_bricks": "Резные кирпичи из натёчного камня",
@@ -1162,7 +1162,7 @@
 	"create.schematic.tool.flip.description.2": "",
 	"create.schematic.tool.flip.description.3": "",
 
-	"create.schematics.synchronizing": "Синхронизация..",
+	"create.schematics.synchronizing": "Синхронизация...",
 	"create.schematics.uploadTooLarge": "Ваша схематика слишком велика.",
 	"create.schematics.maxAllowedSize": "Максимально допустимый размер файла:",
 
@@ -1171,7 +1171,7 @@
 	"create.gui.schematicTable.title": "Схематичный стол",
 	"create.gui.schematicTable.availableSchematics": "Доступные схемы",
 	"create.gui.schematicTable.noSchematics": "Схемы не сохранены",
-	"create.gui.schematicTable.uploading": "Загрузка ...",
+	"create.gui.schematicTable.uploading": "Загрузка...",
 	"create.gui.schematicTable.finished": "Загрузка завершена!",
 	"create.gui.schematicannon.title": "Схематичная пушка",
 	"create.gui.schematicannon.listPrinter": "Список материалов",
@@ -1598,8 +1598,8 @@
 	"create.train.relocate.valid": "Можно переместить сюда, нажмите для подтверждения",
 	"create.train.relocate.invalid": "Невозможно переместить поезд сюда",
 	"create.train.relocate.too_far": "Невозможно переместить поезд так далеко",
-	"create.train.departing_from": "Отправление от станции %1$s",
-	"create.train.arrived_at": "Прибытие на станцию %1$s",
+	"create.train.departing_from": "Отправление от %1$s",
+	"create.train.arrived_at": "Прибытие на %1$s",
 	"create.train.status": "<i> Информация о поезде: %1$s",
 	"create.train.status.back_on_track": "Поезд снова на ходу",
 	"create.train.status.collision": "Столкновение с другим поездом",
@@ -1621,7 +1621,7 @@
 
 	"create.contraption.controls.start_controlling": "Под управлением: %1$s",
 	"create.contraption.controls.stop_controlling": "Выход из режима управления",
-	"create.contraption.controls.approach_station": "Зажмите %1$s для прибытия на станцию %2$s",
+	"create.contraption.controls.approach_station": "Зажмите %1$s для прибытия на %2$s",
 
 	"create.display_link.set": "Выбрана целевая позиция",
 	"create.display_link.success": "Успешно привязан к целевой позиции",
