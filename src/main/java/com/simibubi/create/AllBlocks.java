@@ -241,12 +241,12 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -570,7 +570,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
 			.lang("Cuckoo Clock")
-			.onRegisterAfter(Item.class, c -> TooltipHelper.referTo(c, CUCKOO_CLOCK))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> TooltipHelper.referTo(c, CUCKOO_CLOCK))
 			.register();
 
 	public static final BlockEntry<MillstoneBlock> MILLSTONE = REGISTRATE.block("millstone", MillstoneBlock::new)
@@ -1337,7 +1337,7 @@ public class AllBlocks {
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
-			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
 			.tag(AllBlockTags.SEATS.tag)
 			.item()
 			.tag(AllItemTags.SEATS.tag)
@@ -1953,7 +1953,7 @@ public class AllBlocks {
 					.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/block"))
 					.texture("0", p.modLoc("block/toolbox/" + colourName)));
 			})
-			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
 			.tag(AllBlockTags.TOOLBOXES.tag)
 			.item(UncontainableBlockItem::new)
 			.model((c, p) -> p.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/item"))

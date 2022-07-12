@@ -73,7 +73,7 @@ public class Create {
 		.create();
 
 	public static final CreativeModeTab BASE_CREATIVE_TAB = new CreateItemGroup();
-//	public static final CreativeModeTab PALETTES_CREATIVE_TAB = new PalettesItemGroup();
+	public static final CreativeModeTab PALETTES_CREATIVE_TAB = new PalettesItemGroup();
 
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();

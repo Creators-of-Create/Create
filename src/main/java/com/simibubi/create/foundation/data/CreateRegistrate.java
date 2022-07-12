@@ -30,6 +30,8 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -77,7 +79,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Override
 	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
-		Class<? super R> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
+		ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
 		NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
 		RegistryEntry<T> ret = super.accept(name, type, builder, creator, entryFactory);
 		sectionLookup.put(ret, currentSection());
@@ -103,8 +105,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public <R extends IForgeRegistryEntry<R>> Collection<RegistryEntry<R>> getAll(AllSections section,
-		Class<? super R> registryType) {
-		return this.<R>getAll(registryType)
+		ResourceKey<? extends Registry<R>> registryType) {
+		return this.getAll(registryType)
 			.stream()
 			.filter(e -> getSection(e) == section)
 			.collect(Collectors.toList());
