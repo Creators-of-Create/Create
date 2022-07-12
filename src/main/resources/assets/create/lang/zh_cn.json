@@ -2918,7 +2918,7 @@
 	"create.ponder.train_assembly.text_3": "要创建新列车，打开UI并切换到组装模式",
 	"create.ponder.train_assembly.text_4": "在组装期间，时刻表上的列车不会接近这个车站",
 	"create.ponder.train_assembly.text_5": "在轨道上使用列车机壳创建新的转向架",
-	"create.ponder.train_assembly.text_6": "再次单击轨道以在转向架设计之间循环",
+	"create.ponder.train_assembly.text_6": "再次单击轨道，便可以在转向架类型之间循环",
 	"create.ponder.train_assembly.text_7": "在强力胶的帮助下连接方块",
 	"create.ponder.train_assembly.text_8": "若是组装好的列车在其内的箱子或桶中找到燃料，它们会移动得更快",
 	"create.ponder.train_assembly.text_9": "储存在保险库中的燃料不会被列车消耗",
