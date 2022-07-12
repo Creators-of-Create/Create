@@ -1679,7 +1679,7 @@
 	"create.display_source.station_summary.platform_column": "Размер столбца Платформы",
 	"create.display_source.station_summary.now": "отп.",
 	"create.display_source.station_summary.minutes": " мин.",
-	"create.display_source.station_summary.seconds": "%1$sс",
+	"create.display_source.station_summary.seconds": "%1$s сек.",
 	"create.display_source.observed_train_name": "Название поезда",
 	"create.display_source.max_enchant_level": "Максимальная цена зачарования",
 	"create.display_source.boiler_status": "Статус котла",
@@ -2124,7 +2124,7 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.auto_schedule.header": "Станциях и Расписании",
+	"create.ponder.auto_schedule.header": "Станциях и Расписаниях",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать сигнал всякий раз, когда присутствует поезд",
 	"create.ponder.auto_schedule.text_3": "Имейте в виду, что к станции можно подойти только с указанного направления",
@@ -2773,8 +2773,8 @@
 	"create.ponder.rope_pulley_modes.text_2": "Можно настроить её так, чтобы структура никогда не становилась блоками или только на начальной позиции",
 
 	"create.ponder.rose_quartz_lamp.header": "Лампе из розового кварца",
-	"create.ponder.rose_quartz_lamp.text_1": "Лампы из розового кварца активируются по сигналу редстоуна",
-	"create.ponder.rose_quartz_lamp.text_2": "После этого они сами станут источником сигнала",
+	"create.ponder.rose_quartz_lamp.text_1": "Лампа из розового кварца активируются по сигналу редстоуна",
+	"create.ponder.rose_quartz_lamp.text_2": "После этого она сама станет источником сигнала",
 	"create.ponder.rose_quartz_lamp.text_3": "Когда несколько ламп расположены в группе...",
 	"create.ponder.rose_quartz_lamp.text_4": "...активация одной из Ламп сфокусирует сигнал на ней, деактивируя все остальные",
 	"create.ponder.rose_quartz_lamp.text_5": "Компараторы выводят сигнал исходя из дистанции до ближайшей включённой Лампы",
