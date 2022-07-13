@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.armor;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -28,7 +29,7 @@ public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
 		for (ItemStack itemStack : entity.getArmorSlots())
-			if (AllItems.COPPER_BACKTANK.isIn(itemStack))
+			if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
 				return itemStack;
 		return ItemStack.EMPTY;
 	}
