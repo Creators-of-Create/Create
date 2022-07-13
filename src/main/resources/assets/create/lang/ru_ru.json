@@ -1558,7 +1558,7 @@
 	"create.station.no_assembly_diagonal_1": "на пересениях путей",
 	"create.station.no_assembly_curve": "Нельзя строить поезда",
 	"create.station.no_assembly_curve_1": "на изгнутых путях",
-	"create.station.train_not_aligned": "Не могу разобрать,",
+	"create.station.train_not_aligned": "Невозможно разобрать,",
 	"create.station.train_not_aligned_1": "не все вагонные тележки выровнены",
 	"create.station.carriage_number": "Вагон %1$s:",
 	"create.station.retry": "Исправьте это и повторите попытку.",
