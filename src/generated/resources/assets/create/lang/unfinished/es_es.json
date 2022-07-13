@@ -1721,7 +1721,7 @@
 	"create.super_glue.first_pos": "Primera posición seleccionada",
 	"create.super_glue.abort": "Selección descartada",
 	"create.super_glue.not_enough": "Pegamento insuficiente",
-	"create.super_glue.sucess": "Aplicando pegamento...",
+	"create.super_glue.success": "Aplicando pegamento...",
 
 	"create.gui.config.overlay1": "Hola :)",
 	"create.gui.config.overlay2": "Esta es una muestra de la superposición",
