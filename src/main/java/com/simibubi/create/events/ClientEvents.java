@@ -314,33 +314,33 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
+	public static void getFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
-		FluidState fluidstate = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+		FluidState fluidState = level.getFluidState(blockPos);
+		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return;
 
-		Fluid fluid = fluidstate.getType();
+		Fluid fluid = fluidState.getType();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.setDensity(5f);
+			event.scaleFarPlaneDistance(1f/32f);
 			event.setCanceled(true);
 			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.setDensity(1.5f);
+			event.scaleFarPlaneDistance(1f/8f);
 			event.setCanceled(true);
 			return;
 		}
 
 		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
 			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-			event.setDensity(300f);
+			event.scaleFarPlaneDistance(6.25f);
 			event.setCanceled(true);
 			return;
 		}
@@ -351,24 +351,26 @@ public class ClientEvents {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
-		FluidState fluidstate = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+		FluidState fluidState = level.getFluidState(blockPos);
+		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return;
 
-		Fluid fluid = fluidstate.getType();
+		Fluid fluid = fluidState.getType();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.setRed(98 / 256f);
-			event.setGreen(32 / 256f);
-			event.setBlue(32 / 256f);
+			event.setRed(98 / 255f);
+			event.setGreen(32 / 255f);
+			event.setBlue(32 / 255f);
+			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.setRed(234 / 256f);
-			event.setGreen(174 / 256f);
-			event.setBlue(47 / 256f);
+			event.setRed(234 / 255f);
+			event.setGreen(174 / 255f);
+			event.setBlue(47 / 255f);
+			return;
 		}
 	}
 

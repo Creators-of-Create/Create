@@ -48,17 +48,18 @@ public class FluidHelper {
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
 	}
-	
-	public static boolean isTag(Fluid fluid, TagKey<Fluid> pTag) {
-		return fluid.is(pTag);
+
+	@SuppressWarnings("deprecation")
+	public static boolean isTag(Fluid fluid, TagKey<Fluid> tag) {
+		return fluid.is(tag);
 	}
-	
-	public static boolean isTag(FluidState fluid, TagKey<Fluid> pTag) {
-		return isTag(fluid.getType(), pTag);
+
+	public static boolean isTag(FluidState fluid, TagKey<Fluid> tag) {
+		return fluid.is(tag);
 	}
-	
-	public static boolean isTag(FluidStack fluid, TagKey<Fluid> pTag) {
-		return isTag(fluid.getFluid(), pTag);
+
+	public static boolean isTag(FluidStack fluid, TagKey<Fluid> tag) {
+		return isTag(fluid.getFluid(), tag);
 	}
 
 	public static boolean hasBlockState(Fluid fluid) {

@@ -59,7 +59,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 
 		return fluids.entrySet()
 				.stream()
-				.sorted((Comparator.comparingInt(value -> ((Map.Entry<Fluid, Integer>) value).getValue()).reversed()))
+				.sorted(Comparator.<Map.Entry<Fluid, Integer>>comparingInt(value -> value.getValue()).reversed())
 				.limit(maxRows)
 				.map(entry -> IntAttached.with(
 						entry.getValue(),
