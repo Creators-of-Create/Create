@@ -1599,7 +1599,7 @@
 	"create.train.relocate.invalid": "Невозможно переместить поезд сюда",
 	"create.train.relocate.too_far": "Невозможно переместить поезд так далеко",
 	"create.train.departing_from": "Отправление от %1$s",
-	"create.train.arrived_at": "Прибытие на %1$s",
+	"create.train.arrived_at": "Прибыл на %1$s",
 	"create.train.status": "<i> Информация о поезде: %1$s",
 	"create.train.status.back_on_track": "Поезд снова на ходу",
 	"create.train.status.collision": "Столкновение с другим поездом",
