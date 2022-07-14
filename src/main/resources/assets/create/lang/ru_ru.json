@@ -2067,7 +2067,7 @@
 	"create.ponder.think_back": "Подумать о предыдущем",
 	"create.ponder.slow_text": "Удобное чтение",
 	"create.ponder.exit": "Выйти",
-	"create.ponder.welcome": "Добро пожаловать в размышления",
+	"create.ponder.welcome": "Добро пожаловать в размышления!",
 	"create.ponder.categories": "Категории, доступные в Create",
 	"create.ponder.index_description": "Кликните по одной из иконок, чтобы узнать о связанных с ней предметах и блоках.",
 	"create.ponder.index_title": "Содержание размышлений",
@@ -2888,11 +2888,11 @@
 	"create.ponder.track_chunks.text_5": "Оказавшись рядом с игроком, поезд снова появится",
 
 	"create.ponder.track_observer.header": "Обнаружении поездов",
-	"create.ponder.track_observer.text_1": "Выберите железнодорожный путь, затем поместите наблюдатель рядом",
+	"create.ponder.track_observer.text_1": "Выберите Железнодорожный путь, затем поместите Наблюдатель рядом",
 	"create.ponder.track_observer.text_2": "Наблюдатель обнаружит любые поезда, проходящие через маркер на рельсах",
 	"create.ponder.track_observer.text_3": "Наблюдатели могут быть настроены для обнаружения определённого груза",
 
-	"create.ponder.track_placement.header": "Размещении железнодорожных путей",
+	"create.ponder.track_placement.header": "Размещении Железнодорожных путей",
 	"create.ponder.track_placement.text_1": "Встречайте новый тип рельсов, разработанный для Железнодорожных штуковин",
 	"create.ponder.track_placement.text_2": "Чтобы разместить несколько путей сразу, нажмите на существующие Пути",
 	"create.ponder.track_placement.text_3": "Затем разместите или выберите вторые Пути",
@@ -2925,7 +2925,7 @@
 	"create.ponder.train_assembly.text_9": "Топливо, находящееся в Хранилищах, не будет потребляться поездом",
 
 	"create.ponder.train_controls.header": "Управлении поездами",
-	"create.ponder.train_controls.text_1": "Контроллер поезда требуются на каждой железнодорожной штуковине",
+	"create.ponder.train_controls.text_1": "Контроллер поезда требуются на каждой Железнодорожной штуковине",
 	"create.ponder.train_controls.text_2": "После сборки щёлкните ПКМ по блоку, чтобы начать движение",
 	"create.ponder.train_controls.text_3": "Ускоряйте и управляйте поездом, используя клавиши движения",
 	"create.ponder.train_controls.text_4": "При желании максимальную тягу можно настроить с помощью колесика мыши",
@@ -2943,7 +2943,7 @@
 	"create.ponder.train_schedule.text_6": "Расписания можно забирать у машинистов в любой момент",
 
 	"create.ponder.train_signal_placement.header": "Размещении Железнодорожных светофоров",
-	"create.ponder.train_signal_placement.text_1": "Выберите железнодорожный путь, затем поместите Светофор поблизости",
+	"create.ponder.train_signal_placement.text_1": "Выберите Железнодорожный путь, затем разместите Светофор поблизости",
 	"create.ponder.train_signal_placement.text_2": "Светофоры регулируют поток поездов, которые управляются не игроками",
 	"create.ponder.train_signal_placement.text_3": "Поезда следующие по расписанию никогда не будут пересекать сигналы в противоположном направлении",
 	"create.ponder.train_signal_placement.text_4": "...если не добавлен второй Светофор, направленный в противоположную сторону",
