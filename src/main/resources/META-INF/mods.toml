@@ -5,7 +5,7 @@ license="MIT"
 
 [[mods]]
 modId="create"
-version="0.5.0c"
+version="${version}"
 displayName="Create"
 #updateJSONURL=""
 displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
