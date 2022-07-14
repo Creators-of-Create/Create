@@ -1435,7 +1435,7 @@
 	"create.schedule.instruction.destination.summary": "Следующая остановка:",
 	"create.schedule.instruction.filter_edit_box": "Название станции",
 	"create.schedule.instruction.filter_edit_box_1": "Используйте * в качестве текстового подстановочного знака",
-	"create.schedule.instruction.filter_edit_box_2": "Пример: 'Моя станция, платформа *'",
+	"create.schedule.instruction.filter_edit_box_2": "Пример: 'Станция Тверь, платформа *'",
 	"create.schedule.instruction.filter_edit_box_3": "Поезд выберет наименьшее совпадение",
 	"create.schedule.instruction.rename": "Обновить название расп.",
 	"create.schedule.instruction.rename.summary": "Новое название:",
