@@ -2302,7 +2302,7 @@
 	"create.ponder.deployer.text_10": "ПКМ спереди, чтобы дать ему предмет для использования",
 	"create.ponder.deployer.text_11": "Предметы также могут быть введены автоматически",
 	"create.ponder.deployer.text_12": "Промоутеры имеют слот для фильтра",
-	"create.ponder.deployer.text_13": "Когда фильтр установлен, Активатор работает только держа подходящий предмет",
+	"create.ponder.deployer.text_13": "Когда фильтр установлен, Промоутер работает только держа подходящий предмет",
 	"create.ponder.deployer.text_14": "Только предметы подходящие по фильтру могут быть введены...",
 	"create.ponder.deployer.text_15": "...и только неподходящие предметы будут выведены",
 	"create.ponder.deployer.text_2": "Он всегда будет взаимодействовать с местом на два блока перед ним",
@@ -2320,7 +2320,7 @@
 	"create.ponder.deployer_contraption.text_3": "Слот для Фильтра может быть использован, чтобы уточнить, какие предметы ему брать",
 
 	"create.ponder.deployer_modes.header": "Режимах Промоутера",
-	"create.ponder.deployer_modes.text_1": "По умолчанию, активатор имитирует ПКМ-взаимодейстие",
+	"create.ponder.deployer_modes.text_1": "По умолчанию, Промоутер имитирует ПКМ-взаимодейстие",
 	"create.ponder.deployer_modes.text_2": "Используя Ключ, вы можете установить его на имитацию ЛКМ",
 
 	"create.ponder.deployer_processing.header": "Обработке элементов с помощью Промоутеров",
@@ -2329,9 +2329,9 @@
 	"create.ponder.deployer_processing.text_3": "Когда предметы находятся на конвейере...",
 	"create.ponder.deployer_processing.text_4": "Промоутер будет удерживать и обрабатывать их автоматически",
 
-	"create.ponder.deployer_redstone.header": "Управлении автономными активаторами редстоуном",
-	"create.ponder.deployer_redstone.text_1": "При активации Редстоуном активатор перестанет работать",
-	"create.ponder.deployer_redstone.text_2": "Перед остановкой, Активатор завершит все начатые действия",
+	"create.ponder.deployer_redstone.header": "Управлении автономными Промоутерами редстоуном",
+	"create.ponder.deployer_redstone.text_1": "При активации Редстоуном Промоутер перестанет работать",
+	"create.ponder.deployer_redstone.text_2": "Перед остановкой, Промоутер завершит все начатые действия",
 	"create.ponder.deployer_redstone.text_3": "Таким образом, инвертированный импульс может быть использован для вызова ровно одного срабатывания",
 
 	"create.ponder.depot.header": "Использовании Столика",
