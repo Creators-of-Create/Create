@@ -1945,7 +1945,7 @@
 	"block.create.stockpile_switch.tooltip.condition1": "Когда ниже нижнего предела",
 	"block.create.stockpile_switch.tooltip.behaviour1": "Не подаёт _сигнал_ _красного_ _камня_.",
 
-	"block.create.content_observer.tooltip": "НАБЛЮДАТЕЛЬ ЗА СОДЕРЖИМЫМ",
+	"block.create.content_observer.tooltip": "НАБЛЮДАТЕЛЬ СОДЕРЖИМОГО",
 	"block.create.content_observer.tooltip.summary": "_Обнаруживает элементы_ внутри _контейнеров_ и _конвейеров_, соответствующие настроенному _фильтру_. Если наблюдаемый инвентарь, ремень или шланг содержит совпадающий элемент, этот компонент излучает сигнал красного камня. Когда наблюдаемая _ воронка передает_ соответствующий предмет, этот компонент испускает _импульс_.",
 	"block.create.content_observer.tooltip.condition1": "Когда наблюдает за контейнером",
 	"block.create.content_observer.tooltip.behaviour1": "Выдаёт _сигнал редстоуна_, пока наблюдаемое содержимое совпадает с _фильтром_.",
@@ -3008,7 +3008,7 @@
 	"create.ponder.weighted_ejector_tunnel.text_5": "...остаток продолжит свой путь",
 
 	"create.ponder.windmill_source.header": "Генерации силы вращения при помощи Подшипников ветряной мельницы",
-	"create.ponder.windmill_source.text_1": "Подшипники ветр. мельницы прикрепляются к блокам перед ними",
+	"create.ponder.windmill_source.text_1": "Подшипники мельницы прикрепляются к блокам перед ними",
 	"create.ponder.windmill_source.text_2": "Если прикреплено достаточно парусоподобных блоков, он может стать мельницей",
 	"create.ponder.windmill_source.text_3": "Активированный при помощи ПКМ, Подшипник ветр. мельницы начнёт вырабатывать силу вращения",
 	"create.ponder.windmill_source.text_4": "Количество парусов определяет скорость вращения",
