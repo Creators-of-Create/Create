@@ -1516,7 +1516,7 @@
 	"create.schedule.non_controlling_seat": "Машинист должен сидеть перед блоком управления",
 	"create.schedule.remove_with_empty_hand": "Заберите текущее расписание пустой рукой",
 	"create.schedule.auto_removed_from_train": "Автоматическое расписание отменено",
-	"create.schedule.removed_from_train": "Расписание отозвано из поезда",
+	"create.schedule.removed_from_train": "Расписание получено из поезда",
 	"create.schedule.no_stops": "В этом расписании пока нет остановок",
 	"create.schedule.continued": "Расписание возобновлено",
 
