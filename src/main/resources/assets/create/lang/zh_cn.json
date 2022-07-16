@@ -2912,7 +2912,7 @@
 	"create.ponder.train_assembly.text_11": "可选的第二个允许从车站往两个方向出发",
 	"create.ponder.train_assembly.text_12": "打开车站UI并确认组装过程",
 	"create.ponder.train_assembly.text_13": "列车只能在车站被拆解为方块",
-	"create.ponder.train_assembly.text_14": "在车站上使用时，地图会在该位置添加一个带标签的标记",
+	"create.ponder.train_assembly.text_14": "对着车站使用时，地图会在该位置添加一个带标签的标记",
 	"create.ponder.train_assembly.text_15": "组装好的列车可以使用扳手重新安置到相邻的轨道",
 	"create.ponder.train_assembly.text_2": "车站是你的轨道网络的路径点",
 	"create.ponder.train_assembly.text_3": "要创建新列车，打开UI并切换到组装模式",
