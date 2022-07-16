@@ -1401,7 +1401,7 @@
 	"create.backtank.depleted": "背罐压力耗尽",
 
 	"create.hint.derailed_train.title": "出轨的列车",
-	"create.hint.derailed_train": "看起来该列车不再坐在相连的轨道段上，使用_扳手__右击_可以将它重新安置到附近的轨道上",
+	"create.hint.derailed_train": "看起来该列车不再位于相连的轨道段上，使用_扳手__右击_可以将它重新安置到附近的轨道上",
 
 	"create.boiler.status": "锅炉状态：%1$s",
 	"create.boiler.status_short": "锅炉：%1$s",
