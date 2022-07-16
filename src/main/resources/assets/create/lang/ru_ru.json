@@ -1612,7 +1612,7 @@
 	"create.train.status.missing_driver": "Машинист пропал",
 	"create.train.status.found_driver": "Найден новый машинист",
 	"create.train.status.navigation_success": "Движение успешно восстановлено",
-	"create.train.status.no_match": "Ни одна станция в расписании не соответствует '%1$s'",
+	"create.train.status.no_match": "Станция '%1$s' не найдена.",
 	"create.train.status.no_path": "Не удалось найти подходящий путь к следующему запланированному пункту назначения.",
 
 	"create.track_signal.cannot_change_mode": "Невозможно переключить режим этого светофора",
