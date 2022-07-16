@@ -2410,7 +2410,7 @@
 	"create.ponder.fluid_tank_sizes.text_1": "Жидкостные баки можно объединить для увеличения общей вместимости",
 	"create.ponder.fluid_tank_sizes.text_2": "Их площадь основания может составлять до 3 блоков в ширину...",
 	"create.ponder.fluid_tank_sizes.text_3": "...и увеличиваются в высоту более чем на 30 дополнительных уровней",
-	"create.ponder.fluid_tank_sizes.text_4": "При помощи гаечного ключа можно создать окно на резервуаре",
+	"create.ponder.fluid_tank_sizes.text_4": "При помощи Гаечного ключа можно создать окно на резервуаре",
 
 	"create.ponder.fluid_tank_storage.header": "Хранении жидкостей в Жидкостных баках",
 	"create.ponder.fluid_tank_storage.text_1": "Жидкостные баки можно использовать для хранения большого количества жидкости",
@@ -2462,8 +2462,8 @@
 	"create.ponder.gantry_redstone.text_1": "Активированные редстоуном валы крана перестают двигать шасси",
 	"create.ponder.gantry_redstone.text_2": "Вместо этого сила вращения передаётся выходному валу шасси",
 
-	"create.ponder.gantry_shaft.header": "Использовании валов портального крана",
-	"create.ponder.gantry_shaft.text_1": "Валы портального крана составляют основу крановой установки. По ним будут двигаться присоединённые шасси",
+	"create.ponder.gantry_shaft.header": "Использовании Валов портального крана",
+	"create.ponder.gantry_shaft.text_1": "Валы портального крана составляют основу крановой установки. По ним будут двигаться присоединённые Шасси",
 	"create.ponder.gantry_shaft.text_2": "Крановые установки могут двигать присоединённые Блоки",
 
 	"create.ponder.gearbox.header": "Передаче силы вращения с помощью Коробок передач",
@@ -2651,7 +2651,7 @@
 	"create.ponder.mechanical_pump_flow.text_5": "Смена направления вращения изменяет направление потока",
 	"create.ponder.mechanical_pump_flow.text_6": "Используйте гаечный ключ, чтобы изменить направление помпы вручную",
 
-	"create.ponder.mechanical_pump_speed.header": "Производительности механических помп",
+	"create.ponder.mechanical_pump_speed.header": "Производительности Механических помп",
 	"create.ponder.mechanical_pump_speed.text_1": "Независимо от скорости, Механические помпы оказывают влияние на трубы в радиусе 16 блоков",
 	"create.ponder.mechanical_pump_speed.text_2": "Ускорение подаваемого вращения изменяет скорость распространения потоков...",
 	"create.ponder.mechanical_pump_speed.text_3": "...также, как и скорость передачи жидкостей",
@@ -2673,8 +2673,8 @@
 	"create.ponder.mechanical_saw_processing.text_4": "Когда из ингредиента можно получить несколько результатов, фильтр может уточнить его",
 	"create.ponder.mechanical_saw_processing.text_5": "Без фильтра пила будет выбирать все возможные результаты по очереди",
 
-	"create.ponder.millstone.header": "Обработке предметов в жёрновах",
-	"create.ponder.millstone.text_1": "Жёрнова обрабатывают предметы перемалывая их",
+	"create.ponder.millstone.header": "Обработке предметов в Жерновах",
+	"create.ponder.millstone.text_1": "Жернова обрабатывают предметы перемалывая их",
 	"create.ponder.millstone.text_2": "Их можно запустить при помощи шестерней с любой стороны",
 	"create.ponder.millstone.text_3": "Бросьте или внесите предметы сверху",
 	"create.ponder.millstone.text_4": "После некоторого времени результат можно забрать при помощи ПКМ",
@@ -2732,7 +2732,7 @@
 	"create.ponder.pulse_extender.text_5": "Можно настроить задержку вплоть до 30 минут",
 
 	"create.ponder.pulse_repeater.header": "Управлении сигналами при помощи Импульсных повторителей",
-	"create.ponder.pulse_repeater.text_1": "Импульсные повторители укоротят любой редстуон сигнал до одного импульса.",
+	"create.ponder.pulse_repeater.text_1": "Импульсные повторители укоротят любой редстуон сигнал до одного импульса",
 	"create.ponder.pulse_repeater.text_2": "С помощь колёсика мыши можно настроить время Импульсного повторителя",
 	"create.ponder.pulse_repeater.text_3": "Можно настроить задержку вплоть до 30 минут",
 
@@ -2741,7 +2741,7 @@
 	"create.ponder.radial_chassis.text_2": "Когда один блок перемещается штуковиной, остальные двигаются с ним",
 	"create.ponder.radial_chassis.text_3": "Боковые грани Радиального шасси можно сделать липкими",
 	"create.ponder.radial_chassis.text_4": "Кликните ещё раз, чтобы сделать все остальные грани липкими",
-	"create.ponder.radial_chassis.text_5": "ПКМ пустой рукой крадучись, чтобы убрать слизь",
+	"create.ponder.radial_chassis.text_5": "Нажмите Shift+ПКМ пустой рукой, чтобы убрать слизь",
 	"create.ponder.radial_chassis.text_6": "Когда блок находится рядом с липкой гранью...",
 	"create.ponder.radial_chassis.text_7": "он присоединит все достижимые блоки в пределах радиуса на этом слое",
 	"create.ponder.radial_chassis.text_8": "При помощи ключа можно указать точный радиус для этого шасси",
@@ -2753,7 +2753,7 @@
 
 	"create.ponder.redstone_link.header": "Использовании Беспроводного передатчика редстоун сигнала",
 	"create.ponder.redstone_link.text_1": "Беспроводные передатчики редстоун сигнала могут передавать редстоун сигнал без проводов",
-	"create.ponder.redstone_link.text_2": "ПКМ крадучись, чтобы переключить режим приёмника",
+	"create.ponder.redstone_link.text_2": "Нажмите Shift+ПКМ, чтобы переключить режим приёмника",
 	"create.ponder.redstone_link.text_3": "ПКМ ключом сделает то же самое",
 	"create.ponder.redstone_link.text_4": "Приёмники испускают редстоун сигнал передатчиков в 128 блоках",
 	"create.ponder.redstone_link.text_5": "Положите предметы в два слота, чтобы указать частоту",
@@ -2824,9 +2824,9 @@
 	"create.ponder.speedometer.text_2": "При ношении Инженерных очков игрок может получить более полную информацию от прибора",
 	"create.ponder.speedometer.text_3": "Компараторы могут испускать аналоговый Редстоун сигнал относительно измерений спидометра",
 
-	"create.ponder.spout_filling.header": "Наполнении предметов при помощи дозатора",
+	"create.ponder.spout_filling.header": "Наполнении предметов при помощи Дозатора",
 	"create.ponder.spout_filling.text_1": "Дозатор может заполнять подходящие предметы, расположенные под ним",
-	"create.ponder.spout_filling.text_2": "К содержимому дозатора невозможно получить доступ вручную.",
+	"create.ponder.spout_filling.text_2": "К содержимому дозатора невозможно получить доступ вручную",
 	"create.ponder.spout_filling.text_3": "Вместо этого можно использовать трубы для подачи в него жидкостей",
 	"create.ponder.spout_filling.text_4": "Наполняемые предметы могут быть размещены на депо под дозатором",
 	"create.ponder.spout_filling.text_5": "Когда предметы подаются конвейером...",
@@ -2840,9 +2840,9 @@
 
 	"create.ponder.steam_engine.header": "Настройке Паровых двигателей",
 	"create.ponder.steam_engine.text_1": "Паровые двигатели можно разместить на баке с жидкостью",
-	"create.ponder.steam_engine.text_10": "Ур. 4",
+	"create.ponder.steam_engine.text_10": "4 уровень",
 	"create.ponder.steam_engine.text_11": "4 двигателя",
-	"create.ponder.steam_engine.text_12": "Ур. 8",
+	"create.ponder.steam_engine.text_12": "8 уровень",
 	"create.ponder.steam_engine.text_13": "8 двигателей",
 	"create.ponder.steam_engine.text_2": "Нажмите по Двигателю Валом в руке, чтобы создать выход кинетической энергии",
 	"create.ponder.steam_engine.text_3": "С достаточным количеством воды, уровнем нагрева и размером котла...",
@@ -2902,7 +2902,7 @@
 	"create.ponder.track_placement.text_7": "...создаст самый длинный возможный изгиб",
 	"create.ponder.track_placement.text_8": "Материалы во второй руке будут подкадыватся под Пути автоматически",
 
-	"create.ponder.track_portal.header": "Железнодорожных путях и Незере",
+	"create.ponder.track_portal.header": "Железнодорожных путях и портале в Незер",
 	"create.ponder.track_portal.text_1": "Пути, размещеные напротив портала в Незер...",
 	"create.ponder.track_portal.text_2": "...попытаютя создать Пути на другой стороне",
 	"create.ponder.track_portal.text_3": "Поезда на этом пути теперь могут путешествовать по измерениям",
@@ -2934,7 +2934,7 @@
 	"create.ponder.train_controls.text_7": "Прикреплённые Свистки можно активировать клавишей бега",
 	"create.ponder.train_controls.text_8": "Нажмите Shift или кликните снова, чтобы перестать управлять поездом",
 
-	"create.ponder.train_schedule.header": "Использовании расписания поезда",
+	"create.ponder.train_schedule.header": "Использовании Расписания поезда",
 	"create.ponder.train_schedule.text_1": "Расписания позволяют другим машинистам управлять поездами",
 	"create.ponder.train_schedule.text_2": "Щелкните ПКМ с предметом в руке, чтобы открыть его интерфейс",
 	"create.ponder.train_schedule.text_3": "После составления расписание может быть передано машинисту поезда",
@@ -2971,7 +2971,7 @@
 	"create.ponder.valve_handle.text_4": "Держите ПКМ крадучись для вращения его по Часовой стрелке",
 	"create.ponder.valve_handle.text_5": "Вентили можно окрашивать в эстетических целях",
 
-	"create.ponder.valve_pipe.header": "Управлении потоком жидкости с помощью вентилей",
+	"create.ponder.valve_pipe.header": "Управлении потоком жидкости с помощью Пентилей",
 	"create.ponder.valve_pipe.text_1": "Жидкостные вентили помогают контролировать распространение жидкостей по сетям труб",
 	"create.ponder.valve_pipe.text_2": "Их входной вал контролирует, разрешена ли подача жидкости в данный момент",
 	"create.ponder.valve_pipe.text_3": "При вращении в направлении открытия - клапан откроется",
