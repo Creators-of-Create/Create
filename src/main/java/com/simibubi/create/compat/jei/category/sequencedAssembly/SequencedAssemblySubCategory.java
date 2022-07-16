@@ -11,7 +11,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -73,7 +73,7 @@ public abstract class SequencedAssemblySubCategory {
 			builder
 					.addSlot(RecipeIngredientRole.INPUT, x + 4, 15)
 					.setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
-					.addIngredients(VanillaTypes.FLUID, CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()))
+					.addIngredients(ForgeTypes.FLUID_STACK, CreateRecipeCategory.withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()))
 					.addTooltipCallback(CreateRecipeCategory.addFluidTooltip(fluidIngredient.getRequiredAmount()));
 		}
 

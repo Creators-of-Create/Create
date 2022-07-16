@@ -28,13 +28,8 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 		RECIPES.add(ConversionRecipe.create(AllItems.CHROMATIC_COMPOUND.asStack(), AllItems.REFINED_RADIANCE.asStack()));
 	}
 
-	public MysteriousItemConversionCategory() {
-		super(itemIcon(AllItems.CHROMATIC_COMPOUND.get()), emptyBackground(177, 50));
-	}
-
-	@Override
-	public Class<? extends ConversionRecipe> getRecipeClass() {
-		return ConversionRecipe.class;
+	public MysteriousItemConversionCategory(Info<ConversionRecipe> info) {
+		super(info);
 	}
 
 	@Override

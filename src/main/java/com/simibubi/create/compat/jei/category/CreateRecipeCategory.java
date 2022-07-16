@@ -12,19 +12,17 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.Create;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -33,41 +31,30 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fluids.FluidStack;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IRecipeCategory<T> {
+	private static final IDrawable BASIC_SLOT = asDrawable(AllGuiTextures.JEI_SLOT);
+	private static final IDrawable CHANCE_SLOT = asDrawable(AllGuiTextures.JEI_CHANCE_SLOT);
 
-	public final List<Supplier<List<T>>> recipes = new ArrayList<>();
-	public final List<Supplier<? extends ItemStack>> recipeCatalysts = new ArrayList<>();
+	protected final RecipeType<T> type;
+	protected final Component title;
+	protected final IDrawable background;
+	protected final IDrawable icon;
 
-	protected String name;
-	protected RecipeType<T> type;
-	private final IDrawable background;
-	private final IDrawable icon;
+	private final Supplier<List<T>> recipes;
+	private final List<Supplier<? extends ItemStack>> catalysts;
 
-	private static final IDrawable basicSlot = asDrawable(AllGuiTextures.JEI_SLOT);
-	private static final IDrawable chanceSlot = asDrawable(AllGuiTextures.JEI_CHANCE_SLOT);
-
-	public CreateRecipeCategory(IDrawable icon, IDrawable background) {
-		this.background = background;
-		this.icon = icon;
+	public CreateRecipeCategory(Info<T> info) {
+		this.type = info.recipeType();
+		this.title = info.title();
+		this.background = info.background();
+		this.icon = info.icon();
+		this.recipes = info.recipes();
+		this.catalysts = info.catalysts();
 	}
-
-	public void setCategoryId(String name) {
-		this.name = name;
-		this.type = RecipeType.create(Create.ID, name, getRecipeClass());
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return getRecipeType().getUid();
-	}
-
-	@Override
-	public abstract Class<? extends T> getRecipeClass();
 
 	@NotNull
 	@Override
@@ -77,7 +64,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 
 	@Override
 	public Component getTitle() {
-		return Lang.translateDirect("recipe." + name);
+		return title;
 	}
 
 	@Override
@@ -90,12 +77,28 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return icon;
 	}
 
+	@Override
+	@Deprecated
+	public final ResourceLocation getUid() {
+		return type.getUid();
+	}
+
+	@Override
+	@Deprecated
+	public final Class<? extends T> getRecipeClass() {
+		return type.getRecipeClass();
+	}
+
 	public void registerRecipes(IRecipeRegistration registration) {
-		recipes.forEach(s -> registration.addRecipes(getRecipeType(), s.get()));
+		registration.addRecipes(type, recipes.get());
+	}
+
+	public void registerCatalysts(IRecipeCatalystRegistration registration) {
+		catalysts.forEach(s -> registration.addRecipeCatalyst(s.get(), type));
 	}
 
 	public static IDrawable getRenderedSlot() {
-		return basicSlot;
+		return BASIC_SLOT;
 	}
 
 	public static IDrawable getRenderedSlot(ProcessingOutput output) {
@@ -104,21 +107,9 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 
 	public static IDrawable getRenderedSlot(float chance) {
 		if (chance == 1)
-			return basicSlot;
+			return BASIC_SLOT;
 
-		return chanceSlot;
-	}
-
-	public static IDrawable emptyBackground(int width, int height) {
-		return new EmptyBackground(width, height);
-	}
-
-	public static IDrawable doubleItemIcon(ItemLike item1, ItemLike item2) {
-		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
-	}
-
-	public static IDrawable itemIcon(ItemLike item) {
-		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
+		return CHANCE_SLOT;
 	}
 
 	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
@@ -149,7 +140,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 
 	public static IRecipeSlotTooltipCallback addFluidTooltip(int mbAmount) {
 		return (view, tooltip) -> {
-			Optional<FluidStack> displayed = view.getDisplayedIngredient(VanillaTypes.FLUID);
+			Optional<FluidStack> displayed = view.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
 			if (displayed.isEmpty())
 				return;
 
@@ -179,7 +170,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		};
 	}
 
-	private static IDrawable asDrawable(AllGuiTextures texture) {
+	protected static IDrawable asDrawable(AllGuiTextures texture) {
 		return new IDrawable() {
 			@Override
 			public int getWidth() {
@@ -198,4 +189,10 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		};
 	}
 
+	public record Info<T extends Recipe<?>>(RecipeType<T> recipeType, Component title, IDrawable background, IDrawable icon, Supplier<List<T>> recipes, List<Supplier<? extends ItemStack>> catalysts) {
+	}
+
+	public interface Factory<T extends Recipe<?>> {
+		CreateRecipeCategory<T> create(Info<T> info);
+	}
 }

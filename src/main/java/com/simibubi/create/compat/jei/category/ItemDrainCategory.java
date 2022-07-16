@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedItemDrain;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
@@ -14,6 +13,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -33,15 +33,14 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 @ParametersAreNonnullByDefault
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
-	AnimatedItemDrain drain;
+	private final AnimatedItemDrain drain = new AnimatedItemDrain();
 
-	public ItemDrainCategory() {
-		super(doubleItemIcon(AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET), emptyBackground(177, 50));
-		drain = new AnimatedItemDrain();
+	public ItemDrainCategory(Info<EmptyingRecipe> info) {
+		super(info);
 	}
 
 	public static void consumeRecipes(Consumer<EmptyingRecipe> consumer, IIngredientManager ingredientManager) {
-		for (ItemStack stack : ingredientManager.getAllIngredients(VanillaTypes.ITEM)) {
+		for (ItemStack stack : ingredientManager.getAllIngredients(VanillaTypes.ITEM_STACK)) {
 			if (stack.getItem() instanceof PotionItem) {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient potion = Ingredient.of(stack);
@@ -84,11 +83,6 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public Class<? extends EmptyingRecipe> getRecipeClass() {
-		return EmptyingRecipe.class;
-	}
-
-	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, EmptyingRecipe recipe, IFocusGroup focuses) {
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 8)
@@ -97,7 +91,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 8)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addIngredient(VanillaTypes.FLUID, withImprovedVisibility(recipe.getResultingFluid()))
+				.addIngredient(ForgeTypes.FLUID_STACK, withImprovedVisibility(recipe.getResultingFluid()))
 				.addTooltipCallback(addFluidTooltip(recipe.getResultingFluid().getAmount()));
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 27)

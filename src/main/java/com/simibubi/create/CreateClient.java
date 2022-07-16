@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.ModelSwapper;
-import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -84,8 +83,6 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
-
-		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
 		AllKeys.register();
 		// AllFluids.assignRenderLayers();

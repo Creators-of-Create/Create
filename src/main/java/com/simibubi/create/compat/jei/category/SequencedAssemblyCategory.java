@@ -10,8 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
-import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
@@ -36,13 +34,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 	Map<ResourceLocation, SequencedAssemblySubCategory> subCategories = new HashMap<>();
 
-	public SequencedAssemblyCategory() {
-		super(itemIcon(AllItems.PRECISION_MECHANISM.get()), new EmptyBackground(180, 115));
-	}
-
-	@Override
-	public Class<? extends SequencedAssemblyRecipe> getRecipeClass() {
-		return SequencedAssemblyRecipe.class;
+	public SequencedAssemblyCategory(Info<SequencedAssemblyRecipe> info) {
+		super(info);
 	}
 
 	@Override

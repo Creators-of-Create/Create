@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
@@ -37,8 +36,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
-	public MechanicalCraftingCategory() {
-		super(itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 107));
+	public MechanicalCraftingCategory(Info<CraftingRecipe> info) {
+		super(info);
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			int yPosition = (int) (y + 1 + (i / getWidth(recipe)) * f);
 
 			builder.addSlot(RecipeIngredientRole.INPUT, xPosition, yPosition)
-				.setCustomRenderer(VanillaTypes.ITEM, renderer)
+				.setCustomRenderer(VanillaTypes.ITEM_STACK, renderer)
 				.addIngredients(ingredient);
 
 			i++;
@@ -128,11 +127,6 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
 		matrixStack.popPose();
-	}
-
-	@Override
-	public Class<? extends CraftingRecipe> getRecipeClass() {
-		return CraftingRecipe.class;
 	}
 
 	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {

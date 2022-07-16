@@ -399,10 +399,10 @@ public class ClientEvents {
 		}
 
 		@SubscribeEvent
-		public static void loadCompleted(FMLLoadCompleteEvent event) {
+		public static void onLoadComplete(FMLLoadCompleteEvent event) {
 			ModContainer createContainer = ModList.get()
 				.getModContainerById(Create.ID)
-				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
 			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
 				() -> new ConfigGuiHandler.ConfigGuiFactory(
 					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));

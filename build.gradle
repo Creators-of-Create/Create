@@ -133,19 +133,20 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.18.2-1.1.3]') {
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.18.2-1.1.3,)') {
         jarJar.pin(it, project.registrate_version)
     }
-    jarJar(group: 'com.jozufozu.flywheel', name: 'Flywheel-Forge', version: '[1.18-0.6.4,1.18-0.6.5)') {
-        jarJar.pin(it, project.flywheel_version)
-    }
+    // Uncomment once Forge fixes mixins for included jars
+    //jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.4,0.6.5)') {
+    //    jarJar.pin(it, project.flywheel_version)
+    //}
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
     if (inWorkspace) {
         implementation project(':Flywheel')
     } else {
-        implementation fg.deobf("com.jozufozu.flywheel:Flywheel-Forge:${flywheel_version}")
+        implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     }
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")
@@ -169,14 +170,6 @@ dependencies {
     }
 }
 
-processResources {
-    inputs.property 'version', mod_version
-
-    filesMatching('META-INF/mods.toml') {
-        expand 'version': mod_version
-    }
-}
-
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
     exclude '.cache/'
@@ -184,6 +177,12 @@ sourceSets.main.resources {
 
 mixin {
     add sourceSets.main, 'create.refmap.json'
+}
+
+// Workaround for SpongePowered/MixinGradle#38
+afterEvaluate {
+    tasks.configureReobfTaskForReobfJar.mustRunAfter(tasks.compileJava)
+    tasks.configureReobfTaskForReobfJarJar.mustRunAfter(tasks.compileJava)
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -201,7 +200,7 @@ jar {
             'Specification-Title': 'create',
             'Specification-Vendor': 'simibubi',
             'Specification-Version': '1',
-            'Implementation-Title': project.name,
+            'Implementation-Title': project.jar.baseName,
             'Implementation-Version': project.jar.archiveVersion,
             'Implementation-Vendor': 'simibubi',
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
@@ -233,6 +232,7 @@ publishing {
             artifactId = archivesBaseName
 
             from components.java
+            fg.component(it)
             jarJar.component(it)
         }
     }
