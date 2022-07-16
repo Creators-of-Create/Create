@@ -841,7 +841,7 @@
 	"advancement.create.track_crafting_factory": "轨道工厂",
 	"advancement.create.track_crafting_factory.desc": "用同一个动力辊压机制造1000个列车轨道",
 	"advancement.create.long_bend": "最长弯道",
-	"advancement.create.long_bend.desc": "建造一条长度超过30格的列车轨道",
+	"advancement.create.long_bend.desc": "建造一条长度超过30格的弯曲轨道",
 	"advancement.create.long_train": "雄心勃勃",
 	"advancement.create.long_train.desc": "建造至少带有六个车厢的列车",
 	"advancement.create.long_travel": "异地考察",
