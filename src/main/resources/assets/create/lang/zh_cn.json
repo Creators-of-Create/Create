@@ -213,7 +213,7 @@
 	"block.create.exposed_copper_tile_slab": "斑驳的铜瓦台阶",
 	"block.create.exposed_copper_tile_stairs": "斑驳的铜瓦楼梯",
 	"block.create.exposed_copper_tiles": "斑驳的铜瓦",
-	"block.create.fake_track": "地图的轨道标记",
+	"block.create.fake_track": "用于地图的轨道标记",
 	"block.create.fluid_pipe": "流体管道",
 	"block.create.fluid_tank": "流体储罐",
 	"block.create.fluid_valve": "流体阀门",
