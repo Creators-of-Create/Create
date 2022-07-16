@@ -832,7 +832,7 @@
 	"advancement.create.track_signal.desc": "放置一个列车信号机",
 	"advancement.create.display_board_0": "动态时间表",
 	"advancement.create.display_board_0.desc": "利用显示链接器，在翻牌显示器上预报列车入站时间",
-	"advancement.create.track_0": "新尺度",
+	"advancement.create.track_0": "新轨距",
 	"advancement.create.track_0.desc": "获得一些列车轨道",
 	"advancement.create.train_whistle": "呜！呜！",
 	"advancement.create.train_whistle.desc": "在你的列车上安装一个蒸汽笛并在驾驶时激活它",
