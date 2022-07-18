@@ -2774,10 +2774,10 @@
 
 	"create.ponder.rose_quartz_lamp.header": "Особенностях Фонаря из розового кварца",
 	"create.ponder.rose_quartz_lamp.text_1": "Фонарь из розового кварца активируются по сигналу редстоуна",
-	"create.ponder.rose_quartz_lamp.text_2": "После этого она сама станет источником сигнала",
+	"create.ponder.rose_quartz_lamp.text_2": "После этого он сам станет источником сигнала",
 	"create.ponder.rose_quartz_lamp.text_3": "Когда несколько Фонарей расположены в группе...",
-	"create.ponder.rose_quartz_lamp.text_4": "...активация одного из Фонаря сфокусирует сигнал на нём, деактивируя все остальные",
-	"create.ponder.rose_quartz_lamp.text_5": "Компараторы выводят сигнал исходя из дистанции до ближайшей включённого Фонаря",
+	"create.ponder.rose_quartz_lamp.text_4": "...активация одного из Фонарей, сфокусирует сигнал на нём, деактивируя все остальные",
+	"create.ponder.rose_quartz_lamp.text_5": "Компараторы выводят сигнал исходя из дистанции до ближайшего включённого Фонаря",
 	"create.ponder.rose_quartz_lamp.text_6": "Фонари также можно переключать вручную с помощью Гаечного ключа",
 
 	"create.ponder.rotation_speed_controller.header": "Использовании Регулятора скорости вращения",
