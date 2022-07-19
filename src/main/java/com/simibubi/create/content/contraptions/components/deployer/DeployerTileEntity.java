@@ -12,6 +12,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
@@ -22,16 +23,19 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -456,6 +460,42 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (overflowItems.isEmpty())
 			return false;
 		TooltipHelper.addHint(tooltip, "hint.full_deployer");
+		return true;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		Lang.translate("tooltip.deployer.header")
+				.forGoggles(tooltip);
+
+		float stressAtBase = calculateStressApplied();
+
+		if (StressImpact.isEnabled() && !Mth.equal(stressAtBase, 0)) {
+			Lang.translate("tooltip.stressImpact")
+					.style(GRAY)
+					.forGoggles(tooltip);
+
+			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
+
+			Lang.number(stressTotal)
+					.translate("generic.unit.stress")
+					.style(ChatFormatting.AQUA)
+					.space()
+					.add(Lang.translate("gui.goggles.at_current_speed")
+							.style(ChatFormatting.DARK_GRAY))
+					.forGoggles(tooltip, 1);
+		}
+
+		Lang.translate("tooltip.deployer." + (mode == Mode.USE ? "using" : "punching"))
+				.style(ChatFormatting.YELLOW)
+				.forGoggles(tooltip);
+
+		if (!heldItem.isEmpty()) {
+			Lang.translate("tooltip.deployer.contains", new TranslatableComponent(heldItem.getDescriptionId()).getString(), heldItem.getCount())
+					.style(ChatFormatting.GREEN)
+					.forGoggles(tooltip);
+		}
+
 		return true;
 	}
 
