@@ -1301,15 +1301,15 @@
 
 	"create.gui.attribute_filter.no_selected_attributes": "Атрибуты не выбраны",
 	"create.gui.attribute_filter.selected_attributes": "Выбранные атрибуты:",
-	"create.gui.attribute_filter.add_attribute": "Добавлены атрибуты",
-	"create.gui.attribute_filter.add_inverted_attribute": "Добавлены противоположные атрибуты в список",
+	"create.gui.attribute_filter.add_attribute": "Добавить атрибут",
+	"create.gui.attribute_filter.add_inverted_attribute": "Добавить обратный атрибут в список",
 	"create.gui.attribute_filter.allow_list_disjunctive": "Белый список (любой)",
 	"create.gui.attribute_filter.allow_list_disjunctive.description": "Предметы проходят, если у них есть какой-либо из выбранных атрибутов.",
 	"create.gui.attribute_filter.allow_list_conjunctive": "Белый список (все)",
 	"create.gui.attribute_filter.allow_list_conjunctive.description": "Предметы проходят, только если они имеют ВСЕ выбранные атрибуты.",
 	"create.gui.attribute_filter.deny_list": "Чёрный список",
 	"create.gui.attribute_filter.deny_list.description": "Предметы проходят, если они НЕ имеют ни одного из выбранных атрибутов.",
-	"create.gui.attribute_filter.add_reference_item": "Добавить предмет",
+	"create.gui.attribute_filter.add_reference_item": "Положите предмет",
 
 	"create.tooltip.holdForDescription": "Удерживайте [%1$s] для Сводки",
 	"create.tooltip.holdForControls": "Удерживайте [%1$s] для Управления",
