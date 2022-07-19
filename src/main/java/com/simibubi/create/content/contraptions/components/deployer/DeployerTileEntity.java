@@ -472,7 +472,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (StressImpact.isEnabled() && !Mth.equal(stressAtBase, 0)) {
 			Lang.translate("tooltip.stressImpact")
-					.style(GRAY)
+					.style(ChatFormatting.GRAY)
 					.forGoggles(tooltip);
 
 			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
