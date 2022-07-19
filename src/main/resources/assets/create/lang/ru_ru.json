@@ -1358,7 +1358,7 @@
 	"create.tunnel.selection_mode.randomize": "Случайно",
 	"create.tunnel.selection_mode.synchronize": "Синхронизировать входы",
 
-	"create.tooltip.chute.header": "Информация о Жёлобе",
+	"create.tooltip.chute.header": "Информация о жёлобе",
 	"create.tooltip.chute.items_move_down": "Предметы двигаются вниз",
 	"create.tooltip.chute.items_move_up": "Предметы двигаются вверх",
 	"create.tooltip.chute.no_fans_attached": "Нет подключенных вентиляторов",
@@ -1483,7 +1483,7 @@
 	"create.schedule.condition.threshold.item_measure": "Количество предметов",
 	"create.schedule.condition.threshold.items": "Штук(а)",
 	"create.schedule.condition.threshold.stacks": "Стак(ов)",
-	"create.schedule.condition.threshold.buckets": "Вёдро(ер)",
+	"create.schedule.condition.threshold.buckets": "Ведро(ер)",
 	"create.schedule.condition.threshold.status": "Груз: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Основной предмет",
 	"create.schedule.condition.threshold.place_item_2": "Можно использовать фильтры",
