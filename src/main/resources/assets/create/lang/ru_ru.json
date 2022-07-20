@@ -2081,7 +2081,7 @@
 	"create.ponder.shared.rpm16_source": "Источник: 16 об./мин.",
 	"create.ponder.shared.movement_anchors": "С помощью суперклея или шасси, более крупные структуры могут быть сдвинуты.",
 	"create.ponder.tag.redstone": "Логические компоненты",
-	"create.ponder.tag.redstone.description": "Компоненты, помогающие с конструированием редстоун схем",
+	"create.ponder.tag.redstone.description": "Компоненты, помогающие с конструированием схем из редстоуна",
 	"create.ponder.tag.contraption_assembly": "Приспособления для присоединения блоков",
 	"create.ponder.tag.contraption_assembly.description": "Инструменты и Компоненты используемые для сборки структур передвигаемых как движущиеся Штуковины",
 	"create.ponder.tag.fluids": "Жидкостные манипуляторы",
@@ -2635,7 +2635,7 @@
 	"create.ponder.mechanical_press.text_1": "Механический пресс может обрабатывать предметы под собой",
 	"create.ponder.mechanical_press.text_2": "Подаваемые предметы должны быть брошены или помещены на Депо под Прессом",
 	"create.ponder.mechanical_press.text_3": "Когда предметы подаются на конвейере...",
-	"create.ponder.mechanical_press.text_4": "Пресс будет задерживать и обрабатывать их автоматически",
+	"create.ponder.mechanical_press.text_4": "Пресс будет задерживать и наполнять их автоматически",
 
 	"create.ponder.mechanical_press_compacting.header": "Спрессовании предметов Механическим прессом",
 	"create.ponder.mechanical_press_compacting.text_1": "Спрессовывание предметов в Чаше упакует их",
@@ -2690,7 +2690,7 @@
 	"create.ponder.piston_pole.text_2": "Длина стержня, добавленного к его задней части, определяет Диапазон выдвижения.",
 
 	"create.ponder.portable_fluid_interface.header": "Портативном жидкостном интерфейсе на штуковинах",
-	"create.ponder.portable_fluid_interface.text_1": "Жидкостные баки на движущихся штуковинах не могут быть доступны ни каким трубам",
+	"create.ponder.portable_fluid_interface.text_1": "Жидкостные баки на движущихся штуковинах не могут быть доступны никаким трубам",
 	"create.ponder.portable_fluid_interface.text_2": "Этот интерфейс может взаимодействовать с жидкостными баками без необходимости останавливать штуковину",
 	"create.ponder.portable_fluid_interface.text_3": "Установите второй с промежутком в 1 или 2 блока между ними",
 	"create.ponder.portable_fluid_interface.text_4": "Они установят соединение, когда встретятся",
