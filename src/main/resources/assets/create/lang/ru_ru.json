@@ -883,7 +883,7 @@
 	"create.menu.return": "Вернуться в меню",
 	"create.menu.configure": "Настроить...",
 	"create.menu.ponder_index": "Все размышления",
-	"create.menu.only_ingame": "Доступно в меню во время игры",
+	"create.menu.only_ingame": "Доступны только во время игры",
 	"create.menu.project_page": "Страница проекта",
 	"create.menu.report_bugs": "Нашли ошибку?",
 	"create.menu.support": "Поддержите нас",
@@ -2643,7 +2643,7 @@
 	"create.ponder.mechanical_press_compacting.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
 	"create.ponder.mechanical_press_compacting.text_4": "Слот для фильтра можно использовать в случае конфликта двух рецептов",
 
-	"create.ponder.mechanical_pump_flow.header": "Транспортировке жидкости при помощи Механических помп",
+	"create.ponder.mechanical_pump_flow.header": "Транспортировке жидкостей при помощи Механических помп",
 	"create.ponder.mechanical_pump_flow.text_1": "Механические помпы направляют поток в присоединённые сети из труб",
 	"create.ponder.mechanical_pump_flow.text_2": "Когда работает, стрелка указывает направление потока",
 	"create.ponder.mechanical_pump_flow.text_3": "Часть сети сзади теперь качает жидкости...",
