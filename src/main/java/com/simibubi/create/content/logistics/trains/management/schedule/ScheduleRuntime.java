@@ -181,7 +181,7 @@ public class ScheduleRuntime {
 			}
 
 			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
-				if (!globalStation.name.matches(regex))
+				if (!globalStation.name.matches(regex) || !globalStation.isEnabled())
 					continue;
 				anyMatch = true;
 				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);

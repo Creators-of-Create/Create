@@ -21,6 +21,7 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 	boolean assemblyMode;
 	Boolean tryAssemble;
 	String name;
+	Boolean limitEnabled;
 
 	public static StationEditPacket dropSchedule(BlockPos pos) {
 		StationEditPacket packet = new StationEditPacket(pos);
@@ -48,6 +49,12 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 		return packet;
 	}
 
+	public static StationEditPacket setLimitEnabled(BlockPos pos, boolean limitEnabled) {
+		StationEditPacket packet = new StationEditPacket(pos);
+		packet.limitEnabled = limitEnabled;
+		return packet;
+	}
+
 	public StationEditPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
@@ -66,6 +73,11 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			buffer.writeBoolean(tryAssemble);
 			return;
 		}
+		buffer.writeBoolean(limitEnabled != null);
+		if (limitEnabled != null) {
+			buffer.writeBoolean(limitEnabled);
+			return;
+		}
 		buffer.writeBoolean(assemblyMode);
 		buffer.writeUtf(name);
 	}
@@ -79,6 +91,10 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 		name = "";
 		if (buffer.readBoolean()) {
 			tryAssemble = buffer.readBoolean();
+			return;
+		}
+		if (buffer.readBoolean()) {
+			limitEnabled = buffer.readBoolean();
 			return;
 		}
 		assemblyMode = buffer.readBoolean();
@@ -101,6 +117,16 @@ public class StationEditPacket extends TileEntityConfigurationPacket<StationTile
 			GraphLocation graphLocation = te.edgePoint.determineGraphLocation();
 			if (station != null && graphLocation != null) {
 				station.name = name;
+				Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
+				Create.RAILWAYS.markTracksDirty();
+			}
+		}
+
+		if (limitEnabled != null) {
+			GlobalStation station = te.getStation();
+			GraphLocation graphLocation = te.edgePoint.determineGraphLocation();
+			if (station != null && graphLocation != null) {
+				station.limitEnabled = limitEnabled;
 				Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
 				Create.RAILWAYS.markTracksDirty();
 			}

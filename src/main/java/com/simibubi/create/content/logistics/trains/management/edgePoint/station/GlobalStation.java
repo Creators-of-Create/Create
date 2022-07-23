@@ -19,6 +19,7 @@ public class GlobalStation extends SingleTileEdgePoint {
 	public String name;
 	public WeakReference<Train> nearestTrain;
 	public boolean assembling;
+	public boolean limitEnabled;
 
 	public GlobalStation() {
 		name = "Track Station";
@@ -39,6 +40,7 @@ public class GlobalStation extends SingleTileEdgePoint {
 		name = nbt.getString("Name");
 		assembling = nbt.getBoolean("Assembling");
 		nearestTrain = new WeakReference<Train>(null);
+		limitEnabled = nbt.getBoolean("LimitEnabled");
 	}
 
 	@Override
@@ -48,6 +50,7 @@ public class GlobalStation extends SingleTileEdgePoint {
 		assembling = buffer.readBoolean();
 		if (buffer.readBoolean())
 			tilePos = buffer.readBlockPos();
+		limitEnabled = buffer.readBoolean();
 	}
 
 	@Override
@@ -55,6 +58,7 @@ public class GlobalStation extends SingleTileEdgePoint {
 		super.write(nbt, dimensions);
 		nbt.putString("Name", name);
 		nbt.putBoolean("Assembling", assembling);
+		nbt.putBoolean("LimitEnabled", limitEnabled);
 	}
 
 	@Override
@@ -65,6 +69,7 @@ public class GlobalStation extends SingleTileEdgePoint {
 		buffer.writeBoolean(tilePos != null);
 		if (tilePos != null)
 			buffer.writeBlockPos(tilePos);
+		buffer.writeBoolean(limitEnabled);
 	}
 
 	public boolean canApproachFrom(TrackNode side) {
@@ -117,6 +122,10 @@ public class GlobalStation extends SingleTileEdgePoint {
 	@Nullable
 	public Train getNearestTrain() {
 		return this.nearestTrain.get();
+	}
+
+	public boolean isEnabled() {
+		return !limitEnabled || getNearestTrain() == null;
 	}
 
 }

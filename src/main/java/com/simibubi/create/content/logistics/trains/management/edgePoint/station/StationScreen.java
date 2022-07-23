@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -33,6 +34,7 @@ public class StationScreen extends AbstractStationScreen {
 	private IconButton newTrainButton;
 	private IconButton disassembleTrainButton;
 	private IconButton dropScheduleButton;
+	private Checkbox limitEnableCheckbox;
 
 	private int leavingAnimation;
 	private LerpedFloat trainPosition;
@@ -100,6 +102,15 @@ public class StationScreen extends AbstractStationScreen {
 		trainNameBox.mouseClicked(0, 0, 0);
 		trainNameBox.setResponder(onTextChanged);
 		trainNameBox.active = false;
+
+		limitEnableCheckbox = new Checkbox(x + 8, y + background.height - 26, 50, 20, new TextComponent("Train Limit"), te.getStation() != null && te.getStation().limitEnabled) {
+			@Override
+			public void onPress() {
+				super.onPress();
+				AllPackets.channel.sendToServer(StationEditPacket.setLimitEnabled(te.getBlockPos(), this.selected()));
+			}
+		};
+		addRenderableWidget(limitEnableCheckbox);
 
 		tickTrainDisplay();
 	}
