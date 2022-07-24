@@ -1560,7 +1560,7 @@
 	"create.station.no_assembly_curve_1": "на изгнутых путях",
 	"create.station.train_not_aligned": "Невозможно разобрать,",
 	"create.station.train_not_aligned_1": "не все вагонные тележки были выровнены",
-	"create.station.carriage_number": "Вагон %1$s:",
+	"create.station.carriage_number": "Вагон № %1$s:",
 	"create.station.retry": "Исправьте это и повторите попытку.",
 	"create.station.no_bogeys": "Нет вагонных тележек",
 	"create.station.one_bogey": "1 вагонная тележка",
@@ -1569,7 +1569,7 @@
 	"create.station.how_to_1": "Тележку можно убрать, сломав блок над ней.",
 	"create.station.how_to_2": "Один вагон может иметь до двух тележек.",
 
-	"create.train_assembly.too_many_bogeys": "Слишком много вагонных тележек прицеплено: %1$s.",
+	"create.train_assembly.too_many_bogeys": "Слишком много вагонных тележек прицеплено: %1$s шт.",
 	"create.train_assembly.frontmost_bogey_at_station": "Передняя вагонная тележка должна быть на указателе станции.",
 	"create.train_assembly.no_bogeys": "Вагонные тележки не найдены.",
 	"create.train_assembly.not_connected_in_order": "Вагонные тележки подключены не по порядку.",
