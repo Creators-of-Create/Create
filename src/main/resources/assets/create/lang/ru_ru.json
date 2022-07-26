@@ -1709,7 +1709,7 @@
 	"create.flap_display.cycles.numeric": " ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": "   ; мин.;отп.;15с;30с;45с",
 	"create.flap_display.cycles.shortened_numbers": " ;Т;М",
-	"create.flap_display.cycles.fluid_units": "мв;В ",
+	"create.flap_display.cycles.fluid_units": "мВ;В ",
 	"create.flap_display.cycles.instant": " ; ",
 	"create.flap_display.cycles.pixel": "█;▓;▒",
 
