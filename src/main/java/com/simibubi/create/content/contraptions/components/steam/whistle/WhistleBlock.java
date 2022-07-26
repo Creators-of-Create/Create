@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -19,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -180,7 +179,7 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		withTileEntityDo(pLevel, pPos, WhistleTileEntity::updatePitch);
 	}
 

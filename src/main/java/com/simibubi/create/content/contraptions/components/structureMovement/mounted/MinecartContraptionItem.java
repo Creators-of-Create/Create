@@ -195,7 +195,7 @@ public class MinecartContraptionItem extends Item {
 	@SubscribeEvent
 	public static void wrenchCanBeUsedToPickUpMinecartContraptions(PlayerInteractEvent.EntityInteract event) {
 		Entity entity = event.getTarget();
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player == null || entity == null)
 			return;
 
@@ -223,7 +223,7 @@ public class MinecartContraptionItem extends Item {
 			return;
 		}
 
-		if (event.getWorld().isClientSide) {
+		if (event.getLevel().isClientSide) {
 			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 			return;

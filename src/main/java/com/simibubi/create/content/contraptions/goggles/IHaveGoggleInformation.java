@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -27,7 +26,7 @@ public interface IHaveGoggleInformation {
 	 * Use Lang.[...].forGoggles(list)
 	 */
 	@Deprecated
-	Component componentSpacing = new TextComponent(spacing);
+	Component componentSpacing = Component.literal(spacing);
 
 	/**
 	 * this method will be called when looking at a TileEntity that implemented this

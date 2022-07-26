@@ -30,7 +30,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -38,19 +37,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class GoggleOverlayRenderer {
 
-	public static final IIngameOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
+	public static final IGuiOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
 
 	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
 
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
+	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width,
 		int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
@@ -100,7 +99,7 @@ public class GoggleOverlayRenderer {
 
 		if (hasHoveringInformation) {
 			if (!tooltip.isEmpty())
-				tooltip.add(TextComponent.EMPTY);
+				tooltip.add(Component.empty());
 			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
 			hoverAddedInformation = hte.addToTooltip(tooltip, mc.player.isShiftKeyDown());
 
@@ -143,11 +142,11 @@ public class GoggleOverlayRenderer {
 			if (!pistonFound)
 				return;
 			if (!tooltip.isEmpty())
-				tooltip.add(TextComponent.EMPTY);
+				tooltip.add(Component.empty());
 
 			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 				.append(Lang.translateDirect("gui.goggles.pole_length"))
-				.append(new TextComponent(" " + poles)));
+				.append(Component.literal(" " + poles)));
 		}
 
 		if (tooltip.isEmpty())

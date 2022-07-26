@@ -26,6 +26,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.utility.FilesHelper;
 
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -76,7 +77,7 @@ public class LangMerger implements DataProvider {
 	}
 
 	@Override
-	public void run(HashCache cache) throws IOException {
+	public void run(CachedOutput cache) throws IOException {
 		Path path = this.gen.getOutputFolder()
 			.resolve("assets/" + Create.ID + "/lang/" + "en_us.json");
 
@@ -224,7 +225,7 @@ public class LangMerger implements DataProvider {
 				.getAsJsonObject());
 	}
 
-	private void save(HashCache cache, List<Object> dataIn, int missingKeys, Path target, String message)
+	private void save(CachedOutput cache, List<Object> dataIn, int missingKeys, Path target, String message)
 		throws IOException {
 		String data = createString(dataIn, missingKeys);
 //		data = JavaUnicodeEscaper.outsideOf(0, 0x7f)

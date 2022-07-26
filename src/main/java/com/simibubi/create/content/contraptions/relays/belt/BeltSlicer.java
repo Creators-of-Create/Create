@@ -22,7 +22,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -473,7 +473,7 @@ public class BeltSlicer {
 			mc.player.displayClientMessage(Lang.translateDirect(feedback.langKey)
 				.withStyle(feedback.formatting), true);
 		else
-			mc.player.displayClientMessage(new TextComponent(""), true);
+			mc.player.displayClientMessage(Component.literal(""), true);
 
 		if (feedback.bb != null)
 			CreateClient.OUTLINER.chaseAABB("BeltSlicer", feedback.bb)

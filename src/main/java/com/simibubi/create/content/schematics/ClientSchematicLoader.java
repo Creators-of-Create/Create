@@ -24,7 +24,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -86,8 +85,8 @@ public class ClientSchematicLoader {
 		if (size > maxSize * 1000) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
-				player.sendMessage(Lang.translateDirect("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUUID());
-				player.sendMessage(Lang.translateDirect("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUUID());
+				player.displayClientMessage(Lang.translateDirect("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), false);
+				player.displayClientMessage(Lang.translateDirect("schematics.maxAllowedSize").append(" " + maxSize + " KB"), false);
 			}
 			return false;
 		}
@@ -137,7 +136,7 @@ public class ClientSchematicLoader {
 						if (Files.isDirectory(path))
 							return;
 
-						availableSchematics.add(new TextComponent(path.getFileName().toString()));
+						availableSchematics.add(Component.literal(path.getFileName().toString()));
 					});
 		} catch (NoSuchFileException e) {
 			// No Schematics created yet

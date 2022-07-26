@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.fluids;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
@@ -14,14 +13,16 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap.Builder;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelData.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 public class PipeAttachmentModel extends BakedModelWrapperWithData {
@@ -55,25 +56,25 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 			data.putBracket(bracket.getBracket());
 
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
-		return builder.withInitial(PIPE_PROPERTY, data);
+		return builder.with(PIPE_PROPERTY, data);
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
-		List<BakedQuad> quads = super.getQuads(state, side, rand, data);
-		if (data.hasProperty(PIPE_PROPERTY)) {
-			PipeModelData pipeData = data.getData(PIPE_PROPERTY);
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderType) {
+		List<BakedQuad> quads = super.getQuads(state, side, rand, data, renderType);
+		if (data.has(PIPE_PROPERTY)) {
+			PipeModelData pipeData = data.get(PIPE_PROPERTY);
 			quads = side != null && pipeData.hasRim(side) ? new ArrayList<>() : new ArrayList<>(quads);
-			addQuads(quads, state, side, rand, data, pipeData);
+			addQuads(quads, state, side, rand, data, pipeData, renderType);
 		}
 		return quads;
 	}
 
-	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, Random rand, IModelData data,
-		PipeModelData pipeData) {
+	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, RandomSource rand, ModelData data,
+		PipeModelData pipeData, RenderType renderType) {
 		BakedModel bracket = pipeData.getBracket();
 		if (bracket != null)
-			quads.addAll(bracket.getQuads(state, side, rand, data));
+			quads.addAll(bracket.getQuads(state, side, rand, data, renderType));
 		if (hideAttachmentConnector && side == Direction.UP)
 			return;
 		for (Direction d : Iterate.directions)
@@ -81,10 +82,10 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(pipeData.getRim(d))
 					.get(d)
 					.get()
-					.getQuads(state, side, rand, data));
+					.getQuads(state, side, rand, data, renderType));
 		if (pipeData.isEncased())
 			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
-				.getQuads(state, side, rand, data));
+				.getQuads(state, side, rand, data, renderType));
 	}
 
 	private static class PipeModelData {

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -20,8 +20,8 @@ public class DivingBootsItem extends CopperArmorItem {
 	}
 
 	@SubscribeEvent
-	public static void accellerateDescentUnderwater(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void accellerateDescentUnderwater(LivingTickEvent event) {
+		LivingEntity entity = event.getEntity();
 		if (!affects(entity))
 			return;
 

@@ -18,7 +18,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 
@@ -165,7 +164,7 @@ public class PonderTooltipHandler {
 			bars += ChatFormatting.GRAY + Strings.repeat("|", current);
 			if (progress < 1)
 				bars += ChatFormatting.DARK_GRAY + Strings.repeat("|", total - current);
-			return new TextComponent(bars);
+			return Component.literal(bars);
 		}
 
 		return holdW;

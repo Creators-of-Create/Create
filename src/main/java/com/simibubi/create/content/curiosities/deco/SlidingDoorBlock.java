@@ -54,8 +54,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 
 	@Deprecated // Remove in 1.19 - Fixes incompatibility with Quarks double door module
 	public static void stopItQuark(PlayerInteractEvent.RightClickBlock event) {
-		Player player = event.getPlayer();
-		Level world = event.getWorld();
+		Player player = event.getEntity();
+		Level world = event.getLevel();
 
 		if (!world.isClientSide || player.isDiscrete() || event.isCanceled() || event.getResult() == Result.DENY
 			|| event.getUseBlock() == Result.DENY)
@@ -181,7 +181,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 
 		if (isPowered != pState.getValue(OPEN)) {
 			this.playSound(pLevel, pPos, isPowered);
-			pLevel.gameEvent(isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
+			pLevel.gameEvent(null, isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
 
 			DoorHingeSide hinge = changedState.getValue(HINGE);
 			Direction facing = changedState.getValue(FACING);

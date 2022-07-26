@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.simibubi.create.foundation.worldgen.LayerPattern.Layer;
 
@@ -13,6 +12,7 @@ import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
@@ -28,13 +28,9 @@ public class LayeredOreFeature extends OreFeatureBase {
 
 	public static final LayeredOreFeature INSTANCE = new LayeredOreFeature();
 
-	public LayeredOreFeature() {
-		setRegistryName("config_driven_layered_ore");
-	}
-
 	public boolean place(FeaturePlaceContext<ConfigDrivenOreConfiguration> pContext) {
 
-		Random random = pContext.random();
+		RandomSource random = pContext.random();
 		BlockPos blockpos = pContext.origin();
 		WorldGenLevel worldgenlevel = pContext.level();
 		ConfigDrivenOreConfiguration config = pContext.config();

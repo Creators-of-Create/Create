@@ -25,7 +25,7 @@ public class ScheduleItemRetrieval {
 	@SubscribeEvent
 	public static void removeScheduleFromConductor(EntityInteract event) {
 		Entity entity = event.getTarget();
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player == null || entity == null)
 			return;
 		if (player.isSpectator())

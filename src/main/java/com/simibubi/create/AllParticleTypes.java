@@ -14,16 +14,14 @@ import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
 import com.simibubi.create.content.curiosities.bell.SoulParticle;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 public enum AllParticleTypes {
 
@@ -49,16 +47,17 @@ public enum AllParticleTypes {
 		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory);
 	}
 
-	public static void register(RegistryEvent.Register<ParticleType<?>> event) {
-		for (AllParticleTypes particle : values())
-			particle.entry.register(event.getRegistry());
+	public static void register(RegisterEvent event) {
+		event.register(Registry.PARTICLE_TYPE_REGISTRY, helper -> {
+			for (AllParticleTypes particle : values())
+				particle.entry.register(helper);
+		});
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerFactories(ParticleFactoryRegisterEvent event) {
-		ParticleEngine particles = Minecraft.getInstance().particleEngine;
+	public static void registerFactories(RegisterParticleProvidersEvent event) {
 		for (AllParticleTypes particle : values())
-			particle.entry.registerFactory(particles);
+			particle.entry.registerFactory(event);
 	}
 
 	public ParticleType<?> get() {
@@ -79,8 +78,8 @@ public enum AllParticleTypes {
 			this.typeFactory = typeFactory;
 		}
 
-		void register(IForgeRegistry<ParticleType<?>> registry) {
-			registry.register(getOrCreateType());
+		void register(RegisterEvent.RegisterHelper<ParticleType<?>> helper) {
+			helper.register(id, getOrCreateType());
 		}
 
 		ParticleType<D> getOrCreateType() {
@@ -88,14 +87,13 @@ public enum AllParticleTypes {
 				return type;
 			type = typeFactory.get()
 				.createType();
-			type.setRegistryName(id);
 			return type;
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		void registerFactory(ParticleEngine particles) {
+		void registerFactory(RegisterParticleProvidersEvent event) {
 			typeFactory.get()
-				.register(getOrCreateType(), particles);
+				.register(getOrCreateType(), event);
 		}
 
 	}

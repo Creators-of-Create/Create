@@ -10,8 +10,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
@@ -20,7 +20,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -70,13 +69,13 @@ public class BackTankUtil {
 
 		player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 40, 10));
 		player.connection.send(new ClientboundSetSubtitleTextPacket(
-			new TextComponent("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
+			Component.literal("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
 				.append(component.withStyle(ChatFormatting.GRAY))));
-		player.connection.send(new ClientboundSetTitleTextPacket(new TextComponent("")));
+		player.connection.send(new ClientboundSetTitleTextPacket(Component.literal("")));
 	}
 
 	public static int maxAir(ItemStack backtank) {
-		return maxAir(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), backtank));
+		return maxAir(backtank.getEnchantmentLevel(AllEnchantments.CAPACITY.get()));
 	}
 
 	public static int maxAir(int enchantLevel) {

@@ -14,8 +14,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.level.block.Blocks;
@@ -30,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 public class CloneCommand {
 
 	private static final Dynamic2CommandExceptionType CLONE_TOO_BIG_EXCEPTION = new Dynamic2CommandExceptionType(
-		(arg1, arg2) -> new TranslatableComponent("commands.clone.toobig", arg1, arg2));
+		(arg1, arg2) -> Component.translatable("commands.clone.toobig", arg1, arg2));
 
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("clone")
@@ -47,7 +46,7 @@ public class CloneCommand {
 							BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true)))))
 			.executes(ctx -> {
 				ctx.getSource()
-					.sendSuccess(new TextComponent(
+					.sendSuccess(Component.literal(
 						"Clones all blocks as well as super glue from the specified area to the target destination"),
 						true);
 
@@ -78,9 +77,9 @@ public class CloneCommand {
 		int gluePastes = cloneGlue(sourceArea, world, diffToTarget);
 
 		if (cloneBlocks)
-			source.sendSuccess(new TextComponent("Successfully cloned " + blockPastes + " Blocks"), true);
+			source.sendSuccess(Component.literal("Successfully cloned " + blockPastes + " Blocks"), true);
 
-		source.sendSuccess(new TextComponent("Successfully applied glue " + gluePastes + " times"), true);
+		source.sendSuccess(Component.literal("Successfully applied glue " + gluePastes + " times"), true);
 		return blockPastes + gluePastes;
 
 	}

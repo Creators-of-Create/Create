@@ -6,7 +6,7 @@ import java.util.List;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -57,7 +57,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         ResourceLocation constResource = new ResourceLocation(constellationName);
-        String something = new TranslatableComponent(String.format("%s.constellation.%s", constResource.getNamespace(), constResource.getPath())).getString();
+        String something = Component.translatable(String.format("%s.constellation.%s", constResource.getNamespace(), constResource.getPath())).getString();
         return new Object[] { something };
     }
 

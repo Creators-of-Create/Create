@@ -10,10 +10,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.ForgeModelBakery;
 
 public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedModel> {
 
@@ -33,10 +33,10 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedMod
 	}
 
 	@Override
-	public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
+	public BakedModel applyTransform(ItemTransforms.TransformType cameraTransformType, PoseStack mat, boolean leftHand) {
 		// Super call returns originalModel, but we want to return this, else ISTER
 		// won't be used.
-		super.handlePerspective(cameraTransformType, mat);
+		super.applyTransform(cameraTransformType, mat, leftHand);
 		return this;
 	}
 
@@ -57,14 +57,14 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedMod
 			this.partials.put(name, null);
 	}
 
-	public void loadPartials(ModelBakeEvent event) {
-		ForgeModelBakery modelLoader = event.getModelLoader();
+	public void loadPartials(ModelEvent.BakingCompleted event) {
+		ModelBakery modelLoader = event.getModelBakery();
 		for (String name : partials.keySet())
 			partials.put(name, loadPartial(modelLoader, name));
 	}
 
 	@SuppressWarnings("deprecation")
-	protected BakedModel loadPartial(ForgeModelBakery modelLoader, String name) {
+	protected BakedModel loadPartial(ModelBakery modelLoader, String name) {
 		return modelLoader.bake(getPartialModelLocation(name), BlockModelRotation.X0_Y0);
 	}
 

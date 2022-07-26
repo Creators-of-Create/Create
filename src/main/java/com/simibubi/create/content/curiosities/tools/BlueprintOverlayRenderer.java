@@ -36,8 +36,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,7 +46,7 @@ import net.minecraftforge.registries.tags.ITagManager;
 
 public class BlueprintOverlayRenderer {
 
-	public static final IIngameOverlay OVERLAY = BlueprintOverlayRenderer::renderOverlay;
+	public static final IGuiOverlay OVERLAY = BlueprintOverlayRenderer::renderOverlay;
 
 	static boolean active;
 	static boolean empty;
@@ -239,7 +239,7 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
+	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width,
 		int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui)

@@ -26,7 +26,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class Schedule {
@@ -64,7 +63,7 @@ public class Schedule {
 		return list.stream()
 			.map(Pair::getFirst)
 			.map(rl -> rl.getNamespace() + ".schedule." + langSection + rl.getPath())
-			.map(TranslatableComponent::new)
+			.map(Component::translatable)
 			.toList();
 	}
 

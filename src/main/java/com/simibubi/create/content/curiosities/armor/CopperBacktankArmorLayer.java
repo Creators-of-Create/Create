@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,12 +32,12 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-	public static final IIngameOverlay REMAINING_AIR_OVERLAY = CopperBacktankArmorLayer::renderRemainingAirOverlay;
+	public static final IGuiOverlay REMAINING_AIR_OVERLAY = CopperBacktankArmorLayer::renderRemainingAirOverlay;
 
 	public CopperBacktankArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
@@ -106,7 +105,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		livingRenderer.addLayer((CopperBacktankArmorLayer) layer);
 	}
 
-	public static void renderRemainingAirOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public static void renderRemainingAirOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -129,7 +128,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 
 		poseStack.translate(width / 2 + 90, height - 53, 0);
 
-		Component text = new TextComponent(StringUtil.formatTickDuration(timeLeft * 20));
+		Component text = Component.literal(StringUtil.formatTickDuration(timeLeft * 20));
 		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())
 			.at(0, 0)
 			.render(poseStack);

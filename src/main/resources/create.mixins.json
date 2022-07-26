@@ -23,7 +23,6 @@
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
     "MapRendererMixin",
-    "ModelDataRefreshMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",

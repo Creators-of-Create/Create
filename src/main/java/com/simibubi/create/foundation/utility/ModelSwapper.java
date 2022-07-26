@@ -16,9 +16,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class ModelSwapper {
@@ -39,14 +37,14 @@ public class ModelSwapper {
 		return customRenderedItems;
 	}
 
-	public void onModelRegistry(ModelRegistryEvent event) {
+	public void onModelRegistry(ModelEvent.RegisterAdditional event) {
 		customRenderedItems.forEach((item, modelFunc) -> modelFunc.apply(null)
 			.getModelLocations()
-			.forEach(ForgeModelBakery::addSpecialModel));
+			.forEach(event::register));
 	}
 
-	public void onModelBake(ModelBakeEvent event) {
-		Map<ResourceLocation, BakedModel> modelRegistry = event.getModelRegistry();
+	public void onModelBake(ModelEvent.BakingCompleted event) {
+		Map<ResourceLocation, BakedModel> modelRegistry = event.getModels();
 
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));

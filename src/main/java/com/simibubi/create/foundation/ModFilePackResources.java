@@ -3,9 +3,9 @@ package com.simibubi.create.foundation;
 import java.nio.file.Path;
 
 import net.minecraftforge.forgespi.locating.IModFile;
-import net.minecraftforge.resource.PathResourcePack;
+import net.minecraftforge.resource.PathPackResources;
 
-public class ModFilePackResources extends PathResourcePack {
+public class ModFilePackResources extends PathPackResources {
 	protected final IModFile modFile;
 	protected final String sourcePath;
 

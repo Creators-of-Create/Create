@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -81,7 +80,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(getIcon(), new TextComponent(getOperator().formatted + " " + getThreshold()).append(getUnit()));
+		return Pair.of(getIcon(), Component.literal(getOperator().formatted + " " + getThreshold()).append(getUnit()));
 	}
 
 	@Override
@@ -119,7 +118,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		builder.addSelectionScrollInput(0, 24, (i, l) -> {
 			i.forOptions(Ops.translatedOptions())
 				.titled(Lang.translateDirect("schedule.condition.threshold.train_holds"))
-				.format(state -> new TextComponent(" " + Ops.values()[state].formatted));
+				.format(state -> Component.literal(" " + Ops.values()[state].formatted));
 		}, "Operator");
 		builder.addIntegerTextInput(29, 41, (e, t) -> {
 		}, "Threshold");

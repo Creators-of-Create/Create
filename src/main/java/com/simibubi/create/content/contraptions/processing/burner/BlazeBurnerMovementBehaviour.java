@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.processing.burner;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -23,6 +21,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +41,7 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 		if (!shouldRender(context))
 			return;
 
-		Random r = context.world.getRandom();
+		RandomSource r = context.world.getRandom();
 		Vec3 c = context.position;
 		Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
 			.multiply(1, 0, 1));

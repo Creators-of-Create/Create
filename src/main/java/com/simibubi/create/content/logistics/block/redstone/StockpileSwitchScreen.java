@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class StockpileSwitchScreen extends AbstractSimiScreen {
@@ -57,7 +56,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 			.startWithValue(te.getState() ? 1 : 0);
 
 		offBelow = new ScrollInput(x + 36, y + 40, 102, 18).withRange(0, 100)
-			.titled(TextComponent.EMPTY.plainCopy())
+			.titled(Component.empty())
 			.calling(state -> {
 				lastModification = 0;
 				offBelow.titled(Lang.translateDirect("gui.stockpile_switch.move_to_upper_at", state));
@@ -69,7 +68,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 			.setState((int) (te.offWhenBelow * 100));
 
 		onAbove = new ScrollInput(x + 36, y + 18, 102, 18).withRange(1, 101)
-			.titled(TextComponent.EMPTY.plainCopy())
+			.titled(Component.empty())
 			.calling(state -> {
 				lastModification = 0;
 				onAbove.titled(Lang.translateDirect("gui.stockpile_switch.move_to_lower_at", state));

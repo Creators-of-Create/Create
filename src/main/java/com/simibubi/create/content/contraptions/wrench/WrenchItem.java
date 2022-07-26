@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 public class WrenchItem extends Item {
@@ -71,7 +71,7 @@ public class WrenchItem extends Item {
 		if (player != null && !player.isCreative())
 			Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 				.forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
-		state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
+		state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
 		world.destroyBlock(pos, false);
 		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() * .5f + .5f);
 		return InteractionResult.SUCCESS;
@@ -81,7 +81,7 @@ public class WrenchItem extends Item {
 		Entity target = event.getTarget();
 		if (!(target instanceof AbstractMinecart))
 			return;
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		ItemStack heldItem = player.getMainHandItem();
 		if (!AllItems.WRENCH.isIn(heldItem))
 			return;
@@ -93,7 +93,7 @@ public class WrenchItem extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
 	}
 

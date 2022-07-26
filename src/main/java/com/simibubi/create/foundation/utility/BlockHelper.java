@@ -42,7 +42,7 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 
 public class BlockHelper {
 
@@ -178,7 +178,7 @@ public class BlockHelper {
 			&& (player == null || !player.isCreative())) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerLevel) world, pos, tileentity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
 		}
 
 		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());

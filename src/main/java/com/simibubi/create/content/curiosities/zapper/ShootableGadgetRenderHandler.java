@@ -78,12 +78,12 @@ public abstract class ShootableGadgetRenderHandler {
 		AbstractClientPlayer player = mc.player;
 		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getEntityRenderDispatcher()
 			.getRenderer(player);
-		ItemInHandRenderer firstPersonRenderer = mc.getItemInHandRenderer();
+		ItemInHandRenderer firstPersonRenderer = mc.getEntityRenderDispatcher().getItemInHandRenderer();
 
 		PoseStack ms = event.getPoseStack();
 		MultiBufferSource buffer = event.getMultiBufferSource();
 		int light = event.getPackedLight();
-		float pt = event.getPartialTicks();
+		float pt = event.getPartialTick();
 
 		boolean rightHand = event.getHand() == InteractionHand.MAIN_HAND ^ mc.player.getMainArm() == HumanoidArm.LEFT;
 		float recoil = rightHand ? Mth.lerp(pt, lastRightHandAnimation, rightHandAnimation)

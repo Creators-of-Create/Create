@@ -265,8 +265,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 					List<ItemStack> containers = new ArrayList<>();
 					groupedItems.grid.values()
 						.forEach(stack -> {
-							if (stack.hasContainerItem())
-								containers.add(stack.getContainerItem()
+							if (stack.hasCraftingRemainingItem())
+								containers.add(stack.getCraftingRemainingItem()
 									.copy());
 						});
 

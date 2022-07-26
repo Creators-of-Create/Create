@@ -101,13 +101,13 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					if (!ingredient.test(extracted))
 						continue;
 					// Catalyst items are never consumed
-					if (extracted.hasContainerItem() && extracted.getContainerItem()
+					if (extracted.hasCraftingRemainingItem() && extracted.getCraftingRemainingItem()
 						.sameItem(extracted))
 						continue Ingredients;
 					if (!simulate)
 						availableItems.extractItem(slot, 1, false);
-					else if (extracted.hasContainerItem())
-						recipeOutputItems.add(extracted.getContainerItem()
+					else if (extracted.hasCraftingRemainingItem())
+						recipeOutputItems.add(extracted.getCraftingRemainingItem()
 							.copy());
 					extractedItemsFromSlot[slot]++;
 					continue Ingredients;

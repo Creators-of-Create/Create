@@ -25,7 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -110,7 +110,7 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		String[] pitches = Lang.translateDirect("generic.notes")
 			.getString()
 			.split(";");
-		TextComponent textComponent = new TextComponent(spacing);
+		MutableComponent textComponent = Component.literal(spacing);
 		tooltip.add(textComponent.append(Lang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}

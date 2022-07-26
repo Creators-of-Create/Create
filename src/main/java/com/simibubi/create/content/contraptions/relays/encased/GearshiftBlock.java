@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import java.util.Random;
-
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -9,6 +7,7 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -76,7 +75,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		BlockEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof KineticTileEntity))
 			return;

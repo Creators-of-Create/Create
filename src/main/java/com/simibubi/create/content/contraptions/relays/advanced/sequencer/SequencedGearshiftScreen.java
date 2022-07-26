@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
@@ -150,7 +149,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = font.width(text);
-				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, new TextComponent(text));
+				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, Component.literal(text));
 			}
 			if (def.hasSpeedParameter)
 				label(ms, 127, yOffset - 3, instruction.speedModifier.label);

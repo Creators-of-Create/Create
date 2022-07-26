@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTileEntities;
@@ -12,6 +10,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -86,7 +85,7 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
 		if (pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
 			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
 	}

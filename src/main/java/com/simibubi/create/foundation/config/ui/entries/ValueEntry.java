@@ -21,7 +21,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
@@ -50,7 +50,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		listeners.add(resetButton);
 
 		List<String> path = value.getPath();
-		labelTooltip.add(new TextComponent(label).withStyle(ChatFormatting.WHITE));
+		labelTooltip.add(Component.literal(label).withStyle(ChatFormatting.WHITE));
 		String comment = spec.getComment();
 		if (comment == null || comment.isEmpty())
 			return;
@@ -68,18 +68,18 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		// add comment to tooltip
 		labelTooltip.addAll(commentLines.stream()
 				.filter(Predicates.not(s -> s.startsWith("Range")))
-				.map(TextComponent::new)
+				.map(Component::literal)
 				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, ChatFormatting.GRAY, ChatFormatting.GRAY)
 						.stream())
 				.collect(Collectors.toList()));
 
 		if (annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName()))
-			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _relog_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.GOLD));
+			labelTooltip.addAll(TooltipHelper.cutTextComponent(Component.literal("Changing this value will require a _relog_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.GOLD));
 
 		if (annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName()))
-			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _restart_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.RED));
+			labelTooltip.addAll(TooltipHelper.cutTextComponent(Component.literal("Changing this value will require a _restart_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.RED));
 
-		labelTooltip.add(new TextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).withStyle(ChatFormatting.DARK_GRAY));
+		labelTooltip.add(Component.literal(ConfigScreen.modID + ":" + path.get(path.size() - 1)).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	@Override

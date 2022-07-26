@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.trains.management.display;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
@@ -30,6 +29,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -250,7 +250,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (pState.getBlock() != this)
 			return;
 		BlockPos belowPos =

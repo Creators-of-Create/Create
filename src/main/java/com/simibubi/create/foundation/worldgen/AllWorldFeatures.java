@@ -14,12 +14,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 public class AllWorldFeatures {
 
@@ -103,9 +102,11 @@ public class AllWorldFeatures {
 
 	public static void register() {}
 
-	public static void registerOreFeatures(RegistryEvent.Register<Feature<?>> event) {
-		event.getRegistry()
-			.registerAll(VanillaStyleOreFeature.INSTANCE, LayeredOreFeature.INSTANCE);
+	public static void registerOreFeatures(RegisterEvent event) {
+		event.register(Registry.FEATURE_REGISTRY, helper -> {
+			helper.register(Create.asResource("config_driven_ore"), VanillaStyleOreFeature.INSTANCE);
+			helper.register(Create.asResource("config_driven_layered_ore"), LayeredOreFeature.INSTANCE);
+		});
 	}
 
 	public static void registerPlacementTypes() {

@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -43,7 +43,7 @@ public class EnchantAttribute implements ItemAttribute {
     public Object[] getTranslationParameters() {
         String parameter = "";
         if(enchantment != null)
-            parameter = new TranslatableComponent(enchantment.getDescriptionId()).getString();
+            parameter = Component.translatable(enchantment.getDescriptionId()).getString();
         return new Object[] { parameter };
     }
 

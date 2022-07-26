@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -34,7 +33,6 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -43,6 +41,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -69,6 +68,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -76,7 +76,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private static final Object cuttingRecipesKey = new Object();
 	public static final Supplier<RecipeType<?>> woodcuttingRecipeType =
-		Suppliers.memoize(() -> Registry.RECIPE_TYPE.get(new ResourceLocation("druidcraft", "woodcutting")));
+		Suppliers.memoize(() -> ForgeRegistries.RECIPE_TYPES.getValue(new ResourceLocation("druidcraft", "woodcutting")));
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
@@ -279,7 +279,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		else
 			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
 
-		Random r = level.random;
+		RandomSource r = level.random;
 		Vec3 v = VecHelper.getCenterOf(this.worldPosition)
 			.add(0, 5 / 16f, 0);
 		for (int i = 0; i < 10; i++) {
@@ -302,7 +302,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			speed = .125f;
 		}
 
-		Random r = level.random;
+		RandomSource r = level.random;
 		Vec3 vec = getItemMovementVec();
 		Vec3 pos = VecHelper.getCenterOf(this.worldPosition);
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;

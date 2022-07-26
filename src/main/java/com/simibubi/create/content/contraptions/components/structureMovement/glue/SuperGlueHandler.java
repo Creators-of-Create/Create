@@ -26,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
+import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.network.PacketDistributor;
@@ -36,7 +36,7 @@ public class SuperGlueHandler {
 
 	@SubscribeEvent
 	public static void glueListensForBlockPlacement(EntityPlaceEvent event) {
-		LevelAccessor world = event.getWorld();
+		LevelAccessor world = event.getLevel();
 		Entity entity = event.getEntity();
 		BlockPos pos = event.getPos();
 

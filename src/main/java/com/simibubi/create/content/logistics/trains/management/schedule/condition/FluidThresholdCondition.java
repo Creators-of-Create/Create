@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,7 +30,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 
 	@Override
 	protected Component getUnit() {
-		return new TextComponent("b");
+		return Component.literal("b");
 	}
 
 	@Override
@@ -135,7 +134,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
 		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
 		if (lastDisplaySnapshot == -1)
-			return TextComponent.EMPTY.copy();
+			return Component.empty();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
 		return Lang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
 			Math.max(0, getThreshold() + offset), Lang.translateDirect("schedule.condition.threshold.buckets"));

@@ -54,8 +54,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -511,8 +510,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
 
 	@Override
-	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
+	public ModelData getModelData() {
+		return ModelData.builder().with(CASING_PROPERTY, casing)
 			.build();
 	}
 

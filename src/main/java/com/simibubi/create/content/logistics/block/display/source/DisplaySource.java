@@ -15,16 +15,14 @@ import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class DisplaySource extends DisplayBehaviour {
 
-	public static final List<MutableComponent> EMPTY = ImmutableList.of(new TextComponent(""));
-	public static final MutableComponent EMPTY_LINE = new TextComponent("");
-	public static final MutableComponent WHITESPACE = new TextComponent(" ");
+	public static final List<MutableComponent> EMPTY = ImmutableList.of(Component.literal(""));
+	public static final MutableComponent EMPTY_LINE = Component.literal("");
+	public static final MutableComponent WHITESPACE = Component.literal(" ");
 
 	public abstract List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats);
 
@@ -55,7 +53,7 @@ public abstract class DisplaySource extends DisplayBehaviour {
 	}
 
 	public Component getName() {
-		return new TranslatableComponent(id.getNamespace() + ".display_source." + getTranslationKey());
+		return Component.translatable(id.getNamespace() + ".display_source." + getTranslationKey());
 	}
 
 	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout, int lineIndex) {

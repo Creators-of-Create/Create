@@ -5,7 +5,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -21,7 +21,7 @@ public class FixLightingCommand {
 
 				ctx.getSource()
 					.sendSuccess(
-						new TextComponent("Forge's experimental block rendering pipeline is now enabled."), true);
+						Component.literal("Forge's experimental block rendering pipeline is now enabled."), true);
 
 				return 1;
 			});

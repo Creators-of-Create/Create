@@ -27,7 +27,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
@@ -164,10 +164,10 @@ public class ServerSchematicLoader {
 		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
 			
-			player.sendMessage(Lang.translateDirect("schematics.uploadTooLarge")
-				.append(new TextComponent(" (" + size / 1000 + " KB).")), player.getUUID());
-			player.sendMessage(Lang.translateDirect("schematics.maxAllowedSize")
-				.append(new TextComponent(" " + maxFileSize + " KB")), player.getUUID());
+			player.sendSystemMessage(Lang.translateDirect("schematics.uploadTooLarge")
+				.append(Component.literal(" (" + size / 1000 + " KB).")));
+			player.sendSystemMessage(Lang.translateDirect("schematics.maxAllowedSize")
+				.append(Component.literal(" " + maxFileSize + " KB")));
 			return false;
 		}
 		return true;

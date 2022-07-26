@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -46,7 +45,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public Object[] getTranslationParameters() {
 		String parameter = "";
 		if (fluid != null)
-			parameter = new TranslatableComponent(fluid.getAttributes().getTranslationKey()).getString();
+			parameter = fluid.getFluidType().getDescription().getString();
 		return new Object[] { parameter };
 	}
 

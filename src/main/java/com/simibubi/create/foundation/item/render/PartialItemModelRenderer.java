@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.item.render;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
@@ -14,16 +12,16 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.RenderProperties;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class PartialItemModelRenderer {
 
 	private static final PartialItemModelRenderer INSTANCE = new PartialItemModelRenderer();
 
-	private final Random random = new Random();
+	private final RandomSource random = RandomSource.create();
 
 	private ItemStack stack;
 	private ItemTransforms.TransformType transformType;
@@ -65,12 +63,14 @@ public class PartialItemModelRenderer {
 		ms.pushPose();
 		ms.translate(-0.5D, -0.5D, -0.5D);
 
-		if (!model.isCustomRenderer())
-			renderBakedItemModel(model, light, ms,
-				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
-		else
-			RenderProperties.get(stack)
-				.getItemStackRenderer()
+		if (!model.isCustomRenderer()) {
+			VertexConsumer vc = ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil());
+			for (BakedModel pass : model.getRenderPasses(stack, false)) {
+				renderBakedItemModel(pass, light, ms, vc);
+			}
+		} else
+			IClientItemExtensions.of(stack)
+				.getCustomRenderer()
 				.renderByItem(stack, transformType, ms, buffer, light, overlay);
 
 		ms.popPose();
@@ -79,16 +79,18 @@ public class PartialItemModelRenderer {
 	private void renderBakedItemModel(BakedModel model, int light, PoseStack ms, VertexConsumer buffer) {
 		ItemRenderer ir = Minecraft.getInstance()
 			.getItemRenderer();
-		IModelData data = EmptyModelData.INSTANCE;
+		ModelData data = ModelData.EMPTY;
 
-		for (Direction direction : Iterate.directions) {
+		for (RenderType renderType : model.getRenderTypes(stack, false)) {
+			for (Direction direction : Iterate.directions) {
+				random.setSeed(42L);
+				ir.renderQuadList(ms, buffer, model.getQuads(null, direction, random, data, renderType), stack, light,
+					overlay);
+			}
+
 			random.setSeed(42L);
-			ir.renderQuadList(ms, buffer, model.getQuads(null, direction, random, data), stack, light,
-				overlay);
+			ir.renderQuadList(ms, buffer, model.getQuads(null, null, random, data, renderType), stack, light, overlay);
 		}
-
-		random.setSeed(42L);
-		ir.renderQuadList(ms, buffer, model.getQuads(null, null, random, data), stack, light, overlay);
 	}
 
 }

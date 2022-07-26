@@ -37,9 +37,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -90,6 +88,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		validForRender = false;
 		firstPositionUpdate = true;
 		arrivalSoundTicks = Integer.MIN_VALUE;
+		derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1.5f)
+				.multiply(1, .25f, 1);
 	}
 
 	@Override
@@ -390,8 +390,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	@Override
 	protected void handleStallInformation(float x, float y, float z, float angle) {}
 
-	Vec3 derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, 1.5f)
-		.multiply(1, .25f, 1);
+	Vec3 derailParticleOffset;
 
 	private void spawnDerailParticles(Carriage carriage) {
 		if (random.nextFloat() < 1 / 20f) {
@@ -592,7 +591,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
 			sendPrompt(player, Lang.translateDirect("train.arrived_at",
-				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
+				Component.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 			return true;
 		}
 
@@ -604,7 +603,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
 			sendPrompt(player, Lang.translateDirect("train.departing_from",
-				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
+				Component.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 		}
 
 		if (currentStation == null) {
@@ -617,8 +616,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					double f = (nav.distanceToDestination / navDistanceTotal);
 					int progress = (int) (Mth.clamp(1 - ((1 - f) * (1 - f)), 0, 1) * 30);
 					boolean arrived = progress == 0;
-					TextComponent whiteComponent = new TextComponent(Strings.repeat("|", progress));
-					TextComponent greenComponent = new TextComponent(Strings.repeat("|", 30 - progress));
+					MutableComponent whiteComponent = Component.literal(Strings.repeat("|", progress));
+					MutableComponent greenComponent = Component.literal(Strings.repeat("|", 30 - progress));
 
 					int fromColor = 0x00_FFC244;
 					int toColor = 0x00_529915;
@@ -684,14 +683,14 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
 		sendPrompt(player, Lang.translateDirect("contraption.controls.approach_station",
-			new KeybindComponent("key.jump"), station.name), false);
+			Component.keybind("key.jump"), station.name), false);
 		stationMessage = true;
 	}
 
 	private void cleanUpApproachStationMessage(Player player) {
 		if (!stationMessage)
 			return;
-		player.displayClientMessage(new TextComponent(""), true);
+		player.displayClientMessage(Component.literal(""), true);
 		stationMessage = false;
 	}
 

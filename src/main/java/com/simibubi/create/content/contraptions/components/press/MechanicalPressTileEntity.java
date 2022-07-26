@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.Mode;
 import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.PressingBehaviourSpecifics;
@@ -136,7 +135,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 				ItemEntity created =
 					new ItemEntity(level, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
 				created.setDefaultPickUpDelay();
-				created.setDeltaMovement(VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .05f));
+				created.setDeltaMovement(VecHelper.offsetRandomly(Vec3.ZERO, level.random, .05f));
 				level.addFreshEntity(created);
 			}
 			item.shrink(1);

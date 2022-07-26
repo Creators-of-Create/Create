@@ -38,7 +38,7 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 	@SubscribeEvent
 	public static void manualApplicationRecipesApplyInWorld(PlayerInteractEvent.RightClickBlock event) {
-		Level level = event.getWorld();
+		Level level = event.getLevel();
 		ItemStack heldItem = event.getItemStack();
 		BlockPos pos = event.getPos();
 		BlockState blockState = level.getBlockState(pos);
@@ -81,12 +81,12 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 		if (!unbreakable && !keepHeld) {
 			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, event.getPlayer(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+				heldItem.hurtAndBreak(1, event.getEntity(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 			else
 				heldItem.shrink(1);
 		}
 
-		awardAdvancements(event.getPlayer(), transformedBlock);
+		awardAdvancements(event.getEntity(), transformedBlock);
 
 		event.setCancellationResult(InteractionResult.SUCCESS);
 		event.setCanceled(true);

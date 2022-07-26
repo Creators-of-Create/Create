@@ -31,7 +31,6 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -84,7 +83,7 @@ public class SchematicItem extends Item {
 		if (stack.hasTag()) {
 			if (stack.getTag()
 				.contains("File"))
-				tooltip.add(new TextComponent(ChatFormatting.GOLD + stack.getTag()
+				tooltip.add(Component.literal(ChatFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
 			tooltip.add(Lang.translateDirect("schematic.invalid").withStyle(ChatFormatting.RED));

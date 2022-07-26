@@ -55,14 +55,13 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 
 public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContainer> {
 
@@ -116,7 +115,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		confirmButton.withCallback(() -> minecraft.player.closeContainer());
 		addRenderableWidget(confirmButton);
 
-		cyclicIndicator = new Indicator(leftPos + 21, topPos + 196, TextComponent.EMPTY);
+		cyclicIndicator = new Indicator(leftPos + 21, topPos + 196, Component.empty());
 		cyclicIndicator.state = schedule.cyclic ? State.ON : State.OFF;
 		addRenderableWidget(cyclicIndicator);
 
@@ -171,7 +170,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		resetProgress.visible = false;
 
 		scrollInput = new SelectionScrollInput(leftPos + 56, topPos + 65, 143, 16);
-		scrollInputLabel = new Label(leftPos + 59, topPos + 69, new TextComponent("")).withShadow();
+		scrollInputLabel = new Label(leftPos + 59, topPos + 69, Component.literal("")).withShadow();
 		editorConfirm = new IconButton(leftPos + 56 + 168, topPos + 65 + 22, AllIcons.I_CONFIRM);
 		if (allowDeletion)
 			editorDelete = new IconButton(leftPos + 56 - 45, topPos + 65 + 22, AllIcons.I_TRASH);
@@ -468,9 +467,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		int zLevel = 200;
 		Matrix4f mat = matrixStack.last()
 			.pose();
-		GuiUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 16, leftPos + 16 + 220, topPos + 16 + 10,
+		ScreenUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 16, leftPos + 16 + 220, topPos + 16 + 10,
 			0x77000000, 0x00000000);
-		GuiUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 179, leftPos + 16 + 220, topPos + 179 + 10,
+		ScreenUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 179, leftPos + 16 + 220, topPos + 179 + 10,
 			0x00000000, 0x77000000);
 		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
 	}
@@ -562,8 +561,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				.rotateZ(-90);
 			Matrix4f m = matrixStack.last()
 				.pose();
-			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
-			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16,
+			ScreenUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
+			ScreenUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16,
 				0x00000000, 0x44000000);
 		}
 
@@ -642,7 +641,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		if (editingCondition != null || editingDestination != null)
 			return false;
 
-		Component empty = new TextComponent("");
+		Component empty = Component.literal("");
 
 		int mx = (int) mouseX;
 		int my = (int) mouseY;
@@ -865,7 +864,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		matrixStack.pushPose();
 		matrixStack.translate(x, y, 0);
 		matrixStack.scale(w, h, 1);
-		GuiUtils.drawGradientRect(matrixStack.last()
+		ScreenUtils.drawGradientRect(matrixStack.last()
 			.pose(), -100, 0, 0, 1, 1, 0xff000000, 0xff000000);
 		matrixStack.popPose();
 

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 
@@ -47,6 +46,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -525,7 +525,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {
-				if (itemStack.hasContainerItem() && itemStack.getContainerItem()
+				if (itemStack.hasCraftingRemainingItem() && itemStack.getCraftingRemainingItem()
 					.sameItem(itemStack))
 					continue;
 				spoutputBuffer.add(itemStack.copy());
@@ -570,7 +570,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, boolean simulate, IItemHandler targetInv) {
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
-			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
+			if (itemStack.hasCraftingRemainingItem() && itemStack.getCraftingRemainingItem()
 				.sameItem(itemStack))
 				continue;
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
@@ -609,7 +609,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	private void createFluidParticles() {
-		Random r = level.random;
+		RandomSource r = level.random;
 
 		if (!visualizedOutputFluids.isEmpty())
 			createOutputFluidParticles(r);
@@ -656,7 +656,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 	}
 
-	private void createOutputFluidParticles(Random r) {
+	private void createOutputFluidParticles(RandomSource r) {
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof BasinBlock))
 			return;

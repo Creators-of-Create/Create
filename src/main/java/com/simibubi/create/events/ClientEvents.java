@@ -23,6 +23,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
+import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
@@ -72,7 +73,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -81,21 +81,23 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
@@ -174,21 +176,21 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderSelection(DrawSelectionEvent event) {}
+	public static void onRenderSelection(RenderHighlightEvent.Block event) {}
 
 	@SubscribeEvent
-	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
+	public static void onJoin(ClientPlayerNetworkEvent.LoggingIn event) {
 		CreateClient.checkGraphicsFanciness();
 	}
 
 	@SubscribeEvent
-	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+	public static void onLeave(ClientPlayerNetworkEvent.LoggingOut event) {
 		CreateClient.RAILWAYS.cleanUp();
 	}
 
 	@SubscribeEvent
-	public static void onLoadWorld(WorldEvent.Load event) {
-		LevelAccessor world = event.getWorld();
+	public static void onLoadWorld(LevelEvent.Load event) {
+		LevelAccessor world = event.getLevel();
 		if (world.isClientSide() && world instanceof ClientLevel && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
@@ -196,14 +198,14 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (!event.getWorld()
+	public static void onUnloadWorld(LevelEvent.Unload event) {
+		if (!event.getLevel()
 			.isClientSide())
 			return;
 		CreateClient.invalidateRenderers();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 		AnimationTickHolder.reset();
-		ControlsHandler.levelUnloaded(event.getWorld());
+		ControlsHandler.levelUnloaded(event.getLevel());
 	}
 
 	@SubscribeEvent
@@ -232,7 +234,7 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+	public static void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		if (CameraAngleAnimationService.isYawAnimating())
@@ -251,7 +253,7 @@ public class ClientEvents {
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.CLIENT.tooltips.get())
 			return;
-		if (event.getPlayer() == null)
+		if (event.getEntity() == null)
 			return;
 
 		ItemStack stack = event.getItemStack();
@@ -259,7 +261,7 @@ public class ClientEvents {
 			.getDescriptionId(stack);
 
 		if (translationKey.startsWith(ITEM_PREFIX) || translationKey.startsWith(BLOCK_PREFIX))
-			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
+			if (TooltipHelper.hasTooltip(stack, event.getEntity())) {
 				List<Component> itemTooltip = event.getToolTip();
 				List<Component> toolTip = new ArrayList<>();
 				toolTip.add(itemTooltip.remove(0));
@@ -274,7 +276,7 @@ public class ClientEvents {
 				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
 				if (!kineticStats.isEmpty()) {
 					event.getToolTip()
-						.add(new TextComponent(""));
+						.add(Component.literal(""));
 					event.getToolTip()
 						.addAll(kineticStats);
 				}
@@ -314,7 +316,7 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void getFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
+	public static void getFogDensity(ViewportEvent.RenderFog event) {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
@@ -347,7 +349,7 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
+	public static void getFogColor(ViewportEvent.ComputeFogColor event) {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
@@ -399,12 +401,24 @@ public class ClientEvents {
 		}
 
 		@SubscribeEvent
+		public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+			// Register overlays in reverse order
+			event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "Create's Remaining Air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "Create's Train Driver HUD", TrainHUD.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Goggle Information", GoggleOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Blueprints", BlueprintOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Linked Controller", LinkedControllerClientHandler.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Schematics", CreateClient.SCHEMATIC_HANDLER.getOverlayRenderer());
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Toolboxes", ToolboxHandlerClient.OVERLAY);
+		}
+
+		@SubscribeEvent
 		public static void onLoadComplete(FMLLoadCompleteEvent event) {
 			ModContainer createContainer = ModList.get()
 				.getModContainerById(Create.ID)
 				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
-			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-				() -> new ConfigGuiHandler.ConfigGuiFactory(
+			createContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+				() -> new ConfigScreenHandler.ConfigScreenFactory(
 					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 		}
 

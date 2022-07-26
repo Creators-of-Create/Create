@@ -42,7 +42,7 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (!allowdedIn(p_150895_1_))
+		if (!allowedIn(p_150895_1_))
 			return;
 
 		ItemStack stack = new ItemStack(this);

@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -61,9 +60,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		labelType = new Label(x + 49, y + 28, TextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelType = new Label(x + 49, y + 28, Component.empty()).colored(0xFFFFFFFF)
 			.withShadow();
-		labelAlign = new Label(x + 49, y + 50, TextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelAlign = new Label(x + 49, y + 50, Component.empty()).colored(0xFFFFFFFF)
 			.withShadow();
 
 		int state =

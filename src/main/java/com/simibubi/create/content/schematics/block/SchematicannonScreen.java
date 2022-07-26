@@ -29,7 +29,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -95,17 +94,17 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		playButton.withCallback(() -> {
 			sendOptionUpdate(Option.PLAY, true);
 		});
-		playIndicator = new Indicator(x + 75, y + 79, TextComponent.EMPTY);
+		playIndicator = new Indicator(x + 75, y + 79, Component.empty());
 		pauseButton = new IconButton(x + 93, y + 86, AllIcons.I_PAUSE);
 		pauseButton.withCallback(() -> {
 			sendOptionUpdate(Option.PAUSE, true);
 		});
-		pauseIndicator = new Indicator(x + 93, y + 79, TextComponent.EMPTY);
+		pauseIndicator = new Indicator(x + 93, y + 79, Component.empty());
 		resetButton = new IconButton(x + 111, y + 86, AllIcons.I_STOP);
 		resetButton.withCallback(() -> {
 			sendOptionUpdate(Option.STOP, true);
 		});
-		resetIndicator = new Indicator(x + 111, y + 79, TextComponent.EMPTY);
+		resetIndicator = new Indicator(x + 111, y + 79, Component.empty());
 		resetIndicator.state = State.RED;
 		addRenderableWidgets(playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
 			resetIndicator);
@@ -122,7 +121,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		});
 		showSettingsButton.setToolTip(Lang.translateDirect(_showSettings));
 		addRenderableWidget(showSettingsButton);
-		showSettingsIndicator = new Indicator(x + 9, y + 111, TextComponent.EMPTY);
+		showSettingsIndicator = new Indicator(x + 9, y + 111, Component.empty());
 		addRenderableWidget(showSettingsIndicator);
 
 		extraAreas = ImmutableList.of(new Rect2i(x + BG_TOP.width, y + BG_TOP.height + BG_BOTTOM.height - 62, 84, 92));
@@ -151,7 +150,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			Lang.translateDirect("gui.schematicannon.option.replaceWithEmpty"));
 
 		for (int i = 0; i < 4; i++) {
-			replaceLevelIndicators.add(new Indicator(x + 33 + i * 18, y + 111, TextComponent.EMPTY));
+			replaceLevelIndicators.add(new Indicator(x + 33 + i * 18, y + 111, Component.empty()));
 			IconButton replaceLevelButton = new IconButton(x + 33 + i * 18, y + 117, icons.get(i));
 			int replaceMode = i;
 			replaceLevelButton.withCallback(() -> {
@@ -170,7 +169,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			sendOptionUpdate(Option.SKIP_MISSING, !menu.contentHolder.skipMissing);
 		});
 		skipMissingButton.setToolTip(Lang.translateDirect("gui.schematicannon.option.skipMissing"));
-		skipMissingIndicator = new Indicator(x + 111, y + 111, TextComponent.EMPTY);
+		skipMissingIndicator = new Indicator(x + 111, y + 111, Component.empty());
 		Collections.addAll(placementSettingWidgets, skipMissingButton, skipMissingIndicator);
 
 		skipTilesButton = new IconButton(x + 129, y + 117, AllIcons.I_SKIP_TILES);
@@ -178,7 +177,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			sendOptionUpdate(Option.SKIP_TILES, !menu.contentHolder.replaceTileEntities);
 		});
 		skipTilesButton.setToolTip(Lang.translateDirect("gui.schematicannon.option.skipTileEntities"));
-		skipTilesIndicator = new Indicator(x + 129, y + 111, TextComponent.EMPTY);
+		skipTilesIndicator = new Indicator(x + 129, y + 111, Component.empty());
 		Collections.addAll(placementSettingWidgets, skipTilesButton, skipTilesIndicator);
 
 		addRenderableWidgets(placementSettingWidgets);
@@ -390,7 +389,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		if (te.hasCreativeCrate) {
 			tooltip.add(Lang.translateDirect(_gunpowderLevel, "" + 100));
-			tooltip.add(new TextComponent("(").append(AllBlocks.CREATIVE_CRATE.get()
+			tooltip.add(Component.literal("(").append(AllBlocks.CREATIVE_CRATE.get()
 				.getName())
 				.append(")")
 				.withStyle(DARK_PURPLE));
@@ -399,12 +398,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		int fillPercent = (int) (te.fuelLevel * 100);
 		tooltip.add(Lang.translateDirect(_gunpowderLevel, fillPercent));
-		tooltip.add(Lang.translateDirect(_shotsRemaining, new TextComponent(Integer.toString(shotsLeft)).withStyle(BLUE))
+		tooltip.add(Lang.translateDirect(_shotsRemaining, Component.literal(Integer.toString(shotsLeft)).withStyle(BLUE))
 			.withStyle(GRAY));
 		if (shotsLeftWithItems != shotsLeft)
 			tooltip.add(Lang
 				.translateDirect(_shotsRemainingWithBackup,
-					new TextComponent(Integer.toString(shotsLeftWithItems)).withStyle(BLUE))
+					Component.literal(Integer.toString(shotsLeftWithItems)).withStyle(BLUE))
 				.withStyle(GRAY));
 
 		return tooltip;

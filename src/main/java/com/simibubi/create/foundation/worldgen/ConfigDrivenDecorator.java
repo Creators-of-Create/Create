@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.worldgen;
 
-import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -11,6 +10,7 @@ import com.simibubi.create.Create;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
@@ -37,7 +37,7 @@ public class ConfigDrivenDecorator extends PlacementModifier {
 	}
 
 	@Override
-	public Stream<BlockPos> getPositions(PlacementContext context, Random random, BlockPos pos) {
+	public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
 		ConfigDrivenOreConfiguration config = (ConfigDrivenOreConfiguration) entry().configuredFeature.value()
 			.config();
 

@@ -29,7 +29,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -147,8 +146,8 @@ public class BoilerData {
 		if (!isActive())
 			return false;
 
-		Component indent = new TextComponent(IHaveGoggleInformation.spacing);
-		Component indent2 = new TextComponent(IHaveGoggleInformation.spacing + " ");
+		Component indent = Component.literal(IHaveGoggleInformation.spacing);
+		Component indent2 = Component.literal(IHaveGoggleInformation.spacing + " ");
 
 		calcMinMaxForSize(boilerSize);
 
@@ -169,7 +168,7 @@ public class BoilerData {
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 
-		tooltip.add(Lang.empty());
+		tooltip.add(Component.empty());
 
 		Lang.translate("tooltip.capacityProvided")
 			.style(ChatFormatting.GRAY)
@@ -234,12 +233,12 @@ public class BoilerData {
 	}
 
 	private MutableComponent blockComponent(int level) {
-		return new TextComponent(
+		return Component.literal(
 			"" + "\u2588".repeat(minValue) + "\u2592".repeat(level - minValue) + "\u2591".repeat(maxValue - level));
 	}
 
 	private MutableComponent barComponent(int level) {
-		return TextComponent.EMPTY.copy()
+		return Component.empty()
 			.append(bars(Math.max(0, minValue - 1), ChatFormatting.DARK_GREEN))
 			.append(bars(minValue > 0 ? 1 : 0, ChatFormatting.GREEN))
 			.append(bars(Math.max(0, level - minValue), ChatFormatting.DARK_GREEN))
@@ -250,7 +249,7 @@ public class BoilerData {
 	}
 
 	private MutableComponent bars(int level, ChatFormatting format) {
-		return new TextComponent(Strings.repeat('|', level)).withStyle(format);
+		return Component.literal(Strings.repeat('|', level)).withStyle(format);
 	}
 
 	public boolean evaluate(FluidTankTileEntity controller) {

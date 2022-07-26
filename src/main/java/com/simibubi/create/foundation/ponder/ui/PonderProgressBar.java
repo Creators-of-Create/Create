@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 
 public class PonderProgressBar extends AbstractSimiWidget {
 
@@ -103,8 +103,8 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);
 		int c1 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, true);
 		int c2 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, false);
-		GuiUtils.drawGradientRect(ms.last().pose(), 310, 0, 3, 1, 4, c1, c1);
-		GuiUtils.drawGradientRect(ms.last().pose(), 310, 0, 4, 1, 5, c2, c2);
+		ScreenUtils.drawGradientRect(ms.last().pose(), 310, 0, 3, 1, 4, c1, c1);
+		ScreenUtils.drawGradientRect(ms.last().pose(), 310, 0, 4, 1, 5, c2, c2);
 		ms.popPose();
 
 		renderKeyframes(ms, mouseX, partialTicks);
@@ -149,7 +149,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	private void drawKeyframe(PoseStack ms, PonderScene activeScene, boolean selected, int keyframeTime, int keyframePos, int startColor, int endColor, int height) {
 		if (selected) {
 			Font font = Minecraft.getInstance().font;
-			GuiUtils.drawGradientRect(ms.last()
+			ScreenUtils.drawGradientRect(ms.last()
 					.pose(), 600, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
 			ms.pushPose();
 			ms.translate(0, 0, 200);
@@ -166,7 +166,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			ms.popPose();
 		}
 
-		GuiUtils.drawGradientRect(ms.last()
+		ScreenUtils.drawGradientRect(ms.last()
 				.pose(), 400, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
 	}
 

@@ -16,7 +16,7 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.advancements.critereon.PlacedBlockTrigger;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -54,8 +54,8 @@ public class CreateAdvancement {
 			builder.addCriterion("0", builtinTrigger.instance());
 		}
 
-		builder.display(t.icon, new TranslatableComponent(titleKey()),
-			new TranslatableComponent(descriptionKey()).withStyle(s -> s.withColor(0xDBA213)),
+		builder.display(t.icon, Component.translatable(titleKey()),
+			Component.translatable(descriptionKey()).withStyle(s -> s.withColor(0xDBA213)),
 			id.equals("root") ? BACKGROUND : null, t.type.frame, t.type.toast, t.type.announce, t.type.hide);
 
 		if (t.type == TaskType.SECRET)

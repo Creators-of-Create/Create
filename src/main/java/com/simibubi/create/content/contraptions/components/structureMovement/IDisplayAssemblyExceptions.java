@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public interface IDisplayAssemblyExceptions {
 
@@ -19,7 +18,7 @@ public interface IDisplayAssemblyExceptions {
 			return false;
 
 		if (!tooltip.isEmpty())
-			tooltip.add(TextComponent.EMPTY);
+			tooltip.add(Component.empty());
 
 		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 			.append(Lang.translateDirect("gui.assembly.exception")

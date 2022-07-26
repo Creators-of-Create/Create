@@ -33,20 +33,19 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class AllTags {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
-	public static <T extends IForgeRegistryEntry<T>> TagKey<T> optionalTag(IForgeRegistry<T> registry,
+	public static <T> TagKey<T> optionalTag(IForgeRegistry<T> registry,
 		ResourceLocation id) {
 		return registry.tags()
 			.createOptionalTagKey(id, Collections.emptySet());
 	}
 
-	public static <T extends IForgeRegistryEntry<T>> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
+	public static <T> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
 		return optionalTag(registry, new ResourceLocation("forge", path));
 	}
 

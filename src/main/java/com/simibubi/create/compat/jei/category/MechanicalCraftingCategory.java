@@ -23,7 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -183,7 +183,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				return ingredient.getTooltipLines(player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
 				List<Component> list = new ArrayList<>();
-				TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
+				MutableComponent crash = Component.translatable("jei.tooltip.error.crash");
 				list.add(crash.withStyle(ChatFormatting.RED));
 				return list;
 			}

@@ -1,11 +1,10 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import java.util.Random;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.CampfireBlock;
 
 public class CampfireMovementBehaviour implements MovementBehaviour {
@@ -21,7 +20,7 @@ public class CampfireMovementBehaviour implements MovementBehaviour {
 			return;
 
 		// Mostly copied from CampfireBlock and CampfireTileEntity
-		Random random = context.world.random;
+		RandomSource random = context.world.random;
 		if (random.nextFloat() < 0.11F) {
 			for (int i = 0; i < random.nextInt(2) + 2; ++i) {
 				context.world.addAlwaysVisibleParticle(

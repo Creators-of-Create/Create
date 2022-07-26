@@ -67,9 +67,8 @@ public class ShadowRenderHelper {
 			if (blockstate.isCollisionShapeFullBlock(world, blockpos)) {
 				VoxelShape voxelshape = blockstate.getShape(world, pos.below());
 				if (!voxelshape.isEmpty()) {
-					@SuppressWarnings("deprecation")
-					float f = (float) (((double) opacity - (y - (double) pos.getY()) / 2.0D)
-						* 0.5D * (double) world.getBrightness(pos));
+					float brightness = LightTexture.getBrightness(world.dimensionType(), world.getMaxLocalRawBrightness(pos));
+					float f = (float) ((opacity - (y - pos.getY()) / 2.0D) * 0.5D * brightness);
 					if (f >= 0.0F) {
 						if (f > 1.0F) {
 							f = 1.0F;

@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -52,7 +52,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
 		stack.setHoverName(
-				new TextComponent("Selected Tags").withStyle(ChatFormatting.RESET, ChatFormatting.BLUE));
+				Component.literal("Selected Tags").withStyle(ChatFormatting.RESET, ChatFormatting.BLUE));
 		ghostInventory.setStackInSlot(1, stack);
 	}
 

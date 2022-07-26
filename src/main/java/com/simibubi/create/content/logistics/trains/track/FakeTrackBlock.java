@@ -1,13 +1,12 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import java.util.Random;
-
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -67,7 +66,7 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	}
 	
 	@Override
-	public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (pLevel.getBlockEntity(pPos) instanceof FakeTrackTileEntity te)
 			te.randomTick();
 	}

@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -44,7 +43,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		this.background = background;
 		this.zapper = zapper;
 		this.hand = hand;
-		title = TextComponent.EMPTY;
+		title = Component.empty();
 		brightColor = 0xFEFEFE;
 		fontColor = AllGuiTextures.FONT_COLOR;
 

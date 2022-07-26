@@ -43,8 +43,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class SchematicHandler {
 
@@ -65,7 +65,7 @@ public class SchematicHandler {
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
 
-	private final IIngameOverlay overlayRenderer = this::renderOverlay;
+	private final IGuiOverlay overlayRenderer = this::renderOverlay;
 
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
@@ -229,11 +229,11 @@ public class SchematicHandler {
 		}
 	}
 
-	public IIngameOverlay getOverlayRenderer() {
+	public IGuiOverlay getOverlayRenderer() {
 		return overlayRenderer;
 	}
 
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)

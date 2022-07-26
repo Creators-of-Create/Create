@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -58,7 +57,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 
 		if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
 			if (!world.isClientSide && player instanceof ServerPlayer)
-				NetworkHooks.openGui((ServerPlayer) player, this, buf -> {
+				NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
 					buf.writeItem(heldItem);
 				});
 			return InteractionResultHolder.success(heldItem);
@@ -133,8 +132,8 @@ public class ScheduleItem extends Item implements MenuProvider {
 		if (schedule == null || schedule.entries.isEmpty())
 			return;
 
-		MutableComponent caret = new TextComponent("> ").withStyle(ChatFormatting.GRAY);
-		MutableComponent arrow = new TextComponent("-> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent caret = Component.literal("> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent arrow = Component.literal("-> ").withStyle(ChatFormatting.GRAY);
 
 		List<ScheduleEntry> entries = schedule.entries;
 		for (int i = 0; i < entries.size(); i++) {
@@ -145,7 +144,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 			ChatFormatting format = current ? ChatFormatting.YELLOW : ChatFormatting.GOLD;
 			MutableComponent prefix = current ? arrow : caret;
 			tooltip.add(prefix.copy()
-				.append(new TextComponent(destination.getFilter()).withStyle(format)));
+				.append(Component.literal(destination.getFilter()).withStyle(format)));
 		}
 	}
 

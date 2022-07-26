@@ -39,7 +39,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    //mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    mappings channel: 'official', version: "${minecraft_version}"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -133,7 +134,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.18.2-1.1.3,)') {
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1.5,)') {
         jarJar.pin(it, project.registrate_version)
     }
     // Uncomment once Forge fixes mixins for included jars
@@ -149,8 +150,8 @@ dependencies {
         implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     }
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}")
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}")

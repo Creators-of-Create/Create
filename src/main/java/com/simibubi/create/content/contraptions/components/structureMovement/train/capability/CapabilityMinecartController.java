@@ -36,7 +36,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.level.ChunkEvent;
 
 public class CapabilityMinecartController implements ICapabilitySerializable<CompoundTag> {
 
@@ -144,7 +144,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	public static void onChunkUnloaded(ChunkEvent.Unload event) {
 		ChunkPos chunkPos = event.getChunk()
 			.getPos();
-		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(event.getWorld());
+		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(event.getLevel());
 		for (MinecartController minecartController : carts.values()) {
 			if (minecartController == null)
 				continue;
@@ -153,7 +153,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			AbstractMinecart cart = minecartController.cart();
 			if (cart.chunkPosition()
 				.equals(chunkPos))
-				queuedUnloads.get(event.getWorld())
+				queuedUnloads.get(event.getLevel())
 					.add(cart.getUUID());
 		}
 	}

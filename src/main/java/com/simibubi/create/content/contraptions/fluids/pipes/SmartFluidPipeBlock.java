@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
-import java.util.Random;
-
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
@@ -16,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -124,7 +123,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

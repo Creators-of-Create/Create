@@ -153,7 +153,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			}
 		});
 		if (level instanceof ServerLevel)
-			stateToBreak.spawnAfterBreak((ServerLevel) level, breakingPos, ItemStack.EMPTY);
+			stateToBreak.spawnAfterBreak((ServerLevel) level, breakingPos, ItemStack.EMPTY, true);
 		level.setBlock(breakingPos, FluidState.createLegacyBlock(), 3);
 	}
 

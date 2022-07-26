@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
+import net.minecraftforge.client.event.InputEvent;
 
 public class CurvedTrackInteraction {
 
@@ -57,7 +57,7 @@ public class CurvedTrackInteraction {
 				mc.getSoundManager()
 					.play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.BLOCKS,
 						(soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F,
-						new BlockPos(result.vec())));
+						level.random, new BlockPos(result.vec())));
 			}
 
 			boolean creative = player.getAbilities().instabuild;
@@ -102,7 +102,7 @@ public class CurvedTrackInteraction {
 		breakPos = null;
 	}
 
-	public static boolean onClickInput(ClickInputEvent event) {
+	public static boolean onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
 		BezierPointSelection result = TrackBlockOutline.result;
 		if (result == null)
 			return false;

@@ -19,7 +19,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -59,9 +58,9 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		xInput = new EditBox(font, x + 50, y + 26, 34, 10, TextComponent.EMPTY);
-		yInput = new EditBox(font, x + 90, y + 26, 34, 10, TextComponent.EMPTY);
-		zInput = new EditBox(font, x + 130, y + 26, 34, 10, TextComponent.EMPTY);
+		xInput = new EditBox(font, x + 50, y + 26, 34, 10, Component.empty());
+		yInput = new EditBox(font, x + 90, y + 26, 34, 10, Component.empty());
+		zInput = new EditBox(font, x + 130, y + 26, 34, 10, Component.empty());
 
 		BlockPos anchor = handler.getTransformation()
 				.getAnchor();
@@ -96,14 +95,14 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 		StructurePlaceSettings settings = handler.getTransformation()
 			.toSettings();
-		Label labelR = new Label(x + 50, y + 48, TextComponent.EMPTY).withShadow();
+		Label labelR = new Label(x + 50, y + 48, Component.empty()).withShadow();
 		rotationArea = new SelectionScrollInput(x + 45, y + 43, 118, 18).forOptions(rotationOptions)
 			.titled(rotationLabel.plainCopy())
 			.setState(settings.getRotation()
 				.ordinal())
 			.writingTo(labelR);
 
-		Label labelM = new Label(x + 50, y + 70, TextComponent.EMPTY).withShadow();
+		Label labelM = new Label(x + 50, y + 70, Component.empty()).withShadow();
 		mirrorArea = new SelectionScrollInput(x + 45, y + 65, 118, 18).forOptions(mirrorOptions)
 			.titled(mirrorLabel.plainCopy())
 			.setState(settings.getMirror()

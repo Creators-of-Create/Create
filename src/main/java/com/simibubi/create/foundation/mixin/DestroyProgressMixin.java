@@ -13,8 +13,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.IBlockRenderProperties;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 
 @Mixin(ClientLevel.class)
 public class DestroyProgressMixin {
@@ -26,7 +25,7 @@ public class DestroyProgressMixin {
 	private void onDestroyBlockProgress(int breakerId, BlockPos pos, int progress, CallbackInfo ci) {
 		ClientLevel self = (ClientLevel) (Object) this;
 		BlockState state = self.getBlockState(pos);
-		IBlockRenderProperties properties = RenderProperties.get(state);
+		IClientBlockExtensions properties = IClientBlockExtensions.of(state);
 		if (properties instanceof DestroyProgressRenderingHandler handler) {
 			if (handler.renderDestroyProgress(self, levelRenderer, breakerId, pos, progress, state)) {
 				ci.cancel();

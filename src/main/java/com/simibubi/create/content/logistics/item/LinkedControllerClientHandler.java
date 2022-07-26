@@ -28,15 +28,14 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class LinkedControllerClientHandler {
 
-	public static final IIngameOverlay OVERLAY = LinkedControllerClientHandler::renderOverlay;
+	public static final IGuiOverlay OVERLAY = LinkedControllerClientHandler::renderOverlay;
 
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
@@ -210,7 +209,7 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1,
+	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width1,
 		int height1) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui)
@@ -220,7 +219,7 @@ public class LinkedControllerClientHandler {
 			return;
 
 		poseStack.pushPose();
-		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {
+		Screen tooltipScreen = new Screen(Component.empty()) {
 		};
 		tooltipScreen.init(mc, width1, height1);
 

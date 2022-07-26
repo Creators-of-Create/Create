@@ -52,7 +52,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
+import net.minecraftforge.client.event.InputEvent;
 
 public class TrainRelocator {
 
@@ -71,7 +71,7 @@ public class TrainRelocator {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void onClicked(ClickInputEvent event) {
+	public static void onClicked(InputEvent.InteractionKeyMappingTriggered event) {
 		if (relocatingTrain == null)
 			return;
 

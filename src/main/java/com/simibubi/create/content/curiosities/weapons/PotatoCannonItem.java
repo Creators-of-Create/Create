@@ -24,8 +24,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -45,7 +43,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class PotatoCannonItem extends ProjectileWeaponItem {
 
@@ -222,21 +220,21 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			String _reload = "potato_cannon.ammo.reload_ticks";
 			String _knockback = "potato_cannon.ammo.knockback";
 
-			tooltip.add(new TextComponent(""));
-			tooltip.add(new TranslatableComponent(ammo.getDescriptionId()).append(new TextComponent(":"))
+			tooltip.add(Component.literal(""));
+			tooltip.add(Component.translatable(ammo.getDescriptionId()).append(Component.literal(":"))
 				.withStyle(ChatFormatting.GRAY));
 			PotatoCannonProjectileType type = PotatoProjectileTypeManager.getTypeForStack(ammo)
 				.get();
-			TextComponent spacing = new TextComponent(" ");
+			MutableComponent spacing = Component.literal(" ");
 			ChatFormatting green = ChatFormatting.GREEN;
 			ChatFormatting darkGreen = ChatFormatting.DARK_GREEN;
 
 			float damageF = type.getDamage() * additionalDamageMult;
-			MutableComponent damage = new TextComponent(
+			MutableComponent damage = Component.literal(
 				damageF == Mth.floor(damageF) ? "" + Mth.floor(damageF) : "" + damageF);
-			MutableComponent reloadTicks = new TextComponent("" + type.getReloadTicks());
+			MutableComponent reloadTicks = Component.literal("" + type.getReloadTicks());
 			MutableComponent knockback =
-				new TextComponent("" + (type.getKnockback() + additionalKnockback));
+				Component.literal("" + (type.getKnockback() + additionalKnockback));
 
 			damage = damage.withStyle(additionalDamageMult > 1 ? green : darkGreen);
 			knockback = knockback.withStyle(additionalKnockback > 0 ? green : darkGreen);
@@ -278,7 +276,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new PotatoCannonItemRenderer()));
 	}
 

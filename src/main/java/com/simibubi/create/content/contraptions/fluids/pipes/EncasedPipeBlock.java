@@ -8,7 +8,6 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WEST;
 
 import java.util.Map;
-import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
@@ -25,6 +24,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -101,7 +101,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

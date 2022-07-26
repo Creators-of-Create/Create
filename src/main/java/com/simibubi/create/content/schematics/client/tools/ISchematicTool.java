@@ -3,7 +3,7 @@ package com.simibubi.create.content.schematics.client.tools;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 public interface ISchematicTool {
 
@@ -14,7 +14,7 @@ public interface ISchematicTool {
 	public boolean handleMouseWheel(double delta);
 	
 	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer);
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height);
+	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height);
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer);
 	
 }

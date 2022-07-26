@@ -20,7 +20,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -32,7 +32,7 @@ public class OpenCreateMenuButton extends Button {
 	public static final ItemStack ICON = AllItems.GOGGLES.asStack();
 
 	public OpenCreateMenuButton(int x, int y) {
-		super(x, y, 20, 20, TextComponent.EMPTY, OpenCreateMenuButton::click);
+		super(x, y, 20, 20, Component.empty(), OpenCreateMenuButton::click);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class OpenCreateMenuButton extends Button {
 	public static class OpenConfigButtonHandler {
 
 		@SubscribeEvent
-		public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
+		public static void onGuiInit(ScreenEvent.Init event) {
 			Screen gui = event.getScreen();
 
 			MenuRows menu = null;

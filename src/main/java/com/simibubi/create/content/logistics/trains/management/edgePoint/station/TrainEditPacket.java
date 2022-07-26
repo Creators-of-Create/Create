@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -52,7 +52,7 @@ public class TrainEditPacket extends SimplePacketBase {
 			if (train == null)
 				return;
 			if (!name.isBlank())
-				train.name = new TextComponent(name);
+				train.name = Component.literal(name);
 			train.icon = TrainIconType.byId(iconType);
 			if (sender != null)
 				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainEditReturnPacket(id, name, iconType));

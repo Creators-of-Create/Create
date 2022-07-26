@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,8 +29,8 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 		return Pair.of(icon(), formatted());
 	}
 
-	private TextComponent formatted() {
-		return new TextComponent(intData("Value") + "%");
+	private MutableComponent formatted() {
+		return Component.literal(intData("Value") + "%");
 	}
 
 	@Override

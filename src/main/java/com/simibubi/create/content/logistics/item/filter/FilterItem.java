@@ -18,7 +18,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -75,7 +74,7 @@ public class FilterItem extends Item implements MenuProvider {
 			List<Component> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
 				return;
-			ItemDescription.add(tooltip, new TextComponent(" "));
+			ItemDescription.add(tooltip, Component.literal(" "));
 			ItemDescription.add(tooltip, makeSummary);
 		}
 	}
@@ -92,14 +91,14 @@ public class FilterItem extends Item implements MenuProvider {
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
-					list.add(new TextComponent("- ...").withStyle(ChatFormatting.DARK_GRAY));
+					list.add(Component.literal("- ...").withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
 
 				ItemStack filterStack = filterItems.getStackInSlot(i);
 				if (filterStack.isEmpty())
 					continue;
-				list.add(new TextComponent("- ").append(filterStack.getHoverName()).withStyle(ChatFormatting.GRAY));
+				list.add(Component.literal("- ").append(filterStack.getHoverName()).withStyle(ChatFormatting.GRAY));
 				count++;
 			}
 
@@ -124,10 +123,10 @@ public class FilterItem extends Item implements MenuProvider {
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
 				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
-					list.add(new TextComponent("- ...").withStyle(ChatFormatting.DARK_GRAY));
+					list.add(Component.literal("- ...").withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
-				list.add(new TextComponent("- ").append(attribute.format(inverted)));
+				list.add(Component.literal("- ").append(attribute.format(inverted)));
 				count++;
 			}
 
@@ -144,7 +143,7 @@ public class FilterItem extends Item implements MenuProvider {
 
 		if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
 			if (!world.isClientSide && player instanceof ServerPlayer)
-				NetworkHooks.openGui((ServerPlayer) player, this, buf -> {
+				NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
 					buf.writeItem(heldItem);
 				});
 			return InteractionResultHolder.success(heldItem);

@@ -9,7 +9,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BaseCommandBlock;
 import net.minecraft.world.level.block.CommandBlock;
@@ -59,10 +59,10 @@ public class ReplaceInCommandBlocksCommand {
 			});
 		int intValue = blocks.intValue();
 		if (intValue == 0) {
-			source.sendSuccess(new TextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
+			source.sendSuccess(Component.literal("Couldn't find \"" + toReplace + "\" anywhere."), true);
 			return;
 		}
-		source.sendSuccess(new TextComponent("Replaced occurrences in " + intValue + " blocks."), true);
+		source.sendSuccess(Component.literal("Replaced occurrences in " + intValue + " blocks."), true);
 	}
 
 }

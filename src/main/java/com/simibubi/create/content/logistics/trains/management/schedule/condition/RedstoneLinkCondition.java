@@ -17,7 +17,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -54,13 +53,13 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
 			Lang.translateDirect("schedule.condition.redstone_link.frequency_" + (lowActivation() ? "unpowered" : "powered")),
-			new TextComponent(" #1 ").withStyle(ChatFormatting.GRAY)
+			Component.literal(" #1 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getFirst()
 					.getStack()
 					.getHoverName()
 					.copy()
 					.withStyle(ChatFormatting.DARK_AQUA)),
-			new TextComponent(" #2 ").withStyle(ChatFormatting.GRAY)
+			Component.literal(" #2 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getSecond()
 					.getStack()
 					.getHoverName()

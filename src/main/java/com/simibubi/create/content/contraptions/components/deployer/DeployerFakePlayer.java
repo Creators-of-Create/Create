@@ -135,7 +135,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	public static void entitiesDontRetaliate(LivingSetAttackTargetEvent event) {
 		if (!(event.getTarget() instanceof DeployerFakePlayer))
 			return;
-		LivingEntity entityLiving = event.getEntityLiving();
+		LivingEntity entityLiving = event.getEntity();
 		if (!(entityLiving instanceof Mob))
 			return;
 		Mob mob = (Mob) entityLiving;

@@ -19,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -40,7 +39,7 @@ public class StationMarker {
 		BlockPos source = NbtUtils.readBlockPos(tag.getCompound("source"));
 		BlockPos target = NbtUtils.readBlockPos(tag.getCompound("target"));
 		Component name = Component.Serializer.fromJson(tag.getString("name"));
-		if (name == null) name = TextComponent.EMPTY;
+		if (name == null) name = Component.empty();
 
 		return new StationMarker(source, target, name);
 	}
@@ -54,7 +53,7 @@ public class StationMarker {
 		String name = stationOption.get()
 			.getStation().name;
 		return new StationMarker(pos, TileEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE)
-			.getPositionForMapMarker(), new TextComponent(name));
+			.getPositionForMapMarker(), Component.literal(name));
 	}
 
 	public CompoundTag save() {

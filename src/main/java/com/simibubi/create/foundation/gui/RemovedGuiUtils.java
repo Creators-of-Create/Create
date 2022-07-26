@@ -18,7 +18,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 import net.minecraftforge.common.MinecraftForge;
 
 public class RemovedGuiUtils {
@@ -36,7 +36,7 @@ public class RemovedGuiUtils {
 	public static void drawHoveringText(PoseStack mStack, List<? extends FormattedText> textLines, int mouseX,
 		int mouseY, int screenWidth, int screenHeight, int maxTextWidth, Font font) {
 		drawHoveringText(mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-			GuiUtils.DEFAULT_BACKGROUND_COLOR, GuiUtils.DEFAULT_BORDER_COLOR_START, GuiUtils.DEFAULT_BORDER_COLOR_END,
+			ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
 			font);
 	}
 
@@ -51,7 +51,7 @@ public class RemovedGuiUtils {
 		List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
 		int maxTextWidth, Font font) {
 		drawHoveringText(stack, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-			GuiUtils.DEFAULT_BACKGROUND_COLOR, GuiUtils.DEFAULT_BORDER_COLOR_START, GuiUtils.DEFAULT_BORDER_COLOR_END,
+			ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
 			font);
 	}
 
@@ -156,23 +156,23 @@ public class RemovedGuiUtils {
 		pStack.pushPose();
 		Matrix4f mat = pStack.last()
 			.pose();
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
 			tooltipY - 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3,
 			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
 			tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
 			backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
 			tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
 			tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
 			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
 			tooltipY - 3 + 1, borderColorStart, borderColorStart);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2,
+		ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2,
 			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
 
 		MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()

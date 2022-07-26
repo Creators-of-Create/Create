@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ModularGuiLineBuilder {
 
@@ -52,7 +52,7 @@ public class ModularGuiLineBuilder {
 	}
 
 	private <T extends ScrollInput> void addScrollInput(T input, BiConsumer<T, Label> inputTransform, String dataKey) {
-		Label label = new Label(input.x + 5, y, TextComponent.EMPTY);
+		Label label = new Label(input.x + 5, y, Component.empty());
 		label.withShadow();
 		inputTransform.accept(input, label);
 		input.writingTo(label);
@@ -76,7 +76,7 @@ public class ModularGuiLineBuilder {
 
 	public ModularGuiLineBuilder addTextInput(int x, int width, BiConsumer<EditBox, TooltipArea> inputTransform,
 		String dataKey) {
-		EditBox input = new EditBox(font, x + this.x + 5, y, width - 9, 8, TextComponent.EMPTY);
+		EditBox input = new EditBox(font, x + this.x + 5, y, width - 9, 8, Component.empty());
 		input.setBordered(false);
 		input.setTextColor(0xffffff);
 		input.changeFocus(false);

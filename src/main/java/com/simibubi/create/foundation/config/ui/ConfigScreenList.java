@@ -28,7 +28,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry> implements TickableGuiEventListener {
 
@@ -272,7 +271,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 		// TODO 1.17
 		@Override
 		public Component getNarration() {
-			return TextComponent.EMPTY;
+			return Component.empty();
 		}
 	}
 }

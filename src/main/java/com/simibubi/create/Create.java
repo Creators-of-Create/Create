@@ -39,16 +39,16 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -56,8 +56,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.registries.DataSerializerEntry;
 
 @Mod(Create.ID)
 public class Create {
@@ -80,6 +78,8 @@ public class Create {
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
+	/** Use the {@link RandomSource} of a local {@link Level} or {@link Entity} or create one using {@link RandomSource#create()} */
+	@Deprecated
 	public static final Random RANDOM = new Random();
 
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
@@ -119,11 +119,11 @@ public class Create {
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
-		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
-		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
-		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
+		modEventBus.addListener(AllWorldFeatures::registerOreFeatures);
+		modEventBus.addListener(AllRecipeTypes::register);
+		modEventBus.addListener(AllParticleTypes::register);
+		modEventBus.addListener(AllSoundEvents::register);
+		modEventBus.addListener(AllEntityDataSerializers::register);
 
 		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
 		
@@ -149,12 +149,12 @@ public class Create {
 
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
-		gen.addProvider(new AllAdvancements(gen));
-		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.provider(gen));
-		gen.addProvider(new StandardRecipeGen(gen));
-		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
+		gen.addProvider(true, new AllAdvancements(gen));
+		gen.addProvider(true, new LangMerger(gen));
+		gen.addProvider(true, AllSoundEvents.provider(gen));
+		gen.addProvider(true, new StandardRecipeGen(gen));
+		gen.addProvider(true, new MechanicalCraftingRecipeGen(gen));
+		gen.addProvider(true, new SequencedAssemblyRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
 	}
 

@@ -57,12 +57,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -100,7 +101,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 
 public class TrackBlock extends Block
 	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
@@ -126,7 +127,7 @@ public class TrackBlock extends Block
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 		consumer.accept(new RenderProperties());
 	}
 
@@ -221,7 +222,7 @@ public class TrackBlock extends Block
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random p_60465_) {
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_60465_) {
 		TrackPropagator.onRailAdded(level, pos, state);
 		if (!state.getValue(SHAPE)
 			.isPortal())
@@ -287,12 +288,12 @@ public class TrackBlock extends Block
 		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
 		if (player == null)
 			return;
-		player.displayClientMessage(new TextComponent("<!> ").append(Lang.translateDirect("portal_track.failed"))
+		player.displayClientMessage(Component.literal("<!> ").append(Lang.translateDirect("portal_track.failed"))
 			.withStyle(ChatFormatting.GOLD), false);
 		MutableComponent component =
 			failPos != null ? Lang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
 				: Lang.translateDirect("portal_track." + fail);
-		player.displayClientMessage(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
+		player.displayClientMessage(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}
 

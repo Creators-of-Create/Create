@@ -48,7 +48,6 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
@@ -78,7 +77,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Override
-	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
+	protected <R, T extends R> RegistryEntry<T> accept(String name,
 		ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
 		NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
 		RegistryEntry<T> ret = super.accept(name, type, builder, creator, entryFactory);
@@ -94,7 +93,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return sectionLookup.getOrDefault(entry, AllSections.UNASSIGNED);
 	}
 
-	public AllSections getSection(IForgeRegistryEntry<?> entry) {
+	public AllSections getSection(Object entry) {
 		return sectionLookup.entrySet()
 			.stream()
 			.filter(e -> e.getKey()
@@ -104,7 +103,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.orElse(AllSections.UNASSIGNED);
 	}
 
-	public <R extends IForgeRegistryEntry<R>> Collection<RegistryEntry<R>> getAll(AllSections section,
+	public <R> Collection<RegistryEntry<R>> getAll(AllSections section,
 		ResourceKey<? extends Registry<R>> registryType) {
 		return this.getAll(registryType)
 			.stream()

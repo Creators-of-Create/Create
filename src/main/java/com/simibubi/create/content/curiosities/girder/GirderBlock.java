@@ -3,8 +3,6 @@ package com.simibubi.create.content.curiosities.girder;
 import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.FACE;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
@@ -30,6 +28,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -145,7 +144,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 	}
 
 	@Override
-	public void tick(BlockState p_60462_, ServerLevel p_60463_, BlockPos p_60464_, Random p_60465_) {
+	public void tick(BlockState p_60462_, ServerLevel p_60463_, BlockPos p_60464_, RandomSource p_60465_) {
 		Block.updateOrDestroy(p_60462_, Block.updateFromNeighbourShapes(p_60462_, p_60463_, p_60464_), p_60463_,
 			p_60464_, 3);
 	}

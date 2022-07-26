@@ -14,7 +14,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +49,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 		int target = getTarget();
 		return ImmutableList.of(Lang.translateDirect("schedule.condition.player_count.seated",
 			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
-				new TextComponent("" + target).withStyle(ChatFormatting.DARK_AQUA))));
+				Component.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
 	}
 
 	@Override

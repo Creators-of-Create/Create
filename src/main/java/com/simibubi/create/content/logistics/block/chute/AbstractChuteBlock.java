@@ -32,7 +32,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import net.minecraftforge.common.util.LazyOptional;
 
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
@@ -42,7 +42,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 		consumer.accept(new ReducedDestroyEffects());
 	}
 

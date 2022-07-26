@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -73,7 +72,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 		int max = BackTankUtil.maxAir(capacityEnchantLevel);
 		if (level.isClientSide) {
 			Vec3 centerOf = VecHelper.getCenterOf(worldPosition);
-			Vec3 v = VecHelper.offsetRandomly(centerOf, Create.RANDOM, .65f);
+			Vec3 v = VecHelper.offsetRandomly(centerOf, level.random, .65f);
 			Vec3 m = centerOf.subtract(v);
 			if (airLevel != max)
 				level.addParticle(new AirParticleData(1, .05f), v.x, v.y, v.z, m.x, m.y, m.z);

@@ -86,7 +86,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -115,7 +115,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -148,7 +148,7 @@ public abstract class Contraption {
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
-	public Map<BlockPos, IModelData> modelData;
+	public Map<BlockPos, ModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentTileEntities;
 	public List<BlockEntity> maybeInstancedTileEntities;
 	public List<BlockEntity> specialRenderedTileEntities;
@@ -982,7 +982,7 @@ public abstract class Contraption {
 			// we add the POI data back now
 			// (code copied from ServerWorld.onBlockStateChange)
 			ServerLevel serverWorld = (ServerLevel) world;
-			PoiType.forState(block.state)
+			PoiTypes.forState(block.state)
 				.ifPresent(poiType -> {
 					world.getServer()
 						.execute(() -> {
@@ -1136,7 +1136,7 @@ public abstract class Contraption {
 	}
 
 	protected boolean shouldUpdateAfterMovement(StructureBlockInfo info) {
-		if (PoiType.forState(info.state)
+		if (PoiTypes.forState(info.state)
 			.isPresent())
 			return false;
 		if (info.state.getBlock() instanceof SlidingDoorBlock)

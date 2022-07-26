@@ -36,17 +36,17 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
+import net.minecraftforge.event.level.BlockEvent.BreakEvent;
+import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -79,11 +79,11 @@ public class ExtendoGripItem extends Item {
 	public static final String DUAL_EXTENDO_MARKER = "createDualExtendo";
 
 	@SubscribeEvent
-	public static void holdingExtendoGripIncreasesRange(LivingUpdateEvent event) {
+	public static void holdingExtendoGripIncreasesRange(LivingTickEvent event) {
 		if (!(event.getEntity() instanceof Player))
 			return;
 
-		Player player = (Player) event.getEntityLiving();
+		Player player = (Player) event.getEntity();
 
 		CompoundTag persistentData = player.getPersistentData();
 		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
@@ -124,7 +124,7 @@ public class ExtendoGripItem extends Item {
 
 	@SubscribeEvent
 	public static void addReachToJoiningPlayersHoldingExtendo(PlayerEvent.PlayerLoggedInEvent event) {
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		CompoundTag persistentData = player.getPersistentData();
 
 		if (persistentData.contains(DUAL_EXTENDO_MARKER))
@@ -137,7 +137,7 @@ public class ExtendoGripItem extends Item {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void dontMissEntitiesWhenYouHaveHighReachDistance(ClickInputEvent event) {
+	public static void dontMissEntitiesWhenYouHaveHighReachDistance(InputEvent.InteractionKeyMappingTriggered event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		if (mc.level == null || player == null)
@@ -311,7 +311,7 @@ public class ExtendoGripItem extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new ExtendoGripItemRenderer()));
 	}
 

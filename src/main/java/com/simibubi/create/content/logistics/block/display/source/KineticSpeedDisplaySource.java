@@ -15,7 +15,7 @@ public class KineticSpeedDisplaySource extends NumericSingleLineDisplaySource {
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
 		if (!(context.getSourceTE()instanceof SpeedGaugeTileEntity gaugeTile))
-			return ZERO;
+			return ZERO.copy();
 
 		boolean absoluteValue = context.sourceConfig()
 			.getInt("Directional") == 0;

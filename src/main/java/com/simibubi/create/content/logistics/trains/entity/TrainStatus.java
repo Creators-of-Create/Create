@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -130,7 +129,7 @@ public class TrainStatus {
 	}
 
 	public void displayInformation(String key, boolean itsAGoodThing, Object... args) {
-		queued.add(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
+		queued.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
 			.append(Lang.translateDirect("train.status." + key, args)
 				.withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4))));
 		if (queued.size() > 3)

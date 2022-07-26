@@ -292,7 +292,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 				.forEach(itemStack -> player.getInventory()
 					.placeItemBackInInventory(itemStack));
 		if (world instanceof ServerLevel)
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
 		world.setBlockAndUpdate(pos, getRailBlock(state));
 		return InteractionResult.SUCCESS;
 	}

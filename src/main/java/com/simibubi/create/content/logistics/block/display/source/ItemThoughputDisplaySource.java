@@ -12,7 +12,6 @@ import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +23,7 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
 		CompoundTag conf = context.sourceConfig();
 		if (conf.contains("Inactive"))
-			return new TextComponent("0");
+			return ZERO.copy();
 
 		double interval = 20 * Math.pow(60, conf.getInt("Interval"));
 		double rate = conf.getFloat("Rate") * interval;

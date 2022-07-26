@@ -67,7 +67,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<WindowBlock> OAK_WINDOW = woodenWindowBlock(WoodType.OAK, Blocks.OAK_PLANKS),
 		SPRUCE_WINDOW = woodenWindowBlock(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS),
-		BIRCH_WINDOW = woodenWindowBlock(WoodType.BIRCH, Blocks.BIRCH_PLANKS, () -> RenderType::translucent),
+		BIRCH_WINDOW = woodenWindowBlock(WoodType.BIRCH, Blocks.BIRCH_PLANKS, () -> RenderType::translucent, true),
 		JUNGLE_WINDOW = woodenWindowBlock(WoodType.JUNGLE, Blocks.JUNGLE_PLANKS),
 		ACACIA_WINDOW = woodenWindowBlock(WoodType.ACACIA, Blocks.ACACIA_PLANKS),
 		DARK_OAK_WINDOW = woodenWindowBlock(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS),
@@ -75,7 +75,7 @@ public class AllPaletteBlocks {
 		WARPED_WINDOW = woodenWindowBlock(WoodType.WARPED, Blocks.WARPED_PLANKS),
 		ORNATE_IRON_WINDOW =
 			customWindowBlock("ornate_iron_window", () -> Items.IRON_NUGGET, () -> AllSpriteShifts.ORNATE_IRON_WINDOW,
-				() -> RenderType::cutout, () -> MaterialColor.TERRACOTTA_LIGHT_GRAY);
+				() -> RenderType::cutout, false, () -> MaterialColor.TERRACOTTA_LIGHT_GRAY);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
 		woodenWindowPane(WoodType.OAK, OAK_WINDOW),

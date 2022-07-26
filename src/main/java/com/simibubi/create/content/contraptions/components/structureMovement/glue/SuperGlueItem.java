@@ -28,7 +28,7 @@ public class SuperGlueItem extends Item {
 	@SubscribeEvent
 	public static void glueItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
 		if (event.getHitVec() != null) {
-			BlockState blockState = event.getWorld()
+			BlockState blockState = event.getLevel()
 				.getBlockState(event.getHitVec()
 					.getBlockPos());
 			if (blockState.getBlock()instanceof AbstractChassisBlock cb)

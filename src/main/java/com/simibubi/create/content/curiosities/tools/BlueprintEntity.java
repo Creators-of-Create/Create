@@ -434,7 +434,7 @@ public class BlueprintEntity extends HangingEntity
 
 		int i = section.index;
 		if (!level.isClientSide && player instanceof ServerPlayer) {
-			NetworkHooks.openGui((ServerPlayer) player, section, buf -> {
+			NetworkHooks.openScreen((ServerPlayer) player, section, buf -> {
 				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
 			});

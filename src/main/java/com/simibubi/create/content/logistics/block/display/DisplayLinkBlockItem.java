@@ -39,7 +39,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 	public static void gathererItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack usedItem = event.getItemStack();
 		if (usedItem.getItem() instanceof DisplayLinkBlockItem) {
-			if (AllBlocks.DISPLAY_LINK.has(event.getWorld()
+			if (AllBlocks.DISPLAY_LINK.has(event.getLevel()
 				.getBlockState(event.getPos())))
 				return;
 			event.setUseBlock(Result.DENY);

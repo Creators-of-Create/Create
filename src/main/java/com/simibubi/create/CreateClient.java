@@ -2,18 +2,12 @@ package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
-import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
-import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
@@ -33,14 +27,11 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -84,7 +75,6 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
-		AllKeys.register();
 		// AllFluids.assignRenderLayers();
 		AllBlockPartials.init();
 		AllStitchedTextures.init();
@@ -92,20 +82,7 @@ public class CreateClient {
 		PonderIndex.register();
 		PonderIndex.registerTags();
 
-		registerOverlays();
-
 		UIRenderHelper.init();
-	}
-
-	private static void registerOverlays() {
-		// Register overlays in reverse order
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT, "Create's Remaining Air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "Create's Train Driver HUD", TrainHUD.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Goggle Information", GoggleOverlayRenderer.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Blueprints", BlueprintOverlayRenderer.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Linked Controller", LinkedControllerClientHandler.OVERLAY);
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Schematics", SCHEMATIC_HANDLER.getOverlayRenderer());
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Toolboxes", ToolboxHandlerClient.OVERLAY);
 	}
 
 	public static void invalidateRenderers() {
@@ -120,22 +97,22 @@ public class CreateClient {
 		if (mc.player == null)
 			return;
 
-		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
+		if (mc.options.graphicsMode().get() != GraphicsStatus.FABULOUS)
 			return;
 
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
 			return;
 
-		MutableComponent text = ComponentUtils.wrapInSquareBrackets(new TextComponent("WARN"))
+		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal("WARN"))
 			.withStyle(ChatFormatting.GOLD)
-			.append(new TextComponent(
+			.append(Component.literal(
 				" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
 			.withStyle(style -> style
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
 				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-					new TextComponent("Click here to disable this warning"))));
+					Component.literal("Click here to disable this warning"))));
 
-		mc.gui.handleChat(ChatType.CHAT, text, mc.player.getUUID());
+		mc.player.displayClientMessage(text, false);
 	}
 
 }

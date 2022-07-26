@@ -37,7 +37,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 public enum AllRecipeTypes implements IRecipeTypeInfo {
 
@@ -83,7 +83,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
 		this.id = Create.asResource(Lang.asId(name()));
 		this.serializerSupplier = serializerSupplier;
-		this.typeSupplier = () -> simpleType(id);
+		this.typeSupplier = () -> RecipeType.simple(id);
 	}
 
 	AllRecipeTypes(ProcessingRecipeFactory<?> processingFactory) {
@@ -112,30 +112,26 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 			.getRecipeFor(getType(), inv, world);
 	}
 
-	public static void register(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		ShapedRecipe.setCraftingSize(9, 9);
+	public static void register(RegisterEvent event) {
+		event.register(Registry.RECIPE_SERIALIZER_REGISTRY, helper -> {
+			ShapedRecipe.setCraftingSize(9, 9);
 
-		for (AllRecipeTypes r : AllRecipeTypes.values()) {
-			r.serializer = r.serializerSupplier.get();
-			r.type = r.typeSupplier.get();
-			r.serializer.setRegistryName(r.id);
-			event.getRegistry()
-				.register(r.serializer);
-		}
+			for (AllRecipeTypes r : AllRecipeTypes.values()) {
+				r.serializer = r.serializerSupplier.get();
+				helper.register(r.id, r.serializer);
+			}
+		});
+
+		event.register(Registry.RECIPE_TYPE_REGISTRY, helper -> {
+			for (AllRecipeTypes r : AllRecipeTypes.values()) {
+				r.type = r.typeSupplier.get();
+				helper.register(r.id, r.type);
+			}
+		});
 	}
 
 	private static Supplier<RecipeSerializer<?>> processingSerializer(ProcessingRecipeFactory<?> factory) {
 		return () -> new ProcessingRecipeSerializer<>(factory);
-	}
-
-	public static <T extends Recipe<?>> RecipeType<T> simpleType(ResourceLocation id) {
-		String stringId = id.toString();
-		return Registry.register(Registry.RECIPE_TYPE, id, new RecipeType<T>() {
-			@Override
-			public String toString() {
-				return stringId;
-			}
-		});
 	}
 
 	public static final Set<ResourceLocation> RECIPE_DENY_SET =

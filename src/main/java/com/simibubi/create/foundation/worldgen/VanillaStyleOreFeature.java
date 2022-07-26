@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.worldgen;
 
 import java.util.BitSet;
-import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
@@ -18,15 +18,11 @@ public class VanillaStyleOreFeature extends OreFeatureBase {
 
 	public static final VanillaStyleOreFeature INSTANCE = new VanillaStyleOreFeature();
 	
-	public VanillaStyleOreFeature() {
-		setRegistryName("config_driven_ore");
-	}
-	
 	// From OreFeature, slight adjustments
 
 	public boolean place(FeaturePlaceContext<ConfigDrivenOreConfiguration> pContext) {
 
-		Random random = pContext.random();
+		RandomSource random = pContext.random();
 		BlockPos blockpos = pContext.origin();
 		WorldGenLevel worldgenlevel = pContext.level();
 		ConfigDrivenOreConfiguration oreconfiguration = pContext.config();
@@ -55,7 +51,7 @@ public class VanillaStyleOreFeature extends OreFeatureBase {
 		return false;
 	}
 
-	protected boolean doPlace(WorldGenLevel pLevel, Random pRandom, ConfigDrivenOreConfiguration pConfig, double pMinX,
+	protected boolean doPlace(WorldGenLevel pLevel, RandomSource pRandom, ConfigDrivenOreConfiguration pConfig, double pMinX,
 		double pMaxX, double pMinZ, double pMaxZ, double pMinY, double pMaxY, int pX, int pY, int pZ, int pWidth,
 		int pHeight) {
 		int i = 0;

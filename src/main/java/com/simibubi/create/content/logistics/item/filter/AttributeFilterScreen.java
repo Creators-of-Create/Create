@@ -22,7 +22,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -86,9 +85,9 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		});
 		blacklist.setToolTip(denyN);
 
-		whitelistDisIndicator = new Indicator(x + 47, y + 53, TextComponent.EMPTY);
-		whitelistConIndicator = new Indicator(x + 65, y + 53, TextComponent.EMPTY);
-		blacklistIndicator = new Indicator(x + 83, y + 53, TextComponent.EMPTY);
+		whitelistDisIndicator = new Indicator(x + 47, y + 53, Component.empty());
+		whitelistConIndicator = new Indicator(x + 65, y + 53, Component.empty());
+		blacklistIndicator = new Indicator(x + 83, y + 53, Component.empty());
 
 		addRenderableWidgets(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
 			whitelistDisIndicator);
@@ -106,10 +105,10 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		handleIndicators();
 
-		attributeSelectorLabel = new Label(x + 43, y + 26, TextComponent.EMPTY).colored(0xF3EBDE)
+		attributeSelectorLabel = new Label(x + 43, y + 26, Component.empty()).colored(0xF3EBDE)
 			.withShadow();
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
-		attributeSelector.forOptions(Arrays.asList(TextComponent.EMPTY));
+		attributeSelector.forOptions(Arrays.asList(Component.empty()));
 		attributeSelector.removeCallback();
 		referenceItemChanged(menu.ghostInventory.getStackInSlot(0));
 
@@ -119,7 +118,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		selectedAttributes.clear();
 		selectedAttributes.add((menu.selectedAttributes.isEmpty() ? noSelectedT : selectedT).plainCopy()
 			.withStyle(ChatFormatting.YELLOW));
-		menu.selectedAttributes.forEach(at -> selectedAttributes.add(new TextComponent("- ")
+		menu.selectedAttributes.forEach(at -> selectedAttributes.add(Component.literal("- ")
 			.append(at.getFirst()
 				.format(at.getSecond()))
 			.withStyle(ChatFormatting.GRAY)));
@@ -243,7 +242,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		if (menu.selectedAttributes.size() == 1)
 			selectedAttributes.set(0, selectedT.plainCopy()
 				.withStyle(ChatFormatting.YELLOW));
-		selectedAttributes.add(new TextComponent("- ").append(itemAttribute.format(inverted))
+		selectedAttributes.add(Component.literal("- ").append(itemAttribute.format(inverted))
 			.withStyle(ChatFormatting.GRAY));
 		return true;
 	}

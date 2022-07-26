@@ -12,10 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
-import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
-import net.minecraftforge.client.event.InputEvent.MouseScrollEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -23,7 +20,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class InputEvents {
 
 	@SubscribeEvent
-	public static void onKeyInput(KeyInputEvent event) {
+	public static void onKeyInput(InputEvent.Key event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
 
@@ -35,7 +32,7 @@ public class InputEvents {
 	}
 
 	@SubscribeEvent
-	public static void onMouseScrolled(MouseScrollEvent event) {
+	public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
 
@@ -48,7 +45,7 @@ public class InputEvents {
 	}
 
 	@SubscribeEvent
-	public static void onMouseInput(MouseInputEvent event) {
+	public static void onMouseInput(InputEvent.MouseButton event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
 
@@ -60,7 +57,7 @@ public class InputEvents {
 	}
 
 	@SubscribeEvent
-	public static void onClickInput(ClickInputEvent event) {
+	public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.screen != null)
 			return;

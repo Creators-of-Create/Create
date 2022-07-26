@@ -51,7 +51,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
 		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openGui((ServerPlayer) player, te, te::sendToContainer));
+				te -> NetworkHooks.openScreen((ServerPlayer) player, te, te::sendToContainer));
 		return InteractionResult.SUCCESS;
 	}
 

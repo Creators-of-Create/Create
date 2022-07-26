@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.item;
 
-import java.util.Random;
-
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,8 +22,8 @@ public interface CustomUseEffectsItem {
 	 * @param stack The ItemStack being used.
 	 * @param entity The LivingEntity using the item.
 	 * @param count The amount of times effects should be applied. Can safely be ignored.
-	 * @param random The LivingEntity's Random.
+	 * @param random The LivingEntity's RandomSource.
 	 * @return if the default behavior should be cancelled or not
 	 */
-	boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, Random random);
+	boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, RandomSource random);
 }

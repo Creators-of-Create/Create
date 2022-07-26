@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.particle;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.fan.IAirCurrentSource;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.foundation.utility.Color;
@@ -35,7 +34,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		this.lifetime = 40;
 		hasPhysics = false;
 		selectSprite(7);
-		Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .25f);
+		Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, world.random, .25f);
 		this.setPos(x + offset.x, y + offset.y, z + offset.z);
 		this.xo = x;
 		this.yo = y;

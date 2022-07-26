@@ -3,11 +3,11 @@ package com.simibubi.create.content.logistics.block.display.source;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public abstract class NumericSingleLineDisplaySource extends SingleLineDisplaySource {
 
-	protected static final TextComponent ZERO = new TextComponent("0");
+	protected static final Component ZERO = Component.literal("0");
 	
 	@Override
 	protected String getFlapDisplayLayoutName(DisplayLinkContext context) {

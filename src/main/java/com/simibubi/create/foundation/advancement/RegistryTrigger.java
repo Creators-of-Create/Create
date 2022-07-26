@@ -6,11 +6,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RegistryTrigger<T extends IForgeRegistryEntry<T>> extends StringSerializableTrigger<T> {
+public class RegistryTrigger<T> extends StringSerializableTrigger<T> {
 	private final IForgeRegistry<T> registry;
 
 	public RegistryTrigger(String id, IForgeRegistry<T> registry) {

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -24,8 +24,8 @@ public class DivingHelmetItem extends CopperArmorItem {
 	}
 
 	@SubscribeEvent
-	public static void breatheUnderwater(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void breatheUnderwater(LivingTickEvent event) {
+		LivingEntity entity = event.getEntity();
 		Level world = entity.level;
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAirSupply() == 0;

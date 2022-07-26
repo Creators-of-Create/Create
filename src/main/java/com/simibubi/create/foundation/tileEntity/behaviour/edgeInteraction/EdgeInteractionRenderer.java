@@ -13,7 +13,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -64,7 +64,7 @@ public class EdgeInteractionRenderer {
 		AABB bb = EdgeInteractionHandler.getBB(pos, closestEdge);
 		boolean hit = bb.contains(target.getLocation());
 
-		ValueBox box = new ValueBox(TextComponent.EMPTY, bb.move(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
+		ValueBox box = new ValueBox(Component.empty(), bb.move(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
 		Vec3 textOffset = Vec3.ZERO;
 
 		boolean positive = closestEdge.getAxisDirection() == AxisDirection.POSITIVE;
