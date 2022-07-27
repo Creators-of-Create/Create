@@ -1452,7 +1452,7 @@
 	"create.schedule.condition.delay_short": "Ожидание: %1$s",
 	"create.schedule.condition.delay.status": "До отправления %1$s",
 	"create.schedule.condition.idle": "Неизменение груза",
-	"create.schedule.condition.idle_short": "Груз без изменений: %1$s %1$s",
+	"create.schedule.condition.idle_short": "Груз не изменяется: %1$s %1$s",
 	"create.schedule.condition.idle.status": "Простой груза: %1$s",
 	"create.schedule.condition.for_x_time": "в течение %1$s",
 	"create.schedule.condition.unloaded": "Чанк выгружен",
