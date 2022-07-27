@@ -957,7 +957,7 @@
 	"create.generic.clockwise": "По часовой стрелке",
 	"create.generic.counter_clockwise": "Против часовой стрелки",
 	"create.generic.in_quotes": "\"%1$s\"",
-	"create.generic.pitch": "♩: %1$s",
+	"create.generic.pitch": "♪: %1$s",
 	"create.generic.notes": "фа♯;фа;ми;ре♯;ре;до♯;до;си;ля♯;ля;соль♯;соль",
 
 	"create.action.scroll": "Прокрутка",
