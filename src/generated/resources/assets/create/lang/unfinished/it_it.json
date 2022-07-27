@@ -1902,8 +1902,6 @@
 	"block.create.schematic_table.tooltip.summary": "Importa un file .nbt su un _progetto_ _vuoto_.",
 	"block.create.schematic_table.tooltip.condition1": "Quando viene fornito un progetto vuoto",
 	"block.create.schematic_table.tooltip.behaviour1": "Carica un file selezionato dalla cartella Schematics.",
-	"block.create.schematic_table.tooltip.condition2": "Click Destro con un Progetto e penna",
-	"block.create.schematic_table.tooltip.behaviour2": "Salva la struttura selezionata come file .nbt.",
 
 	"item.create.goggles.tooltip": "OCCHIALI DA INGEGNERE",
 	"item.create.goggles.tooltip.summary": "Un paio di occhiali per migliorare la tua vista con utili _informazioni_ _cinetiche_.",
