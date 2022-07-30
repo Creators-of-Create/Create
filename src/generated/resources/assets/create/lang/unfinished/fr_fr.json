@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2131",
+	"_": "Missing Localizations: 17769",
 
 	"_": "->------------------------]  Éléments de jeu  [------------------------<-",
 
@@ -109,11 +109,11 @@
 	"block.create.cut_crimsite_slab": "Dalle de Crimsite coupée",
 	"block.create.cut_crimsite_stairs": "Escalier en Crimsite coupé",
 	"block.create.cut_crimsite_wall": "Mur de Crimsite coupé",
-	"block.create.cut_deepslate": "UNLOCALIZED: Cut Deepslate",
-	"block.create.cut_deepslate_brick_slab": "UNLOCALIZED: Cut Deepslate Brick Slab",
-	"block.create.cut_deepslate_brick_stairs": "UNLOCALIZED: Cut Deepslate Brick Stairs",
-	"block.create.cut_deepslate_brick_wall": "UNLOCALIZED: Cut Deepslate Brick Wall",
-	"block.create.cut_deepslate_bricks": "UNLOCALIZED: Cut Deepslate Bricks",
+	"block.create.cut_deepslate": "Ardoise des abîmes coupés",
+	"block.create.cut_deepslate_brick_slab": "Dalle de briques coupée en Ardoise des abîmes",
+	"block.create.cut_deepslate_brick_stairs": "Escaliers en briques d'ardoise des abîmes coupées",
+	"block.create.cut_deepslate_brick_wall": "Mur de briques coupé d'ardoise des abîmes",
+	"block.create.cut_deepslate_bricks": "Découpe de briques en ardoise des abîmes",
 	"block.create.cut_deepslate_slab": "UNLOCALIZED: Cut Deepslate Slab",
 	"block.create.cut_deepslate_stairs": "UNLOCALIZED: Cut Deepslate Stairs",
 	"block.create.cut_deepslate_wall": "UNLOCALIZED: Cut Deepslate Wall",
