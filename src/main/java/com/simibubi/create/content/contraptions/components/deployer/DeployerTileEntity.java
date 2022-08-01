@@ -466,34 +466,22 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		Lang.translate("tooltip.deployer.header")
+			.forGoggles(tooltip);
+
+		Lang.translate("tooltip.deployer." + (mode == Mode.USE ? "using" : "punching"))
+			.style(ChatFormatting.YELLOW)
+			.forGoggles(tooltip);
+
+		if (!heldItem.isEmpty())
+			Lang.translate("tooltip.deployer.contains",
+				new TranslatableComponent(heldItem.getDescriptionId()).getString(), heldItem.getCount())
+				.style(ChatFormatting.GREEN)
 				.forGoggles(tooltip);
 
 		float stressAtBase = calculateStressApplied();
-
 		if (StressImpact.isEnabled() && !Mth.equal(stressAtBase, 0)) {
-			Lang.translate("tooltip.stressImpact")
-					.style(ChatFormatting.GRAY)
-					.forGoggles(tooltip);
-
-			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
-
-			Lang.number(stressTotal)
-					.translate("generic.unit.stress")
-					.style(ChatFormatting.AQUA)
-					.space()
-					.add(Lang.translate("gui.goggles.at_current_speed")
-							.style(ChatFormatting.DARK_GRAY))
-					.forGoggles(tooltip, 1);
-		}
-
-		Lang.translate("tooltip.deployer." + (mode == Mode.USE ? "using" : "punching"))
-				.style(ChatFormatting.YELLOW)
-				.forGoggles(tooltip);
-
-		if (!heldItem.isEmpty()) {
-			Lang.translate("tooltip.deployer.contains", new TranslatableComponent(heldItem.getDescriptionId()).getString(), heldItem.getCount())
-					.style(ChatFormatting.GREEN)
-					.forGoggles(tooltip);
+			tooltip.add(Lang.empty());
+			addStressImpactStats(tooltip, stressAtBase);
 		}
 
 		return true;
