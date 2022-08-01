@@ -1,6 +1,7 @@
 package com.simibubi.create.api.behaviour;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
@@ -14,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public abstract class BlockSpoutingBehaviour {
 
-	private static final HashMap<ResourceLocation, BlockSpoutingBehaviour> BLOCK_SPOUTING_BEHAVIOURS = new HashMap<>();
+	private static final Map<ResourceLocation, BlockSpoutingBehaviour> BLOCK_SPOUTING_BEHAVIOURS = new HashMap<>();
 
 	public static void addCustomSpoutInteraction(ResourceLocation resourceLocation,
 		BlockSpoutingBehaviour movementBehaviour) {

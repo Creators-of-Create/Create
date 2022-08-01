@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.block;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.utility.DirectionHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -31,7 +30,7 @@ public class WrenchableDirectionalBlock extends DirectionalBlock implements IWre
 		if (facing.getAxis() == targetedFace.getAxis())
 			return originalState;
 
-		Direction newFacing = DirectionHelper.rotateAround(facing, targetedFace.getAxis());
+		Direction newFacing = facing.getClockWise(targetedFace.getAxis());
 
 		return originalState.setValue(FACING, newFacing);
 	}

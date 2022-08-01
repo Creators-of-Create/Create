@@ -7,6 +7,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
@@ -35,7 +37,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity> {
+public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity>, ITransformableBlock {
 
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
 	public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 5);
@@ -164,6 +166,26 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
 		return state.getValue(STATE)
 			.intValue();
+	}
+
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		if (transform.mirror != null) {
+			state = mirror(state, transform.mirror);
+		}
+
+		if (transform.rotationAxis == Direction.Axis.Y) {
+			return rotate(state, transform.rotation);
+		}
+
+		if (transform.rotation.ordinal() % 2 == 1) {
+			if (transform.rotationAxis != state.getValue(HORIZONTAL_AXIS)) {
+				return state.cycle(VERTICAL);
+			} else if (state.getValue(VERTICAL)) {
+				return state.cycle(VERTICAL).cycle(HORIZONTAL_AXIS);
+			}
+		}
+		return state;
 	}
 
 }
