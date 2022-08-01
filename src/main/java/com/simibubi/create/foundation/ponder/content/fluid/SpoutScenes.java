@@ -70,7 +70,7 @@ public class SpoutScenes {
 		scene.idle(20);
 		FluidStack honey = new FluidStack(FluidHelper.convertToStill(AllFluids.HONEY.get()), 1000);
 		ItemStack bucket = AllFluids.HONEY.get()
-			.getAttributes()
+			.getFluidType()
 			.getBucket(honey);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)

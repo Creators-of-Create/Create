@@ -19,11 +19,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 	protected static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
-	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
+	protected static final int BUCKET = FluidType.BUCKET_VOLUME;
 	protected static final int BOTTLE = 250;
 
 	public static void registerAll(DataGenerator gen) {

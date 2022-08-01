@@ -30,8 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -140,9 +140,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (!hasLevel())
 			return;
 
-		FluidAttributes attributes = newFluidStack.getFluid()
-			.getAttributes();
-		int luminosity = (int) (attributes.getLuminosity(newFluidStack) / 1.2f);
+		FluidType attributes = newFluidStack.getFluid()
+			.getFluidType();
+		int luminosity = (int) (attributes.getLightLevel(newFluidStack) / 1.2f);
 		boolean reversed = attributes.isLighterThanAir();
 		int maxY = (int) ((getFillState() * height) + 1);
 
@@ -315,7 +315,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 				for (int xOffset = 0; xOffset < width; xOffset++)
 					for (int zOffset = 0; zOffset < width; zOffset++)
 						if (level.getBlockEntity(
-							worldPosition.offset(xOffset, yOffset, zOffset))instanceof FluidTankTileEntity fte)
+							worldPosition.offset(xOffset, yOffset, zOffset)) instanceof FluidTankTileEntity fte)
 							fte.refreshCapability();
 		}
 

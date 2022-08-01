@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -57,8 +56,6 @@ import net.minecraftforge.event.level.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -209,11 +206,6 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void startTracking(PlayerEvent.StartTracking event) {
 		CapabilityMinecartController.startTracking(event);
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onBiomeLoad(BiomeLoadingEvent event) {
-		AllWorldFeatures.reload(event);
 	}
 
 	public static void leftClickEmpty(ServerPlayer player) {

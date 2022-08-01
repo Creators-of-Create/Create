@@ -199,7 +199,7 @@ public class FluidTankScenes {
 		scene.idle(90);
 
 		ItemStack chocBucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
+			.getFluidType()
 			.getBucket(new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000));
 		scene.world.createItemOnBeltLike(util.grid.at(3, 1, 0), Direction.WEST, chocBucket);
 		scene.idle(40);

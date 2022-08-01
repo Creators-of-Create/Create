@@ -12,6 +12,8 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
@@ -22,7 +24,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	public final String id;
-	public BiomeFilter biomeFilter;
+	public TagKey<Biome> biomeTag;
 
 	private NonNullSupplier<? extends Block> block;
 	private NonNullSupplier<? extends Block> deepblock;

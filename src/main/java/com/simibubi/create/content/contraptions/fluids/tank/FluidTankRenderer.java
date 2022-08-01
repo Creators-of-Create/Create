@@ -55,7 +55,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 			return;
 
 		boolean top = fluidStack.getFluid()
-			.getAttributes()
+			.getFluidType()
 			.isLighterThanAir();
 
 		float xMin = tankHullWidth;

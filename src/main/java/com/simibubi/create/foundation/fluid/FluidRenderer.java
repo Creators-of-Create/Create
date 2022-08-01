@@ -25,8 +25,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 
 @OnlyIn(Dist.CLIENT)
 public class FluidRenderer {
@@ -43,15 +44,16 @@ public class FluidRenderer {
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, VertexConsumer builder, PoseStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes fluidAttributes = fluid.getAttributes();
+		IClientFluidTypeExtensions clientFluid = IClientFluidTypeExtensions.of(fluid);
+		FluidType fluidAttributes = fluid.getFluidType();
 		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite flowTexture = spriteAtlas.apply(fluidAttributes.getFlowingTexture(fluidStack));
-		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
+		TextureAtlasSprite flowTexture = spriteAtlas.apply(clientFluid.getFlowingTexture(fluidStack));
+		TextureAtlasSprite stillTexture = spriteAtlas.apply(clientFluid.getStillTexture(fluidStack));
 
-		int color = fluidAttributes.getColor(fluidStack);
+		int color = clientFluid.getTintColor(fluidStack);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = Math.max(blockLightIn, fluidAttributes.getLightLevel(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
@@ -74,42 +76,40 @@ public class FluidRenderer {
 
 		for (int i = 0; i < 4; i++) {
 			ms.pushPose();
-			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h,
-				builder, ms, light, color, flowTexture);
+			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h, builder, ms, light, color, flowTexture);
 			ms.popPose();
 			msr.rotateY(90);
 		}
 
 		if (progress != 1)
-			renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin,
-				builder, ms, light, color, stillTexture);
+			renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin, builder, ms, light, color, stillTexture);
 
 		ms.popPose();
 	}
 
-	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
-		float yMax, float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
-		renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light, renderBottom);
+	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax, float yMax,
+		float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
+		renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light,
+			renderBottom);
 	}
 
-	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
-		float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
+	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax, float yMax,
+		float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
 		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes fluidAttributes = fluid.getAttributes();
+		IClientFluidTypeExtensions clientFluid = IClientFluidTypeExtensions.of(fluid);
+		FluidType fluidAttributes = fluid.getFluidType();
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-			.apply(fluidAttributes.getStillTexture(fluidStack));
+			.apply(clientFluid.getStillTexture(fluidStack));
 
-		int color = fluidAttributes.getColor(fluidStack);
+		int color = clientFluid.getTintColor(fluidStack);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = Math.max(blockLightIn, fluidAttributes.getLightLevel(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
-		if (fluidStack.getFluid()
-			.getAttributes()
-			.isLighterThanAir())
+		if (fluidAttributes.isLighterThanAir())
 			TransformStack.cast(ms)
 				.translate(center)
 				.rotateX(180)
@@ -123,36 +123,36 @@ public class FluidRenderer {
 			if (side.getAxis()
 				.isHorizontal()) {
 				if (side.getAxis() == Axis.X) {
-					renderStillTiledFace(side, zMin, yMin, zMax, yMax, positive ? xMax : xMin,
-						builder, ms, light, color, fluidTexture);
+					renderStillTiledFace(side, zMin, yMin, zMax, yMax, positive ? xMax : xMin, builder, ms, light,
+						color, fluidTexture);
 				} else {
-					renderStillTiledFace(side, xMin, yMin, xMax, yMax, positive ? zMax : zMin,
-						builder, ms, light, color, fluidTexture);
+					renderStillTiledFace(side, xMin, yMin, xMax, yMax, positive ? zMax : zMin, builder, ms, light,
+						color, fluidTexture);
 				}
 			} else {
-				renderStillTiledFace(side, xMin, zMin, xMax, zMax, positive ? yMax : yMin,
-					builder, ms, light, color, fluidTexture);
+				renderStillTiledFace(side, xMin, zMin, xMax, zMax, positive ? yMax : yMin, builder, ms, light, color,
+					fluidTexture);
 			}
 		}
 
 		ms.popPose();
 	}
 
-	public static void renderStillTiledFace(Direction dir, float left, float down, float right, float up,
-		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
+	public static void renderStillTiledFace(Direction dir, float left, float down, float right, float up, float depth,
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
 		FluidRenderer.renderTiledFace(dir, left, down, right, up, depth, builder, ms, light, color, texture, 1);
 	}
 
-	public static void renderFlowingTiledFace(Direction dir, float left, float down, float right, float up,
-		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
+	public static void renderFlowingTiledFace(Direction dir, float left, float down, float right, float up, float depth,
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
 		FluidRenderer.renderTiledFace(dir, left, down, right, up, depth, builder, ms, light, color, texture, 0.5f);
 	}
 
-	public static void renderTiledFace(Direction dir, float left, float down, float right, float up,
-		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture,
-		float textureScale) {
+	public static void renderTiledFace(Direction dir, float left, float down, float right, float up, float depth,
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture, float textureScale) {
 		boolean positive = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE;
-		boolean horizontal = dir.getAxis().isHorizontal();
+		boolean horizontal = dir.getAxis()
+			.isHorizontal();
 		boolean x = dir.getAxis() == Axis.X;
 
 		float shrink = texture.uvShrinkRatio() * 0.25f * textureScale;

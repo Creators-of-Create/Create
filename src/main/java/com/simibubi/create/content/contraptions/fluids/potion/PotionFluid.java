@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllFluids.TintedFluidType;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -15,9 +17,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -66,32 +68,37 @@ public class PotionFluid extends VirtualFluid {
 		REGULAR, SPLASH, LINGERING;
 	}
 
-	public static class PotionFluidAttributes extends FluidAttributes {
+	public static class PotionFluidType extends TintedFluidType {
 
-		public PotionFluidAttributes(Builder builder, Fluid fluid) {
-			super(builder, fluid);
+		public PotionFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
+			super(properties, stillTexture, flowingTexture);
 		}
 
 		@Override
-		public int getColor(FluidStack stack) {
+		public int getTintColor(FluidStack stack) {
 			CompoundTag tag = stack.getOrCreateTag();
 			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
 			return color;
 		}
 
 		@Override
-		public Component getDisplayName(FluidStack stack) {
-			return Component.translatable(getTranslationKey(stack));
+		public Component getDescription(FluidStack stack) {
+			return Component.translatable(getDescriptionId(stack));
 		}
 
 		@Override
-		public String getTranslationKey(FluidStack stack) {
+		public String getDescriptionId(FluidStack stack) {
 			CompoundTag tag = stack.getOrCreateTag();
 			ItemLike itemFromBottleType =
 				PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
 			return PotionUtils.getPotion(tag)
 				.getName(itemFromBottleType.asItem()
 					.getDescriptionId() + ".effect.");
+		}
+
+		@Override
+		protected int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+			return NO_TINT;
 		}
 
 	}

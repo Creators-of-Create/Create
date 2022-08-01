@@ -466,6 +466,11 @@ public class BlueprintEntity extends HangingEntity
 			public boolean stillValid(Player playerIn) {
 				return false;
 			}
+
+			@Override
+			public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+				return ItemStack.EMPTY;
+			}
 		};
 
 		public BlueprintCraftingInventory(Map<Integer, ItemStack> items) {

@@ -125,8 +125,6 @@ public class Create {
 		modEventBus.addListener(AllSoundEvents::register);
 		modEventBus.addListener(AllEntityDataSerializers::register);
 
-		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
-		
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
 		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
@@ -156,6 +154,7 @@ public class Create {
 		gen.addProvider(true, new MechanicalCraftingRecipeGen(gen));
 		gen.addProvider(true, new SequencedAssemblyRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
+		AllWorldFeatures.generateBiomeModifiers(event);
 	}
 
 	public static CreateRegistrate registrate() {

@@ -2,41 +2,47 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Couple;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
-import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.common.data.JsonCodecProvider;
+import net.minecraftforge.common.world.BiomeModifier;
+import net.minecraftforge.common.world.ForgeBiomeModifiers.AddFeaturesBiomeModifier;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
 import net.minecraftforge.registries.RegisterEvent;
 
 public class AllWorldFeatures {
 
 	public static final Map<ResourceLocation, ConfigDrivenFeatureEntry> ENTRIES = new HashMap<>();
 
-	private static final BiomeFilter OVERWORLD_BIOMES =
-		(r, b) -> b != BiomeCategory.NETHER && b != BiomeCategory.THEEND && b != BiomeCategory.NONE;
-
-	private static final BiomeFilter NETHER_BIOMES = (r, b) -> b == BiomeCategory.NETHER;
-
 	//
 
 	public static final ConfigDrivenFeatureEntry ZINC_ORE =
-		register("zinc_ore", 12, 8, OVERWORLD_BIOMES).between(-63, 70)
+		register("zinc_ore", 12, 8, BiomeTags.IS_OVERWORLD).between(-63, 70)
 			.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE));
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_OVERWORLD =
-		register("striated_ores_overworld", 32, 1 / 12f, OVERWORLD_BIOMES).between(-30, 70)
+		register("striated_ores_overworld", 32, 1 / 12f, BiomeTags.IS_OVERWORLD).between(-30, 70)
 			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
 			.withLayerPattern(AllLayerPatterns.MAGNETITE)
@@ -45,16 +51,16 @@ public class AllWorldFeatures {
 			.withLayerPattern(AllLayerPatterns.OCHRESTONE);
 
 	public static final ConfigDrivenFeatureEntry STRIATED_ORES_NETHER =
-		register("striated_ores_nether", 32, 1 / 12f, NETHER_BIOMES).between(40, 90)
+		register("striated_ores_nether", 32, 1 / 12f, BiomeTags.IS_NETHER).between(40, 90)
 			.withLayerPattern(AllLayerPatterns.SCORIA_NETHER)
 			.withLayerPattern(AllLayerPatterns.SCORCHIA_NETHER);
 
 	//
 
 	private static ConfigDrivenFeatureEntry register(String id, int clusterSize, float frequency,
-		BiomeFilter biomeFilter) {
+		TagKey<Biome> biomeTag) {
 		ConfigDrivenFeatureEntry configDrivenFeatureEntry = new ConfigDrivenFeatureEntry(id, clusterSize, frequency);
-		configDrivenFeatureEntry.biomeFilter = biomeFilter;
+		configDrivenFeatureEntry.biomeTag = biomeTag;
 		ENTRIES.put(Create.asResource(id), configDrivenFeatureEntry);
 		return configDrivenFeatureEntry;
 	}
@@ -80,17 +86,6 @@ public class AllWorldFeatures {
 			});
 	}
 
-	public static void reload(BiomeLoadingEvent event) {
-		BiomeGenerationSettingsBuilder generation = event.getGeneration();
-		Decoration decoStep = GenerationStep.Decoration.UNDERGROUND_ORES;
-		ENTRIES.values()
-			.forEach(entry -> {
-				ConfigDrivenFeatureEntry value = entry;
-				if (value.biomeFilter.test(event.getName(), event.getCategory()))
-					generation.addFeature(decoStep, value.placedFeature);
-			});
-	}
-
 	public static void fillConfig(ForgeConfigSpec.Builder builder) {
 		ENTRIES.values()
 			.forEach(entry -> {
@@ -112,6 +107,23 @@ public class AllWorldFeatures {
 	public static void registerPlacementTypes() {
 		ConfigDrivenDecorator.TYPE =
 			Registry.register(Registry.PLACEMENT_MODIFIERS, "create_config_driven", () -> ConfigDrivenDecorator.CODEC);
+	}
+
+	public static void generateBiomeModifiers(GatherDataEvent event) {
+		Map<ResourceLocation, BiomeModifier> modifiers = new HashMap<>();
+		RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
+
+		for (Entry<ResourceLocation, ConfigDrivenFeatureEntry> entry : ENTRIES.entrySet()) {
+			ConfigDrivenFeatureEntry feature = entry.getValue();
+			HolderSet<Biome> biomes = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY)
+				.get(), feature.biomeTag);
+			modifiers.put(entry.getKey(), new AddFeaturesBiomeModifier(biomes, HolderSet.direct(feature.placedFeature),
+				Decoration.UNDERGROUND_ORES));
+		}
+
+		DataGenerator generator = event.getGenerator();
+		generator.addProvider(event.includeServer(), JsonCodecProvider.forDatapackRegistry(generator,
+			event.getExistingFileHelper(), Create.ID, ops, Keys.BIOME_MODIFIERS, modifiers));
 	}
 
 }
