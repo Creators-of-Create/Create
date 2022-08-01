@@ -209,6 +209,15 @@ jar {
     }
 }
 
+task jarJarRelease {
+    doLast {
+        tasks.jarJar {
+            classifier = ''
+        }
+    }
+    finalizedBy tasks.jarJar
+}
+
 java {
     withSourcesJar()
     withJavadocJar()
