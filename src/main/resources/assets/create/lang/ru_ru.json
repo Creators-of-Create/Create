@@ -884,7 +884,6 @@
 	"create.menu.configure": "Настроить...",
 	"create.menu.ponder_index": "Все размышления",
 	"create.menu.only_ingame": "Доступны только во время игры",
-	"create.menu.project_page": "Страница проекта",
 	"create.menu.report_bugs": "Нашли ошибку?",
 	"create.menu.support": "Поддержите нас",
 
@@ -1367,6 +1366,10 @@
 	"create.tooltip.chute.fans_pull_up": "Вентилятор тянет сверху",
 	"create.tooltip.chute.fans_pull_down": "Вентилятор тянет снизу",
 	"create.tooltip.chute.contains": "Содержит: %1$s x%2$s",
+	"create.tooltip.deployer.header": "Информация об автономном активаторе",
+	"create.tooltip.deployer.using": "Автономный активатор использует",
+	"create.tooltip.deployer.punching": "Автономный активатор ударяет",
+	"create.tooltip.deployer.contains": "Содержит: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "В данный момент раздает(выдает):",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "ПКМ, чтобы получить",
