@@ -272,7 +272,6 @@ public class BlockHelper {
 					((KineticTileEntity) tile).warnOfMovement();
 				tile.load(data);
 			}
-			System.out.println("");
 		}
 
 		try {

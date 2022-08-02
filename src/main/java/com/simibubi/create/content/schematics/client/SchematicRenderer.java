@@ -117,7 +117,7 @@ public class SchematicRenderer {
 				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
 				BlockEntity tileEntity = renderWorld.getBlockEntity(localPos);
-				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, false, random,
+				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, true, random,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
 
 				poseStack.popPose();
