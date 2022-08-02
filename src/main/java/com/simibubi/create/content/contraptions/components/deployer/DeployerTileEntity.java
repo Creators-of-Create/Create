@@ -403,6 +403,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 		}
 	}
 
+	@Override
+	public void writeSafe(CompoundTag tag) {
+		NBTHelper.writeEnum(tag, "Mode", mode);
+		super.writeSafe(tag);
+	}
+
 	private IItemHandlerModifiable createHandler() {
 		return new DeployerItemHandler(this);
 	}

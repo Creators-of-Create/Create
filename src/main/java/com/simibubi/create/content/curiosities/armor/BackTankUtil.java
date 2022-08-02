@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllEnchantments;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;

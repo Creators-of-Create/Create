@@ -95,11 +95,15 @@ public class FilteringRenderer {
 		if (te == null || te.isRemoved())
 			return;
 
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
-		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()
-			.distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max))
-			return;
+		if (!te.isVirtual()) {
+			Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+			if (cameraEntity != null && te.getLevel() == cameraEntity.getLevel()) {
+				float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
+				if (cameraEntity.position().distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max)) {
+					return;
+				}
+			}
+		}
 
 		FilteringBehaviour behaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)

@@ -453,7 +453,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		story.getTransform()
 			.updateScreenParams(width, height, slide);
 		story.getTransform()
-			.apply(ms, partialTicks, false);
+			.apply(ms, partialTicks);
 		story.getTransform()
 			.updateSceneRVE(partialTicks);
 		story.renderScene(buffer, ms, partialTicks);
