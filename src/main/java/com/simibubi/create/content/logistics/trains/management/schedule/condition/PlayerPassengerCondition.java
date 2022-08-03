@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -49,7 +50,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 		int target = getTarget();
 		return ImmutableList.of(Lang.translateDirect("schedule.condition.player_count.seated",
 			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
-				Component.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
+				Components.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
 	}
 
 	@Override

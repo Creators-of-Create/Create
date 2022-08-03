@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +38,7 @@ public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
 		int cost = EnchantmentHelper.getEnchantmentCost(random, 2, (int) enchantPower, stack);
 
-		return Component.literal(String.valueOf(cost));
+		return Components.literal(String.valueOf(cost));
 	}
 
 	@Override

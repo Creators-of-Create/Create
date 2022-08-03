@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 980",
+	"_": "Missing Localizations: 984",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1366,6 +1366,10 @@
 	"create.tooltip.chute.fans_pull_up": "Ventiladores tirando desde arriba",
 	"create.tooltip.chute.fans_pull_down": "Ventiladores tirando desde abajo",
 	"create.tooltip.chute.contains": "Contiene: %1$s x%2$s",
+	"create.tooltip.deployer.header": "UNLOCALIZED: Deployer Information",
+	"create.tooltip.deployer.using": "UNLOCALIZED: Mode: Use",
+	"create.tooltip.deployer.punching": "UNLOCALIZED: Mode: Attack",
+	"create.tooltip.deployer.contains": "UNLOCALIZED: Item: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "Actualmente distribuyendo:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "Click-Derecho para recuperar",

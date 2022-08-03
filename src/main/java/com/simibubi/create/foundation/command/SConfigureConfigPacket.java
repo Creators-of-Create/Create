@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.ui.PonderIndexScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -85,7 +86,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		try {
 			configPath = ConfigHelper.ConfigPath.parse(option);
 		} catch (IllegalArgumentException e) {
-			player.displayClientMessage(Component.literal(e.getMessage()), false);
+			player.displayClientMessage(Components.literal(e.getMessage()), false);
 			return;
 		}
 
@@ -96,11 +97,11 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		try {
 			ConfigHelper.setConfigValue(configPath, value);
-			player.displayClientMessage(Component.literal("Great Success!"), false);
+			player.displayClientMessage(Components.literal("Great Success!"), false);
 		} catch (ConfigHelper.InvalidValueException e) {
-			player.displayClientMessage(Component.literal("Config could not be set the the specified value!"), false);
+			player.displayClientMessage(Components.literal("Config could not be set the the specified value!"), false);
 		} catch (Exception e) {
-			player.displayClientMessage(Component.literal("Something went wrong while trying to set config value. Check the client logs for more information"), false);
+			player.displayClientMessage(Components.literal("Something went wrong while trying to set config value. Check the client logs for more information"), false);
 			Create.LOGGER.warn("Exception during client-side config value set:", e);
 		}
 
@@ -144,14 +145,14 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			try {
 				 configPath = ConfigHelper.ConfigPath.parse(value);
 			} catch (IllegalArgumentException e) {
-				player.displayClientMessage(Component.literal(e.getMessage()), false);
+				player.displayClientMessage(Components.literal(e.getMessage()), false);
 				return;
 			}
 
 			try {
 				ScreenOpener.open(SubMenuConfigScreen.find(configPath));
 			} catch (Exception e) {
-				player.displayClientMessage(Component.literal("Unable to find the specified config"), false);
+				player.displayClientMessage(Components.literal("Unable to find the specified config"), false);
 			}
 		}
 
@@ -162,7 +163,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 				return;
 
 			if (value.equals("info")) {
-				Component text = Component.literal("Rainbow Debug Utility is currently: ")
+				Component text = Components.literal("Rainbow Debug Utility is currently: ")
 					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
 				player.displayClientMessage(text, false);
 				return;
@@ -170,7 +171,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
 			Component text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
-				.append(Component.literal(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
+				.append(Components.literal(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
 			player.displayClientMessage(text, false);
 		}
 
@@ -214,7 +215,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
 				player.displayClientMessage(
-					Component.literal("Disabled Fabulous graphics warning"), false);
+					Components.literal("Disabled Fabulous graphics warning"), false);
 			}
 		}
 
@@ -268,8 +269,8 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		}
 
 		private static MutableComponent boolToText(boolean b) {
-			return b ? Component.literal("enabled").withStyle(ChatFormatting.DARK_GREEN)
-				: Component.literal("disabled").withStyle(ChatFormatting.RED);
+			return b ? Components.literal("enabled").withStyle(ChatFormatting.DARK_GREEN)
+				: Components.literal("disabled").withStyle(ChatFormatting.RED);
 		}
 	}
 }

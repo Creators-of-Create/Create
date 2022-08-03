@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -53,7 +54,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public void writeNBT(CompoundTag nbt) {
 		if (fluid == null)
 			return;
-		ResourceLocation id = ForgeRegistries.FLUIDS.getKey(fluid);
+		ResourceLocation id = fluid.getRegistryName();
 		if (id == null)
 			return;
 		nbt.putString("id", id.toString());

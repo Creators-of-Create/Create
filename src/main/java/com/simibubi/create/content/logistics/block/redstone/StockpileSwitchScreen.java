@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -56,7 +57,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 			.startWithValue(te.getState() ? 1 : 0);
 
 		offBelow = new ScrollInput(x + 36, y + 40, 102, 18).withRange(0, 100)
-			.titled(Component.empty())
+			.titled(Components.empty())
 			.calling(state -> {
 				lastModification = 0;
 				offBelow.titled(Lang.translateDirect("gui.stockpile_switch.move_to_upper_at", state));
@@ -68,7 +69,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 			.setState((int) (te.offWhenBelow * 100));
 
 		onAbove = new ScrollInput(x + 36, y + 18, 102, 18).withRange(1, 101)
-			.titled(Component.empty())
+			.titled(Components.empty())
 			.calling(state -> {
 				lastModification = 0;
 				onAbove.titled(Lang.translateDirect("gui.stockpile_switch.move_to_lower_at", state));

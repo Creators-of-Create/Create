@@ -1,9 +1,7 @@
 package com.simibubi.create;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -11,20 +9,32 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
+import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllInteractionBehaviours {
-	private static final Map<IRegistryDelegate<Block>, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
+	private static final CreateRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
+	public static void registerBehaviour(ResourceLocation block, MovingInteractionBehaviour provider) {
+		BLOCK_BEHAVIOURS.register(block, provider);
+	}
+
+	public static void registerBehaviour(Block block, MovingInteractionBehaviour provider) {
+		BLOCK_BEHAVIOURS.register(block, provider);
+	}
+
+	@Deprecated(forRemoval = true)
 	public static void registerBehaviour(IRegistryDelegate<Block> block, MovingInteractionBehaviour provider) {
-		BLOCK_BEHAVIOURS.put(block, provider);
+		registerBehaviour(block.name(), provider);
 	}
 
 	public static void registerBehaviourProvider(BehaviourProvider provider) {
@@ -33,7 +43,7 @@ public class AllInteractionBehaviours {
 
 	@Nullable
 	public static MovingInteractionBehaviour getBehaviour(BlockState state) {
-		MovingInteractionBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock().delegate);
+		MovingInteractionBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock());
 		if (behaviour != null) {
 			return behaviour;
 		}
@@ -50,11 +60,11 @@ public class AllInteractionBehaviours {
 
 	public static <B extends Block> NonNullConsumer<? super B> interactionBehaviour(
 		MovingInteractionBehaviour behaviour) {
-		return b -> registerBehaviour(b.delegate, behaviour);
+		return b -> registerBehaviour(b, behaviour);
 	}
 
 	static void registerDefaults() {
-		registerBehaviour(Blocks.LEVER.delegate, new LeverMovingInteraction());
+		registerBehaviour(Blocks.LEVER, new LeverMovingInteraction());
 
 		DoorMovingInteraction doorBehaviour = new DoorMovingInteraction();
 		registerBehaviourProvider(state -> {

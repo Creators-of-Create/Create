@@ -28,7 +28,7 @@ public enum Pointing implements StringRepresentable {
 		Direction top = axis == Axis.Y ? Direction.SOUTH : Direction.UP;
 		int rotations = direction.getAxisDirection() == AxisDirection.NEGATIVE ? 4 - ordinal() : ordinal();
 		for (int i = 0; i < rotations; i++)
-			top = DirectionHelper.rotateAround(top, axis);
+			top = top.getClockWise(axis);
 		return top;
 	}
 

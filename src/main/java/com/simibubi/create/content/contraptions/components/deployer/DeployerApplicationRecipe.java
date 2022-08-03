@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.Component;
@@ -57,9 +58,9 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
 		ItemStack[] matchingStacks = ingredients.get(1)
 			.getItems();
 		if (matchingStacks.length == 0)
-			return Component.literal("Invalid");
+			return Components.literal("Invalid");
 		return Lang.translateDirect("recipe.assembly.deploying_item",
-			Component.translatable(matchingStacks[0].getDescriptionId()).getString());
+			Components.translatable(matchingStacks[0].getDescriptionId()).getString());
 	}
 
 	@Override

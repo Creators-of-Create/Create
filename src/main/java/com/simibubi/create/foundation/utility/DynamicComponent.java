@@ -46,7 +46,7 @@ public class DynamicComponent {
 	}
 
 	public MutableComponent get() {
-		return parsedCustomText == null ? Component.empty() : parsedCustomText.copy();
+		return parsedCustomText == null ? Components.empty() : parsedCustomText.copy();
 	}
 
 	public void read(Level level, BlockPos pos, CompoundTag nbt) {
@@ -89,7 +89,7 @@ public class DynamicComponent {
 
 	public static CommandSourceStack getCommandSource(ServerLevel level, BlockPos pos) {
 		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(pos), Vec2.ZERO, level, 2, Create.ID,
-			Component.literal(Create.ID), level.getServer(), null);
+			Components.literal(Create.ID), level.getServer(), null);
 	}
 
 }

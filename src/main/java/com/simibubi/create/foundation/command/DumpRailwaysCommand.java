@@ -14,6 +14,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,7 +36,7 @@ public class DumpRailwaysCommand {
 			.executes(ctx -> {
 				CommandSourceStack source = ctx.getSource();
 				fillReport(source.getLevel(), source.getPosition(),
-					(s, f) -> source.sendSuccess(Component.literal(s).withStyle(st -> st.withColor(f)), false),
+					(s, f) -> source.sendSuccess(Components.literal(s).withStyle(st -> st.withColor(f)), false),
 					(c) -> source.sendSuccess(c, false));
 				return 1;
 			});
@@ -140,11 +141,11 @@ public class DumpRailwaysCommand {
 	}
 
 	private static Component createDeleteButton(Train train) {
-		return ComponentUtils.wrapInSquareBrackets((Component.literal("Remove")).withStyle((p_180514_) -> {
+		return ComponentUtils.wrapInSquareBrackets((Components.literal("Remove")).withStyle((p_180514_) -> {
 			return p_180514_.withColor(0xFFAD60)
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c killTrain " + train.id.toString()))
 				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-					Component.literal("Click to remove ").append(train.name)))
+					Components.literal("Click to remove ").append(train.name)))
 				.withInsertion("/c killTrain " + train.id.toString());
 		}));
 	}

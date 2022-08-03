@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.Util;
@@ -72,8 +73,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int x = leftPos;
 		int y = topPos;
 
-		schematicsLabel = new Label(x + 49, y + 26, Component.empty()).withShadow();
-		schematicsLabel.text = Component.empty();
+		schematicsLabel = new Label(x + 49, y + 26, Components.immutableEmpty()).withShadow();
+		schematicsLabel.text = Components.immutableEmpty();
 		if (!availableSchematics.isEmpty()) {
 			schematicsArea =
 				new SelectionScrollInput(x + 45, y + 21, 139, 18).forOptions(availableSchematics)
@@ -117,7 +118,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 				addRenderableWidget(schematicsArea);
 			} else {
 				schematicsArea = null;
-				schematicsLabel.text = Component.empty();
+				schematicsLabel.text = Components.immutableEmpty();
 			}
 		});
 		refreshButton.setToolTip(refresh);
@@ -189,7 +190,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			if (schematicsLabel != null) {
 				schematicsLabel.colored(0xCCDDFF);
 				String uploadingSchematic = menu.contentHolder.uploadingSchematic;
-				schematicsLabel.text = uploadingSchematic == null ? null : Component.literal(uploadingSchematic);
+				schematicsLabel.text = uploadingSchematic == null ? null : Components.literal(uploadingSchematic);
 			}
 			if (schematicsArea != null)
 				schematicsArea.visible = false;

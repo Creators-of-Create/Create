@@ -5,8 +5,8 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTargetS
 import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,7 +37,7 @@ public class ItemCountDisplaySource extends NumericSingleLineDisplaySource {
 			collected += stack.getCount();
 		}
 
-		return Component.literal(String.valueOf(collected));
+		return Components.literal(String.valueOf(collected));
 	}
 
 	@Override

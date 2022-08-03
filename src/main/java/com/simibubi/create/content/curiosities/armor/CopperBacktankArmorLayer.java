@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -128,7 +129,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 
 		poseStack.translate(width / 2 + 90, height - 53, 0);
 
-		Component text = Component.literal(StringUtil.formatTickDuration(timeLeft * 20));
+		Component text = Components.literal(StringUtil.formatTickDuration(timeLeft * 20));
 		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())
 			.at(0, 0)
 			.render(poseStack);

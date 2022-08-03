@@ -10,6 +10,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEn
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -132,8 +133,8 @@ public class ScheduleItem extends Item implements MenuProvider {
 		if (schedule == null || schedule.entries.isEmpty())
 			return;
 
-		MutableComponent caret = Component.literal("> ").withStyle(ChatFormatting.GRAY);
-		MutableComponent arrow = Component.literal("-> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent caret = Components.literal("> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent arrow = Components.literal("-> ").withStyle(ChatFormatting.GRAY);
 
 		List<ScheduleEntry> entries = schedule.entries;
 		for (int i = 0; i < entries.size(); i++) {
@@ -144,7 +145,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 			ChatFormatting format = current ? ChatFormatting.YELLOW : ChatFormatting.GOLD;
 			MutableComponent prefix = current ? arrow : caret;
 			tooltip.add(prefix.copy()
-				.append(Component.literal(destination.getFilter()).withStyle(format)));
+				.append(Components.literal(destination.getFilter()).withStyle(format)));
 		}
 	}
 

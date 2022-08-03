@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -22,7 +23,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(AllBlocks.TRACK_STATION.asStack(), Component.literal(getLabelText()));
+		return Pair.of(AllBlocks.TRACK_STATION.asStack(), Components.literal(getLabelText()));
 	}
 
 	@Override

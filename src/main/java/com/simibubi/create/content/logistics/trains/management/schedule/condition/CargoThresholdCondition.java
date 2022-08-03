@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -80,7 +81,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(getIcon(), Component.literal(getOperator().formatted + " " + getThreshold()).append(getUnit()));
+		return Pair.of(getIcon(), Components.literal(getOperator().formatted + " " + getThreshold()).append(getUnit()));
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		builder.addSelectionScrollInput(0, 24, (i, l) -> {
 			i.forOptions(Ops.translatedOptions())
 				.titled(Lang.translateDirect("schedule.condition.threshold.train_holds"))
-				.format(state -> Component.literal(" " + Ops.values()[state].formatted));
+				.format(state -> Components.literal(" " + Ops.values()[state].formatted));
 		}, "Operator");
 		builder.addIntegerTextInput(29, 41, (e, t) -> {
 		}, "Threshold");

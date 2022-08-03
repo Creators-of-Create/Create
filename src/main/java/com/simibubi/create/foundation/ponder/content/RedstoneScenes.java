@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.ParrotElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
@@ -629,7 +630,7 @@ public class RedstoneScenes {
 			.withItem(new ItemStack(Items.NAME_TAG)), 40);
 		scene.idle(7);
 
-		Component component = Component.literal("CREATE");
+		Component component = Components.literal("CREATE");
 		for (int i = 0; i < 3; i++) {
 			final int index = i;
 			scene.world.modifyTileNBT(util.select.position(3 - i, 1, 3), NixieTubeTileEntity.class, nbt -> {

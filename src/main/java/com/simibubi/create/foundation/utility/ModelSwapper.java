@@ -76,7 +76,7 @@ public class ModelSwapper {
 
 	public static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		ResourceLocation blockRl = block.getRegistryName();
+		ResourceLocation blockRl = RegisteredObjects.getKeyOrThrow(block);
 		block.getStateDefinition()
 			.getPossibleStates()
 			.forEach(state -> {
@@ -86,7 +86,7 @@ public class ModelSwapper {
 	}
 
 	public static ModelResourceLocation getItemModelLocation(Item item) {
-		return new ModelResourceLocation(item.getRegistryName(), "inventory");
+		return new ModelResourceLocation(RegisteredObjects.getKeyOrThrow(item), "inventory");
 	}
 
 }

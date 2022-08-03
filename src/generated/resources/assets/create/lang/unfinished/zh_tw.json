@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1038",
+	"_": "Missing Localizations: 1042",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1366,6 +1366,10 @@
 	"create.tooltip.chute.fans_pull_up": "鼓風機從下方進行吸引",
 	"create.tooltip.chute.fans_pull_down": "鼓風機從上方進行吸引",
 	"create.tooltip.chute.contains": "物品: %1$s x%2$s",
+	"create.tooltip.deployer.header": "UNLOCALIZED: Deployer Information",
+	"create.tooltip.deployer.using": "UNLOCALIZED: Mode: Use",
+	"create.tooltip.deployer.punching": "UNLOCALIZED: Mode: Attack",
+	"create.tooltip.deployer.contains": "UNLOCALIZED: Item: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "正在處理",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "右鍵取回",

@@ -15,7 +15,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySource {
+public class ItemThroughputDisplaySource extends AccumulatedItemCountDisplaySource {
 
 	static final int POOL_SIZE = 10;
 

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,7 +46,7 @@ public class AstralSorceryPerkGemAttribute implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         ResourceLocation traitResource = new ResourceLocation(traitName);
-        String something = Component.translatable(String.format("perk.attribute.%s.%s.name", traitResource.getNamespace(), traitResource.getPath())).getString();
+        String something = Components.translatable(String.format("perk.attribute.%s.%s.name", traitResource.getNamespace(), traitResource.getPath())).getString();
         return new Object[] { something };
     }
 

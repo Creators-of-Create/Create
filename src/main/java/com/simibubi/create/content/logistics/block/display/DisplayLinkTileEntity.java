@@ -124,15 +124,15 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag, boolean clientPacket) {
-		super.writeSafe(tag, clientPacket);
-		writeGatheredData(tag, clientPacket);
+	public void writeSafe(CompoundTag tag) {
+		super.writeSafe(tag);
+		writeGatheredData(tag);
 	}
 
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
-		writeGatheredData(tag, clientPacket);
+		writeGatheredData(tag);
 		if (clientPacket && activeTarget != null) 
 			tag.putString("TargetType", activeTarget.id.toString());
 		if (clientPacket && sendPulse) {
@@ -141,7 +141,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		}
 	}
 
-	private void writeGatheredData(CompoundTag tag, boolean clientPacket) {
+	private void writeGatheredData(CompoundTag tag) {
 		tag.put("TargetOffset", NbtUtils.writeBlockPos(targetOffset));
 		tag.putInt("TargetLine", targetLine);
 

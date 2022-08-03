@@ -14,6 +14,7 @@ import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -220,21 +221,21 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			String _reload = "potato_cannon.ammo.reload_ticks";
 			String _knockback = "potato_cannon.ammo.knockback";
 
-			tooltip.add(Component.literal(""));
-			tooltip.add(Component.translatable(ammo.getDescriptionId()).append(Component.literal(":"))
+			tooltip.add(Components.immutableEmpty());
+			tooltip.add(Components.translatable(ammo.getDescriptionId()).append(Components.literal(":"))
 				.withStyle(ChatFormatting.GRAY));
 			PotatoCannonProjectileType type = PotatoProjectileTypeManager.getTypeForStack(ammo)
 				.get();
-			MutableComponent spacing = Component.literal(" ");
+			MutableComponent spacing = Components.literal(" ");
 			ChatFormatting green = ChatFormatting.GREEN;
 			ChatFormatting darkGreen = ChatFormatting.DARK_GREEN;
 
 			float damageF = type.getDamage() * additionalDamageMult;
-			MutableComponent damage = Component.literal(
+			MutableComponent damage = Components.literal(
 				damageF == Mth.floor(damageF) ? "" + Mth.floor(damageF) : "" + damageF);
-			MutableComponent reloadTicks = Component.literal("" + type.getReloadTicks());
+			MutableComponent reloadTicks = Components.literal("" + type.getReloadTicks());
 			MutableComponent knockback =
-				Component.literal("" + (type.getKnockback() + additionalKnockback));
+				Components.literal("" + (type.getKnockback() + additionalKnockback));
 
 			damage = damage.withStyle(additionalDamageMult > 1 ? green : darkGreen);
 			knockback = knockback.withStyle(additionalKnockback > 0 ? green : darkGreen);

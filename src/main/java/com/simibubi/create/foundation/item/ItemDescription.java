@@ -27,6 +27,7 @@ import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
@@ -41,7 +42,7 @@ import net.minecraft.world.level.block.Block;
 public class ItemDescription {
 
 	public static final ItemDescription MISSING = new ItemDescription(null);
-	public static Component trim = Component.literal("                          ").withStyle(WHITE, STRIKETHROUGH);
+	public static Component trim = Components.literal("                          ").withStyle(WHITE, STRIKETHROUGH);
 
 	public enum Palette {
 
@@ -174,13 +175,13 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
-		add(linesOnShift, Component.literal(condition).withStyle(GRAY));
+		add(linesOnShift, Components.literal(condition).withStyle(GRAY));
 		addStrings(linesOnShift, cutStringTextComponent(behaviour, palette.color, palette.hColor, 1));
 		return this;
 	}
 
 	public ItemDescription withControl(String condition, String action) {
-		add(linesOnCtrl, Component.literal(condition).withStyle(GRAY));
+		add(linesOnCtrl, Components.literal(condition).withStyle(GRAY));
 		addStrings(linesOnCtrl, cutStringTextComponent(action, palette.color, palette.hColor, 1));
 		return this;
 	}
@@ -203,30 +204,30 @@ public class ItemDescription {
 				boolean ctrl = list == linesOnCtrl;
 
 				if (holdDesc.length != 2 || holdCtrl.length != 2) {
-					list.add(0, Component.literal("Invalid lang formatting!"));
+					list.add(0, Components.literal("Invalid lang formatting!"));
 					continue;
 				}
 
 				if (hasControls) {
-					MutableComponent tabBuilder = Component.literal("");
-					tabBuilder.append(Component.literal(holdCtrl[0]).withStyle(DARK_GRAY));
+					MutableComponent tabBuilder = Components.empty();
+					tabBuilder.append(Components.literal(holdCtrl[0]).withStyle(DARK_GRAY));
 					tabBuilder.append(keyCtrl.plainCopy()
 						.withStyle(ctrl ? WHITE : GRAY));
-					tabBuilder.append(Component.literal(holdCtrl[1]).withStyle(DARK_GRAY));
+					tabBuilder.append(Components.literal(holdCtrl[1]).withStyle(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
 
 				if (hasDescription) {
-					MutableComponent tabBuilder = Component.literal("");
-					tabBuilder.append(Component.literal(holdDesc[0]).withStyle(DARK_GRAY));
+					MutableComponent tabBuilder = Components.empty();
+					tabBuilder.append(Components.literal(holdDesc[0]).withStyle(DARK_GRAY));
 					tabBuilder.append(keyShift.plainCopy()
 						.withStyle(shift ? WHITE : GRAY));
-					tabBuilder.append(Component.literal(holdDesc[1]).withStyle(DARK_GRAY));
+					tabBuilder.append(Components.literal(holdDesc[1]).withStyle(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
 
 				if (shift || ctrl)
-					list.add(hasDescription && hasControls ? 2 : 1, Component.literal(""));
+					list.add(hasDescription && hasControls ? 2 : 1, Components.immutableEmpty());
 			}
 		}
 

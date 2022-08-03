@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.ItemValueBox
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -65,7 +66,7 @@ public class FilteringRenderer {
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
 		boolean fluids = behaviour.fluidFilter;
-		Component label = isFilterSlotted ? Component.empty()
+		Component label = isFilterSlotted ? Components.immutableEmpty()
 			: Lang.translateDirect(behaviour.recipeFilter ? "logistics.recipe_filter"
 				: fluids ? "logistics.fluid_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getLocation()
@@ -79,7 +80,7 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-				.scrollTooltip(showCount && !isFilterSlotted ? Component.literal("[").append(Lang.translateDirect("action.scroll")).append("]") : Component.empty())
+				.scrollTooltip(showCount && !isFilterSlotted ? Components.literal("[").append(Lang.translateDirect("action.scroll")).append("]") : Components.immutableEmpty())
 				.passive(!hit);
 
 		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
@@ -94,11 +95,15 @@ public class FilteringRenderer {
 		if (te == null || te.isRemoved())
 			return;
 
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
-		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()
-			.distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max))
-			return;
+		if (!te.isVirtual()) {
+			Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+			if (cameraEntity != null && te.getLevel() == cameraEntity.getLevel()) {
+				float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
+				if (cameraEntity.position().distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max)) {
+					return;
+				}
+			}
+		}
 
 		FilteringBehaviour behaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)

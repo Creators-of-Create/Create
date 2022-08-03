@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class FluidFormatter {
@@ -13,13 +12,13 @@ public class FluidFormatter {
 	public static Couple<MutableComponent> asComponents(long amount, boolean shorten) {
 		if (shorten && amount >= 1000) {
 			return Couple.create(
-					Component.literal(String.format("%.1f" , amount / 1000d)),
+					Components.literal(String.format("%.1f" , amount / 1000d)),
 					Lang.translateDirect("generic.unit.buckets")
 			);
 		}
 
 		return Couple.create(
-				Component.literal(String.valueOf(amount)),
+				Components.literal(String.valueOf(amount)),
 				Lang.translateDirect("generic.unit.millibuckets")
 		);
 	}

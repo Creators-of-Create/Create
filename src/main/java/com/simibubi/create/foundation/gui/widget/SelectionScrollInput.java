@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.gui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -42,23 +43,23 @@ public class SelectionScrollInput extends ScrollInput {
 		if (this.min + 1 == min)
 			min--;
 		if (min > this.min)
-			toolTip.add(Component.literal("> ...").withStyle(ChatFormatting.GRAY));
+			toolTip.add(Components.literal("> ...").withStyle(ChatFormatting.GRAY));
 		if (this.max - 1 == max)
 			max++;
 		for (int i = min; i < max; i++) {
 			if (i == state)
-				toolTip.add(Component.empty()
+				toolTip.add(Components.empty()
 					.append("-> ")
 					.append(options.get(i))
 					.withStyle(ChatFormatting.WHITE));
 			else
-				toolTip.add(Component.empty()
+				toolTip.add(Components.empty()
 					.append("> ")
 					.append(options.get(i))
 					.withStyle(ChatFormatting.GRAY));
 		}
 		if (max < this.max)
-			toolTip.add(Component.literal("> ...").withStyle(ChatFormatting.GRAY));
+			toolTip.add(Components.literal("> ...").withStyle(ChatFormatting.GRAY));
 
 		toolTip.add(scrollToSelect.plainCopy()
 			.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));

@@ -7,11 +7,11 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllFluids.TintedFluidType;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PotionFluid extends VirtualFluid {
 
@@ -43,7 +42,7 @@ public class PotionFluid extends VirtualFluid {
 	}
 
 	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
-		ResourceLocation resourcelocation = ForgeRegistries.POTIONS.getKey(potion);
+		ResourceLocation resourcelocation = RegisteredObjects.getKeyOrThrow(potion);
 		if (potion == Potions.EMPTY) {
 			fs.removeChildTag("Potion");
 			return fs;
@@ -79,11 +78,6 @@ public class PotionFluid extends VirtualFluid {
 			CompoundTag tag = stack.getOrCreateTag();
 			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
 			return color;
-		}
-
-		@Override
-		public Component getDescription(FluidStack stack) {
-			return Component.translatable(getDescriptionId(stack));
 		}
 
 		@Override

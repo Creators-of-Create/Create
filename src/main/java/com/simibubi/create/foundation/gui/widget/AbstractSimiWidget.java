@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.TickableGuiEventListener;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -30,7 +31,7 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 	}
 
 	protected AbstractSimiWidget(int x, int y, int width, int height) {
-		this(x, y, width, height, Component.empty());
+		this(x, y, width, height, Components.immutableEmpty());
 	}
 
 	protected AbstractSimiWidget(int x, int y, int width, int height, Component message) {

@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
 
@@ -24,8 +25,8 @@ import net.minecraft.world.phys.Vec3;
 public class ValueBox extends ChasingAABBOutline {
 
 	protected Component label;
-	protected Component sublabel = Component.empty();
-	protected Component scrollTooltip = Component.empty();
+	protected Component sublabel = Components.immutableEmpty();
+	protected Component scrollTooltip = Components.immutableEmpty();
 	protected Vec3 labelOffset = Vec3.ZERO;
 
 	protected int passiveColor;
@@ -105,7 +106,7 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.translate(labelOffset.x, labelOffset.y, labelOffset.z);
 
 			renderHoveringText(ms, buffer, label);
-			if (!sublabel.toString().isEmpty()) {
+			if (!sublabel.getString().isEmpty()) {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, sublabel);
 			}
@@ -136,7 +137,7 @@ public class ValueBox extends ChasingAABBOutline {
 		public void renderContents(PoseStack ms, MultiBufferSource buffer) {
 			super.renderContents(ms, buffer);
 			Font font = Minecraft.getInstance().font;
-			Component countString = Component.literal(count == 0 ? "*" : count + "");
+			Component countString = Components.literal(count == 0 ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;

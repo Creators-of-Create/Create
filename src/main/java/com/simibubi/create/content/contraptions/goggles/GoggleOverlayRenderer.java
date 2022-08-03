@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.Outline;
@@ -99,7 +100,7 @@ public class GoggleOverlayRenderer {
 
 		if (hasHoveringInformation) {
 			if (!tooltip.isEmpty())
-				tooltip.add(Component.empty());
+				tooltip.add(Components.immutableEmpty());
 			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
 			hoverAddedInformation = hte.addToTooltip(tooltip, mc.player.isShiftKeyDown());
 
@@ -142,11 +143,11 @@ public class GoggleOverlayRenderer {
 			if (!pistonFound)
 				return;
 			if (!tooltip.isEmpty())
-				tooltip.add(Component.empty());
+				tooltip.add(Components.immutableEmpty());
 
 			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 				.append(Lang.translateDirect("gui.goggles.pole_length"))
-				.append(Component.literal(" " + poles)));
+				.append(Components.literal(" " + poles)));
 		}
 
 		if (tooltip.isEmpty())

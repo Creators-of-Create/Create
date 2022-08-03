@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilter
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -751,7 +752,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", Component.translatable(item.getDescriptionId())
+				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", Components.translatable(item.getDescriptionId())
 					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}

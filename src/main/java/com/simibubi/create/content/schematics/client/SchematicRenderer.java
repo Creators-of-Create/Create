@@ -96,6 +96,7 @@ public class SchematicRenderer {
 		RandomSource random = objects.random;
 		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
 		SchematicWorld renderWorld = schematic;
+		renderWorld.renderMode = true;
 		BoundingBox bounds = renderWorld.getBounds();
 
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
@@ -134,6 +135,8 @@ public class SchematicRenderer {
 		unshadedBuilder.end();
 		builder.appendUnshadedVertices(unshadedBuilder);
 		builder.end();
+
+		renderWorld.renderMode = false;
 
 		return new SuperByteBuffer(builder);
 	}

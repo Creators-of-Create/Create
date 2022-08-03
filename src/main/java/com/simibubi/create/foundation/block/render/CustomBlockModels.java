@@ -1,58 +1,55 @@
 package com.simibubi.create.foundation.block.render;
 
-import java.util.ArrayList;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
-import org.apache.commons.lang3.tuple.Pair;
-
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CustomBlockModels {
 
-	private List<Pair<Supplier<? extends Block>, NonNullFunction<BakedModel, ? extends BakedModel>>> registered;
-	private Map<Block, NonNullFunction<BakedModel, ? extends BakedModel>> customModels;
+	private final Multimap<ResourceLocation, NonNullFunction<BakedModel, ? extends BakedModel>> modelFuncs = MultimapBuilder.hashKeys().arrayListValues().build();
+	private final Map<Block, NonNullFunction<BakedModel, ? extends BakedModel>> finalModelFunc = new IdentityHashMap<>();
 
-	public CustomBlockModels() {
-		registered = new ArrayList<>();
-		customModels = new IdentityHashMap<>();
-	}
-
-	public void register(Supplier<? extends Block> entry,
-		NonNullFunction<BakedModel, ? extends BakedModel> behaviour) {
-		registered.add(Pair.of(entry, behaviour));
+	public void register(ResourceLocation block, NonNullFunction<BakedModel, ? extends BakedModel> func) {
+		modelFuncs.put(block, func);
 	}
 
 	public void forEach(NonNullBiConsumer<Block, NonNullFunction<BakedModel, ? extends BakedModel>> consumer) {
 		loadEntriesIfMissing();
-		customModels.forEach(consumer);
+		finalModelFunc.forEach(consumer);
 	}
 
 	private void loadEntriesIfMissing() {
-		if (customModels.isEmpty())
+		if (finalModelFunc.isEmpty())
 			loadEntries();
 	}
 
 	private void loadEntries() {
-		customModels.clear();
-		registered.forEach(p -> {
-			Block key = p.getKey()
-				.get();
-			
-			NonNullFunction<BakedModel, ? extends BakedModel> existingModel = customModels.get(key);
-			if (existingModel != null) {
-				customModels.put(key, p.getValue()
-					.andThen(existingModel));
+		finalModelFunc.clear();
+		modelFuncs.asMap().forEach((location, funcList) -> {
+			Block block = ForgeRegistries.BLOCKS.getValue(location);
+			if (block == null) {
 				return;
 			}
-			
-			customModels.put(key, p.getValue());
+
+			NonNullFunction<BakedModel, ? extends BakedModel> finalFunc = null;
+			for (NonNullFunction<BakedModel, ? extends BakedModel> func : funcList) {
+				if (finalFunc == null) {
+					finalFunc = func;
+				} else {
+					finalFunc = finalFunc.andThen(func);
+				}
+			}
+
+			finalModelFunc.put(block, finalFunc);
 		});
 	}
 

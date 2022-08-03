@@ -20,6 +20,7 @@ import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -83,7 +84,7 @@ public class SchematicItem extends Item {
 		if (stack.hasTag()) {
 			if (stack.getTag()
 				.contains("File"))
-				tooltip.add(Component.literal(ChatFormatting.GOLD + stack.getTag()
+				tooltip.add(Components.literal(ChatFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
 			tooltip.add(Lang.translateDirect("schematic.invalid").withStyle(ChatFormatting.RED));

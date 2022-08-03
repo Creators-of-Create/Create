@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -146,8 +147,8 @@ public class BoilerData {
 		if (!isActive())
 			return false;
 
-		Component indent = Component.literal(IHaveGoggleInformation.spacing);
-		Component indent2 = Component.literal(IHaveGoggleInformation.spacing + " ");
+		Component indent = Components.literal(IHaveGoggleInformation.spacing);
+		Component indent2 = Components.literal(IHaveGoggleInformation.spacing + " ");
 
 		calcMinMaxForSize(boilerSize);
 
@@ -168,7 +169,7 @@ public class BoilerData {
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 
-		tooltip.add(Component.empty());
+		tooltip.add(Components.immutableEmpty());
 
 		Lang.translate("tooltip.capacityProvided")
 			.style(ChatFormatting.GRAY)
@@ -233,12 +234,12 @@ public class BoilerData {
 	}
 
 	private MutableComponent blockComponent(int level) {
-		return Component.literal(
+		return Components.literal(
 			"" + "\u2588".repeat(minValue) + "\u2592".repeat(level - minValue) + "\u2591".repeat(maxValue - level));
 	}
 
 	private MutableComponent barComponent(int level) {
-		return Component.empty()
+		return Components.empty()
 			.append(bars(Math.max(0, minValue - 1), ChatFormatting.DARK_GREEN))
 			.append(bars(minValue > 0 ? 1 : 0, ChatFormatting.GREEN))
 			.append(bars(Math.max(0, level - minValue), ChatFormatting.DARK_GREEN))
@@ -249,7 +250,7 @@ public class BoilerData {
 	}
 
 	private MutableComponent bars(int level, ChatFormatting format) {
-		return Component.literal(Strings.repeat('|', level)).withStyle(format);
+		return Components.literal(Strings.repeat('|', level)).withStyle(format);
 	}
 
 	public boolean evaluate(FluidTankTileEntity controller) {

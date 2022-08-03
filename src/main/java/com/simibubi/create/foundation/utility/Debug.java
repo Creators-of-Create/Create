@@ -17,20 +17,20 @@ public class Debug {
 	@Deprecated
 	public static void debugChat(String message) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.displayClientMessage(Component.literal(message), false);
+			Minecraft.getInstance().player.displayClientMessage(Components.literal(message), false);
 	}
 
 	@Deprecated
 	public static void debugChatAndShowStack(String message, int depth) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.displayClientMessage(Component.literal(message).append("@")
+			Minecraft.getInstance().player.displayClientMessage(Components.literal(message).append("@")
 				.append(debugStack(depth)), false);
 	}
 
 	@Deprecated
 	public static void debugMessage(String message) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.displayClientMessage(Component.literal(message), true);
+			Minecraft.getInstance().player.displayClientMessage(Components.literal(message), true);
 	}
 	
 	@Deprecated
@@ -48,18 +48,18 @@ public class Debug {
 	public static Component debugStack(int depth) {
 		StackTraceElement[] stackTraceElements = Thread.currentThread()
 			.getStackTrace();
-		MutableComponent text = Component.literal("[")
-			.append(Component.literal(getLogicalSide()).withStyle(ChatFormatting.GOLD))
+		MutableComponent text = Components.literal("[")
+			.append(Components.literal(getLogicalSide()).withStyle(ChatFormatting.GOLD))
 			.append("] ");
 		for (int i = 1; i < depth + 2 && i < stackTraceElements.length; i++) {
 			StackTraceElement e = stackTraceElements[i];
 			if (e.getClassName()
 				.equals(Debug.class.getName()))
 				continue;
-			text.append(Component.literal(e.getMethodName()).withStyle(ChatFormatting.YELLOW))
+			text.append(Components.literal(e.getMethodName()).withStyle(ChatFormatting.YELLOW))
 				.append(", ");
 		}
-		return text.append(Component.literal(" ...").withStyle(ChatFormatting.GRAY));
+		return text.append(Components.literal(" ...").withStyle(ChatFormatting.GRAY));
 	}
 
 	@Deprecated

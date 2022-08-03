@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.gui.element;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class TextStencilElement extends DelegatedStencilElement {
@@ -21,7 +21,7 @@ public class TextStencilElement extends DelegatedStencilElement {
 
 	public TextStencilElement(Font font, String text) {
 		this(font);
-		component = Component.literal(text);
+		component = Components.literal(text);
 	}
 
 	public TextStencilElement(Font font, MutableComponent component) {
@@ -30,7 +30,7 @@ public class TextStencilElement extends DelegatedStencilElement {
 	}
 
 	public TextStencilElement withText(String text) {
-		component = Component.literal(text);
+		component = Components.literal(text);
 		return this;
 	}
 

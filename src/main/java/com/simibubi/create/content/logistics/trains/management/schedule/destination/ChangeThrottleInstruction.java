@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -30,7 +31,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 	}
 
 	private MutableComponent formatted() {
-		return Component.literal(intData("Value") + "%");
+		return Components.literal(intData("Value") + "%");
 	}
 
 	@Override

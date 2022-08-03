@@ -220,6 +220,7 @@ public class AllTags {
 		MODDED_STRIPPED_WOOD,
 		CASING,
 		SLEEPERS,
+		PRESSURIZED_AIR_SOURCES,
 
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
@@ -444,7 +445,7 @@ public class AllTags {
 		strippedWoodCompat(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark");
 		strippedWoodCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry");
-		
+
 		AllItemTags.MODDED_STRIPPED_LOGS.addOptional(Mods.BYG, "stripped_bulbis_stem");
 		AllItemTags.MODDED_STRIPPED_WOOD.addOptional(Mods.BYG, "stripped_bulbis_wood");
 

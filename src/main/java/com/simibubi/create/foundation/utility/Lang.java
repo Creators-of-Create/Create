@@ -22,7 +22,7 @@ public class Lang {
 	 * @return
 	 */
 	public static MutableComponent translateDirect(String key, Object... args) {
-		return Component.translatable(Create.ID + "." + key, resolveBuilders(args));
+		return Components.translatable(Create.ID + "." + key, resolveBuilders(args));
 	}
 
 	public static String asId(String name) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -18,7 +19,7 @@ public interface IDisplayAssemblyExceptions {
 			return false;
 
 		if (!tooltip.isEmpty())
-			tooltip.add(Component.empty());
+			tooltip.add(Components.immutableEmpty());
 
 		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 			.append(Lang.translateDirect("gui.assembly.exception")

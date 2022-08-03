@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.goggles;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
@@ -26,7 +27,7 @@ public interface IHaveGoggleInformation {
 	 * Use Lang.[...].forGoggles(list)
 	 */
 	@Deprecated
-	Component componentSpacing = Component.literal(spacing);
+	Component componentSpacing = Components.literal(spacing);
 
 	/**
 	 * this method will be called when looking at a TileEntity that implemented this

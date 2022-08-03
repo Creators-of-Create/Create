@@ -27,6 +27,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -591,7 +592,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
 			sendPrompt(player, Lang.translateDirect("train.arrived_at",
-				Component.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
+				Components.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 			return true;
 		}
 
@@ -603,7 +604,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
 			sendPrompt(player, Lang.translateDirect("train.departing_from",
-				Component.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
+				Components.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 		}
 
 		if (currentStation == null) {
@@ -616,8 +617,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					double f = (nav.distanceToDestination / navDistanceTotal);
 					int progress = (int) (Mth.clamp(1 - ((1 - f) * (1 - f)), 0, 1) * 30);
 					boolean arrived = progress == 0;
-					MutableComponent whiteComponent = Component.literal(Strings.repeat("|", progress));
-					MutableComponent greenComponent = Component.literal(Strings.repeat("|", 30 - progress));
+					MutableComponent whiteComponent = Components.literal(Strings.repeat("|", progress));
+					MutableComponent greenComponent = Components.literal(Strings.repeat("|", 30 - progress));
 
 					int fromColor = 0x00_FFC244;
 					int toColor = 0x00_529915;
@@ -683,14 +684,14 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
 		sendPrompt(player, Lang.translateDirect("contraption.controls.approach_station",
-			Component.keybind("key.jump"), station.name), false);
+			Components.keybind("key.jump"), station.name), false);
 		stationMessage = true;
 	}
 
 	private void cleanUpApproachStationMessage(Player player) {
 		if (!stationMessage)
 			return;
-		player.displayClientMessage(Component.literal(""), true);
+		player.displayClientMessage(Components.immutableEmpty(), true);
 		stationMessage = false;
 	}
 

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.components.EditBox;
@@ -58,9 +59,9 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		xInput = new EditBox(font, x + 50, y + 26, 34, 10, Component.empty());
-		yInput = new EditBox(font, x + 90, y + 26, 34, 10, Component.empty());
-		zInput = new EditBox(font, x + 130, y + 26, 34, 10, Component.empty());
+		xInput = new EditBox(font, x + 50, y + 26, 34, 10, Components.immutableEmpty());
+		yInput = new EditBox(font, x + 90, y + 26, 34, 10, Components.immutableEmpty());
+		zInput = new EditBox(font, x + 130, y + 26, 34, 10, Components.immutableEmpty());
 
 		BlockPos anchor = handler.getTransformation()
 				.getAnchor();
@@ -95,14 +96,14 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 		StructurePlaceSettings settings = handler.getTransformation()
 			.toSettings();
-		Label labelR = new Label(x + 50, y + 48, Component.empty()).withShadow();
+		Label labelR = new Label(x + 50, y + 48, Components.immutableEmpty()).withShadow();
 		rotationArea = new SelectionScrollInput(x + 45, y + 43, 118, 18).forOptions(rotationOptions)
 			.titled(rotationLabel.plainCopy())
 			.setState(settings.getRotation()
 				.ordinal())
 			.writingTo(labelR);
 
-		Label labelM = new Label(x + 50, y + 70, Component.empty()).withShadow();
+		Label labelM = new Label(x + 50, y + 70, Components.immutableEmpty()).withShadow();
 		mirrorArea = new SelectionScrollInput(x + 45, y + 65, 118, 18).forOptions(mirrorOptions)
 			.titled(mirrorLabel.plainCopy())
 			.setState(settings.getMirror()

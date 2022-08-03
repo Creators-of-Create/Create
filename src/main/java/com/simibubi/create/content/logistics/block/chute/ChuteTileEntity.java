@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -718,7 +719,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.withStyle(ChatFormatting.YELLOW)));
 		if (!item.isEmpty()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.contains", Component.translatable(item.getDescriptionId())
+				.append(Lang.translateDirect("tooltip.chute.contains", Components.translatable(item.getDescriptionId())
 					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GREEN));
 		}

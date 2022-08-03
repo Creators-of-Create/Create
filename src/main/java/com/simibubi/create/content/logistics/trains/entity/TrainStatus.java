@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.trains.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -129,7 +130,7 @@ public class TrainStatus {
 	}
 
 	public void displayInformation(String key, boolean itsAGoodThing, Object... args) {
-		queued.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
+		queued.add(Components.literal(" - ").withStyle(ChatFormatting.GRAY)
 			.append(Lang.translateDirect("train.status." + key, args)
 				.withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4))));
 		if (queued.size() > 3)

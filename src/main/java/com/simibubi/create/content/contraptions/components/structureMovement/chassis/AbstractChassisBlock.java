@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -26,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 
-public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, ITE<ChassisTileEntity> {
+public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, ITE<ChassisTileEntity>, ITransformableBlock {
 
 	public AbstractChassisBlock(Properties properties) {
 		super(properties);
@@ -130,6 +132,44 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		}
 
 		return mirrored;
+	}
+
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		if (transform.mirror != null) {
+			state = mirror(state, transform.mirror);
+		}
+
+		if (transform.rotationAxis == Direction.Axis.Y) {
+			return rotate(state, transform.rotation);
+		}
+		return transformInner(state, transform);
+	}
+
+	protected BlockState transformInner(BlockState state, StructureTransform transform) {
+		if (transform.rotation == Rotation.NONE)
+			return state;
+
+		BlockState rotated = state.setValue(AXIS, transform.rotateAxis(state.getValue(AXIS)));
+		AbstractChassisBlock block = (AbstractChassisBlock) state.getBlock();
+
+		for (Direction face : Iterate.directions) {
+			BooleanProperty glueableSide = block.getGlueableSide(rotated, face);
+			if (glueableSide != null)
+				rotated = rotated.setValue(glueableSide, false);
+		}
+
+		for (Direction face : Iterate.directions) {
+			BooleanProperty glueableSide = block.getGlueableSide(state, face);
+			if (glueableSide == null || !state.getValue(glueableSide))
+				continue;
+			Direction rotatedFacing = transform.rotateFacing(face);
+			BooleanProperty rotatedGlueableSide = block.getGlueableSide(rotated, rotatedFacing);
+			if (rotatedGlueableSide != null)
+				rotated = rotated.setValue(rotatedGlueableSide, true);
+		}
+
+		return rotated;
 	}
 
 	public abstract BooleanProperty getGlueableSide(BlockState state, Direction face);

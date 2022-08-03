@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -110,7 +111,7 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		String[] pitches = Lang.translateDirect("generic.notes")
 			.getString()
 			.split(";");
-		MutableComponent textComponent = Component.literal(spacing);
+		MutableComponent textComponent = Components.literal(spacing);
 		tooltip.add(textComponent.append(Lang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}

@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import com.google.common.collect.Sets;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -78,7 +79,7 @@ public class MaterialChecklist {
 		MutableComponent textComponent;
 
 		if (blocksNotLoaded) {
-			textComponent = Component.literal("\n" + ChatFormatting.RED);
+			textComponent = Components.literal("\n" + ChatFormatting.RED);
 			textComponent = textComponent.append(Lang.translateDirect("materialChecklist.blocksNotLoaded"));
 			pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
 		}
@@ -93,7 +94,7 @@ public class MaterialChecklist {
 			return name1.compareTo(name2);
 		});
 
-		textComponent = Component.literal("");
+		textComponent = Components.empty();
 		List<Item> completed = new ArrayList<>();
 		for (Item item : keys) {
 			int amount = getRequiredAmount(item);
@@ -107,9 +108,9 @@ public class MaterialChecklist {
 
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				textComponent.append(Component.literal("\n >>>").withStyle(ChatFormatting.BLUE));
+				textComponent.append(Components.literal("\n >>>").withStyle(ChatFormatting.BLUE));
 				pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
-				textComponent = Component.literal("");
+				textComponent = Components.empty();
 			}
 
 			itemsWritten++;
@@ -119,9 +120,9 @@ public class MaterialChecklist {
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				textComponent.append(Component.literal("\n >>>").withStyle(ChatFormatting.DARK_GREEN));
+				textComponent.append(Components.literal("\n >>>").withStyle(ChatFormatting.DARK_GREEN));
 				pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
-				textComponent = Component.literal("");
+				textComponent = Components.empty();
 			}
 
 			itemsWritten++;
@@ -153,12 +154,12 @@ public class MaterialChecklist {
 	private Component entry(ItemStack item, int amount, boolean unfinished) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		MutableComponent tc = Component.translatable(item.getDescriptionId());
+		MutableComponent tc = Components.translatable(item.getDescriptionId());
 		if (!unfinished)
 			tc.append(" \u2714");
 		tc.withStyle(unfinished ? ChatFormatting.BLUE : ChatFormatting.DARK_GREEN);
-		return tc.append(Component.literal("\n" + " x" + amount).withStyle(ChatFormatting.BLACK))
-			.append(Component.literal(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
+		return tc.append(Components.literal("\n" + " x" + amount).withStyle(ChatFormatting.BLACK))
+			.append(Components.literal(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
 	}
 
 }

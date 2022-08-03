@@ -248,6 +248,7 @@ public class AllItems {
 
 	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
 		.model(AssetLookup.customGenericItemModel("_", "item"))
+		.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 		.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)

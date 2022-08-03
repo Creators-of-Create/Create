@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -21,7 +22,7 @@ public abstract class TextScheduleInstruction extends ScheduleInstruction {
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(Lang.translateDirect("schedule." + type + "." + getId().getPath() + ".summary")
-			.withStyle(ChatFormatting.GOLD), Lang.translateDirect("generic.in_quotes", Component.literal(getLabelText())));
+			.withStyle(ChatFormatting.GOLD), Lang.translateDirect("generic.in_quotes", Components.literal(getLabelText())));
 	}
 
 	@Override

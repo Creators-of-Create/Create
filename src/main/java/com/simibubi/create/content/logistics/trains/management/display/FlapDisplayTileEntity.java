@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.DynamicComponent;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -144,7 +145,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		FlapDisplaySection flapDisplaySection = sections.get(0);
 		if (rawComponentText == null) {
 			manualLines[lineIndex] = false;
-			flapDisplaySection.setText(Component.literal(""));
+			flapDisplaySection.setText(Components.immutableEmpty());
 			notifyUpdate();
 			return;
 		}

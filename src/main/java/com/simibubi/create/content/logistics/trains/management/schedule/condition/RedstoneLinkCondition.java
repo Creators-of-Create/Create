@@ -8,6 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -53,13 +54,13 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
 			Lang.translateDirect("schedule.condition.redstone_link.frequency_" + (lowActivation() ? "unpowered" : "powered")),
-			Component.literal(" #1 ").withStyle(ChatFormatting.GRAY)
+			Components.literal(" #1 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getFirst()
 					.getStack()
 					.getHoverName()
 					.copy()
 					.withStyle(ChatFormatting.DARK_AQUA)),
-			Component.literal(" #2 ").withStyle(ChatFormatting.GRAY)
+			Components.literal(" #2 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getSecond()
 					.getStack()
 					.getHoverName()

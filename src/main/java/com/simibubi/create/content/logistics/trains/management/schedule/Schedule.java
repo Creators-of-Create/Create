@@ -19,6 +19,7 @@ import com.simibubi.create.content.logistics.trains.management.schedule.destinat
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -63,7 +64,7 @@ public class Schedule {
 		return list.stream()
 			.map(Pair::getFirst)
 			.map(rl -> rl.getNamespace() + ".schedule." + langSection + rl.getPath())
-			.map(Component::translatable)
+			.map(Components::translatable)
 			.toList();
 	}
 

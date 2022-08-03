@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
@@ -43,8 +44,7 @@ public class FluidBottleItemHook extends Item {
 			return;
 
 		FluidState fluidState = world.getFluidState(blockpos);
-		if (fluidState.is(FluidTags.WATER) && fluidState.getType()
-			.getRegistryName()
+		if (fluidState.is(FluidTags.WATER) && RegisteredObjects.getKeyOrThrow(fluidState.getType())
 			.getNamespace()
 			.equals(Create.ID)) {
 			event.setCancellationResult(InteractionResult.PASS);
