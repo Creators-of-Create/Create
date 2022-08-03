@@ -1366,7 +1366,11 @@
 	"create.tooltip.chute.fans_pull_up": "ファンが上から吸い込んでいます",
 	"create.tooltip.chute.fans_pull_down": "ファンが下から吸い込んでいます",
 	"create.tooltip.chute.contains": "内容物: %1$s x%2$s",
-	"create.tooltip.brass_tunnel.contains": "配布中",
+	"create.tooltip.deployer.header": "デプロイヤーの情報",
+	"create.tooltip.deployer.using": "モード: 使用",
+	"create.tooltip.deployer.punching": "モード: 攻撃",
+	"create.tooltip.deployer.contains": "アイテム: %1$s x%2$s",
+	"create.tooltip.brass_tunnel.contains": "配布中:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "右クリックで取り出し",
 
