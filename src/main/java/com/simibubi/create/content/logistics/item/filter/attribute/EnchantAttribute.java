@@ -51,7 +51,7 @@ public class EnchantAttribute implements ItemAttribute {
     public void writeNBT(CompoundTag nbt) {
         if (enchantment == null)
             return;
-        ResourceLocation id = enchantment.getRegistryName();
+        ResourceLocation id = ForgeRegistries.ENCHANTMENTS.getKey(enchantment);
         if (id == null)
             return;
         nbt.putString("id", id.toString());

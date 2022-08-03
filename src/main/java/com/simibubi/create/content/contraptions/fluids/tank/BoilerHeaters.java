@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class BoilerHeaters {
 	private static final CreateRegistry<Block, Heater> BLOCK_HEATERS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
@@ -29,11 +28,6 @@ public class BoilerHeaters {
 
 	public static void registerHeater(Block block, Heater heater) {
 		BLOCK_HEATERS.register(block, heater);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void registerHeater(IRegistryDelegate<Block> block, Heater heater) {
-		registerHeater(block.name(), heater);
 	}
 
 	public static void registerHeaterProvider(HeaterProvider provider) {

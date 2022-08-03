@@ -44,6 +44,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BuiltinPotatoProjectileTypes {
 
@@ -329,7 +330,7 @@ public class BuiltinPotatoProjectileTypes {
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Block cropBlock) {
-		return plantCrop(cropBlock.delegate);
+		return plantCrop(ForgeRegistries.BLOCKS.getDelegateOrThrow(cropBlock));
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(
@@ -369,7 +370,7 @@ public class BuiltinPotatoProjectileTypes {
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(Block block) {
-		return placeBlockOnGround(block.delegate);
+		return placeBlockOnGround(ForgeRegistries.BLOCKS.getDelegateOrThrow(block));
 	}
 
 	private static Predicate<EntityHitResult> chorusTeleport(double teleportDiameter) {

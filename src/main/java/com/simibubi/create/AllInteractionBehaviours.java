@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllInteractionBehaviours {
 	private static final CreateRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
@@ -30,11 +29,6 @@ public class AllInteractionBehaviours {
 
 	public static void registerBehaviour(Block block, MovingInteractionBehaviour provider) {
 		BLOCK_BEHAVIOURS.register(block, provider);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void registerBehaviour(IRegistryDelegate<Block> block, MovingInteractionBehaviour provider) {
-		registerBehaviour(block.name(), provider);
 	}
 
 	public static void registerBehaviourProvider(BehaviourProvider provider) {

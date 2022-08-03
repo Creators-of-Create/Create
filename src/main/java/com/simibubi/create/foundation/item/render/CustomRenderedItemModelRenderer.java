@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedItemModel> extends BlockEntityWithoutLevelRenderer {
@@ -57,7 +57,7 @@ public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedIt
 	public static void acceptModelFuncs(NonNullBiConsumer<Item, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> consumer) {
 		for (Item item : ITEMS) {
 			if (ForgeRegistries.ITEMS.containsValue(item)) {
-				BlockEntityWithoutLevelRenderer renderer = RenderProperties.get(item).getItemStackRenderer();
+				BlockEntityWithoutLevelRenderer renderer = IClientItemExtensions.of(item).getCustomRenderer();
 				if (renderer instanceof CustomRenderedItemModelRenderer<?> customRenderer) {
 					consumer.accept(item, customRenderer::createModel);
 				}

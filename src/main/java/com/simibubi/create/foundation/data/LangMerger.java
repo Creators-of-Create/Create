@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.data;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,12 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -29,7 +30,6 @@ import com.simibubi.create.foundation.utility.FilesHelper;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
@@ -225,24 +225,13 @@ public class LangMerger implements DataProvider {
 				.getAsJsonObject());
 	}
 
+	@SuppressWarnings("deprecation")
 	private void save(CachedOutput cache, List<Object> dataIn, int missingKeys, Path target, String message)
 		throws IOException {
-		String data = createString(dataIn, missingKeys);
-//		data = JavaUnicodeEscaper.outsideOf(0, 0x7f)
-//			.translate(data);
-		String hash = DataProvider.SHA1.hashUnencodedChars(data)
-			.toString();
-		if (!Objects.equals(cache.getHash(target), hash) || !Files.exists(target)) {
-			Files.createDirectories(target.getParent());
-
-			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
-				Create.LOGGER.info(message);
-				bufferedwriter.write(data);
-				bufferedwriter.close();
-			}
-		}
-
-		cache.putNew(target, hash);
+		Create.LOGGER.info(message);
+		byte[] data = createString(dataIn, missingKeys).getBytes(StandardCharsets.UTF_8);
+		HashCode hash = Hashing.sha1().hashBytes(data);
+		cache.writeIfNeeded(target, data, hash);
 	}
 
 	protected String createString(List<Object> data, int missingKeys) {

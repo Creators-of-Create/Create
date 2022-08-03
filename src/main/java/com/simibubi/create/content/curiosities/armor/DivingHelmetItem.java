@@ -4,7 +4,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -38,8 +38,8 @@ public class DivingHelmetItem extends CopperArmorItem {
 			.isWornBy(entity))
 			return;
 
-		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
-		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
+		boolean lavaDiving = entity.isEyeInFluidType(ForgeMod.LAVA_TYPE.get());
+		if (!entity.isEyeInFluidType(ForgeMod.WATER_TYPE.get()) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;

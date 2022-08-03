@@ -54,7 +54,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 		return super.getQuads(state, side, rand, data, renderType);
 	}
 
-	// TODO: move to Flywheel's ModelUtil
+	// TODO 1.19: move to Flywheel's ModelUtil
 	private static boolean isVirtual(ModelData data) {
 		return data.has(ModelUtil.VIRTUAL_PROPERTY) && data.get(ModelUtil.VIRTUAL_PROPERTY);
 	}

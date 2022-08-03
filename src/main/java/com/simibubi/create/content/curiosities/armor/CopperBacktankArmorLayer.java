@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -35,6 +34,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.common.ForgeMod;
 
 public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
@@ -119,7 +119,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		if (!player.getPersistentData()
 			.contains("VisualBacktankAir"))
 			return;
-		if (!player.isEyeInFluid(FluidTags.WATER))
+		if (!player.isEyeInFluidType(ForgeMod.WATER_TYPE.get()))
 			return;
 
 		int timeLeft = player.getPersistentData()

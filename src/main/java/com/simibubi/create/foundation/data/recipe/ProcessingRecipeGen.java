@@ -19,7 +19,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidType;
 
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {

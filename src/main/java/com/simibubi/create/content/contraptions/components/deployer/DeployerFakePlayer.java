@@ -24,6 +24,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
@@ -55,6 +56,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	public DeployerFakePlayer(ServerLevel world) {
 		super(world, DEPLOYER_PROFILE);
 		connection = new FakePlayNetHandler(world.getServer(), this);
+		this.playEquipSound(spawnedItemEffects);
 	}
 
 	@Override
@@ -116,7 +118,12 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	protected void equipEventAndSound(ItemStack p_147219_) {}
+	protected boolean doesEmitEquipEvent(EquipmentSlot p_217035_) {
+		return false;
+	}
+
+	@Override
+	protected void playEquipSound(ItemStack p_217042_) {}
 
 	@Override
 	public void remove(RemovalReason p_150097_) {

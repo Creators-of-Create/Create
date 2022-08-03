@@ -30,16 +30,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllDisplayBehaviours {
 	public static final Map<ResourceLocation, DisplayBehaviour> GATHERER_BEHAVIOURS = new HashMap<>();
 
 	private static final CreateRegistry<Block, List<DisplaySource>> SOURCES_BY_BLOCK = new CreateRegistry<>(ForgeRegistries.BLOCKS);
-	private static final CreateRegistry<BlockEntityType<?>, List<DisplaySource>> SOURCES_BY_TILE = new CreateRegistry<>(ForgeRegistries.BLOCK_ENTITIES);
+	private static final CreateRegistry<BlockEntityType<?>, List<DisplaySource>> SOURCES_BY_TILE = new CreateRegistry<>(ForgeRegistries.BLOCK_ENTITY_TYPES);
 
 	private static final CreateRegistry<Block, DisplayTarget> TARGETS_BY_BLOCK = new CreateRegistry<>(ForgeRegistries.BLOCKS);
-	private static final CreateRegistry<BlockEntityType<?>, DisplayTarget> TARGETS_BY_TILE = new CreateRegistry<>(ForgeRegistries.BLOCK_ENTITIES);
+	private static final CreateRegistry<BlockEntityType<?>, DisplayTarget> TARGETS_BY_TILE = new CreateRegistry<>(ForgeRegistries.BLOCK_ENTITY_TYPES);
 
 	public static DisplayBehaviour register(ResourceLocation id, DisplayBehaviour behaviour) {
 		behaviour.id = id;
@@ -101,16 +100,6 @@ public class AllDisplayBehaviours {
 		if (behaviour instanceof DisplayTarget target) {
 			TARGETS_BY_TILE.register(teType, target);
 		}
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void assignBlock(DisplayBehaviour behaviour, IRegistryDelegate<Block> block) {
-		assignBlock(behaviour, block.name());
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void assignTile(DisplayBehaviour behaviour, IRegistryDelegate<BlockEntityType<?>> teType) {
-		assignTile(behaviour, teType.name());
 	}
 
 	public static <B extends Block> NonNullConsumer<? super B> assignDataBehaviour(DisplayBehaviour behaviour,

@@ -27,7 +27,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -114,7 +113,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		if (stack == null)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
-			te.setCapacityEnchantLevel(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), stack));
+			te.setCapacityEnchantLevel(stack.getEnchantmentLevel(AllEnchantments.CAPACITY.get()));
 			te.setAirLevel(stack.getOrCreateTag()
 				.getInt("Air"));
 			if (stack.isEnchanted())
