@@ -7,8 +7,7 @@ import java.util.Locale;
 import com.simibubi.create.Create;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,8 +21,8 @@ public class Lang {
 	 * @param args
 	 * @return
 	 */
-	public static TranslatableComponent translateDirect(String key, Object... args) {
-		return new TranslatableComponent(Create.ID + "." + key, resolveBuilders(args));
+	public static MutableComponent translateDirect(String key, Object... args) {
+		return Components.translatable(Create.ID + "." + key, resolveBuilders(args));
 	}
 
 	public static String asId(String name) {
@@ -40,10 +39,6 @@ public class Lang {
 		for (String key : keys)
 			result.add(translate((prefix != null ? prefix + "." : "") + key).component());
 		return result;
-	}
-
-	public static Component empty() {
-		return TextComponent.EMPTY;
 	}
 
 	//

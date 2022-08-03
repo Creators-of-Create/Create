@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.IconValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.TextValueBox;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -65,12 +65,12 @@ public class ScrollValueRenderer {
 		if (behaviour instanceof ScrollOptionBehaviour) {
 			box = new IconValueBox(label, ((ScrollOptionBehaviour<?>) behaviour).getIconForSelected(), bb, pos);
 		} else {
-			box = new TextValueBox(label, bb, pos, new TextComponent(behaviour.formatValue()));
+			box = new TextValueBox(label, bb, pos, Components.literal(behaviour.formatValue()));
 			if (behaviour.unit != null)
-				box.subLabel(new TextComponent("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
+				box.subLabel(Components.literal("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
 		}
 
-		box.scrollTooltip(new TextComponent("[").append(Lang.translateDirect("action.scroll")).append("]"));
+		box.scrollTooltip(Components.literal("[").append(Lang.translateDirect("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 				.withColors(0x5A5D5A, 0xB5B7B6)
 				.passive(!highlight);

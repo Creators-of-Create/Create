@@ -5,11 +5,11 @@ import java.util.UUID;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.UuidArgument;
-import net.minecraft.network.chat.TextComponent;
 
 public class KillTrainCommand {
 
@@ -27,13 +27,13 @@ public class KillTrainCommand {
 	private static void run(CommandSourceStack source, UUID argument) {
 		Train train = Create.RAILWAYS.trains.get(argument);
 		if (train == null) {
-			source.sendFailure(new TextComponent("No Train with id " + argument.toString()
+			source.sendFailure(Components.literal("No Train with id " + argument.toString()
 				.substring(0, 5) + "[...] was found"));
 			return;
 		}
 
 		train.invalid = true;
-		source.sendSuccess(new TextComponent("Train '").append(train.name)
+		source.sendSuccess(Components.literal("Train '").append(train.name)
 			.append("' removed successfully"), true);
 	}
 

@@ -5,12 +5,12 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class ScrollInput extends AbstractSimiWidget {
 
@@ -34,7 +34,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		max = 1;
 		shiftStep = 5;
 		step = standardStep();
-		formatter = i -> new TextComponent(String.valueOf(i));
+		formatter = i -> Components.literal(String.valueOf(i));
 	}
 
 	public Function<StepContext, Integer> standardStep() {

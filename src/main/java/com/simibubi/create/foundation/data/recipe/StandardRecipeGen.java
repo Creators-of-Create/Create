@@ -28,6 +28,7 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -1281,9 +1282,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		private ResourceLocation getRegistryName() {
-			return compatDatagenOutput == null ? result.get()
-				.asItem()
-				.getRegistryName() : compatDatagenOutput;
+			return compatDatagenOutput == null ? RegisteredObjects.getKeyOrThrow(result.get()
+				.asItem()) : compatDatagenOutput;
 		}
 
 		GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends ItemLike> item) {
@@ -1365,7 +1365,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 						consumer.accept(
 							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)
 								: result);
-					}, createSimpleLocation(serializer.getRegistryName()
+					}, createSimpleLocation(RegisteredObjects.getKeyOrThrow(serializer)
 						.getPath()));
 				});
 			}

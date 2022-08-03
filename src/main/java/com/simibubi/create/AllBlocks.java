@@ -172,7 +172,7 @@ import com.simibubi.create.content.logistics.block.display.source.FluidListDispl
 import com.simibubi.create.content.logistics.block.display.source.ItemCountDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemListDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemNameDisplaySource;
-import com.simibubi.create.content.logistics.block.display.source.ItemThoughputDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemThroughputDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.KineticSpeedDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.KineticStressDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ObservedTrainNameSource;
@@ -1696,7 +1696,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
 			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
-			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
+			.onRegister(assignDataBehaviour(new ItemThroughputDisplaySource(), "item_throughput"))
 			.register();
 
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
@@ -1704,7 +1704,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
 			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
-			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
+			.onRegister(assignDataBehaviour(new ItemThroughputDisplaySource(), "item_throughput"))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 

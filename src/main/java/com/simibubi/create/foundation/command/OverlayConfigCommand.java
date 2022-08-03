@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -26,7 +26,7 @@ public class OverlayConfigCommand {
 										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
 
 					ctx.getSource()
-						.sendSuccess(new TextComponent("reset overlay offset"), true);
+						.sendSuccess(Components.literal("reset overlay offset"), true);
 
 						return 1;
 					})
@@ -40,7 +40,7 @@ public class OverlayConfigCommand {
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
 
 					ctx.getSource()
-							.sendSuccess(new TextComponent("window opened"), true);
+							.sendSuccess(Components.literal("window opened"), true);
 
 				return 1;
 			});

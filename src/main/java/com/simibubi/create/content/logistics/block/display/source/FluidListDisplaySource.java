@@ -15,12 +15,12 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FluidFormatter;
 import com.simibubi.create.foundation.utility.IntAttached;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -63,7 +63,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 				.limit(maxRows)
 				.map(entry -> IntAttached.with(
 						entry.getValue(),
-						new TranslatableComponent(fluidNames.get(entry.getKey()).getTranslationKey()))
+						Components.translatable(fluidNames.get(entry.getKey()).getTranslationKey()))
 				);
 	}
 

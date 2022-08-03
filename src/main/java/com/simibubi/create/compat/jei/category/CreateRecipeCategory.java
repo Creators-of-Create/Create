@@ -15,6 +15,7 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.forge.ForgeTypes;
@@ -27,7 +28,6 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -159,12 +159,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			}
 
 			int amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
-			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+			Component text = Components.literal(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {
 				List<Component> siblings = tooltip.get(0).getSiblings();
-				siblings.add(new TextComponent(" "));
+				siblings.add(Components.literal(" "));
 				siblings.add(text);
 			}
 		};

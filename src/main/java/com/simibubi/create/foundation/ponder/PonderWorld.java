@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
 import net.minecraft.client.Camera;
@@ -47,7 +48,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderWorld extends SchematicWorld {
 
@@ -228,7 +228,7 @@ public class PonderWorld extends SchematicWorld {
 	@SuppressWarnings("unchecked")
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
-		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(data.getType());
 		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(key);
 		return particleProvider == null ? null
 			: particleProvider.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);

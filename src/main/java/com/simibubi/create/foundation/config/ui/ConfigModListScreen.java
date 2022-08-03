@@ -13,10 +13,10 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 
@@ -58,7 +58,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil()
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
-				.add(new TextComponent("Go Back"));
+				.add(Components.literal("Go Back"));
 		addRenderableWidget(goBack);
 
 		search = new HintableTextFieldWidget(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
@@ -112,8 +112,8 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.active = false;
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
-				labelTooltip.add(new TextComponent(toHumanReadable(id)));
-				labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
+				labelTooltip.add(Components.literal(toHumanReadable(id)));
+				labelTooltip.addAll(TooltipHelper.cutTextComponent(Components.literal("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
 			}
 
 			listeners.add(button);

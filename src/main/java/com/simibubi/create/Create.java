@@ -29,6 +29,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
@@ -36,6 +37,7 @@ import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
@@ -43,8 +45,10 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
@@ -80,6 +84,8 @@ public class Create {
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
+	/** Use the {@link Random} of a local {@link Level} or {@link Entity} or create one */
+	@Deprecated
 	public static final Random RANDOM = new Random();
 
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
@@ -103,6 +109,7 @@ public class Create {
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
+		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
@@ -133,6 +140,7 @@ public class Create {
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
+		CreateRegistry.unwrapAll();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();

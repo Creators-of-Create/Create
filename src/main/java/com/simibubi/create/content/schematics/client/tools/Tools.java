@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 public enum Tools {
 
@@ -31,7 +31,7 @@ public enum Tools {
 		return tool;
 	}
 
-	public TranslatableComponent getDisplayName() {
+	public MutableComponent getDisplayName() {
 		return Lang.translateDirect("schematic.tool." + Lang.asId(name()));
 	}
 

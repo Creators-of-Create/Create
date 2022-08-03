@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.Casin
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -22,7 +23,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -473,7 +473,7 @@ public class BeltSlicer {
 			mc.player.displayClientMessage(Lang.translateDirect(feedback.langKey)
 				.withStyle(feedback.formatting), true);
 		else
-			mc.player.displayClientMessage(new TextComponent(""), true);
+			mc.player.displayClientMessage(Components.immutableEmpty(), true);
 
 		if (feedback.bb != null)
 			CreateClient.OUTLINER.chaseAABB("BeltSlicer", feedback.bb)

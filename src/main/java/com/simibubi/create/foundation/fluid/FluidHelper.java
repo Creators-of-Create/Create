@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTil
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -100,8 +101,7 @@ public class FluidHelper {
 
 	public static JsonElement serializeFluidStack(FluidStack stack) {
 		JsonObject json = new JsonObject();
-		json.addProperty("fluid", stack.getFluid()
-			.getRegistryName()
+		json.addProperty("fluid", RegisteredObjects.getKeyOrThrow(stack.getFluid())
 			.toString());
 		json.addProperty("amount", stack.getAmount());
 		if (stack.hasTag())
