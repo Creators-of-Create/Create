@@ -272,7 +272,7 @@ public class AllAdvancements implements DataProvider {
 
 		DIVING_SUIT = create("diving_suit", b -> b.icon(AllItems.DIVING_HELMET)
 			.title("Ready for the Depths")
-			.description("Equip a Diving Helmet with a Copper Backtank and jump into water")
+			.description("Equip a Diving Helmet and a Copper Backtank, then jump into water")
 			.after(BACKTANK)),
 
 		// Copper - Top Branch
