@@ -1590,7 +1590,7 @@
 	"create.track_target.missing": "Сначала выберите пути, нажав ПКМ по ним",
 	"create.track_target.too_far": "Установите станцию ближе к путям...",
 	"create.track_target.no_junctions": "Невозможно установить маркер станции на перекрёстке",
-	"create.track_target.occupied": "Выбранный путь занят",
+	"create.track_target.occupied": "Выбранные пути заняты",
 	"create.track_target.invalid": "Невозможно выбрать эти пути",
 
 	"create.train.unnamed": "Безымянный поезд",
