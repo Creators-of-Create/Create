@@ -126,6 +126,8 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		event.register(Registry.RECIPE_TYPE_REGISTRY, helper -> {
 			for (AllRecipeTypes r : AllRecipeTypes.values()) {
 				r.type = r.typeSupplier.get();
+				if (r.type == RecipeType.CRAFTING)
+					continue;
 				helper.register(r.id, r.type);
 			}
 		});

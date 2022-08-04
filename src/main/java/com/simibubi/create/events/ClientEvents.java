@@ -404,13 +404,13 @@ public class ClientEvents {
 		@SubscribeEvent
 		public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
 			// Register overlays in reverse order
-			event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "Create's Remaining Air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "Create's Train Driver HUD", TrainHUD.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Goggle Information", GoggleOverlayRenderer.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Blueprints", BlueprintOverlayRenderer.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Linked Controller", LinkedControllerClientHandler.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Schematics", CreateClient.SCHEMATIC_HANDLER.getOverlayRenderer());
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "Create's Toolboxes", ToolboxHandlerClient.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "train_hud", TrainHUD.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "goggle_info", GoggleOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "blueprint", BlueprintOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "linked_controller", LinkedControllerClientHandler.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "schematic", CreateClient.SCHEMATIC_HANDLER.getOverlayRenderer());
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "toolbox", ToolboxHandlerClient.OVERLAY);
 		}
 
 		@SubscribeEvent

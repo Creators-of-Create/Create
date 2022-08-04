@@ -1,7 +1,7 @@
 {
 	"parent": "create:block/flywheel/flywheel",
 	"loader": "forge:obj",
-	"flip-v": true,
+	"flip_v": true,
 	"model": "create:models/block/flywheel/flywheel.obj",
 	"display": {
         "gui": {

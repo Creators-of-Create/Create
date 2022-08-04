@@ -7,6 +7,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -175,14 +178,15 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
 		return entry(name,
-			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
-				Create.asResource("fluid/" + name + "_flow"), null, VirtualFluid::new));
+			c -> new VirtualFluidBuilder<VirtualFluid, CreateRegistrate>(self(), self(), name, c,
+				Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"),
+				CreateRegistrate::defaultFluidType, VirtualFluid::new));
 	}
 
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name, ResourceLocation still,
 		ResourceLocation flow) {
-		return entry(name,
-			c -> new VirtualFluidBuilder<>(self(), self(), name, c, still, flow, null, VirtualFluid::new));
+		return entry(name, c -> new VirtualFluidBuilder<>(self(), self(), name, c, still, flow,
+			CreateRegistrate::defaultFluidType, VirtualFluid::new));
 	}
 
 	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name) {
@@ -193,6 +197,26 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		FluidBuilder.FluidTypeFactory typeFactory) {
 		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"),
 			typeFactory);
+	}
+
+	public static FluidType defaultFluidType(FluidType.Properties properties, ResourceLocation stillTexture,
+		ResourceLocation flowingTexture) {
+		return new FluidType(properties) {
+			@Override
+			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+				consumer.accept(new IClientFluidTypeExtensions() {
+					@Override
+					public ResourceLocation getStillTexture() {
+						return stillTexture;
+					}
+
+					@Override
+					public ResourceLocation getFlowingTexture() {
+						return flowingTexture;
+					}
+				});
+			}
+		};
 	}
 
 	/* Util */

@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
 import java.lang.ref.Reference;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -23,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +44,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	@Final
 	@Shadow
-	protected Random random;
+	protected RandomSource random;
 
 	@Shadow
 	private float nextStep;
