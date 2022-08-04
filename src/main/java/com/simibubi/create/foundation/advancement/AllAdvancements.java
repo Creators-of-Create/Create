@@ -359,7 +359,7 @@ public class AllAdvancements implements DataProvider {
 
 		BRASS = create("brass", b -> b.icon(AllItems.BRASS_INGOT)
 			.title("Real Alloys")
-			.description("Create a Brass Ingot by alloying Copper and Zinc Ingots in your Blaze-heated Mechanical Mixer")
+			.description("Create Brass Ingots by alloying Copper and Zinc Ingots in your Blaze-heated Mechanical Mixer")
 			.whenIconCollected()
 			.after(DIVING_SUIT)),
 
