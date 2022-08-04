@@ -56,7 +56,6 @@ public class DeployerFakePlayer extends FakePlayer {
 	public DeployerFakePlayer(ServerLevel world) {
 		super(world, DEPLOYER_PROFILE);
 		connection = new FakePlayNetHandler(world.getServer(), this);
-		this.playEquipSound(spawnedItemEffects);
 	}
 
 	@Override

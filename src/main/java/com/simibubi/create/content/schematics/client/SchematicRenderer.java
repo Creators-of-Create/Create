@@ -4,9 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
+import com.jozufozu.flywheel.util.Pair;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -100,7 +101,7 @@ public class SchematicRenderer {
 		BoundingBox bounds = renderWorld.getBounds();
 
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder builder = new BufferBuilder(512);
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
 
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
@@ -132,13 +133,11 @@ public class SchematicRenderer {
 		ModelBlockRenderer.clearCache();
 
 		shadeSeparatingWrapper.clear();
-		unshadedBuilder.end();
-		builder.appendUnshadedVertices(unshadedBuilder);
-		builder.end();
+		Pair<RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
 
 		renderWorld.renderMode = false;
 
-		return new SuperByteBuffer(builder);
+		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 
 	private static int getLayerCount() {

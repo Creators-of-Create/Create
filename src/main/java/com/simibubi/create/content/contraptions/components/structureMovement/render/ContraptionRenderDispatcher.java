@@ -15,7 +15,7 @@ import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.WorldAttached;
 import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -171,11 +171,11 @@ public class ContraptionRenderDispatcher {
 	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
 		RenderType layer) {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
-		BufferBuilder builder = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
+		com.jozufozu.flywheel.util.Pair<RenderedBuffer, Integer> pair = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
 				.withBlocks(values)
 				.withModelData(c.modelData)
 				.build();
-		return new SuperByteBuffer(builder);
+		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 
 	public static int getLight(Level world, float lx, float ly, float lz) {

@@ -29,7 +29,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public ModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, ModelData tileData) {
-		if (isVirtual(tileData))
+		if (ModelUtil.isVirtual(tileData))
 			return tileData;
 		BracketedModelData data = new BracketedModelData();
 		BracketedTileEntityBehaviour attachmentBehaviour =
@@ -42,7 +42,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderType) {
-		if (!isVirtual(data)) {
+		if (!ModelUtil.isVirtual(data)) {
 			if (data.has(BRACKET_PROPERTY)) {
 				BracketedModelData pipeData = data.get(BRACKET_PROPERTY);
 				BakedModel bracket = pipeData.getBracket();
@@ -52,11 +52,6 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 			return Collections.emptyList();
 		}
 		return super.getQuads(state, side, rand, data, renderType);
-	}
-
-	// TODO 1.19: move to Flywheel's ModelUtil
-	private static boolean isVirtual(ModelData data) {
-		return data.has(ModelUtil.VIRTUAL_PROPERTY) && data.get(ModelUtil.VIRTUAL_PROPERTY);
 	}
 
 	private static class BracketedModelData {
