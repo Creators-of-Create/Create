@@ -1,5 +1,8 @@
 package com.simibubi.create.content.curiosities.weapons;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -48,16 +51,16 @@ import net.minecraftforge.event.entity.EntityTeleportEvent;
 public class BuiltinPotatoProjectileTypes {
 
 	private static final GameProfile ZOMBIE_CONVERTER_NAME =
-		new GameProfile(UUID.fromString("be12d3dc-27d3-4992-8c97-66be53fd49c5"), "Converter");
+			new GameProfile(UUID.fromString("be12d3dc-27d3-4992-8c97-66be53fd49c5"), "Converter");
 	private static final WorldAttached<FakePlayer> ZOMBIE_CONVERTERS =
-		new WorldAttached<>(w -> new FakePlayer((ServerLevel) w, ZOMBIE_CONVERTER_NAME));
+			new WorldAttached<>(w -> new FakePlayer((ServerLevel) w, ZOMBIE_CONVERTER_NAME));
 
 	public static final PotatoCannonProjectileType
 
-	FALLBACK = create("fallback").damage(0)
-		.register(),
+			FALLBACK = create("fallback").damage(0)
+			.register(),
 
-		POTATO = create("potato").damage(5)
+	POTATO = create("potato").damage(5)
 			.reloadTicks(15)
 			.velocity(1.25f)
 			.knockback(1.5f)
@@ -65,15 +68,15 @@ public class BuiltinPotatoProjectileTypes {
 			.onBlockHit(plantCrop(Blocks.POTATOES))
 			.registerAndAssign(Items.POTATO),
 
-		BAKED_POTATO = create("baked_potato").damage(5)
+	BAKED_POTATO = create("baked_potato").damage(5)
 			.reloadTicks(15)
 			.velocity(1.25f)
 			.knockback(0.5f)
 			.renderTumbling()
-			.preEntityHit(setFire(3))
+			.preEntityHit(setFire(3, false))
 			.registerAndAssign(Items.BAKED_POTATO),
 
-		CARROT = create("carrot").damage(4)
+	CARROT = create("carrot").damage(4)
 			.reloadTicks(12)
 			.velocity(1.45f)
 			.knockback(0.3f)
@@ -82,7 +85,7 @@ public class BuiltinPotatoProjectileTypes {
 			.onBlockHit(plantCrop(Blocks.CARROTS))
 			.registerAndAssign(Items.CARROT),
 
-		GOLDEN_CARROT = create("golden_carrot").damage(12)
+	GOLDEN_CARROT = create("golden_carrot").damage(12)
 			.reloadTicks(15)
 			.velocity(1.45f)
 			.knockback(0.5f)
@@ -90,35 +93,35 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.5f)
 			.registerAndAssign(Items.GOLDEN_CARROT),
 
-		SWEET_BERRIES = create("sweet_berry").damage(3)
+	SWEET_BERRIES = create("sweet_berry").damage(3)
 			.reloadTicks(10)
 			.knockback(0.1f)
 			.velocity(1.05f)
 			.renderTumbling()
-			.splitInto(3)
+			.spray(3)
 			.soundPitch(1.25f)
 			.registerAndAssign(Items.SWEET_BERRIES),
 
-		GLOW_BERRIES = create("glow_berry").damage(2)
+	GLOW_BERRIES = create("glow_berry").damage(2)
 			.reloadTicks(10)
 			.knockback(0.05f)
 			.velocity(1.05f)
 			.renderTumbling()
-			.splitInto(2)
+			.spray(2)
 			.soundPitch(1.2f)
 			.onEntityHit(potion(MobEffects.GLOWING, 1, 200, false))
 			.registerAndAssign(Items.GLOW_BERRIES),
 
-		CHOCOLATE_BERRIES = create("chocolate_berry").damage(4)
+	CHOCOLATE_BERRIES = create("chocolate_berry").damage(4)
 			.reloadTicks(10)
 			.knockback(0.2f)
 			.velocity(1.05f)
 			.renderTumbling()
-			.splitInto(3)
+			.spray(3)
 			.soundPitch(1.25f)
 			.registerAndAssign(AllItems.CHOCOLATE_BERRIES.get()),
 
-		POISON_POTATO = create("poison_potato").damage(5)
+	POISON_POTATO = create("poison_potato").damage(5)
 			.reloadTicks(15)
 			.knockback(0.05f)
 			.velocity(1.25f)
@@ -126,7 +129,7 @@ public class BuiltinPotatoProjectileTypes {
 			.onEntityHit(potion(MobEffects.POISON, 1, 160, true))
 			.registerAndAssign(Items.POISONOUS_POTATO),
 
-		CHORUS_FRUIT = create("chorus_fruit").damage(3)
+	CHORUS_FRUIT = create("chorus_fruit").damage(3)
 			.reloadTicks(15)
 			.velocity(1.20f)
 			.knockback(0.05f)
@@ -134,7 +137,7 @@ public class BuiltinPotatoProjectileTypes {
 			.onEntityHit(chorusTeleport(20))
 			.registerAndAssign(Items.CHORUS_FRUIT),
 
-		APPLE = create("apple").damage(5)
+	APPLE = create("apple").damage(5)
 			.reloadTicks(10)
 			.velocity(1.45f)
 			.knockback(0.5f)
@@ -142,7 +145,7 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.1f)
 			.registerAndAssign(Items.APPLE),
 
-		HONEYED_APPLE = create("honeyed_apple").damage(6)
+	HONEYED_APPLE = create("honeyed_apple").damage(6)
 			.reloadTicks(15)
 			.velocity(1.35f)
 			.knockback(0.1f)
@@ -151,7 +154,7 @@ public class BuiltinPotatoProjectileTypes {
 			.onEntityHit(potion(MobEffects.MOVEMENT_SLOWDOWN, 2, 160, true))
 			.registerAndAssign(AllItems.HONEYED_APPLE.get()),
 
-		GOLDEN_APPLE = create("golden_apple").damage(1)
+	GOLDEN_APPLE = create("golden_apple").damage(1)
 			.reloadTicks(100)
 			.velocity(1.45f)
 			.knockback(0.05f)
@@ -173,7 +176,7 @@ public class BuiltinPotatoProjectileTypes {
 			})
 			.registerAndAssign(Items.GOLDEN_APPLE),
 
-		ENCHANTED_GOLDEN_APPLE = create("enchanted_golden_apple").damage(1)
+	ENCHANTED_GOLDEN_APPLE = create("enchanted_golden_apple").damage(1)
 			.reloadTicks(100)
 			.velocity(1.45f)
 			.knockback(0.05f)
@@ -182,7 +185,7 @@ public class BuiltinPotatoProjectileTypes {
 			.onEntityHit(foodEffects(Foods.ENCHANTED_GOLDEN_APPLE, false))
 			.registerAndAssign(Items.ENCHANTED_GOLDEN_APPLE),
 
-		BEETROOT = create("beetroot").damage(2)
+	BEETROOT = create("beetroot").damage(2)
 			.reloadTicks(5)
 			.velocity(1.6f)
 			.knockback(0.1f)
@@ -190,7 +193,7 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.6f)
 			.registerAndAssign(Items.BEETROOT),
 
-		MELON_SLICE = create("melon_slice").damage(3)
+	MELON_SLICE = create("melon_slice").damage(3)
 			.reloadTicks(8)
 			.knockback(0.1f)
 			.velocity(1.45f)
@@ -198,25 +201,42 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.5f)
 			.registerAndAssign(Items.MELON_SLICE),
 
-		GLISTERING_MELON = create("glistering_melon").damage(5)
+	GOLD_NUGGET = create("gold_nugget").damage(5)
+			.reloadTicks(8)
+			.knockback(0f)
+			.velocity(2f)
+			.renderTumbling()
+			.onEntityHit(potion(MobEffects.GLOWING, 1, 25, false))
+			.splitOnly(Items.GOLD_NUGGET)
+			.registerAndAssign(),
+
+	GLISTERING_MELON = create("glistering_melon").damage(5)
 			.reloadTicks(8)
 			.knockback(0.1f)
 			.velocity(1.45f)
 			.renderTumbling()
 			.soundPitch(1.5f)
+			.split(3)
+			.splitAmount(1)
+			.splitSpeed(0.5f)
+			.splitInto(new SplitProperty(GOLD_NUGGET, 100))
 			.onEntityHit(potion(MobEffects.GLOWING, 1, 100, true))
 			.registerAndAssign(Items.GLISTERING_MELON_SLICE),
 
-		MELON_BLOCK = create("melon_block").damage(8)
+	MELON_BLOCK = create("melon_block").damage(8)
 			.reloadTicks(20)
 			.knockback(2.0f)
 			.velocity(0.95f)
 			.renderTumbling()
 			.soundPitch(0.9f)
-			.onBlockHit(placeBlockOnGround(Blocks.MELON))
+			//.onBlockHit(placeBlockOnGround(Blocks.MELON))
+			.split(8)
+			.splitInto(new SplitProperty(MELON_SLICE, 95), new SplitProperty(GLISTERING_MELON, 5))
+			.splitAmount(1)
+			.splitSpeed(0.15f)
 			.registerAndAssign(Blocks.MELON),
 
-		PUMPKIN_BLOCK = create("pumpkin_block").damage(6)
+	PUMPKIN_BLOCK = create("pumpkin_block").damage(6)
 			.reloadTicks(15)
 			.knockback(2.0f)
 			.velocity(0.95f)
@@ -225,7 +245,7 @@ public class BuiltinPotatoProjectileTypes {
 			.onBlockHit(placeBlockOnGround(Blocks.PUMPKIN))
 			.registerAndAssign(Blocks.PUMPKIN),
 
-		PUMPKIN_PIE = create("pumpkin_pie").damage(7)
+	PUMPKIN_PIE = create("pumpkin_pie").damage(7)
 			.reloadTicks(15)
 			.knockback(0.05f)
 			.velocity(1.1f)
@@ -234,7 +254,7 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.1f)
 			.registerAndAssign(Items.PUMPKIN_PIE),
 
-		CAKE = create("cake").damage(8)
+	CAKE = create("cake").damage(8)
 			.reloadTicks(15)
 			.knockback(0.1f)
 			.velocity(1.1f)
@@ -243,37 +263,66 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.0f)
 			.registerAndAssign(Items.CAKE),
 
-		BLAZE_CAKE = create("blaze_cake").damage(15)
+	BLAZE_CAKE = create("blaze_cake").damage(15)
 			.reloadTicks(20)
 			.knockback(0.3f)
 			.velocity(1.1f)
 			.renderTumbling()
 			.sticky()
-			.preEntityHit(setFire(12))
+			.preEntityHit(setFire(12, false))
 			.soundPitch(1.0f)
-			.registerAndAssign(AllItems.BLAZE_CAKE.get())
-
-	;
+			.registerAndAssign(AllItems.BLAZE_CAKE.get());
 
 	private static PotatoCannonProjectileType.Builder create(String name) {
 		return new PotatoCannonProjectileType.Builder(Create.asResource(name));
 	}
 
-	private static Predicate<EntityHitResult> setFire(int seconds) {
+	protected static Predicate<EntityHitResult> setFire(int seconds, boolean recoverable) {
 		return ray -> {
 			ray.getEntity()
-				.setSecondsOnFire(seconds);
-			return false;
+					.setSecondsOnFire(seconds);
+			return !recoverable;
 		};
 	}
 
-	private static Predicate<EntityHitResult> potion(MobEffect effect, int level, int ticks, boolean recoverable) {
+	protected static Predicate<EntityHitResult> setFrozen(int seconds, boolean recoverable) {
+		return ray -> {
+			ray.getEntity()
+					.setTicksFrozen(seconds * 20);
+			return !recoverable;
+		};
+	}
+
+	protected static Predicate<EntityHitResult> potion(MobEffect effect, int level, int ticks, boolean recoverable) {
 		return ray -> {
 			Entity entity = ray.getEntity();
 			if (entity.level.isClientSide)
 				return true;
 			if (entity instanceof LivingEntity)
 				applyEffect((LivingEntity) entity, new MobEffectInstance(effect, ticks, level - 1));
+			return !recoverable;
+		};
+	}
+
+	protected static Predicate<EntityHitResult> getEffects(List<ProjectileEffect> effects, int fireTimer, int iceTimer, boolean recoverable) {
+		return ray -> {
+			Entity entity = ray.getEntity();
+			if (entity.level.isClientSide)
+				return true;
+			if (entity instanceof LivingEntity) {
+				for (ProjectileEffect effect : effects) {
+					System.out.println(effect);
+					applyEffect((LivingEntity) entity, effect.getMEI());
+				}
+				if (fireTimer > 0)
+					ray.getEntity().setSecondsOnFire(fireTimer);
+				if (iceTimer > 0)
+					ray.getEntity().setTicksFrozen(iceTimer * 20);
+				System.out.println(effects);
+				System.out.println(fireTimer);
+				System.out.println(iceTimer);
+			}
+
 			return !recoverable;
 		};
 	}
@@ -296,9 +345,9 @@ public class BuiltinPotatoProjectileTypes {
 
 	private static void applyEffect(LivingEntity entity, MobEffectInstance effect) {
 		if (effect.getEffect()
-			.isInstantenous())
+				.isInstantenous())
 			effect.getEffect()
-				.applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
+					.applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
 		else
 			entity.addEffect(effect);
 	}
@@ -314,8 +363,8 @@ public class BuiltinPotatoProjectileTypes {
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
-				.getMaterial()
-				.isReplaceable())
+					.getMaterial()
+					.isReplaceable())
 				return false;
 			if (!(cropBlock.get() instanceof IPlantable))
 				return false;
@@ -323,7 +372,7 @@ public class BuiltinPotatoProjectileTypes {
 			if (!blockState.canSustainPlant(world, hitPos, face, (IPlantable) cropBlock.get()))
 				return false;
 			world.setBlock(placePos, cropBlock.get()
-				.defaultBlockState(), 3);
+					.defaultBlockState(), 3);
 			return true;
 		};
 	}
@@ -333,7 +382,7 @@ public class BuiltinPotatoProjectileTypes {
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(
-		Supplier<? extends Block> block) {
+			Supplier<? extends Block> block) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -344,13 +393,13 @@ public class BuiltinPotatoProjectileTypes {
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
-				.getMaterial()
-				.isReplaceable())
+					.getMaterial()
+					.isReplaceable())
 				return false;
 
 			if (face == Direction.UP) {
 				world.setBlock(placePos, block.get()
-					.defaultBlockState(), 3);
+						.defaultBlockState(), 3);
 			} else if (world instanceof Level level) {
 				double y = ray.getLocation().y - 0.5;
 				if (!world.isEmptyBlock(placePos.above()))
@@ -359,7 +408,7 @@ public class BuiltinPotatoProjectileTypes {
 					y = Math.max(y, placePos.getY());
 
 				FallingBlockEntity falling = FallingBlockEntityAccessor.create$callInit(level, placePos.getX() + 0.5, y,
-					placePos.getZ() + 0.5, block.get().defaultBlockState());
+						placePos.getZ() + 0.5, block.get().defaultBlockState());
 				falling.time = 1;
 				world.addFreshEntity(falling);
 			}
@@ -388,14 +437,14 @@ public class BuiltinPotatoProjectileTypes {
 
 			for (int teleportTry = 0; teleportTry < 16; ++teleportTry) {
 				double teleportX = entityX + (livingEntity.getRandom()
-					.nextDouble() - 0.5D) * teleportDiameter;
+						.nextDouble() - 0.5D) * teleportDiameter;
 				double teleportY = Mth.clamp(entityY + (livingEntity.getRandom()
-					.nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
+						.nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
 				double teleportZ = entityZ + (livingEntity.getRandom()
-					.nextDouble() - 0.5D) * teleportDiameter;
+						.nextDouble() - 0.5D) * teleportDiameter;
 
 				EntityTeleportEvent.ChorusFruit event =
-					ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
+						ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
 				if (event.isCanceled())
 					return false;
 				if (livingEntity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
@@ -403,7 +452,7 @@ public class BuiltinPotatoProjectileTypes {
 						livingEntity.stopRiding();
 
 					SoundEvent soundevent =
-						livingEntity instanceof Fox ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
+							livingEntity instanceof Fox ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
 					world.playSound(null, entityX, entityY, entityZ, soundevent, SoundSource.PLAYERS, 1.0F, 1.0F);
 					livingEntity.playSound(soundevent, 1.0F, 1.0F);
 					livingEntity.setDeltaMovement(Vec3.ZERO);
@@ -415,6 +464,7 @@ public class BuiltinPotatoProjectileTypes {
 		};
 	}
 
-	public static void register() {}
+	public static void register() {
+	}
 
 }

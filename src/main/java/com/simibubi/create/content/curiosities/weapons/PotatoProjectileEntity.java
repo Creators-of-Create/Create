@@ -3,12 +3,15 @@ package com.simibubi.create.content.curiosities.weapons;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllEnchantments;
+import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,6 +29,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -51,6 +55,10 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	protected float additionalKnockback = 0;
 	protected float recoveryChance = 0;
 
+	protected int splitAmount = 0;
+
+	protected int randomIdentifer = 0;
+
 	public PotatoProjectileEntity(EntityType<? extends AbstractHurtingProjectile> type, Level world) {
 		super(type, world);
 	}
@@ -66,11 +74,11 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	public PotatoCannonProjectileType getProjectileType() {
 		if (type == null)
 			type = PotatoProjectileTypeManager.getTypeForStack(stack)
-				.orElse(BuiltinPotatoProjectileTypes.FALLBACK);
+					.orElse(BuiltinPotatoProjectileTypes.FALLBACK);
 		return type;
 	}
 
-	public void setEnchantmentEffectsFromCannon(ItemStack cannon) {
+	public void setEnchantmentEffectsFromCannon(ItemStack cannon, int splitAmount) {
 		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, cannon);
 		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, cannon);
 		int flame = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, cannon);
@@ -84,6 +92,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			setSecondsOnFire(100);
 		if (recovery > 0)
 			recoveryChance = .125f + recovery * .125f;
+
+		this.splitAmount = splitAmount;
 	}
 
 	@Override
@@ -139,12 +149,12 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 				stuckFallSpeed += 0.007 * projectileType.getGravityMultiplier();
 				stuckOffset = stuckOffset.add(0, -stuckFallSpeed, 0);
 				Vec3 pos = stuckEntity.position()
-					.add(stuckOffset);
+						.add(stuckOffset);
 				setPos(pos.x, pos.y, pos.z);
 			}
 		} else {
 			setDeltaMovement(getDeltaMovement().add(0, -0.05 * projectileType.getGravityMultiplier(), 0)
-				.scale(projectileType.getDrag()));
+					.scale(projectileType.getDrag()));
 		}
 
 		super.tick();
@@ -179,8 +189,15 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		float knockback = projectileType.getKnockback() + additionalKnockback;
 		Entity owner = this.getOwner();
 
+		if (target instanceof PotatoProjectileEntity)
+			if (this.randomIdentifer == ((PotatoProjectileEntity) target).randomIdentifer)
+				return;
+
+		split(projectileType);
+
 		if (!target.isAlive())
 			return;
+
 		if (owner instanceof LivingEntity)
 			((LivingEntity) owner).setLastHurtMob(target);
 
@@ -192,7 +209,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 					AllAdvancements.POTATO_CANNON_COLLIDE.awardTo(p);
 				if (ppe.getOwner() instanceof Player p)
 					AllAdvancements.POTATO_CANNON_COLLIDE.awardTo(p);
-			}
+			} else
+				return;
 		}
 
 		pop(hit);
@@ -234,9 +252,9 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		if (onServer && knockback > 0) {
 			Vec3 appliedMotion = this.getDeltaMovement()
-				.multiply(1.0D, 0.0D, 1.0D)
-				.normalize()
-				.scale(knockback * 0.6);
+					.multiply(1.0D, 0.0D, 1.0D)
+					.normalize()
+					.scale(knockback * 0.6);
 			if (appliedMotion.lengthSqr() > 0.0D)
 				livingentity.push(appliedMotion.x, 0.1D, appliedMotion.z);
 		}
@@ -247,15 +265,15 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		}
 
 		if (livingentity != owner && livingentity instanceof Player && owner instanceof ServerPlayer
-			&& !this.isSilent()) {
+				&& !this.isSilent()) {
 			((ServerPlayer) owner).connection
-				.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+					.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
 		}
 
 		if (onServer && owner instanceof ServerPlayer) {
 			ServerPlayer serverplayerentity = (ServerPlayer) owner;
 			if (!target.isAlive() && target.getType()
-				.getCategory() == MobCategory.MONSTER || (target instanceof Player && target != owner))
+					.getCategory() == MobCategory.MONSTER || (target instanceof Player && target != owner))
 				AllAdvancements.POTATO_CANNON.awardTo(serverplayerentity);
 		}
 
@@ -282,13 +300,73 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	@Override
 	protected void onHitBlock(BlockHitResult ray) {
+		PotatoCannonProjectileType projectileType = getProjectileType();
 		Vec3 hit = ray.getLocation();
 		pop(hit);
-		if (!getProjectileType().onBlockHit(level, ray) && !level.isClientSide)
+		if (!getProjectileType().onBlockHit(level, ray) && !level.isClientSide && projectileType.getSplit() > 0)
 			if (random.nextDouble() <= recoveryChance)
 				recoverItem();
+
+		split(projectileType);
+
 		super.onHitBlock(ray);
 		kill();
+	}
+
+	public void split(PotatoCannonProjectileType type) {
+
+		if (type.getSplit() > 0 && splitAmount > 0)
+			for (int i = 0; i < type.getSplit(); i++) {
+
+				float random = Create.RANDOM.nextFloat(0, 100);
+				float chance = 0;
+				PotatoCannonProjectileType chosenType = null;
+				for (SplitProperty splitType : type.getSplitInto()){
+					chance += splitType.chance();
+					if (random < chance) {
+						chosenType = splitType.type();
+						break;
+					}
+				}
+				if (chosenType == null)
+					continue;
+
+				PotatoProjectileEntity projectile = AllEntityTypes.POTATO_PROJECTILE.create(level);
+
+				if (!type.getSplitInto().isEmpty()) {
+					projectile.type = chosenType;
+					if (projectile.type.getOverride() == null)
+						projectile.setItem(new ItemStack(projectile.type.getItems().get(0).get()));
+					else
+						projectile.setItem(new ItemStack(projectile.type.getOverride().get()));
+				} else {
+					projectile.type = type;
+					projectile.setItem(this.getItem());
+				}
+
+				projectile.setOwner(this.getOwner());
+				projectile.randomIdentifer = this.randomIdentifer;
+
+				projectile.setEnchantmentEffectsFromCannon(stack, splitAmount - 1);
+
+				Vec3 sprayBase = VecHelper.rotate(new Vec3(0, type.getSplitSpeed(), 0), 360 * Create.RANDOM.nextFloat(), Direction.Axis.Z);
+				float sprayChange = 360f / type.getSplit();
+
+				Vec3 splitMotion = new Vec3(0, 0.5, 0);
+				float spread = 100 * (Create.RANDOM.nextFloat() - 0.5f);
+				Vec3 sprayOffset = VecHelper.rotate(sprayBase, i * sprayChange + spread, Direction.Axis.Y);
+				splitMotion = splitMotion.add(VecHelper.lookAt(sprayOffset, splitMotion));
+
+				if (chosenType.getSplitAmount() == -1 || type.getSplitInto().isEmpty())
+					projectile.splitAmount = this.splitAmount - 1;
+				else
+					projectile.splitAmount = chosenType.getSplitAmount();
+
+				projectile.setPos(this.getX(), this.getY(), this.getZ());
+				projectile.setDeltaMovement(splitMotion);
+				projectile.setOwner(this.getOwner());
+				level.addFreshEntity(projectile);
+			}
 	}
 
 	@Override
@@ -307,7 +385,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			for (int i = 0; i < 7; i++) {
 				Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, this.random, .25f);
 				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y,
-					m.z);
+						m.z);
 			}
 		}
 		if (!level.isClientSide)
