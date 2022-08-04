@@ -53,14 +53,14 @@ public class AllAdvancements implements DataProvider {
 		// Andesite - Central Branch
 
 		ANDESITE = create("andesite_alloy", b -> b.icon(AllItems.ANDESITE_ALLOY)
-			.title("Sturdy Rocks")
+			.title("Sturdier Rocks")
 			.description("Obtain some Andesite Alloy, Create's most important resource")
 			.after(ROOT)
 			.whenIconCollected()),
 
 		ANDESITE_CASING = create("andesite_casing", b -> b.icon(AllBlocks.ANDESITE_CASING)
 			.title("The Andesite Age")
-			.description("Apply Andesite Alloy to wood creating a basic casing for your machines")
+			.description("Apply Andesite Alloy to stripped wood, creating a basic casing for your machines")
 			.after(ANDESITE)
 			.special(NOISY)),
 
@@ -233,15 +233,15 @@ public class AllAdvancements implements DataProvider {
 		// Copper - Central Branch
 
 		COPPER = create("copper", b -> b.icon(Items.COPPER_INGOT)
-			.title("More Sturdy Rocks")
-			.description("Amass some copper for your exploits in fluid manipulation")
+			.title("Cuprum Bokum")
+			.description("Amass some Copper Ingots for your exploits in fluid manipulation")
 			.whenIconCollected()
 			.after(BLAZE_BURNER)
 			.special(SILENT)),
 
 		COPPER_CASING = create("copper_casing", b -> b.icon(AllBlocks.COPPER_CASING)
 			.title("The Copper Age")
-			.description("Apply Copper Ingots to wood creating a waterproof casing for your machines")
+			.description("Apply Copper Ingots to stripped wood, creating a waterproof casing for your machines")
 			.after(COPPER)
 			.special(NOISY)),
 
@@ -365,7 +365,7 @@ public class AllAdvancements implements DataProvider {
 
 		BRASS_CASING = create("brass_casing", b -> b.icon(AllBlocks.BRASS_CASING)
 			.title("The Brass Age")
-			.description("Apply Brass Ingots to wood creating a casing for more sophisticated machines")
+			.description("Apply Brass Ingots to stripped wood, creating a casing for more sophisticated machines")
 			.after(BRASS)
 			.special(NOISY)),
 
