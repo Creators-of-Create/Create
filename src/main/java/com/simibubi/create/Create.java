@@ -20,7 +20,6 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteracti
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
-import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -37,7 +36,9 @@ import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateRegistry;
-import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
+import com.simibubi.create.foundation.worldgen.AllFeatures;
+import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
+import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.data.DataGenerator;
@@ -92,6 +93,10 @@ public class Create {
 	public static void onCtor() {
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
+		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+			.getModEventBus();
+		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
@@ -101,31 +106,30 @@ public class Create {
 		AllContainerTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
+		AllEnchantments.register();
+		AllRecipeTypes.register(modEventBus);
+		AllParticleTypes.register(modEventBus);
+		AllStructureProcessorTypes.register(modEventBus);
+		AllEntityDataSerializers.register(modEventBus);
+		AllFeatures.register(modEventBus);
+		AllPlacementModifiers.register(modEventBus);
+		BuiltinRegistration.register(modEventBus);
+
+		AllConfigs.register(modLoadingContext);
+
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
-		AllWorldFeatures.register();
-		AllEnchantments.register();
-		AllConfigs.register(modLoadingContext);
-		BlockSpoutingBehaviour.register();
+		BlockSpoutingBehaviour.registerDefaults();
 
 		ForgeMod.enableMilkFluid();
-
 		CopperRegistries.inject();
-
-		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-			.getModEventBus();
-		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		modEventBus.addListener(AllWorldFeatures::registerOreFeatures);
-		modEventBus.addListener(AllRecipeTypes::register);
-		modEventBus.addListener(AllParticleTypes::register);
 		modEventBus.addListener(AllSoundEvents::register);
-		modEventBus.addListener(AllEntityDataSerializers::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
@@ -141,23 +145,24 @@ public class Create {
 		event.enqueueWork(() -> {
 			AllAdvancements.register();
 			AllTriggers.register();
-			SchematicProcessor.register();
-			AllWorldFeatures.registerFeatures();
-			AllWorldFeatures.registerPlacementTypes();
 			BoilerHeaters.registerDefaults();
 		});
 	}
 
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
-		gen.addProvider(true, new AllAdvancements(gen));
-		gen.addProvider(true, new LangMerger(gen));
-		gen.addProvider(true, AllSoundEvents.provider(gen));
-		gen.addProvider(true, new StandardRecipeGen(gen));
-		gen.addProvider(true, new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(true, new SequencedAssemblyRecipeGen(gen));
-		ProcessingRecipeGen.registerAll(gen);
-		AllWorldFeatures.generateBiomeModifiers(event);
+		if (event.includeClient()) {
+			gen.addProvider(true, new LangMerger(gen));
+			gen.addProvider(true, AllSoundEvents.provider(gen));
+		}
+		if (event.includeServer()) {
+			gen.addProvider(true, new AllAdvancements(gen));
+			gen.addProvider(true, new StandardRecipeGen(gen));
+			gen.addProvider(true, new MechanicalCraftingRecipeGen(gen));
+			gen.addProvider(true, new SequencedAssemblyRecipeGen(gen));
+			ProcessingRecipeGen.registerAll(gen);
+//			AllOreFeatureConfigEntries.gatherData(event);
+		}
 	}
 
 	public static CreateRegistrate registrate() {

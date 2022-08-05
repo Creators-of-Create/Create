@@ -1,16 +1,13 @@
 package com.simibubi.create.foundation.worldgen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.simibubi.create.foundation.worldgen.LayerPattern.Layer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.SectionPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -22,19 +19,18 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 
-public class LayeredOreFeature extends OreFeatureBase {
+public class LayeredOreFeature extends BaseConfigDrivenOreFeature<ConfigDrivenLayeredOreFeatureConfiguration> {
+	public LayeredOreFeature() {
+		super(ConfigDrivenLayeredOreFeatureConfiguration.CODEC);
+	}
 
-	public static final Map<ResourceLocation, List<LayerPattern>> LAYER_PATTERNS = new HashMap<>();
-
-	public static final LayeredOreFeature INSTANCE = new LayeredOreFeature();
-
-	public boolean place(FeaturePlaceContext<ConfigDrivenOreConfiguration> pContext) {
-
+	@Override
+	public boolean place(FeaturePlaceContext<ConfigDrivenLayeredOreFeatureConfiguration> pContext) {
 		RandomSource random = pContext.random();
 		BlockPos blockpos = pContext.origin();
 		WorldGenLevel worldgenlevel = pContext.level();
-		ConfigDrivenOreConfiguration config = pContext.config();
-		List<LayerPattern> patternPool = config.getLayers();
+		ConfigDrivenLayeredOreFeatureConfiguration config = pContext.config();
+		List<LayerPattern> patternPool = config.getLayerPatterns();
 
 		if (patternPool.isEmpty())
 			return false;
@@ -42,8 +38,8 @@ public class LayeredOreFeature extends OreFeatureBase {
 		LayerPattern layerPattern = patternPool.get(random.nextInt(patternPool.size()));
 
 		int placedAmount = 0;
-		int size = config.getSize();
-		int radius = Mth.ceil(config.getSize() / 2f);
+		int size = config.getClusterSize();
+		int radius = Mth.ceil(config.getClusterSize() / 2f);
 		int x0 = blockpos.getX() - radius;
 		int y0 = blockpos.getY() - radius;
 		int z0 = blockpos.getZ() - radius;
@@ -146,5 +142,4 @@ public class LayeredOreFeature extends OreFeatureBase {
 		bulksectionaccess.close();
 		return placedAmount > 0;
 	}
-
 }

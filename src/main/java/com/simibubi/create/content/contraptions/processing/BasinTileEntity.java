@@ -588,7 +588,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public static HeatLevel getHeatLevelOf(BlockState state) {
 		if (state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL))
 			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
+		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
 	}
 
 	public Couple<SmartFluidTankBehaviour> getTanks() {

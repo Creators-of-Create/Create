@@ -14,14 +14,15 @@ import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
 import com.simibubi.create.content.curiosities.bell.SoulParticle;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public enum AllParticleTypes {
 
@@ -37,21 +38,17 @@ public enum AllParticleTypes {
 	SOUL(SoulParticle.Data::new),
 	SOUL_BASE(SoulBaseParticle.Data::new),
 	SOUL_PERIMETER(SoulParticle.PerimeterData::new),
-	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new)
-	;
+	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new);
 
-	private ParticleEntry<?> entry;
+	private final ParticleEntry<?> entry;
 
 	<D extends ParticleOptions> AllParticleTypes(Supplier<? extends ICustomParticleData<D>> typeFactory) {
-		String asId = Lang.asId(this.name());
-		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory);
+		String name = Lang.asId(name());
+		entry = new ParticleEntry<>(name, typeFactory);
 	}
 
-	public static void register(RegisterEvent event) {
-		event.register(Registry.PARTICLE_TYPE_REGISTRY, helper -> {
-			for (AllParticleTypes particle : values())
-				particle.entry.register(helper);
-		});
+	public static void register(IEventBus modEventBus) {
+		ParticleEntry.REGISTER.register(modEventBus);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -61,39 +58,31 @@ public enum AllParticleTypes {
 	}
 
 	public ParticleType<?> get() {
-		return entry.getOrCreateType();
+		return entry.object.get();
 	}
 
 	public String parameter() {
-		return Lang.asId(name());
+		return entry.name;
 	}
 
-	private class ParticleEntry<D extends ParticleOptions> {
-		Supplier<? extends ICustomParticleData<D>> typeFactory;
-		ParticleType<D> type;
-		ResourceLocation id;
+	private static class ParticleEntry<D extends ParticleOptions> {
+		private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Create.ID);
 
-		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticleData<D>> typeFactory) {
-			this.id = id;
+		private final String name;
+		private final Supplier<? extends ICustomParticleData<D>> typeFactory;
+		private final RegistryObject<ParticleType<D>> object;
+
+		public ParticleEntry(String name, Supplier<? extends ICustomParticleData<D>> typeFactory) {
+			this.name = name;
 			this.typeFactory = typeFactory;
-		}
 
-		void register(RegisterEvent.RegisterHelper<ParticleType<?>> helper) {
-			helper.register(id, getOrCreateType());
-		}
-
-		ParticleType<D> getOrCreateType() {
-			if (type != null)
-				return type;
-			type = typeFactory.get()
-				.createType();
-			return type;
+			object = REGISTER.register(name, () -> this.typeFactory.get().createType());
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		void registerFactory(RegisterParticleProvidersEvent event) {
+		public void registerFactory(RegisterParticleProvidersEvent event) {
 			typeFactory.get()
-				.register(getOrCreateType(), event);
+				.register(object.get(), event);
 		}
 
 	}
