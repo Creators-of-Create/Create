@@ -21,7 +21,6 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteracti
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
-import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -38,18 +37,17 @@ import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateRegistry;
-import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
+import com.simibubi.create.foundation.worldgen.AllFeatures;
+import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
+import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
@@ -61,7 +59,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.registries.DataSerializerEntry;
 
 @Mod(Create.ID)
 public class Create {
@@ -97,6 +94,10 @@ public class Create {
 	public static void onCtor() {
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
+		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+			.getModEventBus();
+		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
@@ -106,34 +107,33 @@ public class Create {
 		AllContainerTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
+		AllEnchantments.register();
+		AllRecipeTypes.register(modEventBus);
+		AllParticleTypes.register(modEventBus);
+		AllStructureProcessorTypes.register(modEventBus);
+		AllEntityDataSerializers.register(modEventBus);
+		AllFeatures.register(modEventBus);
+		AllPlacementModifiers.register(modEventBus);
+		BuiltinRegistration.register(modEventBus);
+
+		AllConfigs.register(modLoadingContext);
+
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
-		AllWorldFeatures.register();
-		AllEnchantments.register();
-		AllConfigs.register(modLoadingContext);
-		BlockSpoutingBehaviour.register();
+		BlockSpoutingBehaviour.registerDefaults();
 
 		ForgeMod.enableMilkFluid();
-
 		CopperRegistries.inject();
-
-		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-			.getModEventBus();
-		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
-		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
-		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
 
 		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
-		
+
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
 		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
@@ -148,22 +148,24 @@ public class Create {
 		event.enqueueWork(() -> {
 			AllAdvancements.register();
 			AllTriggers.register();
-			SchematicProcessor.register();
-			AllWorldFeatures.registerFeatures();
-			AllWorldFeatures.registerPlacementTypes();
 			BoilerHeaters.registerDefaults();
 		});
 	}
 
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
-		gen.addProvider(new AllAdvancements(gen));
-		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.provider(gen));
-		gen.addProvider(new StandardRecipeGen(gen));
-		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-		ProcessingRecipeGen.registerAll(gen);
+		if (event.includeClient()) {
+			gen.addProvider(new LangMerger(gen));
+			gen.addProvider(AllSoundEvents.provider(gen));
+		}
+		if (event.includeServer()) {
+			gen.addProvider(new AllAdvancements(gen));
+			gen.addProvider(new StandardRecipeGen(gen));
+			gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
+			ProcessingRecipeGen.registerAll(gen);
+//			AllOreFeatureConfigEntries.gatherData(event);
+		}
 	}
 
 	public static CreateRegistrate registrate() {

@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
+import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -213,7 +213,7 @@ public class CommonEvents {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBiomeLoad(BiomeLoadingEvent event) {
-		AllWorldFeatures.reload(event);
+		AllOreFeatureConfigEntries.modifyBiomes(event);
 	}
 
 	public static void leftClickEmpty(ServerPlayer player) {
