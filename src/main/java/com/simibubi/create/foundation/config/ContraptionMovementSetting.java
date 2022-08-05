@@ -31,7 +31,10 @@ public enum ContraptionMovementSetting {
 	public static ContraptionMovementSetting get(Block block) {
 		if (block instanceof IMovementSettingProvider provider)
 			return provider.getContraptionMovementSetting();
-		return SETTING_SUPPLIERS.get(block).get();
+		Supplier<ContraptionMovementSetting> supplier = SETTING_SUPPLIERS.get(block);
+		if (supplier == null)
+			return null;
+		return supplier.get();
 	}
 
 	public static boolean allAre(Collection<StructureTemplate.StructureBlockInfo> blocks, ContraptionMovementSetting are) {
