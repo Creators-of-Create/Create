@@ -14,6 +14,7 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
@@ -24,7 +25,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -69,7 +69,7 @@ public class TooltipHelper {
 
 	@Deprecated
 	public static List<String> cutString(Component s, ChatFormatting defaultColor, ChatFormatting highlightColor) {
-		return cutString(s.getContents(), defaultColor, highlightColor, 0);
+		return cutString(s.getString(), defaultColor, highlightColor, 0);
 	}
 
 	@Deprecated
@@ -105,7 +105,7 @@ public class TooltipHelper {
 
 	public static List<Component> cutStringTextComponent(String c, ChatFormatting defaultColor,
 		ChatFormatting highlightColor) {
-		return cutTextComponent(new TextComponent(c), defaultColor, highlightColor, 0);
+		return cutTextComponent(Components.literal(c), defaultColor, highlightColor, 0);
 	}
 
 	public static List<Component> cutTextComponent(Component c, ChatFormatting defaultColor,
@@ -115,7 +115,7 @@ public class TooltipHelper {
 
 	public static List<Component> cutStringTextComponent(String c, ChatFormatting defaultColor,
 		ChatFormatting highlightColor, int indent) {
-		return cutTextComponent(new TextComponent(c), defaultColor, highlightColor, indent);
+		return cutTextComponent(Components.literal(c), defaultColor, highlightColor, indent);
 	}
 
 	public static List<Component> cutTextComponent(Component c, ChatFormatting defaultColor,
@@ -161,7 +161,7 @@ public class TooltipHelper {
 		}
 
 		// Format
-		MutableComponent lineStart = new TextComponent(Strings.repeat(" ", indent));
+		MutableComponent lineStart = Components.literal(Strings.repeat(" ", indent));
 		lineStart.withStyle(defaultColor);
 		List<Component> formattedLines = new ArrayList<>(lines.size());
 		Couple<ChatFormatting> f = Couple.create(highlightColor, defaultColor);
@@ -171,7 +171,7 @@ public class TooltipHelper {
 			MutableComponent currentComponent = lineStart.plainCopy();
 			String[] split = string.split("_");
 			for (String part : split) {
-				currentComponent.append(new TextComponent(part).withStyle(f.get(currentlyHighlighted)));
+				currentComponent.append(Components.literal(part).withStyle(f.get(currentlyHighlighted)));
 				currentlyHighlighted = !currentlyHighlighted;
 			}
 
@@ -275,7 +275,7 @@ public class TooltipHelper {
 
 		// Summary
 		if (I18n.exists(summaryKey))
-			tooltip = tooltip.withSummary(new TextComponent(I18n.get(summaryKey)));
+			tooltip = tooltip.withSummary(Components.literal(I18n.get(summaryKey)));
 
 		// Requirements
 //		if (stack.getItem() instanceof BlockItem) {
@@ -293,7 +293,7 @@ public class TooltipHelper {
 				break;
 			if (i == 1)
 				tooltip.getLinesOnShift()
-					.add(new TextComponent(""));
+					.add(Components.immutableEmpty());
 			tooltip.withBehaviour(I18n.get(conditionKey), I18n.get(behaviourKey));
 		}
 

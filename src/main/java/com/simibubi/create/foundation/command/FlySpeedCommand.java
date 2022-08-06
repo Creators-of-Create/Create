@@ -4,11 +4,11 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -38,7 +38,7 @@ public class FlySpeedCommand {
 		player.connection.send(packet);
 
 		ctx.getSource()
-			.sendSuccess(new TextComponent("Temporarily set " + player.getName()
+			.sendSuccess(Components.literal("Temporarily set " + player.getName()
 				.getString() + "'s Flying Speed to: " + speed), true);
 
 		return Command.SINGLE_SUCCESS;

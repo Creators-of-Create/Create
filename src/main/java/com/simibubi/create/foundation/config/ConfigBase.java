@@ -63,6 +63,10 @@ public abstract class ConfigBase {
 		return i(current, min, Integer.MAX_VALUE, name, comment);
 	}
 
+	protected ConfigInt i(int current, String name, String... comment) {
+		return i(current, Integer.MIN_VALUE, Integer.MAX_VALUE, name, comment);
+	}
+
 	protected <T extends Enum<T>> ConfigEnum<T> e(T defaultValue, String name, String... comment) {
 		return new ConfigEnum<>(name, defaultValue, comment);
 	}

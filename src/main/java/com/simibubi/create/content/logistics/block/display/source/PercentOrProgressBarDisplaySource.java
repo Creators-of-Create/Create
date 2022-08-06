@@ -8,9 +8,9 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 
@@ -47,11 +47,11 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 		for (int i = 0; i < emptySpaces; i++)
 			s.append("\u2592");
 
-		return new TextComponent(s.toString());
+		return Components.literal(s.toString());
 	}
 
 	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {
-		return new TextComponent(Mth.clamp((int) (currentLevel * 100), 0, 100) + "%");
+		return Components.literal(Mth.clamp((int) (currentLevel * 100), 0, 100) + "%");
 	}
 
 	@Nullable

@@ -4,10 +4,10 @@ import java.util.Random;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -23,7 +23,7 @@ public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
 		if (!(context.getSourceTE() instanceof EnchantmentTableBlockEntity enchantmentTile))
-			return ZERO;
+			return ZERO.copy();
 
 		BlockPos pos = context.getSourcePos();
 		Level level = context.level();
@@ -39,7 +39,7 @@ public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
 		int cost = EnchantmentHelper.getEnchantmentCost(random, 2, (int) enchantPower, stack);
 
-		return new TextComponent(String.valueOf(cost));
+		return Components.literal(String.valueOf(cost));
 	}
 
 	@Override

@@ -4,9 +4,9 @@ import com.simibubi.create.content.contraptions.components.clock.CuckooClockTile
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class StopWatchDisplaySource extends SingleLineDisplaySource {
 
@@ -32,7 +32,7 @@ public class StopWatchDisplaySource extends SingleLineDisplaySource {
 		int minutes = (diff / 60 / 20) % 60;
 		int seconds = (diff / 20) % 60;
 
-		MutableComponent component = new TextComponent((hours == 0 ? "" : (hours < 10 ? " " : "") + hours + ":")
+		MutableComponent component = Components.literal((hours == 0 ? "" : (hours < 10 ? " " : "") + hours + ":")
 			+ (minutes < 10 ? hours == 0 ? " " : "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
 
 		return component;

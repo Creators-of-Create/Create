@@ -12,19 +12,18 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTargetS
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class DisplaySource extends DisplayBehaviour {
 
-	public static final List<MutableComponent> EMPTY = ImmutableList.of(new TextComponent(""));
-	public static final MutableComponent EMPTY_LINE = new TextComponent("");
-	public static final MutableComponent WHITESPACE = new TextComponent(" ");
+	public static final List<MutableComponent> EMPTY = ImmutableList.of(Components.empty());
+	public static final MutableComponent EMPTY_LINE = Components.empty();
+	public static final MutableComponent WHITESPACE = Components.literal(" ");
 
 	public abstract List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats);
 
@@ -55,7 +54,7 @@ public abstract class DisplaySource extends DisplayBehaviour {
 	}
 
 	public Component getName() {
-		return new TranslatableComponent(id.getNamespace() + ".display_source." + getTranslationKey());
+		return Components.translatable(id.getNamespace() + ".display_source." + getTranslationKey());
 	}
 
 	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout, int lineIndex) {

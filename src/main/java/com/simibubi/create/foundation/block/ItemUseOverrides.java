@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ public class ItemUseOverrides {
 	private static final Set<ResourceLocation> OVERRIDES = new HashSet<>();
 
 	public static void addBlock(Block block) {
-		OVERRIDES.add(block.getRegistryName());
+		OVERRIDES.add(RegisteredObjects.getKeyOrThrow(block));
 	}
 
 	@SubscribeEvent
@@ -31,8 +32,7 @@ public class ItemUseOverrides {
 
 		BlockState state = event.getWorld()
 				.getBlockState(event.getPos());
-		ResourceLocation id = state.getBlock()
-				.getRegistryName();
+		ResourceLocation id = RegisteredObjects.getKeyOrThrow(state.getBlock());
 
 		if (!OVERRIDES.contains(id))
 			return;
