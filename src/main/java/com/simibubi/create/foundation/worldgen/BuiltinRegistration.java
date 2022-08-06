@@ -6,6 +6,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.worldgen.OreFeatureConfigEntry.DatagenExtension;
 
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -22,8 +23,8 @@ public class BuiltinRegistration {
 			if (id.getNamespace().equals(Create.ID)) {
 				DatagenExtension datagenExt = entry.getValue().datagenExt();
 				if (datagenExt != null) {
-					CONFIGURED_FEATURE_REGISTER.register(id.getPath(), () -> datagenExt.getConfiguredFeature());
-					PLACED_FEATURE_REGISTER.register(id.getPath(), () -> datagenExt.getPlacedFeature());
+					CONFIGURED_FEATURE_REGISTER.register(id.getPath(), () -> datagenExt.createConfiguredFeature(BuiltinRegistries.ACCESS));
+					PLACED_FEATURE_REGISTER.register(id.getPath(), () -> datagenExt.createPlacedFeature(BuiltinRegistries.ACCESS));
 				}
 			}
 		}

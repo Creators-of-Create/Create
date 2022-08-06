@@ -17,6 +17,7 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -140,19 +141,12 @@ public class OreFeatureConfigEntry extends ConfigBase {
 	}
 
 	public abstract class DatagenExtension {
-		protected ConfiguredFeature<?, ?> configuredFeature;
-		protected PlacedFeature placedFeature;
+		public abstract ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess);
 
-		public abstract ConfiguredFeature<?, ?> getConfiguredFeature();
-
-		public PlacedFeature getPlacedFeature() {
-			if (placedFeature != null) {
-				return placedFeature;
-			}
-
-			placedFeature = new PlacedFeature(Holder.direct(getConfiguredFeature()), List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
-
-			return placedFeature;
+		public PlacedFeature createPlacedFeature(RegistryAccess registryAccess) {
+			Registry<ConfiguredFeature<?, ?>> featureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY);
+			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getOrCreateHolder(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
+			return new PlacedFeature(featureHolder, List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
 		}
 
 		public OreFeatureConfigEntry parent() {
@@ -183,11 +177,7 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 
 		@Override
-		public ConfiguredFeature<?, ?> getConfiguredFeature() {
-			if (configuredFeature != null) {
-				return configuredFeature;
-			}
-
+		public ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess) {
 			List<TargetBlockState> targetStates = new ArrayList<>();
 			if (block != null)
 				targetStates.add(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, block.get()
@@ -200,9 +190,7 @@ public class OreFeatureConfigEntry extends ConfigBase {
 					.defaultBlockState()));
 
 			ConfigDrivenOreFeatureConfiguration config = new ConfigDrivenOreFeatureConfiguration(OreFeatureConfigEntry.this, 0, targetStates);
-			configuredFeature = new ConfiguredFeature<>(AllFeatures.STANDARD_ORE.get(), config);
-
-			return configuredFeature;
+			return new ConfiguredFeature<>(AllFeatures.STANDARD_ORE.get(), config);
 		}
 	}
 
@@ -215,19 +203,13 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 
 		@Override
-		public ConfiguredFeature<?, ?> getConfiguredFeature() {
-			if (configuredFeature != null) {
-				return configuredFeature;
-			}
-
+		public ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess) {
 			List<LayerPattern> layerPatterns = this.layerPatterns.stream()
 					.map(NonNullSupplier::get)
 					.toList();
 
 			ConfigDrivenLayeredOreFeatureConfiguration config = new ConfigDrivenLayeredOreFeatureConfiguration(OreFeatureConfigEntry.this, 0, layerPatterns);
-			configuredFeature = new ConfiguredFeature<>(AllFeatures.LAYERED_ORE.get(), config);
-
-			return configuredFeature;
+			return new ConfiguredFeature<>(AllFeatures.LAYERED_ORE.get(), config);
 		}
 	}
 }

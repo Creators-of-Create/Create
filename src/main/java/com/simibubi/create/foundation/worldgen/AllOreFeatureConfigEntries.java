@@ -107,7 +107,7 @@ public class AllOreFeatureConfigEntries {
 		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
 			DatagenExtension datagenExt = entry.getValue().datagenExt();
 			if (datagenExt != null) {
-				configuredFeatures.put(entry.getKey(), datagenExt.getConfiguredFeature());
+				configuredFeatures.put(entry.getKey(), datagenExt.createConfiguredFeature(registryAccess));
 			}
 		}
 
@@ -122,7 +122,7 @@ public class AllOreFeatureConfigEntries {
 		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
 			DatagenExtension datagenExt = entry.getValue().datagenExt();
 			if (datagenExt != null) {
-				placedFeatures.put(entry.getKey(), datagenExt.getPlacedFeature());
+				placedFeatures.put(entry.getKey(), datagenExt.createPlacedFeature(registryAccess));
 			}
 		}
 
