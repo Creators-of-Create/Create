@@ -37,6 +37,7 @@ import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.simibubi.create.foundation.worldgen.AllFeatures;
+import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
 import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -111,6 +112,7 @@ public class Create {
 		AllParticleTypes.register(modEventBus);
 		AllStructureProcessorTypes.register(modEventBus);
 		AllEntityDataSerializers.register(modEventBus);
+		AllOreFeatureConfigEntries.init();
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
 		BuiltinRegistration.register(modEventBus);

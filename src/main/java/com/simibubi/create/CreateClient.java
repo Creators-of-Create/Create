@@ -75,7 +75,6 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
-		// AllFluids.assignRenderLayers();
 		AllBlockPartials.init();
 		AllStitchedTextures.init();
 

@@ -16,7 +16,7 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -109,39 +109,25 @@ public class OreFeatureConfigEntry extends ConfigBase {
 	public abstract class DatagenExtension {
 		public TagKey<Biome> biomeTag;
 
-		protected ConfiguredFeature<?, ?> configuredFeature;
-		protected PlacedFeature placedFeature;
-		protected BiomeModifier biomeModifier;
-
 		public DatagenExtension biomeTag(TagKey<Biome> biomes) {
 			this.biomeTag = biomes;
 			return this;
 		}
 
-		public abstract ConfiguredFeature<?, ?> getConfiguredFeature();
+		public abstract ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess);
 
-		public PlacedFeature getPlacedFeature() {
-			if (placedFeature != null) {
-				return placedFeature;
-			}
-
-			Holder<ConfiguredFeature<?, ?>> featureHolder = BuiltinRegistries.CONFIGURED_FEATURE.getOrCreateHolderOrThrow(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
-			placedFeature = new PlacedFeature(featureHolder, List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
-
-			return placedFeature;
+		public PlacedFeature createPlacedFeature(RegistryAccess registryAccess) {
+			Registry<ConfiguredFeature<?, ?>> featureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY);
+			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
+			return new PlacedFeature(featureHolder, List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
 		}
 
-		public BiomeModifier getBiomeModifier() {
-			if (biomeModifier != null) {
-				return biomeModifier;
-			}
-
-			@SuppressWarnings("deprecation")
-			HolderSet<Biome> biomes = new HolderSet.Named<>(BuiltinRegistries.BIOME, biomeTag);
-			Holder<PlacedFeature> featureHolder = BuiltinRegistries.PLACED_FEATURE.getOrCreateHolderOrThrow(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, id));
-			biomeModifier = new AddFeaturesBiomeModifier(biomes, HolderSet.direct(featureHolder), Decoration.UNDERGROUND_ORES);
-
-			return biomeModifier;
+		public BiomeModifier createBiomeModifier(RegistryAccess registryAccess) {
+			Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registry.BIOME_REGISTRY);
+			Registry<PlacedFeature> featureRegistry = registryAccess.registryOrThrow(Registry.PLACED_FEATURE_REGISTRY);
+			HolderSet<Biome> biomes = new HolderSet.Named<>(biomeRegistry, biomeTag);
+			Holder<PlacedFeature> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, id));
+			return new AddFeaturesBiomeModifier(biomes, HolderSet.direct(featureHolder), Decoration.UNDERGROUND_ORES);
 		}
 
 		public OreFeatureConfigEntry parent() {
@@ -178,11 +164,7 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 
 		@Override
-		public ConfiguredFeature<?, ?> getConfiguredFeature() {
-			if (configuredFeature != null) {
-				return configuredFeature;
-			}
-
+		public ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess) {
 			List<TargetBlockState> targetStates = new ArrayList<>();
 			if (block != null)
 				targetStates.add(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, block.get()
@@ -195,9 +177,7 @@ public class OreFeatureConfigEntry extends ConfigBase {
 					.defaultBlockState()));
 
 			ConfigDrivenOreFeatureConfiguration config = new ConfigDrivenOreFeatureConfiguration(OreFeatureConfigEntry.this, 0, targetStates);
-			configuredFeature = new ConfiguredFeature<>(AllFeatures.STANDARD_ORE.get(), config);
-
-			return configuredFeature;
+			return new ConfiguredFeature<>(AllFeatures.STANDARD_ORE.get(), config);
 		}
 	}
 
@@ -216,19 +196,13 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 
 		@Override
-		public ConfiguredFeature<?, ?> getConfiguredFeature() {
-			if (configuredFeature != null) {
-				return configuredFeature;
-			}
-
+		public ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess) {
 			List<LayerPattern> layerPatterns = this.layerPatterns.stream()
 					.map(NonNullSupplier::get)
 					.toList();
 
 			ConfigDrivenLayeredOreFeatureConfiguration config = new ConfigDrivenLayeredOreFeatureConfiguration(OreFeatureConfigEntry.this, 0, layerPatterns);
-			configuredFeature = new ConfiguredFeature<>(AllFeatures.LAYERED_ORE.get(), config);
-
-			return configuredFeature;
+			return new ConfiguredFeature<>(AllFeatures.LAYERED_ORE.get(), config);
 		}
 	}
 }
