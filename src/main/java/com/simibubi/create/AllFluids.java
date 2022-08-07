@@ -91,6 +91,8 @@ public class AllFluids {
 
 		public TintedFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
 			super(properties);
+			this.stillTexture = stillTexture;
+			this.flowingTexture = flowingTexture;
 		}
 
 		@Override
@@ -98,23 +100,23 @@ public class AllFluids {
 			consumer.accept(new IClientFluidTypeExtensions() {
 
 				@Override
-				public ResourceLocation getFlowingTexture() {
-					return flowingTexture;
-				}
-
-				@Override
 				public ResourceLocation getStillTexture() {
 					return stillTexture;
 				}
 
 				@Override
+				public ResourceLocation getFlowingTexture() {
+					return flowingTexture;
+				}
+
+				@Override
 				public int getTintColor(FluidStack stack) {
-					return getTintColor(stack);
+					return TintedFluidType.this.getTintColor(stack);
 				}
 
 				@Override
 				public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-					return getTintColor(state, getter, pos);
+					return TintedFluidType.this.getTintColor(state, getter, pos);
 				}
 
 			});
@@ -138,13 +140,13 @@ public class AllFluids {
 		}
 
 		@Override
-		public int getTintColor(FluidState state, BlockAndTintGetter world, BlockPos pos) {
-			return 0x00ffffff;
+		protected int getTintColor(FluidStack stack) {
+			return NO_TINT;
 		}
 
 		@Override
-		protected int getTintColor(FluidStack stack) {
-			return NO_TINT;
+		public int getTintColor(FluidState state, BlockAndTintGetter world, BlockPos pos) {
+			return 0x00ffffff;
 		}
 
 	}
