@@ -574,7 +574,7 @@
 	"entity.create.potato_projectile": "Картофельный снаряд",
 	"entity.create.seat": "Сиденье",
 	"entity.create.stationary_contraption": "Стационарная штуковина",
-	"entity.create.super_glue": "Супер-клей",
+	"entity.create.super_glue": "Суперклей",
 
 	"fluid.create.potion": "Зелье",
 	"fluid.create.tea": "Чай строителя",
@@ -651,7 +651,7 @@
 	"item.create.schematic_and_quill": "Схематика и перо",
 	"item.create.shadow_steel": "Теневая сталь",
 	"item.create.sturdy_sheet": "Прочный лист",
-	"item.create.super_glue": "Супер-клей",
+	"item.create.super_glue": "Суперклей",
 	"item.create.sweet_roll": "Сладкий рулет",
 	"item.create.tree_fertilizer": "Удобрение для деревьев",
 	"item.create.unprocessed_obsidian_sheet": "Необработанный обсидиановый лист",
@@ -701,7 +701,7 @@
 	"advancement.create.millstone": "Карманная дробилка",
 	"advancement.create.millstone.desc": "Поставьте и приведите в действие Жёрнов",
 	"advancement.create.super_glue": "Площадь соединена",
-	"advancement.create.super_glue.desc": "Объедините несколько блоков в группу с помощью Супер-клея",
+	"advancement.create.super_glue.desc": "Объедините несколько блоков в группу с помощью Суперклея",
 	"advancement.create.contraption_actors": "Движение с целью",
 	"advancement.create.contraption_actors.desc": "Создайте штуковину с Дрелью, Пилой или Комбайном на борту",
 	"advancement.create.portable_storage_interface": "Обмен на ходу",
@@ -2082,7 +2082,7 @@
 	"create.ponder.shared.ctrl_and": "Ctrl +",
 	"create.ponder.shared.rpm32": "32 об./мин.",
 	"create.ponder.shared.rpm16_source": "Источник: 16 об./мин.",
-	"create.ponder.shared.movement_anchors": "С помощью супер-клея или шасси, более крупные структуры могут быть сдвинуты.",
+	"create.ponder.shared.movement_anchors": "С помощью суперклея или шасси, более крупные структуры могут быть сдвинуты.",
 	"create.ponder.tag.redstone": "Логические компоненты",
 	"create.ponder.tag.redstone.description": "Компоненты, помогающие с конструированием схем из редстоуна",
 	"create.ponder.tag.contraption_assembly": "Приспособления для присоединения блоков",
@@ -2261,7 +2261,7 @@
 	"create.ponder.clockwork_bearing.text_4": "4:00",
 	"create.ponder.clockwork_bearing.text_5": "ПКМ по механизму, чтобы остановить или вновь запустить структуру",
 	"create.ponder.clockwork_bearing.text_6": "Вторая структура может быть добавлена спереди Часовой стрелки",
-	"create.ponder.clockwork_bearing.text_7": "Убедитесь, что две структуры не соединены между собой супер-клеем или чем-то схожим",
+	"create.ponder.clockwork_bearing.text_7": "Убедитесь, что две структуры не соединены между собой суперклеем или чем-то схожим",
 	"create.ponder.clockwork_bearing.text_8": "Вторая структура станет вращаться как Минутная стрелка",
 
 	"create.ponder.clutch.header": "Управлением силы вращения с помощью Сцепления",
@@ -2451,7 +2451,7 @@
 	"create.ponder.gantry_carriage.text_2": "Крановые установки могут двигать присоединённые Блоки",
 
 	"create.ponder.gantry_cascaded.header": "Многоступенчатым портальным краном",
-	"create.ponder.gantry_cascaded.text_1": "Валы портального крана прикрепляются к шасси без нужды в супер-клее",
+	"create.ponder.gantry_cascaded.text_1": "Валы портального крана прикрепляются к шасси без нужды в суперклее",
 	"create.ponder.gantry_cascaded.text_2": "То же относится и к шасси на движущихся Валах портального крана",
 	"create.ponder.gantry_cascaded.text_3": "Таким образом крановая система может покрывать несколько осей движения",
 
@@ -2535,7 +2535,7 @@
 	"create.ponder.linear_chassis_attachment.text_4": "Липкие грани Линейных шасси будут прикреплять ряд блоков перед ним",
 	"create.ponder.linear_chassis_attachment.text_5": "Используйте Ключ, чтобы настроить радиус прикрепления для этого шасси",
 	"create.ponder.linear_chassis_attachment.text_6": "Прокрутка при удерживании Ctrl настраивает радиус всех присоединённых шасси",
-	"create.ponder.linear_chassis_attachment.text_7": "Прикрепление блоков на другие стороны требует использования Супер-клея",
+	"create.ponder.linear_chassis_attachment.text_7": "Прикрепление блоков на другие стороны требует использования Суперклея",
 	"create.ponder.linear_chassis_attachment.text_8": "При помощи этих механик, структуры любой формы могут двигаться как Штуковина",
 
 	"create.ponder.linear_chassis_group.header": "Движением Линейных шасси группами",
@@ -2875,12 +2875,12 @@
 	"create.ponder.stressometer.text_2": "При ношении Инженерных очков игрок может получить более полную информацию от прибора",
 	"create.ponder.stressometer.text_3": "Компараторы могут испускать аналоговый редстоун сигнал относительно измерений стрессометра",
 
-	"create.ponder.super_glue.header": "Присоединением блоков при помощи Супер-клея",
-	"create.ponder.super_glue.text_1": "Супер-клей можно использовать между двумя любыми блоками",
+	"create.ponder.super_glue.header": "Присоединением блоков при помощи Суперклея",
+	"create.ponder.super_glue.text_1": "Суперклей можно использовать между двумя любыми блоками",
 	"create.ponder.super_glue.text_2": "Скреплённые блоки будут двигаться вместе при сборке в штуковну",
-	"create.ponder.super_glue.text_3": "Когда вы супер-клей во второй руке...",
+	"create.ponder.super_glue.text_3": "Когда вы суперклей во второй руке...",
 	"create.ponder.super_glue.text_4": "...добавленные блоки будут сразу приклеены к грани, на которую они были поставлены",
-	"create.ponder.super_glue.text_5": "Супер-клей можно удалить левым кликом",
+	"create.ponder.super_glue.text_5": "Суперклей можно удалить левым кликом",
 	"create.ponder.super_glue.text_6": "Блоки, висящие на других, обычно не требуют клея",
 
 	"create.ponder.track_chunks.header": "Пересечением незагруженных чанков",
@@ -2923,7 +2923,7 @@
 	"create.ponder.train_assembly.text_4": "Во время сборки к этой Станции не будут подъезжать поезда, следующие по Расписанию",
 	"create.ponder.train_assembly.text_5": "Создавайте новые вагонные тележки, используя Железнодорожный корпус на путях",
 	"create.ponder.train_assembly.text_6": "Нажмите на тележку ещё раз, чтобы переключаться между их вариациями внешнего вида",
-	"create.ponder.train_assembly.text_7": "Приклейте блоки с помощью Супер-клея",
+	"create.ponder.train_assembly.text_7": "Приклейте блоки с помощью Суперклея",
 	"create.ponder.train_assembly.text_8": "Собранные поезда будут двигаться быстрее, если они смогут найти топливо в прикреплённых сундуках или бочках",
 	"create.ponder.train_assembly.text_9": "Топливо, находящееся в Хранилищах, не будет потребляться поездом",
 
