@@ -812,7 +812,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.pipe())
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -827,7 +827,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -849,7 +849,7 @@ public class AllBlocks {
 							.build();
 					}, BlockStateProperties.WATERLOGGED);
 			})
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::transparent))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -858,7 +858,7 @@ public class AllBlocks {
 		.properties(p -> p.color(MaterialColor.STONE))
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
@@ -870,7 +870,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.blockstate(new SmartFluidPipeGenerator()::generate)
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::transparent))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -881,7 +881,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
 			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
 				state.getValue(FluidValveBlock.ENABLED) ? "open" : "closed")))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();

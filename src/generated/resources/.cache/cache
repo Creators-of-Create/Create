@@ -209,7 +209,7 @@ d13940ed213d7acbc6ebe3bdd21175ef89e4d613 assets/create/blockstates/encased_fluid
 8a87e42262f3f161b0e6fe10b795ff00eccf768f assets/create/blockstates/exposed_copper_tile_stairs.json
 fb41aa1a0828c9256b3f886fdcb55bb54252ba09 assets/create/blockstates/exposed_copper_tiles.json
 7a2259a71fbbbb9491fc1e6a9c935bc9fef14042 assets/create/blockstates/fake_track.json
-bb74442749b6bd688d45d919b541dbd66bbeb18a assets/create/blockstates/fluid_pipe.json
+dd6dadfeb65c4a4c4d1dc92516c411355e90dcca assets/create/blockstates/fluid_pipe.json
 f0eaab18e16c4f3f65ebf3b55b08f0dc445720fe assets/create/blockstates/fluid_tank.json
 5408d92ab02af86539ac42971d4033545970bb3a assets/create/blockstates/fluid_valve.json
 95b0775bf4d619ca5b0a42dbdc47c6f2c15d7b3d assets/create/blockstates/flywheel.json
@@ -1047,9 +1047,6 @@ abb8810d05128749bd7ffbbbd9d7c425886d8ef3 assets/create/models/block/fluid_pipe/l
 eefb0e3b0ed7b6d5a99ff715d4aae42db4133343 assets/create/models/block/fluid_pipe/lu_x.json
 a55a9ef109c4166c767459f88bce4f5c614fe13e assets/create/models/block/fluid_pipe/lu_y.json
 d933b8a9e5d166cb6b250eb8f359180872daa276 assets/create/models/block/fluid_pipe/lu_z.json
-8d2a247dcb09c4bc07c2c88ceaebc45f2f29ccaf assets/create/models/block/fluid_pipe/none_x.json
-817252a6729ca8dc52753de47dbfe0b30c33dfa8 assets/create/models/block/fluid_pipe/none_y.json
-ddba92d010016a0147ceecc30a30c9c1622d3daa assets/create/models/block/fluid_pipe/none_z.json
 968fc1c2d555592134554bd16abb0b38629a76dd assets/create/models/block/fluid_pipe/r_x.json
 c8fee17269f33f5e55ff0b019e535e9506dd964b assets/create/models/block/fluid_pipe/r_y.json
 f63e221319b2703083e55f4034ed2d7b7a79a5da assets/create/models/block/fluid_pipe/r_z.json
