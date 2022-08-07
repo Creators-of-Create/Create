@@ -1,0 +1,20 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "create:block/pipes",
+		"particle": "create:block/pipes"
+	},
+	"elements": [
+		{
+			"from": [12, 4, 4],
+			"to": [14, 12, 12],
+			"faces": {
+				"north": {"uv": [0, 9, 4, 10], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [0, 8, 4, 9], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [4, 8, 0, 9], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [4, 9, 0, 10], "rotation": 270, "texture": "#0"}
+			}
+		}
+	]
+}
