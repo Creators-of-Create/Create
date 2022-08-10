@@ -21,6 +21,8 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.DoorBlock;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -1045,7 +1047,7 @@ public abstract class Contraption {
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
 				if (verticalRotation) {
-					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock)
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock || state.getBlock() instanceof DoorBlock)
 						world.destroyBlock(targetPos, true);
 				}
 
