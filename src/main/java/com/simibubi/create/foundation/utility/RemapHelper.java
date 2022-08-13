@@ -167,6 +167,8 @@ public class RemapHelper {
 		remapPaletteBlock("dolomite", "calcite", false);
 		remapPaletteBlock("weathered_limestone", "tuff", false);
 
+		reMap.put("natural_scoria", asResource("scoria"));
+		
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 		reMap.put("gold_sheet", GOLDEN_SHEET.getId());
 		reMap.put("flour", WHEAT_FLOUR.getId());
