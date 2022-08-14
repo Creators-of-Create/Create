@@ -17,7 +17,9 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllOreFeatureConfigEntries {
 	public static final OreFeatureConfigEntry ZINC_ORE =
@@ -101,6 +103,21 @@ public class AllOreFeatureConfigEntries {
 		DynamicDataProvider<PlacedFeature> placedFeatureProvider = DynamicDataProvider.create(generator, "Create's Placed Features", registryAccess, Registry.PLACED_FEATURE_REGISTRY, placedFeatures);
 		if (placedFeatureProvider != null) {
 			generator.addProvider(true, placedFeatureProvider);
+		}
+
+		//
+
+		Map<ResourceLocation, BiomeModifier> biomeModifiers = new HashMap<>();
+		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
+			DatagenExtension datagenExt = entry.getValue().datagenExt();
+			if (datagenExt != null) {
+				biomeModifiers.put(entry.getKey(), datagenExt.createBiomeModifier(registryAccess));
+			}
+		}
+
+		DynamicDataProvider<BiomeModifier> biomeModifierProvider = DynamicDataProvider.create(generator, "Create's Biome Modifiers", registryAccess, ForgeRegistries.Keys.BIOME_MODIFIERS, biomeModifiers);
+		if (biomeModifierProvider != null) {
+			generator.addProvider(true, biomeModifierProvider);
 		}
 	}
 }

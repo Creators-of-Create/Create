@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
@@ -10,10 +12,9 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 import com.simibubi.create.foundation.utility.Lang;
 
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
@@ -171,7 +172,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		public void send(Packet<?> packetIn) {}
 
 		@Override
-		public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) {}
+		public void send(Packet<?> p_243227_, @Nullable PacketSendListener p_243273_) {}
 	}
 
 }

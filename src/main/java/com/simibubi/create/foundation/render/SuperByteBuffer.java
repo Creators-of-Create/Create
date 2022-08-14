@@ -1,9 +1,6 @@
 package com.simibubi.create.foundation.render;
 
-import java.util.function.IntPredicate;
-
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
-import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
@@ -34,8 +31,7 @@ import net.minecraft.world.level.Level;
 
 public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
-	private final VertexList template;
-	private final IntPredicate shadedPredicate;
+	private final ShadedVertexList template;
 
 	// Vertex Position
 	private final PoseStack transforms;
@@ -67,15 +63,9 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
 	public SuperByteBuffer(RenderedBuffer buf, int unshadedStartVertex) {
-		if (buf != null) {
-			DrawState drawState = buf.drawState();
-			ShadedVertexList template = new BlockVertexList.Shaded(buf.vertexBuffer(), drawState.vertexCount(), drawState.format().getVertexSize(), unshadedStartVertex);
-			this.template = template;
-			shadedPredicate = template::isShaded;
-		} else {
-			this.template = null;
-			shadedPredicate = index -> true;
-		}
+		DrawState drawState = buf.drawState();
+		template = new BlockVertexList.Shaded(buf.vertexBuffer(), drawState.vertexCount(), drawState.format().getVertexSize(), unshadedStartVertex);
+
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}
@@ -158,7 +148,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 			if (disableDiffuseMult) {
 				builder.color(r, g, b, a);
 			} else {
-				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz, shadedPredicate.test(i));
+				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz, template.isShaded(i));
 				int colorR = transformColor(r, instanceDiffuse);
 				int colorG = transformColor(g, instanceDiffuse);
 				int colorB = transformColor(b, instanceDiffuse);
@@ -234,7 +224,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	public boolean isEmpty() {
-		return template == null || template.isEmpty();
+		return template.isEmpty();
 	}
 
 	public PoseStack getTransforms() {

@@ -156,7 +156,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 				dim = 0.75f;
 			}
 
-			GlyphInfo glyphinfo = fontset.getGlyphInfo(glyph);
+			GlyphInfo glyphinfo = fontset.getGlyphInfo(glyph, false);
 			float glyphWidth = glyphinfo.getAdvance(false);
 
 			if (!section.renderCharsIndividually() && section.spinning[0]) {

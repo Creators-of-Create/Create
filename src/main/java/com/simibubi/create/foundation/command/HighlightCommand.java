@@ -101,6 +101,6 @@ public class HighlightCommand {
 		BlockPos p = exception.getPosition();
 		String command = "/create highlight " + p.getX() + " " + p.getY() + " " + p.getZ();
 		return player.server.getCommands()
-			.performCommand(source, command);
+			.performPrefixedCommand(source, command);
 	}
 }
