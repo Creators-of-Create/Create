@@ -308,7 +308,7 @@ public class CreateJEI implements IModPlugin {
 
 		mysteryConversion = builder(ConversionRecipe.class)
 				.addRecipes(() -> MysteriousItemConversionCategory.RECIPES)
-				.itemIcon(AllItems.CHROMATIC_COMPOUND.get())
+				.itemIcon(AllBlocks.PECULIAR_BELL.get())
 				.emptyBackground(177, 50)
 				.build("mystery_conversion", MysteriousItemConversionCategory::new);
 
