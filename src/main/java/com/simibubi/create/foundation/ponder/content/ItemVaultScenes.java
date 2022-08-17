@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -232,8 +234,41 @@ public class ItemVaultScenes {
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(blockSurface);
+		InputWindowElement dyeInput = new InputWindowElement(util.vector.centerOf(util.grid.at(1,1,1)), Pointing.RIGHT)
+				.withItem(new ItemStack(Items.CYAN_DYE));
+		InputWindowElement waterInput = new InputWindowElement(util.vector.centerOf(util.grid.at(1,1,1)), Pointing.RIGHT)
+				.withItem(new ItemStack(Items.WATER_BUCKET));
+		scene.idle(80);
+		scene.overlay.showText(40)
+				.colored(PonderPalette.BLUE)
+				.text("Right-Click with Dye to paint them...")
+				.attachKeyFrame()
+				.pointAt(util.vector.centerOf(util.grid.at(1,1,1)))
+				.placeNearTarget();
+		scene.idle(25);
+		scene.overlay.showControls(dyeInput, 30);
+		scene.idle(20);
+		scene.world.replaceBlocks(full2, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 9), false);
+		scene.idle(20);
+		scene.world.replaceBlocks(full1, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 14), false);
+		scene.idle(20);
+		scene.world.replaceBlocks(full3, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 5).setValue(ItemVaultBlock.LARGE, false), true);
+		scene.idle(25);
+		scene.overlay.showText(40)
+				.colored(PonderPalette.BLUE)
+				.text("...and with Water to clean them")
+				.attachKeyFrame()
+				.pointAt(util.vector.centerOf(util.grid.at(1,1,1)))
+				.placeNearTarget();
+		scene.idle(20);
+		scene.overlay.showControls(waterInput, 30);
+		scene.idle(20);
+		scene.world.replaceBlocks(full2, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 16), false);
+		scene.idle(20);
+		scene.world.replaceBlocks(full1, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 16), false);
+		scene.idle(20);
+		scene.world.replaceBlocks(full3, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 16).setValue(ItemVaultBlock.LARGE, true), false);
 		scene.idle(40);
 	}
-
 
 }
