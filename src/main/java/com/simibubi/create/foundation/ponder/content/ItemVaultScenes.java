@@ -121,7 +121,7 @@ public class ItemVaultScenes {
 	}
 
 	public static void sizes(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("item_vault_sizes", "Dimensions of an Item Vault");
+		scene.title("item_vault_sizes", "Properties of an Item Vault");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(0.9f);
 		scene.showBasePlate();
