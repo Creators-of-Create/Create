@@ -61,7 +61,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
-		pBuilder.add(HORIZONTAL_AXIS, LARGE);
+		pBuilder.add(HORIZONTAL_AXIS, LARGE, COLOR);
 		super.createBlockStateDefinition(pBuilder);
 	}
 
