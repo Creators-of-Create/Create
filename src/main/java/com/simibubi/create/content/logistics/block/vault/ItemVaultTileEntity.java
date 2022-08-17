@@ -115,8 +115,6 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		if (colorIn != null)
 			colorID = colorIn.getId();
 
-		System.out.println("applyColor called, setting to: "+colorID);
-
 		for (BlockPos pos : ItemVaultBlock.getVaultBlocks(level, getController())) {
 			BlockState blockState = level.getBlockState(pos);
 			BlockEntity te = level.getBlockEntity(pos);
