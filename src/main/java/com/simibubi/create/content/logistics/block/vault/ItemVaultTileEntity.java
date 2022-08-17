@@ -304,7 +304,6 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 
 	@Override
 	public void setWidth(int width) { this.radius = width; }
-
 	@Override
 	public boolean hasInventory() { return true; }
 }

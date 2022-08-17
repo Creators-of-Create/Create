@@ -166,6 +166,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 			.orElse(0);
 	}
 
+
 	@Override
 	public BlockEntityType<? extends ItemVaultTileEntity> getTileEntityType() {
 		return AllTileEntities.ITEM_VAULT.get();

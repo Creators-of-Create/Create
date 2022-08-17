@@ -14,7 +14,6 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-
 public class ItemVaultCTBehaviour extends ConnectedTextureBehaviour.Base {
 
 	@Override
