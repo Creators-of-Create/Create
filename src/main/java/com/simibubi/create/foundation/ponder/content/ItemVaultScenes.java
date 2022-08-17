@@ -252,7 +252,7 @@ public class ItemVaultScenes {
 		scene.idle(20);
 		scene.world.replaceBlocks(full1, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 14), false);
 		scene.idle(20);
-		scene.world.replaceBlocks(full3, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 5).setValue(ItemVaultBlock.LARGE, false), true);
+		scene.world.replaceBlocks(full3, AllBlocks.ITEM_VAULT.getDefaultState().setValue(ItemVaultBlock.COLOR, 5).setValue(ItemVaultBlock.LARGE, true), false);
 		scene.idle(25);
 		scene.overlay.showText(40)
 				.colored(PonderPalette.BLUE)
